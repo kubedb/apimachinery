@@ -1297,14 +1297,15 @@ const (
 const (
 
 	// envs
-	EnvFerretDBUser     = "FERRETDB_PG_USER"
-	EnvFerretDBPassword = "FERRETDB_PG_PASSWORD"
-	EnvFerretDBHandler  = "FERRETDB_HANDLER"
-	EnvFerretDBPgURL    = "FERRETDB_POSTGRESQL_URL"
-	EnvFerretDBTLSPort  = "FERRETDB_LISTEN_TLS"
-	EnvFerretDBCAPath   = "FERRETDB_LISTEN_TLS_CA_FILE"
-	EnvFerretDBCertPath = "FERRETDB_LISTEN_TLS_CERT_FILE"
-	EnvFerretDBKeyPath  = "FERRETDB_LISTEN_TLS_KEY_FILE"
+	EnvFerretDBUser      = "FERRETDB_PG_USER"
+	EnvFerretDBPassword  = "FERRETDB_PG_PASSWORD"
+	EnvFerretDBHandler   = "FERRETDB_HANDLER"
+	EnvFerretDBPgURL     = "FERRETDB_POSTGRESQL_URL"
+	EnvFerretDBTLSPort   = "FERRETDB_LISTEN_TLS"
+	EnvFerretDBCAPath    = "FERRETDB_LISTEN_TLS_CA_FILE"
+	EnvFerretDBCertPath  = "FERRETDB_LISTEN_TLS_CERT_FILE"
+	EnvFerretDBKeyPath   = "FERRETDB_LISTEN_TLS_KEY_FILE"
+	EnvFerretDBDebugAddr = "FERRETDB_DEBUG_ADDR"
 
 	FerretDBContainerName = "ferretdb"
 	FerretDBMainImage     = "ghcr.io/ferretdb/ferretdb"
@@ -1315,7 +1316,7 @@ const (
 	FerretDBExternalClientPath = "/etc/certs/ext"
 
 	FerretDBDefaultPort = 27017
-	FerretDBMetricsPort = 8080
+	FerretDBMetricsPort = 56790
 	FerretDBTLSPort     = 27018
 
 	FerretDBMetricsPath     = "/debug/metrics"
