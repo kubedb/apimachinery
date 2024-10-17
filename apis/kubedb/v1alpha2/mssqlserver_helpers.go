@@ -88,7 +88,7 @@ func (m *MSSQLServer) ServiceName() string {
 }
 
 func (m *MSSQLServer) SecondaryServiceName() string {
-	return metautil.NameWithPrefix(m.ServiceName(), "secondary")
+	return metautil.NameWithPrefix(m.ServiceName(), string(SecondaryServiceAlias))
 }
 
 func (m *MSSQLServer) GoverningServiceName() string {
@@ -245,6 +245,7 @@ func (m *MSSQLServer) GetPersistentSecrets() []string {
 	secrets = append(secrets, m.EndpointCertSecretName())
 	secrets = append(secrets, m.DbmLoginSecretName())
 	secrets = append(secrets, m.MasterKeySecretName())
+	secrets = append(secrets, m.ConfigSecretName())
 
 	return secrets
 }

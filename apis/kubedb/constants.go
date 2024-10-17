@@ -407,6 +407,7 @@ const (
 	EnvMSSQLAgentEnabled = "MSSQL_AGENT_ENABLED"
 	EnvMSSQLSAUsername   = "MSSQL_SA_USERNAME"
 	EnvMSSQLSAPassword   = "MSSQL_SA_PASSWORD"
+	EnvMSSQLVersion      = "VERSION"
 
 	// container related
 	MSSQLContainerName            = "mssql"
