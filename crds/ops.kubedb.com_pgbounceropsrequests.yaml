@@ -48,6 +48,16 @@ spec:
                 - IfReady
                 - Always
                 type: string
+              authentication:
+                properties:
+                  secretRef:
+                    properties:
+                      name:
+                        default: ""
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                type: object
               configuration:
                 properties:
                   pgbouncer:
@@ -197,6 +207,7 @@ spec:
                 - VerticalScaling
                 - UpdateVersion
                 - Reconfigure
+                - RotateAuth
                 type: string
               updateVersion:
                 properties:
