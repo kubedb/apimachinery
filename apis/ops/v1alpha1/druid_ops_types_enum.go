@@ -18,6 +18,8 @@ const (
 	DruidOpsRequestTypeVolumeExpansion DruidOpsRequestType = "VolumeExpansion"
 	// DruidOpsRequestTypeRestart is a DruidOpsRequestType of type Restart.
 	DruidOpsRequestTypeRestart DruidOpsRequestType = "Restart"
+	// DruidOpsRequestTypeRotateAuth is a DruidOpsRequestType of type RotateAuth.
+	DruidOpsRequestTypeRotateAuth DruidOpsRequestType = "RotateAuth"
 )
 
 var ErrInvalidDruidOpsRequestType = fmt.Errorf("not a valid DruidOpsRequestType, try [%s]", strings.Join(_DruidOpsRequestTypeNames, ", "))
@@ -26,6 +28,7 @@ var _DruidOpsRequestTypeNames = []string{
 	string(DruidOpsRequestTypeVerticalScaling),
 	string(DruidOpsRequestTypeVolumeExpansion),
 	string(DruidOpsRequestTypeRestart),
+	string(DruidOpsRequestTypeRotateAuth),
 }
 
 // DruidOpsRequestTypeNames returns a list of possible string values of DruidOpsRequestType.
@@ -41,6 +44,7 @@ func DruidOpsRequestTypeValues() []DruidOpsRequestType {
 		DruidOpsRequestTypeVerticalScaling,
 		DruidOpsRequestTypeVolumeExpansion,
 		DruidOpsRequestTypeRestart,
+		DruidOpsRequestTypeRotateAuth,
 	}
 }
 
@@ -60,6 +64,7 @@ var _DruidOpsRequestTypeValue = map[string]DruidOpsRequestType{
 	"VerticalScaling": DruidOpsRequestTypeVerticalScaling,
 	"VolumeExpansion": DruidOpsRequestTypeVolumeExpansion,
 	"Restart":         DruidOpsRequestTypeRestart,
+	"RotateAuth":      DruidOpsRequestTypeRotateAuth,
 }
 
 // ParseDruidOpsRequestType attempts to convert a string to a DruidOpsRequestType.

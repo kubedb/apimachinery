@@ -48,6 +48,16 @@ spec:
                 - IfReady
                 - Always
                 type: string
+              authentication:
+                properties:
+                  secretRef:
+                    properties:
+                      name:
+                        default: ""
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                type: object
               databaseRef:
                 properties:
                   name:
@@ -64,6 +74,7 @@ spec:
                 - VerticalScaling
                 - VolumeExpansion
                 - Restart
+                - RotateAuth
                 type: string
               verticalScaling:
                 properties:

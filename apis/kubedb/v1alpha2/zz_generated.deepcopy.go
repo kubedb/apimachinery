@@ -274,7 +274,7 @@ func (in *CassandraSpec) DeepCopyInto(out *CassandraSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
@@ -490,7 +490,7 @@ func (in *ClickHouseSpec) DeepCopyInto(out *ClickHouseSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
@@ -1322,7 +1322,7 @@ func (in *ElasticsearchSpec) DeepCopyInto(out *ElasticsearchSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
@@ -1560,7 +1560,7 @@ func (in *EtcdSpec) DeepCopyInto(out *EtcdSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
@@ -1745,7 +1745,7 @@ func (in *FerretDBSpec) DeepCopyInto(out *FerretDBSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.PodTemplate != nil {
 		in, out := &in.PodTemplate, &out.PodTemplate
@@ -2020,7 +2020,7 @@ func (in *KafkaCruiseControl) DeepCopyInto(out *KafkaCruiseControl) {
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Replicas != nil {
 		in, out := &in.Replicas, &out.Replicas
@@ -2142,7 +2142,7 @@ func (in *KafkaSpec) DeepCopyInto(out *KafkaSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
@@ -2152,7 +2152,7 @@ func (in *KafkaSpec) DeepCopyInto(out *KafkaSpec) {
 	if in.KeystoreCredSecret != nil {
 		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.TLS != nil {
 		in, out := &in.TLS, &out.TLS
@@ -2386,7 +2386,7 @@ func (in *MSSQLServerSpec) DeepCopyInto(out *MSSQLServerSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
@@ -2577,7 +2577,7 @@ func (in *MariaDBSpec) DeepCopyInto(out *MariaDBSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
@@ -3084,7 +3084,7 @@ func (in *MongoDBSpec) DeepCopyInto(out *MongoDBSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
@@ -3361,7 +3361,7 @@ func (in *MySQLSpec) DeepCopyInto(out *MySQLSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
@@ -3626,7 +3626,7 @@ func (in *PerconaXtraDBSpec) DeepCopyInto(out *PerconaXtraDBSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
@@ -3796,7 +3796,7 @@ func (in *PgBouncerSpec) DeepCopyInto(out *PgBouncerSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
@@ -3948,7 +3948,7 @@ func (in *PgpoolSpec) DeepCopyInto(out *PgpoolSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
@@ -4196,7 +4196,7 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
@@ -4421,7 +4421,7 @@ func (in *ProxySQLSpec) DeepCopyInto(out *ProxySQLSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
@@ -4565,7 +4565,7 @@ func (in *RabbitMQSpec) DeepCopyInto(out *RabbitMQSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
@@ -4920,7 +4920,7 @@ func (in *RedisSentinelSpec) DeepCopyInto(out *RedisSentinelSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
@@ -4996,7 +4996,7 @@ func (in *RedisSpec) DeepCopyInto(out *RedisSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
@@ -5134,6 +5134,15 @@ func (in *ScriptSourceSpec) DeepCopy() *ScriptSourceSpec {
 func (in *SecretReference) DeepCopyInto(out *SecretReference) {
 	*out = *in
 	out.LocalObjectReference = in.LocalObjectReference
+	if in.RotateAfter != nil {
+		in, out := &in.RotateAfter, &out.RotateAfter
+		*out = new(v1.Duration)
+		**out = **in
+	}
+	if in.ActiveFrom != nil {
+		in, out := &in.ActiveFrom, &out.ActiveFrom
+		*out = (*in).DeepCopy()
+	}
 	return
 }
 
@@ -5292,12 +5301,12 @@ func (in *SinglestoreSpec) DeepCopyInto(out *SinglestoreSpec) {
 	if in.LicenseSecret != nil {
 		in, out := &in.LicenseSecret, &out.LicenseSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.PodTemplate != nil {
 		in, out := &in.PodTemplate, &out.PodTemplate
@@ -5648,12 +5657,12 @@ func (in *SystemUserSecretsSpec) DeepCopyInto(out *SystemUserSecretsSpec) {
 	if in.ReplicationUserSecret != nil {
 		in, out := &in.ReplicationUserSecret, &out.ReplicationUserSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.MonitorUserSecret != nil {
 		in, out := &in.MonitorUserSecret, &out.MonitorUserSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }
@@ -5810,7 +5819,7 @@ func (in *ZooKeeperSpec) DeepCopyInto(out *ZooKeeperSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
