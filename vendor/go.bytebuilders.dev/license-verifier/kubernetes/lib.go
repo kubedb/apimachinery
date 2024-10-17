@@ -168,7 +168,7 @@ func (le *LicenseEnforcer) handleLicenseVerificationFailure(licenseErr error) er
 	}()
 
 	// Log licenseInfo verification failure
-	klog.Errorln("Failed to verify license. Reason: ", licenseErr.Error())
+	klog.Errorf("failed to verify license for cluster %s, reason: %v\n", le.opts.ClusterUID, licenseErr)
 
 	// Read the namespace of current pod
 	namespace := meta.PodNamespace()
@@ -198,7 +198,7 @@ func (le *LicenseEnforcer) handleLicenseVerificationFailure(licenseErr error) er
 		in.Type = core.EventTypeWarning
 		in.Source = core.EventSource{Component: EventSourceLicenseVerifier}
 		in.Reason = EventReasonLicenseVerificationFailed
-		in.Message = fmt.Sprintf("Failed to verify license. Reason: %s", licenseErr.Error())
+		in.Message = fmt.Sprintf("failed to verify license for cluster %s, reason: %v", le.opts.ClusterUID, licenseErr)
 
 		if in.FirstTimestamp.IsZero() {
 			in.FirstTimestamp = metav1.Now()
