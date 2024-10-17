@@ -18,6 +18,7 @@ package v1
 
 import (
 	"fmt"
+	"k8s.io/utils/ptr"
 	"strconv"
 	"time"
 
@@ -265,6 +266,9 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
 			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = postgresVersion.Spec.SecurityContext.RunAsUser
 		}
+	}
+	if p.Spec.Init != nil && p.Spec.Init.Archiver != nil && p.Spec.Init.Archiver.ReplicationStrategy == nil {
+		p.Spec.Init.Archiver.ReplicationStrategy = ptr.To(ReplicationStrategyNone)
 	}
 }
 
