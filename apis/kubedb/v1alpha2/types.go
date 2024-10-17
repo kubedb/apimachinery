@@ -207,7 +207,13 @@ type SystemUserSecretsSpec struct {
 
 type SecretReference struct {
 	core.LocalObjectReference `json:",inline,omitempty"`
-	ExternallyManaged         bool `json:"externallyManaged,omitempty"`
+	// Recommendation engine will generate RotateAuth opsReq using this field
+	// +optional
+	RotateAfter *metav1.Duration `json:"rotateAfter,omitempty"`
+	// ActiveFrom holds the RFC3339 time. The referred authSecret is in-use from this timestamp.
+	// +optional
+	ActiveFrom        *metav1.Time `json:"activeFrom,omitempty"`
+	ExternallyManaged bool         `json:"externallyManaged,omitempty"`
 }
 
 type Age struct {

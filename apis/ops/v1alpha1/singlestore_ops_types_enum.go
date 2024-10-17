@@ -26,6 +26,8 @@ const (
 	SinglestoreOpsRequestTypeConfiguration SinglestoreOpsRequestType = "Configuration"
 	// SinglestoreOpsRequestTypeReconfigureTLS is a SinglestoreOpsRequestType of type ReconfigureTLS.
 	SinglestoreOpsRequestTypeReconfigureTLS SinglestoreOpsRequestType = "ReconfigureTLS"
+	// SinglestoreOpsRequestTypeRotateAuth is a SinglestoreOpsRequestType of type RotateAuth.
+	SinglestoreOpsRequestTypeRotateAuth SinglestoreOpsRequestType = "RotateAuth"
 )
 
 var ErrInvalidSinglestoreOpsRequestType = fmt.Errorf("not a valid SinglestoreOpsRequestType, try [%s]", strings.Join(_SinglestoreOpsRequestTypeNames, ", "))
@@ -38,6 +40,7 @@ var _SinglestoreOpsRequestTypeNames = []string{
 	string(SinglestoreOpsRequestTypeRestart),
 	string(SinglestoreOpsRequestTypeConfiguration),
 	string(SinglestoreOpsRequestTypeReconfigureTLS),
+	string(SinglestoreOpsRequestTypeRotateAuth),
 }
 
 // SinglestoreOpsRequestTypeNames returns a list of possible string values of SinglestoreOpsRequestType.
@@ -57,6 +60,7 @@ func SinglestoreOpsRequestTypeValues() []SinglestoreOpsRequestType {
 		SinglestoreOpsRequestTypeRestart,
 		SinglestoreOpsRequestTypeConfiguration,
 		SinglestoreOpsRequestTypeReconfigureTLS,
+		SinglestoreOpsRequestTypeRotateAuth,
 	}
 }
 
@@ -80,6 +84,7 @@ var _SinglestoreOpsRequestTypeValue = map[string]SinglestoreOpsRequestType{
 	"Restart":           SinglestoreOpsRequestTypeRestart,
 	"Configuration":     SinglestoreOpsRequestTypeConfiguration,
 	"ReconfigureTLS":    SinglestoreOpsRequestTypeReconfigureTLS,
+	"RotateAuth":        SinglestoreOpsRequestTypeRotateAuth,
 }
 
 // ParseSinglestoreOpsRequestType attempts to convert a string to a SinglestoreOpsRequestType.

@@ -48,6 +48,16 @@ spec:
                 - IfReady
                 - Always
                 type: string
+              authentication:
+                properties:
+                  secretRef:
+                    properties:
+                      name:
+                        default: ""
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                type: object
               configuration:
                 properties:
                   applyConfig:
@@ -89,6 +99,7 @@ spec:
                 - VolumeExpansion
                 - Restart
                 - Reconfigure
+                - RotateAuth
                 type: string
               updateVersion:
                 properties:

@@ -24,6 +24,8 @@ const (
 	ZooKeeperOpsRequestTypeRestart ZooKeeperOpsRequestType = "Restart"
 	// ZooKeeperOpsRequestTypeReconfigure is a ZooKeeperOpsRequestType of type Reconfigure.
 	ZooKeeperOpsRequestTypeReconfigure ZooKeeperOpsRequestType = "Reconfigure"
+	// ZooKeeperOpsRequestTypeRotateAuth is a ZooKeeperOpsRequestType of type RotateAuth.
+	ZooKeeperOpsRequestTypeRotateAuth ZooKeeperOpsRequestType = "RotateAuth"
 )
 
 var ErrInvalidZooKeeperOpsRequestType = fmt.Errorf("not a valid ZooKeeperOpsRequestType, try [%s]", strings.Join(_ZooKeeperOpsRequestTypeNames, ", "))
@@ -35,6 +37,7 @@ var _ZooKeeperOpsRequestTypeNames = []string{
 	string(ZooKeeperOpsRequestTypeVolumeExpansion),
 	string(ZooKeeperOpsRequestTypeRestart),
 	string(ZooKeeperOpsRequestTypeReconfigure),
+	string(ZooKeeperOpsRequestTypeRotateAuth),
 }
 
 // ZooKeeperOpsRequestTypeNames returns a list of possible string values of ZooKeeperOpsRequestType.
@@ -53,6 +56,7 @@ func ZooKeeperOpsRequestTypeValues() []ZooKeeperOpsRequestType {
 		ZooKeeperOpsRequestTypeVolumeExpansion,
 		ZooKeeperOpsRequestTypeRestart,
 		ZooKeeperOpsRequestTypeReconfigure,
+		ZooKeeperOpsRequestTypeRotateAuth,
 	}
 }
 
@@ -75,6 +79,7 @@ var _ZooKeeperOpsRequestTypeValue = map[string]ZooKeeperOpsRequestType{
 	"VolumeExpansion":   ZooKeeperOpsRequestTypeVolumeExpansion,
 	"Restart":           ZooKeeperOpsRequestTypeRestart,
 	"Reconfigure":       ZooKeeperOpsRequestTypeReconfigure,
+	"RotateAuth":        ZooKeeperOpsRequestTypeRotateAuth,
 }
 
 // ParseZooKeeperOpsRequestType attempts to convert a string to a ZooKeeperOpsRequestType.
