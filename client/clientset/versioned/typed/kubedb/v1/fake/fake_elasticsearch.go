@@ -21,12 +21,13 @@ package fake
 import (
 	"context"
 
+	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
-	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 )
 
 // FakeElasticsearches implements ElasticsearchInterface
