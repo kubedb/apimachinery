@@ -621,9 +621,6 @@ const (
 	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"
 	KubeDBZooKeeperRoleBindingName  = "kubedb:zookeeper-version-reader"
 	ZooKeeperClientPortName         = "client"
-	ZooKeeperNodeRolesCombined      = "controller,broker"
-	ZooKeeperNodeRolesBrokers       = "broker"
-	ZooKeeperNodeRolesController    = "controller"
 	ZooKeeperClientPort             = 2181
 	ZooKeeperQuorumPortName         = "quorum"
 	ZooKeeperQuorumPort             = 2888
@@ -640,7 +637,6 @@ const (
 	ZooKeeperConfigVolumeName       = "zookeeper-config"
 	ZooKeeperConfigVolumePath       = "/conf"
 	ZooKeeperVolumeTempConfig       = "temp-config"
-	ZooKeeperVolumeCustomConfig     = "custom-config"
 	ZooKeeperDataVolumeName         = "data"
 	ZooKeeperDataVolumePath         = "/data"
 	ZooKeeperScriptVolumeName       = "script-vol"
@@ -667,10 +663,7 @@ const (
 	ZooKeeperKeystoreLocationKey   = "ssl.quorum.keyStore.location"
 	ZooKeeperTruststoreLocationKey = "ssl.quorum.trustStore.location"
 
-	ZooKeeperSSLPropertiesFileName          = "ssl.properties"
-	ZooKeeperBrokerCustomConfigFileName     = "broker.properties"
-	ZooKeeperControllerCustomConfigFileName = "controller.properties"
-	ZooKeeperClientAuthConfigFileName       = "clientauth.properties"
+	ZooKeeperSSLPropertiesFileName = "ssl.properties"
 
 	EnvZooKeeperDomain          = "DOMAIN"
 	EnvZooKeeperQuorumPort      = "QUORUM_PORT"
