@@ -1254,7 +1254,7 @@ func (in *MemcachedSpec) DeepCopyInto(out *MemcachedSpec) {
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.DataVolume != nil {
 		in, out := &in.DataVolume, &out.DataVolume
