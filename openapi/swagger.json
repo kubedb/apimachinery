@@ -26105,6 +26105,10 @@
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference": {
       "type": "object",
       "properties": {
+        "activeFrom": {
+          "description": "ActiveFrom holds the RFC3339 time. The referred authSecret is in-use from this timestamp.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
         "externallyManaged": {
           "type": "boolean"
         },
@@ -26112,6 +26116,10 @@
           "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
           "type": "string",
           "default": ""
+        },
+        "rotateAfter": {
+          "description": "Recommendation engine will generate RotateAuth opsReq using this field",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         }
       }
     },
@@ -26173,6 +26181,15 @@
         "ref": {
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.AuthSpec": {
+      "type": "object",
+      "properties": {
+        "secretRef": {
+          "description": "SecretRef holds the new authSecret If it is given, ops-manager will use this. Otherwise, will generate random password",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         }
       }
     },
@@ -26371,6 +26388,10 @@
         "apply": {
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
+        },
+        "authentication": {
+          "description": "Specifies information necessary for configuring authSecret of the database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AuthSpec"
         },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Elasticsearch",
@@ -26609,6 +26630,10 @@
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
         },
+        "authentication": {
+          "description": "Specifies information necessary for configuring authSecret of the database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AuthSpec"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Etcd",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdCustomConfigurationSpec"
@@ -26792,6 +26817,10 @@
         "apply": {
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
+        },
+        "authentication": {
+          "description": "Specifies information necessary for configuring authSecret of the database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AuthSpec"
         },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Memcached",
@@ -27018,6 +27047,10 @@
         "archiver": {
           "description": "Specifies information necessary for setting up Archiver for database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ArchiverOptions"
+        },
+        "authentication": {
+          "description": "Specifies information necessary for configuring authSecret of the database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AuthSpec"
         },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of MongoDB",
@@ -27283,6 +27316,10 @@
         "apply": {
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
+        },
+        "authentication": {
+          "description": "Specifies information necessary for configuring authSecret of the database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AuthSpec"
         },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of MySQL",
@@ -27585,6 +27622,10 @@
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
         },
+        "authentication": {
+          "description": "Specifies information necessary for configuring authSecret of the database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AuthSpec"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of PerconaXtraDB",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBCustomConfigurationSpec"
@@ -27828,6 +27869,10 @@
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
         },
+        "authentication": {
+          "description": "Specifies information necessary for configuring authSecret of the database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AuthSpec"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Postgres",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresCustomConfigurationSpec"
@@ -28057,6 +28102,10 @@
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
         },
+        "authentication": {
+          "description": "Specifies information necessary for configuring authSecret of the database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AuthSpec"
+        },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of ProxySQL",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLCustomConfigurationSpec"
@@ -28231,6 +28280,10 @@
         "apply": {
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
+        },
+        "authentication": {
+          "description": "Specifies information necessary for configuring authSecret of the database",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AuthSpec"
         },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Redis",

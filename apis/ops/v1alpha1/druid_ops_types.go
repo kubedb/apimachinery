@@ -59,6 +59,8 @@ type DruidOpsRequestSpec struct {
 	VerticalScaling *DruidVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for volume expansion
 	VolumeExpansion *DruidVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
+	// Specifies information necessary for configuring authSecret of the database
+	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -68,8 +70,8 @@ type DruidOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart
-// ENUM(VerticalScaling, VolumeExpansion, Restart)
+// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart;RotateAuth
+// ENUM(VerticalScaling, VolumeExpansion, Restart, RotateAuth)
 type DruidOpsRequestType string
 
 // DruidVerticalScalingSpec contains the vertical scaling information of a Druid cluster
