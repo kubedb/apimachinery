@@ -66,9 +66,14 @@ type MemcachedSpec struct {
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
-	// AuthSecret is an optional field to provide authentication file for database.
-	// If specified, this file will be used as authentication file otherwise no authentication will be used.
-	AuthSecret *core.LocalObjectReference `json:"authSecret,omitempty"`
+	// Database Authentication Secret
+	// If specified, this will be used for authentication otherwise default secret will be used.
+	// +optional
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
+
+	// If disable Auth true then don't create any auth secret
+	// +optional
+	DisableAuth bool `json:"disableAuth,omitempty"`
 
 	// DataVolume is an optional field to add one volume to each
 	// memcached pod.  The volume will be made available under

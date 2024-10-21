@@ -123,18 +123,29 @@ const (
 	ElasticsearchMinHeapSize = 128 * 1024 * 1024
 
 	// =========================== Memcached Constants ============================
-	MemcachedConfigKey              = "memcached.conf" // MemcachedConfigKey is going to create for the customize redis configuration
+
+	MemcachedConfigKey              = "memcached.conf" // MemcachedConfigKey is going to create for the customize memcached configuration
+	MemcachedDefaultKey             = "default.conf"   //
 	MemcachedDatabasePortName       = "db"
 	MemcachedPrimaryServicePortName = "primary"
 	MemcachedDatabasePort           = 11211
-	MemcachedShardKey               = MemcachedKey + "/shard"
 	MemcachedContainerName          = "memcached"
 
 	MemcachedConfigVolumeName = "memcached-config"
-	MemcachedConfigVolumePath = "/etc/memcached/"
+	MemcachedConfigVolumePath = "/usr/config/"
 
 	MemcachedDataVolumeName = "data"
-	MemcachedDataVolumePath = "/data"
+	MemcachedDataVolumePath = "/usr/data"
+
+	MemcachedAuthVolumeName = "auth"
+	MemcachedAuthVolumePath = "/usr/auth"
+
+	MemcachedHealthKey   = "kubedb_memcached_health_key"
+	MemcachedHealthValue = "kubedb_memcached_health_value"
+
+	MemcachedUserName = "user"
+	MemcachedPassword = "pass"
+
 	// =========================== MongoDB Constants ============================
 
 	MongoDBDatabasePortName       = "db"
@@ -396,6 +407,7 @@ const (
 	EnvMSSQLAgentEnabled = "MSSQL_AGENT_ENABLED"
 	EnvMSSQLSAUsername   = "MSSQL_SA_USERNAME"
 	EnvMSSQLSAPassword   = "MSSQL_SA_PASSWORD"
+	EnvMSSQLVersion      = "VERSION"
 
 	// container related
 	MSSQLContainerName            = "mssql"
@@ -1433,8 +1445,8 @@ const (
 	CassandraInterNodeSslPortName = "internode-ssl"
 	CassandraJmxPortName          = "jmx"
 
-	CassandraUserAdmin         = "admin"
-	CassandraStandaloneSeed    = "cassandra-sample-0.cassandra-sample-pods.default.svc.cluster.local"
+	CassandraUserAdmin = "admin"
+
 	CassandraAuthCommand       = "/usr/local/bin/docker-entrypoint.sh cassandra  -f & /tmp/sc/cassandra-auth.sh"
 	CassandraMetadataName      = "metadata.name"
 	CassandraMetadataNamespace = "metadata.namespace"

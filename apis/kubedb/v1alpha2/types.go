@@ -124,7 +124,7 @@ const (
 	TerminationPolicyDoNotTerminate TerminationPolicy = "DoNotTerminate"
 )
 
-// +kubebuilder:validation:Enum=primary;standby;stats;dashboard
+// +kubebuilder:validation:Enum=primary;standby;stats;dashboard;secondary
 type ServiceAlias string
 
 const (
@@ -132,6 +132,7 @@ const (
 	StandbyServiceAlias   ServiceAlias = "standby"
 	StatsServiceAlias     ServiceAlias = "stats"
 	DashboardServiceAlias ServiceAlias = "dashboard"
+	SecondaryServiceAlias ServiceAlias = "secondary"
 )
 
 // +kubebuilder:validation:Enum=DNS;IP;IPv4;IPv6
