@@ -261,15 +261,15 @@ func (s Solr) NodeRoleSpecificLabelKey(roleType SolrNodeRoleType) string {
 }
 
 func (s Solr) OverseerSelectors() map[string]string {
-	return s.OffshootSelectors(map[string]string{s.NodeRoleSpecificLabelKey(SolrNodeRoleOverseer): SolrNodeRoleSet})
+	return s.OffshootSelectors(map[string]string{string(SolrNodeRoleOverseer): SolrNodeRoleSet})
 }
 
 func (s Solr) DataSelectors() map[string]string {
-	return s.OffshootSelectors(map[string]string{s.NodeRoleSpecificLabelKey(SolrNodeRoleData): SolrNodeRoleSet})
+	return s.OffshootSelectors(map[string]string{string(SolrNodeRoleData): SolrNodeRoleSet})
 }
 
 func (s Solr) CoordinatorSelectors() map[string]string {
-	return s.OffshootSelectors(map[string]string{s.NodeRoleSpecificLabelKey(SolrNodeRoleCoordinator): SolrNodeRoleSet})
+	return s.OffshootSelectors(map[string]string{string(SolrNodeRoleCoordinator): SolrNodeRoleSet})
 }
 
 func (s *Solr) SetDefaults() {
