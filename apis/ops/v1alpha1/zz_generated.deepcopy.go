@@ -6020,6 +6020,11 @@ func (in *ZooKeeperOpsRequestSpec) DeepCopyInto(out *ZooKeeperOpsRequestSpec) {
 		*out = new(ZooKeeperCustomConfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(TLSSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Restart != nil {
 		in, out := &in.Restart, &out.Restart
 		*out = new(RestartSpec)
