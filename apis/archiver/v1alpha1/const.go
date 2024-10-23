@@ -27,9 +27,14 @@ const (
 	SidekickNameSuffix     = "sidekick"
 	WalgContainerName      = "wal-g"
 	RestoreSessionName     = "manifest-restorer"
-	RestoreJobName         = "oplog-restorer"
 
-	OplogBackupDir = "oplog-backup"
+	RestoreJobNameBinlog = "binlog-restorer"
+	RestoreJobNameOplog  = "oplog-restorer"
+	RestoreJobNameWal    = "wal-restorer"
+
+	BackupDirBinlog = "binlog-backup"
+	BackupDirOplog  = "oplog-backup"
+	BackupDirWal    = "wal-backup"
 )
 
 // azure
