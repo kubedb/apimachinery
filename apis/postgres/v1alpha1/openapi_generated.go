@@ -25587,7 +25587,7 @@ func schema_apimachinery_apis_postgres_v1alpha1_PublisherSpec(ref common.Referen
 							Format:      "",
 						},
 					},
-					"serverRef": {
+					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ServerRef specifies the database appbinding reference in any namespace.",
 							Default:     map[string]interface{}{},
@@ -25651,7 +25651,7 @@ func schema_apimachinery_apis_postgres_v1alpha1_PublisherSpec(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"name", "serverRef", "databaseName"},
+				Required: []string{"name", "databaseRef", "databaseName"},
 			},
 		},
 		Dependencies: []string{
@@ -25921,7 +25921,7 @@ func schema_apimachinery_apis_postgres_v1alpha1_SubscriberSpec(ref common.Refere
 							Format:      "",
 						},
 					},
-					"serverRef": {
+					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ServerRef specifies the database appbinding reference in any namespace.",
 							Default:     map[string]interface{}{},
@@ -25962,7 +25962,7 @@ func schema_apimachinery_apis_postgres_v1alpha1_SubscriberSpec(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"name", "serverRef", "databaseName", "publisher"},
+				Required: []string{"name", "databaseRef", "databaseName", "publisher"},
 			},
 		},
 		Dependencies: []string{
