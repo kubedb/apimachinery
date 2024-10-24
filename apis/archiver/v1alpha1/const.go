@@ -28,13 +28,19 @@ const (
 	WalgContainerName      = "wal-g"
 	RestoreSessionName     = "manifest-restorer"
 
-	RestoreJobNameBinlog = "binlog-restorer"
-	RestoreJobNameOplog  = "oplog-restorer"
-	RestoreJobNameWal    = "wal-restorer"
+	RestoreJobNameBinlog  = "binlog-restorer"
+	RestoreJobNameOplog   = "oplog-restorer"
+	RestoreJobNameWal     = "wal-restorer"
+	RestoreCmdBinlogFetch = "binlog-fetch"
+	RestoreCmdOplogReplay = "oplog-replay"
+	RestoreCmdWalFetch    = "wal-fetch"
 
-	BackupDirBinlog = "binlog-backup"
-	BackupDirOplog  = "oplog-backup"
-	BackupDirWal    = "wal-backup"
+	BackupDirBinlog     = "binlog-backup"
+	BackupDirOplog      = "oplog-backup"
+	BackupDirWal        = "wal-backup"
+	BackupCmdBinlogPush = "binlog-push"
+	BackupCmdOplogPush  = "oplog-push"
+	BackupCmdWalPush    = "wal-push"
 )
 
 // azure
