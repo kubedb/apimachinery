@@ -25665,6 +25665,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ArchiverRecovery(ref common.Refere
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
+					"replicationStrategy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 				},
 				Required: []string{"recoveryTimestamp"},
 			},
