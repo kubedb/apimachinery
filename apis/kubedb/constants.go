@@ -1488,7 +1488,7 @@ const (
 
 	CassandraUserAdmin = "admin"
 
-	CassandraAuthCommand       = "/usr/local/bin/docker-entrypoint.sh cassandra  -f & /tmp/sc/cassandra-auth.sh"
+	CassandraAuthCommand       = "/tmp/sc/cassandra-auth.sh"
 	CassandraMetadataName      = "metadata.name"
 	CassandraMetadataNamespace = "metadata.namespace"
 	CassandraStatusPodIP       = "status.podIP"
