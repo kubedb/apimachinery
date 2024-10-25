@@ -276,7 +276,7 @@ func (r *Cassandra) SetDefaults() {
 		if r.Spec.AuthSecret == nil {
 			r.Spec.AuthSecret = &SecretReference{
 				LocalObjectReference: core.LocalObjectReference{
-					Name: r.DefaultUserCredSecretName(kubedb.CassandraUserAdmin),
+					Name: meta_util.NameWithSuffix(r.OffshootName(), "auth"),
 				},
 				ExternallyManaged: false,
 			}

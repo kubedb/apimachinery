@@ -233,7 +233,6 @@ func (r *Cassandra) ValidateVersion(db *Cassandra) error {
 	casVersion := catalog.CassandraVersion{}
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &casVersion)
 	if err != nil {
-		// fmt.Sprint(db.Spec.Version, "version not supported")
 		return errors.New(fmt.Sprint("version ", db.Spec.Version, " not supported"))
 	}
 	return nil
