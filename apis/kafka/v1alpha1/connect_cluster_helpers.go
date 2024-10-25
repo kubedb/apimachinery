@@ -196,8 +196,8 @@ func (k *ConnectCluster) KafkaClientCredentialsSecretName() string {
 	return meta_util.NameWithSuffix(k.Name, "kafka-client-cred")
 }
 
-func (k *ConnectCluster) DefaultUserCredSecretName(username string) string {
-	return meta_util.NameWithSuffix(k.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
+func (k *ConnectCluster) DefaultUserCredSecretName() string {
+	return meta_util.NameWithSuffix(k.OffshootName(), "auth")
 }
 
 func (k *ConnectCluster) DefaultKeystoreCredSecretName() string {
@@ -213,7 +213,7 @@ func (k *ConnectCluster) GetAuthSecretName() string {
 	if k.Spec.AuthSecret != nil && k.Spec.AuthSecret.Name != "" {
 		return k.Spec.AuthSecret.Name
 	}
-	return k.DefaultUserCredSecretName("admin")
+	return k.DefaultUserCredSecretName()
 }
 
 // GetCertSecretName returns the secret name for a certificate alias if any,

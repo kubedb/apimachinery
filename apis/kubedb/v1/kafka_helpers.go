@@ -231,7 +231,7 @@ func (k *Kafka) GetAuthSecretName() string {
 	if k.Spec.AuthSecret != nil && k.Spec.AuthSecret.Name != "" {
 		return k.Spec.AuthSecret.Name
 	}
-	return k.DefaultUserCredSecretName("admin")
+	return k.DefaultUserCredSecretName()
 }
 
 func (k *Kafka) GetPersistentSecrets() []string {
@@ -249,8 +249,8 @@ func (k *Kafka) CruiseControlConfigSecretName() string {
 	return meta_util.NameWithSuffix(k.OffshootName(), "cruise-control-config")
 }
 
-func (k *Kafka) DefaultUserCredSecretName(username string) string {
-	return meta_util.NameWithSuffix(k.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
+func (k *Kafka) DefaultUserCredSecretName() string {
+	return meta_util.NameWithSuffix(k.OffshootName(), "auth")
 }
 
 func (k *Kafka) DefaultKeystoreCredSecretName() string {
