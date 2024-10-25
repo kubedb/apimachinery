@@ -146,7 +146,7 @@ func (r *Cassandra) GetAuthSecretName() string {
 	if r.Spec.AuthSecret != nil && r.Spec.AuthSecret.Name != "" {
 		return r.Spec.AuthSecret.Name
 	}
-	return r.DefaultUserCredSecretName("admin")
+	return meta_util.NameWithSuffix(r.OffshootName(), "auth")
 }
 
 func (r *Cassandra) ConfigSecretName() string {
