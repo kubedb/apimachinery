@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -195,7 +194,7 @@ func (c *ClickHouse) GetAuthSecretName() string {
 	if c.Spec.AuthSecret != nil && c.Spec.AuthSecret.Name != "" {
 		return c.Spec.AuthSecret.Name
 	}
-	return c.DefaultUserCredSecretName("admin")
+	return meta_util.NameWithSuffix(c.OffshootName(), "auth")
 }
 
 func (r *ClickHouse) ConfigSecretName() string {
@@ -204,10 +203,6 @@ func (r *ClickHouse) ConfigSecretName() string {
 
 func (r *ClickHouse) KeeperConfigSecretName() string {
 	return meta_util.NameWithSuffix(r.OffshootKeeperName(), "config")
-}
-
-func (c *ClickHouse) DefaultUserCredSecretName(username string) string {
-	return meta_util.NameWithSuffix(c.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
 }
 
 func (c *ClickHouse) GetInternalAuthTokenName() string {
