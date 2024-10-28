@@ -19,6 +19,7 @@ package apis
 import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
@@ -82,13 +83,20 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 		req.Requests = core.ResourceList{}
 	}
 
+	klog.Infof("1111111 %+v %+v \n", req.Requests, req.Limits)
+
 	// Calculate the limits first
 	for l := range defaultResources.Limits {
 		req.Limits[l] = calLimit(l, defaultResources.Limits[l])
 	}
 
 	// Once the limit is calculated, Calculate requests
-	for r := range defaultResources.Requests {
-		req.Requests[r] = calRequest(r, defaultResources.Requests[r])
+	for r, q := range defaultResources.Requests {
+		// If no req is specified, Use the default one. Otherwise, limits will be used
+		if _, exists := req.Requests[r]; !exists {
+			req.Requests[r] = q
+		}
+		req.Requests[r] = calRequest(r, q)
 	}
+	klog.Infof("22222222 %+v %+v \n", req.Requests, req.Limits)
 }
