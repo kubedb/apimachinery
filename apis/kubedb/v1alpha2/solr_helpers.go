@@ -444,7 +444,7 @@ func (s *Solr) GetPersistentSecrets() []string {
 	var secrets []string
 	// Add Admin/Elastic user secret name
 	if s.Spec.AuthSecret != nil {
-		secrets = append(secrets, s.Spec.AuthSecret.Name)
+		secrets = append(secrets, s.GetAuthSecretName())
 	}
 
 	if s.Spec.AuthConfigSecret != nil {
