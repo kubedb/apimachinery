@@ -107,7 +107,7 @@ type MSSQLServerVerticalScalingSpec struct {
 
 // MSSQLServerVolumeExpansionSpec is the spec for MSSQLServer volume expansion
 type MSSQLServerVolumeExpansionSpec struct {
-	// volume specification for Postgres
+	// volume specification for MSSQLServer
 	MSSQLServer *resource.Quantity  `json:"mssqlserver,omitempty"`
 	Mode        VolumeExpansionMode `json:"mode"`
 }

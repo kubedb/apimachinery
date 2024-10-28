@@ -28087,7 +28087,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVolumeExpansionSpec(ref co
 				Properties: map[string]spec.Schema{
 					"mssqlserver": {
 						SchemaProps: spec.SchemaProps{
-							Description: "volume specification for Postgres",
+							Description: "volume specification for MSSQLServer",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
