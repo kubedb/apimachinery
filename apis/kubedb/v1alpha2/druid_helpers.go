@@ -317,9 +317,9 @@ func (d *Druid) AppBindingMeta() appcat.AppBindingMeta {
 
 func (d *Druid) GetConnectionScheme() string {
 	scheme := "http"
-	//if d.Spec.EnableSSL {
-	//	scheme = "https"
-	//}
+	if d.Spec.EnableSSL {
+		scheme = "https"
+	}
 	return scheme
 }
 
