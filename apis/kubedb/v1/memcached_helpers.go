@@ -30,6 +30,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -289,6 +290,23 @@ func (m *Memcached) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTem
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
+}
+
+// CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
+func (m *Memcached) CertificateName(alias MemcachedCertificateAlias) string {
+	return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
+}
+
+// GetCertSecretName returns the secret name for a certificate alias if any provide,
+// otherwise returns default certificate secret name for the given alias.
+func (m *Memcached) GetCertSecretName(alias MemcachedCertificateAlias) string {
+	if m.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(m.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return m.CertificateName(alias)
 }
 
 func (m *MemcachedSpec) GetPersistentSecrets() []string {

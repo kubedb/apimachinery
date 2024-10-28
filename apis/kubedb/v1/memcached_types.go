@@ -124,6 +124,7 @@ type MemcachedCertificateAlias string
 
 const (
 	MemcachedServerCert          MemcachedCertificateAlias = "server"
+	MemcachedClientCert          MemcachedCertificateAlias = "client"
 	MemcachedMetricsExporterCert MemcachedCertificateAlias = "metrics-exporter"
 )
 
