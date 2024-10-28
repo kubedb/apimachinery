@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -583,6 +584,18 @@ func (d *Druid) SetDefaults() {
 		}
 		d.Spec.Monitor.SetDefaults()
 	}
+
+	if d.Spec.EnableSSL {
+		d.SetTLSDefaults()
+	}
+}
+
+func (d *Druid) SetTLSDefaults() {
+	if d.Spec.TLS == nil || d.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	d.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(d.Spec.TLS.Certificates, string(DruidServerCert), d.CertificateName(DruidServerCert))
+	d.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(d.Spec.TLS.Certificates, string(DruidClientCert), d.CertificateName(DruidClientCert))
 }
 
 func (d *Druid) SetDefaultsToMetadataStorage() {
@@ -784,4 +797,17 @@ func (d *Druid) GetZooKeeperName() string {
 
 func (d *Druid) GetInitConfigMapName() string {
 	return d.OffShootName() + "-init-script"
+}
+
+// CertSecretVolumeName returns the CertSecretVolumeName
+// Values will be like: client-certs, server-certs etc.
+func (d *Druid) CertSecretVolumeName(alias DruidCertificateAlias) string {
+	return string(alias) + "-certs"
+}
+
+// CertSecretVolumeMountPath returns the CertSecretVolumeMountPath
+// if configDir is "/var/druid/ssl",
+// mountPath will be, "/var/druid/ssl/<alias>".
+func (d *Druid) CertSecretVolumeMountPath(configDir string, cert string) string {
+	return filepath.Join(configDir, cert)
 }
