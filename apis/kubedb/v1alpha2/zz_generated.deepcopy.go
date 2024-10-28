@@ -989,11 +989,6 @@ func (in *DruidSpec) DeepCopyInto(out *DruidSpec) {
 		*out = new(DruidClusterTopology)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.DisableSecurity != nil {
-		in, out := &in.DisableSecurity, &out.DisableSecurity
-		*out = new(bool)
-		**out = **in
-	}
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(corev1.LocalObjectReference)
@@ -1008,6 +1003,16 @@ func (in *DruidSpec) DeepCopyInto(out *DruidSpec) {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
+	}
+	if in.KeystoreCredSecret != nil {
+		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
+		*out = new(SecretReference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(apiv1.TLSConfig)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.MetadataStorage != nil {
 		in, out := &in.MetadataStorage, &out.MetadataStorage
@@ -5825,6 +5830,16 @@ func (in *ZooKeeperSpec) DeepCopyInto(out *ZooKeeperSpec) {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
+	}
+	if in.KeystoreCredSecret != nil {
+		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
+		*out = new(SecretReference)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(apiv1.TLSConfig)
+		(*in).DeepCopyInto(*out)
 	}
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	if in.ServiceTemplates != nil {

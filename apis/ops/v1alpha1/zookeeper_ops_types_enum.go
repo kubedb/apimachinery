@@ -24,6 +24,8 @@ const (
 	ZooKeeperOpsRequestTypeRestart ZooKeeperOpsRequestType = "Restart"
 	// ZooKeeperOpsRequestTypeReconfigure is a ZooKeeperOpsRequestType of type Reconfigure.
 	ZooKeeperOpsRequestTypeReconfigure ZooKeeperOpsRequestType = "Reconfigure"
+	// ZooKeeperOpsRequestTypeReconfigureTLS is a ZooKeeperOpsRequestType of type ReconfigureTLS.
+	ZooKeeperOpsRequestTypeReconfigureTLS ZooKeeperOpsRequestType = "ReconfigureTLS"
 	// ZooKeeperOpsRequestTypeRotateAuth is a ZooKeeperOpsRequestType of type RotateAuth.
 	ZooKeeperOpsRequestTypeRotateAuth ZooKeeperOpsRequestType = "RotateAuth"
 )
@@ -37,6 +39,7 @@ var _ZooKeeperOpsRequestTypeNames = []string{
 	string(ZooKeeperOpsRequestTypeVolumeExpansion),
 	string(ZooKeeperOpsRequestTypeRestart),
 	string(ZooKeeperOpsRequestTypeReconfigure),
+	string(ZooKeeperOpsRequestTypeReconfigureTLS),
 	string(ZooKeeperOpsRequestTypeRotateAuth),
 }
 
@@ -56,6 +59,7 @@ func ZooKeeperOpsRequestTypeValues() []ZooKeeperOpsRequestType {
 		ZooKeeperOpsRequestTypeVolumeExpansion,
 		ZooKeeperOpsRequestTypeRestart,
 		ZooKeeperOpsRequestTypeReconfigure,
+		ZooKeeperOpsRequestTypeReconfigureTLS,
 		ZooKeeperOpsRequestTypeRotateAuth,
 	}
 }
@@ -79,6 +83,7 @@ var _ZooKeeperOpsRequestTypeValue = map[string]ZooKeeperOpsRequestType{
 	"VolumeExpansion":   ZooKeeperOpsRequestTypeVolumeExpansion,
 	"Restart":           ZooKeeperOpsRequestTypeRestart,
 	"Reconfigure":       ZooKeeperOpsRequestTypeReconfigure,
+	"ReconfigureTLS":    ZooKeeperOpsRequestTypeReconfigureTLS,
 	"RotateAuth":        ZooKeeperOpsRequestTypeRotateAuth,
 }
 

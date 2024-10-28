@@ -315,6 +315,20 @@ const (
 
 // Druid Constants
 const (
+	ScaleUpCoordinators   = "ScaleUpCoordinators"
+	ScaleUpOverlords      = "ScaleUpOverlords"
+	ScaleUpBrokers        = "ScaleUpBrokers"
+	ScaleUpHistoricals    = "ScaleUpHistoricals"
+	ScaleUpMiddleManagers = "ScaleUpMiddleManagers"
+	ScaleUpRouters        = "ScaleUpRouters"
+
+	ScaleDownCoordinators   = "ScaleDownCoordinators"
+	ScaleDownOverlords      = "ScaleDownOverlords"
+	ScaleDownBrokers        = "ScaleDownBrokers"
+	ScaleDownHistoricals    = "ScaleDownHistoricals"
+	ScaleDownMiddleManagers = "ScaleDownMiddleManagers"
+	ScaleDownRouters        = "ScaleDownRouters"
+
 	UpdateMiddleManagersNodePVCs = "UpdateMiddleManagersNodePVCs"
 	UpdateHistoricalsNodePVCs    = "UpdateHistoricalsNodePVCs"
 )
