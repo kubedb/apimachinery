@@ -34192,6 +34192,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SecretReference(ref common.Referen
 							Format:      "",
 						},
 					},
+					"rotateAfter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Recommendation engine will generate RotateAuth opsReq using this field",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"activeFrom": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ActiveFrom holds the RFC3339 time. The referred authSecret is in-use from this timestamp.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
 					"externallyManaged": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"boolean"},
@@ -34201,6 +34213,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SecretReference(ref common.Referen
 				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

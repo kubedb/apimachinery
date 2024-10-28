@@ -101,6 +101,12 @@ const (
 	IssueCertificatesFailed    = "IssueCertificatesFailed"
 )
 
+// RotateAuth
+const (
+	RotateAuth       = "RotateAuth"
+	UpdateCredential = "UpdateCredential"
+)
+
 // Restart
 const (
 	Restart              = "Restart"

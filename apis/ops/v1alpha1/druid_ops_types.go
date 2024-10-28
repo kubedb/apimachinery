@@ -55,14 +55,16 @@ type DruidOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type DruidOpsRequestType `json:"type"`
-	// Specifies information necessary for restarting database
-	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *DruidHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *DruidVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for volume expansion
 	VolumeExpansion *DruidVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
+	// Specifies information necessary for configuring authSecret of the database
+	Authentication *AuthSpec `json:"authentication,omitempty"`
+	// Specifies information necessary for restarting database
+	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for upgrading Druid
 	UpdateVersion *DruidUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for custom configuration of Druid
@@ -76,8 +78,8 @@ type DruidOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
+// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth)
 type DruidOpsRequestType string
 
 // DruidVerticalScalingSpec contains the vertical scaling information of a Druid cluster

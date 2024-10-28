@@ -492,6 +492,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.Volume":                                                    schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ArchiverOptions":                                  schema_apimachinery_apis_ops_v1alpha1_ArchiverOptions(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec":                                         schema_apimachinery_apis_ops_v1alpha1_AuthSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseOpsRequest":                             schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseOpsRequestList":                         schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseOpsRequestSpec":                         schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestSpec(ref),
@@ -25539,6 +25540,26 @@ func schema_apimachinery_apis_ops_v1alpha1_ArchiverOptions(ref common.ReferenceC
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_AuthSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretRef holds the new authSecret If it is given, ops-manager will use this. Otherwise, will generate random password",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -25656,6 +25677,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestSpec(ref common.R
 							Format:      "",
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -25680,7 +25707,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -25962,12 +25989,6 @@ func schema_apimachinery_apis_ops_v1alpha1_DruidOpsRequestSpec(ref common.Refere
 							Format:      "",
 						},
 					},
-					"restart": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies information necessary for restarting database",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
-						},
-					},
 					"horizontalScaling": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for horizontal scaling",
@@ -25984,6 +26005,18 @@ func schema_apimachinery_apis_ops_v1alpha1_DruidOpsRequestSpec(ref common.Refere
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for volume expansion",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidVolumeExpansionSpec"),
+						},
+					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for restarting database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
 					"updateVersion": {
@@ -26022,7 +26055,7 @@ func schema_apimachinery_apis_ops_v1alpha1_DruidOpsRequestSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -26486,6 +26519,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestSpec(ref commo
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -26510,7 +26549,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestSpec(ref commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -26927,6 +26966,12 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdOpsRequestSpec(ref common.Referen
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -26945,7 +26990,7 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdOpsRequestSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -27178,6 +27223,12 @@ func schema_apimachinery_apis_ops_v1alpha1_FerretDBOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBTLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -27202,7 +27253,7 @@ func schema_apimachinery_apis_ops_v1alpha1_FerretDBOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -27579,6 +27630,12 @@ func schema_apimachinery_apis_ops_v1alpha1_KafkaOpsRequestSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -27603,7 +27660,7 @@ func schema_apimachinery_apis_ops_v1alpha1_KafkaOpsRequestSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -27926,6 +27983,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref common.
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -27950,7 +28013,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerOpsRequestSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -28306,6 +28369,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBOpsRequestSpec(ref common.Refe
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBTLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -28330,7 +28399,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBOpsRequestSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -28729,6 +28798,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MemcachedOpsRequestSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -28753,7 +28828,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MemcachedOpsRequestSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -29118,6 +29193,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBOpsRequestSpec(ref common.Refe
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -29160,7 +29241,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MongoDBOpsRequestSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ArchiverOptions", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBReplicaReadinessCriteria", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Reprovision", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ArchiverOptions", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBReplicaReadinessCriteria", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Reprovision", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -29572,6 +29653,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLTLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -29596,7 +29683,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -30096,6 +30183,12 @@ func schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBOpsRequestSpec(ref commo
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBTLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -30120,7 +30213,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBOpsRequestSpec(ref commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -30493,6 +30586,12 @@ func schema_apimachinery_apis_ops_v1alpha1_PgBouncerOpsRequestSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -30517,7 +30616,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PgBouncerOpsRequestSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -30776,6 +30875,12 @@ func schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequestSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolTLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -30800,7 +30905,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequestSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -31206,6 +31311,12 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -31230,7 +31341,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -31625,6 +31736,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -31649,7 +31766,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -31927,6 +32044,12 @@ func schema_apimachinery_apis_ops_v1alpha1_RabbitMQOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -31951,7 +32074,7 @@ func schema_apimachinery_apis_ops_v1alpha1_RabbitMQOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -32255,6 +32378,12 @@ func schema_apimachinery_apis_ops_v1alpha1_RedisOpsRequestSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisTLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -32285,7 +32414,7 @@ func schema_apimachinery_apis_ops_v1alpha1_RedisOpsRequestSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -32506,6 +32635,12 @@ func schema_apimachinery_apis_ops_v1alpha1_RedisSentinelOpsRequestSpec(ref commo
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for restarting database",
@@ -32530,7 +32665,7 @@ func schema_apimachinery_apis_ops_v1alpha1_RedisSentinelOpsRequestSpec(ref commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -33099,6 +33234,12 @@ func schema_apimachinery_apis_ops_v1alpha1_SinglestoreOpsRequestSpec(ref common.
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -33117,7 +33258,7 @@ func schema_apimachinery_apis_ops_v1alpha1_SinglestoreOpsRequestSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -33464,6 +33605,12 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref common.Referen
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -33482,7 +33629,7 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -33876,6 +34023,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ZooKeeperOpsRequestSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperCustomConfigurationSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for configuring TLS",
@@ -33906,7 +34059,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ZooKeeperOpsRequestSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperVolumeExpansionSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperVolumeExpansionSpec"},
 	}
 }
 
