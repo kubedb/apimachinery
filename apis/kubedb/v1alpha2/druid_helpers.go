@@ -19,7 +19,6 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -450,10 +449,6 @@ func (d *Druid) SetDefaults() {
 				},
 			}
 		}
-	}
-
-	if d.Spec.DisableSecurity == nil {
-		d.Spec.DisableSecurity = pointer.BoolP(false)
 	}
 
 	var druidVersion catalog.DruidVersion
