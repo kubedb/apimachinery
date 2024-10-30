@@ -241,7 +241,7 @@ spec:
                 - VerticalScaling
                 - VolumeExpansion
                 - Restart
-                - Configuration
+                - Reconfigure
                 - ReconfigureTLS
                 - RotateAuth
                 type: string
