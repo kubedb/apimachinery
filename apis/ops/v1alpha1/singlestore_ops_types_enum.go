@@ -22,8 +22,8 @@ const (
 	SinglestoreOpsRequestTypeVolumeExpansion SinglestoreOpsRequestType = "VolumeExpansion"
 	// SinglestoreOpsRequestTypeRestart is a SinglestoreOpsRequestType of type Restart.
 	SinglestoreOpsRequestTypeRestart SinglestoreOpsRequestType = "Restart"
-	// SinglestoreOpsRequestTypeConfiguration is a SinglestoreOpsRequestType of type Configuration.
-	SinglestoreOpsRequestTypeConfiguration SinglestoreOpsRequestType = "Configuration"
+	// SinglestoreOpsRequestTypeReconfigure is a SinglestoreOpsRequestType of type Reconfigure.
+	SinglestoreOpsRequestTypeReconfigure SinglestoreOpsRequestType = "Reconfigure"
 	// SinglestoreOpsRequestTypeReconfigureTLS is a SinglestoreOpsRequestType of type ReconfigureTLS.
 	SinglestoreOpsRequestTypeReconfigureTLS SinglestoreOpsRequestType = "ReconfigureTLS"
 	// SinglestoreOpsRequestTypeRotateAuth is a SinglestoreOpsRequestType of type RotateAuth.
@@ -38,7 +38,7 @@ var _SinglestoreOpsRequestTypeNames = []string{
 	string(SinglestoreOpsRequestTypeVerticalScaling),
 	string(SinglestoreOpsRequestTypeVolumeExpansion),
 	string(SinglestoreOpsRequestTypeRestart),
-	string(SinglestoreOpsRequestTypeConfiguration),
+	string(SinglestoreOpsRequestTypeReconfigure),
 	string(SinglestoreOpsRequestTypeReconfigureTLS),
 	string(SinglestoreOpsRequestTypeRotateAuth),
 }
@@ -58,7 +58,7 @@ func SinglestoreOpsRequestTypeValues() []SinglestoreOpsRequestType {
 		SinglestoreOpsRequestTypeVerticalScaling,
 		SinglestoreOpsRequestTypeVolumeExpansion,
 		SinglestoreOpsRequestTypeRestart,
-		SinglestoreOpsRequestTypeConfiguration,
+		SinglestoreOpsRequestTypeReconfigure,
 		SinglestoreOpsRequestTypeReconfigureTLS,
 		SinglestoreOpsRequestTypeRotateAuth,
 	}
@@ -82,7 +82,7 @@ var _SinglestoreOpsRequestTypeValue = map[string]SinglestoreOpsRequestType{
 	"VerticalScaling":   SinglestoreOpsRequestTypeVerticalScaling,
 	"VolumeExpansion":   SinglestoreOpsRequestTypeVolumeExpansion,
 	"Restart":           SinglestoreOpsRequestTypeRestart,
-	"Configuration":     SinglestoreOpsRequestTypeConfiguration,
+	"Reconfigure":       SinglestoreOpsRequestTypeReconfigure,
 	"ReconfigureTLS":    SinglestoreOpsRequestTypeReconfigureTLS,
 	"RotateAuth":        SinglestoreOpsRequestTypeRotateAuth,
 }
