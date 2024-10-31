@@ -379,8 +379,14 @@ func (m *MSSQLServer) SetDefaults() {
 
 	m.setDefaultContainerResourceLimits(m.Spec.PodTemplate)
 
-	m.Spec.Monitor.SetDefaults()
-	if m.Spec.Monitor != nil && m.Spec.Monitor.Prometheus != nil {
+	if m.Spec.Monitor != nil {
+		if m.Spec.Monitor.Prometheus == nil {
+			m.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
+		if m.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			m.Spec.Monitor.Prometheus.Exporter.Port = kubedb.MSSQLMonitoringDefaultServicePort
+		}
+		m.Spec.Monitor.SetDefaults()
 		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
 			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = mssqlVersion.Spec.SecurityContext.RunAsUser
 		}
