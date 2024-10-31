@@ -113,7 +113,7 @@ func PhaseFromCondition(conditions []kmapi.Condition) olddbapi.DatabasePhase {
 			return olddbapi.DatabasePhaseDataRestoring
 		}
 	}
-	if cutil.IsConditionFalse(conditions, kubedb.DatabaseDataRestored) {
+	if cutil.HasCondition(conditions, kubedb.DatabaseDataRestored) && cutil.IsConditionFalse(conditions, kubedb.DatabaseDataRestored) {
 		return olddbapi.DatabasePhaseNotReady
 	}
 
@@ -204,7 +204,7 @@ func PhaseFromConditionV1(conditions []kmapi.Condition) dbapi.DatabasePhase {
 			return dbapi.DatabasePhaseDataRestoring
 		}
 	}
-	if cutil.IsConditionFalse(conditions, kubedb.DatabaseDataRestored) {
+	if cutil.HasCondition(conditions, kubedb.DatabaseDataRestored) && cutil.IsConditionFalse(conditions, kubedb.DatabaseDataRestored) {
 		return dbapi.DatabasePhaseNotReady
 	}
 

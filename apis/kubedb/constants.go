@@ -400,6 +400,7 @@ const (
 	MSSQLDatabasePort                  = 1433
 	MSSQLDatabaseMirroringEndpointPort = 5022
 	MSSQLCoordinatorPort               = 2381
+	MSSQLMonitoringDefaultServicePort  = 9399
 
 	// environment variables
 	EnvAcceptEula        = "ACCEPT_EULA"
