@@ -501,6 +501,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CassandraApp":                                  schema_apimachinery_apis_kubedb_v1alpha2_CassandraApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CassandraList":                                 schema_apimachinery_apis_kubedb_v1alpha2_CassandraList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CassandraSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_CassandraSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CassandraStatsService":                         schema_apimachinery_apis_kubedb_v1alpha2_CassandraStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CassandraStatus":                               schema_apimachinery_apis_kubedb_v1alpha2_CassandraStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouse":                                    schema_apimachinery_apis_kubedb_v1alpha2_ClickHouse(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseKeeper":                              schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseKeeper(ref),
@@ -25888,6 +25889,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_CassandraSpec(ref common.Reference
 							},
 						},
 					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used monitor database instance",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+						},
+					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DeletionPolicy controls the delete operation for database",
@@ -25907,7 +25914,27 @@ func schema_apimachinery_apis_kubedb_v1alpha2_CassandraSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Topology"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Topology"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_CassandraStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Cassandra": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Cassandra"),
+						},
+					},
+				},
+				Required: []string{"Cassandra"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Cassandra"},
 	}
 }
 
