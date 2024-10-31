@@ -272,17 +272,6 @@ func (r *Cassandra) SetDefaults() {
 		r.Spec.DeletionPolicy = TerminationPolicyDelete
 	}
 
-	if !r.Spec.DisableSecurity {
-		if r.Spec.AuthSecret == nil {
-			r.Spec.AuthSecret = &SecretReference{
-				LocalObjectReference: core.LocalObjectReference{
-					Name: meta_util.NameWithSuffix(r.OffshootName(), "auth"),
-				},
-				ExternallyManaged: false,
-			}
-		}
-	}
-
 	var casVersion catalog.CassandraVersion
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: r.Spec.Version,
