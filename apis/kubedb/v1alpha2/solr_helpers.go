@@ -97,6 +97,13 @@ func (s *Solr) SolrSecretName(suffix string) string {
 	return strings.Join([]string{s.Name, suffix}, "-")
 }
 
+func (s *Solr) GetAuthSecretName() string {
+	if s.Spec.AuthSecret != nil && s.Spec.AuthSecret.Name != "" {
+		return s.Spec.AuthSecret.Name
+	}
+	return meta_util.NameWithSuffix(s.OffshootName(), "auth")
+}
+
 func (s *Solr) SolrSecretKey() string {
 	return kubedb.SolrSecretKey
 }
@@ -260,12 +267,6 @@ func (s *Solr) SetDefaults() {
 
 	if s.Spec.StorageType == "" {
 		s.Spec.StorageType = StorageTypeDurable
-	}
-
-	if s.Spec.AuthSecret == nil {
-		s.Spec.AuthSecret = &v1.LocalObjectReference{
-			Name: s.SolrSecretName("admin-cred"),
-		}
 	}
 
 	if s.Spec.ZookeeperDigestSecret == nil {
@@ -442,9 +443,8 @@ func (s *Solr) GetPersistentSecrets() []string {
 
 	var secrets []string
 	// Add Admin/Elastic user secret name
-	if s.Spec.AuthSecret != nil {
-		secrets = append(secrets, s.Spec.AuthSecret.Name)
-	}
+
+	secrets = append(secrets, s.GetAuthSecretName())
 
 	if s.Spec.AuthConfigSecret != nil {
 		secrets = append(secrets, s.Spec.AuthConfigSecret.Name)

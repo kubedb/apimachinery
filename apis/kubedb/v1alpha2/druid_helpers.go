@@ -103,6 +103,13 @@ func (d *Druid) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(d.ServiceName(), "pods")
 }
 
+func (d *Druid) GetAuthSecretName() string {
+	if d.Spec.AuthSecret != nil && d.Spec.AuthSecret.Name != "" {
+		return d.Spec.AuthSecret.Name
+	}
+	return meta_util.NameWithSuffix(d.OffShootName(), "auth")
+}
+
 func (d *Druid) OffShootSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
 		meta_util.NameLabelKey:      d.ResourceFQN(),
@@ -310,9 +317,9 @@ func (d *Druid) AppBindingMeta() appcat.AppBindingMeta {
 
 func (d *Druid) GetConnectionScheme() string {
 	scheme := "http"
-	//if d.Spec.EnableSSL {
-	//	scheme = "https"
-	//}
+	if d.Spec.EnableSSL {
+		scheme = "https"
+	}
 	return scheme
 }
 

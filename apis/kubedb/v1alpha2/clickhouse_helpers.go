@@ -195,7 +195,7 @@ func (c *ClickHouse) GetAuthSecretName() string {
 	if c.Spec.AuthSecret != nil && c.Spec.AuthSecret.Name != "" {
 		return c.Spec.AuthSecret.Name
 	}
-	return c.DefaultUserCredSecretName("admin")
+	return meta_util.NameWithSuffix(c.OffshootName(), "auth")
 }
 
 func (r *ClickHouse) ConfigSecretName() string {
