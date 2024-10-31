@@ -434,14 +434,6 @@ func (d *Druid) SetDefaults() {
 		d.Spec.DeletionPolicy = TerminationPolicyDelete
 	}
 
-	if !d.Spec.DisableSecurity {
-		if d.Spec.AuthSecret == nil {
-			d.Spec.AuthSecret = &v1.LocalObjectReference{
-				Name: d.DefaultUserCredSecretName(kubedb.DruidUserAdmin),
-			}
-		}
-	}
-
 	if d.Spec.EnableSSL {
 		if d.Spec.KeystoreCredSecret == nil {
 			d.Spec.KeystoreCredSecret = &SecretReference{
