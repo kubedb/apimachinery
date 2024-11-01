@@ -107,6 +107,11 @@ func (in *DatabaseConnectionSpec) DeepCopyInto(out *DatabaseConnectionSpec) {
 			(*out)[key] = val
 		}
 	}
+	if in.CACert != nil {
+		in, out := &in.CACert, &out.CACert
+		*out = make([]byte, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

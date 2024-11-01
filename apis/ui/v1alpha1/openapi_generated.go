@@ -25566,6 +25566,12 @@ func schema_apimachinery_apis_ui_v1alpha1_DatabaseConnectionSpec(ref common.Refe
 							},
 						},
 					},
+					"caCert": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "byte",
+						},
+					},
 				},
 			},
 		},
