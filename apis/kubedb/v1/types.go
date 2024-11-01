@@ -139,10 +139,9 @@ type PITRReplicationStrategy string
 const (
 	// ReplicationStrategySync means data will be synced from primary to secondary
 	ReplicationStrategySync PITRReplicationStrategy = "sync"
-	// ReplicationStrategyFSCopy means data will be copied from primary filesystem to secondary filesystem
+	// ReplicationStrategyFSCopy means data will be copied from filesystem
 	ReplicationStrategyFSCopy PITRReplicationStrategy = "fscopy"
-	// ReplicationStrategyClone means volumesnapshot will be used to create pvc's of both primary and secondary
-	// cluster should have the pvc cloning property
+	// ReplicationStrategyClone means volumeSnapshot will be used to create pvc's
 	ReplicationStrategyClone PITRReplicationStrategy = "clone"
 	// ReplicationStrategyNone means no replication will be used
 	// data will be fully restored in every replicas instead of replication
