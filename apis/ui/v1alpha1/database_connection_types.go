@@ -58,6 +58,7 @@ type DatabaseConnectionSpec struct {
 	//
 	// And some language specific template strings. Like: Java, C#, Go, Python, Javascript, Ruby etc.
 	ConnectOptions map[string]string `json:"connectOptions,omitempty"`
+	CACert         []byte            `json:"caCert,omitempty"`
 }
 
 //type ConnectOption struct {
