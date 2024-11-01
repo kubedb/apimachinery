@@ -19,6 +19,8 @@ package v1
 import (
 	"context"
 	"fmt"
+	"k8s.io/utils/ptr"
+	"kmodules.xyz/client-go/policy/secomp"
 	"strconv"
 
 	"kubedb.dev/apimachinery/apis"
@@ -234,10 +236,10 @@ func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion, uses
 	p.Spec.Monitor.SetDefaults()
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
-			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = pgBouncerVersion.Spec.SecurityContext.RunAsUser
+			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = ptr.To(*pgBouncerVersion.Spec.SecurityContext.RunAsUser)
 		}
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
-			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = pgBouncerVersion.Spec.SecurityContext.RunAsUser
+			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = ptr.To(*pgBouncerVersion.Spec.SecurityContext.RunAsUser)
 		}
 	}
 	dbContainer := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, ResourceSingularPgBouncer)
@@ -321,55 +323,62 @@ func (p *PgBouncer) SetHealthCheckerDefaults() {
 }
 
 func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersion) {
+
 	container := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.PgBouncerContainerName)
 	if container == nil {
 		container = &core.Container{
 			Name: kubedb.PgBouncerContainerName,
 		}
 	}
+
 	if container.SecurityContext == nil {
-		container.SecurityContext = &core.SecurityContext{
-			RunAsUser: func() *int64 {
-				if p.Spec.PodTemplate.Spec.SecurityContext == nil || p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
-					return pgBouncerVersion.Spec.SecurityContext.RunAsUser
-				}
-				return p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser
-			}(),
-			RunAsGroup: func() *int64 {
-				if p.Spec.PodTemplate.Spec.SecurityContext == nil || p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
-					return pgBouncerVersion.Spec.SecurityContext.RunAsUser
-				}
-				return p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup
-			}(),
-			Privileged: pointer.BoolP(false),
-		}
-	} else {
-		if container.SecurityContext.RunAsUser == nil {
+		container.SecurityContext = &core.SecurityContext{}
+	}
+	if container.SecurityContext.RunAsUser == nil {
+		if p.Spec.PodTemplate.Spec.SecurityContext == nil || p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
 			container.SecurityContext.RunAsUser = pgBouncerVersion.Spec.SecurityContext.RunAsUser
-		}
-		if container.SecurityContext.RunAsGroup == nil {
-			container.SecurityContext.RunAsGroup = container.SecurityContext.RunAsUser
+		} else {
+			container.SecurityContext.RunAsUser = p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser
 		}
 	}
 
+	if container.SecurityContext.RunAsGroup == nil {
+		if p.Spec.PodTemplate.Spec.SecurityContext == nil || p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
+			container.SecurityContext.RunAsGroup = pgBouncerVersion.Spec.SecurityContext.RunAsUser
+		} else {
+			container.SecurityContext.RunAsGroup = p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup
+		}
+	}
+
+	allowPrivilegeEscalation := pointer.Bool(container.SecurityContext.AllowPrivilegeEscalation)
+	container.SecurityContext.AllowPrivilegeEscalation = &allowPrivilegeEscalation
+
+	if container.SecurityContext.Capabilities == nil {
+		container.SecurityContext.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+
+	if container.SecurityContext.RunAsNonRoot == nil {
+		container.SecurityContext.RunAsNonRoot = ptr.To(true)
+	}
+
+	if container.SecurityContext.SeccompProfile == nil {
+		container.SecurityContext.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+
+	// podTemplate
 	if p.Spec.PodTemplate.Spec.SecurityContext == nil {
-		p.Spec.PodTemplate.Spec.SecurityContext = &core.PodSecurityContext{
-			RunAsUser:  container.SecurityContext.RunAsUser,
-			RunAsGroup: container.SecurityContext.RunAsGroup,
-		}
-	} else {
-		if p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
-			p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser = container.SecurityContext.RunAsUser
-		}
-		if p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
-			p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup = container.SecurityContext.RunAsGroup
-		}
+		p.Spec.PodTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
+	}
+	if p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
+		p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser = ptr.To(*container.SecurityContext.RunAsUser)
+	}
+	if p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup == nil {
+		p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup = ptr.To(*container.SecurityContext.RunAsGroup)
 	}
 
-	// Need to set FSGroup equal to  p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup.
-	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
-	// Otherwise, We will get write permission denied.
-	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = container.SecurityContext.RunAsGroup
+	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = ptr.To(*container.SecurityContext.RunAsGroup)
 	isPgbouncerContainerPresent := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.PgBouncerContainerName)
 	if isPgbouncerContainerPresent == nil {
 		core_util.UpsertContainer(p.Spec.PodTemplate.Spec.Containers, *container)
