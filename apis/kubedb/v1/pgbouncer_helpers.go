@@ -234,12 +234,15 @@ func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion, uses
 	}
 
 	p.Spec.Monitor.SetDefaults()
+
+	// we have set the permission for exporter certificate for 70 userid
+	// that's why we need to set RunAsUser and RunAsGroup 70
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
-			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = ptr.To(*pgBouncerVersion.Spec.SecurityContext.RunAsUser)
+			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = pointer.Int64P(70)
 		}
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
-			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = ptr.To(*pgBouncerVersion.Spec.SecurityContext.RunAsUser)
+			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = pointer.Int64P(70)
 		}
 	}
 	dbContainer := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, ResourceSingularPgBouncer)
