@@ -19,8 +19,6 @@ package v1
 import (
 	"context"
 	"fmt"
-	"k8s.io/utils/ptr"
-	"kmodules.xyz/client-go/policy/secomp"
 	"strconv"
 
 	"kubedb.dev/apimachinery/apis"
@@ -34,10 +32,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
@@ -326,7 +326,6 @@ func (p *PgBouncer) SetHealthCheckerDefaults() {
 }
 
 func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersion) {
-
 	container := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.PgBouncerContainerName)
 	if container == nil {
 		container = &core.Container{
