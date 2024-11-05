@@ -178,6 +178,8 @@ spec:
                       - alias
                       type: object
                     type: array
+                  clientTLS:
+                    type: boolean
                   issuerRef:
                     properties:
                       apiGroup:
@@ -195,6 +197,8 @@ spec:
                     type: boolean
                   rotateCertificates:
                     type: boolean
+                required:
+                - clientTLS
                 type: object
               type:
                 enum:
