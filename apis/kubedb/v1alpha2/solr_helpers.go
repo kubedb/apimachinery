@@ -256,6 +256,22 @@ func (s *Solr) PVCName(alias string) string {
 	return meta_util.NameWithSuffix(s.Name, alias)
 }
 
+func (s Solr) NodeRoleSpecificLabelKey(roleType SolrNodeRoleType) string {
+	return kubedb.GroupName + "/role-" + string(roleType)
+}
+
+func (s Solr) OverseerSelectors() map[string]string {
+	return s.OffshootSelectors(map[string]string{string(SolrNodeRoleOverseer): SolrNodeRoleSet})
+}
+
+func (s Solr) DataSelectors() map[string]string {
+	return s.OffshootSelectors(map[string]string{string(SolrNodeRoleData): SolrNodeRoleSet})
+}
+
+func (s Solr) CoordinatorSelectors() map[string]string {
+	return s.OffshootSelectors(map[string]string{string(SolrNodeRoleCoordinator): SolrNodeRoleSet})
+}
+
 func (s *Solr) SetDefaults() {
 	if s.Spec.DeletionPolicy == "" {
 		s.Spec.DeletionPolicy = TerminationPolicyDelete
