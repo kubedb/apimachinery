@@ -318,3 +318,12 @@ func (m *Memcached) ReplicasAreReady(lister pslister.PetSetLister) (bool, string
 	expectedItems := 1
 	return checkReplicas(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
 }
+
+func (m *Memcached) SetTLSDefaults() {
+	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MemcachedServerCert), m.CertificateName(MemcachedServerCert))
+	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MemcachedClientCert), m.CertificateName(MemcachedClientCert))
+	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MemcachedMetricsExporterCert), m.CertificateName(MemcachedMetricsExporterCert))
+}
