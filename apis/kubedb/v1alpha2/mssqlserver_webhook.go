@@ -132,23 +132,6 @@ func (m *MSSQLServer) ValidateCreateOrUpdate() field.ErrorList {
 				m.Name,
 				"number of replicas can not be nil and can not be less than or equal to 0"))
 		}
-
-		if m.Spec.InternalAuth == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth"),
-				m.Name, "spec.internalAuth is missing"))
-		} else if m.Spec.InternalAuth.EndpointCert == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth").Child("endpointCert"),
-				m.Name, "spec.internalAuth.endpointCert is missing"))
-		} else {
-			if m.Spec.InternalAuth.EndpointCert.IssuerRef == nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth").Child("endpointCert").Child("issuerRef"),
-					m.Name, "spec.internalAuth.endpointCert.issuerRef' is missing"))
-			}
-			if len(m.Spec.InternalAuth.EndpointCert.Certificates) > 1 {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("internalAuth").Child("endpointCert").Child("certificates"),
-					m.Name, "spec.internalAuth.endpointCert.certificates' can have only one certificate"))
-			}
-		}
 	}
 
 	if m.Spec.TLS == nil {
@@ -291,7 +274,6 @@ func mssqlValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 var forbiddenMSSQLServerEnvVars = []string{
 	kubedb.EnvMSSQLSAUsername,
 	kubedb.EnvMSSQLSAPassword,
-	kubedb.EnvAcceptEula,
 	kubedb.EnvMSSQLEnableHADR,
 	kubedb.EnvMSSQLAgentEnabled,
 	kubedb.EnvMSSQLVersion,
