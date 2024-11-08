@@ -130,15 +130,25 @@ const (
 	MemcachedPrimaryServicePortName = "primary"
 	MemcachedDatabasePort           = 11211
 	MemcachedContainerName          = "memcached"
+	MemcachedExporterContainerName  = "exporter"
 
 	MemcachedConfigVolumeName = "memcached-config"
 	MemcachedConfigVolumePath = "/usr/config/"
 
 	MemcachedDataVolumeName = "data"
-	MemcachedDataVolumePath = "/usr/data"
+	MemcachedDataVolumePath = "/usr/data/"
 
 	MemcachedAuthVolumeName = "auth"
-	MemcachedAuthVolumePath = "/usr/auth"
+	MemcachedAuthVolumePath = "/usr/auth/"
+
+	MemcachedExporterAuthVolumeName = "exporter-auth"
+	MemcachedExporterAuthVolumePath = "/auth/"
+
+	MemcachedExporterTLSVolumeName = "exporter-tls"
+	MemcachedExporterTLSVolumePath = "/certs/"
+
+	MemcachedTLSVolumeName = "tls"
+	MemcachedTLSVolumePath = "/usr/certs/"
 
 	MemcachedHealthKey   = "kubedb_memcached_health_key"
 	MemcachedHealthValue = "kubedb_memcached_health_value"
