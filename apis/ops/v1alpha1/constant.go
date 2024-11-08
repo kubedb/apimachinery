@@ -331,6 +331,8 @@ const (
 
 	UpdateMiddleManagersNodePVCs = "UpdateMiddleManagersNodePVCs"
 	UpdateHistoricalsNodePVCs    = "UpdateHistoricalsNodePVCs"
+
+	UpdateCredentialDynamically = "UpdateCredentialDynamically"
 )
 
 // SingleStore Constants
