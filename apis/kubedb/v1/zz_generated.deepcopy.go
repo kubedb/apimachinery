@@ -141,6 +141,11 @@ func (in *ArchiverRecovery) DeepCopyInto(out *ArchiverRecovery) {
 		*out = new(apiv1.ObjectReference)
 		**out = **in
 	}
+	if in.ReplicationStrategy != nil {
+		in, out := &in.ReplicationStrategy, &out.ReplicationStrategy
+		*out = new(PITRReplicationStrategy)
+		**out = **in
+	}
 	return
 }
 

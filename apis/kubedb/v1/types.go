@@ -133,6 +133,21 @@ const (
 	StatsServiceAlias   ServiceAlias = "stats"
 )
 
+// +kubebuilder:validation:Enum=fscopy;clone;sync;none
+type PITRReplicationStrategy string
+
+const (
+	// ReplicationStrategySync means data will be synced from primary to secondary
+	ReplicationStrategySync PITRReplicationStrategy = "sync"
+	// ReplicationStrategyFSCopy means data will be copied from filesystem
+	ReplicationStrategyFSCopy PITRReplicationStrategy = "fscopy"
+	// ReplicationStrategyClone means volumeSnapshot will be used to create pvc's
+	ReplicationStrategyClone PITRReplicationStrategy = "clone"
+	// ReplicationStrategyNone means no replication will be used
+	// data will be fully restored in every replicas instead of replication
+	ReplicationStrategyNone PITRReplicationStrategy = "none"
+)
+
 // +kubebuilder:validation:Enum=DNS;IP;IPv4;IPv6
 type AddressType string
 
@@ -220,5 +235,6 @@ type ArchiverRecovery struct {
 	ManifestRepository *kmapi.ObjectReference `json:"manifestRepository,omitempty"`
 
 	// FullDBRepository means db restore + manifest restore
-	FullDBRepository *kmapi.ObjectReference `json:"fullDBRepository,omitempty"`
+	FullDBRepository    *kmapi.ObjectReference   `json:"fullDBRepository,omitempty"`
+	ReplicationStrategy *PITRReplicationStrategy `json:"replicationStrategy,omitempty"`
 }

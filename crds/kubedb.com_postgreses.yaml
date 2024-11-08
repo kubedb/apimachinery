@@ -287,6 +287,13 @@ spec:
                       recoveryTimestamp:
                         format: date-time
                         type: string
+                      replicationStrategy:
+                        enum:
+                        - fscopy
+                        - clone
+                        - sync
+                        - none
+                        type: string
                     required:
                     - recoveryTimestamp
                     type: object
@@ -5300,6 +5307,13 @@ spec:
                         type: object
                       recoveryTimestamp:
                         format: date-time
+                        type: string
+                      replicationStrategy:
+                        enum:
+                        - fscopy
+                        - clone
+                        - sync
+                        - none
                         type: string
                     required:
                     - recoveryTimestamp
