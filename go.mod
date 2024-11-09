@@ -6,7 +6,7 @@ toolchain go1.22.5
 
 require (
 	github.com/Masterminds/semver/v3 v3.3.0
-	github.com/cert-manager/cert-manager v1.15.1
+	github.com/cert-manager/cert-manager v1.15.2
 	github.com/coreos/go-semver v0.3.1
 	github.com/evanphx/json-patch v5.9.0+incompatible
 	github.com/fatih/structs v1.1.0
@@ -36,7 +36,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20240703190633-0aa61b46e8c2
 	k8s.io/metrics v0.30.2
 	k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0
-	kmodules.xyz/client-go v0.30.28
+	kmodules.xyz/client-go v0.30.32
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.30.0
 	kmodules.xyz/monitoring-agent-api v0.30.2
