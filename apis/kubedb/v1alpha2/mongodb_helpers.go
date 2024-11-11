@@ -618,7 +618,7 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion, topology *core
 		m.Spec.StorageEngine = StorageEngineWiredTiger
 	}
 	if m.Spec.TerminationPolicy == "" {
-		m.Spec.TerminationPolicy = TerminationPolicyDelete
+		m.Spec.TerminationPolicy = DeletionPolicyDelete
 	}
 
 	if m.Spec.SSLMode == "" {

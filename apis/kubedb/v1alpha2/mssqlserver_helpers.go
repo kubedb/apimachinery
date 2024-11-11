@@ -326,7 +326,7 @@ func (m *MSSQLServer) SetDefaults() {
 		m.Spec.StorageType = StorageTypeDurable
 	}
 	if m.Spec.DeletionPolicy == "" {
-		m.Spec.DeletionPolicy = TerminationPolicyDelete
+		m.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
 
 	if m.IsStandalone() {

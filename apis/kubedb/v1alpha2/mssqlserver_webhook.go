@@ -95,7 +95,7 @@ func (m *MSSQLServer) ValidateDelete() (admission.Warnings, error) {
 	mssqllog.Info("validate delete", "name", m.Name)
 
 	var allErr field.ErrorList
-	if m.Spec.DeletionPolicy == TerminationPolicyDoNotTerminate {
+	if m.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			m.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
