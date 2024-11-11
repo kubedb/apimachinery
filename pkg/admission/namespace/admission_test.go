@@ -111,7 +111,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.TerminationPolicyDoNotTerminate)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.DeletionPolicyDoNotTerminate)},
 		false,
 	},
 	{
@@ -120,7 +120,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.TerminationPolicyHalt)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.DeletionPolicyHalt)},
 		false,
 	},
 	{
@@ -129,7 +129,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.TerminationPolicyDelete)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.DeletionPolicyDelete)},
 		true,
 	},
 	{
@@ -138,7 +138,7 @@ var cases = []struct {
 		"demo",
 		admission.Delete,
 		sampleNamespace(),
-		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.TerminationPolicyWipeOut)},
+		[]runtime.Object{setTerminationPolicy(sampleDatabase(), olddbapi.DeletionPolicyWipeOut)},
 		true,
 	},
 	{
@@ -178,12 +178,12 @@ func sampleDatabase() *olddbapi.Postgres {
 			},
 		},
 		Spec: olddbapi.PostgresSpec{
-			TerminationPolicy: olddbapi.TerminationPolicyDelete,
+			TerminationPolicy: olddbapi.DeletionPolicyDelete,
 		},
 	}
 }
 
-func setTerminationPolicy(obj runtime.Object, terminationPolicy olddbapi.TerminationPolicy) runtime.Object {
+func setTerminationPolicy(obj runtime.Object, terminationPolicy olddbapi.DeletionPolicy) runtime.Object {
 	db := obj.(*olddbapi.Postgres)
 	db.Spec.TerminationPolicy = terminationPolicy
 	return obj
