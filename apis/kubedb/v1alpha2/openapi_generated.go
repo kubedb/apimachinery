@@ -549,7 +549,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBStatus":                                schema_apimachinery_apis_kubedb_v1alpha2_FerretDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.GitRepo":                                       schema_apimachinery_apis_kubedb_v1alpha2_GitRepo(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec":                                      schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InternalAuthentication":                        schema_apimachinery_apis_kubedb_v1alpha2_InternalAuthentication(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Kafka":                                         schema_apimachinery_apis_kubedb_v1alpha2_Kafka(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaApp":                                      schema_apimachinery_apis_kubedb_v1alpha2_KafkaApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity":                           schema_apimachinery_apis_kubedb_v1alpha2_KafkaBrokerCapacity(ref),
@@ -28546,28 +28545,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_InitSpec(ref common.ReferenceCallb
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_InternalAuthentication(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "InternalAuthentication provides different way of endpoint authentication",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"endpointCert": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndpointCert is used for endpoint authentication of MSSql Server",
-							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
-						},
-					},
-				},
-				Required: []string{"endpointCert"},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.TLSConfig"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_Kafka(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -29177,9 +29154,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerAvailabilityGroupSpec(r
 							},
 						},
 					},
+					"leaderElection": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Leader election configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerLeaderElectionConfig"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerLeaderElectionConfig"},
 	}
 }
 
@@ -29334,12 +29319,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"internalAuth": {
-						SchemaProps: spec.SchemaProps{
-							Description: "InternalAuth is used to authenticate endpoint",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InternalAuthentication"),
-						},
-					},
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize database",
@@ -29386,19 +29365,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 							Format:      "",
 						},
 					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator defines attributes of the coordinator container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec"),
-						},
-					},
-					"leaderElection": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Leader election configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerLeaderElectionConfig"),
-						},
-					},
 					"healthChecker": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker",
@@ -29423,7 +29389,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InternalAuthentication", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SQLServerTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SQLServerTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 

@@ -193,7 +193,7 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 		p.Spec.StorageType = StorageTypeDurable
 	}
 	if p.Spec.TerminationPolicy == "" {
-		p.Spec.TerminationPolicy = TerminationPolicyDelete
+		p.Spec.TerminationPolicy = DeletionPolicyDelete
 	}
 
 	if p.Spec.LeaderElection == nil {
