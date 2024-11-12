@@ -900,7 +900,7 @@ func (m *MongoDB) GetEntryCommand(mgVersion *v1alpha1.MongoDBVersion) string {
 	return "mongo"
 }
 
-func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion, isArbiter ...bool) []string {
+func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion) []string {
 	var sslArgs string
 	if m.Spec.SSLMode == SSLModeRequireSSL {
 		sslArgs = fmt.Sprintf("--tls --tlsCAFile=%v/%v --tlsCertificateKeyFile=%v/%v",
@@ -919,17 +919,13 @@ func (m *MongoDB) getCmdForProbes(mgVersion *v1alpha1.MongoDBVersion, isArbiter 
 		}
 	}
 
-	var authArgs string
-	if len(isArbiter) == 0 { // not arbiter
-		authArgs = "--username=$MONGO_INITDB_ROOT_USERNAME --password=$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase=admin"
-	}
 	return []string{
 		"bash",
 		"-c",
-		fmt.Sprintf(`set -x; if [[ $(%s admin --host=localhost %v %v --quiet --eval "db.adminCommand('ping').ok" ) -eq "1" ]]; then 
+		fmt.Sprintf(`set -x; if [[ $(%s admin --host=localhost %v --quiet --eval "db.adminCommand('ping').ok" ) -eq "1" ]]; then 
           exit 0
         fi
-        exit 1`, m.GetEntryCommand(mgVersion), sslArgs, authArgs),
+        exit 1`, m.GetEntryCommand(mgVersion), sslArgs),
 	}
 }
 
@@ -937,7 +933,7 @@ func (m *MongoDB) GetDefaultLivenessProbeSpec(mgVersion *v1alpha1.MongoDBVersion
 	return &core.Probe{
 		ProbeHandler: core.ProbeHandler{
 			Exec: &core.ExecAction{
-				Command: m.getCmdForProbes(mgVersion, isArbiter...),
+				Command: m.getCmdForProbes(mgVersion),
 			},
 		},
 		FailureThreshold: 3,
@@ -951,7 +947,7 @@ func (m *MongoDB) GetDefaultReadinessProbeSpec(mgVersion *v1alpha1.MongoDBVersio
 	return &core.Probe{
 		ProbeHandler: core.ProbeHandler{
 			Exec: &core.ExecAction{
-				Command: m.getCmdForProbes(mgVersion, isArbiter...),
+				Command: m.getCmdForProbes(mgVersion),
 			},
 		},
 		FailureThreshold: 3,
