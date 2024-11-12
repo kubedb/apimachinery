@@ -31,6 +31,7 @@ import (
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/equality"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -306,12 +307,16 @@ func (p *Postgres) SetDefaultReplicationMode(postgresVersion *catalog.PostgresVe
 }
 
 func (p *Postgres) SetArbiterDefault() {
-	if p.Spec.Arbiter == nil {
+	if ptr.Deref(p.Spec.Replicas, 0)%2 != 0 && p.Spec.Arbiter != nil {
+		if p.Spec.Arbiter.NodeSelector == nil && p.Spec.Arbiter.Tolerations == nil && equality.Semantic.DeepEqual(p.Spec.Arbiter.Resources, kubedb.DefaultArbiter(false)) {
+			p.Spec.Arbiter = nil
+		}
+	} else if ptr.Deref(p.Spec.Replicas, 0) != 0 && ptr.Deref(p.Spec.Replicas, 0)%2 == 0 && p.Spec.Arbiter == nil {
 		p.Spec.Arbiter = &ArbiterSpec{
 			Resources: core.ResourceRequirements{},
 		}
+		apis.SetDefaultResourceLimits(&p.Spec.Arbiter.Resources, kubedb.DefaultArbiter(false))
 	}
-	apis.SetDefaultResourceLimits(&p.Spec.Arbiter.Resources, kubedb.DefaultArbiter(false))
 }
 
 func (p *Postgres) setDefaultPodSecurityContext(podTemplate *ofstv2.PodTemplateSpec, pgVersion *catalog.PostgresVersion) {
