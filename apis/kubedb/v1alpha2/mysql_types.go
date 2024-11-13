@@ -46,7 +46,7 @@ type MySQLGroupMode string
 
 const (
 	MySQLGroupModeSinglePrimary MySQLGroupMode = "Single-Primary"
-	// MySQLGroupModeMultiPrimary  MySQLGroupMode = "Multi-Primary"
+	MySQLGroupModeMultiPrimary  MySQLGroupMode = "Multi-Primary"
 )
 
 // Mysql defines a Mysql database.
