@@ -67,6 +67,9 @@ const (
 	EtcdKey          = "etcd" + "." + GroupName
 	ProxySQLKey      = "proxysql" + "." + GroupName
 
+	// Auth related constants
+	BasicAuthActiveFromAnnotation = "basic-auth-active-from"
+
 	// =========================== Elasticsearch Constants ============================
 	ElasticsearchRestPort                        = 9200
 	ElasticsearchRestPortName                    = "http"
