@@ -25,17 +25,17 @@ require (
 	gomodules.xyz/runtime v0.3.0
 	gomodules.xyz/stow v0.2.4
 	gomodules.xyz/x v0.0.17
-	k8s.io/api v0.30.2
+	k8s.io/api v0.30.3
 	k8s.io/apiextensions-apiserver v0.30.2
-	k8s.io/apimachinery v0.30.2
+	k8s.io/apimachinery v0.30.3
 	k8s.io/apiserver v0.30.2
-	k8s.io/client-go v0.30.2
+	k8s.io/client-go v0.30.3
 	k8s.io/component-base v0.30.2
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/kube-aggregator v0.30.2
-	k8s.io/kube-openapi v0.0.0-20240703190633-0aa61b46e8c2
+	k8s.io/kube-openapi v0.0.0-20240726031636-6f6746feab9c
 	k8s.io/metrics v0.30.2
-	k8s.io/utils v0.0.0-20240502163921-fe8a2dddb1d0
+	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8
 	kmodules.xyz/client-go v0.30.32
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.30.0
@@ -44,6 +44,7 @@ require (
 	kmodules.xyz/offshoot-api v0.30.1
 	kmodules.xyz/resource-metadata v0.20.0
 	kmodules.xyz/webhook-runtime v0.29.1
+	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/petset v0.0.7
 	kubeops.dev/sidekick v0.0.8
 	kubestash.dev/apimachinery v0.13.0
@@ -128,7 +129,7 @@ require (
 	github.com/nats-io/nats.go v1.36.0 // indirect
 	github.com/nats-io/nkeys v0.4.7 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
-	github.com/onsi/gomega v1.33.1 // indirect
+	github.com/onsi/gomega v1.34.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc3 // indirect
 	github.com/prometheus/client_golang v1.18.0 // indirect
