@@ -1607,10 +1607,10 @@ var (
 			core.ResourceStorage: resource.MustParse("2Gi"),
 			// these are the default cpu & memory for a coordinator container
 			core.ResourceCPU:    resource.MustParse(".200"),
-			core.ResourceMemory: resource.MustParse("250Mi"),
+			core.ResourceMemory: resource.MustParse("256Mi"),
 		},
 		Limits: core.ResourceList{
-			core.ResourceMemory: resource.MustParse("250Mi"),
+			core.ResourceMemory: resource.MustParse("256Mi"),
 		},
 	}
 	DefaultArbiterMemoryIntensive = core.ResourceRequirements{
@@ -1624,8 +1624,8 @@ var (
 		},
 	}
 
-	// DefaultResourcesCPUIntensiveVersion6 is for MongoDB versions >= 6
-	DefaultResourcesCPUIntensiveVersion6 = core.ResourceRequirements{
+	// DefaultResourcesCPUIntensiveMongoDBv6 is for MongoDB versions >= 6
+	DefaultResourcesCPUIntensiveMongoDBv6 = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse(".800"),
 			core.ResourceMemory: resource.MustParse("1024Mi"),
@@ -1634,8 +1634,8 @@ var (
 			core.ResourceMemory: resource.MustParse("1024Mi"),
 		},
 	}
-	// DefaultResourcesCPUIntensiveVersion8 is for MongoDB versions >= 8
-	DefaultResourcesCPUIntensiveVersion8 = core.ResourceRequirements{
+	// DefaultResourcesCPUIntensiveMongoDBv8 is for MongoDB versions >= 8
+	DefaultResourcesCPUIntensiveMongoDBv8 = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse(".800"),
 			core.ResourceMemory: resource.MustParse("1.5Gi"),

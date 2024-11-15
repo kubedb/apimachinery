@@ -714,9 +714,9 @@ func (m *MongoDB) setPodTemplateDefaultValues(podTemplate *ofstv2.PodTemplateSpe
 
 	defaultResource := kubedb.DefaultResources
 	if m.isLaterVersion(mgVersion, 8) {
-		defaultResource = kubedb.DefaultResourcesCPUIntensiveVersion8
+		defaultResource = kubedb.DefaultResourcesCPUIntensiveMongoDBv8
 	} else if m.isLaterVersion(mgVersion, 6) {
-		defaultResource = kubedb.DefaultResourcesCPUIntensiveVersion6
+		defaultResource = kubedb.DefaultResourcesCPUIntensiveMongoDBv6
 	}
 
 	container := ofst_util.EnsureInitContainerExists(podTemplate, kubedb.MongoDBInitInstallContainerName)
