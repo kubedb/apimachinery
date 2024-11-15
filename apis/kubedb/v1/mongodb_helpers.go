@@ -735,7 +735,11 @@ func (m *MongoDB) setContainerDefaultValues(container *core.Container, mgVersion
 	defaultResource core.ResourceRequirements, isArbiter ...bool,
 ) {
 	if len(isArbiter) > 0 && isArbiter[0] {
-		m.setContainerDefaultResources(container, kubedb.DefaultArbiter(true))
+		if m.isLaterVersion(mgVersion, 7) {
+			m.setContainerDefaultResources(container, kubedb.DefaultArbiterMemoryIntensive)
+		} else {
+			m.setContainerDefaultResources(container, kubedb.DefaultArbiter(true))
+		}
 	} else {
 		m.setContainerDefaultResources(container, defaultResource)
 	}

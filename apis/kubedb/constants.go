@@ -1607,6 +1607,16 @@ var (
 			core.ResourceStorage: resource.MustParse("2Gi"),
 			// these are the default cpu & memory for a coordinator container
 			core.ResourceCPU:    resource.MustParse(".200"),
+			core.ResourceMemory: resource.MustParse("250Mi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("250Mi"),
+		},
+	}
+	DefaultArbiterMemoryIntensive = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			// these are the default cpu & memory for a coordinator container
+			core.ResourceCPU:    resource.MustParse(".200"),
 			core.ResourceMemory: resource.MustParse("500Mi"),
 		},
 		Limits: core.ResourceList{
