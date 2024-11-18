@@ -104,7 +104,7 @@ type MSSQLServerSpec struct {
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// TLS contains tls configurations for client and server.
-	TLS *SQLServerTLSConfig `json:"tls,omitempty"`
+	TLS *MSSQLServerTLSConfig `json:"tls,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
@@ -132,7 +132,7 @@ type MSSQLServerSpec struct {
 	Archiver *Archiver `json:"archiver,omitempty"`
 }
 
-type SQLServerTLSConfig struct {
+type MSSQLServerTLSConfig struct {
 	kmapi.TLSConfig `json:",inline"`
 
 	// +optional

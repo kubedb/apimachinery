@@ -566,6 +566,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerList":                               schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerStatus":                             schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTLSConfig":                          schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTopology":                           schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDB":                                       schema_apimachinery_apis_kubedb_v1alpha2_MariaDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MariaDBList":                                   schema_apimachinery_apis_kubedb_v1alpha2_MariaDBList(ref),
@@ -643,7 +644,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisSpec":                                     schema_apimachinery_apis_kubedb_v1alpha2_RedisSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisStatus":                                   schema_apimachinery_apis_kubedb_v1alpha2_RedisStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RemoteReplicaSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_RemoteReplicaSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SQLServerTLSConfig":                            schema_apimachinery_apis_kubedb_v1alpha2_SQLServerTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ScriptSourceSpec":                              schema_apimachinery_apis_kubedb_v1alpha2_ScriptSourceSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference":                               schema_apimachinery_apis_kubedb_v1alpha2_SecretReference(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SemiSyncSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_SemiSyncSpec(ref),
@@ -29334,7 +29334,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SQLServerTLSConfig"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTLSConfig"),
 						},
 					},
 					"serviceTemplates": {
@@ -29389,7 +29389,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SQLServerTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -29433,6 +29433,46 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerStatus(ref common.Refer
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"clientTLS": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
 	}
 }
 
@@ -33945,46 +33985,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RemoteReplicaSpec(ref common.Refer
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.ObjectReference"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_SQLServerTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"issuerRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "IssuerRef is a reference to a Certificate Issuer.",
-							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
-						},
-					},
-					"certificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
-									},
-								},
-							},
-						},
-					},
-					"clientTLS": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
 	}
 }
 

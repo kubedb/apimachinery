@@ -502,6 +502,11 @@ func (m *MSSQLServer) SetTLSDefaults() {
 		return
 	}
 
+	if m.Spec.TLS.ClientTLS == nil {
+		defaultValue := false
+		m.Spec.TLS.ClientTLS = &defaultValue
+	}
+
 	// Server-cert
 	defaultServerOrg := []string{kubedb.KubeDBOrganization}
 	defaultServerOrgUnit := []string{string(MSSQLServerServerCert)}

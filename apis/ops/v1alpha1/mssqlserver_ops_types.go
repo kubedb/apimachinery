@@ -124,7 +124,7 @@ type MSSQLServerCustomConfigurationSpec struct {
 type MSSQLServerTLSSpec struct {
 	// SQLServerTLSSpec contains updated tls configurations for client and server.
 	// +optional
-	dbapi.SQLServerTLSConfig `json:",inline,omitempty"`
+	dbapi.MSSQLServerTLSConfig `json:",inline,omitempty"`
 
 	// RotateCertificates tells operator to initiate certificate rotation
 	// +optional

@@ -142,10 +142,6 @@ func (m *MSSQLServer) ValidateCreateOrUpdate() field.ErrorList {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("issuerRef"),
 				m.Name, "spec.tls.issuerRef' is missing"))
 		}
-		if m.Spec.TLS.ClientTLS == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("clientTLS"),
-				m.Name, "spec.tls.clientTLS' is missing"))
-		}
 	}
 
 	if m.Spec.PodTemplate != nil {
