@@ -5104,6 +5104,11 @@ func (in *RemoteReplicaSpec) DeepCopy() *RemoteReplicaSpec {
 func (in *SQLServerTLSConfig) DeepCopyInto(out *SQLServerTLSConfig) {
 	*out = *in
 	in.TLSConfig.DeepCopyInto(&out.TLSConfig)
+	if in.ClientTLS != nil {
+		in, out := &in.ClientTLS, &out.ClientTLS
+		*out = new(bool)
+		**out = **in
+	}
 	return
 }
 

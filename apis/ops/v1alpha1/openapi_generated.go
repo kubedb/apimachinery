@@ -28069,9 +28069,8 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerTLSSpec(ref common.Referen
 					},
 					"clientTLS": {
 						SchemaProps: spec.SchemaProps{
-							Default: false,
-							Type:    []string{"boolean"},
-							Format:  "",
+							Type:   []string{"boolean"},
+							Format: "",
 						},
 					},
 					"rotateCertificates": {
@@ -28089,7 +28088,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerTLSSpec(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"clientTLS"},
 			},
 		},
 		Dependencies: []string{

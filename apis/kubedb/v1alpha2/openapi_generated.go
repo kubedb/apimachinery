@@ -33976,13 +33976,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SQLServerTLSConfig(ref common.Refe
 					},
 					"clientTLS": {
 						SchemaProps: spec.SchemaProps{
-							Default: false,
-							Type:    []string{"boolean"},
-							Format:  "",
+							Type:   []string{"boolean"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"clientTLS"},
 			},
 		},
 		Dependencies: []string{

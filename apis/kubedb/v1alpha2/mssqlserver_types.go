@@ -134,7 +134,9 @@ type MSSQLServerSpec struct {
 
 type SQLServerTLSConfig struct {
 	kmapi.TLSConfig `json:",inline"`
-	ClientTLS       bool `json:"clientTLS"`
+
+	// +optional
+	ClientTLS *bool `json:"clientTLS"`
 }
 
 type MSSQLServerTopology struct {

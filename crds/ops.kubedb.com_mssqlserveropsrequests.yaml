@@ -197,8 +197,6 @@ spec:
                     type: boolean
                   rotateCertificates:
                     type: boolean
-                required:
-                - clientTLS
                 type: object
               type:
                 enum:
