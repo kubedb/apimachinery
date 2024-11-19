@@ -36,13 +36,13 @@ require (
 	k8s.io/kube-openapi v0.0.0-20240726031636-6f6746feab9c
 	k8s.io/metrics v0.30.2
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8
-	kmodules.xyz/client-go v0.30.32
+	kmodules.xyz/client-go v0.30.38
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.30.0
 	kmodules.xyz/monitoring-agent-api v0.30.2
 	kmodules.xyz/objectstore-api v0.29.1
 	kmodules.xyz/offshoot-api v0.30.1
-	kmodules.xyz/resource-metadata v0.20.0
+	kmodules.xyz/resource-metadata v0.22.5
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/petset v0.0.7
@@ -98,7 +98,7 @@ require (
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/cel-go v0.17.8 // indirect
@@ -195,7 +195,7 @@ require (
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.12 // indirect
 	kmodules.xyz/prober v0.29.0 // indirect
-	kmodules.xyz/resource-metrics v0.30.4 // indirect
+	kmodules.xyz/resource-metrics v0.30.5 // indirect
 	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.30.3 // indirect
 	sigs.k8s.io/cli-utils v0.35.0 // indirect

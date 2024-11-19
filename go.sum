@@ -146,8 +146,9 @@ github.com/gofrs/uuid v4.4.0+incompatible/go.mod h1:b2aQJv3Z4Fp6yNu3cdSllBxTCLRx
 github.com/gogo/protobuf v1.3.2 h1:Ov1cvc58UF3b5XjBnZv7+opcTcQFZebYjWzi34vdm4Q=
 github.com/gogo/protobuf v1.3.2/go.mod h1:P1XiOD3dCwIKUDQYPy72D8LYyHL2YPYrpS2s69NZV8Q=
 github.com/golang-jwt/jwt/v4 v4.0.0/go.mod h1:/xlHOz8bRuivTWchD4jCa+NbatV+wEUSzwAxVc6locg=
-github.com/golang-jwt/jwt/v4 v4.5.0 h1:7cYmW1XlMY7h7ii7UhUyChSgS5wUJEnm9uZVTGqOWzg=
 github.com/golang-jwt/jwt/v4 v4.5.0/go.mod h1:m21LjoU+eqJr34lmDMbreY2eSTRJ1cv77w39/MY0Ch0=
+github.com/golang-jwt/jwt/v4 v4.5.1 h1:JdqV9zKUdtaa9gdPlywC3aeoEsR681PlKC+4F5gQgeo=
+github.com/golang-jwt/jwt/v4 v4.5.1/go.mod h1:m21LjoU+eqJr34lmDMbreY2eSTRJ1cv77w39/MY0Ch0=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
 github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
 github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da h1:oI5xCqsCo564l8iNU+DwB5epxmsaqB+rhGL0m5jtYqE=
@@ -653,8 +654,8 @@ k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 h1:pUdcCO1Lk/tbT5ztQWOBi5HBgbBP1
 k8s.io/utils v0.0.0-20240711033017-18e509b52bc8/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
 kmodules.xyz/apiversion v0.2.0 h1:vAQYqZFm4xu4pbB1cAdHbFEPES6EQkcR4wc06xdTOWk=
 kmodules.xyz/apiversion v0.2.0/go.mod h1:oPX8g8LvlPdPX3Yc5YvCzJHQnw3YF/X4/jdW0b1am80=
-kmodules.xyz/client-go v0.30.32 h1:y1qb4IJwYdkROLcc7e0UcJSDj8D2YeLsawAWHnCF+JU=
-kmodules.xyz/client-go v0.30.32/go.mod h1:CAu+JlA8RVGtj6LQHu0Q1w2mnFUajuti49c7T1AvGdM=
+kmodules.xyz/client-go v0.30.38 h1:kAQ3FdgX2HbkmfFGEoeKz7fmJYWo1Ndgdum50aaHyI0=
+kmodules.xyz/client-go v0.30.38/go.mod h1:CAu+JlA8RVGtj6LQHu0Q1w2mnFUajuti49c7T1AvGdM=
 kmodules.xyz/crd-schema-fuzz v0.29.1 h1:zJTlWYOrT5dsVVHW8HGcnR/vaWfxQfNh11QwTtkYpcs=
 kmodules.xyz/crd-schema-fuzz v0.29.1/go.mod h1:n708z9YQqLMP2KNLQVgBcRJw1QpSWLvpNCEi+KJDOYE=
 kmodules.xyz/custom-resources v0.30.0 h1:vR3CbseHMLwR4GvtcJJuRuwIV8voKqFqNii27rMcm1o=
@@ -669,10 +670,10 @@ kmodules.xyz/offshoot-api v0.30.1 h1:TrulAYO+oBsXe9sZZGTmNWIuI8qD2izMpgcTSPvgAmI
 kmodules.xyz/offshoot-api v0.30.1/go.mod h1:T3mpjR6fui0QzOcmQvIuANytW48fe9ytmy/1cgx6D4g=
 kmodules.xyz/prober v0.29.0 h1:Ex7m4F9rH7uWNNJlLgP63ROOM+nUATJkC2L5OQ7nwMg=
 kmodules.xyz/prober v0.29.0/go.mod h1:UtK+HKyI1lFLEKX+HFLyOCVju6TO93zv3kwGpzqmKOo=
-kmodules.xyz/resource-metadata v0.20.0 h1:3nb/K0F6N2s0BOMrHC6+moK60q0Jqvac8UjWI3kW0kY=
-kmodules.xyz/resource-metadata v0.20.0/go.mod h1:yPqwR6xSTXuIgOjR6kNPDDJUe++sS+h7gtCmevJR60g=
-kmodules.xyz/resource-metrics v0.30.4 h1:8HBPtYmo9ETY91gsc55JE8Z986+3ZuRq57M0wZ9npqI=
-kmodules.xyz/resource-metrics v0.30.4/go.mod h1:w9+rz7/s/kGP1GWzYSuRdCn+l7EwpesmESSEHkLBnIQ=
+kmodules.xyz/resource-metadata v0.22.5 h1:CO83J09Gxru3ILdxW1+pzuFyRoGdGKkU6JrbwRxYfsI=
+kmodules.xyz/resource-metadata v0.22.5/go.mod h1:zq0gtycDR21iPzhhqrbOGF4lwffIgQ9xiS8T34aJqjk=
+kmodules.xyz/resource-metrics v0.30.5 h1:ZhpGeR9DCz1HTrKUg/mWhr95wlFzCPRdgVAqwaggy1o=
+kmodules.xyz/resource-metrics v0.30.5/go.mod h1:w9+rz7/s/kGP1GWzYSuRdCn+l7EwpesmESSEHkLBnIQ=
 kmodules.xyz/webhook-runtime v0.29.1 h1:SQ8NvwJpxv5CUuXIubSg9g0Bk8BBnj4dhCWEk6Ou8g8=
 kmodules.xyz/webhook-runtime v0.29.1/go.mod h1:WVgNO4NqFdYwYZ82L6QIycN1Ax47y+yXi7XIHekYylo=
 kubeops.dev/csi-driver-cacerts v0.1.0 h1:WDgKNo5QAiMoVy4c/4ARWeCXJbqdcXdcn8VLImV4VZU=
