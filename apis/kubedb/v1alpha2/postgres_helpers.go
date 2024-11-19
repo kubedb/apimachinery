@@ -305,10 +305,10 @@ func (p *Postgres) SetDefaultReplicationMode(postgresVersion *catalog.PostgresVe
 		}
 	}
 	if p.Spec.Replication.WALLimitPolicy == WALKeepSegment && p.Spec.Replication.WalKeepSegment == nil {
-		p.Spec.Replication.WalKeepSegment = pointer.Int32P(64)
+		p.Spec.Replication.WalKeepSegment = pointer.Int32P(96)
 	}
 	if p.Spec.Replication.WALLimitPolicy == WALKeepSize && p.Spec.Replication.WalKeepSizeInMegaBytes == nil {
-		p.Spec.Replication.WalKeepSizeInMegaBytes = pointer.Int32P(1024)
+		p.Spec.Replication.WalKeepSizeInMegaBytes = pointer.Int32P(1536)
 	}
 	if p.Spec.Replication.WALLimitPolicy == ReplicationSlot && p.Spec.Replication.MaxSlotWALKeepSizeInMegaBytes == nil {
 		p.Spec.Replication.MaxSlotWALKeepSizeInMegaBytes = pointer.Int32P(-1)
