@@ -5597,8 +5597,8 @@ func (in *SolrSpec) DeepCopyInto(out *SolrSpec) {
 	}
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
+		*out = new(SecretReference)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.ZookeeperDigestSecret != nil {
 		in, out := &in.ZookeeperDigestSecret, &out.ZookeeperDigestSecret
