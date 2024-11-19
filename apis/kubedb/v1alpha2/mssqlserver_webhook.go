@@ -137,9 +137,11 @@ func (m *MSSQLServer) ValidateCreateOrUpdate() field.ErrorList {
 	if m.Spec.TLS == nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 			m.Name, "spec.tls is missing"))
-	} else if m.Spec.TLS.IssuerRef == nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("issuerRef"),
-			m.Name, "spec.tls.issuerRef' is missing"))
+	} else {
+		if m.Spec.TLS.IssuerRef == nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("issuerRef"),
+				m.Name, "spec.tls.issuerRef' is missing"))
+		}
 	}
 
 	if m.Spec.PodTemplate != nil {
@@ -289,11 +291,18 @@ func getMSSQLServerContainerEnvs(m *MSSQLServer) []core.EnvVar {
 }
 
 func ValidateMSSQLServerEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceType string) error {
+	presentMSSQL_PID := false
 	for _, env := range envs {
 		present, _ := arrays.Contains(forbiddenEnvs, env.Name)
 		if present {
 			return fmt.Errorf("environment variable %s is forbidden to use in %s spec", env.Name, resourceType)
 		}
+		if env.Name == "MSSQL_PID" {
+			presentMSSQL_PID = true
+		}
+	}
+	if !presentMSSQL_PID {
+		return fmt.Errorf("environment variable %s must be provided in %s spec", kubedb.EnvMSSQLPid, resourceType)
 	}
 	return nil
 }

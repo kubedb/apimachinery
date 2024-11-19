@@ -417,6 +417,7 @@ const (
 
 	// environment variables
 	EnvAcceptEula        = "ACCEPT_EULA"
+	EnvMSSQLPid          = "MSSQL_PID"
 	EnvMSSQLEnableHADR   = "MSSQL_ENABLE_HADR"
 	EnvMSSQLAgentEnabled = "MSSQL_AGENT_ENABLED"
 	EnvMSSQLSAUsername   = "MSSQL_SA_USERNAME"
