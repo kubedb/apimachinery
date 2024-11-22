@@ -68,7 +68,7 @@ const (
 	ProxySQLKey      = "proxysql" + "." + GroupName
 
 	// Auth related constants
-	BasicAuthActiveFromAnnotation = "basic-auth-active-from"
+	BasicAuthActiveFromAnnotation = "kubedb.com/auth-active-from"
 
 	// =========================== Elasticsearch Constants ============================
 	ElasticsearchRestPort                        = 9200
