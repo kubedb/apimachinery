@@ -46,7 +46,7 @@ require (
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/petset v0.0.7
-	kubeops.dev/sidekick v0.0.8
+	kubeops.dev/sidekick v0.0.9
 	kubestash.dev/apimachinery v0.13.0
 	sigs.k8s.io/controller-runtime v0.18.4
 	sigs.k8s.io/yaml v1.4.0

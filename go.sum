@@ -680,8 +680,8 @@ kubeops.dev/csi-driver-cacerts v0.1.0 h1:WDgKNo5QAiMoVy4c/4ARWeCXJbqdcXdcn8VLImV
 kubeops.dev/csi-driver-cacerts v0.1.0/go.mod h1:5a/ZOn5LFw26PPBpTKvsivBjcvVArOrJX24C+k+przk=
 kubeops.dev/petset v0.0.7 h1:F77BTRfUqRVO7kNc8q2oFSSviDmYBqni/osXqu0kgJ4=
 kubeops.dev/petset v0.0.7/go.mod h1:lt0SZV4ohRy7RiwLNUnMoauG4lCbcRbSqhMg20rdUQg=
-kubeops.dev/sidekick v0.0.8 h1:A9OEsy4qmc2sfR1DDHvkfF/LOl/oBUtqSpgBIjvzlRs=
-kubeops.dev/sidekick v0.0.8/go.mod h1:p8CBMYxliVa/TpHW3ZNkqJurx0xqd6YCAQksgwAhj3g=
+kubeops.dev/sidekick v0.0.9 h1:nd6hcctswmUammKW50x8S+KSSIBTmQIqJuTp+eyRT70=
+kubeops.dev/sidekick v0.0.9/go.mod h1:SksBYafOpe8cHeHw9GahNmrkNGsPTxnSUHf7oTXLEVY=
 kubestash.dev/apimachinery v0.13.0 h1:c1K5QzUR/x1Og56+oUufPq7cDX3QljPw9CQrEpVnPrI=
 kubestash.dev/apimachinery v0.13.0/go.mod h1:OuO8kh4EcAerSpllIXM7JaPQfKDGsQoAm3jAt4m0a1E=
 moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 h1:NykkTlRB+X40z86cLHdEmuoTxhNKhQebLT379b1EumA=
