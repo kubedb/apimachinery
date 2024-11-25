@@ -351,3 +351,9 @@ const (
 	UpdatePgBouncerBackendSecret = "UpdateBackendSecret"
 	ConfigSecretDelete           = "ConfigSecretDeleted"
 )
+
+// Memcached Constant
+const (
+	AuthPreviousUsernamePasswordPair = "authData.prev"
+	AuthUsernamePasswordPair         = "authData"
+)
