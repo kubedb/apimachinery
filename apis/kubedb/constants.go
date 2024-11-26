@@ -147,6 +147,9 @@ const (
 	MemcachedExporterAuthVolumeName = "exporter-auth"
 	MemcachedExporterAuthVolumePath = "/auth/"
 
+	// AuthDataKey store Username Password Pairs.
+	AuthDataKey = "authData"
+
 	MemcachedExporterTLSVolumeName = "exporter-tls"
 	MemcachedExporterTLSVolumePath = "/certs/"
 

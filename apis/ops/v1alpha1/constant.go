@@ -110,6 +110,7 @@ const (
 	BasicAuthNextUsernameKey       = "username.next"
 	BasicAuthNextPasswordKey       = "password.next"
 	SecretAlreadyUpdatedAnnotation = "secret-already-updated"
+	AuthDataPreviousKey            = "authData.prev"
 )
 
 // Restart
@@ -350,10 +351,4 @@ const (
 const (
 	UpdatePgBouncerBackendSecret = "UpdateBackendSecret"
 	ConfigSecretDelete           = "ConfigSecretDeleted"
-)
-
-// Memcached Constant
-const (
-	AuthPreviousUsernamePasswordPair = "authData.prev"
-	AuthUsernamePasswordPair         = "authData"
 )
