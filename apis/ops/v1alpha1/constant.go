@@ -110,6 +110,7 @@ const (
 	BasicAuthNextUsernameKey       = "username.next"
 	BasicAuthNextPasswordKey       = "password.next"
 	SecretAlreadyUpdatedAnnotation = "secret-already-updated"
+	AuthDataPreviousKey            = "authData.prev"
 )
 
 // Restart
