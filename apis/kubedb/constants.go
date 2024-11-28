@@ -17,10 +17,13 @@ limitations under the License.
 package kubedb
 
 import (
+	"fmt"
 	"time"
 
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	meta_util "kmodules.xyz/client-go/meta"
+	skapi "kubeops.dev/sidekick/apis/apps/v1alpha1"
 )
 
 const (
@@ -1566,6 +1569,19 @@ const (
 	ResourceKindStatefulSet = "StatefulSet"
 	ResourceKindPetSet      = "PetSet"
 )
+
+var (
+	SidekickGVR       = fmt.Sprintf("%s.%s", skapi.ResourceSidekicks, skapi.SchemeGroupVersion.Group)
+	SidekickOwnerName = SidekickGVR + "/owner-name"
+	SidekickOwnerKind = SidekickGVR + "/owner-kind"
+)
+
+func CommonSidekickLabels() map[string]string {
+	return map[string]string{
+		meta_util.NameLabelKey:      SidekickGVR,
+		meta_util.ManagedByLabelKey: GroupName,
+	}
+}
 
 var (
 	DefaultInitContainerResource = core.ResourceRequirements{

@@ -77,6 +77,14 @@ func (m MariaDB) PodControllerLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Controller.Labels)
 }
 
+func (m MariaDB) SidekickLabels(skName string) map[string]string {
+	return meta_util.OverwriteKeys(nil, kubedb.CommonSidekickLabels(), map[string]string{
+		meta_util.InstanceLabelKey: skName,
+		kubedb.SidekickOwnerName:   m.Name,
+		kubedb.SidekickOwnerKind:   m.ResourceFQN(),
+	})
+}
+
 func (m MariaDB) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = kubedb.ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, m.Labels, override))
