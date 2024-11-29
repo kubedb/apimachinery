@@ -150,7 +150,7 @@ require (
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	go.bytebuilders.dev/license-proxyserver v0.0.18 // indirect
+	go.bytebuilders.dev/license-proxyserver v0.0.19-0.20241022124046-544efbfc2bc4 // indirect
 	go.bytebuilders.dev/license-verifier v0.14.3 // indirect
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.3 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.14 // indirect
