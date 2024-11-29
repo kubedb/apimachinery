@@ -88,6 +88,14 @@ func (m MySQL) PodControllerLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Controller.Labels)
 }
 
+func (m MySQL) SidekickLabels(skName string) map[string]string {
+	return meta_util.OverwriteKeys(nil, kubedb.CommonSidekickLabels(), map[string]string{
+		meta_util.InstanceLabelKey: skName,
+		kubedb.SidekickOwnerName:   m.Name,
+		kubedb.SidekickOwnerKind:   m.ResourceFQN(),
+	})
+}
+
 func (m MySQL) RouterOffshootLabels() map[string]string {
 	return m.offshootLabels(m.RouterOffshootSelectors(), nil)
 }
