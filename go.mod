@@ -19,7 +19,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.75.2
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.75.2
-	go.bytebuilders.dev/audit v0.0.38
+	go.bytebuilders.dev/audit v0.0.39-0.20241023005507-ce9c08eef49b
 	gomodules.xyz/encoding v0.0.8
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0
