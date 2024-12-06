@@ -1342,7 +1342,7 @@ const (
 	RabbitMQDefaultSSLListener1Key     = "listeners.ssl.1"
 	RabbitMQDefaultTCPListenerVal      = "5672"
 	RabbitMQDefaultTLSListenerVal      = "5671"
-	RabbitMQQueueMasterLocatorKey      = "queue_master_locator"
+	RabbitMQQueueLeaderLocatorKey      = "queue_leader_locator"
 	RabbitMQQueueMasterLocatorVal      = "min-masters"
 	RabbitMQDiskFreeLimitKey           = "disk_free_limit.absolute"
 	RabbitMQDiskFreeLimitVal           = "2GB"
