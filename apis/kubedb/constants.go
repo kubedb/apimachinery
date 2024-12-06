@@ -1343,7 +1343,7 @@ const (
 	RabbitMQDefaultTCPListenerVal      = "5672"
 	RabbitMQDefaultTLSListenerVal      = "5671"
 	RabbitMQQueueLeaderLocatorKey      = "queue_leader_locator"
-	RabbitMQQueueMasterLocatorVal      = "min-masters"
+	RabbitMQQueueLeaderLocatorVal      = "min-masters"
 	RabbitMQDiskFreeLimitKey           = "disk_free_limit.absolute"
 	RabbitMQDiskFreeLimitVal           = "2GB"
 	RabbitMQPartitionHandingKey        = "cluster_partition_handling"
