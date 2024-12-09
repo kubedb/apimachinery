@@ -2446,6 +2446,11 @@ func (in *MSSQLServerSpec) DeepCopyInto(out *MSSQLServerSpec) {
 		*out = new(Archiver)
 		**out = **in
 	}
+	if in.Arbiter != nil {
+		in, out := &in.Arbiter, &out.Arbiter
+		*out = new(ArbiterSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
