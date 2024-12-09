@@ -418,7 +418,8 @@ const (
 	MSSQLSecondaryServicePortName      = "secondary"
 	MSSQLDatabasePort                  = 1433
 	MSSQLDatabaseMirroringEndpointPort = 5022
-	MSSQLCoordinatorPort               = 2381
+	MSSQLCoordinatorPort               = 2380
+	MSSQLCoordinatorClientPort         = 2379
 	MSSQLMonitoringDefaultServicePort  = 9399
 
 	// environment variables
