@@ -24,6 +24,7 @@ import (
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	"kubedb.dev/apimachinery/crds"
 
 	"github.com/Masterminds/semver/v3"
@@ -188,6 +189,9 @@ func (p Postgres) StatsServiceLabels() map[string]string {
 func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topology *core_util.Topology) {
 	if p == nil {
 		return
+	}
+	if p.Spec.StandbyMode == nil {
+		p.Spec.StandbyMode = ptr.To(PostgresStandbyMode(dbapi.HotPostgresStandbyMode))
 	}
 
 	if p.Spec.StorageType == "" {
