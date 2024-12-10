@@ -416,6 +416,8 @@ const (
 	MSSQLDatabasePortName              = "db"
 	MSSQLPrimaryServicePortName        = "primary"
 	MSSQLSecondaryServicePortName      = "secondary"
+	MSSQLCoordinatorPortName           = "coordinator"
+	MSSQLCoordinatorClientPortName     = "coordinatorclient"
 	MSSQLDatabasePort                  = 1433
 	MSSQLDatabaseMirroringEndpointPort = 5022
 	MSSQLCoordinatorPort               = 2380
