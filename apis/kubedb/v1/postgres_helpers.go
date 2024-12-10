@@ -24,7 +24,6 @@ import (
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/crds"
 
 	"github.com/Masterminds/semver/v3"
@@ -201,7 +200,7 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 		return
 	}
 	if p.Spec.StandbyMode == nil {
-		p.Spec.StandbyMode = ptr.To(PostgresStandbyMode(dbapi.HotPostgresStandbyMode))
+		p.Spec.StandbyMode = ptr.To(HotPostgresStandbyMode)
 	}
 	if p.Spec.StorageType == "" {
 		p.Spec.StorageType = StorageTypeDurable
