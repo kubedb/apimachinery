@@ -159,9 +159,10 @@ const (
 
 // Elasticsearch Constant
 const (
-	PrepareCustomConfig       = "PrepareCustomConfig"
-	PrepareSecureCustomConfig = "PrepareSecureCustomConfig"
-	ReconfigureSecurityAdmin  = "ReconfigureSecurityAdmin"
+	PrepareCustomConfig               = "PrepareCustomConfig"
+	PrepareSecureCustomConfig         = "PrepareSecureCustomConfig"
+	ReconfigureSecurityAdmin          = "ReconfigureSecurityAdmin"
+	DisabledMasterNodeShardAllocation = "DisabledMasterNodeShardAllocation"
 
 	HorizontalScaleMasterNode       = "HorizontalScaleMasterNode"
 	HorizontalScaleDataNode         = "HorizontalScaleDataNode"
