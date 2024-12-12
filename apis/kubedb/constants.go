@@ -836,6 +836,7 @@ const (
 	KafkaListenerSecurityProtocolMap       = "listener.security.protocol.map"
 	KafkaControllerNodeCount               = "controller.count"
 	KafkaControllerQuorumVoters            = "controller.quorum.voters"
+	KafkaControllerQuorumBootstrapServers  = "controller.quorum.bootstrap.servers"
 	KafkaControllerListenersName           = "controller.listener.names"
 	KafkaInterBrokerListener               = "inter.broker.listener.name"
 	KafkaNodeRole                          = "process.roles"
