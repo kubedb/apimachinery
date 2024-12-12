@@ -27337,6 +27337,10 @@
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLHorizontalScalingSpec"
         },
+        "replicationModeTransformation": {
+          "description": "Specifies information transform Remote Replica to GroupReplication",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReplicationModeTransformSpec"
+        },
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
@@ -27390,6 +27394,34 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReplicaReadinessCriteria": {
       "description": "MySQLReplicaReadinessCriteria is the criteria for checking readiness of a MySQL pod after updating, horizontal scaling etc.",
       "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLReplicationModeTransformSpec": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "certificates": {
+          "description": "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.CertificateSpec"
+          }
+        },
+        "issuerRef": {
+          "description": "IssuerRef is a reference to a Certificate Issuer.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+        },
+        "mode": {
+          "description": "Group Replication can be deployed in either \"Single-Primary\" or \"Multi-Primary\" mode",
+          "type": "string"
+        },
+        "requireSSL": {
+          "description": "Indicates that the database server need to be encrypted connections(ssl)",
+          "type": "boolean"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLTLSSpec": {
       "type": "object",

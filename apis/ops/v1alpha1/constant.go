@@ -284,7 +284,11 @@ const (
 
 // MySQL/MariaDB Constants
 const (
-	TempIniFilesPath = "/tmp/kubedb-custom-ini-files"
+	TempIniFilesPath           = "/tmp/kubedb-custom-ini-files"
+	StopRemoteReplica          = "StopRemoteReplica"
+	DBPatch                    = "DBPatch"
+	StopRemoteReplicaSucceeded = "StopRemoteReplicaSucceeded"
+	DBPatchSucceeded           = "DBPatchSucceeded"
 )
 
 // Postgres Constants
