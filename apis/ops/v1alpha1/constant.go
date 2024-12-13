@@ -111,6 +111,7 @@ const (
 	BasicAuthNextPasswordKey       = "password.next"
 	SecretAlreadyUpdatedAnnotation = "secret-already-updated"
 	AuthDataPreviousKey            = "authData.prev"
+	PatchDefaultConfig             = "PatchDefaultConfig"
 )
 
 // Restart
