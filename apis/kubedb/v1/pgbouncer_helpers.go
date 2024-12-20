@@ -239,10 +239,10 @@ func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion, uses
 	// that's why we need to set RunAsUser and RunAsGroup 70
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
-			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = pointer.Int64P(70)
+			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = pointer.Int64P(*pgBouncerVersion.Spec.SecurityContext.RunAsUser)
 		}
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
-			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = pointer.Int64P(70)
+			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = pointer.Int64P(*pgBouncerVersion.Spec.SecurityContext.RunAsUser)
 		}
 	}
 	dbContainer := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, ResourceSingularPgBouncer)
