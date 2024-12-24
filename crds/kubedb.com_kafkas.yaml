@@ -7038,6 +7038,36 @@ spec:
                 - Durable
                 - Ephemeral
                 type: string
+              tieredStorage:
+                properties:
+                  configSecret:
+                    properties:
+                      name:
+                        default: ""
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  storageBackendType:
+                    enum:
+                    - s3
+                    - gcs
+                    - azure
+                    - file
+                    type: string
+                  storageManagerClassName:
+                    type: string
+                  storageManagerClassPath:
+                    type: string
+                  storageSecret:
+                    properties:
+                      name:
+                        default: ""
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                required:
+                - storageBackendType
+                type: object
               tls:
                 properties:
                   certificates:
