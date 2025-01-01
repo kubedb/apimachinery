@@ -1698,7 +1698,7 @@ var (
 			core.ResourceMemory: resource.MustParse("1.5Gi"),
 		},
 		Limits: core.ResourceList{
-			core.ResourceMemory: resource.MustParse("4Gi"),
+			core.ResourceMemory: resource.MustParse("2Gi"),
 		},
 	}
 
