@@ -27118,14 +27118,6 @@ func schema_apimachinery_apis_kubedb_v1_KafkaTieredStorage(ref common.ReferenceC
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"storageBackendType": {
-						SchemaProps: spec.SchemaProps{
-							Description: "StorageBackendType is defined as the type of storage backend to be used for tiered storage(like S3, GCS, Azure, File etc)",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"storageManagerClassName": {
 						SchemaProps: spec.SchemaProps{
 							Description: "StorageManagerClassName is defined as the class name of the storage manager to be used for tiered storage It can be used your own custom storage manager class name",
@@ -27140,24 +27132,9 @@ func schema_apimachinery_apis_kubedb_v1_KafkaTieredStorage(ref common.ReferenceC
 							Format:      "",
 						},
 					},
-					"storageSecret": {
-						SchemaProps: spec.SchemaProps{
-							Description: "StorageSecret is defined as the secret reference to be used for tiered storage backend type AWS credentials for S3, GCS credentials for GCS, Azure credentials for Azure etc",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"configSecret": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret is used for tiered storage additional configurations",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
 				},
-				Required: []string{"storageBackendType"},
 			},
 		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
