@@ -591,3 +591,10 @@ func (k *Kafka) KafkaSaslListenerProtocolConfigKey(protocol string, mechanism st
 func (k *Kafka) KafkaEnabledSASLMechanismsKey(protocol string) string {
 	return fmt.Sprintf("listener.name.%s.sasl.enabled.mechanisms", strings.ToLower(protocol))
 }
+
+func (k *Kafka) GetKafkaBrokerCounts() int {
+	if k.Spec.Topology != nil {
+		return int(*k.Spec.Topology.Broker.Replicas)
+	}
+	return int(*k.Spec.Replicas)
+}
