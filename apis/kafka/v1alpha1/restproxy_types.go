@@ -70,17 +70,10 @@ type RestProxySpec struct {
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
-	// EnableSchemaRegistry indicates whether the REST Proxy should connect to a Schema Registry.
-	// If set to true, the REST Proxy will establish a connection to the Schema Registry before communicating with Kafka.
-	// This is necessary when producing or consuming messages that use Avro or other schema-based formats.
-	// +optional
-	EnableSchemaRegistry bool `json:"enableSchemaRegistry,omitempty"`
-
 	// SchemaRegistryRef provides a reference to the Schema Registry configuration.
-	// If EnableSchemaRegistry and SchemaRegistryRef are both set, the REST Proxy will connect to the external Schema Registry.
-	// Otherwise, the REST Proxy will use the internal Schema Registry.
+	// the REST Proxy will connect to the Schema Registry if SchemaRegistryRef is provided.
 	// +optional
-	SchemaRegistryRef *kmapi.ObjectReference `json:"schemaRegistryRef,omitempty"`
+	SchemaRegistryRef *SchemaRegistryRef `json:"schemaRegistryRef,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
@@ -94,6 +87,19 @@ type RestProxySpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+}
+
+// SchemaRegistryRef provides a reference to the Schema Registry configuration.
+type SchemaRegistryRef struct {
+	// Name and namespace of appbinding of schema registry
+	// If this is provided, the REST Proxy will connect to the Schema Registry
+	// InternallyManaged must be set to false in this case
+	// +optional
+	*kmapi.ObjectReference `json:",omitempty"`
+
+	// InternallyManaged true specifies if the schema registry runs internally along with the rest proxy
+	// +optional
+	InternallyManaged bool `json:"internallyManaged,omitempty"`
 }
 
 // RestProxyStatus defines the observed state of RestProxy

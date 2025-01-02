@@ -96,11 +96,16 @@ func (k *RestProxy) ValidateCreateOrUpdate() field.ErrorList {
 		return allErr
 	}
 
-	if !k.Spec.EnableSchemaRegistry {
-		if k.Spec.SchemaRegistryRef != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSchemaRegistry"),
+	if k.Spec.SchemaRegistryRef != nil {
+		if k.Spec.SchemaRegistryRef.InternallyManaged && k.Spec.SchemaRegistryRef.ObjectReference != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("schemaRegistryRef").Child("objectReference"),
 				k.Name,
-				"SchemaRegistryRef can only be set when EnableSchemaRegistry is true"))
+				"ObjectReference should be nil when InternallyManaged is true"))
+		}
+		if !k.Spec.SchemaRegistryRef.InternallyManaged && k.Spec.SchemaRegistryRef.ObjectReference == nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("schemaRegistryRef").Child("objectReference"),
+				k.Name,
+				"ObjectReference should not be nil when InternallyManaged is false"))
 		}
 	}
 

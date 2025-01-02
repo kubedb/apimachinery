@@ -55,8 +55,6 @@ spec:
                 - WipeOut
                 - DoNotTerminate
                 type: string
-              enableSchemaRegistry:
-                type: boolean
               healthChecker:
                 default:
                   failureThreshold: 3
@@ -3156,6 +3154,8 @@ spec:
                 type: integer
               schemaRegistryRef:
                 properties:
+                  internallyManaged:
+                    type: boolean
                   name:
                     type: string
                   namespace:
