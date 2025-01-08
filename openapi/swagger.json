@@ -32254,7 +32254,7 @@
       }
     },
     "xyz.kmodules.client-go.api.v1.TypedObjectReference": {
-      "description": "TypedObjectReference represents an typed namespaced object.",
+      "description": "TypedObjectReference represents a typed namespaced object.",
       "type": "object",
       "required": [
         "name"
