@@ -195,6 +195,7 @@ func (c *Client) GetToken() (*identityapi.InboxTokenRequestResponse, error) {
 	if err = json.Unmarshal(body, tokenResponse); err != nil {
 		return nil, err
 	}
+	tokenResponse.CABundle = string(c.caCert)
 
 	return tokenResponse, nil
 }

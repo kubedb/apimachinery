@@ -46,6 +46,7 @@ type InboxTokenRequestRequest struct{}
 
 type InboxTokenRequestResponse struct {
 	AgentJWTToken string `json:"agentJwtToken"`
+	CABundle      string `json:"caBundle,omitempty"`
 }
 
 func init() {

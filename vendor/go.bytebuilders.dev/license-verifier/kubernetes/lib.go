@@ -285,11 +285,11 @@ func verifyLicensePeriodically(le *LicenseEnforcer, licenseFile string, stopCh <
 			return false, err
 		}
 		// Validate license
-		_, err = verifier.CheckLicense(le.opts)
+		lic, err := verifier.CheckLicense(le.opts)
 		if err != nil {
 			return false, err
 		}
-		klog.Infoln("Successfully verified license!")
+		klog.Infof("Successfully verified license! Valid until: %v", lic.NotAfter.UTC().Format(time.RFC822))
 		// return false so that the loop never ends
 		return false, nil
 	}
@@ -332,11 +332,11 @@ func checkLicenseFile(le *LicenseEnforcer) error {
 		return err
 	}
 	// Validate license
-	_, err = verifier.CheckLicense(le.opts)
+	lic, err := verifier.CheckLicense(le.opts)
 	if err != nil {
 		return err
 	}
-	klog.Infoln("Successfully verified license!")
+	klog.Infof("Successfully verified license! Valid until: %v", lic.NotAfter.UTC().Format(time.RFC822))
 	return nil
 }
 
