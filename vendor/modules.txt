@@ -1780,7 +1780,7 @@ kubeops.dev/petset/client/informers/externalversions/internalinterfaces
 kubeops.dev/petset/client/listers/apps/v1
 kubeops.dev/petset/crds
 kubeops.dev/petset/pkg/features
-# kubeops.dev/sidekick v0.0.10-0.20241122131943-163e27e5ef71
+# kubeops.dev/sidekick v0.0.10
 ## explicit; go 1.22.1
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
@@ -1865,7 +1865,7 @@ sigs.k8s.io/structured-merge-diff/v4/value
 ## explicit; go 1.12
 sigs.k8s.io/yaml
 sigs.k8s.io/yaml/goyaml.v2
-# stash.appscode.dev/apimachinery v0.37.0
+# stash.appscode.dev/apimachinery v0.38.0
 ## explicit; go 1.22.0
 stash.appscode.dev/apimachinery/apis
 stash.appscode.dev/apimachinery/apis/repositories
