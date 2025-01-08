@@ -48,7 +48,7 @@ require (
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/petset v0.0.7
 	kubeops.dev/sidekick v0.0.10-0.20241122131943-163e27e5ef71
-	kubestash.dev/apimachinery v0.14.0
+	kubestash.dev/apimachinery v0.15.0
 	sigs.k8s.io/controller-runtime v0.18.4
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.37.0
