@@ -49,13 +49,14 @@ API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,PodSpec,V
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,ExternalIPs
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,LoadBalancerSourceRanges
 API rule violation: list_type_missing,kmodules.xyz/offshoot-api/api/v1,ServiceSpec,Ports
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseConnectionSpec,CACert
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseConnectionSpec,Databases
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseConnectionSpec,Gateway
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatSpec,Roles
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatsSpec,Nodes
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchSchemaOverviewSpec,Indices
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,GatewayConnection,CACert
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,GenericSchemaOverviewSpec,Databases
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,InClusterConnection,CACert
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MariaDBQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBCollectionSpec,TotalSize
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBQueriesSpec,Queries
