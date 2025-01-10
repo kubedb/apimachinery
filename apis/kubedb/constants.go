@@ -626,6 +626,7 @@ const (
 	EnvSkipPasswdEncryption            = "PGPOOL_SKIP_PASSWORD_ENCRYPTION"
 	PgpoolConfigSecretMountPath        = "/config"
 	PgpoolConfigVolumeName             = "pgpool-config"
+	PgpoolPcpConfigVolumeName          = "pgpool-pcp-config"
 	PgpoolContainerName                = "pgpool"
 	PgpoolDefaultServicePort           = 9999
 	PgpoolMonitoringDefaultServicePort = 9719
