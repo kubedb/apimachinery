@@ -524,6 +524,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_DeepStorageSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid":                                         schema_apimachinery_apis_kubedb_v1alpha2_Druid(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidApp":                                      schema_apimachinery_apis_kubedb_v1alpha2_DruidApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidBind":                                     schema_apimachinery_apis_kubedb_v1alpha2_DruidBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidClusterTopology":                          schema_apimachinery_apis_kubedb_v1alpha2_DruidClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidDataNode":                                 schema_apimachinery_apis_kubedb_v1alpha2_DruidDataNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidList":                                     schema_apimachinery_apis_kubedb_v1alpha2_DruidList(ref),
@@ -629,6 +630,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLStatus":                                schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ":                                      schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQ(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQBind":                                  schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQList":                                  schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQStatus":                                schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQStatus(ref),
@@ -651,6 +653,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference":                               schema_apimachinery_apis_kubedb_v1alpha2_SecretReference(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SemiSyncSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_SemiSyncSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Singlestore":                                   schema_apimachinery_apis_kubedb_v1alpha2_Singlestore(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SinglestoreBind":                               schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SinglestoreList":                               schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SinglestoreNode":                               schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SinglestoreSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreSpec(ref),
@@ -658,6 +661,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SinglestoreTopology":                           schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Solr":                                          schema_apimachinery_apis_kubedb_v1alpha2_Solr(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrApp":                                       schema_apimachinery_apis_kubedb_v1alpha2_SolrApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBind":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology":                           schema_apimachinery_apis_kubedb_v1alpha2_SolrClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrList":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrNode":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrNode(ref),
@@ -26862,6 +26866,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidApp(ref common.ReferenceCallb
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_DruidBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Druid": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid"),
+						},
+					},
+				},
+				Required: []string{"Druid"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_DruidClusterTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -33101,6 +33125,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQ(ref common.ReferenceCallb
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"RabbitMQ": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ"),
+						},
+					},
+				},
+				Required: []string{"RabbitMQ"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RabbitMQ"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_RabbitMQList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34410,6 +34454,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Singlestore(ref common.ReferenceCa
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Singlestore": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Singlestore"),
+						},
+					},
+				},
+				Required: []string{"Singlestore"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Singlestore"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34739,6 +34803,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Solr(ref common.ReferenceCallback)
 }
 
 func schema_apimachinery_apis_kubedb_v1alpha2_SolrApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Solr": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Solr"),
+						},
+					},
+				},
+				Required: []string{"Solr"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Solr"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_SolrBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
