@@ -31,6 +31,14 @@ const (
 	ResourcePluralMariaDB   = "mariadbs"
 )
 
+// +kubebuilder:validation:Enum=GroupReplication;InnoDBCluster;RemoteReplica;SemiSync
+type MariaDBMode string
+
+const (
+	MariaDBModeReplication   MariaDBMode = "MariaDBReplication"
+	MariaDBModeGaleraCluster MariaDBMode = "GaleraCluster"
+)
+
 // MariaDB defines a MariaDB database.
 
 // +genclient
@@ -61,6 +69,9 @@ type MariaDBSpec struct {
 
 	// Number of instances to deploy for a MariaDB database.
 	Replicas *int32 `json:"replicas,omitempty"`
+
+	// MariaDB cluster topology
+	Topology *MariaDBTopology `json:"topology,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -171,4 +182,10 @@ type MariaDBList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 	// Items is a list of MariaDB TPR objects
 	Items []MariaDB `json:"items,omitempty"`
+}
+
+type MariaDBTopology struct {
+	// If set to -
+	// "GroupReplication", GroupSpec is required and MariaDB servers will start  a replication group
+	Mode *MariaDBMode `json:"mode,omitempty"`
 }
