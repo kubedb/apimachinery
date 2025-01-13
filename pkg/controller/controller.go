@@ -19,6 +19,7 @@ package controller
 import (
 	"time"
 
+	configapi "kubedb.dev/apimachinery/apis/config/v1alpha1"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 	kubedbinformers "kubedb.dev/apimachinery/client/informers/externalversions"
 
@@ -88,6 +89,7 @@ type Config struct {
 
 	// Only watch or reconcile objects in this namespace (usually for license reasons)
 	RestrictToNamespace    string
+	LicenseRestrictions    configapi.LicenseRestrictions
 	ResyncPeriod           time.Duration
 	ReadinessProbeInterval time.Duration
 	MaxNumRequeues         int

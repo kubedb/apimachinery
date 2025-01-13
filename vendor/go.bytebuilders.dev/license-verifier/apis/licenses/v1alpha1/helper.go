@@ -17,7 +17,7 @@ limitations under the License.
 package v1alpha1
 
 func (l License) DisableAnalytics() bool {
-	return len(l.FeatureFlags) > 0 && l.FeatureFlags["DisableAnalytics"] == "true"
+	return len(l.FeatureFlags) > 0 && l.FeatureFlags[FeatureDisableAnalytics] == "true"
 }
 
 func (i *License) Less(j *License) bool {
