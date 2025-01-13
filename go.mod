@@ -20,7 +20,7 @@ require (
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.75.2
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.75.2
 	go.bytebuilders.dev/audit v0.0.39
-	go.bytebuilders.dev/license-verifier/kubernetes v0.14.4
+	go.bytebuilders.dev/license-verifier/kubernetes v0.14.5
 	gomodules.xyz/encoding v0.0.8
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0
@@ -151,8 +151,8 @@ require (
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	go.bytebuilders.dev/license-proxyserver v0.0.19 // indirect
-	go.bytebuilders.dev/license-verifier v0.14.4 // indirect
+	go.bytebuilders.dev/license-proxyserver v0.0.20 // indirect
+	go.bytebuilders.dev/license-verifier v0.14.5 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.14 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.14 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.14 // indirect
