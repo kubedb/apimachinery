@@ -255,3 +255,10 @@ type ArchiverRecovery struct {
 	FullDBRepository    *kmapi.ObjectReference   `json:"fullDBRepository,omitempty"`
 	ReplicationStrategy *PITRReplicationStrategy `json:"replicationStrategy,omitempty"`
 }
+
+type DBBindInterface interface {
+	ServiceNames() (string, string) // (DBServiceName, UIServiceName)
+	Ports() (int, int)              // (DBPort, UIPort)
+	SecretName() string
+	CertSecretName() string
+}
