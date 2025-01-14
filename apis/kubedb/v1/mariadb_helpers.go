@@ -124,6 +124,18 @@ func (m MariaDB) IsCluster() bool {
 	return pointer.Int32(m.Spec.Replicas) > 1
 }
 
+func (m MariaDB) IsGaleraCluster() bool {
+	return m.Spec.Topology != nil &&
+		m.Spec.Topology.Mode != nil &&
+		*m.Spec.Topology.Mode == MariaDBModeGaleraCluster
+}
+
+func (m MariaDB) IsMariaDBReplication() bool {
+	return m.Spec.Topology != nil &&
+		m.Spec.Topology.Mode != nil &&
+		*m.Spec.Topology.Mode == MariaDBModeReplication
+}
+
 func (m MariaDB) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(m.ServiceName(), "pods")
 }
