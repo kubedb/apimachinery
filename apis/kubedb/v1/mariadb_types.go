@@ -31,7 +31,7 @@ const (
 	ResourcePluralMariaDB   = "mariadbs"
 )
 
-// +kubebuilder:validation:Enum=GroupReplication;InnoDBCluster;RemoteReplica;SemiSync
+// +kubebuilder:validation:Enum=MariaDBReplication;GaleraCluster
 type MariaDBMode string
 
 const (

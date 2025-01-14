@@ -4737,6 +4737,14 @@ spec:
                     type: object
                     x-kubernetes-map-type: atomic
                 type: object
+              topology:
+                properties:
+                  mode:
+                    enum:
+                    - MariaDBReplication
+                    - GaleraCluster
+                    type: string
+                type: object
               version:
                 type: string
               wsrepSSTMethod:
