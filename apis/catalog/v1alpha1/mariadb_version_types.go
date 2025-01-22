@@ -54,6 +54,8 @@ type MariaDBVersionSpec struct {
 	Version string `json:"version"`
 	// Database Image
 	DB MariaDBVersionDatabase `json:"db"`
+	// Maxscale Image
+	Maxscale MariaDBVersionMaxscale `json:"maxscale"`
 	// Exporter Image
 	Exporter MariaDBVersionExporter `json:"exporter"`
 	// Coordinator Image
@@ -84,6 +86,11 @@ type MariaDBVersionSpec struct {
 
 // MariaDBVersionDatabase is the mariadb image
 type MariaDBVersionDatabase struct {
+	Image string `json:"image"`
+}
+
+// MariaDBVersionMaxscale is the mariadb maxscale image
+type MariaDBVersionMaxscale struct {
 	Image string `json:"image"`
 }
 

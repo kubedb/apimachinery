@@ -58,6 +58,10 @@ func (m MariaDB) OffshootName() string {
 	return m.Name
 }
 
+func (m MariaDB) OffshootMaxscaleName() string {
+	return meta_util.NameWithSuffix(m.Name, "maxscale")
+}
+
 func (m MariaDB) OffshootSelectors() map[string]string {
 	return map[string]string{
 		meta_util.NameLabelKey:      m.ResourceFQN(),
@@ -66,16 +70,36 @@ func (m MariaDB) OffshootSelectors() map[string]string {
 	}
 }
 
+func (m MariaDB) OffshootMaxscaleSelectors() map[string]string {
+	return map[string]string{
+		meta_util.NameLabelKey:      m.ResourceFQN(),
+		meta_util.InstanceLabelKey:  m.OffshootMaxscaleName(),
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
+	}
+}
+
 func (m MariaDB) OffshootLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), nil)
+}
+
+func (m MariaDB) OffshootMaxscaleLabels() map[string]string {
+	return m.offshootLabels(m.OffshootMaxscaleSelectors(), nil)
 }
 
 func (m MariaDB) PodLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Labels)
 }
 
+func (m MariaDB) MaxscalePodLabels() map[string]string {
+	return m.offshootLabels(m.OffshootMaxscaleSelectors(), m.Spec.PodTemplate.Labels)
+}
+
 func (m MariaDB) PodControllerLabels() map[string]string {
 	return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Controller.Labels)
+}
+
+func (m MariaDB) MaxscalePodControllerLabels() map[string]string {
+	return m.offshootLabels(m.OffshootMaxscaleSelectors(), m.Spec.PodTemplate.Controller.Labels)
 }
 
 func (m MariaDB) SidekickLabels(skName string) map[string]string {
@@ -138,6 +162,10 @@ func (m MariaDB) IsMariaDBReplication() bool {
 
 func (m MariaDB) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(m.ServiceName(), "pods")
+}
+
+func (m MariaDB) MaxscaleGoverningServiceName() string {
+	return meta_util.NameWithSuffix(m.OffshootMaxscaleName(), "pods")
 }
 
 func (m MariaDB) PeerName(idx int) string {
