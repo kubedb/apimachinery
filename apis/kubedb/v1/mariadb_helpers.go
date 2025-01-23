@@ -59,7 +59,7 @@ func (m MariaDB) OffshootName() string {
 }
 
 func (m MariaDB) OffshootMaxscaleName() string {
-	return meta_util.NameWithSuffix(m.Name, "maxscale")
+	return meta_util.NameWithSuffix(m.Name, kubedb.MaxscaleCommonName)
 }
 
 func (m MariaDB) OffshootSelectors() map[string]string {
