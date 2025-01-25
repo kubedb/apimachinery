@@ -528,6 +528,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBSpec":                                         schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBStatus":                                       schema_apimachinery_apis_kubedb_v1_MariaDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBTopology":                                     schema_apimachinery_apis_kubedb_v1_MariaDBTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.MaxScaleSpec":                                        schema_apimachinery_apis_kubedb_v1_MaxScaleSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Memcached":                                           schema_apimachinery_apis_kubedb_v1_Memcached(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MemcachedList":                                       schema_apimachinery_apis_kubedb_v1_MemcachedList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MemcachedSpec":                                       schema_apimachinery_apis_kubedb_v1_MemcachedSpec(ref),
@@ -27478,14 +27479,63 @@ func schema_apimachinery_apis_kubedb_v1_MariaDBTopology(ref common.ReferenceCall
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "If set to - \"GroupReplication\", GroupSpec is required and MariaDB servers will start  a replication group",
+							Description: "If set to - mode of the topology, possible values MariaDBReplication,GaleraCluster. Must be set for topology set up",
 							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxscale": {
+						SchemaProps: spec.SchemaProps{
+							Description: "must set for MariaDBReplication mode",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.MaxScaleSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1.MaxScaleSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1_MaxScaleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of instances to deploy for a MariaDB database.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage spec to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"enableUI": {
+						SchemaProps: spec.SchemaProps{
+							Description: "enable/disable MaxscaleUI",
+							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
