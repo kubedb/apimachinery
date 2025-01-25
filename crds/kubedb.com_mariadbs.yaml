@@ -7898,6 +7898,11 @@ spec:
                           volumeName:
                             type: string
                         type: object
+                      storageType:
+                        enum:
+                        - Durable
+                        - Ephemeral
+                        type: string
                     type: object
                   mode:
                     enum:

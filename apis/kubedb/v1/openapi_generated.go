@@ -27524,6 +27524,13 @@ func schema_apimachinery_apis_kubedb_v1_MaxScaleSpec(ref common.ReferenceCallbac
 							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType can be durable (default) or ephemeral",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"enableUI": {
 						SchemaProps: spec.SchemaProps{
 							Description: "enable/disable MaxscaleUI",

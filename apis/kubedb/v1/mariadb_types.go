@@ -202,6 +202,8 @@ type MaxScaleSpec struct {
 	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 	// Storage spec to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+	// StorageType can be durable (default) or ephemeral
+	StorageType StorageType `json:"storageType,omitempty"`
 	// enable/disable MaxscaleUI
 	// +optional
 	EnableUI *bool `json:"enableUI,omitempty"`
