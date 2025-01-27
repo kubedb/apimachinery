@@ -367,6 +367,8 @@ const (
 	MaxscaleContainerName     = "maxscale"
 	MaxscaleInitContainerName = "maxscale-init"
 	MaxscaleServerName        = "server"
+	MaxscaleUIPort            = 8989
+	MaxscaleUIPortName        = "ui"
 
 	// =========================== SingleStore Constants ============================
 	SinglestoreDatabasePortName       = "db"
