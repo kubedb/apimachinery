@@ -358,3 +358,8 @@ const (
 	UpdatePgBouncerBackendSecret = "UpdateBackendSecret"
 	ConfigSecretDelete           = "ConfigSecretDeleted"
 )
+
+// Pgpool Constants
+const (
+	UpdateConfigSecret = "UpdateConfigSecret"
+)

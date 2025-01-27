@@ -626,6 +626,7 @@ const (
 	EnvSkipPasswdEncryption            = "PGPOOL_SKIP_PASSWORD_ENCRYPTION"
 	PgpoolConfigSecretMountPath        = "/config"
 	PgpoolConfigVolumeName             = "pgpool-config"
+	PgpoolPcpConfigVolumeName          = "pgpool-pcp-config"
 	PgpoolContainerName                = "pgpool"
 	PgpoolDefaultServicePort           = 9999
 	PgpoolMonitoringDefaultServicePort = 9719
@@ -649,6 +650,9 @@ const (
 	PgpoolDatabasePortName             = "db"
 	PgpoolPcpPortName                  = "pcp"
 	PgpoolCustomConfigFile             = "pgpool.conf"
+	PgpoolCustomHBAConfigFile          = "pool_hba.conf"
+	PgpoolCustomPCPFile                = "pcp.conf"
+	PGPOOL_INSTALL_DIR                 = "/opt/pgpool-II"
 	// ========================================== ZooKeeper Constants =================================================//
 
 	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"
