@@ -149,7 +149,7 @@ func checkExpected(req *core.ResourceRequirements, old *core.ResourceRequirement
 	}
 
 	// If old requests existed but no limits, verify limits are set from requests
-	if old != nil && old.Requests != nil && (old.Limits == nil || len(old.Limits) == 0) {
+	if old != nil && old.Requests != nil && len(old.Limits) == 0 {
 		for name, oldReq := range old.Requests {
 			if newLim, exists := req.Limits[name]; !exists || newLim.Cmp(oldReq) != 0 {
 				return false
@@ -162,7 +162,7 @@ func checkExpected(req *core.ResourceRequirements, old *core.ResourceRequirement
 	}
 
 	// If old limits existed but no requests, verify requests are set from limits
-	if old != nil && old.Limits != nil && (old.Requests == nil || len(old.Requests) == 0) {
+	if old != nil && old.Limits != nil && len(old.Requests) == 0 {
 		for name, oldLim := range old.Limits {
 			if newReq, exists := req.Requests[name]; !exists || newReq.Cmp(oldLim) != 0 {
 				return false
@@ -175,7 +175,7 @@ func checkExpected(req *core.ResourceRequirements, old *core.ResourceRequirement
 	}
 
 	// If neither requests nor limits existed, verify default values are used
-	if old != nil && (old.Requests == nil || len(old.Requests) == 0) && (old.Limits == nil || len(old.Limits) == 0) {
+	if old != nil && len(old.Requests) == 0 && len(old.Limits) == 0 {
 		// CPU check
 		if cpuReq, exists := req.Requests[core.ResourceCPU]; !exists || cpuReq.Cmp(*DefaultResources.Requests.Cpu()) != 0 {
 			return false
