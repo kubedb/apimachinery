@@ -416,9 +416,12 @@ const (
 	MSSQLDatabasePortName              = "db"
 	MSSQLPrimaryServicePortName        = "primary"
 	MSSQLSecondaryServicePortName      = "secondary"
+	MSSQLCoordinatorPortName           = "coordinator"
+	MSSQLCoordinatorClientPortName     = "coordinatclient"
 	MSSQLDatabasePort                  = 1433
 	MSSQLDatabaseMirroringEndpointPort = 5022
-	MSSQLCoordinatorPort               = 2381
+	MSSQLCoordinatorPort               = 2380
+	MSSQLCoordinatorClientPort         = 2379
 	MSSQLMonitoringDefaultServicePort  = 9399
 
 	// environment variables
@@ -1695,7 +1698,7 @@ var (
 			core.ResourceMemory: resource.MustParse("1.5Gi"),
 		},
 		Limits: core.ResourceList{
-			core.ResourceMemory: resource.MustParse("4Gi"),
+			core.ResourceMemory: resource.MustParse("2Gi"),
 		},
 	}
 
