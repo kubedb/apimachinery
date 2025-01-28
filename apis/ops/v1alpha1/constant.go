@@ -220,7 +220,8 @@ const (
 
 // RabbitMQ Constants
 const (
-	UpdateNodePVCs = "UpdateNodePVCs"
+	UpdateNodePVCs        = "UpdateNodePVCs"
+	EnableAllFeatureFlags = "EnableAllFeatureFlags"
 )
 
 // MongoDB Constants
