@@ -258,7 +258,11 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 	if m.Spec.Replicas == nil {
 		m.Spec.Replicas = pointer.Int32P(1)
 	}
-
+	if *m.Spec.Replicas > 1 && m.Spec.Topology == nil {
+		m.Spec.Topology = &MariaDBTopology{
+			Mode: ptr.To(MariaDBModeGaleraCluster),
+		}
+	}
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
