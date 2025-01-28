@@ -237,4 +237,19 @@ type ArchiverRecovery struct {
 	// FullDBRepository means db restore + manifest restore
 	FullDBRepository    *kmapi.ObjectReference   `json:"fullDBRepository,omitempty"`
 	ReplicationStrategy *PITRReplicationStrategy `json:"replicationStrategy,omitempty"`
+
+	// ManifestOptions provide options to select particular manifest object to restore
+	// +optional
+	ManifestOptions *ManifestOptions `json:"manifestOptions,omitempty"`
+}
+
+type ManifestOptions struct {
+	// Archiver specifies whether to restore the Archiver manifest or not
+	// +kubebuilder:default=false
+	// +optional
+	Archiver *bool `json:"archiver,omitempty"`
+
+	// ArchiverRef specifies the new name and namespace of the Archiver yaml after restore
+	// +optional
+	ArchiverRef *kmapi.ObjectReference `json:"archiverRef,omitempty"`
 }
