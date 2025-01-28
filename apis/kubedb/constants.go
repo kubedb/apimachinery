@@ -358,6 +358,17 @@ const (
 	MariaDBMetricsExporterTLSVolumeName  = "metrics-exporter-config"
 	MariaDBMetricsExporterConfigPath     = "/etc/mysql/config/exporter"
 	MariaDBDataVolumeName                = "data"
+	DatabasePodPrimaryComponent          = "Primary"
+	DatabasePodMasterComponent           = "Master"
+	DatabasePodSlaveComponent            = "Slave"
+
+	// Maxscale
+	MaxscaleCommonName        = "maxscale"
+	MaxscaleContainerName     = "maxscale"
+	MaxscaleInitContainerName = "maxscale-init"
+	MaxscaleServerName        = "server"
+	MaxscaleUIPort            = 8989
+	MaxscaleUIPortName        = "ui"
 
 	// =========================== SingleStore Constants ============================
 	SinglestoreDatabasePortName       = "db"
