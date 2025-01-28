@@ -367,7 +367,7 @@ func (m *MariaDB) setMaxscaleDefaultContainerSecurityContext(mdVersion *v1alpha1
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = ptr.To(int64(995))
+		podTemplate.Spec.SecurityContext.FSGroup = mdVersion.Spec.Maxscale.SecurityContext.RunAsUser
 	}
 	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MaxscaleContainerName)
 	if dbContainer == nil {

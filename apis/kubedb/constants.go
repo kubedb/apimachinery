@@ -363,10 +363,16 @@ const (
 	DatabasePodSlaveComponent            = "Slave"
 
 	// Maxscale
-	MaxscaleCommonName        = "maxscale"
+	MaxscaleCommonName        = "mx"
 	MaxscaleContainerName     = "maxscale"
 	MaxscaleInitContainerName = "maxscale-init"
 	MaxscaleServerName        = "server"
+	MaxscaleConfigName        = "config"
+	MaxscaleConfigPath        = "/etc/maxscale.cnf.d"
+	MaxscaleDefaultConfigName = "default-config"
+	MaxscaleDefaultConfigPath = "/etc/maxscale"
+	MaxscaleDataVolumeName    = "data"
+	MaxscaleDataVolumePath    = "/var/lib/maxscale"
 	MaxscaleUIPort            = 8989
 	MaxscaleUIPortName        = "ui"
 
