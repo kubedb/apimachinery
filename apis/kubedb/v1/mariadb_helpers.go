@@ -284,11 +284,11 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 		}
 	}
 	if m.IsCluster() && m.IsMariaDBReplication() {
-		m.SetDefaultsMaxscale(m.Spec.Topology.MaxScale)
+		m.SetDefaultsMaxscale(mdVersion, m.Spec.Topology.MaxScale)
 	}
 }
 
-func (m *MariaDB) SetDefaultsMaxscale(maxscale *MaxScaleSpec) {
+func (m *MariaDB) SetDefaultsMaxscale(mdVersion *v1alpha1.MariaDBVersion, maxscale *MaxScaleSpec) {
 	if maxscale == nil {
 		return
 	}
@@ -305,7 +305,7 @@ func (m *MariaDB) SetDefaultsMaxscale(maxscale *MaxScaleSpec) {
 	if maxscale.EnableUI == nil {
 		maxscale.EnableUI = pointer.BoolP(true)
 	}
-	m.setMaxscaleDefaultContainerSecurityContext(&maxscale.PodTemplate)
+	m.setMaxscaleDefaultContainerSecurityContext(mdVersion, &maxscale.PodTemplate)
 	m.setMaxscaleDefaultContainerResourceLimits(&maxscale.PodTemplate)
 }
 
@@ -359,7 +359,7 @@ func (m *MariaDB) setDefaultContainerSecurityContext(mdVersion *v1alpha1.MariaDB
 	}
 }
 
-func (m *MariaDB) setMaxscaleDefaultContainerSecurityContext(podTemplate *ofstv2.PodTemplateSpec) {
+func (m *MariaDB) setMaxscaleDefaultContainerSecurityContext(mdVersion *v1alpha1.MariaDBVersion, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -378,7 +378,7 @@ func (m *MariaDB) setMaxscaleDefaultContainerSecurityContext(podTemplate *ofstv2
 	if dbContainer.SecurityContext == nil {
 		dbContainer.SecurityContext = &core.SecurityContext{}
 	}
-	m.assignMaxscaleDefaultContainerSecurityContext(dbContainer.SecurityContext)
+	m.assignMaxscaleDefaultContainerSecurityContext(mdVersion, dbContainer.SecurityContext)
 	podTemplate.Spec.Containers = core_util.UpsertContainer(podTemplate.Spec.Containers, *dbContainer)
 
 	initContainer := core_util.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.MaxscaleInitContainerName)
@@ -390,7 +390,7 @@ func (m *MariaDB) setMaxscaleDefaultContainerSecurityContext(podTemplate *ofstv2
 	if initContainer.SecurityContext == nil {
 		initContainer.SecurityContext = &core.SecurityContext{}
 	}
-	m.assignMaxscaleDefaultContainerSecurityContext(initContainer.SecurityContext)
+	m.assignMaxscaleDefaultContainerSecurityContext(mdVersion, initContainer.SecurityContext)
 	podTemplate.Spec.InitContainers = core_util.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 }
 
@@ -417,7 +417,7 @@ func (m *MariaDB) assignDefaultContainerSecurityContext(mdVersion *v1alpha1.Mari
 	}
 }
 
-func (m *MariaDB) assignMaxscaleDefaultContainerSecurityContext(sc *core.SecurityContext) {
+func (m *MariaDB) assignMaxscaleDefaultContainerSecurityContext(mdVersion *v1alpha1.MariaDBVersion, sc *core.SecurityContext) {
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
@@ -430,12 +430,10 @@ func (m *MariaDB) assignMaxscaleDefaultContainerSecurityContext(sc *core.Securit
 		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
 	if sc.RunAsUser == nil {
-		// sc.RunAsUser = mdVersion.Spec.SecurityContext.RunAsUser
-		sc.RunAsUser = ptr.To(int64(995))
+		sc.RunAsUser = mdVersion.Spec.Maxscale.SecurityContext.RunAsUser
 	}
 	if sc.RunAsGroup == nil {
-		// sc.RunAsGroup = mdVersion.Spec.SecurityContext.RunAsUser
-		sc.RunAsUser = ptr.To(int64(995))
+		sc.RunAsUser = mdVersion.Spec.Maxscale.SecurityContext.RunAsUser
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
