@@ -92,6 +92,9 @@ type MariaDBVersionDatabase struct {
 // MariaDBVersionMaxscale is the mariadb maxscale image
 type MariaDBVersionMaxscale struct {
 	Image string `json:"image"`
+	// SecurityContext is for the additional config for the maxscale container
+	// +optional
+	SecurityContext SecurityContext `json:"securityContext"`
 }
 
 // MariaDBVersionExporter is the image for the MariaDB exporter

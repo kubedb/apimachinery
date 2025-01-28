@@ -28153,10 +28153,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionMaxscale(ref common
 							Format:  "",
 						},
 					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional config for the maxscale container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
+						},
+					},
 				},
 				Required: []string{"image"},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
 	}
 }
 
