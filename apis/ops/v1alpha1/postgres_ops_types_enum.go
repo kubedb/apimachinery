@@ -28,6 +28,8 @@ const (
 	PostgresOpsRequestTypeReconfigureTLS PostgresOpsRequestType = "ReconfigureTLS"
 	// PostgresOpsRequestTypeRotateAuth is a PostgresOpsRequestType of type RotateAuth.
 	PostgresOpsRequestTypeRotateAuth PostgresOpsRequestType = "RotateAuth"
+	// PostgresOpsRequestTypeReconnectStandby is a PostgresOpsRequestType of type ReconnectStandby.
+	PostgresOpsRequestTypeReconnectStandby PostgresOpsRequestType = "ReconnectStandby"
 )
 
 var ErrInvalidPostgresOpsRequestType = fmt.Errorf("not a valid PostgresOpsRequestType, try [%s]", strings.Join(_PostgresOpsRequestTypeNames, ", "))
@@ -41,6 +43,7 @@ var _PostgresOpsRequestTypeNames = []string{
 	string(PostgresOpsRequestTypeReconfigure),
 	string(PostgresOpsRequestTypeReconfigureTLS),
 	string(PostgresOpsRequestTypeRotateAuth),
+	string(PostgresOpsRequestTypeReconnectStandby),
 }
 
 // PostgresOpsRequestTypeNames returns a list of possible string values of PostgresOpsRequestType.
@@ -61,6 +64,7 @@ func PostgresOpsRequestTypeValues() []PostgresOpsRequestType {
 		PostgresOpsRequestTypeReconfigure,
 		PostgresOpsRequestTypeReconfigureTLS,
 		PostgresOpsRequestTypeRotateAuth,
+		PostgresOpsRequestTypeReconnectStandby,
 	}
 }
 
@@ -85,6 +89,7 @@ var _PostgresOpsRequestTypeValue = map[string]PostgresOpsRequestType{
 	"Reconfigure":       PostgresOpsRequestTypeReconfigure,
 	"ReconfigureTLS":    PostgresOpsRequestTypeReconfigureTLS,
 	"RotateAuth":        PostgresOpsRequestTypeRotateAuth,
+	"ReconnectStandby":  PostgresOpsRequestTypeReconnectStandby,
 }
 
 // ParsePostgresOpsRequestType attempts to convert a string to a PostgresOpsRequestType.
