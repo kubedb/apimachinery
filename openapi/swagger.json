@@ -27921,6 +27921,10 @@
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec"
         },
+        "reconnectStandby": {
+          "description": "Try to reconnect standby's with primary",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReconnectStandby"
+        },
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
@@ -27951,6 +27955,9 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresVolumeExpansionSpec"
         }
       }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReconnectStandby": {
+      "type": "object"
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresTLSSpec": {
       "type": "object",

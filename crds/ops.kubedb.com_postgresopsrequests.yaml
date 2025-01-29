@@ -99,6 +99,8 @@ spec:
                     - Asynchronous
                     type: string
                 type: object
+              reconnectStandby:
+                type: object
               restart:
                 type: object
               timeout:
@@ -234,6 +236,7 @@ spec:
                 - Reconfigure
                 - ReconfigureTLS
                 - RotateAuth
+                - ReconnectStandby
                 type: string
               updateVersion:
                 properties:
