@@ -63,6 +63,9 @@ type CassandraVersionSpec struct {
 	// Exporter Image
 	Exporter CassandraVersionExporter `json:"exporter"`
 
+	// Cassandra-medusa image
+	Medusa CassandraVersionMedusa `json:"medusa"`
+
 	// Database Image
 	InitContainer CassandraInitContainer `json:"initContainer"`
 
@@ -84,6 +87,11 @@ type CassandraVersionExporter struct {
 
 // CassandraVersionDatabase is the Cassandra Database image
 type CassandraVersionDatabase struct {
+	Image string `json:"image"`
+}
+
+// CassandraVersionMedusa is the Cassandra-Medusa image
+type CassandraVersionMedusa struct {
 	Image string `json:"image"`
 }
 

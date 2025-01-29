@@ -511,6 +511,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionDatabase":                     schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionExporter":                     schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionExporter(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionList":                         schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionMedusa":                       schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionMedusa(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionStatus":                       schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionStatus(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo":                                    schema_apimachinery_apis_catalog_v1alpha1_ChartInfo(ref),
@@ -26265,6 +26266,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionList(ref common.R
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionMedusa(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CassandraVersionMedusa is the Cassandra-Medusa image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -26292,6 +26314,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionSpec(ref common.R
 							Description: "Exporter Image",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionExporter"),
+						},
+					},
+					"medusa": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Cassandra-medusa image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionMedusa"),
 						},
 					},
 					"initContainer": {
@@ -26329,11 +26358,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionSpec(ref common.R
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "initContainer", "initMedusaContainer"},
+				Required: []string{"version", "db", "exporter", "medusa", "initContainer", "initMedusaContainer"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraMedusaInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraMedusaInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionMedusa", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
 	}
 }
 
