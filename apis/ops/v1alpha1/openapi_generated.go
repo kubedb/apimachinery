@@ -31646,8 +31646,18 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresReconnectStandby(ref common.R
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"readyTimeOut": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReadyTimeOut is the time to wait for standby`s to become ready",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 

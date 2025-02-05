@@ -326,7 +326,18 @@ const (
 	OpsRequestProgressing                   = "OpsRequestProgressing"
 	SetRaftKeyOpsRequestProgressing         = "SetRaftKeyOpsRequestProgressing"
 	UnsetRaftKeyOpsRequestProgressing       = "UnsetRaftKeyOpsRequestProgressing"
-
+	NotReadyReplicas                        = "NotReadyReplicas"
+	RestartNotReadyStandby                  = "RestartNotReadyStandby"
+	StandbyReadyCheck                       = "StandbyReadyCheck"
+	PrimaryRunningCheck                     = "PrimaryRunningCheck"
+	StopPostgresServer                      = "StopPostgresServer"
+	SetupRecoverySettings                   = "SetupRecoverySettings"
+	RunPostgresBaseBackup                   = "RunPostgresBaseBackup"
+	StartPostgresRecovery                   = "StartPostgresRecovery"
+	RestartNotReadyStandbyAfterBaseBackup   = "RestartNotReadyStandbyAfterBaseBackup"
+	StandbyReadyCheckAfterBaseBackup        = "StandbyReadyCheckAfterBaseBackup"
+	ReconnectStandbyWithRestart             = "ReconnectStandbyWithRestart"
+	ReconnectStandbyWithBaseBackup          = "ReconnectStandbyWithBaseBackup"
 	// need reveiw about this two
 
 	StringFalse = "false"

@@ -122,7 +122,7 @@ const (
 type PostgresHorizontalScalingSpec struct {
 	Replicas *int32 `json:"replicas,omitempty"`
 	// Standby mode
-	// +kubebuilder:default="Warm"
+	// +kubebuilder:default="Hot"
 	StandbyMode *PostgresStandbyMode `json:"standbyMode,omitempty"`
 
 	// Streaming mode
@@ -158,7 +158,11 @@ type PostgresCustomConfiguration struct {
 	Remove    bool                       `json:"remove,omitempty"`
 }
 
-type PostgresReconnectStandby struct{}
+type PostgresReconnectStandby struct {
+	// ReadyTimeOut is the time to wait for standby`s to become ready
+	// +optional
+	ReadyTimeOut *metav1.Duration `json:"readyTimeOut,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

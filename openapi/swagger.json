@@ -27992,7 +27992,13 @@
       }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReconnectStandby": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "readyTimeOut": {
+          "description": "ReadyTimeOut is the time to wait for standby`s to become ready",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresTLSSpec": {
       "type": "object",

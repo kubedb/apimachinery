@@ -87,7 +87,7 @@ spec:
                     format: int32
                     type: integer
                   standbyMode:
-                    default: Warm
+                    default: Hot
                     enum:
                     - Hot
                     - Warm
@@ -100,6 +100,9 @@ spec:
                     type: string
                 type: object
               reconnectStandby:
+                properties:
+                  readyTimeOut:
+                    type: string
                 type: object
               restart:
                 type: object
