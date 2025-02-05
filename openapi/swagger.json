@@ -22527,6 +22527,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
+        "tls": {
+          "description": "PostgresVersionTLSSpec is used to set postgres version specific tls settings",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTLSSpec"
+        },
         "ui": {
           "type": "array",
           "items": {
@@ -22543,6 +22547,16 @@
           "description": "Version",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTLSSpec": {
+      "description": "PostgresVersionTLSSpec is used to set postgres version specific tls settings",
+      "type": "object",
+      "properties": {
+        "disableSSLSessionResumption": {
+          "description": "DisableSSLSessionResumption determines whether to disable or enable Envoy Session Resumption",
+          "type": "boolean"
         }
       }
     },
