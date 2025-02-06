@@ -127,7 +127,6 @@ func UpdateMariaDBOpsRequestStatus(
 		}
 		return e2 == nil, nil
 	})
-
 	if err != nil {
 		err = fmt.Errorf("failed to update status of MariaDBOpsRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}

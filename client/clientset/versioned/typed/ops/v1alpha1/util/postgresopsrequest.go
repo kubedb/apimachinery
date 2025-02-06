@@ -95,7 +95,6 @@ func TryUpdatePostgresOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface,
 		klog.Errorf("Attempt %d failed to update PostgresOpsRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
 		return false, nil
 	})
-
 	if err != nil {
 		err = fmt.Errorf("failed to update PostgresOpsRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
@@ -148,7 +147,6 @@ func UpdatePostgresOpsRequestStatus(
 		}
 		return e2 == nil, nil
 	})
-
 	if err != nil {
 		err = fmt.Errorf("failed to update status of PostgresOpsRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}

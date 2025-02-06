@@ -95,7 +95,6 @@ func TryUpdateMemcachedOpsRequest(ctx context.Context, c cs.OpsV1alpha1Interface
 		klog.Errorf("Attempt %d failed to update MemcachedOpsRequest %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
 		return false, nil
 	})
-
 	if err != nil {
 		err = fmt.Errorf("failed to update MemcachedOpsRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
@@ -148,7 +147,6 @@ func UpdateMemcachedOpsRequestStatus(
 		}
 		return e2 == nil, nil
 	})
-
 	if err != nil {
 		err = fmt.Errorf("failed to update status of MemcachedOpsRequest %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
