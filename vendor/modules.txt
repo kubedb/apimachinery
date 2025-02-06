@@ -454,8 +454,8 @@ github.com/modern-go/reflect2
 # github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822
 ## explicit
 github.com/munnerz/goautoneg
-# github.com/nats-io/nats.go v1.38.0
-## explicit; go 1.20
+# github.com/nats-io/nats.go v1.39.0
+## explicit; go 1.22.0
 github.com/nats-io/nats.go
 github.com/nats-io/nats.go/encoders/builtin
 github.com/nats-io/nats.go/internal/parser
@@ -568,7 +568,7 @@ github.com/yudai/golcs
 # github.com/zeebo/xxh3 v1.0.2
 ## explicit; go 1.17
 github.com/zeebo/xxh3
-# go.bytebuilders.dev/audit v0.0.40
+# go.bytebuilders.dev/audit v0.0.41
 ## explicit; go 1.22.1
 go.bytebuilders.dev/audit/api/v1
 go.bytebuilders.dev/audit/lib

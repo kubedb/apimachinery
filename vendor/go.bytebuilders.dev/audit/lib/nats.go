@@ -116,15 +116,21 @@ func isNatsAuthError(e string) bool {
 	return false
 }
 
-func (c *NatsClient) GetLicenseID() string {
+func (c *NatsClient) GetLicenseID() (string, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
+
+	if c.l == nil {
+		if err := c.connect(); err != nil {
+			return "", err
+		}
+	}
 
 	if c.l.Status == v1alpha1.LicenseActive && time.Now().After(c.l.NotAfter.Time) {
 		license, _ := c.le.LoadLicense()
 		c.l = &license
 	}
-	return c.l.ID
+	return c.l.ID, nil
 }
 
 func (c *NatsClient) connect() error {

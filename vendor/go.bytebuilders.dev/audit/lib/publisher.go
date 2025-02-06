@@ -146,8 +146,8 @@ func (p *EventPublisher) ForGVK(informer Informer, gvk schema.GroupVersionKind) 
 			if err != nil {
 				return nil, err
 			}
-			ev.LicenseID = p.c.GetLicenseID()
-			return ev, nil
+			ev.LicenseID, err = p.c.GetLicenseID()
+			return ev, err
 		},
 	}
 	_, _ = informer.AddEventHandlerWithResyncPeriod(h, eventInterval)
@@ -212,7 +212,10 @@ func (p *EventPublisher) setupSiteInfoPublisher(cfg *rest.Config, kc kubernetes.
 		identitylib.RefreshNodeStats(p.si, nodes)
 		p.siMutex.Unlock()
 
-		licenseID := p.c.GetLicenseID()
+		licenseID, err := p.c.GetLicenseID()
+		if err != nil {
+			return nil, err
+		}
 		p.si.Product.LicenseID = licenseID
 		p.si.Name = fmt.Sprintf("%s.%s", licenseID, p.si.Product.ProductName)
 		ev := &api.Event{
