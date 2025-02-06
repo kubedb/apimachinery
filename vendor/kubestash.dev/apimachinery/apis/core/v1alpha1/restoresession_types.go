@@ -175,6 +175,11 @@ type MSSQLServerManifestOptions struct {
 	// +optional
 	AuthSecretName string `json:"authSecretName,omitempty"`
 
+	// InitScript specifies whether to restore the InitScript manifest or not
+	// +kubebuilder:default=true
+	// +optional
+	InitScript *bool `json:"initScript,omitempty"`
+
 	// Archiver specifies whether to restore the Archiver manifest or not
 	// +kubebuilder:default=false
 	// +optional

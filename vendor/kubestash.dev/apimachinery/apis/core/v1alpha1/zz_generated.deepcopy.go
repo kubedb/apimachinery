@@ -1342,6 +1342,11 @@ func (in *MSSQLServerManifestOptions) DeepCopyInto(out *MSSQLServerManifestOptio
 		*out = new(bool)
 		**out = **in
 	}
+	if in.InitScript != nil {
+		in, out := &in.InitScript, &out.InitScript
+		*out = new(bool)
+		**out = **in
+	}
 	if in.Archiver != nil {
 		in, out := &in.Archiver, &out.Archiver
 		*out = new(bool)

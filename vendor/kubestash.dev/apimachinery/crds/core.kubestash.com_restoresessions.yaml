@@ -9486,6 +9486,9 @@ spec:
                         type: boolean
                       dbName:
                         type: string
+                      initScript:
+                        default: true
+                        type: boolean
                       restoreNamespace:
                         type: string
                       tlsIssuerRef:
