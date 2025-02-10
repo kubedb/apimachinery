@@ -18,6 +18,7 @@ package license
 
 import (
 	"context"
+	"fmt"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	configapi "kubedb.dev/apimachinery/apis/config/v1alpha1"
@@ -28,49 +29,49 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func MeetsLicenseRestrictions(kc client.Client, restrictions configapi.LicenseRestrictions, dbGK schema.GroupKind, dbVersion string) (bool, error) {
+func MeetsLicenseRestrictions(kc client.Client, restrictions configapi.LicenseRestrictions, dbGK schema.GroupKind, dbVersion string) (bool, string, error) {
 	if len(restrictions) == 0 {
-		return true, nil
+		return true, "", nil
 	}
 	restriction, found := restrictions[dbGK.Kind]
 	if !found {
-		return false, nil
+		return false, fmt.Sprintf("Kind is not found in the restrictions map"), nil
 	}
 
 	var dbv unstructured.Unstructured
 	dbv.SetGroupVersionKind(catalogapi.SchemeGroupVersion.WithKind(dbGK.Kind + "Version"))
 	err := kc.Get(context.TODO(), client.ObjectKey{Name: dbVersion}, &dbv)
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 
 	strVer, ok, err := unstructured.NestedString(dbv.UnstructuredContent(), "spec", "version")
 	if err != nil || !ok {
-		return false, err
+		return false, "", err
 	}
 	v, err := semver.NewVersion(strVer)
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 
 	c, err := semver.NewConstraint(restriction.VersionConstraint)
 	if err != nil {
-		return false, err
+		return false, "", err
 	}
 	if !c.Check(v) {
 		// write reason ?
-		return false, nil
+		return false, fmt.Sprintf("Doesn't satisfy the constraint: %v", restriction.VersionConstraint), nil
 	}
 	if len(restriction.Distributions) > 0 {
 		strDistro, ok, err := unstructured.NestedString(dbv.UnstructuredContent(), "spec", "distribution")
 		if err != nil || !ok {
-			return false, err
+			return false, "", err
 		}
 		if !contains(restriction.Distributions, strDistro) {
-			return false, nil
+			return false, fmt.Sprintf("%v distro is not present in the allowed distributions list: %v", strDistro, restriction.Distributions), nil
 		}
 	}
-	return true, nil
+	return true, "", nil
 }
 
 func contains(list []string, str string) bool {
