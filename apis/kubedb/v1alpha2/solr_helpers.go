@@ -350,10 +350,6 @@ func (s *Solr) SetDefaults() {
 		if s.Spec.Replicas == nil {
 			s.Spec.Replicas = pointer.Int32P(1)
 		}
-		if s.Spec.PodTemplate.Spec.SecurityContext == nil {
-			s.Spec.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
-		}
-		s.Spec.PodTemplate.Spec.SecurityContext.FSGroup = slVersion.Spec.SecurityContext.RunAsUser
 		s.setDefaultContainerSecurityContext(&slVersion, &s.Spec.PodTemplate)
 		s.setDefaultContainerResourceLimits(&s.Spec.PodTemplate)
 	}
