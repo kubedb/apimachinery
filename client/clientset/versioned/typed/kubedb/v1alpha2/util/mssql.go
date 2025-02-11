@@ -95,7 +95,6 @@ func TryUpdateMSSQL(ctx context.Context, c cs.KubedbV1alpha2Interface, meta meta
 		klog.Errorf("Attempt %d failed to update MSSQLServer %s/%s due to %v.", attempt, cur.Namespace, cur.Name, e2)
 		return false, nil
 	})
-
 	if err != nil {
 		err = fmt.Errorf("failed to update MSSQLServer %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}
@@ -148,7 +147,6 @@ func UpdateMSSQLStatus(
 		}
 		return e2 == nil, nil
 	})
-
 	if err != nil {
 		err = fmt.Errorf("failed to update status of MSSQLServer %s/%s after %d attempts due to %v", meta.Namespace, meta.Name, attempt, err)
 	}

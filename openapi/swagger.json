@@ -22527,6 +22527,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
+        "tls": {
+          "description": "PostgresVersionTLSSpec is used to set postgres version specific tls settings",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTLSSpec"
+        },
         "ui": {
           "type": "array",
           "items": {
@@ -22543,6 +22547,16 @@
           "description": "Version",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTLSSpec": {
+      "description": "PostgresVersionTLSSpec is used to set postgres version specific tls settings",
+      "type": "object",
+      "properties": {
+        "disableSSLSessionResumption": {
+          "description": "DisableSSLSessionResumption determines whether to disable or enable Envoy Session Resumption",
+          "type": "boolean"
         }
       }
     },
@@ -23043,6 +23057,10 @@
         "fullDBRepository": {
           "description": "FullDBRepository means db restore + manifest restore",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "manifestOptions": {
+          "description": "ManifestOptions provide options to select particular manifest object to restore",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ManifestOptions"
         },
         "manifestRepository": {
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
@@ -23832,6 +23850,23 @@
             "default": {},
             "$ref": "#/definitions/io.k8s.api.core.v1.Sysctl"
           }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ManifestOptions": {
+      "type": "object",
+      "properties": {
+        "archiver": {
+          "description": "Archiver specifies whether to restore the Archiver manifest or not",
+          "type": "boolean"
+        },
+        "archiverRef": {
+          "description": "ArchiverRef specifies the new name and namespace of the Archiver yaml after restore",
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "initScript": {
+          "description": "InitScript specifies whether to restore the InitScript or not",
+          "type": "boolean"
         }
       }
     },

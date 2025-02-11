@@ -358,6 +358,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.Volume":                                             schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                       schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
+		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ComputeResource":                   schema_resource_metadata_apis_core_v1alpha1_ComputeResource(ref),
+		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ContainerResource":                 schema_resource_metadata_apis_core_v1alpha1_ContainerResource(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ContainerView":                     schema_resource_metadata_apis_core_v1alpha1_ContainerView(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ControlPlaneInfo":                  schema_resource_metadata_apis_core_v1alpha1_ControlPlaneInfo(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ExecServiceFacilitator":            schema_resource_metadata_apis_core_v1alpha1_ExecServiceFacilitator(ref),
@@ -384,6 +386,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceSummarySpec":               schema_resource_metadata_apis_core_v1alpha1_ResourceSummarySpec(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceView":                      schema_resource_metadata_apis_core_v1alpha1_ResourceView(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.Service":                           schema_resource_metadata_apis_core_v1alpha1_Service(ref),
+		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.StorageResource":                   schema_resource_metadata_apis_core_v1alpha1_StorageResource(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.Action":                                   schema_kmodulesxyz_resource_metadata_apis_shared_Action(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.ActionGroup":                              schema_kmodulesxyz_resource_metadata_apis_shared_ActionGroup(ref),
 		"kmodules.xyz/resource-metadata/apis/shared.ActionInfo":                               schema_kmodulesxyz_resource_metadata_apis_shared_ActionInfo(ref),
@@ -18869,6 +18872,99 @@ func schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref common.ReferenceCal
 	}
 }
 
+func schema_resource_metadata_apis_core_v1alpha1_ComputeResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"creationTimestamp": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"containers": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.ContainerResource"),
+									},
+								},
+							},
+						},
+					},
+					"initContainers": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.ContainerResource"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.ContainerResource"},
+	}
+}
+
+func schema_resource_metadata_apis_core_v1alpha1_ContainerResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"restartPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements"},
+	}
+}
+
 func schema_resource_metadata_apis_core_v1alpha1_ContainerView(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -19738,6 +19834,32 @@ func schema_resource_metadata_apis_core_v1alpha1_GenericResourceSpec(ref common.
 							},
 						},
 					},
+					"pods": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.ComputeResource"),
+									},
+								},
+							},
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.StorageResource"),
+									},
+								},
+							},
+						},
+					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -19749,7 +19871,7 @@ func schema_resource_metadata_apis_core_v1alpha1_GenericResourceSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/apimachinery/pkg/api/resource.Quantity", "kmodules.xyz/client-go/api/v1.ClusterMetadata", "kmodules.xyz/client-go/api/v1.ResourceID", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.GenericResourceStatus"},
+			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/apimachinery/pkg/api/resource.Quantity", "kmodules.xyz/client-go/api/v1.ClusterMetadata", "kmodules.xyz/client-go/api/v1.ResourceID", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.ComputeResource", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.GenericResourceStatus", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.StorageResource"},
 	}
 }
 
@@ -20362,6 +20484,45 @@ func schema_resource_metadata_apis_core_v1alpha1_Service(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.GroupKind", "kmodules.xyz/resource-metadata/apis/shared.ResourceQuery"},
+	}
+}
+
+func schema_resource_metadata_apis_core_v1alpha1_StorageResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"uid": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"creationTimestamp": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/api/core/v1.VolumeResourceRequirements"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.VolumeResourceRequirements", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

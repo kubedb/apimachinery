@@ -20,6 +20,10 @@ func (l License) DisableAnalytics() bool {
 	return len(l.FeatureFlags) > 0 && l.FeatureFlags[FeatureDisableAnalytics] == "true"
 }
 
+func (l License) EnableClientBilling() bool {
+	return len(l.FeatureFlags) > 0 && l.FeatureFlags[FeatureEnableClientBilling] == "true"
+}
+
 func (i *License) Less(j *License) bool {
 	if i == nil {
 		return true
