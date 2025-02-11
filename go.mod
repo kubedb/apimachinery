@@ -37,7 +37,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20240726031636-6f6746feab9c
 	k8s.io/metrics v0.30.2
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8
-	kmodules.xyz/client-go v0.30.44
+	kmodules.xyz/client-go v0.30.45
 	kmodules.xyz/crd-schema-fuzz v0.29.1
 	kmodules.xyz/custom-resources v0.30.0
 	kmodules.xyz/monitoring-agent-api v0.30.2
@@ -48,7 +48,7 @@ require (
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/petset v0.0.7
 	kubeops.dev/sidekick v0.0.10
-	kubestash.dev/apimachinery v0.16.0-rc.0
+	kubestash.dev/apimachinery v0.16.0
 	sigs.k8s.io/controller-runtime v0.18.4
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.38.0
