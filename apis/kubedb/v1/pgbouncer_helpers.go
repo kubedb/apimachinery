@@ -380,7 +380,10 @@ func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersio
 		p.Spec.PodTemplate.Spec.SecurityContext.RunAsGroup = ptr.To(*container.SecurityContext.RunAsGroup)
 	}
 
-	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = ptr.To(*container.SecurityContext.RunAsGroup)
+	if p.Spec.PodTemplate.Spec.SecurityContext.FSGroup == nil {
+		p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = ptr.To(*container.SecurityContext.RunAsGroup)
+	}
+
 	isPgbouncerContainerPresent := core_util.GetContainerByName(p.Spec.PodTemplate.Spec.Containers, kubedb.PgBouncerContainerName)
 	if isPgbouncerContainerPresent == nil {
 		core_util.UpsertContainer(p.Spec.PodTemplate.Spec.Containers, *container)
