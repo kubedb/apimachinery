@@ -35,7 +35,7 @@ func MeetsLicenseRestrictions(kc client.Client, restrictions configapi.LicenseRe
 	}
 	restriction, found := restrictions[dbGK.Kind]
 	if !found {
-		return false, fmt.Sprintf("Kind '%s' is not found in the restrictions map", dbGK.Kind), nil
+		return false, "Kind is not found in the restrictions map", nil
 	}
 
 	var dbv unstructured.Unstructured
