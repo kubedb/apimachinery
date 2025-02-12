@@ -350,10 +350,9 @@ func (p *PgBouncer) SetContainerDefaultSecurityContext(container *core.Container
 		container.SecurityContext = &core.SecurityContext{}
 	}
 	if container.SecurityContext.RunAsUser == nil {
-		if p.Spec.PodTemplate.Spec.SecurityContext == nil || p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser == nil {
+		container.SecurityContext.RunAsUser = pointer.Int64P(70)
+		if pbVersion.Spec.SecurityContext.RunAsUser != nil {
 			container.SecurityContext.RunAsUser = pbVersion.Spec.SecurityContext.RunAsUser
-		} else {
-			container.SecurityContext.RunAsUser = p.Spec.PodTemplate.Spec.SecurityContext.RunAsUser
 		}
 	}
 
