@@ -294,8 +294,6 @@ func (s *Solr) SetZooKeeperObjectRef() {
 	if s.Spec.ZookeeperRef.Name == "" {
 		s.Spec.ZookeeperRef.ExternallyManaged = false
 		s.Spec.ZookeeperRef.Name = s.GetZooKeeperName()
-	} else {
-		s.Spec.ZookeeperRef.ExternallyManaged = true
 	}
 	if s.Spec.ZookeeperRef.Namespace == "" {
 		s.Spec.ZookeeperRef.Namespace = s.Namespace
