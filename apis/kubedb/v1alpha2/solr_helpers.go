@@ -303,6 +303,10 @@ func (s *Solr) SetDefaults() {
 		}
 	}
 
+	if s.Spec.ZookeeperRef.Name != "" {
+		s.Spec.ZookeeperRef.ExternallyManaged = true
+	}
+
 	var slVersion catalog.SolrVersion
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: s.Spec.Version,
