@@ -18,6 +18,7 @@ package lib
 
 import (
 	"context"
+	"strings"
 
 	api "go.bytebuilders.dev/audit/api/v1"
 
@@ -32,6 +33,7 @@ type BillingEventCreator struct {
 	Mapper          discovery.ResourceMapper
 	ClusterMetadata *kmapi.ClusterMetadata
 	ClientBilling   bool
+	NamespaceLister client.Reader
 	PodLister       client.Reader
 	PVCLister       client.Reader
 }
@@ -45,6 +47,30 @@ func (p *BillingEventCreator) CreateEvent(obj client.Object) (*api.Event, error)
 	res, err := corev1alpha1.ToGenericResource(obj, rid, p.ClusterMetadata)
 	if err != nil {
 		return nil, err
+	}
+
+	if p.NamespaceLister != nil {
+		var ns core.Namespace
+		err = p.NamespaceLister.Get(context.TODO(), client.ObjectKey{Name: obj.GetNamespace()}, &ns)
+		if err != nil {
+			return nil, err
+		}
+		res.Spec.Namespace = &corev1alpha1.NamespaceInfo{
+			UID:               ns.UID,
+			Name:              ns.Name,
+			CreationTimestamp: ns.CreationTimestamp,
+		}
+		if ns.Labels[kmapi.ClientOrgKey] == "true" {
+			res.Spec.Namespace.AceOrgID = ns.Annotations[kmapi.AceOrgIDKey]
+
+			orgMetadata := map[string]string{}
+			for k, v := range ns.Annotations {
+				if after, found := strings.CutPrefix(k, kmapi.ClientKeyPrefix); found {
+					orgMetadata[after] = v
+				}
+			}
+			res.Spec.Namespace.AceOrgMetadata = orgMetadata
+		}
 	}
 
 	if p.ClientBilling {
