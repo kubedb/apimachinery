@@ -280,6 +280,18 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 	if p.Spec.Init != nil && p.Spec.Init.Archiver != nil && p.Spec.Init.Archiver.ReplicationStrategy == nil {
 		p.Spec.Init.Archiver.ReplicationStrategy = ptr.To(ReplicationStrategyNone)
 	}
+
+	if p.Spec.Init != nil && p.Spec.Init.Archiver != nil {
+		if p.Spec.Init.Archiver.EncryptionSecret != nil && p.Spec.Init.Archiver.EncryptionSecret.Namespace == "" {
+			p.Spec.Init.Archiver.EncryptionSecret.Namespace = p.GetNamespace()
+		}
+		if p.Spec.Init.Archiver.FullDBRepository != nil && p.Spec.Init.Archiver.FullDBRepository.Namespace == "" {
+			p.Spec.Init.Archiver.FullDBRepository.Namespace = p.GetNamespace()
+		}
+		if p.Spec.Init.Archiver.ManifestRepository != nil && p.Spec.Init.Archiver.ManifestRepository.Namespace == "" {
+			p.Spec.Init.Archiver.ManifestRepository.Namespace = p.GetNamespace()
+		}
+	}
 }
 
 func getMajorPgVersion(postgresVersion *catalog.PostgresVersion) (uint64, error) {
