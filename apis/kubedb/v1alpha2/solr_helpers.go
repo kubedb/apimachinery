@@ -272,6 +272,34 @@ func (s Solr) CoordinatorSelectors() map[string]string {
 	return s.OffshootSelectors(map[string]string{string(SolrNodeRoleCoordinator): SolrNodeRoleSet})
 }
 
+func (s *Solr) SetDefaultsToZooKeeperRef() {
+	if s.Spec.ZookeeperRef == nil {
+		s.Spec.ZookeeperRef = &ZookeeperRef{}
+	}
+	s.SetZooKeeperObjectRef()
+	if s.Spec.ZookeeperRef.Version == nil {
+		defaultVersion := "3.7.2"
+		s.Spec.ZookeeperRef.Version = &defaultVersion
+	}
+}
+
+func (s *Solr) GetZooKeeperName() string {
+	return s.OffshootName() + "-zk"
+}
+
+func (s *Solr) SetZooKeeperObjectRef() {
+	if s.Spec.ZookeeperRef.ObjectReference == nil {
+		s.Spec.ZookeeperRef.ObjectReference = &kmapi.ObjectReference{}
+	}
+	if s.Spec.ZookeeperRef.Name == "" {
+		s.Spec.ZookeeperRef.ExternallyManaged = false
+		s.Spec.ZookeeperRef.Name = s.GetZooKeeperName()
+	}
+	if s.Spec.ZookeeperRef.Namespace == "" {
+		s.Spec.ZookeeperRef.Namespace = s.Namespace
+	}
+}
+
 func (s *Solr) SetDefaults() {
 	if s.Spec.DeletionPolicy == "" {
 		s.Spec.DeletionPolicy = DeletionPolicyDelete
@@ -284,6 +312,9 @@ func (s *Solr) SetDefaults() {
 	if s.Spec.StorageType == "" {
 		s.Spec.StorageType = StorageTypeDurable
 	}
+
+	s.SetDefaultsToZooKeeperRef()
+	s.SetZooKeeperObjectRef()
 
 	if s.Spec.ZookeeperDigestSecret == nil {
 		s.Spec.ZookeeperDigestSecret = &v1.LocalObjectReference{
