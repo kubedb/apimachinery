@@ -27844,6 +27844,18 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresForceFailOver": {
+      "type": "object",
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for Postgres horizontal scaling",
       "type": "object",
@@ -27952,13 +27964,25 @@
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "forceFailOver": {
+          "description": "Forcefully do a failover to the given candidate",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresForceFailOver"
+        },
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec"
         },
+        "reconnectStandby": {
+          "description": "Try to reconnect standby's with primary",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReconnectStandby"
+        },
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "setRaftKeyPair": {
+          "description": "Set given key pairs to raft storage",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresSetRaftKeyPair"
         },
         "timeout": {
           "description": "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -27984,6 +28008,27 @@
         "volumeExpansion": {
           "description": "Specifies information necessary for volume expansion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresVolumeExpansionSpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReconnectStandby": {
+      "type": "object",
+      "properties": {
+        "readyTimeOut": {
+          "description": "ReadyTimeOut is the time to wait for standby`s to become ready",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresSetRaftKeyPair": {
+      "type": "object",
+      "properties": {
+        "keyPair": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
         }
       }
     },
