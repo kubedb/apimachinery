@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
+
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -31,35 +33,36 @@ import (
 // log is for logging in this package.
 var connectorlog = logf.Log.WithName("connector-resource")
 
-var _ webhook.Defaulter = &Connector{}
+var _ webhook.CustomDefaulter = &Connector{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *Connector) Default() {
+func (k *Connector) Default(ctx context.Context, obj runtime.Object) error {
 	if k == nil {
-		return
+		return nil
 	}
 	connectClusterLog.Info("default", "name", k.Name)
 	if k.Spec.DeletionPolicy == "" {
 		k.Spec.DeletionPolicy = dbapi.DeletionPolicyDelete
 	}
+	return nil
 }
 
-var _ webhook.Validator = &Connector{}
+var _ webhook.CustomValidator = &Connector{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *Connector) ValidateCreate() (admission.Warnings, error) {
+func (k *Connector) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	connectClusterLog.Info("validate create", "name", k.Name)
 	return nil, k.ValidateCreateOrUpdate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *Connector) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (k *Connector) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	connectClusterLog.Info("validate update", "name", k.Name)
 	return nil, k.ValidateCreateOrUpdate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *Connector) ValidateDelete() (admission.Warnings, error) {
+func (k *Connector) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	connectorlog.Info("validate delete", "name", k.Name)
 
 	var allErr field.ErrorList

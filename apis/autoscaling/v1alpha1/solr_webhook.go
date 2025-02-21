@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var sllog = logf.Log.WithName("solr-autoscaler")
 
-var _ webhook.Defaulter = &SolrAutoscaler{}
+var _ webhook.CustomDefaulter = &SolrAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *SolrAutoscaler) Default() {
+func (r *SolrAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	sllog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
+	return nil
 }
 
 func (r *SolrAutoscaler) setDefaults() {
@@ -81,21 +82,21 @@ func (r *SolrAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &SolrAutoscaler{}
+var _ webhook.CustomValidator = &SolrAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *SolrAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (r *SolrAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	sllog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *SolrAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (r *SolrAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	sllog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *SolrAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (r *SolrAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

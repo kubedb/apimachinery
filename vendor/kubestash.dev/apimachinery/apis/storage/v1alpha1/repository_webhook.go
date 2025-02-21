@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"fmt"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -39,10 +40,10 @@ func (r *Repository) SetupWebhookWithManager(mgr ctrl.Manager) error {
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-storage-kubestash-com-v1alpha1-repository,mutating=false,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=repositories,verbs=create;update,versions=v1alpha1,name=vrepository.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &Repository{}
+var _ webhook.CustomValidator = &Repository{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *Repository) ValidateCreate() (admission.Warnings, error) {
+func (r *Repository) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	repositorylog.Info("validate create", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object creation.
@@ -50,7 +51,7 @@ func (r *Repository) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *Repository) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *Repository) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	repositorylog.Info("validate update", "name", r.Name)
 
 	oldRepo := old.(*Repository)
@@ -62,7 +63,7 @@ func (r *Repository) ValidateUpdate(old runtime.Object) (admission.Warnings, err
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *Repository) ValidateDelete() (admission.Warnings, error) {
+func (r *Repository) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	repositorylog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

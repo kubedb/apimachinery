@@ -38,21 +38,22 @@ import (
 // log is for logging in this package.
 var restproxylog = logf.Log.WithName("restproxy-resource")
 
-var _ webhook.Defaulter = &RestProxy{}
+var _ webhook.CustomDefaulter = &RestProxy{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *RestProxy) Default() {
+func (k *RestProxy) Default(ctx context.Context, obj runtime.Object) error {
 	if k == nil {
-		return
+		return nil
 	}
 	restproxylog.Info("default", "name", k.Name)
 	k.SetDefaults()
+	return nil
 }
 
-var _ webhook.Validator = &RestProxy{}
+var _ webhook.CustomValidator = &RestProxy{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *RestProxy) ValidateCreate() (admission.Warnings, error) {
+func (k *RestProxy) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	restproxylog.Info("validate create", "name", k.Name)
 	allErr := k.ValidateCreateOrUpdate()
 	if len(allErr) == 0 {
@@ -62,7 +63,7 @@ func (k *RestProxy) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *RestProxy) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (k *RestProxy) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	restproxylog.Info("validate update", "name", k.Name)
 	allErr := k.ValidateCreateOrUpdate()
 	if len(allErr) == 0 {
@@ -72,7 +73,7 @@ func (k *RestProxy) ValidateUpdate(old runtime.Object) (admission.Warnings, erro
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *RestProxy) ValidateDelete() (admission.Warnings, error) {
+func (k *RestProxy) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	restproxylog.Info("validate delete", "name", k.Name)
 
 	var allErr field.ErrorList

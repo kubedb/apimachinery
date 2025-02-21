@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var singlestoreLog = logf.Log.WithName("singlestore-autoscaler")
 
-var _ webhook.Defaulter = &SinglestoreAutoscaler{}
+var _ webhook.CustomDefaulter = &SinglestoreAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (s *SinglestoreAutoscaler) Default() {
+func (s *SinglestoreAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	singlestoreLog.Info("defaulting", "name", s.Name)
 	s.setDefaults()
+	return nil
 }
 
 func (s *SinglestoreAutoscaler) setDefaults() {
@@ -85,21 +86,21 @@ func (s *SinglestoreAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &SinglestoreAutoscaler{}
+var _ webhook.CustomValidator = &SinglestoreAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (s *SinglestoreAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (s *SinglestoreAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	kafkaLog.Info("validate create", "name", s.Name)
 	return nil, s.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (s *SinglestoreAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (s *SinglestoreAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	kafkaLog.Info("validate update", "name", s.Name)
 	return nil, s.validate()
 }
 
-func (_ *SinglestoreAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ *SinglestoreAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

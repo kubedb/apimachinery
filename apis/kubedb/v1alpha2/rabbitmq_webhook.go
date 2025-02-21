@@ -39,35 +39,36 @@ var rabbitmqlog = logf.Log.WithName("rabbitmq-resource")
 
 //+kubebuilder:webhook:path=/mutate-rabbitmq-kubedb-com-v1alpha1-rabbitmq,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=rabbitmqs,verbs=create;update,versions=v1alpha1,name=mrabbitmq.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &RabbitMQ{}
+var _ webhook.CustomDefaulter = &RabbitMQ{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *RabbitMQ) Default() {
+func (r *RabbitMQ) Default(ctx context.Context, obj runtime.Object) error {
 	if r == nil {
-		return
+		return nil
 	}
 	rabbitmqlog.Info("default", "name", r.Name)
 	r.SetDefaults()
+	return nil
 }
 
 //+kubebuilder:webhook:path=/validate-rabbitmq-kubedb-com-v1alpha1-rabbitmq,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=rabbitmqs,verbs=create;update,versions=v1alpha1,name=vrabbitmq.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &RabbitMQ{}
+var _ webhook.CustomValidator = &RabbitMQ{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *RabbitMQ) ValidateCreate() (admission.Warnings, error) {
+func (r *RabbitMQ) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	rabbitmqlog.Info("validate create", "name", r.Name)
 	return nil, r.ValidateCreateOrUpdate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *RabbitMQ) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *RabbitMQ) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	rabbitmqlog.Info("validate update", "name", r.Name)
 	return nil, r.ValidateCreateOrUpdate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *RabbitMQ) ValidateDelete() (admission.Warnings, error) {
+func (r *RabbitMQ) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	rabbitmqlog.Info("validate delete", "name", r.Name)
 
 	var allErr field.ErrorList

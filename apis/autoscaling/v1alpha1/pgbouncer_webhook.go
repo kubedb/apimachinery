@@ -44,12 +44,13 @@ func (in *PgBouncerAutoscaler) SetupWebhookWithManager(mgr manager.Manager) erro
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-pgbouncerautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=pgbouncerautoscaler,verbs=create;update,versions=v1alpha1,name=mpgbouncerautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &PgBouncerAutoscaler{}
+var _ webhook.CustomDefaulter = &PgBouncerAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *PgBouncerAutoscaler) Default() {
+func (r *PgBouncerAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	pbLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
+	return nil
 }
 
 func (r *PgBouncerAutoscaler) setDefaults() {
@@ -83,21 +84,21 @@ func (r *PgBouncerAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-pgbouncerautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=pgbouncerautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vpgbouncerautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &PgBouncerAutoscaler{}
+var _ webhook.CustomValidator = &PgBouncerAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *PgBouncerAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (r *PgBouncerAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pbLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *PgBouncerAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (r *PgBouncerAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	pbLog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *PgBouncerAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (r *PgBouncerAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

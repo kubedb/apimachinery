@@ -51,21 +51,22 @@ func (p *Pgpool) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-pgpool,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=pgpools,verbs=create;update,versions=v1alpha2,name=mpgpool.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &Pgpool{}
+var _ webhook.CustomDefaulter = &Pgpool{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (p *Pgpool) Default() {
+func (p *Pgpool) Default(ctx context.Context, obj runtime.Object) error {
 	pgpoollog.Info("default", "name", p.Name)
 	p.SetDefaults()
+	return nil
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-pgpool,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=pgpools,verbs=create;update;delete,versions=v1alpha2,name=vpgpool.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &Pgpool{}
+var _ webhook.CustomValidator = &Pgpool{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (p *Pgpool) ValidateCreate() (admission.Warnings, error) {
+func (p *Pgpool) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pgpoollog.Info("validate create", "name", p.Name)
 	errorList := p.ValidateCreateOrUpdate()
 	if len(errorList) == 0 {
@@ -75,7 +76,7 @@ func (p *Pgpool) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (p *Pgpool) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (p *Pgpool) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	pgpoollog.Info("validate update", "name", p.Name)
 
 	errorList := p.ValidateCreateOrUpdate()
@@ -86,7 +87,7 @@ func (p *Pgpool) ValidateUpdate(old runtime.Object) (admission.Warnings, error) 
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (p *Pgpool) ValidateDelete() (admission.Warnings, error) {
+func (p *Pgpool) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pgpoollog.Info("validate delete", "name", p.Name)
 
 	var errorList field.ErrorList

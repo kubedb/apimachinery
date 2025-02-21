@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var casLog = logf.Log.WithName("cassandra-autoscaler")
 
-var _ webhook.Defaulter = &CassandraAutoscaler{}
+var _ webhook.CustomDefaulter = &CassandraAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *CassandraAutoscaler) Default() {
+func (r *CassandraAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	casLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
+	return nil
 }
 
 func (r *CassandraAutoscaler) setDefaults() {
@@ -75,21 +76,21 @@ func (r *CassandraAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &CassandraAutoscaler{}
+var _ webhook.CustomValidator = &CassandraAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *CassandraAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (r *CassandraAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	casLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *CassandraAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (r *CassandraAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	casLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *CassandraAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (r *CassandraAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

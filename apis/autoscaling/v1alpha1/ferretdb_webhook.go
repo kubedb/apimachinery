@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var frLog = logf.Log.WithName("ferretdb-autoscaler")
 
-var _ webhook.Defaulter = &FerretDBAutoscaler{}
+var _ webhook.CustomDefaulter = &FerretDBAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *FerretDBAutoscaler) Default() {
+func (r *FerretDBAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	frLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
+	return nil
 }
 
 func (r *FerretDBAutoscaler) setDefaults() {
@@ -75,21 +76,21 @@ func (r *FerretDBAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &FerretDBAutoscaler{}
+var _ webhook.CustomValidator = &FerretDBAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *FerretDBAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (r *FerretDBAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	frLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *FerretDBAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (r *FerretDBAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	frLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *FerretDBAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (r *FerretDBAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

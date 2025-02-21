@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"fmt"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -40,24 +41,25 @@ func (in *MongoDBDatabase) SetupWebhookWithManager(mgr manager.Manager) error {
 
 // +kubebuilder:webhook:path=/mutate-schema-kubedb-com-v1alpha1-mongodbdatabase,mutating=true,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mongodbdatabases,verbs=create;update,versions=v1alpha1,name=mmongodbdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &MongoDBDatabase{}
+var _ webhook.CustomDefaulter = &MongoDBDatabase{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MongoDBDatabase) Default() {
+func (in *MongoDBDatabase) Default(ctx context.Context, obj runtime.Object) error {
+	return nil
 }
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mongodbdatabase,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mongodbdatabases,verbs=create;update;delete,versions=v1alpha1,name=vmongodbdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &MongoDBDatabase{}
+var _ webhook.CustomValidator = &MongoDBDatabase{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBDatabase) ValidateCreate() (admission.Warnings, error) {
+func (in *MongoDBDatabase) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mongodbdatabaselog.Info("validate create", "name", in.Name)
 	return nil, in.ValidateMongoDBDatabase()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBDatabase) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *MongoDBDatabase) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	mongodbdatabaselog.Info("validate update", "name", in.Name)
 	var allErrs field.ErrorList
 	path := field.NewPath("spec")
@@ -105,7 +107,7 @@ const (
 )
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBDatabase) ValidateDelete() (admission.Warnings, error) {
+func (in *MongoDBDatabase) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mongodbdatabaselog.Info("validate delete", "name", in.Name)
 	if in.Spec.DeletionPolicy == DeletionPolicyDoNotDelete {
 		var allErrs field.ErrorList
