@@ -47,35 +47,36 @@ func (z *ZooKeeper) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-zookeeper-kubedb-com-v1alpha1-zookeeper,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=zookeepers,verbs=create;update,versions=v1alpha1,name=mzookeeper.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &ZooKeeper{}
+var _ webhook.CustomDefaulter = &ZooKeeper{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (z *ZooKeeper) Default() {
+func (z *ZooKeeper) Default(ctx context.Context, obj runtime.Object) error {
 	if z == nil {
-		return
+		return nil
 	}
 	zookeeperlog.Info("default", "name", z.Name)
 	z.SetDefaults()
+	return nil
 }
 
 //+kubebuilder:webhook:path=/validate-zookeeper-kubedb-com-v1alpha1-zookeeper,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=zookeepers,verbs=create;update,versions=v1alpha1,name=vzookeeper.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &ZooKeeper{}
+var _ webhook.CustomValidator = &ZooKeeper{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (z *ZooKeeper) ValidateCreate() (admission.Warnings, error) {
+func (z *ZooKeeper) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	zookeeperlog.Info("validate create", "name", z.Name)
 	return z.ValidateCreateOrUpdate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (z *ZooKeeper) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (z *ZooKeeper) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	zookeeperlog.Info("validate update", "name", z.Name)
 	return z.ValidateCreateOrUpdate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (z *ZooKeeper) ValidateDelete() (admission.Warnings, error) {
+func (z *ZooKeeper) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	zookeeperlog.Info("validate delete", "name", z.Name)
 
 	var allErr field.ErrorList

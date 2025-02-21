@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"fmt"
 	"k8s.io/apimachinery/pkg/runtime"
 	"reflect"
@@ -40,10 +41,10 @@ func (r *BackupVerificationSession) SetupWebhookWithManager(mgr ctrl.Manager) er
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-backupverificationsession,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupverificationsessions,verbs=create;update,versions=v1alpha1,name=vbackupverificationsession.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &BackupVerificationSession{}
+var _ webhook.CustomValidator = &BackupVerificationSession{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupVerificationSession) ValidateCreate() (admission.Warnings, error) {
+func (r *BackupVerificationSession) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	backupverificationsessionlog.Info("validate create", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object creation.
@@ -51,7 +52,7 @@ func (r *BackupVerificationSession) ValidateCreate() (admission.Warnings, error)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupVerificationSession) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *BackupVerificationSession) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	backupverificationsessionlog.Info("validate update", "name", r.Name)
 
 	oldBVS := old.(*BackupVerificationSession)
@@ -63,7 +64,7 @@ func (r *BackupVerificationSession) ValidateUpdate(old runtime.Object) (admissio
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupVerificationSession) ValidateDelete() (admission.Warnings, error) {
+func (r *BackupVerificationSession) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	backupverificationsessionlog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

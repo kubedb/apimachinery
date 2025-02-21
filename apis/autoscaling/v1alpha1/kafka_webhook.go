@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var kafkaLog = logf.Log.WithName("kafka-autoscaler")
 
-var _ webhook.Defaulter = &KafkaAutoscaler{}
+var _ webhook.CustomDefaulter = &KafkaAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (k *KafkaAutoscaler) Default() {
+func (k *KafkaAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	kafkaLog.Info("defaulting", "name", k.Name)
 	k.setDefaults()
+	return nil
 }
 
 func (k *KafkaAutoscaler) setDefaults() {
@@ -85,21 +86,21 @@ func (k *KafkaAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &KafkaAutoscaler{}
+var _ webhook.CustomValidator = &KafkaAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (k *KafkaAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	kafkaLog.Info("validate create", "name", k.Name)
 	return nil, k.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (k *KafkaAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	kafkaLog.Info("validate create", "name", k.Name)
 	return nil, k.validate()
 }
 
-func (_ *KafkaAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ *KafkaAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

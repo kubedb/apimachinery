@@ -40,22 +40,23 @@ import (
 // log is for logging in this package.
 var solrlog = logf.Log.WithName("solr-resource")
 
-var _ webhook.Defaulter = &Solr{}
+var _ webhook.CustomDefaulter = &Solr{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (s *Solr) Default() {
+func (s *Solr) Default(ctx context.Context, obj runtime.Object) error {
 	if s == nil {
-		return
+		return nil
 	}
 	solrlog.Info("default", "name", s.Name)
 
 	s.SetDefaults()
+	return nil
 }
 
-var _ webhook.Validator = &Solr{}
+var _ webhook.CustomValidator = &Solr{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (s *Solr) ValidateCreate() (admission.Warnings, error) {
+func (s *Solr) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	solrlog.Info("validate create", "name", s.Name)
 
 	allErr := s.ValidateCreateOrUpdate()
@@ -66,7 +67,7 @@ func (s *Solr) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (s *Solr) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (s *Solr) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	solrlog.Info("validate update", "name", s.Name)
 
 	_ = old.(*Solr)
@@ -80,7 +81,7 @@ func (s *Solr) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (s *Solr) ValidateDelete() (admission.Warnings, error) {
+func (s *Solr) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	solrlog.Info("validate delete", "name", s.Name)
 
 	var allErr field.ErrorList

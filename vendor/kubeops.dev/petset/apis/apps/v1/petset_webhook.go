@@ -17,6 +17,7 @@ limitations under the License.
 package v1
 
 import (
+	"context"
 	"kubeops.dev/petset/pkg/features"
 
 	appsv1 "k8s.io/api/apps/v1"
@@ -43,10 +44,10 @@ func (r *PetSet) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-apps-k8s-appscode-com-v1-petset,mutating=true,failurePolicy=fail,sideEffects=None,groups=apps.k8s.appscode.com,resources=petsets,verbs=create;update,versions=v1,name=mpetset.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &PetSet{}
+var _ webhook.CustomDefaulter = &PetSet{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (obj *PetSet) Default() {
+func (obj *PetSet) Default(ctx context.Context, _ runtime.Object) error {
 	if len(obj.Spec.PodManagementPolicy) == 0 {
 		obj.Spec.PodManagementPolicy = appsv1.OrderedReadyPodManagement
 	}
@@ -93,15 +94,16 @@ func (obj *PetSet) Default() {
 		obj.Spec.RevisionHistoryLimit = new(int32)
 		*obj.Spec.RevisionHistoryLimit = 10
 	}
+	return nil
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-apps-k8s-appscode-com-v1-petset,mutating=false,failurePolicy=fail,sideEffects=None,groups=apps.k8s.appscode.com,resources=petsets,verbs=create;update,versions=v1,name=vpetset.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &PetSet{}
+var _ webhook.CustomValidator = &PetSet{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *PetSet) ValidateCreate() (admission.Warnings, error) {
+func (r *PetSet) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	petsetlog.Info("validate create", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object creation.
@@ -109,7 +111,7 @@ func (r *PetSet) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *PetSet) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *PetSet) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	petsetlog.Info("validate update", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object update.
@@ -117,7 +119,7 @@ func (r *PetSet) ValidateUpdate(old runtime.Object) (admission.Warnings, error) 
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *PetSet) ValidateDelete() (admission.Warnings, error) {
+func (r *PetSet) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	petsetlog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

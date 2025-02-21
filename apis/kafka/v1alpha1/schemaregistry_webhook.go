@@ -37,21 +37,22 @@ import (
 // log is for logging in this package.
 var schemaregistrylog = logf.Log.WithName("schemaregistry-resource")
 
-var _ webhook.Defaulter = &SchemaRegistry{}
+var _ webhook.CustomDefaulter = &SchemaRegistry{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *SchemaRegistry) Default() {
+func (k *SchemaRegistry) Default(ctx context.Context, obj runtime.Object) error {
 	if k == nil {
-		return
+		return nil
 	}
 	schemaregistrylog.Info("default", "name", k.Name)
 	k.SetDefaults()
+	return nil
 }
 
-var _ webhook.Validator = &SchemaRegistry{}
+var _ webhook.CustomValidator = &SchemaRegistry{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *SchemaRegistry) ValidateCreate() (admission.Warnings, error) {
+func (k *SchemaRegistry) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	schemaregistrylog.Info("validate create", "name", k.Name)
 	allErr := k.ValidateCreateOrUpdate()
 	if len(allErr) == 0 {
@@ -61,7 +62,7 @@ func (k *SchemaRegistry) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *SchemaRegistry) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (k *SchemaRegistry) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	schemaregistrylog.Info("validate update", "name", k.Name)
 
 	oldRegistry := old.(*SchemaRegistry)
@@ -80,7 +81,7 @@ func (k *SchemaRegistry) ValidateUpdate(old runtime.Object) (admission.Warnings,
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *SchemaRegistry) ValidateDelete() (admission.Warnings, error) {
+func (k *SchemaRegistry) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	schemaregistrylog.Info("validate delete", "name", k.Name)
 
 	var allErr field.ErrorList

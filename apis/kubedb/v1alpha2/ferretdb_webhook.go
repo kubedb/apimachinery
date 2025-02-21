@@ -49,23 +49,24 @@ func (f *FerretDB) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-ferretdb,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=ferretdbs,verbs=create;update,versions=v1alpha2,name=mferretdb.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &FerretDB{}
+var _ webhook.CustomDefaulter = &FerretDB{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (f *FerretDB) Default() {
+func (f *FerretDB) Default(ctx context.Context, obj runtime.Object) error {
 	if f == nil {
-		return
+		return nil
 	}
 	ferretdblog.Info("default", "name", f.Name)
 	f.SetDefaults()
+	return nil
 }
 
 //+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-ferretdb,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=ferretdbs,verbs=create;update;delete,versions=v1alpha2,name=vferretdb.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &FerretDB{}
+var _ webhook.CustomValidator = &FerretDB{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (f *FerretDB) ValidateCreate() (admission.Warnings, error) {
+func (f *FerretDB) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ferretdblog.Info("validate create", "name", f.Name)
 
 	allErr := f.ValidateCreateOrUpdate()
@@ -76,7 +77,7 @@ func (f *FerretDB) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (f *FerretDB) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (f *FerretDB) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	ferretdblog.Info("validate update", "name", f.Name)
 
 	_ = old.(*FerretDB)
@@ -88,7 +89,7 @@ func (f *FerretDB) ValidateUpdate(old runtime.Object) (admission.Warnings, error
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (f *FerretDB) ValidateDelete() (admission.Warnings, error) {
+func (f *FerretDB) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ferretdblog.Info("validate delete", "name", f.Name)
 
 	var allErr field.ErrorList

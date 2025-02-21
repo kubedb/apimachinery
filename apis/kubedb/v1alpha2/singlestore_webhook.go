@@ -37,22 +37,23 @@ import (
 // log is for logging in this package.
 var singlestorelog = logf.Log.WithName("singlestore-resource")
 
-var _ webhook.Defaulter = &Singlestore{}
+var _ webhook.CustomDefaulter = &Singlestore{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (s *Singlestore) Default() {
+func (s *Singlestore) Default(ctx context.Context, obj runtime.Object) error {
 	if s == nil {
-		return
+		return nil
 	}
 	singlestorelog.Info("default", "name", s.Name)
 
 	s.SetDefaults()
+	return nil
 }
 
-var _ webhook.Validator = &Singlestore{}
+var _ webhook.CustomValidator = &Singlestore{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (s *Singlestore) ValidateCreate() (admission.Warnings, error) {
+func (s *Singlestore) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	singlestorelog.Info("validate create", "name", s.Name)
 	allErr := s.ValidateCreateOrUpdate()
 	if len(allErr) == 0 {
@@ -62,7 +63,7 @@ func (s *Singlestore) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (s *Singlestore) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (s *Singlestore) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	singlestorelog.Info("validate update", "name", s.Name)
 
 	allErr := s.ValidateCreateOrUpdate()
@@ -74,7 +75,7 @@ func (s *Singlestore) ValidateUpdate(old runtime.Object) (admission.Warnings, er
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (s *Singlestore) ValidateDelete() (admission.Warnings, error) {
+func (s *Singlestore) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	singlestorelog.Info("validate delete", "name", s.Name)
 
 	var allErr field.ErrorList

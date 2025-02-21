@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -38,10 +39,10 @@ func (r *BackupBatch) SetupWebhookWithManager(mgr ctrl.Manager) error {
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-backupbatch,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupbatches,verbs=create;update,versions=v1alpha1,name=vbackupbatch.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &BackupBatch{}
+var _ webhook.CustomValidator = &BackupBatch{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupBatch) ValidateCreate() (admission.Warnings, error) {
+func (r *BackupBatch) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	backupbatchlog.Info("validate create", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object creation.
@@ -49,7 +50,7 @@ func (r *BackupBatch) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupBatch) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *BackupBatch) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	backupbatchlog.Info("validate update", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object update.
@@ -57,7 +58,7 @@ func (r *BackupBatch) ValidateUpdate(old runtime.Object) (admission.Warnings, er
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupBatch) ValidateDelete() (admission.Warnings, error) {
+func (r *BackupBatch) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	backupbatchlog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

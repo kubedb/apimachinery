@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"fmt"
 	"k8s.io/apimachinery/pkg/runtime"
 	"kubestash.dev/apimachinery/apis"
@@ -40,24 +41,25 @@ func (r *HookTemplate) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-core-kubestash-com-v1alpha1-hooktemplate,mutating=true,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=hooktemplates,verbs=create;update,versions=v1alpha1,name=mhooktemplate.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &HookTemplate{}
+var _ webhook.CustomDefaulter = &HookTemplate{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *HookTemplate) Default() {
+func (r *HookTemplate) Default(ctx context.Context, obj runtime.Object) error {
 	hooktemplatelog.Info("default", "name", r.Name)
 
 	if r.Spec.UsagePolicy == nil {
 		r.setDefaultUsagePolicy()
 	}
+	return nil
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-hooktemplate,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=hooktemplates,verbs=create;update,versions=v1alpha1,name=vhooktemplate.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &HookTemplate{}
+var _ webhook.CustomValidator = &HookTemplate{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *HookTemplate) ValidateCreate() (admission.Warnings, error) {
+func (r *HookTemplate) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	hooktemplatelog.Info("validate create", "name", r.Name)
 
 	if r.Spec.Executor == nil {
@@ -76,7 +78,7 @@ func (r *HookTemplate) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *HookTemplate) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *HookTemplate) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	hooktemplatelog.Info("validate update", "name", r.Name)
 
 	if r.Spec.Executor == nil {
@@ -95,7 +97,7 @@ func (r *HookTemplate) ValidateUpdate(old runtime.Object) (admission.Warnings, e
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *HookTemplate) ValidateDelete() (admission.Warnings, error) {
+func (r *HookTemplate) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	hooktemplatelog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

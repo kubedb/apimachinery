@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var zkLog = logf.Log.WithName("zookeeper-autoscaler")
 
-var _ webhook.Defaulter = &ZooKeeperAutoscaler{}
+var _ webhook.CustomDefaulter = &ZooKeeperAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *ZooKeeperAutoscaler) Default() {
+func (r *ZooKeeperAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	zkLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
+	return nil
 }
 
 func (r *ZooKeeperAutoscaler) setDefaults() {
@@ -75,21 +76,21 @@ func (r *ZooKeeperAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &ZooKeeperAutoscaler{}
+var _ webhook.CustomValidator = &ZooKeeperAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *ZooKeeperAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (r *ZooKeeperAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	zkLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *ZooKeeperAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (r *ZooKeeperAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	zkLog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *ZooKeeperAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (r *ZooKeeperAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

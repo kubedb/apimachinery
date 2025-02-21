@@ -46,24 +46,25 @@ func (r *BackupBlueprint) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-core-kubestash-com-v1alpha1-backupblueprint,mutating=true,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupblueprints,verbs=create;update,versions=v1alpha1,name=mbackupblueprint.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &BackupBlueprint{}
+var _ webhook.CustomDefaulter = &BackupBlueprint{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *BackupBlueprint) Default() {
+func (r *BackupBlueprint) Default(ctx context.Context, obj runtime.Object) error {
 	backupblueprintlog.Info("default", "name", r.Name)
 
 	if r.Spec.UsagePolicy == nil {
 		r.setDefaultUsagePolicy()
 	}
+	return nil
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-backupblueprint,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupblueprints,verbs=create;update,versions=v1alpha1,name=vbackupblueprint.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &BackupBlueprint{}
+var _ webhook.CustomValidator = &BackupBlueprint{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupBlueprint) ValidateCreate() (admission.Warnings, error) {
+func (r *BackupBlueprint) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	backupblueprintlog.Info("validate create", "name", r.Name)
 
 	if err := r.validateUsagePolicy(); err != nil {
@@ -74,7 +75,7 @@ func (r *BackupBlueprint) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupBlueprint) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *BackupBlueprint) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	backupblueprintlog.Info("validate update", "name", r.Name)
 
 	if err := r.validateUsagePolicy(); err != nil {
@@ -85,7 +86,7 @@ func (r *BackupBlueprint) ValidateUpdate(old runtime.Object) (admission.Warnings
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupBlueprint) ValidateDelete() (admission.Warnings, error) {
+func (r *BackupBlueprint) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	backupblueprintlog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

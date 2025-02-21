@@ -40,24 +40,25 @@ var druidlog = logf.Log.WithName("druid-resource")
 
 //+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-druid,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=druids,verbs=create;update,versions=v1alpha2,name=mdruid.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &Druid{}
+var _ webhook.CustomDefaulter = &Druid{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (d *Druid) Default() {
+func (d *Druid) Default(ctx context.Context, obj runtime.Object) error {
 	if d == nil {
-		return
+		return nil
 	}
 	druidlog.Info("default", "name", d.Name)
 
 	d.SetDefaults()
+	return nil
 }
 
 //+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-druid,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=druids,verbs=create;update,versions=v1alpha2,name=vdruid.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &Druid{}
+var _ webhook.CustomValidator = &Druid{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (d *Druid) ValidateCreate() (admission.Warnings, error) {
+func (d *Druid) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	druidlog.Info("validate create", "name", d.Name)
 
 	allErr := d.validateCreateOrUpdate()
@@ -68,7 +69,7 @@ func (d *Druid) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (d *Druid) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (d *Druid) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	druidlog.Info("validate update", "name", d.Name)
 	_ = old.(*Druid)
 	allErr := d.validateCreateOrUpdate()
@@ -79,7 +80,7 @@ func (d *Druid) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (d *Druid) ValidateDelete() (admission.Warnings, error) {
+func (d *Druid) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	druidlog.Info("validate delete", "name", d.Name)
 	return nil, nil
 }

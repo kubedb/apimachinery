@@ -51,24 +51,25 @@ func (r *MSSQLServer) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-mssqlserver,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqlservers,verbs=create;update,versions=v1alpha2,name=mmssqlserver.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &MSSQLServer{}
+var _ webhook.CustomDefaulter = &MSSQLServer{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (m *MSSQLServer) Default() {
+func (m *MSSQLServer) Default(ctx context.Context, obj runtime.Object) error {
 	if m == nil {
-		return
+		return nil
 	}
 	mssqllog.Info("default", "name", m.Name)
 
 	m.SetDefaults()
+	return nil
 }
 
 //+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-mssqlserver,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqlservers,verbs=create;update,versions=v1alpha2,name=vmssqlserver.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &MSSQLServer{}
+var _ webhook.CustomValidator = &MSSQLServer{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQLServer) ValidateCreate() (admission.Warnings, error) {
+func (m *MSSQLServer) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mssqllog.Info("validate create", "name", m.Name)
 
 	allErr := m.ValidateCreateOrUpdate()
@@ -79,7 +80,7 @@ func (m *MSSQLServer) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQLServer) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (m *MSSQLServer) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	mssqllog.Info("validate update", "name", m.Name)
 
 	allErr := m.ValidateCreateOrUpdate()
@@ -91,7 +92,7 @@ func (m *MSSQLServer) ValidateUpdate(old runtime.Object) (admission.Warnings, er
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQLServer) ValidateDelete() (admission.Warnings, error) {
+func (m *MSSQLServer) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mssqllog.Info("validate delete", "name", m.Name)
 
 	var allErr field.ErrorList

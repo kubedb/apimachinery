@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis"
@@ -72,7 +73,7 @@ func (ed *ElasticsearchDashboard) SetupWebhookWithManager(mgr manager.Manager) e
 
 // +kubebuilder:webhook:path=/mutate-elasticsearch-kubedb-com-v1alpha1-elasticsearchelasticsearch,mutating=true,failurePolicy=fail,sideEffects=None,groups=elasticsearch.kubedb.com,resources=elasticsearchelasticsearchs,verbs=create;update,versions=v1alpha1,name=melasticsearchelasticsearch.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &ElasticsearchDashboard{}
+var _ webhook.CustomDefaulter = &ElasticsearchDashboard{}
 
 func (ed *ElasticsearchDashboard) setDefaultContainerSecurityContext(esVersion catalog.ElasticsearchVersion, podTemplate *ofst.PodTemplateSpec) {
 	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.ElasticsearchInitConfigMergerContainerName)
@@ -132,22 +133,23 @@ func (ed *ElasticsearchDashboard) assignDefaultContainerSecurityContext(esVersio
 }
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (ed *ElasticsearchDashboard) Default() {
+func (ed *ElasticsearchDashboard) Default(ctx context.Context, obj runtime.Object) error {
 	ed.SetDefaults()
+	return nil
 }
 
 // +kubebuilder:webhook:path=/validate-elasticsearch-kubedb-com-v1alpha1-elasticsearchelasticsearch,mutating=false,failurePolicy=fail,sideEffects=None,groups=elasticsearch.kubedb.com,resources=elasticsearchelasticsearchs,verbs=create;update;delete,versions=v1alpha1,name=velasticsearchelasticsearch.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &ElasticsearchDashboard{}
+var _ webhook.CustomValidator = &ElasticsearchDashboard{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (ed *ElasticsearchDashboard) ValidateCreate() (admission.Warnings, error) {
+func (ed *ElasticsearchDashboard) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	edLog.Info("validate create", "name", ed.Name)
 	return nil, ed.Validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (ed *ElasticsearchDashboard) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (ed *ElasticsearchDashboard) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	// Skip validation, if UPDATE operation is called after deletion.
 	// Case: Removing Finalizer
 	if ed.DeletionTimestamp != nil {
@@ -157,7 +159,7 @@ func (ed *ElasticsearchDashboard) ValidateUpdate(old runtime.Object) (admission.
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (ed *ElasticsearchDashboard) ValidateDelete() (admission.Warnings, error) {
+func (ed *ElasticsearchDashboard) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	edLog.Info("validate delete", "name", ed.Name)
 
 	var allErr field.ErrorList

@@ -44,12 +44,13 @@ func (in *ElasticsearchAutoscaler) SetupWebhookWithManager(mgr manager.Manager) 
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-elasticsearchautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=elasticsearchautoscaler,verbs=create;update,versions=v1alpha1,name=melasticsearchautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &ElasticsearchAutoscaler{}
+var _ webhook.CustomDefaulter = &ElasticsearchAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *ElasticsearchAutoscaler) Default() {
+func (in *ElasticsearchAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	esLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
+	return nil
 }
 
 func (in *ElasticsearchAutoscaler) setDefaults() {
@@ -98,20 +99,20 @@ func (in *ElasticsearchAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-elasticsearchautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=elasticsearchautoscalers,verbs=create;update;delete,versions=v1alpha1,name=velasticsearchautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &ElasticsearchAutoscaler{}
+var _ webhook.CustomValidator = &ElasticsearchAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *ElasticsearchAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (in *ElasticsearchAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	esLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *ElasticsearchAutoscaler) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *ElasticsearchAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	return nil, in.validate()
 }
 
-func (_ ElasticsearchAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ ElasticsearchAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

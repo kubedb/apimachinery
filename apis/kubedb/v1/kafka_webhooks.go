@@ -41,33 +41,34 @@ import (
 // log is for logging in this package.
 var kafkalog = logf.Log.WithName("kafka-resource")
 
-var _ webhook.Defaulter = &Kafka{}
+var _ webhook.CustomDefaulter = &Kafka{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *Kafka) Default() {
+func (k *Kafka) Default(ctx context.Context, obj runtime.Object) error {
 	if k == nil {
-		return
+		return nil
 	}
 	kafkalog.Info("default", "name", k.Name)
 	k.SetDefaults()
+	return nil
 }
 
-var _ webhook.Validator = &Kafka{}
+var _ webhook.CustomValidator = &Kafka{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *Kafka) ValidateCreate() (admission.Warnings, error) {
+func (k *Kafka) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	kafkalog.Info("validate create", "name", k.Name)
 	return nil, k.ValidateCreateOrUpdate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *Kafka) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (k *Kafka) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	kafkalog.Info("validate update", "name", k.Name)
 	return nil, k.ValidateCreateOrUpdate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *Kafka) ValidateDelete() (admission.Warnings, error) {
+func (k *Kafka) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	kafkalog.Info("validate delete", "name", k.Name)
 
 	var allErr field.ErrorList

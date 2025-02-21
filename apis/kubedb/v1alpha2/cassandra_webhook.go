@@ -39,33 +39,34 @@ import (
 // log is for logging in this package.
 var cassandralog = logf.Log.WithName("cassandra-resource")
 
-var _ webhook.Defaulter = &Cassandra{}
+var _ webhook.CustomDefaulter = &Cassandra{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *Cassandra) Default() {
+func (r *Cassandra) Default(ctx context.Context, obj runtime.Object) error {
 	if r == nil {
-		return
+		return nil
 	}
 	cassandralog.Info("default", "name", r.Name)
 	r.SetDefaults()
+	return nil
 }
 
-var _ webhook.Validator = &Cassandra{}
+var _ webhook.CustomValidator = &Cassandra{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *Cassandra) ValidateCreate() (admission.Warnings, error) {
+func (r *Cassandra) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	cassandralog.Info("validate create", "name", r.Name)
 	return nil, r.ValidateCreateOrUpdate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *Cassandra) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *Cassandra) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	cassandralog.Info("validate update", "name", r.Name)
 	return nil, r.ValidateCreateOrUpdate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *Cassandra) ValidateDelete() (admission.Warnings, error) {
+func (r *Cassandra) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	cassandralog.Info("validate delete", "name", r.Name)
 
 	var allErr field.ErrorList

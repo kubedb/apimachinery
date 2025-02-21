@@ -43,16 +43,17 @@ func (r *BackupStorage) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-storage-kubestash-com-v1alpha1-backupstorage,mutating=true,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=backupstorages,verbs=create;update,versions=v1alpha1,name=mbackupstorage.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &BackupStorage{}
+var _ webhook.CustomDefaulter = &BackupStorage{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *BackupStorage) Default() {
+func (r *BackupStorage) Default(ctx context.Context, obj runtime.Object) error {
 	backupstoragelog.Info("default", "name", r.Name)
 
 	if r.Spec.UsagePolicy == nil {
 		r.setDefaultUsagePolicy()
 	}
 	r.removeTrailingSlash()
+	return nil
 }
 
 func (r *BackupStorage) removeTrailingSlash() {
@@ -73,10 +74,10 @@ func (r *BackupStorage) removeTrailingSlash() {
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-storage-kubestash-com-v1alpha1-backupstorage,mutating=false,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=backupstorages,verbs=create;update,versions=v1alpha1,name=vbackupstorage.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &BackupStorage{}
+var _ webhook.CustomValidator = &BackupStorage{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupStorage) ValidateCreate() (admission.Warnings, error) {
+func (r *BackupStorage) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	backupstoragelog.Info("validate create", "name", r.Name)
 
 	c := apis.GetRuntimeClient()
@@ -95,7 +96,7 @@ func (r *BackupStorage) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupStorage) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *BackupStorage) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	backupstoragelog.Info("validate update", "name", r.Name)
 
 	c := apis.GetRuntimeClient()
@@ -118,7 +119,7 @@ func (r *BackupStorage) ValidateUpdate(old runtime.Object) (admission.Warnings, 
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupStorage) ValidateDelete() (admission.Warnings, error) {
+func (r *BackupStorage) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	backupstoragelog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

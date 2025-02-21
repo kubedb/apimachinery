@@ -42,10 +42,10 @@ func (r *RetentionPolicy) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-storage-kubestash-com-v1alpha1-retentionpolicy,mutating=true,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=retentionpolicies,verbs=create;update,versions=v1alpha1,name=mretentionpolicy.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &RetentionPolicy{}
+var _ webhook.CustomDefaulter = &RetentionPolicy{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *RetentionPolicy) Default() {
+func (r *RetentionPolicy) Default(ctx context.Context, obj runtime.Object) error {
 	retentionpolicylog.Info("default", "name", r.Name)
 
 	if r.Spec.UsagePolicy == nil {
@@ -55,6 +55,7 @@ func (r *RetentionPolicy) Default() {
 	if r.Spec.FailedSnapshots == nil {
 		r.setDefaultFailedSnapshots()
 	}
+	return nil
 }
 
 func (r *RetentionPolicy) setDefaultUsagePolicy() {
@@ -75,10 +76,10 @@ func (r *RetentionPolicy) setDefaultFailedSnapshots() {
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-storage-kubestash-com-v1alpha1-retentionpolicy,mutating=false,failurePolicy=fail,sideEffects=None,groups=storage.kubestash.com,resources=retentionpolicies,verbs=create;update,versions=v1alpha1,name=vretentionpolicy.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &RetentionPolicy{}
+var _ webhook.CustomValidator = &RetentionPolicy{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *RetentionPolicy) ValidateCreate() (admission.Warnings, error) {
+func (r *RetentionPolicy) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	retentionpolicylog.Info("validate create", "name", r.Name)
 
 	c := apis.GetRuntimeClient()
@@ -99,7 +100,7 @@ func (r *RetentionPolicy) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *RetentionPolicy) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *RetentionPolicy) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	retentionpolicylog.Info("validate update", "name", r.Name)
 
 	c := apis.GetRuntimeClient()
@@ -174,7 +175,7 @@ func (r *RetentionPolicy) validateUsagePolicy() error {
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *RetentionPolicy) ValidateDelete() (admission.Warnings, error) {
+func (r *RetentionPolicy) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	retentionpolicylog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

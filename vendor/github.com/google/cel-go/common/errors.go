@@ -30,9 +30,13 @@ type Errors struct {
 
 // NewErrors creates a new instance of the Errors type.
 func NewErrors(source Source) *Errors {
+	src := source
+	if src == nil {
+		src = NewTextSource("")
+	}
 	return &Errors{
 		errors:            []*Error{},
-		source:            source,
+		source:            src,
 		maxErrorsToReport: 100,
 	}
 }
@@ -64,7 +68,7 @@ func (e *Errors) GetErrors() []*Error {
 // Append creates a new Errors object with the current and input errors.
 func (e *Errors) Append(errs []*Error) *Errors {
 	return &Errors{
-		errors:            append(e.errors, errs...),
+		errors:            append(e.errors[:], errs...),
 		source:            e.source,
 		numErrors:         e.numErrors + len(errs),
 		maxErrorsToReport: e.maxErrorsToReport,

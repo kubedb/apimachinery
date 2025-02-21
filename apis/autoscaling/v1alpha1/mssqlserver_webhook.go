@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var msLog = logf.Log.WithName("mssqlserver-autoscaler")
 
-var _ webhook.Defaulter = &MSSQLServerAutoscaler{}
+var _ webhook.CustomDefaulter = &MSSQLServerAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *MSSQLServerAutoscaler) Default() {
+func (r *MSSQLServerAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	msLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
+	return nil
 }
 
 func (r *MSSQLServerAutoscaler) setDefaults() {
@@ -75,21 +76,21 @@ func (r *MSSQLServerAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &MSSQLServerAutoscaler{}
+var _ webhook.CustomValidator = &MSSQLServerAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *MSSQLServerAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (r *MSSQLServerAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	msLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *MSSQLServerAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (r *MSSQLServerAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	msLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *MSSQLServerAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (r *MSSQLServerAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
