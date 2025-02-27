@@ -28,6 +28,7 @@ import (
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:path=redises,singular=redis
 // +kubebuilder:subresource:status
 type Redis struct {
 	metav1.TypeMeta   `json:",inline"`
