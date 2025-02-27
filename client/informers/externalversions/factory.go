@@ -28,6 +28,7 @@ import (
 	autoscaling "kubedb.dev/apimachinery/client/informers/externalversions/autoscaling"
 	catalog "kubedb.dev/apimachinery/client/informers/externalversions/catalog"
 	elasticsearch "kubedb.dev/apimachinery/client/informers/externalversions/elasticsearch"
+	gitops "kubedb.dev/apimachinery/client/informers/externalversions/gitops"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
 	kafka "kubedb.dev/apimachinery/client/informers/externalversions/kafka"
 	kubedb "kubedb.dev/apimachinery/client/informers/externalversions/kubedb"
@@ -266,6 +267,7 @@ type SharedInformerFactory interface {
 	Autoscaling() autoscaling.Interface
 	Catalog() catalog.Interface
 	Elasticsearch() elasticsearch.Interface
+	Gitops() gitops.Interface
 	Kafka() kafka.Interface
 	Kubedb() kubedb.Interface
 	Ops() ops.Interface
@@ -287,6 +289,10 @@ func (f *sharedInformerFactory) Catalog() catalog.Interface {
 
 func (f *sharedInformerFactory) Elasticsearch() elasticsearch.Interface {
 	return elasticsearch.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Gitops() gitops.Interface {
+	return gitops.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Kafka() kafka.Interface {
