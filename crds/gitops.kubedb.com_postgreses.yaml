@@ -4,14 +4,14 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: redis.gitops.kubedb.com
+  name: postgreses.gitops.kubedb.com
 spec:
   group: gitops.kubedb.com
   names:
-    kind: Redis
-    listKind: RedisList
-    plural: redis
-    singular: redis
+    kind: Postgres
+    listKind: PostgresList
+    plural: postgreses
+    singular: postgres
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -96,6 +96,77 @@ spec:
                     type: object
                     x-kubernetes-map-type: atomic
                 type: object
+              arbiter:
+                properties:
+                  nodeSelector:
+                    additionalProperties:
+                      type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  resources:
+                    properties:
+                      claims:
+                        items:
+                          properties:
+                            name:
+                              type: string
+                          required:
+                          - name
+                          type: object
+                        type: array
+                        x-kubernetes-list-map-keys:
+                        - name
+                        x-kubernetes-list-type: map
+                      limits:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        type: object
+                      requests:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        type: object
+                    type: object
+                  tolerations:
+                    items:
+                      properties:
+                        effect:
+                          type: string
+                        key:
+                          type: string
+                        operator:
+                          type: string
+                        tolerationSeconds:
+                          format: int64
+                          type: integer
+                        value:
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              archiver:
+                properties:
+                  pause:
+                    type: boolean
+                  ref:
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    type: object
+                required:
+                - ref
+                type: object
               authSecret:
                 properties:
                   activeFrom:
@@ -115,15 +186,12 @@ spec:
                   disabled:
                     type: boolean
                 type: object
-              cluster:
-                properties:
-                  replicas:
-                    format: int32
-                    type: integer
-                  shards:
-                    format: int32
-                    type: integer
-                type: object
+              clientAuthMode:
+                enum:
+                - md5
+                - scram
+                - cert
+                type: string
               configSecret:
                 properties:
                   name:
@@ -138,7 +206,7 @@ spec:
                 - WipeOut
                 - DoNotTerminate
                 type: string
-              disableAuth:
+              enforceFsGroup:
                 type: boolean
               halted:
                 type: boolean
@@ -1194,11 +1262,40 @@ spec:
                   waitForInitialRestore:
                     type: boolean
                 type: object
+              leaderElection:
+                properties:
+                  electionTick:
+                    default: 10
+                    format: int32
+                    type: integer
+                  heartbeatTick:
+                    default: 1
+                    format: int32
+                    type: integer
+                  leaseDurationSeconds:
+                    format: int32
+                    type: integer
+                  maximumLagBeforeFailover:
+                    default: 33554432
+                    format: int64
+                    type: integer
+                  period:
+                    default: 100ms
+                    type: string
+                  renewDeadlineSeconds:
+                    format: int32
+                    type: integer
+                  retryPeriodSeconds:
+                    format: int32
+                    type: integer
+                  transferLeadershipInterval:
+                    default: 1s
+                    type: string
+                  transferLeadershipTimeout:
+                    default: 60s
+                    type: string
+                type: object
               mode:
-                enum:
-                - Standalone
-                - Cluster
-                - Sentinel
                 type: string
               monitor:
                 properties:
@@ -4465,15 +4562,47 @@ spec:
                         type: array
                     type: object
                 type: object
+              remoteReplica:
+                properties:
+                  sourceRef:
+                    properties:
+                      apiVersion:
+                        type: string
+                      fieldPath:
+                        type: string
+                      kind:
+                        type: string
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                      resourceVersion:
+                        type: string
+                      uid:
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                required:
+                - sourceRef
+                type: object
               replicas:
                 format: int32
                 type: integer
-              sentinelRef:
+              replication:
                 properties:
-                  name:
+                  maxSlotWALKeepSize:
+                    format: int32
+                    type: integer
+                  walKeepSegment:
+                    format: int32
+                    type: integer
+                  walKeepSize:
+                    format: int32
+                    type: integer
+                  walLimitPolicy:
                     type: string
-                  namespace:
-                    type: string
+                required:
+                - walLimitPolicy
                 type: object
               serviceTemplates:
                 items:
@@ -4545,6 +4674,20 @@ spec:
                   - alias
                   type: object
                 type: array
+              sslMode:
+                enum:
+                - disable
+                - allow
+                - prefer
+                - require
+                - verify-ca
+                - verify-full
+                type: string
+              standbyMode:
+                enum:
+                - Hot
+                - Warm
+                type: string
               storage:
                 properties:
                   accessModes:
@@ -4637,6 +4780,11 @@ spec:
                 enum:
                 - Durable
                 - Ephemeral
+                type: string
+              streamingMode:
+                enum:
+                - Synchronous
+                - Asynchronous
                 type: string
               tls:
                 properties:
