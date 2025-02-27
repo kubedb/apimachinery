@@ -28,6 +28,7 @@ import (
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:path=postgreses,singular=postgres
 // +kubebuilder:subresource:status
 type Postgres struct {
 	metav1.TypeMeta   `json:",inline"`
