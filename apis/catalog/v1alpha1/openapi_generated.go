@@ -31159,6 +31159,14 @@ func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref common.Refer
 							Format:      "",
 						},
 					},
+					"authPlugin": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Authentication plugin used by Redis cluster",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"initContainer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "init container image",
@@ -31242,7 +31250,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
+				Required: []string{"version", "authPlugin", "db", "exporter", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{

@@ -22842,11 +22842,17 @@
       "type": "object",
       "required": [
         "version",
+        "authPlugin",
         "db",
         "exporter",
         "podSecurityPolicies"
       ],
       "properties": {
+        "authPlugin": {
+          "description": "Authentication plugin used by Redis cluster",
+          "type": "string",
+          "default": ""
+        },
         "coordinator": {
           "description": "Coordinator Image",
           "default": {},

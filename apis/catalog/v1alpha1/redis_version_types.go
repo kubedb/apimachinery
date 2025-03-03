@@ -52,6 +52,8 @@ type RedisVersion struct {
 type RedisVersionSpec struct {
 	// Version
 	Version string `json:"version"`
+	// Authentication plugin used by Redis cluster
+	AuthPlugin RedisAuthPlugin `json:"authPlugin"`
 	// init container image
 	InitContainer RedisVersionInitContainer `json:"initContainer,omitempty"`
 	// Database Image
@@ -113,3 +115,11 @@ type RedisVersionList struct {
 	// Items is a list of RedisVersion CRD objects
 	Items []RedisVersion `json:"items,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=X-Pack;Valkey
+type RedisAuthPlugin string
+
+const (
+	RedisAuthPluginXpack  RedisAuthPlugin = "X-Pack"
+	RedisAuthPluginValkey RedisAuthPlugin = "Valkey"
+)

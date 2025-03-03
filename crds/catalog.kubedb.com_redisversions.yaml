@@ -45,6 +45,11 @@ spec:
             type: object
           spec:
             properties:
+              authPlugin:
+                enum:
+                - X-Pack
+                - Valkey
+                type: string
               coordinator:
                 properties:
                   image:
@@ -171,6 +176,7 @@ spec:
               version:
                 type: string
             required:
+            - authPlugin
             - db
             - exporter
             - podSecurityPolicies
