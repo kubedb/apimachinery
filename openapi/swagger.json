@@ -22842,17 +22842,12 @@
       "type": "object",
       "required": [
         "version",
-        "authPlugin",
+        "engine",
         "db",
         "exporter",
         "podSecurityPolicies"
       ],
       "properties": {
-        "authPlugin": {
-          "description": "Authentication plugin used by Redis cluster",
-          "type": "string",
-          "default": ""
-        },
         "coordinator": {
           "description": "Coordinator Image",
           "default": {},
@@ -22866,6 +22861,11 @@
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
           "type": "boolean"
+        },
+        "engine": {
+          "description": "Engine determines the type of the database(Valkey or Redis)",
+          "type": "string",
+          "default": ""
         },
         "exporter": {
           "description": "Exporter Image",

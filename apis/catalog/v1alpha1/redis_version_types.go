@@ -52,8 +52,8 @@ type RedisVersion struct {
 type RedisVersionSpec struct {
 	// Version
 	Version string `json:"version"`
-	// Authentication plugin used by Redis cluster
-	AuthPlugin RedisAuthPlugin `json:"authPlugin"`
+	// Engine determines the type of the database(Valkey or Redis)
+	Engine Engine `json:"engine"`
 	// init container image
 	InitContainer RedisVersionInitContainer `json:"initContainer,omitempty"`
 	// Database Image
@@ -116,10 +116,10 @@ type RedisVersionList struct {
 	Items []RedisVersion `json:"items,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=X-Pack;Valkey
-type RedisAuthPlugin string
+// +kubebuilder:validation:Enum=Redis;Valkey
+type Engine string
 
 const (
-	RedisAuthPluginXpack  RedisAuthPlugin = "X-Pack"
-	RedisAuthPluginValkey RedisAuthPlugin = "Valkey"
+	EngineRedis  Engine = "Redis"
+	EngineValkey Engine = "Valkey"
 )

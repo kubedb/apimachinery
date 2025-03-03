@@ -45,11 +45,6 @@ spec:
             type: object
           spec:
             properties:
-              authPlugin:
-                enum:
-                - X-Pack
-                - Valkey
-                type: string
               coordinator:
                 properties:
                   image:
@@ -66,6 +61,11 @@ spec:
                 type: object
               deprecated:
                 type: boolean
+              engine:
+                enum:
+                - Redis
+                - Valkey
+                type: string
               exporter:
                 properties:
                   image:
@@ -176,8 +176,8 @@ spec:
               version:
                 type: string
             required:
-            - authPlugin
             - db
+            - engine
             - exporter
             - podSecurityPolicies
             - version
