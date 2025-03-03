@@ -1430,6 +1430,9 @@ const (
 	EnvFerretDBKeyPath   = "FERRETDB_LISTEN_TLS_KEY_FILE"
 	EnvFerretDBDebugAddr = "FERRETDB_DEBUG_ADDR"
 
+	FerretDBDatabasePortName       = "db"
+	FerretDBPrimaryServicePortName = "primary"
+
 	FerretDBContainerName = "ferretdb"
 	FerretDBMainImage     = "ghcr.io/ferretdb/ferretdb"
 	FerretDBUser          = "postgres"
