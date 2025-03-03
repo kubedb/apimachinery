@@ -219,6 +219,22 @@ func (f *FerretDB) SetDefaults(kc client.Client) {
 		dbContainer.SecurityContext = &core.SecurityContext{}
 	}
 	f.setDefaultContainerSecurityContext(&frVersion, dbContainer.SecurityContext)
+
+	replContainer := coreutil.GetContainerByName(f.Spec.PodTemplate.Spec.Containers, kubedb.ReplicationModeDetectorContainerName)
+	if replContainer == nil {
+		replContainer = &core.Container{
+			Name: kubedb.ReplicationModeDetectorContainerName,
+		}
+		f.Spec.PodTemplate.Spec.Containers = append(f.Spec.PodTemplate.Spec.Containers, *replContainer)
+	}
+	if structs.IsZero(replContainer.Resources) {
+		apis.SetDefaultResourceLimits(&replContainer.Resources, kubedb.DefaultResources)
+	}
+	if replContainer.SecurityContext == nil {
+		replContainer.SecurityContext = &core.SecurityContext{}
+	}
+	f.setDefaultContainerSecurityContext(&frVersion, replContainer.SecurityContext)
+
 	f.setDefaultPodTemplateSecurityContext(&frVersion, f.Spec.PodTemplate)
 
 	if f.Spec.Backend.LinkedDB == "" {
@@ -251,6 +267,11 @@ func (f *FerretDB) SetDefaults(kc client.Client) {
 			f.Spec.Backend.Version = &defaultVersion
 		}
 	}
+
+	if f.Spec.Backend.PostgresRef != nil && f.Spec.Backend.PostgresRef.Name != "" && f.Spec.Backend.PostgresRef.Namespace == "" {
+		f.Spec.Backend.PostgresRef.Namespace = f.Namespace
+	}
+
 	f.SetTLSDefaults()
 	f.SetHealthCheckerDefaults()
 }
@@ -368,6 +389,10 @@ func (fs FerretDBStatsService) ServiceName() string {
 
 func (f *FerretDB) StatsService() mona.StatsAccessor {
 	return &FerretDBStatsService{f}
+}
+
+func (f *FerretDB) GoverningServiceName() string {
+	return f.OffshootName() + "pods"
 }
 
 func (f *FerretDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
