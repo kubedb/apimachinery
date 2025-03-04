@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"github.com/Masterminds/semver/v3"
 	"net/url"
 
 	"kubedb.dev/apimachinery/apis"
@@ -195,6 +196,9 @@ func (f *FerretDB) SetDefaults() {
 	if f.Spec.PodTemplate == nil {
 		f.Spec.PodTemplate = &ofst.PodTemplateSpec{}
 	}
+	if f.Spec.PodTemplate.Spec.ServiceAccountName == "" {
+		f.Spec.PodTemplate.Spec.ServiceAccountName = f.OffshootName()
+	}
 
 	var frVersion catalog.FerretDBVersion
 	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
@@ -259,8 +263,10 @@ func (f *FerretDB) SetDefaults() {
 			f.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = frVersion.Spec.SecurityContext.RunAsUser
 		}
 	}
-
 	defaultVersion := "16.4-bookworm"
+	if f.isLaterVersion(&frVersion, 2) {
+		defaultVersion = "16.7-doc"
+	}
 	if !f.Spec.Backend.ExternallyManaged {
 		if f.Spec.Backend.Version == nil {
 			f.Spec.Backend.Version = &defaultVersion
@@ -273,6 +279,11 @@ func (f *FerretDB) SetDefaults() {
 
 	f.SetTLSDefaults()
 	f.SetHealthCheckerDefaults()
+}
+
+func (f *FerretDB) isLaterVersion(frVersion *catalog.FerretDBVersion, version uint64) bool {
+	v, _ := semver.NewVersion(frVersion.Spec.Version)
+	return v.Major() >= version
 }
 
 func (f *FerretDB) setDefaultPodTemplateSecurityContext(frVersion *catalog.FerretDBVersion, podTemplate *ofst.PodTemplateSpec) {
@@ -391,7 +402,7 @@ func (f *FerretDB) StatsService() mona.StatsAccessor {
 }
 
 func (f *FerretDB) GoverningServiceName() string {
-	return f.OffshootName() + "pods"
+	return f.OffshootName() + "-pods"
 }
 
 func (f *FerretDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
