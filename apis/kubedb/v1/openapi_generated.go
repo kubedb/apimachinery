@@ -31220,6 +31220,20 @@ func schema_apimachinery_apis_kubedb_v1_SecretReference(ref common.ReferenceCall
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Two possible groups: \"\", virtual-secrets.dev",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"secretSource": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretSource references the secret manager used for virtual secret",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
