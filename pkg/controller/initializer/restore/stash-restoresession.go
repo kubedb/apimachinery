@@ -39,7 +39,8 @@ func (c *Controller) restoreSessionInformer(tweakListOptions func(options *metav
 	})
 }
 
-func (c *Controller) processRestoreSession(key string) error {
+func (c *Controller) processRestoreSession(k any) error {
+	key := k.(string)
 	klog.Infof("started processing, key: %v", key)
 	obj, exists, err := c.RSInformer.GetIndexer().GetByKey(key)
 	if err != nil {

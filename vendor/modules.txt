@@ -247,8 +247,8 @@ github.com/go-openapi/jsonreference/internal
 # github.com/go-openapi/swag v0.23.0
 ## explicit; go 1.20
 github.com/go-openapi/swag
-# github.com/go-sql-driver/mysql v1.8.1
-## explicit; go 1.18
+# github.com/go-sql-driver/mysql v1.9.0
+## explicit; go 1.21
 github.com/go-sql-driver/mysql
 # github.com/gofrs/uuid v4.4.0+incompatible
 ## explicit
@@ -720,8 +720,8 @@ go.uber.org/zap/internal/pool
 go.uber.org/zap/internal/stacktrace
 go.uber.org/zap/zapcore
 go.uber.org/zap/zapgrpc
-# golang.org/x/crypto v0.33.0
-## explicit; go 1.20
+# golang.org/x/crypto v0.35.0
+## explicit; go 1.23.0
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blake2b
 golang.org/x/crypto/blowfish
@@ -757,8 +757,8 @@ golang.org/x/net/internal/httpcommon
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
 golang.org/x/net/websocket
-# golang.org/x/oauth2 v0.25.0
-## explicit; go 1.18
+# golang.org/x/oauth2 v0.27.0
+## explicit; go 1.23.0
 golang.org/x/oauth2
 golang.org/x/oauth2/authhandler
 golang.org/x/oauth2/google
@@ -1728,7 +1728,7 @@ k8s.io/utils/trace
 # kmodules.xyz/apiversion v0.2.0
 ## explicit; go 1.14
 kmodules.xyz/apiversion
-# kmodules.xyz/client-go v0.30.47-0.20250221045612-6ab42ed27325
+# kmodules.xyz/client-go v0.30.47-0.20250303073751-80d02d19452f
 ## explicit; go 1.23.0
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1751,11 +1751,11 @@ kmodules.xyz/client-go/policy/v1
 kmodules.xyz/client-go/policy/v1beta1
 kmodules.xyz/client-go/tools/clusterid
 kmodules.xyz/client-go/tools/queue
-# kmodules.xyz/crd-schema-fuzz v0.29.1
-## explicit; go 1.21.5
+# kmodules.xyz/crd-schema-fuzz v0.29.2-0.20250302110413-c5b140ca984a
+## explicit; go 1.23.0
 kmodules.xyz/crd-schema-fuzz
-# kmodules.xyz/custom-resources v0.30.1
-## explicit; go 1.22.1
+# kmodules.xyz/custom-resources v0.30.2-0.20250303080226-05eb1392c05f
+## explicit; go 1.23.0
 kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
 kmodules.xyz/custom-resources/apis/metrics
@@ -1839,7 +1839,7 @@ kubeops.dev/petset/pkg/features
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
 kubeops.dev/sidekick/crds
-# kubestash.dev/apimachinery v0.16.1-0.20250221082917-363b95e8476c
+# kubestash.dev/apimachinery v0.16.1-0.20250304052026-ff90d99c387e
 ## explicit; go 1.23.0
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/addons/v1alpha1

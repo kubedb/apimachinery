@@ -39,7 +39,8 @@ func (c *Controller) restoreBatchInformer(tweakListOptions func(options *metav1.
 	})
 }
 
-func (c Controller) processRestoreBatch(key string) error {
+func (c Controller) processRestoreBatch(k any) error {
+	key := k.(string)
 	klog.Infof("started processing, key: %v", key)
 	obj, exists, err := c.RBInformer.GetIndexer().GetByKey(key)
 	if err != nil {

@@ -36,6 +36,8 @@ var backupstoragelog = logf.Log.WithName("backupstorage-resource")
 func (r *BackupStorage) SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
 		For(r).
+		WithValidator(r).
+		WithDefaulter(r).
 		Complete()
 }
 
@@ -46,13 +48,18 @@ func (r *BackupStorage) SetupWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.CustomDefaulter = &BackupStorage{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *BackupStorage) Default(ctx context.Context, obj runtime.Object) error {
-	backupstoragelog.Info("default", "name", r.Name)
-
-	if r.Spec.UsagePolicy == nil {
-		r.setDefaultUsagePolicy()
+func (_ *BackupStorage) Default(_ context.Context, obj runtime.Object) error {
+	storage, ok := obj.(*BackupStorage)
+	if !ok {
+		return fmt.Errorf("expected BackupStorage but got %T", obj)
 	}
-	r.removeTrailingSlash()
+
+	backupstoragelog.Info("default", "name", storage.Name)
+
+	if storage.Spec.UsagePolicy == nil {
+		storage.setDefaultUsagePolicy()
+	}
+	storage.removeTrailingSlash()
 	return nil
 }
 
@@ -77,50 +84,67 @@ func (r *BackupStorage) removeTrailingSlash() {
 var _ webhook.CustomValidator = &BackupStorage{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupStorage) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	backupstoragelog.Info("validate create", "name", r.Name)
-
+func (_ *BackupStorage) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	c := apis.GetRuntimeClient()
+	storage, ok := obj.(*BackupStorage)
+	if !ok {
+		return nil, fmt.Errorf("expected BackupStorage but got %T", obj)
+	}
 
-	if r.Spec.Default {
-		if err := r.validateSingleDefaultBackupStorageInSameNamespace(context.Background(), c); err != nil {
+	backupstoragelog.Info("validate create", "name", storage.Name)
+
+	if storage.Spec.Default {
+		if err := storage.validateSingleDefaultBackupStorageInSameNamespace(ctx, c); err != nil {
 			return nil, err
 		}
 	}
 
-	if err := r.validateUsagePolicy(); err != nil {
+	if err := storage.validateUsagePolicy(); err != nil {
 		return nil, err
 	}
 
-	return nil, r.validateUniqueDirectory(context.Background(), c)
+	return nil, storage.validateUniqueDirectory(ctx, c)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupStorage) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	backupstoragelog.Info("validate update", "name", r.Name)
-
+func (_ *BackupStorage) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	c := apis.GetRuntimeClient()
+	newStorage, ok := newObj.(*BackupStorage)
+	if !ok {
+		return nil, fmt.Errorf("expected BackupStorage but got %T", newObj)
+	}
 
-	if r.Spec.Default {
-		if err := r.validateSingleDefaultBackupStorageInSameNamespace(context.Background(), c); err != nil {
+	oldStorage, ok := old.(*BackupStorage)
+	if !ok {
+		return nil, fmt.Errorf("expected BackupStorage but got %T", old)
+	}
+
+	backupstoragelog.Info("validate update", "name", newStorage.Name)
+
+	if newStorage.Spec.Default {
+		if err := newStorage.validateSingleDefaultBackupStorageInSameNamespace(context.Background(), c); err != nil {
 			return nil, err
 		}
 	}
 
-	if err := r.validateUsagePolicy(); err != nil {
+	if err := newStorage.validateUsagePolicy(); err != nil {
 		return nil, err
 	}
 
-	if err := r.validateUpdateStorage(old.(*BackupStorage)); err != nil {
+	if err := newStorage.validateUpdateStorage(oldStorage); err != nil {
 		return nil, err
 	}
 
-	return nil, r.validateUniqueDirectory(context.Background(), c)
+	return nil, newStorage.validateUniqueDirectory(ctx, c)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *BackupStorage) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	backupstoragelog.Info("validate delete", "name", r.Name)
+func (_ *BackupStorage) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	storage, ok := obj.(*BackupStorage)
+	if !ok {
+		return nil, fmt.Errorf("expected BackupStorage but got %T", obj)
+	}
+	backupstoragelog.Info("validate delete", "name", storage.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.
 	return nil, nil

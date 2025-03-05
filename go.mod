@@ -37,9 +37,9 @@ require (
 	k8s.io/kube-openapi v0.0.0-20241212222426-2c72e554b1e7
 	k8s.io/metrics v0.32.2
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
-	kmodules.xyz/client-go v0.30.47-0.20250221045612-6ab42ed27325
-	kmodules.xyz/crd-schema-fuzz v0.29.1
-	kmodules.xyz/custom-resources v0.30.1
+	kmodules.xyz/client-go v0.30.47-0.20250303073751-80d02d19452f
+	kmodules.xyz/crd-schema-fuzz v0.29.2-0.20250302110413-c5b140ca984a
+	kmodules.xyz/custom-resources v0.30.2-0.20250303080226-05eb1392c05f
 	kmodules.xyz/monitoring-agent-api v0.30.4
 	kmodules.xyz/objectstore-api v0.29.1
 	kmodules.xyz/offshoot-api v0.30.1
@@ -48,7 +48,7 @@ require (
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/petset v0.0.8-0.20250221072845-c4b7c4af4678
 	kubeops.dev/sidekick v0.0.10
-	kubestash.dev/apimachinery v0.16.1-0.20250221082917-363b95e8476c
+	kubestash.dev/apimachinery v0.16.1-0.20250304052026-ff90d99c387e
 	sigs.k8s.io/controller-runtime v0.20.2
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.39.0
@@ -97,7 +97,7 @@ require (
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
-	github.com/go-sql-driver/mysql v1.8.1 // indirect
+	github.com/go-sql-driver/mysql v1.9.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
@@ -173,10 +173,10 @@ require (
 	go.opentelemetry.io/proto/otlp v1.4.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/crypto v0.33.0 // indirect
+	golang.org/x/crypto v0.35.0 // indirect
 	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
 	golang.org/x/net v0.35.0 // indirect
-	golang.org/x/oauth2 v0.25.0 // indirect
+	golang.org/x/oauth2 v0.27.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/term v0.29.0 // indirect
