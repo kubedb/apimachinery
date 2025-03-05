@@ -42,6 +42,10 @@ type EtcdVersionListerExpansion interface{}
 // FerretDBVersionLister.
 type FerretDBVersionListerExpansion interface{}
 
+// HazelcastVersionListerExpansion allows custom methods to be added to
+// HazelcastVersionLister.
+type HazelcastVersionListerExpansion interface{}
+
 // KafkaConnectorVersionListerExpansion allows custom methods to be added to
 // KafkaConnectorVersionLister.
 type KafkaConnectorVersionListerExpansion interface{}
