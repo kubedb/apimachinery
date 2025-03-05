@@ -55,10 +55,14 @@ spec:
                     type: string
                   externallyManaged:
                     type: boolean
+                  group:
+                    type: string
                   name:
                     default: ""
                     type: string
                   rotateAfter:
+                    type: string
+                  secretSource:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
