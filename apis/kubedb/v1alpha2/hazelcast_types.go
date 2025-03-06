@@ -26,8 +26,8 @@ import (
 const (
 	ResourceCodeHazelcast     = "hz"
 	ResourceKindHazelcast     = "Hazelcast"
-	ResourceSingularHazelcast = "Hazelcast"
-	ResourcePluralHazelcast   = "Hazelcasts"
+	ResourceSingularHazelcast = "hazelcast"
+	ResourcePluralHazelcast   = "hazelcasts"
 )
 
 // Hazelcast is the Schema for the hazelcasts API.
