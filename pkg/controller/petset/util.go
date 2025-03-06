@@ -28,6 +28,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	dmcond "kmodules.xyz/client-go/dynamic/conditions"
+	scapi "kubeops.dev/operator-shard-manager/api/v1alpha1"
 	petsetapps "kubeops.dev/petset/apis/apps/v1"
 )
 
@@ -35,6 +36,7 @@ type databaseInfo struct {
 	opts          dmcond.DynamicOptions
 	replicasReady bool
 	msg           string
+	shouldRequeue bool
 }
 
 func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, error) {
@@ -227,6 +229,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(pg.GetLabels(), c.ShardConfig, c.KBClient)
 
 	case dbapi.ResourceKindProxySQL:
 		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralProxySQL
