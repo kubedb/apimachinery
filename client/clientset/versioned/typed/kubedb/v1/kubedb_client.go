@@ -21,10 +21,9 @@ package v1
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type KubedbV1Interface interface {

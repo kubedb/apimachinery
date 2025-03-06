@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	ofst "kmodules.xyz/offshoot-api/api/v2"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -110,14 +111,26 @@ func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
 			f.Name,
 			err.Error()))
 	}
-	if f.Spec.Replicas == nil || *f.Spec.Replicas < 1 {
+	if f.Spec.Server.Primary.Replicas == nil || *f.Spec.Server.Primary.Replicas < 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 			f.Name,
-			fmt.Sprintf(`spec.replicas "%v" invalid. Must be greater than zero`, f.Spec.Replicas)))
+			fmt.Sprintf(`spec.server.primary.replicas "%v" invalid. Must be greater than zero`, f.Spec.Server.Primary.Replicas)))
+	}
+	if f.Spec.Server.Secondary != nil && (f.Spec.Server.Secondary.Replicas == nil || *f.Spec.Server.Secondary.Replicas < 1) {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+			f.Name,
+			fmt.Sprintf(`spec.server.secondary.replicas "%v" invalid. Must be greater than zero`, f.Spec.Server.Secondary.Replicas)))
 	}
 
-	if f.Spec.PodTemplate != nil {
-		if err := FerretDBValidateEnvVar(getMainContainerEnvs(f), forbiddenEnvVars, f.ResourceKind()); err != nil {
+	if f.Spec.Server.Primary.PodTemplate != nil {
+		if err := FerretDBValidateEnvVar(getMainContainerEnvs(f.Spec.Server.Primary.PodTemplate), forbiddenEnvVars, f.ResourceKind()); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
+				f.Name,
+				err.Error()))
+		}
+	}
+	if f.Spec.Server.Secondary.PodTemplate != nil {
+		if err := FerretDBValidateEnvVar(getMainContainerEnvs(f.Spec.Server.Secondary.PodTemplate), forbiddenEnvVars, f.ResourceKind()); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
 				f.Name,
 				err.Error()))
@@ -265,8 +278,8 @@ var forbiddenEnvVars = []string{
 	kubedb.EnvFerretDBTLSPort, kubedb.EnvFerretDBCAPath, kubedb.EnvFerretDBCertPath, kubedb.EnvFerretDBKeyPath,
 }
 
-func getMainContainerEnvs(f *FerretDB) []core.EnvVar {
-	for _, container := range f.Spec.PodTemplate.Spec.Containers {
+func getMainContainerEnvs(podTemplate *ofst.PodTemplateSpec) []core.EnvVar {
+	for _, container := range podTemplate.Spec.Containers {
 		if container.Name == kubedb.FerretDBContainerName {
 			return container.Env
 		}
