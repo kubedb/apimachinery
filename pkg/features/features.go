@@ -52,6 +52,9 @@ const (
 	// Enables FerretDB operator.
 	FerretDB featuregate.Feature = "FerretDB"
 
+	// Enable Hazelcast Operator
+	Hazelcast featuregate.Feature = "Hazelcast"
+
 	// Enables Flink operator.
 	// Flink featuregate.Feature = "Flink"
 
@@ -138,6 +141,7 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	Elasticsearch: {Default: true, PreRelease: featuregate.GA},
 	// Etcd:               {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
 	FerretDB:    {Default: false, PreRelease: featuregate.Alpha},
+	Hazelcast:   {Default: false, PreRelease: featuregate.Alpha},
 	Kafka:       {Default: true, PreRelease: featuregate.Beta},
 	MariaDB:     {Default: true, PreRelease: featuregate.GA},
 	Memcached:   {Default: false, PreRelease: featuregate.Beta},
