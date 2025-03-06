@@ -555,6 +555,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBApp":                                   schema_apimachinery_apis_kubedb_v1alpha2_FerretDBApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBBackend":                               schema_apimachinery_apis_kubedb_v1alpha2_FerretDBBackend(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBList":                                  schema_apimachinery_apis_kubedb_v1alpha2_FerretDBList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBServer":                                schema_apimachinery_apis_kubedb_v1alpha2_FerretDBServer(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBServerSpec":                            schema_apimachinery_apis_kubedb_v1alpha2_FerretDBServerSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBStatsService":                          schema_apimachinery_apis_kubedb_v1alpha2_FerretDBStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBStatus":                                schema_apimachinery_apis_kubedb_v1alpha2_FerretDBStatus(ref),
@@ -28775,6 +28777,56 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBList(ref common.ReferenceC
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBServer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"primary": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBServerSpec"),
+						},
+					},
+					"secondary": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBServerSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBServerSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBServerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -28789,11 +28841,10 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref common.ReferenceC
 							Format:      "",
 						},
 					},
-					"replicas": {
+					"server": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a FerretDB database.",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Description: "FerretDB primary and secondary server configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBServer"),
 						},
 					},
 					"authSecret": {
@@ -28807,12 +28858,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref common.ReferenceC
 							Description: "See more options: https://docs.ferretdb.io/security/tls-connections/",
 							Type:        []string{"string"},
 							Format:      "",
-						},
-					},
-					"podTemplate": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -28885,7 +28930,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FerretDBSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBBackend", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBBackend", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.FerretDBServer", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 

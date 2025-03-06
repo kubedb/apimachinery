@@ -19,7 +19,6 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
-	"github.com/Masterminds/semver/v3"
 	"net/url"
 
 	"kubedb.dev/apimachinery/apis"
@@ -27,6 +26,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/fatih/structs"
 	v1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
@@ -100,8 +100,11 @@ func (f *FerretDB) OffshootLabels() map[string]string {
 	return f.offshootLabels(f.OffshootSelectors(), nil)
 }
 
-func (r *FerretDB) PetSetName() string {
-	return r.OffshootName()
+func (f *FerretDB) PetSetName(alias string) string {
+	if alias != "" {
+		return fmt.Sprintf("%s-%s", f.OffshootName(), alias)
+	}
+	return f.OffshootName()
 }
 
 func (f *FerretDB) offshootLabels(selector, override map[string]string) map[string]string {
@@ -190,17 +193,6 @@ func (f *FerretDB) SetDefaults(kc client.Client) {
 		f.Spec.SSLMode = SSLModeDisabled
 	}
 
-	if f.Spec.Replicas == nil {
-		f.Spec.Replicas = pointer.Int32P(1)
-	}
-
-	if f.Spec.PodTemplate == nil {
-		f.Spec.PodTemplate = &ofst.PodTemplateSpec{}
-	}
-	if f.Spec.PodTemplate.Spec.ServiceAccountName == "" {
-		f.Spec.PodTemplate.Spec.ServiceAccountName = f.OffshootName()
-	}
-
 	var frVersion catalog.FerretDBVersion
 	err := kc.Get(context.TODO(), types.NamespacedName{
 		Name: f.Spec.Version,
@@ -209,37 +201,35 @@ func (f *FerretDB) SetDefaults(kc client.Client) {
 		klog.Errorf("can't get the FerretDB version object %s for %s \n", err.Error(), f.Spec.Version)
 		return
 	}
-	dbContainer := coreutil.GetContainerByName(f.Spec.PodTemplate.Spec.Containers, kubedb.FerretDBContainerName)
-	if dbContainer == nil {
-		dbContainer = &core.Container{
-			Name: kubedb.FerretDBContainerName,
-		}
-		f.Spec.PodTemplate.Spec.Containers = append(f.Spec.PodTemplate.Spec.Containers, *dbContainer)
-	}
-	if structs.IsZero(dbContainer.Resources) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
-	}
-	if dbContainer.SecurityContext == nil {
-		dbContainer.SecurityContext = &core.SecurityContext{}
-	}
-	f.setDefaultContainerSecurityContext(&frVersion, dbContainer.SecurityContext)
 
-	replContainer := coreutil.GetContainerByName(f.Spec.PodTemplate.Spec.Containers, kubedb.ReplicationModeDetectorContainerName)
-	if replContainer == nil {
-		replContainer = &core.Container{
-			Name: kubedb.ReplicationModeDetectorContainerName,
+	if f.Spec.Server == nil {
+		f.Spec.Server = &FerretDBServer{
+			Primary: &FerretDBServerSpec{
+				Replicas:    pointer.Int32P(1),
+				PodTemplate: &ofst.PodTemplateSpec{},
+			},
 		}
-		f.Spec.PodTemplate.Spec.Containers = append(f.Spec.PodTemplate.Spec.Containers, *replContainer)
 	}
-	if structs.IsZero(replContainer.Resources) {
-		apis.SetDefaultResourceLimits(&replContainer.Resources, kubedb.DefaultResources)
-	}
-	if replContainer.SecurityContext == nil {
-		replContainer.SecurityContext = &core.SecurityContext{}
-	}
-	f.setDefaultContainerSecurityContext(&frVersion, replContainer.SecurityContext)
 
-	f.setDefaultPodTemplateSecurityContext(&frVersion, f.Spec.PodTemplate)
+	if f.Spec.Server.Primary != nil {
+		if f.Spec.Server.Primary.Replicas == nil {
+			f.Spec.Server.Primary.Replicas = pointer.Int32P(1)
+		}
+		if f.Spec.Server.Primary.PodTemplate == nil {
+			f.Spec.Server.Primary.PodTemplate = &ofst.PodTemplateSpec{}
+		}
+		f.setDefaultPodTemplateValues(f.Spec.Server.Primary.PodTemplate, &frVersion)
+	}
+
+	if f.Spec.Server.Secondary != nil {
+		if f.Spec.Server.Secondary.Replicas == nil {
+			f.Spec.Server.Secondary.Replicas = pointer.Int32P(1)
+		}
+		if f.Spec.Server.Secondary.PodTemplate == nil {
+			f.Spec.Server.Secondary.PodTemplate = &ofst.PodTemplateSpec{}
+		}
+		f.setDefaultPodTemplateValues(f.Spec.Server.Secondary.PodTemplate, &frVersion)
+	}
 
 	if f.Spec.Backend.LinkedDB == "" {
 		if f.Spec.Backend.ExternallyManaged {
@@ -280,6 +270,24 @@ func (f *FerretDB) SetDefaults(kc client.Client) {
 
 	f.SetTLSDefaults()
 	f.SetHealthCheckerDefaults()
+}
+
+func (f *FerretDB) setDefaultPodTemplateValues(podTemplate *ofst.PodTemplateSpec, frVersion *catalog.FerretDBVersion) {
+	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.FerretDBContainerName)
+	if dbContainer == nil {
+		dbContainer = &core.Container{
+			Name: kubedb.FerretDBContainerName,
+		}
+		podTemplate.Spec.Containers = append(podTemplate.Spec.Containers, *dbContainer)
+	}
+	if structs.IsZero(dbContainer.Resources) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
+	if dbContainer.SecurityContext == nil {
+		dbContainer.SecurityContext = &core.SecurityContext{}
+	}
+	f.setDefaultContainerSecurityContext(frVersion, dbContainer.SecurityContext)
+	f.setDefaultPodTemplateSecurityContext(frVersion, podTemplate)
 }
 
 func (f *FerretDB) isLaterVersion(frVersion *catalog.FerretDBVersion, version uint64) bool {
