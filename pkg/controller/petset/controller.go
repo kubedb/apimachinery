@@ -35,11 +35,14 @@ import (
 	"kmodules.xyz/client-go/tools/queue"
 	petsetapps "kubeops.dev/petset/apis/apps/v1"
 	petsetcs "kubeops.dev/petset/client/clientset/versioned"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type Controller struct {
 	*amc.Config
 
+	// Kubebuilder client
+	KBClient client.Client
 	// Kubernetes client
 	Client kubernetes.Interface
 	// KubeDB client
@@ -56,6 +59,7 @@ func NewController(
 	dbClient db_cs.Interface,
 	dmClient dynamic.Interface,
 	psClient petsetcs.Interface,
+	kbClient client.Client,
 ) *Controller {
 	return &Controller{
 		Config:        config,
@@ -63,6 +67,7 @@ func NewController(
 		DBClient:      dbClient,
 		DynamicClient: dmClient,
 		PSClient:      psClient,
+		KBClient:      kbClient,
 	}
 }
 
@@ -153,7 +158,10 @@ func (c *Controller) enqueueOnlyKubeDBPS(ps *petsetapps.PetSet) {
 		return
 	}
 	if ok {
-		queue.Enqueue(c.PSQueue.GetQueue(), cache.ExplicitKey(ps.Namespace+"/"+ps.Name))
+		dbInfo, err := c.extractDatabaseInfo(ps)
+		if err == nil && dbInfo != nil && dbInfo.shouldRequeue {
+			queue.Enqueue(c.PSQueue.GetQueue(), cache.ExplicitKey(ps.Namespace+"/"+ps.Name))
+		}
 	}
 }
 
