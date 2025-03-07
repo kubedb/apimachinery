@@ -59,7 +59,6 @@ func NewController(
 	dbClient db_cs.Interface,
 	dmClient dynamic.Interface,
 	psClient petsetcs.Interface,
-	kbClient client.Client,
 ) *Controller {
 	return &Controller{
 		Config:        config,
@@ -67,8 +66,12 @@ func NewController(
 		DBClient:      dbClient,
 		DynamicClient: dmClient,
 		PSClient:      psClient,
-		KBClient:      kbClient,
 	}
+}
+
+func (c *Controller) WithCacheClient(kbClient client.Client) *Controller {
+	c.KBClient = kbClient
+	return c
 }
 
 func (c *Controller) InitPetSetWatcher() {
