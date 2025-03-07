@@ -1595,6 +1595,16 @@ const (
 	EnvNameCassandraPassword         = "CASSANDRA_PASSWORD"
 )
 
+// =========================== Virtual Secrets Constants ============================
+
+const (
+	VirtualSecretsVolume          = "virtual-secrets"
+	VirtualSecretsVolumeMountPath = "/var/run/secrets/virtual-secrets"
+	VirtualSecretsKeyUsername     = "vs:///var/run/secrets/virtual-secrets/username"
+	VirtualSecretsKeyPassword     = "vs:///var/run/secrets/virtual-secrets/password"
+	VirtualSecretsVENV            = "/var/run/secrets/virtual-secrets/venv"
+)
+
 // Resource kind related constants
 const (
 	ResourceKindStatefulSet = "StatefulSet"
