@@ -54,7 +54,7 @@ type HazelcastSpec struct {
 	// Version of Hazelcast to be deployed
 	Version string `json:"version"`
 
-	// +optional
+	// lisence for hazelcast community edition
 	LicenseSecret *core.SecretReference `json:"licenseSecret,omitempty"`
 
 	// Number of instances to deploy for a Hazelcast database
