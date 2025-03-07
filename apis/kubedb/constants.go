@@ -1447,6 +1447,12 @@ const (
 
 	FerretDBMetricsPath     = "/debug/metrics"
 	FerretDBMetricsPortName = "metrics"
+
+	FerretDBServerTypePrimary   = "primary"
+	FerretDBServerTypeSecondary = "secondary"
+
+	FerretDBPrimaryLabelKey   = "ferretdb.kubedb.com/server.primary"
+	FerretDBSecondaryLabelKey = "ferretdb.kubedb.com/server.secondary"
 )
 
 // =========================== ClickHouse Constants ============================
