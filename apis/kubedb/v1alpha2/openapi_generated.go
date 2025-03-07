@@ -28776,7 +28776,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HazelcastSpec(ref common.Reference
 					},
 					"licenseSecret": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.SecretReference"),
+							Description: "lisence for hazelcast community edition",
+							Ref:         ref("k8s.io/api/core/v1.SecretReference"),
 						},
 					},
 					"replicas": {
