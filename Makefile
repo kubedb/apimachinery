@@ -189,20 +189,32 @@ gen-crds:
 			paths="./apis/..."              \
 			output:crd:artifacts:config=crds
 
-crds_to_patch := kubedb.com_elasticsearches.yaml \
-					kubedb.com_etcds.yaml \
-					kubedb.com_mariadbs.yaml \
-					kubedb.com_memcacheds.yaml \
-					kubedb.com_mongodbs.yaml \
-					kubedb.com_mysqls.yaml \
-					kubedb.com_perconaxtradbs.yaml \
-					kubedb.com_pgbouncers.yaml \
-					kubedb.com_postgreses.yaml \
-					kubedb.com_proxysqls.yaml \
-					kubedb.com_redises.yaml
+crd_to_patch := kubedb.com_cassandras.yaml \
+								kubedb.com_clickhouses.yaml \
+								kubedb.com_druids.yaml \
+								kubedb.com_elasticsearches.yaml \
+								kubedb.com_etcds.yaml \
+								kubedb.com_ferretdbs.yaml \
+								kubedb.com_kafkas.yaml \
+								kubedb.com_mariadbs.yaml \
+								kubedb.com_memcacheds.yaml \
+								kubedb.com_mongodbs.yaml \
+								kubedb.com_mssqlservers.yaml \
+								kubedb.com_mysqls.yaml \
+								kubedb.com_perconaxtradbs.yaml \
+								kubedb.com_pgbouncers.yaml \
+								kubedb.com_pgpools.yaml \
+								kubedb.com_postgreses.yaml \
+								kubedb.com_proxysqls.yaml \
+								kubedb.com_rabbitmqs.yaml \
+								kubedb.com_redises.yaml \
+								kubedb.com_redissentinels.yaml \
+								kubedb.com_singlestores.yaml \
+								kubedb.com_solrs.yaml \
+								kubedb.com_zookeepers.yaml
 
 .PHONY: patch-crds
-patch-crds: $(addprefix patch-crd-, $(crds_to_patch))
+patch-crds: $(addprefix patch-crd-, $(crd_to_patch))
 patch-crd-%: $(BUILD_DIRS)
 	@echo "patching $*"
 	@kubectl patch -f crds/$* -p "$$(cat hack/crd-patch.json)" --type=json --local=true -o yaml > bin/$*
