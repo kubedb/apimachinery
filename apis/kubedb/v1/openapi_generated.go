@@ -31220,16 +31220,18 @@ func schema_apimachinery_apis_kubedb_v1_SecretReference(ref common.ReferenceCall
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"group": {
+					"apiGroup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Two possible groups: \"\", virtual-secrets.dev",
+							Description: "APIGroup is the group for the resource being referenced. This should be one of \"\", virtual-secrets.dev",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"secretSource": {
+					"kind": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecretSource references the secret manager used for virtual secret",
+							Description: "Only Secret",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -31260,7 +31262,15 @@ func schema_apimachinery_apis_kubedb_v1_SecretReference(ref common.ReferenceCall
 							Format: "",
 						},
 					},
+					"secretSourceName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretSourceName references the secret manager used for virtual secret",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
+				Required: []string{"apiGroup", "kind"},
 			},
 		},
 		Dependencies: []string{

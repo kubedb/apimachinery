@@ -204,14 +204,12 @@ type SystemUserSecretsSpec struct {
 }
 
 type SecretReference struct {
-	// +optional
-	// Two possible groups: "", virtual-secrets.dev
-	Group string `json:"group,omitempty"`
-
-	// +optional
-	// SecretSource references the secret manager used for virtual secret
-	SecretSource string `json:"secretSource,omitempty"`
-
+	// APIGroup is the group for the resource being referenced. This should be one of "", virtual-secrets.dev
+	// +kubebuilder:default:=""
+	APIGroup string `json:"apiGroup"`
+	// Only Secret
+	// +kubebuilder:default:=Secret
+	Kind                      string `json:"kind"`
 	core.LocalObjectReference `json:",inline,omitempty"`
 	// Recommendation engine will generate RotateAuth opsReq using this field
 	// +optional
@@ -220,6 +218,9 @@ type SecretReference struct {
 	// +optional
 	ActiveFrom        *metav1.Time `json:"activeFrom,omitempty"`
 	ExternallyManaged bool         `json:"externallyManaged,omitempty"`
+	// +optional
+	// SecretSourceName references the secret manager used for virtual secret
+	SecretSourceName string `json:"secretSourceName,omitempty"`
 }
 
 type Age struct {
