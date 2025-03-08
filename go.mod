@@ -46,6 +46,7 @@ require (
 	kmodules.xyz/resource-metadata v0.25.1
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/csi-driver-cacerts v0.1.0
+	kubeops.dev/operator-shard-manager v0.0.2-0.20250307043015-f24541485447
 	kubeops.dev/petset v0.0.7
 	kubeops.dev/sidekick v0.0.10
 	kubestash.dev/apimachinery v0.16.0

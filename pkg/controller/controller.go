@@ -95,6 +95,7 @@ type Config struct {
 	MaxNumRequeues         int
 	NumThreads             int
 	NetworkPolicyEnabled   bool
+	ShardConfig            string
 }
 
 type Initializers struct {
