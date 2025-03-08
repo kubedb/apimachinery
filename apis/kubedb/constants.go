@@ -1607,9 +1607,9 @@ const (
 const (
 	VirtualSecretsVolume          = "virtual-secrets"
 	VirtualSecretsVolumeMountPath = "/var/run/secrets/virtual-secrets"
-	VirtualSecretsKeyUsername     = "vs:///var/run/secrets/virtual-secrets/username"
-	VirtualSecretsKeyPassword     = "vs:///var/run/secrets/virtual-secrets/password"
-	VirtualSecretsVENV            = "/var/run/secrets/virtual-secrets/venv"
+	VirtualSecretsKeyUsername     = "vs:///var/run/secrets/virtual-secrets/" + core.BasicAuthUsernameKey
+	VirtualSecretsKeyPassword     = "vs:///var/run/secrets/virtual-secrets/" + core.BasicAuthPasswordKey
+	VirtualSecretsVENV            = "/var/run/secrets/virtual-secrets/bin/venv"
 )
 
 // Resource kind related constants
