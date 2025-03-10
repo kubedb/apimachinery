@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var rabbitLog = logf.Log.WithName("rabbitmq-autoscaler")
 
-var _ webhook.Defaulter = &RabbitMQAutoscaler{}
+var _ webhook.CustomDefaulter = &RabbitMQAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *RabbitMQAutoscaler) Default() {
+func (r *RabbitMQAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	rabbitLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
+	return nil
 }
 
 func (r *RabbitMQAutoscaler) setDefaults() {
@@ -75,21 +76,21 @@ func (r *RabbitMQAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &RabbitMQAutoscaler{}
+var _ webhook.CustomValidator = &RabbitMQAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *RabbitMQAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (r *RabbitMQAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	rabbitLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *RabbitMQAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (r *RabbitMQAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	rabbitLog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *RabbitMQAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (r *RabbitMQAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

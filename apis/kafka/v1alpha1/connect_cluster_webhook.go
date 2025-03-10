@@ -39,21 +39,22 @@ import (
 // log is for logging in this package.
 var connectClusterLog = logf.Log.WithName("connectCluster-resource")
 
-var _ webhook.Defaulter = &ConnectCluster{}
+var _ webhook.CustomDefaulter = &ConnectCluster{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *ConnectCluster) Default() {
+func (k *ConnectCluster) Default(ctx context.Context, obj runtime.Object) error {
 	if k == nil {
-		return
+		return nil
 	}
 	connectClusterLog.Info("default", "name", k.Name)
 	k.SetDefaults()
+	return nil
 }
 
-var _ webhook.Validator = &ConnectCluster{}
+var _ webhook.CustomValidator = &ConnectCluster{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *ConnectCluster) ValidateCreate() (admission.Warnings, error) {
+func (k *ConnectCluster) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	connectClusterLog.Info("validate create", "name", k.Name)
 	allErr := k.ValidateCreateOrUpdate()
 	if len(allErr) == 0 {
@@ -63,7 +64,7 @@ func (k *ConnectCluster) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *ConnectCluster) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (k *ConnectCluster) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	connectClusterLog.Info("validate update", "name", k.Name)
 
 	oldConnect := old.(*ConnectCluster)
@@ -82,7 +83,7 @@ func (k *ConnectCluster) ValidateUpdate(old runtime.Object) (admission.Warnings,
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *ConnectCluster) ValidateDelete() (admission.Warnings, error) {
+func (k *ConnectCluster) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	connectClusterLog.Info("validate delete", "name", k.Name)
 
 	var allErr field.ErrorList

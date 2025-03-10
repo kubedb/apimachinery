@@ -39,33 +39,34 @@ import (
 // log is for logging in this package.
 var clickhouselog = logf.Log.WithName("clickhouse-resource")
 
-var _ webhook.Defaulter = &ClickHouse{}
+var _ webhook.CustomDefaulter = &ClickHouse{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (c *ClickHouse) Default() {
+func (c *ClickHouse) Default(ctx context.Context, obj runtime.Object) error {
 	if c == nil {
-		return
+		return nil
 	}
 	clickhouselog.Info("default", "name", c.Name)
 	c.SetDefaults()
+	return nil
 }
 
-var _ webhook.Validator = &ClickHouse{}
+var _ webhook.CustomValidator = &ClickHouse{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (c *ClickHouse) ValidateCreate() (admission.Warnings, error) {
+func (c *ClickHouse) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	clickhouselog.Info("validate create", "name", c.Name)
 	return nil, c.ValidateCreateOrUpdate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (c *ClickHouse) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (c *ClickHouse) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	clickhouselog.Info("validate update", "name", c.Name)
 	return nil, c.ValidateCreateOrUpdate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (c *ClickHouse) ValidateDelete() (admission.Warnings, error) {
+func (c *ClickHouse) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	clickhouselog.Info("validate delete", "name", c.Name)
 
 	var allErr field.ErrorList

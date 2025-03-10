@@ -48,35 +48,36 @@ func (k *Kafka) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-kafka-kubedb-com-v1alpha1-kafka,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=kafkas,verbs=create;update,versions=v1alpha1,name=mkafka.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &Kafka{}
+var _ webhook.CustomDefaulter = &Kafka{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *Kafka) Default() {
+func (k *Kafka) Default(ctx context.Context, obj runtime.Object) error {
 	if k == nil {
-		return
+		return nil
 	}
 	kafkalog.Info("default", "name", k.Name)
 	k.SetDefaults()
+	return nil
 }
 
 //+kubebuilder:webhook:path=/validate-kafka-kubedb-com-v1alpha1-kafka,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=kafkas,verbs=create;update,versions=v1alpha1,name=vkafka.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &Kafka{}
+var _ webhook.CustomValidator = &Kafka{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *Kafka) ValidateCreate() (admission.Warnings, error) {
+func (k *Kafka) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	kafkalog.Info("validate create", "name", k.Name)
 	return nil, k.ValidateCreateOrUpdate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *Kafka) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (k *Kafka) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	kafkalog.Info("validate update", "name", k.Name)
 	return nil, k.ValidateCreateOrUpdate()
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *Kafka) ValidateDelete() (admission.Warnings, error) {
+func (k *Kafka) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	kafkalog.Info("validate delete", "name", k.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

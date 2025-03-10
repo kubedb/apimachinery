@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"errors"
 
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -40,12 +41,13 @@ func (in *MySQLAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-mysqlautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=mysqlautoscaler,verbs=create;update,versions=v1alpha1,name=mmysqlautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &MySQLAutoscaler{}
+var _ webhook.CustomDefaulter = &MySQLAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MySQLAutoscaler) Default() {
+func (in *MySQLAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	mysqlLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
+	return nil
 }
 
 func (in *MySQLAutoscaler) setDefaults() {
@@ -76,21 +78,21 @@ func (in *MySQLAutoscaler) SetDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mysqlautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mysqlautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vmysqlautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &MySQLAutoscaler{}
+var _ webhook.CustomValidator = &MySQLAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MySQLAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (in *MySQLAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mysqlLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MySQLAutoscaler) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *MySQLAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	mysqlLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
-func (_ MySQLAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ MySQLAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

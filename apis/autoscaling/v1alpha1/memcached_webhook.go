@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var mcLog = logf.Log.WithName("memcached-autoscaler")
 
-var _ webhook.Defaulter = &MemcachedAutoscaler{}
+var _ webhook.CustomDefaulter = &MemcachedAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *MemcachedAutoscaler) Default() {
+func (r *MemcachedAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	mcLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
+	return nil
 }
 
 func (r *MemcachedAutoscaler) setDefaults() {
@@ -75,21 +76,21 @@ func (r *MemcachedAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &MemcachedAutoscaler{}
+var _ webhook.CustomValidator = &MemcachedAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *MemcachedAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (r *MemcachedAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mcLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *MemcachedAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (r *MemcachedAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	mcLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *MemcachedAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (r *MemcachedAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

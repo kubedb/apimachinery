@@ -44,12 +44,13 @@ func (in *RedisAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-redisautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=redisautoscaler,verbs=create;update,versions=v1alpha1,name=mredisautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &RedisAutoscaler{}
+var _ webhook.CustomDefaulter = &RedisAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *RedisAutoscaler) Default() {
+func (in *RedisAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	redisLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
+	return nil
 }
 
 func (in *RedisAutoscaler) setDefaults() {
@@ -81,21 +82,21 @@ func (in *RedisAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-redisautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=redisautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vredisautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &RedisAutoscaler{}
+var _ webhook.CustomValidator = &RedisAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *RedisAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (in *RedisAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	redisLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *RedisAutoscaler) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *RedisAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	redisLog.Info("validate update", "name", in.Name)
 	return nil, in.validate()
 }
 
-func (_ RedisAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ RedisAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

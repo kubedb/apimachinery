@@ -45,10 +45,10 @@ func (r *RestoreSession) SetupWebhookWithManager(mgr ctrl.Manager) error {
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-restoresession,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=restoresessions,verbs=create;update,versions=v1alpha1,name=vrestoresession.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &RestoreSession{}
+var _ webhook.CustomValidator = &RestoreSession{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *RestoreSession) ValidateCreate() (admission.Warnings, error) {
+func (r *RestoreSession) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	restoresessionlog.Info("validate create", "name", r.Name)
 
 	if err := r.ValidateDataSource(); err != nil {
@@ -59,7 +59,7 @@ func (r *RestoreSession) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *RestoreSession) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *RestoreSession) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	restoresessionlog.Info("validate update", "name", r.Name)
 
 	if err := r.ValidateDataSource(); err != nil {
@@ -70,7 +70,7 @@ func (r *RestoreSession) ValidateUpdate(old runtime.Object) (admission.Warnings,
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *RestoreSession) ValidateDelete() (admission.Warnings, error) {
+func (r *RestoreSession) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	restoresessionlog.Info("validate delete", "name", r.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

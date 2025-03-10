@@ -70,7 +70,7 @@ func (c *Controller) InitPetSetWatcher() {
 	klog.Infoln("Initializing PetSet watcher.....")
 	// Initialize PetSet Watcher
 	c.PSInformer = c.PetSetInformerFactory.Apps().V1().PetSets().Informer()
-	c.PSQueue = queue.New(kubedb.ResourceKindPetSet, c.MaxNumRequeues, c.NumThreads, c.processPetSet)
+	c.PSQueue = queue.New[any](kubedb.ResourceKindPetSet, c.MaxNumRequeues, c.NumThreads, c.processPetSet)
 	c.PSLister = c.PetSetInformerFactory.Apps().V1().PetSets().Lister()
 	_, _ = c.PSInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
@@ -157,7 +157,8 @@ func (c *Controller) enqueueOnlyKubeDBPS(ps *petsetapps.PetSet) {
 	}
 }
 
-func (c *Controller) processPetSet(key string) error {
+func (c *Controller) processPetSet(k any) error {
+	key := k.(string)
 	obj, exists, err := c.PSInformer.GetIndexer().GetByKey(key)
 	if err != nil {
 		klog.Errorf("Fetching object with key %s from store failed with %v", key, err)

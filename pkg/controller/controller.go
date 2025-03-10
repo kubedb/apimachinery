@@ -83,7 +83,7 @@ type Config struct {
 	SecretLister   corelisters.SecretLister
 
 	// PetSet Watcher
-	PSQueue    *queue.Worker
+	PSQueue    *queue.Worker[any]
 	PSInformer cache.SharedIndexInformer
 	PSLister   pslister.PetSetLister
 
@@ -105,12 +105,12 @@ type StashInitializer struct {
 	StashClient          scs.Interface
 	StashInformerFactory stashinformer.SharedInformerFactory
 	// StashInitializer RestoreSession
-	RSQueue    *queue.Worker
+	RSQueue    *queue.Worker[any]
 	RSInformer cache.SharedIndexInformer
 	RSLister   lister.RestoreSessionLister
 
 	// StashInitializer RestoreBatch
-	RBQueue    *queue.Worker
+	RBQueue    *queue.Worker[any]
 	RBInformer cache.SharedIndexInformer
 	RBLister   lister.RestoreBatchLister
 }
