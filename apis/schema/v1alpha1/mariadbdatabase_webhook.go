@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
+
 	gocmp "github.com/google/go-cmp/cmp"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -40,10 +42,10 @@ func (r *MariaDBDatabase) SetupWebhookWithManager(mgr manager.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-schema-kubedb-com-v1alpha1-mariadbdatabase,mutating=true,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mariadbdatabases,verbs=create;update,versions=v1alpha1,name=mmariadbdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &MariaDBDatabase{}
+var _ webhook.CustomDefaulter = &MariaDBDatabase{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *MariaDBDatabase) Default() {
+func (r *MariaDBDatabase) Default(ctx context.Context, obj runtime.Object) error {
 	mariadbdatabaselog.Info("default", "name", r.Name)
 
 	if r.Spec.Init != nil {
@@ -56,14 +58,15 @@ func (r *MariaDBDatabase) Default() {
 	if r.Spec.Database.Config.CharacterSet == "" {
 		r.Spec.Database.Config.CharacterSet = "utf8mb4"
 	}
+	return nil
 }
 
 //+kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mariadbdatabase,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mariadbdatabases,verbs=create;update;delete,versions=v1alpha1,name=vmariadbdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &MariaDBDatabase{}
+var _ webhook.CustomValidator = &MariaDBDatabase{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *MariaDBDatabase) ValidateCreate() (admission.Warnings, error) {
+func (r *MariaDBDatabase) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mariadbdatabaselog.Info("validate create", "name", r.Name)
 	var allErrs field.ErrorList
 	if err := r.ValidateMariaDBDatabase(); err != nil {
@@ -76,7 +79,7 @@ func (r *MariaDBDatabase) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *MariaDBDatabase) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *MariaDBDatabase) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	mariadbdatabaselog.Info("validate update", "name", r.Name)
 	oldobj := old.(*MariaDBDatabase)
 	return nil, ValidateMariaDBDatabaseUpdate(r, oldobj)
@@ -125,7 +128,7 @@ func ValidateMariaDBDatabaseUpdate(newobj *MariaDBDatabase, oldobj *MariaDBDatab
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *MariaDBDatabase) ValidateDelete() (admission.Warnings, error) {
+func (r *MariaDBDatabase) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mariadbdatabaselog.Info("validate delete", "name", r.Name)
 	if r.Spec.DeletionPolicy == DeletionPolicyDoNotDelete {
 		return nil, field.Invalid(field.NewPath("spec").Child("terminationPolicy"), r.Name, `cannot delete object when terminationPolicy is set to "DoNotDelete"`)

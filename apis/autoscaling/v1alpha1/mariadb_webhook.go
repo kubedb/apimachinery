@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"errors"
 
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -40,12 +41,13 @@ func (in *MariaDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error 
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-mariadbautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=mariadbautoscaler,verbs=create;update,versions=v1alpha1,name=mmariadbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &MariaDBAutoscaler{}
+var _ webhook.CustomDefaulter = &MariaDBAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MariaDBAutoscaler) Default() {
+func (in *MariaDBAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	mariaLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
+	return nil
 }
 
 func (in *MariaDBAutoscaler) setDefaults() {
@@ -72,20 +74,20 @@ func (in *MariaDBAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mariadbautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mariadbautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vmariadbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &MariaDBAutoscaler{}
+var _ webhook.CustomValidator = &MariaDBAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MariaDBAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (in *MariaDBAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mariaLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MariaDBAutoscaler) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *MariaDBAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	return nil, in.validate()
 }
 
-func (_ MariaDBAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ MariaDBAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

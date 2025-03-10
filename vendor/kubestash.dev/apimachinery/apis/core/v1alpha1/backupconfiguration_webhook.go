@@ -46,10 +46,10 @@ func (b *BackupConfiguration) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-core-kubestash-com-v1alpha1-backupconfiguration,mutating=true,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupconfigurations,verbs=create;update,versions=v1alpha1,name=mbackupconfiguration.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Defaulter = &BackupConfiguration{}
+var _ webhook.CustomDefaulter = &BackupConfiguration{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (b *BackupConfiguration) Default() {
+func (b *BackupConfiguration) Default(ctx context.Context, obj runtime.Object) error {
 	backupconfigurationlog.Info("default", "name", b.Name)
 
 	c := apis.GetRuntimeClient()
@@ -59,6 +59,7 @@ func (b *BackupConfiguration) Default() {
 	}
 
 	b.setDefaultRetentionPolicy(context.Background(), c)
+	return nil
 }
 
 func (b *BackupConfiguration) setDefaultBackend(ctx context.Context, c client.Client) {
@@ -180,10 +181,10 @@ func (b *BackupConfiguration) getDefaultRetentionPolicy(ctx context.Context, c c
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-core-kubestash-com-v1alpha1-backupconfiguration,mutating=false,failurePolicy=fail,sideEffects=None,groups=core.kubestash.com,resources=backupconfigurations,verbs=create;update,versions=v1alpha1,name=vbackupconfiguration.kb.io,admissionReviewVersions=v1
 
-var _ webhook.Validator = &BackupConfiguration{}
+var _ webhook.CustomValidator = &BackupConfiguration{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (b *BackupConfiguration) ValidateCreate() (admission.Warnings, error) {
+func (b *BackupConfiguration) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	backupconfigurationlog.Info("validate create", apis.KeyName, b.Name)
 
 	c := apis.GetRuntimeClient()
@@ -600,7 +601,7 @@ func (b *BackupConfiguration) getHookTemplatesFromHookInfo(hooks []HookInfo) []H
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (b *BackupConfiguration) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	backupconfigurationlog.Info("validate update", apis.KeyName, b.Name)
 	c := apis.GetRuntimeClient()
 	if err := b.validateBackends(); err != nil {
@@ -619,7 +620,7 @@ func (b *BackupConfiguration) ValidateUpdate(old runtime.Object) (admission.Warn
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (b *BackupConfiguration) ValidateDelete() (admission.Warnings, error) {
+func (b *BackupConfiguration) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	backupconfigurationlog.Info("validate delete", apis.KeyName, b.Name)
 
 	// TODO(user): fill in your validation logic upon object deletion.

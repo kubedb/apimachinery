@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"errors"
 
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -40,12 +41,13 @@ func (in *PostgresAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-postgresautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=postgresautoscaler,verbs=create;update,versions=v1alpha1,name=mpostgresautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &PostgresAutoscaler{}
+var _ webhook.CustomDefaulter = &PostgresAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *PostgresAutoscaler) Default() {
+func (in *PostgresAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	pgLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
+	return nil
 }
 
 func (in *PostgresAutoscaler) setDefaults() {
@@ -73,21 +75,21 @@ func (in *PostgresAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-postgresautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=postgresautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vpostgresautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &PostgresAutoscaler{}
+var _ webhook.CustomValidator = &PostgresAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *PostgresAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (in *PostgresAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pgLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *PostgresAutoscaler) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *PostgresAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	pgLog.Info("validate update", "name", in.Name)
 	return nil, in.validate()
 }
 
-func (_ PostgresAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ PostgresAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

@@ -280,6 +280,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -453,6 +456,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -738,6 +744,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -911,6 +920,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -1196,6 +1208,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -1369,6 +1384,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -1654,6 +1672,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -1827,6 +1848,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -2112,6 +2136,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -2285,6 +2312,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -2570,6 +2600,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -2743,6 +2776,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -3028,6 +3064,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -3201,6 +3240,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -3486,6 +3528,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -3659,6 +3704,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -3944,6 +3992,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -4117,6 +4168,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -6238,6 +6292,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -6414,6 +6471,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -6702,6 +6762,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -6878,6 +6941,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -7166,6 +7232,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -7342,6 +7411,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -7630,6 +7702,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -7806,6 +7881,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -8094,6 +8172,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -8270,6 +8351,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -8558,6 +8642,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -8734,6 +8821,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -9022,6 +9112,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -9198,6 +9291,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -9486,6 +9582,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -9662,6 +9761,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -9950,6 +10052,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -10126,6 +10231,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -10414,6 +10522,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -10590,6 +10701,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -10878,6 +10992,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -11054,6 +11171,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -14609,6 +14729,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -14785,6 +14908,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -15073,6 +15199,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -15249,6 +15378,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -15537,6 +15669,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -15713,6 +15848,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -16001,6 +16139,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -16177,6 +16318,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -16465,6 +16609,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -16641,6 +16788,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -16929,6 +17079,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -17105,6 +17258,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -17393,6 +17549,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -17569,6 +17728,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -17857,6 +18019,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -18033,6 +18198,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -18321,6 +18489,9 @@
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
           },
           {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
             "$ref": "#/parameters/labelSelector-5Zw57w4C"
           },
           {
@@ -18497,6 +18668,9 @@
           },
           {
             "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
           },
           {
             "$ref": "#/parameters/orphanDependents-uRB25kX5"
@@ -20935,6 +21109,32 @@
           "$ref": "#/parameters/watch-XNNPZGbK"
         }
       ]
+    },
+    "/version/": {
+      "get": {
+        "description": "get the code version",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "version"
+        ],
+        "operationId": "getCodeVersion",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.apimachinery.pkg.version.Info"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -26017,23 +26217,23 @@
       "type": "object",
       "properties": {
         "awsElasticBlockStore": {
-          "description": "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
+          "description": "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: AWSElasticBlockStore is deprecated. All operations for the in-tree awsElasticBlockStore type are redirected to the ebs.csi.aws.com CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
           "$ref": "#/definitions/io.k8s.api.core.v1.AWSElasticBlockStoreVolumeSource"
         },
         "azureDisk": {
-          "description": "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
+          "description": "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod. Deprecated: AzureDisk is deprecated. All operations for the in-tree azureDisk type are redirected to the disk.csi.azure.com CSI driver.",
           "$ref": "#/definitions/io.k8s.api.core.v1.AzureDiskVolumeSource"
         },
         "azureFile": {
-          "description": "azureFile represents an Azure File Service mount on the host and bind mount to the pod.",
+          "description": "azureFile represents an Azure File Service mount on the host and bind mount to the pod. Deprecated: AzureFile is deprecated. All operations for the in-tree azureFile type are redirected to the file.csi.azure.com CSI driver.",
           "$ref": "#/definitions/io.k8s.api.core.v1.AzureFileVolumeSource"
         },
         "cephfs": {
-          "description": "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime",
+          "description": "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime. Deprecated: CephFS is deprecated and the in-tree cephfs type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.CephFSVolumeSource"
         },
         "cinder": {
-          "description": "cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
+          "description": "cinder represents a cinder volume attached and mounted on kubelets host machine. Deprecated: Cinder is deprecated. All operations for the in-tree cinder type are redirected to the cinder.csi.openstack.org CSI driver. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
           "$ref": "#/definitions/io.k8s.api.core.v1.CinderVolumeSource"
         },
         "configMap": {
@@ -26041,7 +26241,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ConfigMapVolumeSource"
         },
         "csi": {
-          "description": "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature).",
+          "description": "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers.",
           "$ref": "#/definitions/io.k8s.api.core.v1.CSIVolumeSource"
         },
         "downwardAPI": {
@@ -26061,31 +26261,35 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.FCVolumeSource"
         },
         "flexVolume": {
-          "description": "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.",
+          "description": "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin. Deprecated: FlexVolume is deprecated. Consider using a CSIDriver instead.",
           "$ref": "#/definitions/io.k8s.api.core.v1.FlexVolumeSource"
         },
         "flocker": {
-          "description": "flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running",
+          "description": "flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running. Deprecated: Flocker is deprecated and the in-tree flocker type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.FlockerVolumeSource"
         },
         "gcePersistentDisk": {
-          "description": "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
+          "description": "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: GCEPersistentDisk is deprecated. All operations for the in-tree gcePersistentDisk type are redirected to the pd.csi.storage.gke.io CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
           "$ref": "#/definitions/io.k8s.api.core.v1.GCEPersistentDiskVolumeSource"
         },
         "git": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.GitRepo"
         },
         "gitRepo": {
-          "description": "gitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
+          "description": "gitRepo represents a git repository at a particular revision. Deprecated: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
           "$ref": "#/definitions/io.k8s.api.core.v1.GitRepoVolumeSource"
         },
         "glusterfs": {
-          "description": "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
+          "description": "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
           "$ref": "#/definitions/io.k8s.api.core.v1.GlusterfsVolumeSource"
         },
         "hostPath": {
           "description": "hostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath",
           "$ref": "#/definitions/io.k8s.api.core.v1.HostPathVolumeSource"
+        },
+        "image": {
+          "description": "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine. The volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. - Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. - IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation. A failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message. The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field. The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images. The volume will be mounted read-only (ro) and non-executable files (noexec). Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath). The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ImageVolumeSource"
         },
         "iscsi": {
           "description": "iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md",
@@ -26100,11 +26304,11 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimVolumeSource"
         },
         "photonPersistentDisk": {
-          "description": "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine",
+          "description": "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine. Deprecated: PhotonPersistentDisk is deprecated and the in-tree photonPersistentDisk type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PhotonPersistentDiskVolumeSource"
         },
         "portworxVolume": {
-          "description": "portworxVolume represents a portworx volume attached and mounted on kubelets host machine",
+          "description": "portworxVolume represents a portworx volume attached and mounted on kubelets host machine. Deprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type are redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate is on.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PortworxVolumeSource"
         },
         "projected": {
@@ -26112,15 +26316,15 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ProjectedVolumeSource"
         },
         "quobyte": {
-          "description": "quobyte represents a Quobyte mount on the host that shares a pod's lifetime",
+          "description": "quobyte represents a Quobyte mount on the host that shares a pod's lifetime. Deprecated: Quobyte is deprecated and the in-tree quobyte type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.QuobyteVolumeSource"
         },
         "rbd": {
-          "description": "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md",
+          "description": "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported. More info: https://examples.k8s.io/volumes/rbd/README.md",
           "$ref": "#/definitions/io.k8s.api.core.v1.RBDVolumeSource"
         },
         "scaleIO": {
-          "description": "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.",
+          "description": "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes. Deprecated: ScaleIO is deprecated and the in-tree scaleIO type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.ScaleIOVolumeSource"
         },
         "scriptPath": {
@@ -26131,11 +26335,11 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "storageos": {
-          "description": "storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.",
+          "description": "storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes. Deprecated: StorageOS is deprecated and the in-tree storageos type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.StorageOSVolumeSource"
         },
         "vsphereVolume": {
-          "description": "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
+          "description": "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine. Deprecated: VsphereVolume is deprecated. All operations for the in-tree vsphereVolume type are redirected to the csi.vsphere.vmware.com CSI driver.",
           "$ref": "#/definitions/io.k8s.api.core.v1.VsphereVirtualDiskVolumeSource"
         }
       }
@@ -28688,6 +28892,7 @@
         "cachingMode": {
           "description": "cachingMode is the Host Caching mode: None, Read Only, Read Write.\n\nPossible enum values:\n - `\"None\"`\n - `\"ReadOnly\"`\n - `\"ReadWrite\"`",
           "type": "string",
+          "default": "ReadWrite",
           "enum": [
             "None",
             "ReadOnly",
@@ -28706,11 +28911,13 @@
         },
         "fsType": {
           "description": "fsType is Filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. \"ext4\", \"xfs\", \"ntfs\". Implicitly inferred to be \"ext4\" if unspecified.",
-          "type": "string"
+          "type": "string",
+          "default": "ext4"
         },
         "kind": {
           "description": "kind expected values are Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared\n\nPossible enum values:\n - `\"Dedicated\"`\n - `\"Managed\"`\n - `\"Shared\"`",
           "type": "string",
+          "default": "Shared",
           "enum": [
             "Dedicated",
             "Managed",
@@ -28719,7 +28926,8 @@
         },
         "readOnly": {
           "description": "readOnly Defaults to false (read/write). ReadOnly here will force the ReadOnly setting in VolumeMounts.",
-          "type": "boolean"
+          "type": "boolean",
+          "default": false
         }
       }
     },
@@ -29513,6 +29721,7 @@
       }
     },
     "io.k8s.api.core.v1.GRPCAction": {
+      "description": "GRPCAction specifies an action involving a GRPC service.",
       "type": "object",
       "required": [
         "port"
@@ -29695,7 +29904,8 @@
         },
         "iscsiInterface": {
           "description": "iscsiInterface is the interface Name that uses an iSCSI transport. Defaults to 'default' (tcp).",
-          "type": "string"
+          "type": "string",
+          "default": "default"
         },
         "lun": {
           "description": "lun represents iSCSI Target Lun number.",
@@ -29724,6 +29934,25 @@
           "description": "targetPortal is iSCSI Target Portal. The Portal is either an IP or ip_addr:port if the port is other than default (typically TCP ports 860 and 3260).",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "io.k8s.api.core.v1.ImageVolumeSource": {
+      "description": "ImageVolumeSource represents a image volume resource.",
+      "type": "object",
+      "properties": {
+        "pullPolicy": {
+          "description": "Policy for pulling OCI objects. Possible values are: Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.\n\nPossible enum values:\n - `\"Always\"` means that kubelet always attempts to pull the latest image. Container will fail If the pull fails.\n - `\"IfNotPresent\"` means that kubelet pulls if the image isn't present on disk. Container will fail if the image isn't present and the pull fails.\n - `\"Never\"` means that kubelet never pulls an image, but only uses a local image. Container will fail if the image isn't present",
+          "type": "string",
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ]
+        },
+        "reference": {
+          "description": "Required: Image or artifact reference to be used. Behaves in the same way as pod.spec.containers[*].image. Pull secrets will be assembled in the same way as for the container image by looking up node credentials, SA image pull secrets, and pod spec image pull secrets. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets.",
+          "type": "string"
         }
       }
     },
@@ -29771,19 +30000,19 @@
       "type": "object",
       "properties": {
         "exec": {
-          "description": "Exec specifies the action to take.",
+          "description": "Exec specifies a command to execute in the container.",
           "$ref": "#/definitions/io.k8s.api.core.v1.ExecAction"
         },
         "httpGet": {
-          "description": "HTTPGet specifies the http request to perform.",
+          "description": "HTTPGet specifies an HTTP GET request to perform.",
           "$ref": "#/definitions/io.k8s.api.core.v1.HTTPGetAction"
         },
         "sleep": {
-          "description": "Sleep represents the duration that the container should sleep before being terminated.",
+          "description": "Sleep represents a duration that the container should sleep.",
           "$ref": "#/definitions/io.k8s.api.core.v1.SleepAction"
         },
         "tcpSocket": {
-          "description": "Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for the backward compatibility. There are no validation of this field and lifecycle hooks will fail in runtime when tcp handler is specified.",
+          "description": "Deprecated. TCPSocket is NOT supported as a LifecycleHandler and kept for backward compatibility. There is no validation of this field and lifecycle hooks will fail at runtime when it is specified.",
           "$ref": "#/definitions/io.k8s.api.core.v1.TCPSocketAction"
         }
       }
@@ -30013,7 +30242,7 @@
           "type": "string"
         },
         "volumeAttributesClassName": {
-          "description": "volumeAttributesClassName may be used to set the VolumeAttributesClass used by this claim. If specified, the CSI driver will create or update the volume with the attributes defined in the corresponding VolumeAttributesClass. This has a different purpose than storageClassName, it can be changed after the claim is created. An empty string value means that no VolumeAttributesClass will be applied to the claim but it's not allowed to reset this field to empty string once it is set. If unspecified and the PersistentVolumeClaim is unbound, the default VolumeAttributesClass will be set by the persistentvolume controller if it exists. If the resource referred to by volumeAttributesClass does not exist, this PersistentVolumeClaim will be set to a Pending state, as reflected by the modifyVolumeStatus field, until such as a resource exists. More info: https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/ (Alpha) Using this field requires the VolumeAttributesClass feature gate to be enabled.",
+          "description": "volumeAttributesClassName may be used to set the VolumeAttributesClass used by this claim. If specified, the CSI driver will create or update the volume with the attributes defined in the corresponding VolumeAttributesClass. This has a different purpose than storageClassName, it can be changed after the claim is created. An empty string value means that no VolumeAttributesClass will be applied to the claim but it's not allowed to reset this field to empty string once it is set. If unspecified and the PersistentVolumeClaim is unbound, the default VolumeAttributesClass will be set by the persistentvolume controller if it exists. If the resource referred to by volumeAttributesClass does not exist, this PersistentVolumeClaim will be set to a Pending state, as reflected by the modifyVolumeStatus field, until such as a resource exists. More info: https://kubernetes.io/docs/concepts/storage/volume-attributes-classes/ (Beta) Using this field requires the VolumeAttributesClass feature gate to be enabled (off by default).",
           "type": "string"
         },
         "volumeMode": {
@@ -30121,7 +30350,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.LabelSelector"
         },
         "matchLabelKeys": {
-          "description": "MatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both matchLabelKeys and labelSelector. Also, matchLabelKeys cannot be set when labelSelector isn't set. This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.",
+          "description": "MatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key in (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both matchLabelKeys and labelSelector. Also, matchLabelKeys cannot be set when labelSelector isn't set. This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).",
           "type": "array",
           "items": {
             "type": "string",
@@ -30130,7 +30359,7 @@
           "x-kubernetes-list-type": "atomic"
         },
         "mismatchLabelKeys": {
-          "description": "MismatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both mismatchLabelKeys and labelSelector. Also, mismatchLabelKeys cannot be set when labelSelector isn't set. This is an alpha field and requires enabling MatchLabelKeysInPodAffinity feature gate.",
+          "description": "MismatchLabelKeys is a set of pod label keys to select which pods will be taken into consideration. The keys are used to lookup values from the incoming pod labels, those key-value labels are merged with `labelSelector` as `key notin (value)` to select the group of existing pods which pods will be taken into consideration for the incoming pod's pod (anti) affinity. Keys that don't exist in the incoming pod labels will be ignored. The default value is empty. The same key is forbidden to exist in both mismatchLabelKeys and labelSelector. Also, mismatchLabelKeys cannot be set when labelSelector isn't set. This is a beta field and requires enabling MatchLabelKeysInPodAffinity feature gate (enabled by default).",
           "type": "array",
           "items": {
             "type": "string",
@@ -30220,10 +30449,11 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Required.",
+          "description": "Name is this DNS resolver option's name. Required.",
           "type": "string"
         },
         "value": {
+          "description": "Value is this DNS resolver option's value.",
           "type": "string"
         }
       }
@@ -30263,6 +30493,10 @@
           "type": "integer",
           "format": "int64"
         },
+        "seLinuxChangePolicy": {
+          "description": "seLinuxChangePolicy defines how the container's SELinux label is applied to all volumes used by the Pod. It has no effect on nodes that do not support SELinux or to volumes does not support SELinux. Valid values are \"MountOption\" and \"Recursive\".\n\n\"Recursive\" means relabeling of all files on all Pod volumes by the container runtime. This may be slow for large volumes, but allows mixing privileged and unprivileged Pods sharing the same volume on the same node.\n\n\"MountOption\" mounts all eligible Pod volumes with `-o context` mount option. This requires all Pods that share the same volume to use the same SELinux label. It is not possible to share the same volume among privileged and unprivileged Pods. Eligible volumes are in-tree FibreChannel and iSCSI volumes, and all CSI volumes whose CSI driver announces SELinux support by setting spec.seLinuxMount: true in their CSIDriver instance. Other volumes are always re-labelled recursively. \"MountOption\" value is allowed only when SELinuxMount feature gate is enabled.\n\nIf not specified and SELinuxMount feature gate is enabled, \"MountOption\" is used. If not specified and SELinuxMount feature gate is disabled, \"MountOption\" is used for ReadWriteOncePod volumes and \"Recursive\" for all other volumes.\n\nThis field affects only Pods that have SELinux label set, either in PodSecurityContext or in SecurityContext of all containers.\n\nAll Pods that use the same volume should use the same seLinuxChangePolicy, otherwise some pods can get stuck in ContainerCreating state. Note that this field cannot be set when spec.os.name is windows.",
+          "type": "string"
+        },
         "seLinuxOptions": {
           "description": "The SELinux context to be applied to all containers. If unspecified, the container runtime will allocate a random SELinux context for each container.  May also be set in SecurityContext.  If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence for that container. Note that this field cannot be set when spec.os.name is windows.",
           "$ref": "#/definitions/io.k8s.api.core.v1.SELinuxOptions"
@@ -30272,7 +30506,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SeccompProfile"
         },
         "supplementalGroups": {
-          "description": "A list of groups applied to the first process run in each container, in addition to the container's primary GID, the fsGroup (if specified), and group memberships defined in the container image for the uid of the container process. If unspecified, no additional groups are added to any container. Note that group memberships defined in the container image for the uid of the container process are still effective, even if they are not included in this list. Note that this field cannot be set when spec.os.name is windows.",
+          "description": "A list of groups applied to the first process run in each container, in addition to the container's primary GID and fsGroup (if specified).  If the SupplementalGroupsPolicy feature is enabled, the supplementalGroupsPolicy field determines whether these are in addition to or instead of any group memberships defined in the container image. If unspecified, no additional groups are added, though group memberships defined in the container image may still be used, depending on the supplementalGroupsPolicy field. Note that this field cannot be set when spec.os.name is windows.",
           "type": "array",
           "items": {
             "type": "integer",
@@ -30280,6 +30514,14 @@
             "default": 0
           },
           "x-kubernetes-list-type": "atomic"
+        },
+        "supplementalGroupsPolicy": {
+          "description": "Defines how supplemental groups of the first container processes are calculated. Valid values are \"Merge\" and \"Strict\". If not specified, \"Merge\" is used. (Alpha) Using the field requires the SupplementalGroupsPolicy feature gate to be enabled and the container runtime must implement support for this feature. Note that this field cannot be set when spec.os.name is windows.\n\nPossible enum values:\n - `\"Merge\"` means that the container's provided SupplementalGroups and FsGroup (specified in SecurityContext) will be merged with the primary user's groups as defined in the container image (in /etc/group).\n - `\"Strict\"` means that the container's provided SupplementalGroups and FsGroup (specified in SecurityContext) will be used instead of any groups defined in the container image.",
+          "type": "string",
+          "enum": [
+            "Merge",
+            "Strict"
+          ]
         },
         "sysctls": {
           "description": "Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported sysctls (by the container runtime) might fail to launch. Note that this field cannot be set when spec.os.name is windows.",
@@ -30344,7 +30586,7 @@
       "type": "object",
       "properties": {
         "exec": {
-          "description": "Exec specifies the action to take.",
+          "description": "Exec specifies a command to execute in the container.",
           "$ref": "#/definitions/io.k8s.api.core.v1.ExecAction"
         },
         "failureThreshold": {
@@ -30353,11 +30595,11 @@
           "format": "int32"
         },
         "grpc": {
-          "description": "GRPC specifies an action involving a GRPC port.",
+          "description": "GRPC specifies a GRPC HealthCheckRequest.",
           "$ref": "#/definitions/io.k8s.api.core.v1.GRPCAction"
         },
         "httpGet": {
-          "description": "HTTPGet specifies the http request to perform.",
+          "description": "HTTPGet specifies an HTTP GET request to perform.",
           "$ref": "#/definitions/io.k8s.api.core.v1.HTTPGetAction"
         },
         "initialDelaySeconds": {
@@ -30376,7 +30618,7 @@
           "format": "int32"
         },
         "tcpSocket": {
-          "description": "TCPSocket specifies an action involving a TCP port.",
+          "description": "TCPSocket specifies a connection to a TCP port.",
           "$ref": "#/definitions/io.k8s.api.core.v1.TCPSocketAction"
         },
         "terminationGracePeriodSeconds": {
@@ -30401,7 +30643,7 @@
           "format": "int32"
         },
         "sources": {
-          "description": "sources is the list of volume projections",
+          "description": "sources is the list of volume projections. Each entry in this list handles one source.",
           "type": "array",
           "items": {
             "default": {},
@@ -30466,7 +30708,8 @@
         },
         "keyring": {
           "description": "keyring is the path to key ring for RBDUser. Default is /etc/ceph/keyring. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
-          "type": "string"
+          "type": "string",
+          "default": "/etc/ceph/keyring"
         },
         "monitors": {
           "description": "monitors is a collection of Ceph monitors. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
@@ -30479,7 +30722,8 @@
         },
         "pool": {
           "description": "pool is the rados pool name. Default is rbd. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
-          "type": "string"
+          "type": "string",
+          "default": "rbd"
         },
         "readOnly": {
           "description": "readOnly here will force the ReadOnly setting in VolumeMounts. Defaults to false. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
@@ -30491,7 +30735,8 @@
         },
         "user": {
           "description": "user is the rados user name. Default is admin. More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it",
-          "type": "string"
+          "type": "string",
+          "default": "admin"
         }
       }
     },
@@ -30506,6 +30751,10 @@
           "description": "Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.",
           "type": "string",
           "default": ""
+        },
+        "request": {
+          "description": "Request is the name chosen for a request in the referenced claim. If empty, everything from the claim is made available, otherwise only the result of this request.",
+          "type": "string"
         }
       }
     },
@@ -30597,7 +30846,8 @@
       "properties": {
         "fsType": {
           "description": "fsType is the filesystem type to mount. Must be a filesystem type supported by the host operating system. Ex. \"ext4\", \"xfs\", \"ntfs\". Default is \"xfs\".",
-          "type": "string"
+          "type": "string",
+          "default": "xfs"
         },
         "gateway": {
           "description": "gateway is the host address of the ScaleIO API Gateway.",
@@ -30622,7 +30872,8 @@
         },
         "storageMode": {
           "description": "storageMode indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned. Default is ThinProvisioned.",
-          "type": "string"
+          "type": "string",
+          "default": "ThinProvisioned"
         },
         "storagePool": {
           "description": "storagePool is the ScaleIO Storage Pool associated with the protection domain.",
@@ -30782,7 +31033,7 @@
           "type": "boolean"
         },
         "procMount": {
-          "description": "procMount denotes the type of proc mount to use for the containers. The default is DefaultProcMount which uses the container runtime defaults for readonly paths and masked paths. This requires the ProcMountType feature flag to be enabled. Note that this field cannot be set when spec.os.name is windows.\n\nPossible enum values:\n - `\"Default\"` uses the container runtime defaults for readonly and masked paths for /proc. Most container runtimes mask certain paths in /proc to avoid accidental security exposure of special devices or information.\n - `\"Unmasked\"` bypasses the default masking behavior of the container runtime and ensures the newly created /proc the container stays in tact with no modifications.",
+          "description": "procMount denotes the type of proc mount to use for the containers. The default value is Default which uses the container runtime defaults for readonly paths and masked paths. This requires the ProcMountType feature flag to be enabled. Note that this field cannot be set when spec.os.name is windows.\n\nPossible enum values:\n - `\"Default\"` uses the container runtime defaults for readonly and masked paths for /proc. Most container runtimes mask certain paths in /proc to avoid accidental security exposure of special devices or information.\n - `\"Unmasked\"` bypasses the default masking behavior of the container runtime and ensures the newly created /proc the container stays in tact with no modifications.",
           "type": "string",
           "enum": [
             "Default",
@@ -31059,6 +31310,7 @@
       "x-kubernetes-map-type": "atomic"
     },
     "io.k8s.api.core.v1.TypedObjectReference": {
+      "description": "TypedObjectReference contains enough information to let you locate the typed referenced object",
       "type": "object",
       "required": [
         "kind",
@@ -31151,7 +31403,7 @@
       }
     },
     "io.k8s.api.core.v1.VolumeProjection": {
-      "description": "Projection that may be projected along with other supported volume types",
+      "description": "Projection that may be projected along with other supported volume types. Exactly one of these fields must be set.",
       "type": "object",
       "properties": {
         "clusterTrustBundle": {
@@ -31201,23 +31453,23 @@
       "type": "object",
       "properties": {
         "awsElasticBlockStore": {
-          "description": "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
+          "description": "awsElasticBlockStore represents an AWS Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: AWSElasticBlockStore is deprecated. All operations for the in-tree awsElasticBlockStore type are redirected to the ebs.csi.aws.com CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore",
           "$ref": "#/definitions/io.k8s.api.core.v1.AWSElasticBlockStoreVolumeSource"
         },
         "azureDisk": {
-          "description": "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.",
+          "description": "azureDisk represents an Azure Data Disk mount on the host and bind mount to the pod. Deprecated: AzureDisk is deprecated. All operations for the in-tree azureDisk type are redirected to the disk.csi.azure.com CSI driver.",
           "$ref": "#/definitions/io.k8s.api.core.v1.AzureDiskVolumeSource"
         },
         "azureFile": {
-          "description": "azureFile represents an Azure File Service mount on the host and bind mount to the pod.",
+          "description": "azureFile represents an Azure File Service mount on the host and bind mount to the pod. Deprecated: AzureFile is deprecated. All operations for the in-tree azureFile type are redirected to the file.csi.azure.com CSI driver.",
           "$ref": "#/definitions/io.k8s.api.core.v1.AzureFileVolumeSource"
         },
         "cephfs": {
-          "description": "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime",
+          "description": "cephFS represents a Ceph FS mount on the host that shares a pod's lifetime. Deprecated: CephFS is deprecated and the in-tree cephfs type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.CephFSVolumeSource"
         },
         "cinder": {
-          "description": "cinder represents a cinder volume attached and mounted on kubelets host machine. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
+          "description": "cinder represents a cinder volume attached and mounted on kubelets host machine. Deprecated: Cinder is deprecated. All operations for the in-tree cinder type are redirected to the cinder.csi.openstack.org CSI driver. More info: https://examples.k8s.io/mysql-cinder-pd/README.md",
           "$ref": "#/definitions/io.k8s.api.core.v1.CinderVolumeSource"
         },
         "configMap": {
@@ -31225,7 +31477,7 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ConfigMapVolumeSource"
         },
         "csi": {
-          "description": "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers (Beta feature).",
+          "description": "csi (Container Storage Interface) represents ephemeral storage that is handled by certain external CSI drivers.",
           "$ref": "#/definitions/io.k8s.api.core.v1.CSIVolumeSource"
         },
         "downwardAPI": {
@@ -31245,28 +31497,32 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.FCVolumeSource"
         },
         "flexVolume": {
-          "description": "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin.",
+          "description": "flexVolume represents a generic volume resource that is provisioned/attached using an exec based plugin. Deprecated: FlexVolume is deprecated. Consider using a CSIDriver instead.",
           "$ref": "#/definitions/io.k8s.api.core.v1.FlexVolumeSource"
         },
         "flocker": {
-          "description": "flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running",
+          "description": "flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running. Deprecated: Flocker is deprecated and the in-tree flocker type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.FlockerVolumeSource"
         },
         "gcePersistentDisk": {
-          "description": "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
+          "description": "gcePersistentDisk represents a GCE Disk resource that is attached to a kubelet's host machine and then exposed to the pod. Deprecated: GCEPersistentDisk is deprecated. All operations for the in-tree gcePersistentDisk type are redirected to the pd.csi.storage.gke.io CSI driver. More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk",
           "$ref": "#/definitions/io.k8s.api.core.v1.GCEPersistentDiskVolumeSource"
         },
         "gitRepo": {
-          "description": "gitRepo represents a git repository at a particular revision. DEPRECATED: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
+          "description": "gitRepo represents a git repository at a particular revision. Deprecated: GitRepo is deprecated. To provision a container with a git repo, mount an EmptyDir into an InitContainer that clones the repo using git, then mount the EmptyDir into the Pod's container.",
           "$ref": "#/definitions/io.k8s.api.core.v1.GitRepoVolumeSource"
         },
         "glusterfs": {
-          "description": "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
+          "description": "glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime. Deprecated: Glusterfs is deprecated and the in-tree glusterfs type is no longer supported. More info: https://examples.k8s.io/volumes/glusterfs/README.md",
           "$ref": "#/definitions/io.k8s.api.core.v1.GlusterfsVolumeSource"
         },
         "hostPath": {
           "description": "hostPath represents a pre-existing file or directory on the host machine that is directly exposed to the container. This is generally used for system agents or other privileged things that are allowed to see the host machine. Most containers will NOT need this. More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath",
           "$ref": "#/definitions/io.k8s.api.core.v1.HostPathVolumeSource"
+        },
+        "image": {
+          "description": "image represents an OCI object (a container image or artifact) pulled and mounted on the kubelet's host machine. The volume is resolved at pod startup depending on which PullPolicy value is provided:\n\n- Always: the kubelet always attempts to pull the reference. Container creation will fail If the pull fails. - Never: the kubelet never pulls the reference and only uses a local image or artifact. Container creation will fail if the reference isn't present. - IfNotPresent: the kubelet pulls if the reference isn't already present on disk. Container creation will fail if the reference isn't present and the pull fails.\n\nThe volume gets re-resolved if the pod gets deleted and recreated, which means that new remote content will become available on pod recreation. A failure to resolve or pull the image during pod startup will block containers from starting and may add significant latency. Failures will be retried using normal volume backoff and will be reported on the pod reason and message. The types of objects that may be mounted by this volume are defined by the container runtime implementation on a host machine and at minimum must include all valid types supported by the container image field. The OCI object gets mounted in a single directory (spec.containers[*].volumeMounts.mountPath) by merging the manifest layers in the same way as for container images. The volume will be mounted read-only (ro) and non-executable files (noexec). Sub path mounts for containers are not supported (spec.containers[*].volumeMounts.subpath). The field spec.securityContext.fsGroupChangePolicy has no effect on this volume type.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.ImageVolumeSource"
         },
         "iscsi": {
           "description": "iscsi represents an ISCSI Disk resource that is attached to a kubelet's host machine and then exposed to the pod. More info: https://examples.k8s.io/volumes/iscsi/README.md",
@@ -31281,11 +31537,11 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimVolumeSource"
         },
         "photonPersistentDisk": {
-          "description": "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine",
+          "description": "photonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine. Deprecated: PhotonPersistentDisk is deprecated and the in-tree photonPersistentDisk type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PhotonPersistentDiskVolumeSource"
         },
         "portworxVolume": {
-          "description": "portworxVolume represents a portworx volume attached and mounted on kubelets host machine",
+          "description": "portworxVolume represents a portworx volume attached and mounted on kubelets host machine. Deprecated: PortworxVolume is deprecated. All operations for the in-tree portworxVolume type are redirected to the pxd.portworx.com CSI driver when the CSIMigrationPortworx feature-gate is on.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PortworxVolumeSource"
         },
         "projected": {
@@ -31293,15 +31549,15 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.ProjectedVolumeSource"
         },
         "quobyte": {
-          "description": "quobyte represents a Quobyte mount on the host that shares a pod's lifetime",
+          "description": "quobyte represents a Quobyte mount on the host that shares a pod's lifetime. Deprecated: Quobyte is deprecated and the in-tree quobyte type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.QuobyteVolumeSource"
         },
         "rbd": {
-          "description": "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. More info: https://examples.k8s.io/volumes/rbd/README.md",
+          "description": "rbd represents a Rados Block Device mount on the host that shares a pod's lifetime. Deprecated: RBD is deprecated and the in-tree rbd type is no longer supported. More info: https://examples.k8s.io/volumes/rbd/README.md",
           "$ref": "#/definitions/io.k8s.api.core.v1.RBDVolumeSource"
         },
         "scaleIO": {
-          "description": "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.",
+          "description": "scaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes. Deprecated: ScaleIO is deprecated and the in-tree scaleIO type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.ScaleIOVolumeSource"
         },
         "secret": {
@@ -31309,11 +31565,11 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.SecretVolumeSource"
         },
         "storageos": {
-          "description": "storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.",
+          "description": "storageOS represents a StorageOS volume attached and mounted on Kubernetes nodes. Deprecated: StorageOS is deprecated and the in-tree storageos type is no longer supported.",
           "$ref": "#/definitions/io.k8s.api.core.v1.StorageOSVolumeSource"
         },
         "vsphereVolume": {
-          "description": "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine",
+          "description": "vsphereVolume represents a vSphere volume attached and mounted on kubelets host machine. Deprecated: VsphereVolume is deprecated. All operations for the in-tree vsphereVolume type are redirected to the csi.vsphere.vmware.com CSI driver.",
           "$ref": "#/definitions/io.k8s.api.core.v1.VsphereVirtualDiskVolumeSource"
         }
       }
@@ -31611,6 +31867,10 @@
           "description": "The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately.",
           "type": "integer",
           "format": "int64"
+        },
+        "ignoreStoreReadErrorWithClusterBreakingPotential": {
+          "description": "if set to true, it will trigger an unsafe deletion of the resource in case the normal deletion flow fails with a corrupt object error. A resource is considered corrupt if it can not be retrieved from the underlying storage successfully because of a) its data can not be transformed e.g. decryption failure, or b) it fails to decode into an object. NOTE: unsafe deletion ignores finalizer constraints, skips precondition checks, and removes the object from the storage. WARNING: This may potentially break the cluster if the workload associated with the resource being unsafe-deleted relies on normal deletion flow. Use only if you REALLY know what you are doing. The default value is false, and the user must opt in to enable it",
+          "type": "boolean"
         },
         "kind": {
           "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
@@ -32151,6 +32411,59 @@
       "description": "IntOrString is a type that can hold an int32 or a string.  When used in JSON or YAML marshalling and unmarshalling, it produces or consumes the inner type.  This allows you to have, for example, a JSON field that can accept a name or number.",
       "type": "string",
       "format": "int-or-string"
+    },
+    "io.k8s.apimachinery.pkg.version.Info": {
+      "description": "Info contains versioning information. how we'll want to distribute that information.",
+      "type": "object",
+      "required": [
+        "major",
+        "minor",
+        "gitVersion",
+        "gitCommit",
+        "gitTreeState",
+        "buildDate",
+        "goVersion",
+        "compiler",
+        "platform"
+      ],
+      "properties": {
+        "buildDate": {
+          "type": "string",
+          "default": ""
+        },
+        "compiler": {
+          "type": "string",
+          "default": ""
+        },
+        "gitCommit": {
+          "type": "string",
+          "default": ""
+        },
+        "gitTreeState": {
+          "type": "string",
+          "default": ""
+        },
+        "gitVersion": {
+          "type": "string",
+          "default": ""
+        },
+        "goVersion": {
+          "type": "string",
+          "default": ""
+        },
+        "major": {
+          "type": "string",
+          "default": ""
+        },
+        "minor": {
+          "type": "string",
+          "default": ""
+        },
+        "platform": {
+          "type": "string",
+          "default": ""
+        }
+      }
     },
     "xyz.kmodules.client-go.api.v1.CertificatePrivateKey": {
       "description": "CertificatePrivateKey contains configuration options for private keys used by the Certificate controller. This allows control of how private keys are rotated.",
@@ -33176,6 +33489,13 @@
       "type": "integer",
       "description": "The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately.",
       "name": "gracePeriodSeconds",
+      "in": "query"
+    },
+    "ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj": {
+      "uniqueItems": true,
+      "type": "boolean",
+      "description": "if set to true, it will trigger an unsafe deletion of the resource in case the normal deletion flow fails with a corrupt object error. A resource is considered corrupt if it can not be retrieved from the underlying storage successfully because of a) its data can not be transformed e.g. decryption failure, or b) it fails to decode into an object. NOTE: unsafe deletion ignores finalizer constraints, skips precondition checks, and removes the object from the storage. WARNING: This may potentially break the cluster if the workload associated with the resource being unsafe-deleted relies on normal deletion flow. Use only if you REALLY know what you are doing. The default value is false, and the user must opt in to enable it",
+      "name": "ignoreStoreReadErrorWithClusterBreakingPotential",
       "in": "query"
     },
     "labelSelector-5Zw57w4C": {

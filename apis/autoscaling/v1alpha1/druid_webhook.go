@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var druidLog = logf.Log.WithName("druid-autoscaler")
 
-var _ webhook.Defaulter = &DruidAutoscaler{}
+var _ webhook.CustomDefaulter = &DruidAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (d *DruidAutoscaler) Default() {
+func (d *DruidAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	druidLog.Info("defaulting", "name", d.Name)
 	d.setDefaults()
+	return nil
 }
 
 func (d *DruidAutoscaler) setDefaults() {
@@ -102,21 +103,21 @@ func (d *DruidAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &DruidAutoscaler{}
+var _ webhook.CustomValidator = &DruidAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (d *DruidAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (d *DruidAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	druidLog.Info("validate create", "name", d.Name)
 	return nil, d.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (d *DruidAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (d *DruidAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	druidLog.Info("validate create", "name", d.Name)
 	return nil, d.validate()
 }
 
-func (_ *DruidAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ *DruidAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
