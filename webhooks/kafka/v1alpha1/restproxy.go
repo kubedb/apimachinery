@@ -20,6 +20,10 @@ import (
 	"context"
 	"fmt"
 
+	kafkapi "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 
@@ -35,105 +39,133 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+// SetupRestProxyWebhookWithManager registers the webhook for Kafka RestProxy in the manager.
+func SetupRestProxyWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&kafkapi.RestProxy{}).
+		WithValidator(&RestProxyCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&RestProxyCustomWebhook{mgr.GetClient()}).
+		Complete()
+}
+
+type RestProxyCustomWebhook struct {
+	DefaultClient client.Client
+}
+
 // log is for logging in this package.
 var restproxylog = logf.Log.WithName("restproxy-resource")
 
-var _ webhook.CustomDefaulter = &RestProxy{}
+var _ webhook.CustomDefaulter = &RestProxyCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *RestProxy) Default(ctx context.Context, obj runtime.Object) error {
-	if k == nil {
-		return nil
+func (k *RestProxyCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	rp, ok := obj.(*kafkapi.RestProxy)
+	if !ok {
+		return fmt.Errorf("expected an RestProxy object but got %T", obj)
 	}
-	restproxylog.Info("default", "name", k.Name)
-	k.SetDefaults()
+	restproxylog.Info("default", "name", rp.Name)
+	rp.SetDefaults()
 	return nil
 }
 
-var _ webhook.CustomValidator = &RestProxy{}
+var _ webhook.CustomValidator = &RestProxyCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *RestProxy) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	restproxylog.Info("validate create", "name", k.Name)
-	allErr := k.ValidateCreateOrUpdate()
+func (k *RestProxyCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	rp, ok := obj.(*kafkapi.RestProxy)
+	if !ok {
+		return nil, fmt.Errorf("expected an RestProxy object but got %T", obj)
+	}
+
+	restproxylog.Info("validate create", "name", rp.Name)
+	allErr := k.ValidateCreateOrUpdate(rp)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "RestProxy"}, k.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "RestProxy"}, rp.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *RestProxy) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	restproxylog.Info("validate update", "name", k.Name)
-	allErr := k.ValidateCreateOrUpdate()
+func (k *RestProxyCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	rp, ok := newObj.(*kafkapi.RestProxy)
+	if !ok {
+		return nil, fmt.Errorf("expected an RestProxy object but got %T", newObj)
+	}
+
+	restproxylog.Info("validate update", "name", rp.Name)
+	allErr := k.ValidateCreateOrUpdate(rp)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "RestProxy"}, k.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "RestProxy"}, rp.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *RestProxy) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	restproxylog.Info("validate delete", "name", k.Name)
+func (k *RestProxyCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	rp, ok := obj.(*kafkapi.RestProxy)
+	if !ok {
+		return nil, fmt.Errorf("expected an RestProxy object but got %T", obj)
+	}
+
+	restproxylog.Info("validate delete", "name", rp.Name)
 
 	var allErr field.ErrorList
-	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
+	if rp.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
-			k.Name,
+			rp.Name,
 			"Can not delete as deletionPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "RestProxy"}, k.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "RestProxy"}, rp.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (k *RestProxy) ValidateCreateOrUpdate() field.ErrorList {
+func (k *RestProxyCustomWebhook) ValidateCreateOrUpdate(rp *kafkapi.RestProxy) field.ErrorList {
 	var allErr field.ErrorList
 
-	err := k.validateVersion()
+	err := k.validateVersion(rp)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			k.Name,
+			rp.Name,
 			err.Error()))
 		return allErr
 	}
 
-	if k.Spec.SchemaRegistryRef != nil {
-		if k.Spec.SchemaRegistryRef.InternallyManaged && k.Spec.SchemaRegistryRef.ObjectReference != nil {
+	if rp.Spec.SchemaRegistryRef != nil {
+		if rp.Spec.SchemaRegistryRef.InternallyManaged && rp.Spec.SchemaRegistryRef.ObjectReference != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("schemaRegistryRef").Child("objectReference"),
-				k.Name,
+				rp.Name,
 				"ObjectReference should be nil when InternallyManaged is true"))
 		}
-		if !k.Spec.SchemaRegistryRef.InternallyManaged && k.Spec.SchemaRegistryRef.ObjectReference == nil {
+		if !rp.Spec.SchemaRegistryRef.InternallyManaged && rp.Spec.SchemaRegistryRef.ObjectReference == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("schemaRegistryRef").Child("objectReference"),
-				k.Name,
+				rp.Name,
 				"ObjectReference should not be nil when InternallyManaged is false"))
 		}
 	}
 
-	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
+	if rp.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
-			k.Name,
+			rp.Name,
 			"DeletionPolicyHalt is not supported for RestProxy"))
 	}
 
 	// number of replicas can not be 0 or less
-	if k.Spec.Replicas != nil && *k.Spec.Replicas <= 0 {
+	if rp.Spec.Replicas != nil && *rp.Spec.Replicas <= 0 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			k.Name,
+			rp.Name,
 			"number of replicas can not be 0 or less"))
 	}
 
-	err = k.validateVolumes()
+	err = k.validateVolumes(rp)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-			k.Name,
+			rp.Name,
 			err.Error()))
 	}
 
-	err = k.validateContainerVolumeMountPaths()
+	err = k.validateContainerVolumeMountPaths(rp)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Child("volumeMounts"),
-			k.Name,
+			rp.Name,
 			err.Error()))
 	}
 
@@ -143,9 +175,9 @@ func (k *RestProxy) ValidateCreateOrUpdate() field.ErrorList {
 	return allErr
 }
 
-func (k *RestProxy) validateVersion() error {
+func (k *RestProxyCustomWebhook) validateVersion(rp *kafkapi.RestProxy) error {
 	ksrVersion := &catalog.SchemaRegistryVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, ksrVersion)
+	err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: rp.Spec.Version}, ksrVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
@@ -156,17 +188,17 @@ func (k *RestProxy) validateVersion() error {
 }
 
 var restProxyReservedVolumes = []string{
-	KafkaClientCertVolumeName,
-	RestProxyOperatorVolumeConfig,
+	kafkapi.KafkaClientCertVolumeName,
+	kafkapi.RestProxyOperatorVolumeConfig,
 }
 
-func (k *RestProxy) validateVolumes() error {
-	if k.Spec.PodTemplate.Spec.Volumes == nil {
+func (k *RestProxyCustomWebhook) validateVolumes(rp *kafkapi.RestProxy) error {
+	if rp.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
 	rsv := make([]string, len(restProxyReservedVolumes))
 	copy(rsv, restProxyReservedVolumes)
-	volumes := k.Spec.PodTemplate.Spec.Volumes
+	volumes := rp.Spec.PodTemplate.Spec.Volumes
 	for _, rv := range rsv {
 		for _, ugv := range volumes {
 			if ugv.Name == rv {
@@ -178,12 +210,12 @@ func (k *RestProxy) validateVolumes() error {
 }
 
 var restProxyReservedVolumeMountPaths = []string{
-	KafkaClientCertDir,
-	RestProxyOperatorVolumeConfig,
+	kafkapi.KafkaClientCertDir,
+	kafkapi.RestProxyOperatorVolumeConfig,
 }
 
-func (k *RestProxy) validateContainerVolumeMountPaths() error {
-	container := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, RestProxyContainerName)
+func (k *RestProxyCustomWebhook) validateContainerVolumeMountPaths(rp *kafkapi.RestProxy) error {
+	container := coreutil.GetContainerByName(rp.Spec.PodTemplate.Spec.Containers, kafkapi.RestProxyContainerName)
 	if container == nil {
 		return errors.New("container not found")
 	}

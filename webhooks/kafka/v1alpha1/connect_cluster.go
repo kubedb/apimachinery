@@ -18,7 +18,12 @@ package v1alpha1
 
 import (
 	"context"
+	"fmt"
 	"strings"
+
+	kafkapi "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -36,127 +41,156 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+// SetupConnectClusterWebhookWithManager registers the webhook for Kafka ConnectCluster in the manager.
+func SetupConnectClusterWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&kafkapi.ConnectCluster{}).
+		WithValidator(&ConnectClusterCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&ConnectClusterCustomWebhook{mgr.GetClient()}).
+		Complete()
+}
+
+type ConnectClusterCustomWebhook struct {
+	DefaultClient client.Client
+}
+
 // log is for logging in this package.
 var connectClusterLog = logf.Log.WithName("connectCluster-resource")
 
-var _ webhook.CustomDefaulter = &ConnectCluster{}
+var _ webhook.CustomDefaulter = &ConnectClusterCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *ConnectCluster) Default(ctx context.Context, obj runtime.Object) error {
-	if k == nil {
-		return nil
+func (k *ConnectClusterCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	c, ok := obj.(*kafkapi.ConnectCluster)
+	if !ok {
+		return fmt.Errorf("expected an connect-cluster object but got %T", obj)
 	}
-	connectClusterLog.Info("default", "name", k.Name)
-	k.SetDefaults()
+
+	connectClusterLog.Info("default", "name", c.Name)
+	c.SetDefaults()
 	return nil
 }
 
-var _ webhook.CustomValidator = &ConnectCluster{}
+var _ webhook.CustomValidator = &ConnectorCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *ConnectCluster) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	connectClusterLog.Info("validate create", "name", k.Name)
-	allErr := k.ValidateCreateOrUpdate()
+func (k *ConnectClusterCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	c, ok := obj.(*kafkapi.ConnectCluster)
+	if !ok {
+		return nil, fmt.Errorf("expected an connect-cluster object but got %T", obj)
+	}
+
+	connectClusterLog.Info("validate create", "name", c.Name)
+	allErr := k.ValidateCreateOrUpdate(c)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "ConnectCluster"}, k.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "ConnectCluster"}, c.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *ConnectCluster) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	connectClusterLog.Info("validate update", "name", k.Name)
+func (k *ConnectClusterCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	c, ok := newObj.(*kafkapi.ConnectCluster)
+	if !ok {
+		return nil, fmt.Errorf("expected an connect-cluster object but got %T", newObj)
+	}
 
-	oldConnect := old.(*ConnectCluster)
-	allErr := k.ValidateCreateOrUpdate()
+	connectClusterLog.Info("validate update", "name", c.Name)
 
-	if *oldConnect.Spec.Replicas == 1 && *k.Spec.Replicas > 1 {
+	oldConnect := old.(*kafkapi.ConnectCluster)
+	allErr := k.ValidateCreateOrUpdate(c)
+
+	if *oldConnect.Spec.Replicas == 1 && *c.Spec.Replicas > 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			k.Name,
+			c.Name,
 			"Cannot scale up from 1 to more than 1 in standalone mode"))
 	}
 
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "ConnectCluster"}, k.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "ConnectCluster"}, c.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *ConnectCluster) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	connectClusterLog.Info("validate delete", "name", k.Name)
+func (k *ConnectClusterCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	c, ok := obj.(*kafkapi.ConnectCluster)
+	if !ok {
+		return nil, fmt.Errorf("expected an connect-cluster object but got %T", obj)
+	}
+
+	connectClusterLog.Info("validate delete", "name", c.Name)
 
 	var allErr field.ErrorList
-	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
+	if c.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
-			k.Name,
+			c.Name,
 			"Can not delete as deletionPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "ConnectCluster"}, k.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "ConnectCluster"}, c.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (k *ConnectCluster) ValidateCreateOrUpdate() field.ErrorList {
+func (k *ConnectClusterCustomWebhook) ValidateCreateOrUpdate(c *kafkapi.ConnectCluster) field.ErrorList {
 	var allErr field.ErrorList
-	if k.Spec.EnableSSL {
-		if k.Spec.TLS == nil {
+	if c.Spec.EnableSSL {
+		if c.Spec.TLS == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-				k.Name,
+				c.Name,
 				".spec.tls can't be nil, if .spec.enableSSL is true"))
 		}
 	} else {
-		if k.Spec.TLS != nil {
+		if c.Spec.TLS != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-				k.Name,
+				c.Name,
 				".spec.tls must be nil, if .spec.enableSSL is disabled"))
 		}
 	}
 
-	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
+	if c.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
-			k.Name,
+			c.Name,
 			"DeletionPolicyHalt is not supported for ConnectCluster"))
 	}
 
 	// number of replicas can not be 0 or less
-	if k.Spec.Replicas != nil && *k.Spec.Replicas <= 0 {
+	if c.Spec.Replicas != nil && *c.Spec.Replicas <= 0 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			k.Name,
+			c.Name,
 			"number of replicas can not be 0 or less"))
 	}
 
-	err := validateVersion(k)
+	err := k.validateVersion(c)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			k.Name,
+			c.Name,
 			err.Error()))
 	}
 
-	err = validateVolumes(k)
+	err = k.validateVolumes(c)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-			k.Name,
+			c.Name,
 			err.Error()))
 	}
 
-	err = validateContainerVolumeMountPaths(k)
+	err = k.validateContainerVolumeMountPaths(c)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Child("volumeMounts"),
-			k.Name,
+			c.Name,
 			err.Error()))
 	}
 
-	err = validateInitContainerVolumeMountPaths(k)
+	err = k.validateInitContainerVolumeMountPaths(c)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("initContainers").Child("volumeMounts"),
-			k.Name,
+			c.Name,
 			err.Error()))
 	}
 
-	err = validateEnvVars(k)
+	err = k.validateEnvVars(c)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("envs"),
-			k.Name,
+			c.Name,
 			err.Error()))
 	}
 
@@ -166,23 +200,23 @@ func (k *ConnectCluster) ValidateCreateOrUpdate() field.ErrorList {
 	return allErr
 }
 
-func validateEnvVars(connect *ConnectCluster) error {
-	container := coreutil.GetContainerByName(connect.Spec.PodTemplate.Spec.Containers, ConnectClusterContainerName)
+func (k *ConnectClusterCustomWebhook) validateEnvVars(connect *kafkapi.ConnectCluster) error {
+	container := coreutil.GetContainerByName(connect.Spec.PodTemplate.Spec.Containers, kafkapi.ConnectClusterContainerName)
 	if container == nil {
 		return errors.New("container not found")
 	}
-	env := coreutil.GetEnvByName(container.Env, ConnectClusterModeEnv)
+	env := coreutil.GetEnvByName(container.Env, kafkapi.ConnectClusterModeEnv)
 	if env != nil {
-		if *connect.Spec.Replicas > 1 && env.Value == string(ConnectClusterNodeRoleStandalone) {
+		if *connect.Spec.Replicas > 1 && env.Value == string(kafkapi.ConnectClusterNodeRoleStandalone) {
 			return errors.New("can't use standalone mode as env, if replicas is more than 1")
 		}
 	}
 	return nil
 }
 
-func validateVersion(connect *ConnectCluster) error {
+func (k *ConnectClusterCustomWebhook) validateVersion(connect *kafkapi.ConnectCluster) error {
 	kccVersion := &catalog.KafkaVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: connect.Spec.Version}, kccVersion)
+	err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: connect.Spec.Version}, kccVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
@@ -190,16 +224,16 @@ func validateVersion(connect *ConnectCluster) error {
 }
 
 var reservedVolumes = []string{
-	ConnectClusterOperatorVolumeConfig,
-	ConnectClusterCustomVolumeConfig,
-	ConnectorPluginsVolumeName,
-	ConnectClusterAuthSecretVolumeName,
-	ConnectClusterOffsetFileDirName,
-	KafkaClientCertVolumeName,
-	ConnectClusterServerCertsVolumeName,
+	kafkapi.ConnectClusterOperatorVolumeConfig,
+	kafkapi.ConnectClusterCustomVolumeConfig,
+	kafkapi.ConnectorPluginsVolumeName,
+	kafkapi.ConnectClusterAuthSecretVolumeName,
+	kafkapi.ConnectClusterOffsetFileDirName,
+	kafkapi.KafkaClientCertVolumeName,
+	kafkapi.ConnectClusterServerCertsVolumeName,
 }
 
-func validateVolumes(connect *ConnectCluster) error {
+func (k *ConnectClusterCustomWebhook) validateVolumes(connect *kafkapi.ConnectCluster) error {
 	if connect.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
@@ -217,17 +251,17 @@ func validateVolumes(connect *ConnectCluster) error {
 }
 
 var reservedVolumeMountPaths = []string{
-	ConnectClusterOperatorConfigPath,
-	ConnectorPluginsVolumeDir,
-	ConnectClusterAuthSecretVolumePath,
-	ConnectClusterOffsetFileDir,
-	ConnectClusterCustomConfigPath,
-	KafkaClientCertDir,
-	ConnectClusterServerCertVolumeDir,
+	kafkapi.ConnectClusterOperatorConfigPath,
+	kafkapi.ConnectorPluginsVolumeDir,
+	kafkapi.ConnectClusterAuthSecretVolumePath,
+	kafkapi.ConnectClusterOffsetFileDir,
+	kafkapi.ConnectClusterCustomConfigPath,
+	kafkapi.KafkaClientCertDir,
+	kafkapi.ConnectClusterServerCertVolumeDir,
 }
 
-func validateContainerVolumeMountPaths(connect *ConnectCluster) error {
-	container := coreutil.GetContainerByName(connect.Spec.PodTemplate.Spec.Containers, ConnectClusterContainerName)
+func (k *ConnectClusterCustomWebhook) validateContainerVolumeMountPaths(connect *kafkapi.ConnectCluster) error {
+	container := coreutil.GetContainerByName(connect.Spec.PodTemplate.Spec.Containers, kafkapi.ConnectClusterContainerName)
 	if container == nil {
 		return errors.New("container not found")
 	}
@@ -243,10 +277,10 @@ func validateContainerVolumeMountPaths(connect *ConnectCluster) error {
 	return nil
 }
 
-func validateInitContainerVolumeMountPaths(connect *ConnectCluster) error {
+func (k *ConnectClusterCustomWebhook) validateInitContainerVolumeMountPaths(connect *kafkapi.ConnectCluster) error {
 	for _, name := range connect.Spec.ConnectorPlugins {
 		connectorVersion := &catalog.KafkaConnectorVersion{}
-		err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: name}, connectorVersion)
+		err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: name}, connectorVersion)
 		if err != nil {
 			klog.Errorf("can't get the kafka connector version object %s for %s \n", err.Error(), name)
 			return errors.New("no connector version found for " + name)
@@ -255,9 +289,9 @@ func validateInitContainerVolumeMountPaths(connect *ConnectCluster) error {
 		if initContainer == nil {
 			return errors.New("init container not found for " + strings.ToLower(connectorVersion.Spec.Type))
 		}
-		volumeMount := coreutil.GetVolumeMountByName(initContainer.VolumeMounts, ConnectorPluginsVolumeName)
-		if volumeMount != nil && volumeMount.MountPath == ConnectorPluginsVolumeDir {
-			return errors.New("Cannot use a reserve volume mount path: " + ConnectorPluginsVolumeDir)
+		volumeMount := coreutil.GetVolumeMountByName(initContainer.VolumeMounts, kafkapi.ConnectorPluginsVolumeName)
+		if volumeMount != nil && volumeMount.MountPath == kafkapi.ConnectorPluginsVolumeDir {
+			return errors.New("Cannot use a reserve volume mount path: " + kafkapi.ConnectorPluginsVolumeDir)
 		}
 	}
 	return nil

@@ -18,6 +18,11 @@ package v1alpha1
 
 import (
 	"context"
+	"fmt"
+
+	kafkapi "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -34,107 +39,135 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+// SetupSchemaRegistryWebhookWithManager registers the webhook for Kafka SchemaRegistry in the manager.
+func SetupSchemaRegistryWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&kafkapi.SchemaRegistry{}).
+		WithValidator(&SchemaRegistryCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&SchemaRegistryCustomWebhook{mgr.GetClient()}).
+		Complete()
+}
+
+type SchemaRegistryCustomWebhook struct {
+	DefaultClient client.Client
+}
+
 // log is for logging in this package.
 var schemaregistrylog = logf.Log.WithName("schemaregistry-resource")
 
-var _ webhook.CustomDefaulter = &SchemaRegistry{}
+var _ webhook.CustomDefaulter = &SchemaRegistryCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *SchemaRegistry) Default(ctx context.Context, obj runtime.Object) error {
-	if k == nil {
-		return nil
+func (k *SchemaRegistryCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	sr, ok := obj.(*kafkapi.SchemaRegistry)
+	if !ok {
+		return fmt.Errorf("expected an schema-registry object but got %T", obj)
 	}
-	schemaregistrylog.Info("default", "name", k.Name)
-	k.SetDefaults()
+	schemaregistrylog.Info("default", "name", sr.Name)
+	sr.SetDefaults()
 	return nil
 }
 
-var _ webhook.CustomValidator = &SchemaRegistry{}
+var _ webhook.CustomValidator = &SchemaRegistryCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *SchemaRegistry) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	schemaregistrylog.Info("validate create", "name", k.Name)
-	allErr := k.ValidateCreateOrUpdate()
+func (k *SchemaRegistryCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	sr, ok := obj.(*kafkapi.SchemaRegistry)
+	if !ok {
+		return nil, fmt.Errorf("expected an SchemaRegistry object but got %T", obj)
+	}
+
+	schemaregistrylog.Info("validate create", "name", sr.Name)
+	allErr := k.ValidateCreateOrUpdate(sr)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "SchemaRegistry"}, k.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "SchemaRegistry"}, sr.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *SchemaRegistry) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	schemaregistrylog.Info("validate update", "name", k.Name)
+func (k *SchemaRegistryCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	sr, ok := newObj.(*kafkapi.SchemaRegistry)
+	if !ok {
+		return nil, fmt.Errorf("expected an SchemaRegistry object but got %T", newObj)
+	}
 
-	oldRegistry := old.(*SchemaRegistry)
-	allErr := k.ValidateCreateOrUpdate()
+	schemaregistrylog.Info("validate update", "name", sr.Name)
 
-	if *oldRegistry.Spec.Replicas == 1 && *k.Spec.Replicas > 1 {
+	oldRegistry := old.(*kafkapi.SchemaRegistry)
+	allErr := k.ValidateCreateOrUpdate(sr)
+
+	if *oldRegistry.Spec.Replicas == 1 && *sr.Spec.Replicas > 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			k.Name,
+			sr.Name,
 			"Cannot scale up from 1 to more than 1 in standalone mode"))
 	}
 
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "SchemaRegistry"}, k.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "SchemaRegistry"}, sr.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *SchemaRegistry) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	schemaregistrylog.Info("validate delete", "name", k.Name)
+func (k *SchemaRegistryCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	sr, ok := obj.(*kafkapi.SchemaRegistry)
+	if !ok {
+		return nil, fmt.Errorf("expected an SchemaRegistry object but got %T", obj)
+	}
+
+	schemaregistrylog.Info("validate delete", "name", sr.Name)
 
 	var allErr field.ErrorList
-	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
+	if sr.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
-			k.Name,
+			sr.Name,
 			"Can not delete as deletionPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "SchemaRegistry"}, k.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "SchemaRegistry"}, sr.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (k *SchemaRegistry) ValidateCreateOrUpdate() field.ErrorList {
+func (k *SchemaRegistryCustomWebhook) ValidateCreateOrUpdate(sr *kafkapi.SchemaRegistry) field.ErrorList {
 	var allErr field.ErrorList
 
-	if k.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
+	if sr.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
-			k.Name,
+			sr.Name,
 			"DeletionPolicyHalt is not supported for SchemaRegistry"))
 	}
 
 	// number of replicas can not be 0 or less
-	if k.Spec.Replicas != nil && *k.Spec.Replicas <= 0 {
+	if sr.Spec.Replicas != nil && *sr.Spec.Replicas <= 0 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			k.Name,
+			sr.Name,
 			"number of replicas can not be 0 or less"))
 	}
 
-	err := k.validateVersion()
+	err := k.validateVersion(sr)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			k.Name,
+			sr.Name,
 			err.Error()))
 	}
 
-	err = k.validateVolumes()
+	err = k.validateVolumes(sr)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-			k.Name,
+			sr.Name,
 			err.Error()))
 	}
 
-	err = k.validateContainerVolumeMountPaths()
+	err = k.validateContainerVolumeMountPaths(sr)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Child("volumeMounts"),
-			k.Name,
+			sr.Name,
 			err.Error()))
 	}
 
 	err = k.validateEnvVars()
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Child("envs"),
-			k.Name,
+			sr.Name,
 			err.Error()))
 	}
 
@@ -144,13 +177,13 @@ func (k *SchemaRegistry) ValidateCreateOrUpdate() field.ErrorList {
 	return allErr
 }
 
-func (k *SchemaRegistry) validateEnvVars() error {
+func (k *SchemaRegistryCustomWebhook) validateEnvVars() error {
 	return nil
 }
 
-func (k *SchemaRegistry) validateVersion() error {
+func (k *SchemaRegistryCustomWebhook) validateVersion(sr *kafkapi.SchemaRegistry) error {
 	ksrVersion := &catalog.SchemaRegistryVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, ksrVersion)
+	err := kafkapi.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: sr.Spec.Version}, ksrVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
@@ -158,16 +191,16 @@ func (k *SchemaRegistry) validateVersion() error {
 }
 
 var schemaRegistryReservedVolumes = []string{
-	KafkaClientCertVolumeName,
+	kafkapi.KafkaClientCertVolumeName,
 }
 
-func (k *SchemaRegistry) validateVolumes() error {
-	if k.Spec.PodTemplate.Spec.Volumes == nil {
+func (k *SchemaRegistryCustomWebhook) validateVolumes(sr *kafkapi.SchemaRegistry) error {
+	if sr.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
 	rsv := make([]string, len(schemaRegistryReservedVolumes))
 	copy(rsv, schemaRegistryReservedVolumes)
-	volumes := k.Spec.PodTemplate.Spec.Volumes
+	volumes := sr.Spec.PodTemplate.Spec.Volumes
 	for _, rv := range rsv {
 		for _, ugv := range volumes {
 			if ugv.Name == rv {
@@ -179,11 +212,11 @@ func (k *SchemaRegistry) validateVolumes() error {
 }
 
 var schemaRegistryReservedVolumeMountPaths = []string{
-	KafkaClientCertDir,
+	kafkapi.KafkaClientCertDir,
 }
 
-func (k *SchemaRegistry) validateContainerVolumeMountPaths() error {
-	container := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, SchemaRegistryContainerName)
+func (k *SchemaRegistryCustomWebhook) validateContainerVolumeMountPaths(sr *kafkapi.SchemaRegistry) error {
+	container := coreutil.GetContainerByName(sr.Spec.PodTemplate.Spec.Containers, kafkapi.SchemaRegistryContainerName)
 	if container == nil {
 		return errors.New("container not found")
 	}
