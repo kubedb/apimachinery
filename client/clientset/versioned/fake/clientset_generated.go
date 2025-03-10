@@ -30,6 +30,8 @@ import (
 	fakeconfigv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/config/v1alpha1/fake"
 	elasticsearchv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/elasticsearch/v1alpha1"
 	fakeelasticsearchv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/elasticsearch/v1alpha1/fake"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
+	fakegitopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1/fake"
 	kafkav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kafka/v1alpha1"
 	fakekafkav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kafka/v1alpha1/fake"
 	kubedbv1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1"
@@ -127,6 +129,11 @@ func (c *Clientset) ConfigV1alpha1() configv1alpha1.ConfigV1alpha1Interface {
 // ElasticsearchV1alpha1 retrieves the ElasticsearchV1alpha1Client
 func (c *Clientset) ElasticsearchV1alpha1() elasticsearchv1alpha1.ElasticsearchV1alpha1Interface {
 	return &fakeelasticsearchv1alpha1.FakeElasticsearchV1alpha1{Fake: &c.Fake}
+}
+
+// GitopsV1alpha1 retrieves the GitopsV1alpha1Client
+func (c *Clientset) GitopsV1alpha1() gitopsv1alpha1.GitopsV1alpha1Interface {
+	return &fakegitopsv1alpha1.FakeGitopsV1alpha1{Fake: &c.Fake}
 }
 
 // KafkaV1alpha1 retrieves the KafkaV1alpha1Client
