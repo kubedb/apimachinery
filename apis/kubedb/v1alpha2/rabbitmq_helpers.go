@@ -314,6 +314,14 @@ func (r *RabbitMQ) SetDefaults() {
 			r.Spec.Monitor.Prometheus.Exporter.Port = kubedb.RabbitMQExporterPort
 		}
 		r.Spec.Monitor.SetDefaults()
+		if r.Spec.Monitor.Prometheus != nil {
+			if r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+				r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = rmVersion.Spec.SecurityContext.RunAsUser
+			}
+			if r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+				r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = rmVersion.Spec.SecurityContext.RunAsUser
+			}
+		}
 	}
 }
 
