@@ -18,6 +18,12 @@ package v1alpha2
 
 import (
 	"context"
+	"fmt"
+
+	"k8s.io/apimachinery/pkg/types"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -26,7 +32,6 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -34,160 +39,190 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+// SetupSinglestoreWebhookWithManager registers the webhook for Singlestore in the manager.
+func SetupSinglestoreWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Singlestore{}).
+		WithValidator(&SinglestoreCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&SinglestoreCustomWebhook{mgr.GetClient()}).
+		Complete()
+}
+
+//+kubebuilder:webhook:path=/mutate-singlestore-kubedb-com-v1alpha1-singlestore,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=singlestores,verbs=create;update,versions=v1alpha1,name=msinglestore.kb.io,admissionReviewVersions={v1,v1beta1}
+
+// +kubebuilder:object:generate=false
+type SinglestoreCustomWebhook struct {
+	DefaultClient client.Client
+}
+
+var _ webhook.CustomDefaulter = &SinglestoreCustomWebhook{}
+
 // log is for logging in this package.
 var singlestorelog = logf.Log.WithName("singlestore-resource")
 
-var _ webhook.CustomDefaulter = &Singlestore{}
-
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (s *Singlestore) Default(ctx context.Context, obj runtime.Object) error {
-	if s == nil {
-		return nil
+func (w *SinglestoreCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	db, ok := obj.(*olddbapi.Singlestore)
+	if !ok {
+		return fmt.Errorf("expected an Singlestore object but got %T", obj)
 	}
-	singlestorelog.Info("default", "name", s.Name)
 
-	s.SetDefaults()
+	singlestorelog.Info("default", "name", db.Name)
+
+	db.SetDefaults()
 	return nil
 }
 
-var _ webhook.CustomValidator = &Singlestore{}
+var _ webhook.CustomValidator = &SinglestoreCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (s *Singlestore) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	singlestorelog.Info("validate create", "name", s.Name)
-	allErr := s.ValidateCreateOrUpdate()
+func (w *SinglestoreCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.Singlestore)
+	if !ok {
+		return nil, fmt.Errorf("expected an Singlestore object but got %T", obj)
+	}
+
+	singlestorelog.Info("validate create", "name", db.Name)
+	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Singlestore"}, s.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Singlestore"}, db.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (s *Singlestore) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	singlestorelog.Info("validate update", "name", s.Name)
+func (w *SinglestoreCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	db, ok := newObj.(*olddbapi.Singlestore)
+	if !ok {
+		return nil, fmt.Errorf("expected an Singlestore object but got %T", newObj)
+	}
+	singlestorelog.Info("validate update", "name", db.Name)
 
-	allErr := s.ValidateCreateOrUpdate()
+	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
 
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Singlestore"}, s.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Singlestore"}, db.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (s *Singlestore) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	singlestorelog.Info("validate delete", "name", s.Name)
+func (w *SinglestoreCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.Singlestore)
+	if !ok {
+		return nil, fmt.Errorf("expected an Singlestore object but got %T", obj)
+	}
+	singlestorelog.Info("validate delete", "name", db.Name)
 
 	var allErr field.ErrorList
-	if s.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
+	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
-			s.Name,
+			db.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Singlestore"}, s.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Singlestore"}, db.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (s *Singlestore) ValidateCreateOrUpdate() field.ErrorList {
+func (w *SinglestoreCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Singlestore) field.ErrorList {
 	var allErr field.ErrorList
 
-	if s.Spec.Version == "" {
+	if db.Spec.Version == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			s.Name,
+			db.Name,
 			"spec.version' is missing"))
 	} else {
-		err := sdbValidateVersion(s)
+		err := sdbValidateVersion(db)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
 	}
 
-	if s.Spec.Topology == nil {
-		err := sdbValidateVolumes(s.Spec.PodTemplate)
+	if db.Spec.Topology == nil {
+		err := sdbValidateVolumes(db.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
-		err = sdbValidateVolumesMountPaths(s.Spec.PodTemplate)
+		err = sdbValidateVolumesMountPaths(db.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
 
 	} else {
-		if s.Spec.Topology.Aggregator == nil {
+		if db.Spec.Topology.Aggregator == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("aggregator"),
-				s.Name,
+				db.Name,
 				".spec.topology.aggregator can't be empty in cluster mode"))
 		}
-		if s.Spec.Topology.Leaf == nil {
+		if db.Spec.Topology.Leaf == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("leaf"),
-				s.Name,
+				db.Name,
 				".spec.topology.leaf can't be empty in cluster mode"))
 		}
 
-		if s.Spec.Topology.Aggregator.Replicas == nil {
+		if db.Spec.Topology.Aggregator.Replicas == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("aggregator").Child("replicas"),
-				s.Name,
+				db.Name,
 				"doesn't support spec.topology.aggregator.replicas is set"))
 		}
-		if s.Spec.Topology.Leaf.Replicas == nil {
+		if db.Spec.Topology.Leaf.Replicas == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("leaf").Child("replicas"),
-				s.Name,
+				db.Name,
 				"doesn't support spec.topology.leaf.replicas is set"))
 		}
 
-		if *s.Spec.Topology.Aggregator.Replicas <= 0 {
+		if *db.Spec.Topology.Aggregator.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("aggregator").Child("replicas"),
-				s.Name,
+				db.Name,
 				"number of replicas can not be less be 0 or less"))
 		}
 
-		if *s.Spec.Topology.Leaf.Replicas <= 0 {
+		if *db.Spec.Topology.Leaf.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("leaf").Child("replicas"),
-				s.Name,
+				db.Name,
 				"number of replicas can not be 0 or less"))
 		}
 
-		err := sdbValidateVolumes(s.Spec.Topology.Aggregator.PodTemplate)
+		err := sdbValidateVolumes(db.Spec.Topology.Aggregator.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("aggregator").Child("podTemplate").Child("spec").Child("volumes"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
-		err = sdbValidateVolumes(s.Spec.Topology.Leaf.PodTemplate)
+		err = sdbValidateVolumes(db.Spec.Topology.Leaf.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("leaf").Child("podTemplate").Child("spec").Child("volumes"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
 
-		err = sdbValidateVolumesMountPaths(s.Spec.Topology.Aggregator.PodTemplate)
+		err = sdbValidateVolumesMountPaths(db.Spec.Topology.Aggregator.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("aggregator").Child("podTemplate").Child("spec").Child("containers"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
-		err = sdbValidateVolumesMountPaths(s.Spec.Topology.Leaf.PodTemplate)
+		err = sdbValidateVolumesMountPaths(db.Spec.Topology.Leaf.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("leaf").Child("podTemplate").Child("spec").Child("containers"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
 	}
 
-	if s.Spec.StorageType == "" {
+	if db.Spec.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-			s.Name,
+			db.Name,
 			"StorageType can not be empty"))
 	} else {
-		if s.Spec.StorageType != StorageTypeDurable && s.Spec.StorageType != StorageTypeEphemeral {
+		if db.Spec.StorageType != olddbapi.StorageTypeDurable && db.Spec.StorageType != olddbapi.StorageTypeEphemeral {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-				s.Name,
+				db.Name,
 				"StorageType should be either durable or ephemeral"))
 		}
 	}
@@ -215,10 +250,10 @@ var sdbReservedVolumesMountPaths = []string{
 	kubedb.SinglestoreVolumeMountPathTLS,
 }
 
-func sdbValidateVersion(s *Singlestore) error {
+func sdbValidateVersion(db *olddbapi.Singlestore) error {
 	var sdbVersion catalog.SinglestoreVersion
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: s.Spec.Version,
+	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.Spec.Version,
 	}, &sdbVersion)
 	if err != nil {
 		return errors.New("version not supported")
