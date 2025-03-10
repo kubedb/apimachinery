@@ -25,6 +25,7 @@ import (
 	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	elasticsearchv1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -175,6 +176,48 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=elasticsearch.kubedb.com, Version=v1alpha1
 	case elasticsearchv1alpha1.SchemeGroupVersion.WithResource("elasticsearchdashboards"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Elasticsearch().V1alpha1().ElasticsearchDashboards().Informer()}, nil
+
+		// Group=gitops.kubedb.com, Version=v1alpha1
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("druids"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Druids().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("elasticsearches"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Elasticsearches().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("ferretdbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().FerretDBs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("kafkas"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Kafkas().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("mssqlservers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().MSSQLServers().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("mariadbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().MariaDBs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("memcacheds"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Memcacheds().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("mongodbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().MongoDBs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("mysqls"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().MySQLs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("perconaxtradbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().PerconaXtraDBs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("pgbouncers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().PgBouncers().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("pgpools"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Pgpools().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("postgreses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Postgreses().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("proxysqls"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().ProxySQLs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("rabbitmqs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().RabbitMQs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("redises"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Redises().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("redissentinels"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().RedisSentinels().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("singlestores"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Singlestores().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("solrs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Solrs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("zookeepers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().ZooKeepers().Informer()}, nil
 
 		// Group=kafka.kubedb.com, Version=v1alpha1
 	case kafkav1alpha1.SchemeGroupVersion.WithResource("connectclusters"):

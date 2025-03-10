@@ -21,6 +21,8 @@ import (
 	"errors"
 	"fmt"
 
+	ctrl "sigs.k8s.io/controller-runtime"
+
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
@@ -39,6 +41,17 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+// SetupCassandraWebhookWithManager registers the webhook for Cassandra in the manager.
+func SetupCassandraWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Cassandra{}).
+		WithValidator(&CassandraCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&CassandraCustomWebhook{mgr.GetClient()}).
+		Complete()
+}
+
+//+kubebuilder:webhook:path=/mutate-cassandra-kubedb-com-v1alpha1-cassandra,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=cassandras,verbs=create;update,versions=v1alpha1,name=mcassandra.kb.io,admissionReviewVersions={v1,v1beta1}
+
+// +kubebuilder:object:generate=false
 type CassandraCustomWebhook struct {
 	DefaultClient client.Client
 }
