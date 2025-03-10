@@ -123,13 +123,24 @@ spec:
                   activeFrom:
                     format: date-time
                     type: string
+                  apiGroup:
+                    default: ""
+                    type: string
                   externallyManaged:
                     type: boolean
+                  kind:
+                    default: Secret
+                    type: string
                   name:
                     default: ""
                     type: string
                   rotateAfter:
                     type: string
+                  secretSourceName:
+                    type: string
+                required:
+                - apiGroup
+                - kind
                 type: object
                 x-kubernetes-map-type: atomic
               autoOps:
@@ -4645,13 +4656,24 @@ spec:
                       activeFrom:
                         format: date-time
                         type: string
+                      apiGroup:
+                        default: ""
+                        type: string
                       externallyManaged:
                         type: boolean
+                      kind:
+                        default: Secret
+                        type: string
                       name:
                         default: ""
                         type: string
                       rotateAfter:
                         type: string
+                      secretSourceName:
+                        type: string
+                    required:
+                    - apiGroup
+                    - kind
                     type: object
                     x-kubernetes-map-type: atomic
                   replicationUserSecret:
@@ -4659,13 +4681,24 @@ spec:
                       activeFrom:
                         format: date-time
                         type: string
+                      apiGroup:
+                        default: ""
+                        type: string
                       externallyManaged:
                         type: boolean
+                      kind:
+                        default: Secret
+                        type: string
                       name:
                         default: ""
                         type: string
                       rotateAfter:
                         type: string
+                      secretSourceName:
+                        type: string
+                    required:
+                    - apiGroup
+                    - kind
                     type: object
                     x-kubernetes-map-type: atomic
                 type: object
@@ -4924,13 +4957,24 @@ spec:
                   activeFrom:
                     format: date-time
                     type: string
+                  apiGroup:
+                    default: ""
+                    type: string
                   externallyManaged:
                     type: boolean
+                  kind:
+                    default: Secret
+                    type: string
                   name:
                     default: ""
                     type: string
                   rotateAfter:
                     type: string
+                  secretSourceName:
+                    type: string
+                required:
+                - apiGroup
+                - kind
                 type: object
                 x-kubernetes-map-type: atomic
               autoOps:
@@ -9115,13 +9159,24 @@ spec:
                       activeFrom:
                         format: date-time
                         type: string
+                      apiGroup:
+                        default: ""
+                        type: string
                       externallyManaged:
                         type: boolean
+                      kind:
+                        default: Secret
+                        type: string
                       name:
                         default: ""
                         type: string
                       rotateAfter:
                         type: string
+                      secretSourceName:
+                        type: string
+                    required:
+                    - apiGroup
+                    - kind
                     type: object
                     x-kubernetes-map-type: atomic
                   replicationUserSecret:
@@ -9129,13 +9184,24 @@ spec:
                       activeFrom:
                         format: date-time
                         type: string
+                      apiGroup:
+                        default: ""
+                        type: string
                       externallyManaged:
                         type: boolean
+                      kind:
+                        default: Secret
+                        type: string
                       name:
                         default: ""
                         type: string
                       rotateAfter:
                         type: string
+                      secretSourceName:
+                        type: string
+                    required:
+                    - apiGroup
+                    - kind
                     type: object
                     x-kubernetes-map-type: atomic
                 type: object
