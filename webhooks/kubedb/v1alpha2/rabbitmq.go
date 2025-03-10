@@ -60,14 +60,14 @@ var _ webhook.CustomDefaulter = &RabbitMQCustomWebhook{}
 var rabbitmqlog = logf.Log.WithName("rabbitmq-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *RabbitMQCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *RabbitMQCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db, ok := obj.(*olddbapi.RabbitMQ)
 	if !ok {
 		return fmt.Errorf("expected an RabbitMQ object but got %T", obj)
 	}
 
 	rabbitmqlog.Info("default", "name", db.GetName())
-	db.SetDefaults(r.DefaultClient)
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
@@ -76,28 +76,28 @@ func (r *RabbitMQCustomWebhook) Default(ctx context.Context, obj runtime.Object)
 var _ webhook.CustomValidator = &RabbitMQCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *RabbitMQCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RabbitMQCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*olddbapi.RabbitMQ)
 	if !ok {
 		return nil, fmt.Errorf("expected an RabbitMQ object but got %T", obj)
 	}
 	rabbitmqlog.Info("validate create", "name", db.GetName())
-	return nil, r.ValidateCreateOrUpdate(db)
+	return nil, w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *RabbitMQCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *RabbitMQCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	db, ok := newObj.(*olddbapi.RabbitMQ)
 	if !ok {
 		return nil, fmt.Errorf("expected an RabbitMQ object but got %T", newObj)
 	}
 
 	rabbitmqlog.Info("validate update", "name", db.GetName())
-	return nil, r.ValidateCreateOrUpdate(db)
+	return nil, w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *RabbitMQCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RabbitMQCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*olddbapi.RabbitMQ)
 	if !ok {
 		return nil, fmt.Errorf("expected an RabbitMQ object but got %T", obj)
@@ -114,7 +114,7 @@ func (r *RabbitMQCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.
 	return nil, nil
 }
 
-func (r *RabbitMQCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.RabbitMQ) error {
+func (w *RabbitMQCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.RabbitMQ) error {
 	var allErr field.ErrorList
 	if db.Spec.EnableSSL {
 		if db.Spec.TLS == nil {
@@ -142,7 +142,7 @@ func (r *RabbitMQCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.RabbitMQ) er
 			db.GetName(),
 			"spec.version' is missing"))
 	} else {
-		err := r.ValidateVersion(db)
+		err := w.ValidateVersion(db)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 				db.GetName(),
@@ -150,14 +150,14 @@ func (r *RabbitMQCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.RabbitMQ) er
 		}
 	}
 
-	err := r.validateVolumes(db)
+	err := w.validateVolumes(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
 			db.GetName(),
 			err.Error()))
 	}
 
-	err = r.validateVolumesMountPaths(&db.Spec.PodTemplate)
+	err = w.validateVolumesMountPaths(&db.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumeMounts"),
 			db.GetName(),
@@ -188,9 +188,9 @@ func (r *RabbitMQCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.RabbitMQ) er
 	return apierrors.NewInvalid(schema.GroupKind{Group: "rabbitmq.kubedb.com", Kind: "RabbitMQ"}, db.GetName(), allErr)
 }
 
-func (r *RabbitMQCustomWebhook) ValidateVersion(db *olddbapi.RabbitMQ) error {
+func (w *RabbitMQCustomWebhook) ValidateVersion(db *olddbapi.RabbitMQ) error {
 	rmVersion := catalog.RabbitMQVersion{}
-	err := r.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &rmVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &rmVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
@@ -203,7 +203,7 @@ var rabbitmqReservedVolumes = []string{
 	kubedb.RabbitMQVolumeTempConfig,
 }
 
-func (r *RabbitMQCustomWebhook) validateVolumes(db *olddbapi.RabbitMQ) error {
+func (w *RabbitMQCustomWebhook) validateVolumes(db *olddbapi.RabbitMQ) error {
 	if db.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
@@ -233,7 +233,7 @@ var rabbitmqReservedVolumeMountPaths = []string{
 	kubedb.RabbitMQCertDir,
 }
 
-func (r *RabbitMQCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
+func (w *RabbitMQCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 	if podTemplate == nil {
 		return nil
 	}

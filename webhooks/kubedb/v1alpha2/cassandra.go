@@ -21,6 +21,9 @@ import (
 	"errors"
 	"fmt"
 
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 
@@ -36,203 +39,221 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+type CassandraCustomWebhook struct {
+	DefaultClient client.Client
+}
+
+var _ webhook.CustomDefaulter = &CassandraCustomWebhook{}
+
 // log is for logging in this package.
 var cassandralog = logf.Log.WithName("cassandra-resource")
 
-var _ webhook.CustomDefaulter = &Cassandra{}
-
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *Cassandra) Default(ctx context.Context, obj runtime.Object) error {
-	if r == nil {
-		return nil
+func (w *CassandraCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	db, ok := obj.(*olddbapi.Cassandra)
+	if !ok {
+		return fmt.Errorf("expected an Cassandra object but got %T", obj)
 	}
-	cassandralog.Info("default", "name", r.Name)
-	r.SetDefaults()
+	cassandralog.Info("default", "name", db.GetName())
+	db.SetDefaults()
 	return nil
 }
 
-var _ webhook.CustomValidator = &Cassandra{}
+var _ webhook.CustomValidator = &CassandraCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *Cassandra) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	cassandralog.Info("validate create", "name", r.Name)
-	return nil, r.ValidateCreateOrUpdate()
+func (w *CassandraCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.Cassandra)
+	if !ok {
+		return nil, fmt.Errorf("expected an Cassandra object but got %T", obj)
+	}
+	cassandralog.Info("validate create", "name", db.Name)
+	return nil, w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *Cassandra) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	cassandralog.Info("validate update", "name", r.Name)
-	return nil, r.ValidateCreateOrUpdate()
+func (w *CassandraCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	db, ok := newObj.(*olddbapi.Cassandra)
+	if !ok {
+		return nil, fmt.Errorf("expected an Cassandra object but got %T", newObj)
+	}
+	cassandralog.Info("validate update", "name", db.Name)
+	return nil, w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *Cassandra) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	cassandralog.Info("validate delete", "name", r.Name)
+func (w *CassandraCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.Cassandra)
+	if !ok {
+		return nil, fmt.Errorf("expected an Cassandra object but got %T", obj)
+	}
+
+	cassandralog.Info("validate delete", "name", db.Name)
 
 	var allErr field.ErrorList
-	if r.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
+	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
-			r.Name,
+			db.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "Cassandra.kubedb.com", Kind: "Cassandra"}, r.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "Cassandra.kubedb.com", Kind: "Cassandra"}, db.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (r *Cassandra) ValidateCreateOrUpdate() error {
+func (w *CassandraCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Cassandra) error {
 	var allErr field.ErrorList
 
-	if r.Spec.Version == "" {
+	if db.Spec.Version == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			r.Name,
+			db.Name,
 			"spec.version' is missing"))
-		return apierrors.NewInvalid(schema.GroupKind{Group: "Cassandra.kubedb.com", Kind: "Cassandra"}, r.Name, allErr)
+		return apierrors.NewInvalid(schema.GroupKind{Group: "Cassandra.kubedb.com", Kind: "Cassandra"}, db.Name, allErr)
 	} else {
-		err := r.ValidateVersion(r)
+		err := w.ValidateVersion(db)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-				r.Spec.Version,
+				db.Spec.Version,
 				err.Error()))
-			return apierrors.NewInvalid(schema.GroupKind{Group: "cassandra.kubedb.com", Kind: "cassandra"}, r.Name, allErr)
+			return apierrors.NewInvalid(schema.GroupKind{Group: "cassandra.kubedb.com", Kind: "cassandra"}, db.Name, allErr)
 		}
 	}
 
-	if r.Spec.Topology != nil {
+	if db.Spec.Topology != nil {
 		rackName := map[string]bool{}
-		racks := r.Spec.Topology.Rack
+		racks := db.Spec.Topology.Rack
 		for _, rack := range racks {
 			if rack.Replicas != nil && *rack.Replicas <= 0 {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child("replicas"),
-					r.Name,
+					db.Name,
 					"number of replicas can't be 0 or less"))
 			}
 			if rackName[rack.Name] {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child(rack.Name),
-					r.Name,
+					db.Name,
 					"rack name is duplicated, use different rack name"))
 			}
 			rackName[rack.Name] = true
 
-			allErr = r.validateClusterStorageType(rack, allErr)
+			allErr = w.validateClusterStorageType(db, rack, allErr)
 
-			err := r.validateVolumes(rack.PodTemplate)
+			err := w.validateVolumes(rack.PodTemplate)
 			if err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child("podTemplate").Child("spec").Child("volumes"),
-					r.Name,
+					db.Name,
 					err.Error()))
 			}
-			err = r.validateVolumesMountPaths(rack.PodTemplate)
+			err = w.validateVolumesMountPaths(rack.PodTemplate)
 			if err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child("podTemplate").Child("spec").Child("volumeMounts"),
-					r.Name,
+					db.Name,
 					err.Error()))
 			}
 		}
-		if r.Spec.PodTemplate != nil {
+		if db.Spec.PodTemplate != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
-				r.Name,
+				db.Name,
 				"PodTemplate should be nil in Topology"))
 		}
 
-		if r.Spec.Replicas != nil {
+		if db.Spec.Replicas != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replica"),
-				r.Name,
+				db.Name,
 				"replica should be nil in Topology"))
 		}
 
-		if r.Spec.StorageType != "" {
+		if db.Spec.StorageType != "" {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-				r.Name,
+				db.Name,
 				"StorageType should be empty in Topology"))
 		}
 
-		if r.Spec.Storage != nil {
+		if db.Spec.Storage != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"),
-				r.Name,
+				db.Name,
 				"storage should be nil in Topology"))
 		}
 
 	} else {
 		// number of replicas can not be 0 or less
-		if r.Spec.Replicas != nil && *r.Spec.Replicas <= 0 {
+		if db.Spec.Replicas != nil && *db.Spec.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-				r.Name,
+				db.Name,
 				"number of replicas can't be 0 or less"))
 		}
 
 		// number of replicas can not be greater than 1
-		if r.Spec.Replicas != nil && *r.Spec.Replicas > 1 {
+		if db.Spec.Replicas != nil && *db.Spec.Replicas > 1 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-				r.Name,
+				db.Name,
 				"number of replicas can't be greater than 1 in standalone mode"))
 		}
-		err := r.validateVolumes(r.Spec.PodTemplate)
+		err := w.validateVolumes(db.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-				r.Name,
+				db.Name,
 				err.Error()))
 		}
-		err = r.validateVolumesMountPaths(r.Spec.PodTemplate)
+		err = w.validateVolumesMountPaths(db.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumeMounts"),
-				r.Name,
+				db.Name,
 				err.Error()))
 		}
 
-		allErr = r.validateStandaloneStorageType(r.Spec.StorageType, r.Spec.Storage, allErr)
+		allErr = w.validateStandaloneStorageType(db, db.Spec.StorageType, db.Spec.Storage, allErr)
 	}
 
 	if len(allErr) == 0 {
 		return nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "Cassandra.kubedb.com", Kind: "Cassandra"}, r.Name, allErr)
+	return apierrors.NewInvalid(schema.GroupKind{Group: "Cassandra.kubedb.com", Kind: "Cassandra"}, db.Name, allErr)
 }
 
-func (c *Cassandra) validateStandaloneStorageType(storageType StorageType, storage *core.PersistentVolumeClaimSpec, allErr field.ErrorList) field.ErrorList {
+func (w *CassandraCustomWebhook) validateStandaloneStorageType(db *olddbapi.Cassandra, storageType olddbapi.StorageType, storage *core.PersistentVolumeClaimSpec, allErr field.ErrorList) field.ErrorList {
 	if storageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-			c.Name,
+			db.Name,
 			"StorageType can not be empty"))
 	} else {
-		if storageType != StorageTypeDurable && c.Spec.StorageType != StorageTypeEphemeral {
+		if storageType != olddbapi.StorageTypeDurable && db.Spec.StorageType != olddbapi.StorageTypeEphemeral {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-				c.Name,
+				db.Name,
 				"StorageType should be either durable or ephemeral"))
 		}
 	}
 
-	if storage == nil && c.Spec.StorageType == StorageTypeDurable {
+	if storage == nil && db.Spec.StorageType == olddbapi.StorageTypeDurable {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"),
-			c.Name,
+			db.Name,
 			"Storage can't be empty when StorageType is durable"))
 	}
 
 	return allErr
 }
 
-func (c *Cassandra) validateClusterStorageType(rack RackSpec, allErr field.ErrorList) field.ErrorList {
+func (w *CassandraCustomWebhook) validateClusterStorageType(db *olddbapi.Cassandra, rack olddbapi.RackSpec, allErr field.ErrorList) field.ErrorList {
 	if rack.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child(rack.Name).Child("storageType"),
-			c.Name,
+			db.Name,
 			"StorageType can not be empty"))
 	} else {
-		if rack.StorageType != StorageTypeDurable && rack.StorageType != StorageTypeEphemeral {
+		if rack.StorageType != olddbapi.StorageTypeDurable && rack.StorageType != olddbapi.StorageTypeEphemeral {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child(rack.Name).Child("storageType"),
 				rack.StorageType,
 				"StorageType should be either durable or ephemeral"))
 		}
 	}
-	if rack.Storage == nil && rack.StorageType == StorageTypeDurable {
+	if rack.Storage == nil && rack.StorageType == olddbapi.StorageTypeDurable {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child(rack.Name).Child("storage"),
-			c.Name,
+			db.Name,
 			"Storage can't be empty when StorageType is durable"))
 	}
 	return allErr
 }
 
-func (r *Cassandra) ValidateVersion(db *Cassandra) error {
+func (w *CassandraCustomWebhook) ValidateVersion(db *olddbapi.Cassandra) error {
 	casVersion := catalog.CassandraVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &casVersion)
+	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &casVersion)
 	if err != nil {
 		return errors.New(fmt.Sprint("version ", db.Spec.Version, " not supported"))
 	}
@@ -243,7 +264,7 @@ var cassandraReservedVolumes = []string{
 	kubedb.CassandraVolumeData,
 }
 
-func (r *Cassandra) validateVolumes(podTemplate *ofst.PodTemplateSpec) error {
+func (w *CassandraCustomWebhook) validateVolumes(podTemplate *ofst.PodTemplateSpec) error {
 	if podTemplate.Spec.Volumes == nil {
 		return nil
 	}
@@ -264,7 +285,7 @@ var cassandraReservedVolumeMountPaths = []string{
 	kubedb.CassandraDataDir,
 }
 
-func (r *Cassandra) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
+func (w *CassandraCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 	if podTemplate == nil {
 		return nil
 	}
