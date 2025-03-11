@@ -45,9 +45,6 @@ func SetupClickHouseWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-singlestore-kubedb-com-v1alpha1-singlestore,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=singlestores,verbs=create;update,versions=v1alpha1,name=msinglestore.kb.io,admissionReviewVersions={v1,v1beta1}
-
-// +kubebuilder:object:generate=false
 type ClickHouseCustomWebhook struct {
 	DefaultClient client.Client
 }
