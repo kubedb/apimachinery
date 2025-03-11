@@ -19,6 +19,9 @@ package v1alpha2
 import (
 	"context"
 	"errors"
+	"fmt"
+
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -31,102 +34,123 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// log is for logging in this package.
-var zookeeperlog = logf.Log.WithName("zookeeper-resource")
-
-func (z *ZooKeeper) SetupWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).
-		For(z).
+// SetupZooKeeperWebhookWithManager registers the webhook for ZooKeeper in the manager.
+func SetupZooKeeperWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.ZooKeeper{}).
+		WithValidator(&ZooKeeperCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&ZooKeeperCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
 
+// log is for logging in this package.
+var zookeeperlog = logf.Log.WithName("zookeeper-resource")
+
 //+kubebuilder:webhook:path=/mutate-zookeeper-kubedb-com-v1alpha1-zookeeper,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=zookeepers,verbs=create;update,versions=v1alpha1,name=mzookeeper.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomDefaulter = &ZooKeeper{}
+// +kubebuilder:object:generate=false
+type ZooKeeperCustomWebhook struct {
+	DefaultClient client.Client
+}
+
+var _ webhook.CustomDefaulter = &ZooKeeperCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (z *ZooKeeper) Default(ctx context.Context, obj runtime.Object) error {
-	if z == nil {
-		return nil
+func (z *ZooKeeperCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	db, ok := obj.(*olddbapi.ZooKeeper)
+	if !ok {
+		return fmt.Errorf("expected an ZooKeeper object but got %T", obj)
 	}
-	zookeeperlog.Info("default", "name", z.Name)
-	z.SetDefaults()
+	zookeeperlog.Info("default", "name", db.Name)
+	db.SetDefaults(z.DefaultClient)
 	return nil
 }
 
 //+kubebuilder:webhook:path=/validate-zookeeper-kubedb-com-v1alpha1-zookeeper,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=zookeepers,verbs=create;update,versions=v1alpha1,name=vzookeeper.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomValidator = &ZooKeeper{}
+var _ webhook.CustomValidator = &ZooKeeperCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (z *ZooKeeper) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	zookeeperlog.Info("validate create", "name", z.Name)
-	return z.ValidateCreateOrUpdate()
+func (z *ZooKeeperCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.ZooKeeper)
+	if !ok {
+		return nil, fmt.Errorf("expected an ZooKeeper object but got %T", obj)
+	}
+	zookeeperlog.Info("validate create", "name", db.Name)
+	return z.ValidateCreateOrUpdate(db)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (z *ZooKeeper) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	zookeeperlog.Info("validate update", "name", z.Name)
-	return z.ValidateCreateOrUpdate()
+func (z *ZooKeeperCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	db, ok := newObj.(*olddbapi.ZooKeeper)
+	if !ok {
+		return nil, fmt.Errorf("expected an ZooKeeper object but got %T", newObj)
+	}
+	zookeeperlog.Info("validate update", "name", db.Name)
+	return z.ValidateCreateOrUpdate(db)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (z *ZooKeeper) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	zookeeperlog.Info("validate delete", "name", z.Name)
+func (z *ZooKeeperCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.ZooKeeper)
+	if !ok {
+		return nil, fmt.Errorf("expected an ZooKeeper object but got %T", obj)
+	}
+	zookeeperlog.Info("validate delete", "name", db.Name)
 
 	var allErr field.ErrorList
-	if z.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
+	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("teminationPolicy"),
-			z.Name,
+			db.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "zookeeper.kubedb.com", Kind: "ZooKeeper"}, z.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "zookeeper.kubedb.com", Kind: "ZooKeeper"}, db.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (z *ZooKeeper) ValidateCreateOrUpdate() (admission.Warnings, error) {
+func (z *ZooKeeperCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ZooKeeper) (admission.Warnings, error) {
 	var allErr field.ErrorList
-	if z.Spec.Replicas != nil && *z.Spec.Replicas == 2 {
+	if db.Spec.Replicas != nil && *db.Spec.Replicas == 2 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			z.Name,
+			db.Name,
 			"zookeeper ensemble should have 3 or more replicas"))
 	}
 
-	err := z.validateVersion()
+	err := z.validateVersion(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			z.Name,
+			db.Name,
 			err.Error()))
 	}
 
-	err = z.validateVolumes()
+	err = z.validateVolumes(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-			z.Name,
+			db.Name,
 			err.Error()))
 	}
 
-	err = z.validateVolumesMountPaths(&z.Spec.PodTemplate)
+	err = z.validateVolumesMountPaths(&db.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumeMounts"),
-			z.Name,
+			db.Name,
 			err.Error()))
 	}
 
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "zookeeper.kubedb.com", Kind: "ZooKeeper"}, z.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "zookeeper.kubedb.com", Kind: "ZooKeeper"}, db.Name, allErr)
 }
 
-func (z *ZooKeeper) validateVersion() error {
+func (z *ZooKeeperCustomWebhook) validateVersion(db *olddbapi.ZooKeeper) error {
 	zkVersion := v1alpha1.ZooKeeperVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: z.Spec.Version}, &zkVersion)
+	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &zkVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
@@ -139,14 +163,14 @@ var zookeeperReservedVolumes = []string{
 	kubedb.ZooKeeperConfigVolumeName,
 }
 
-func (z *ZooKeeper) validateVolumes() error {
-	if z.Spec.PodTemplate.Spec.Volumes == nil {
+func (z *ZooKeeperCustomWebhook) validateVolumes(db *olddbapi.ZooKeeper) error {
+	if db.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
 	rsv := make([]string, len(zookeeperReservedVolumes))
 	copy(rsv, zookeeperReservedVolumes)
 
-	volumes := z.Spec.PodTemplate.Spec.Volumes
+	volumes := db.Spec.PodTemplate.Spec.Volumes
 	for _, rv := range rsv {
 		for _, ugv := range volumes {
 			if ugv.Name == rv {
@@ -163,7 +187,7 @@ var zookeeperReservedVolumeMountPaths = []string{
 	kubedb.ZooKeeperDataVolumePath,
 }
 
-func (z *ZooKeeper) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
+func (z *ZooKeeperCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 	if podTemplate == nil {
 		return nil
 	}
