@@ -21,12 +21,9 @@ import (
 	"errors"
 	"fmt"
 
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -34,6 +31,8 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
@@ -139,7 +138,7 @@ func (w *DruidCustomWebhook) validateCreateOrUpdate(db *olddbapi.Druid) field.Er
 			db.Name,
 			"spec.version is missing"))
 	} else {
-		err := druidValidateVersion(db)
+		err := w.druidValidateVersion(db)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 				db.Name,
@@ -291,9 +290,9 @@ func (w *DruidCustomWebhook) validateDruidDataNode(db *olddbapi.Druid, nodeType 
 	}
 }
 
-func druidValidateVersion(db *olddbapi.Druid) error {
+func (w *DruidCustomWebhook) druidValidateVersion(db *olddbapi.Druid) error {
 	var druidVersion catalog.DruidVersion
-	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
 	}, &druidVersion)
 	if err != nil {

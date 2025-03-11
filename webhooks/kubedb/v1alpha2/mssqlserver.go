@@ -62,7 +62,7 @@ var _ webhook.CustomDefaulter = &MSSQLServerCustomWebhook{}
 var mssqllog = logf.Log.WithName("mssql-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (m *MSSQLServerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *MSSQLServerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db, ok := obj.(*olddbapi.MSSQLServer)
 	if !ok {
 		return fmt.Errorf("expected a MSSQLServer object, got a %T", obj)
@@ -70,14 +70,14 @@ func (m *MSSQLServerCustomWebhook) Default(ctx context.Context, obj runtime.Obje
 
 	mssqllog.Info("default", "name", db.Name)
 
-	db.SetDefaults()
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
 var _ webhook.CustomValidator = &MSSQLServerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQLServerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MSSQLServerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*olddbapi.MSSQLServer)
 	if !ok {
 		return nil, fmt.Errorf("expected a MSSQLServer object, got a %T", obj)
@@ -85,7 +85,7 @@ func (m *MSSQLServerCustomWebhook) ValidateCreate(ctx context.Context, obj runti
 
 	mssqllog.Info("validate create", "name", db.Name)
 
-	allErr := m.ValidateCreateOrUpdate(db)
+	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
@@ -93,7 +93,7 @@ func (m *MSSQLServerCustomWebhook) ValidateCreate(ctx context.Context, obj runti
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQLServerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *MSSQLServerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	db, ok := newObj.(*olddbapi.MSSQLServer)
 	if !ok {
 		return nil, fmt.Errorf("expected a MSSQLServer object, got a %T", newObj)
@@ -101,7 +101,7 @@ func (m *MSSQLServerCustomWebhook) ValidateUpdate(ctx context.Context, old, newO
 
 	mssqllog.Info("validate update", "name", db.Name)
 
-	allErr := m.ValidateCreateOrUpdate(db)
+	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
@@ -110,7 +110,7 @@ func (m *MSSQLServerCustomWebhook) ValidateUpdate(ctx context.Context, old, newO
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQLServerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MSSQLServerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*olddbapi.MSSQLServer)
 	if !ok {
 		return nil, fmt.Errorf("expected a MSSQLServer object, got a %T", obj)
@@ -128,10 +128,10 @@ func (m *MSSQLServerCustomWebhook) ValidateDelete(ctx context.Context, obj runti
 	return nil, nil
 }
 
-func (m *MSSQLServerCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.MSSQLServer) field.ErrorList {
+func (w *MSSQLServerCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.MSSQLServer) field.ErrorList {
 	var allErr field.ErrorList
 
-	err := mssqlValidateVersion(db)
+	err := w.mssqlValidateVersion(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 			db.Name,
@@ -232,10 +232,10 @@ var mssqlReservedVolumesMountPaths = []string{
 	kubedb.MSSQLVolumeMountPathCACerts,
 }
 
-func mssqlValidateVersion(db *olddbapi.MSSQLServer) error {
+func (w *MSSQLServerCustomWebhook) mssqlValidateVersion(db *olddbapi.MSSQLServer) error {
 	var mssqlVersion catalog.MSSQLServerVersion
 
-	return olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	return w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
 	}, &mssqlVersion)
 }

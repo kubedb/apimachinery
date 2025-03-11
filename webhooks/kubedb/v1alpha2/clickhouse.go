@@ -56,40 +56,40 @@ var _ webhook.CustomDefaulter = &ClickHouseCustomWebhook{}
 var clickhouselog = logf.Log.WithName("clickhouse-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (c *ClickHouseCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *ClickHouseCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db, ok := obj.(*olddbapi.ClickHouse)
 	if !ok {
 		return fmt.Errorf("expected an ClickHouse object but got %T", obj)
 	}
 	clickhouselog.Info("default", "name", db.Name)
-	db.SetDefaults(c.DefaultClient)
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
 var _ webhook.CustomValidator = &ClickHouseCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (c *ClickHouseCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ClickHouseCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*olddbapi.ClickHouse)
 	if !ok {
 		return nil, fmt.Errorf("expected an ClickHouse object but got %T", obj)
 	}
 	clickhouselog.Info("validate create", "name", db.Name)
-	return nil, c.ValidateCreateOrUpdate(db)
+	return nil, w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (c *ClickHouseCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *ClickHouseCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	db, ok := newObj.(*olddbapi.ClickHouse)
 	if !ok {
 		return nil, fmt.Errorf("expected an ClickHouse object but got %T", newObj)
 	}
 	clickhouselog.Info("validate update", "name", db.Name)
-	return nil, c.ValidateCreateOrUpdate(db)
+	return nil, w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (c *ClickHouseCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ClickHouseCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*olddbapi.ClickHouse)
 	if !ok {
 		return nil, fmt.Errorf("expected an ClickHouse object but got %T", obj)
@@ -106,7 +106,7 @@ func (c *ClickHouseCustomWebhook) ValidateDelete(ctx context.Context, obj runtim
 	return nil, nil
 }
 
-func (c *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse) error {
+func (w *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse) error {
 	var allErr field.ErrorList
 
 	if db.Spec.Version == "" {
@@ -115,7 +115,7 @@ func (c *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 			"spec.version' is missing"))
 		return apierrors.NewInvalid(schema.GroupKind{Group: "ClickHouse.kubedb.com", Kind: "ClickHouse"}, db.Name, allErr)
 	} else {
-		err := c.ValidateVersion(db)
+		err := w.ValidateVersion(db)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 				db.Spec.Version,
@@ -148,7 +148,7 @@ func (c *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 							db.Name,
 							"number of replica can not be 0 or less"))
 					}
-					allErr = c.validateClickHouseKeeperStorageType(db, allErr)
+					allErr = w.validateClickHouseKeeperStorageType(db, allErr)
 				}
 				if db.Spec.ClusterTopology.ClickHouseKeeper.Node != nil {
 					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("node"),
@@ -197,15 +197,15 @@ func (c *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 			}
 			clusterName[cluster.Name] = true
 
-			allErr = c.validateClusterStorageType(db, cluster, allErr)
+			allErr = w.validateClusterStorageType(db, cluster, allErr)
 
-			err := c.validateVolumes(cluster.PodTemplate)
+			err := w.validateVolumes(cluster.PodTemplate)
 			if err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("podTemplate").Child("spec").Child("volumes"),
 					db.Name,
 					err.Error()))
 			}
-			err = c.validateVolumesMountPaths(cluster.PodTemplate)
+			err = w.validateVolumesMountPaths(cluster.PodTemplate)
 			if err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("podTemplate").Child("spec").Child("volumeMounts"),
 					db.Name,
@@ -250,20 +250,20 @@ func (c *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 				db.Name,
 				"number of replicas can't be greater than 1 in standalone mode"))
 		}
-		err := c.validateVolumes(db.Spec.PodTemplate)
+		err := w.validateVolumes(db.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
 				db.Name,
 				err.Error()))
 		}
-		err = c.validateVolumesMountPaths(db.Spec.PodTemplate)
+		err = w.validateVolumesMountPaths(db.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumeMounts"),
 				db.Name,
 				err.Error()))
 		}
 
-		allErr = c.validateStandaloneStorageType(db, allErr)
+		allErr = w.validateStandaloneStorageType(db, allErr)
 	}
 
 	if len(allErr) == 0 {
@@ -272,7 +272,7 @@ func (c *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 	return apierrors.NewInvalid(schema.GroupKind{Group: "ClickHouse.kubedb.com", Kind: "ClickHouse"}, db.Name, allErr)
 }
 
-func (c *ClickHouseCustomWebhook) validateStandaloneStorageType(db *olddbapi.ClickHouse, allErr field.ErrorList) field.ErrorList {
+func (w *ClickHouseCustomWebhook) validateStandaloneStorageType(db *olddbapi.ClickHouse, allErr field.ErrorList) field.ErrorList {
 	if db.Spec.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 			db.Name,
@@ -294,7 +294,7 @@ func (c *ClickHouseCustomWebhook) validateStandaloneStorageType(db *olddbapi.Cli
 	return allErr
 }
 
-func (c *ClickHouseCustomWebhook) validateClusterStorageType(db *olddbapi.ClickHouse, cluster olddbapi.ClusterSpec, allErr field.ErrorList) field.ErrorList {
+func (w *ClickHouseCustomWebhook) validateClusterStorageType(db *olddbapi.ClickHouse, cluster olddbapi.ClusterSpec, allErr field.ErrorList) field.ErrorList {
 	if cluster.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child(cluster.Name).Child("storageType"),
 			db.Name,
@@ -314,7 +314,7 @@ func (c *ClickHouseCustomWebhook) validateClusterStorageType(db *olddbapi.ClickH
 	return allErr
 }
 
-func (c *ClickHouseCustomWebhook) validateClickHouseKeeperStorageType(db *olddbapi.ClickHouse, allErr field.ErrorList) field.ErrorList {
+func (w *ClickHouseCustomWebhook) validateClickHouseKeeperStorageType(db *olddbapi.ClickHouse, allErr field.ErrorList) field.ErrorList {
 	if db.Spec.ClusterTopology.ClickHouseKeeper.Spec.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("clickHouseKeeper").Child("spec").Child("storageType"),
 			db.Name,
@@ -335,9 +335,9 @@ func (c *ClickHouseCustomWebhook) validateClickHouseKeeperStorageType(db *olddba
 	return allErr
 }
 
-func (c *ClickHouseCustomWebhook) ValidateVersion(db *olddbapi.ClickHouse) error {
+func (w *ClickHouseCustomWebhook) ValidateVersion(db *olddbapi.ClickHouse) error {
 	chVersion := catalog.ClickHouseVersion{}
-	err := c.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &chVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &chVersion)
 	if err != nil {
 		// fmt.Sprint(db.Spec.Version, "version not supported")
 		return errors.New(fmt.Sprint("version ", db.Spec.Version, " not supported"))
@@ -349,7 +349,7 @@ var clickhouseReservedVolumes = []string{
 	kubedb.ClickHouseVolumeData,
 }
 
-func (c *ClickHouseCustomWebhook) validateVolumes(podTemplate *ofst.PodTemplateSpec) error {
+func (w *ClickHouseCustomWebhook) validateVolumes(podTemplate *ofst.PodTemplateSpec) error {
 	if podTemplate.Spec.Volumes == nil {
 		return nil
 	}
@@ -370,7 +370,7 @@ var clickhouseReservedVolumeMountPaths = []string{
 	kubedb.ClickHouseDataDir,
 }
 
-func (c *ClickHouseCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
+func (w *ClickHouseCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 	if podTemplate == nil {
 		return nil
 	}

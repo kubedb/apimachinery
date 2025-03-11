@@ -60,13 +60,13 @@ type ZooKeeperCustomWebhook struct {
 var _ webhook.CustomDefaulter = &ZooKeeperCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (z *ZooKeeperCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *ZooKeeperCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db, ok := obj.(*olddbapi.ZooKeeper)
 	if !ok {
 		return fmt.Errorf("expected an ZooKeeper object but got %T", obj)
 	}
 	zookeeperlog.Info("default", "name", db.Name)
-	db.SetDefaults(z.DefaultClient)
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
@@ -75,27 +75,27 @@ func (z *ZooKeeperCustomWebhook) Default(ctx context.Context, obj runtime.Object
 var _ webhook.CustomValidator = &ZooKeeperCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (z *ZooKeeperCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ZooKeeperCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*olddbapi.ZooKeeper)
 	if !ok {
 		return nil, fmt.Errorf("expected an ZooKeeper object but got %T", obj)
 	}
 	zookeeperlog.Info("validate create", "name", db.Name)
-	return z.ValidateCreateOrUpdate(db)
+	return w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (z *ZooKeeperCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *ZooKeeperCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	db, ok := newObj.(*olddbapi.ZooKeeper)
 	if !ok {
 		return nil, fmt.Errorf("expected an ZooKeeper object but got %T", newObj)
 	}
 	zookeeperlog.Info("validate update", "name", db.Name)
-	return z.ValidateCreateOrUpdate(db)
+	return w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (z *ZooKeeperCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ZooKeeperCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*olddbapi.ZooKeeper)
 	if !ok {
 		return nil, fmt.Errorf("expected an ZooKeeper object but got %T", obj)
@@ -112,7 +112,7 @@ func (z *ZooKeeperCustomWebhook) ValidateDelete(ctx context.Context, obj runtime
 	return nil, nil
 }
 
-func (z *ZooKeeperCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ZooKeeper) (admission.Warnings, error) {
+func (w *ZooKeeperCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ZooKeeper) (admission.Warnings, error) {
 	var allErr field.ErrorList
 	if db.Spec.Replicas != nil && *db.Spec.Replicas == 2 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
@@ -120,21 +120,21 @@ func (z *ZooKeeperCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ZooKeeper) 
 			"zookeeper ensemble should have 3 or more replicas"))
 	}
 
-	err := z.validateVersion(db)
+	err := w.validateVersion(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 			db.Name,
 			err.Error()))
 	}
 
-	err = z.validateVolumes(db)
+	err = w.validateVolumes(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
 			db.Name,
 			err.Error()))
 	}
 
-	err = z.validateVolumesMountPaths(&db.Spec.PodTemplate)
+	err = w.validateVolumesMountPaths(&db.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumeMounts"),
 			db.Name,
@@ -147,9 +147,9 @@ func (z *ZooKeeperCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ZooKeeper) 
 	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "zookeeper.kubedb.com", Kind: "ZooKeeper"}, db.Name, allErr)
 }
 
-func (z *ZooKeeperCustomWebhook) validateVersion(db *olddbapi.ZooKeeper) error {
+func (w *ZooKeeperCustomWebhook) validateVersion(db *olddbapi.ZooKeeper) error {
 	zkVersion := v1alpha1.ZooKeeperVersion{}
-	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &zkVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &zkVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
@@ -162,7 +162,7 @@ var zookeeperReservedVolumes = []string{
 	kubedb.ZooKeeperConfigVolumeName,
 }
 
-func (z *ZooKeeperCustomWebhook) validateVolumes(db *olddbapi.ZooKeeper) error {
+func (w *ZooKeeperCustomWebhook) validateVolumes(db *olddbapi.ZooKeeper) error {
 	if db.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
@@ -186,7 +186,7 @@ var zookeeperReservedVolumeMountPaths = []string{
 	kubedb.ZooKeeperDataVolumePath,
 }
 
-func (z *ZooKeeperCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
+func (w *ZooKeeperCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 	if podTemplate == nil {
 		return nil
 	}

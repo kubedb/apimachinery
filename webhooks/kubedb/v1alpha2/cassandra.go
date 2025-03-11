@@ -264,7 +264,7 @@ func (w *CassandraCustomWebhook) validateClusterStorageType(db *olddbapi.Cassand
 
 func (w *CassandraCustomWebhook) ValidateVersion(db *olddbapi.Cassandra) error {
 	casVersion := catalog.CassandraVersion{}
-	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &casVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &casVersion)
 	if err != nil {
 		return errors.New(fmt.Sprint("version ", db.Spec.Version, " not supported"))
 	}

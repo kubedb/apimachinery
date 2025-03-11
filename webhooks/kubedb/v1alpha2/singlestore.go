@@ -67,7 +67,7 @@ func (w *SinglestoreCustomWebhook) Default(ctx context.Context, obj runtime.Obje
 
 	singlestorelog.Info("default", "name", db.Name)
 
-	db.SetDefaults()
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
@@ -130,7 +130,7 @@ func (w *SinglestoreCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Singlesto
 			db.Name,
 			"spec.version' is missing"))
 	} else {
-		err := sdbValidateVersion(db)
+		err := w.sdbValidateVersion(db)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 				db.Name,
@@ -249,9 +249,9 @@ var sdbReservedVolumesMountPaths = []string{
 	kubedb.SinglestoreVolumeMountPathTLS,
 }
 
-func sdbValidateVersion(db *olddbapi.Singlestore) error {
+func (w *SinglestoreCustomWebhook) sdbValidateVersion(db *olddbapi.Singlestore) error {
 	var sdbVersion catalog.SinglestoreVersion
-	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
 	}, &sdbVersion)
 	if err != nil {

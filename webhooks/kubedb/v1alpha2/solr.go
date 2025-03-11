@@ -69,7 +69,7 @@ func (w *SolrCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 
 	solrlog.Info("default", "name", db.Name)
 
-	db.SetDefaults()
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
@@ -167,7 +167,7 @@ func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *v1alpha2.Solr) field.Erro
 			db.Name,
 			"spec.version' is missing"))
 	} else {
-		err := solrValidateVersion(db)
+		err := w.solrValidateVersion(db)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 				db.Name,
@@ -310,9 +310,9 @@ func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *v1alpha2.Solr) field.Erro
 	return allErr
 }
 
-func solrValidateVersion(s *v1alpha2.Solr) error {
+func (w *SolrCustomWebhook) solrValidateVersion(s *v1alpha2.Solr) error {
 	slVersion := catalog.SolrVersion{}
-	err := v1alpha2.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, &slVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, &slVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}

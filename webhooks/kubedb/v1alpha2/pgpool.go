@@ -65,13 +65,13 @@ var pgpoollog = logf.Log.WithName("pgpool-resource")
 var _ webhook.CustomDefaulter = &PgpoolCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (p *PgpoolCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *PgpoolCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	pp, ok := obj.(*olddbapi.Pgpool)
 	if !ok {
 		return fmt.Errorf("expected an pgpool object but got %T", obj)
 	}
 	pgpoollog.Info("default", "name", pp.Name)
-	pp.SetDefaults(p.DefaultClient)
+	pp.SetDefaults(w.DefaultClient)
 	return nil
 }
 
@@ -81,13 +81,13 @@ func (p *PgpoolCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 var _ webhook.CustomValidator = &PgpoolCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (p *PgpoolCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PgpoolCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pp, ok := obj.(*olddbapi.Pgpool)
 	if !ok {
 		return nil, fmt.Errorf("expected an pgpool object but got %T", obj)
 	}
 	pgpoollog.Info("validate create", "name", pp.Name)
-	errorList := p.ValidateCreateOrUpdate(pp)
+	errorList := w.ValidateCreateOrUpdate(pp)
 	if len(errorList) == 0 {
 		return nil, nil
 	}
@@ -95,14 +95,14 @@ func (p *PgpoolCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (p *PgpoolCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *PgpoolCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	pp, ok := newObj.(*olddbapi.Pgpool)
 	if !ok {
 		return nil, fmt.Errorf("expected an pgpool object but got %T", pp)
 	}
 	pgpoollog.Info("validate update", "name", pp.Name)
 
-	errorList := p.ValidateCreateOrUpdate(pp)
+	errorList := w.ValidateCreateOrUpdate(pp)
 	if len(errorList) == 0 {
 		return nil, nil
 	}
@@ -110,7 +110,7 @@ func (p *PgpoolCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (p *PgpoolCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PgpoolCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pp, ok := obj.(*olddbapi.Pgpool)
 	if !ok {
 		return nil, fmt.Errorf("expected an pgpool object but got %T", pp)
@@ -127,14 +127,14 @@ func (p *PgpoolCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Ob
 	return nil, nil
 }
 
-func (p *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.ErrorList {
+func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.ErrorList {
 	var errorList field.ErrorList
 	if pp.Spec.Version == "" {
 		errorList = append(errorList, field.Required(field.NewPath("spec").Child("version"),
 			"`spec.version` is missing",
 		))
 	} else {
-		err := p.PgpoolValidateVersion(pp)
+		err := w.PgpoolValidateVersion(pp)
 		if err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("version"),
 				pp.Name,
@@ -159,7 +159,7 @@ func (p *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 
 	if pp.ObjectMeta.DeletionTimestamp == nil {
 		apb := appcat.AppBinding{}
-		err := p.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      pp.Spec.PostgresRef.Name,
 			Namespace: pp.Spec.PostgresRef.Namespace,
 		}, &apb)
@@ -170,7 +170,7 @@ func (p *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 			))
 		}
 
-		backendSSL, err := pp.IsBackendTLSEnabled(p.DefaultClient)
+		backendSSL, err := pp.IsBackendTLSEnabled(w.DefaultClient)
 		if err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("postgresRef"),
 				pp.Name,
@@ -215,7 +215,7 @@ func (p *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 	}
 
 	if pp.Spec.PodTemplate != nil {
-		if err := p.ValidateEnvVar(PgpoolGetMainContainerEnvs(pp), PgpoolForbiddenEnvVars, pp.ResourceKind()); err != nil {
+		if err := w.ValidateEnvVar(PgpoolGetMainContainerEnvs(pp), PgpoolForbiddenEnvVars, pp.ResourceKind()); err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Child("env"),
 				pp.Name,
 				err.Error(),
@@ -237,7 +237,7 @@ func (p *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 		}
 	}
 
-	if err := p.ValidateHealth(&pp.Spec.HealthChecker); err != nil {
+	if err := w.ValidateHealth(&pp.Spec.HealthChecker); err != nil {
 		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("healthChecker"),
 			pp.Name,
 			err.Error(),
@@ -250,7 +250,7 @@ func (p *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 	return errorList
 }
 
-func (p *PgpoolCustomWebhook) ValidateEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceType string) error {
+func (w *PgpoolCustomWebhook) ValidateEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceType string) error {
 	for _, env := range envs {
 		present, _ := arrays.Contains(forbiddenEnvs, env.Name)
 		if present {
@@ -260,7 +260,7 @@ func (p *PgpoolCustomWebhook) ValidateEnvVar(envs []core.EnvVar, forbiddenEnvs [
 	return nil
 }
 
-func (p *PgpoolCustomWebhook) ValidateHealth(health *kmapi.HealthCheckSpec) error {
+func (w *PgpoolCustomWebhook) ValidateHealth(health *kmapi.HealthCheckSpec) error {
 	if health.PeriodSeconds != nil && *health.PeriodSeconds <= 0 {
 		return fmt.Errorf(`spec.healthCheck.periodSeconds: can not be less than 1`)
 	}
@@ -275,9 +275,9 @@ func (p *PgpoolCustomWebhook) ValidateHealth(health *kmapi.HealthCheckSpec) erro
 	return nil
 }
 
-func (p *PgpoolCustomWebhook) PgpoolValidateVersion(pp *olddbapi.Pgpool) error {
+func (w *PgpoolCustomWebhook) PgpoolValidateVersion(pp *olddbapi.Pgpool) error {
 	ppVersion := catalog.PgpoolVersion{}
-	err := p.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: pp.Spec.Version,
 	}, &ppVersion)
 	if err != nil {

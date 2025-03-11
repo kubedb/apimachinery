@@ -44,6 +44,7 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type SolrApp struct {
@@ -300,7 +301,7 @@ func (s *Solr) SetZooKeeperObjectRef() {
 	}
 }
 
-func (s *Solr) SetDefaults() {
+func (s *Solr) SetDefaults(kc client.Client) {
 	if s.Spec.DeletionPolicy == "" {
 		s.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
@@ -335,7 +336,7 @@ func (s *Solr) SetDefaults() {
 	}
 
 	var slVersion catalog.SolrVersion
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := kc.Get(context.TODO(), types.NamespacedName{
 		Name: s.Spec.Version,
 	}, &slVersion)
 	if err != nil {
