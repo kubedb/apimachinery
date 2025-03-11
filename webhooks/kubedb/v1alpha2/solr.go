@@ -20,10 +20,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	"strings"
+
+	"kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -116,7 +117,7 @@ func (w *SolrCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Obje
 
 	var allErr field.ErrorList
 	if db.Spec.DeletionPolicy == v1alpha2.DeletionPolicyDoNotTerminate {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			db.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
 		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Solr"}, db.Name, allErr)
