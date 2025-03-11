@@ -24,7 +24,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
-	"kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	"github.com/coreos/go-semver/semver"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -42,7 +42,7 @@ import (
 
 // SetupSolrWebhookWithManager registers the webhook for Solr in the manager.
 func SetupSolrWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha2.Solr{}).
+	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Solr{}).
 		WithValidator(&SolrCustomWebhook{mgr.GetClient()}).
 		WithDefaulter(&SolrCustomWebhook{mgr.GetClient()}).
 		Complete()
@@ -62,7 +62,7 @@ var solrlog = logf.Log.WithName("solr-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *SolrCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
-	db, ok := obj.(*v1alpha2.Solr)
+	db, ok := obj.(*olddbapi.Solr)
 	if !ok {
 		return fmt.Errorf("expected an Solr object but got %T", obj)
 	}
@@ -77,7 +77,7 @@ var _ webhook.CustomValidator = &SolrCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *SolrCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	db, ok := obj.(*v1alpha2.Solr)
+	db, ok := obj.(*olddbapi.Solr)
 	if !ok {
 		return nil, fmt.Errorf("expected an Solr object but got %T", obj)
 	}
@@ -92,7 +92,7 @@ func (w *SolrCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obje
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *SolrCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	db, ok := newObj.(*v1alpha2.Solr)
+	db, ok := newObj.(*olddbapi.Solr)
 	if !ok {
 		return nil, fmt.Errorf("expected an Solr object but got %T", newObj)
 	}
@@ -108,14 +108,14 @@ func (w *SolrCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runt
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
 func (w *SolrCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	db, ok := obj.(*v1alpha2.Solr)
+	db, ok := obj.(*olddbapi.Solr)
 	if !ok {
 		return nil, fmt.Errorf("expected an Solr object but got %T", obj)
 	}
 	solrlog.Info("validate delete", "name", db.Name)
 
 	var allErr field.ErrorList
-	if db.Spec.DeletionPolicy == v1alpha2.DeletionPolicyDoNotTerminate {
+	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			db.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
@@ -145,7 +145,7 @@ var solrAvailableModules = []string{
 	"clustering", "hadoop-auth", "jwt-auth", "opentelemetry", "scripting",
 }
 
-func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *v1alpha2.Solr) field.ErrorList {
+func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Solr) field.ErrorList {
 	var allErr field.ErrorList
 
 	if db.Spec.EnableSSL {
@@ -284,7 +284,7 @@ func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *v1alpha2.Solr) field.Erro
 			db.Name,
 			"StorageType can not be empty"))
 	} else {
-		if db.Spec.StorageType != v1alpha2.StorageTypeDurable && db.Spec.StorageType != v1alpha2.StorageTypeEphemeral {
+		if db.Spec.StorageType != olddbapi.StorageTypeDurable && db.Spec.StorageType != olddbapi.StorageTypeEphemeral {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 				db.Name,
 				"StorageType should be either durable or ephemeral"))
@@ -310,7 +310,7 @@ func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *v1alpha2.Solr) field.Erro
 	return allErr
 }
 
-func (w *SolrCustomWebhook) solrValidateVersion(s *v1alpha2.Solr) error {
+func (w *SolrCustomWebhook) solrValidateVersion(s *olddbapi.Solr) error {
 	slVersion := catalog.SolrVersion{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, &slVersion)
 	if err != nil {
@@ -319,7 +319,7 @@ func (w *SolrCustomWebhook) solrValidateVersion(s *v1alpha2.Solr) error {
 	return nil
 }
 
-func solrValidateModules(db *v1alpha2.Solr) error {
+func solrValidateModules(db *olddbapi.Solr) error {
 	modules := db.Spec.SolrModules
 	for _, mod := range modules {
 		fl := false

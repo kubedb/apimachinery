@@ -1839,7 +1839,7 @@ kubeops.dev/petset/pkg/features
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
 kubeops.dev/sidekick/crds
-# kubestash.dev/apimachinery v0.16.1-0.20250304052026-ff90d99c387e
+# kubestash.dev/apimachinery v0.16.1-0.20250311062248-74531c6cf9ea
 ## explicit; go 1.23.0
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/addons/v1alpha1

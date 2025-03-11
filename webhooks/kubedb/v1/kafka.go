@@ -60,41 +60,41 @@ var kafkalog = logf.Log.WithName("kafka-resource")
 var _ webhook.CustomDefaulter = &KafkaCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (k *KafkaCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *KafkaCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db, ok := obj.(*dbapi.Kafka)
 	if !ok {
 		return fmt.Errorf("expected an Kafka object but got %T", obj)
 	}
 
 	kafkalog.Info("default", "name", db.Name)
-	db.SetDefaults(k.DefaultClient)
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
 var _ webhook.CustomValidator = &KafkaCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *KafkaCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*dbapi.Kafka)
 	if !ok {
 		return nil, fmt.Errorf("expected an Kafka object but got %T", obj)
 	}
 	kafkalog.Info("validate create", "name", db.Name)
-	return nil, k.ValidateCreateOrUpdate(db)
+	return nil, w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *KafkaCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	db, ok := newObj.(*dbapi.Kafka)
 	if !ok {
 		return nil, fmt.Errorf("expected an Kafka object but got %T", newObj)
 	}
 	kafkalog.Info("validate update", "name", db.Name)
-	return nil, k.ValidateCreateOrUpdate(db)
+	return nil, w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *KafkaCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*dbapi.Kafka)
 	if !ok {
 		return nil, fmt.Errorf("expected an Kafka object but got %T", obj)
@@ -111,10 +111,10 @@ func (k *KafkaCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Obj
 	return nil, nil
 }
 
-func (k *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
+func (w *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 	var allErr field.ErrorList
 
-	err := k.validateVersion(db)
+	err := w.validateVersion(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 			db.Name,
@@ -176,7 +176,7 @@ func (k *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 		}
 
 		// validate that broker and controller have same cluster id
-		err := k.validateClusterID(db.Spec.Topology)
+		err := w.validateClusterID(db.Spec.Topology)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology"),
 				db.Name,
@@ -184,7 +184,7 @@ func (k *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 		}
 
 		// validate that multiple nodes don't have same suffixes
-		err = k.validateNodeSuffix(db.Spec.Topology)
+		err = w.validateNodeSuffix(db.Spec.Topology)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology"),
 				db.Name,
@@ -192,7 +192,7 @@ func (k *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 		}
 
 		// validate that node replicas are not 0 or negative
-		err = k.validateNodeReplicas(db.Spec.Topology)
+		err = w.validateNodeReplicas(db.Spec.Topology)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology"),
 				db.Name,
@@ -213,14 +213,14 @@ func (k *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 			`can't halt if deletionPolicy is set to "DoNotTerminate"`))
 	}
 
-	err = k.validateVolumes(db)
+	err = w.validateVolumes(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
 			db.Name,
 			err.Error()))
 	}
 
-	err = k.validateVolumesMountPaths(&db.Spec.PodTemplate)
+	err = w.validateVolumesMountPaths(&db.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumeMounts"),
 			db.Name,
@@ -250,16 +250,16 @@ func (k *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, db.Name, allErr)
 }
 
-func (k *KafkaCustomWebhook) validateVersion(db *dbapi.Kafka) error {
+func (w *KafkaCustomWebhook) validateVersion(db *dbapi.Kafka) error {
 	kfVersion := &catalog.KafkaVersion{}
-	err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, kfVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, kfVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
 	return nil
 }
 
-func (k *KafkaCustomWebhook) validateClusterID(topology *dbapi.KafkaClusterTopology) error {
+func (w *KafkaCustomWebhook) validateClusterID(topology *dbapi.KafkaClusterTopology) error {
 	brokerContainer := core_util.GetContainerByName(topology.Broker.PodTemplate.Spec.Containers, kubedb.KafkaContainerName)
 	controllerContainer := core_util.GetContainerByName(topology.Controller.PodTemplate.Spec.Containers, kubedb.KafkaContainerName)
 	var brokerClusterID, controllerClusterID *core.EnvVar
@@ -278,7 +278,7 @@ func (k *KafkaCustomWebhook) validateClusterID(topology *dbapi.KafkaClusterTopol
 	return errors.New("broker and controller env: KAFKA_CLUSTER_ID must have same cluster id")
 }
 
-func (k *KafkaCustomWebhook) validateNodeSuffix(topology *dbapi.KafkaClusterTopology) error {
+func (w *KafkaCustomWebhook) validateNodeSuffix(topology *dbapi.KafkaClusterTopology) error {
 	tMap := topology.ToMap()
 	names := make(map[string]bool)
 	for _, value := range tMap {
@@ -290,7 +290,7 @@ func (k *KafkaCustomWebhook) validateNodeSuffix(topology *dbapi.KafkaClusterTopo
 	return nil
 }
 
-func (k *KafkaCustomWebhook) validateNodeReplicas(topology *dbapi.KafkaClusterTopology) error {
+func (w *KafkaCustomWebhook) validateNodeReplicas(topology *dbapi.KafkaClusterTopology) error {
 	tMap := topology.ToMap()
 	for key, node := range tMap {
 		if pointer.Int32(node.Replicas) <= 0 {
@@ -306,7 +306,7 @@ var kafkaReservedVolumes = []string{
 	kubedb.KafkaVolumeTempConfig,
 }
 
-func (k *KafkaCustomWebhook) validateVolumes(db *dbapi.Kafka) error {
+func (w *KafkaCustomWebhook) validateVolumes(db *dbapi.Kafka) error {
 	if db.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
@@ -336,7 +336,7 @@ var kafkaReservedVolumeMountPaths = []string{
 	kubedb.KafkaCertDir,
 }
 
-func (k *KafkaCustomWebhook) validateVolumesMountPaths(podTemplate *ofstv2.PodTemplateSpec) error {
+func (w *KafkaCustomWebhook) validateVolumesMountPaths(podTemplate *ofstv2.PodTemplateSpec) error {
 	if podTemplate == nil {
 		return nil
 	}

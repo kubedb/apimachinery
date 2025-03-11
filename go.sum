@@ -688,8 +688,8 @@ kubeops.dev/petset v0.0.8-0.20250221072845-c4b7c4af4678 h1:LDLDoYYgYziOZq7ws8Ra3
 kubeops.dev/petset v0.0.8-0.20250221072845-c4b7c4af4678/go.mod h1:j/14AVeCqFTrB9doR+/2SnFeVZ/ObX9MEtvJjpDhvbI=
 kubeops.dev/sidekick v0.0.10 h1:/lOT+yV920F6TTPLc7bKR9HLAG/Yx+sTRm1C7rUz744=
 kubeops.dev/sidekick v0.0.10/go.mod h1:VRyiiKGiJikv/8dNCkrXfkwZCv/2HoIhkmtNurs0gcM=
-kubestash.dev/apimachinery v0.16.1-0.20250304052026-ff90d99c387e h1:wQYwObJX961MTOzYuUCDTnZBRHSyb/YmWA3z0MRYNL4=
-kubestash.dev/apimachinery v0.16.1-0.20250304052026-ff90d99c387e/go.mod h1:14z0dgHjsPumhQrfKrZfIq4zft4+HZUu96zU3Ky1wJ8=
+kubestash.dev/apimachinery v0.16.1-0.20250311062248-74531c6cf9ea h1:8UaP2WgKDQwhhMdr59t0ud7aJQMR/bA5GrypCHEJXeM=
+kubestash.dev/apimachinery v0.16.1-0.20250311062248-74531c6cf9ea/go.mod h1:14z0dgHjsPumhQrfKrZfIq4zft4+HZUu96zU3Ky1wJ8=
 moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 h1:NykkTlRB+X40z86cLHdEmuoTxhNKhQebLT379b1EumA=
 moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7/go.mod h1:RW4hyBjTWSYDOxapodpNEtX0g5Eb16sxklBqmd2RHcE=
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.31.1 h1:uOuSLOMBWkJH0TWa9X6l+mj5nZdm6Ay6Bli8HL8rNfk=
