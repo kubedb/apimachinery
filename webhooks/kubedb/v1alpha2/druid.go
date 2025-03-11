@@ -21,6 +21,10 @@ import (
 	"errors"
 	"fmt"
 
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 
@@ -35,53 +39,81 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+// SetupDruidWebhookWithManager registers the webhook for Druid in the manager.
+func SetupDruidWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Druid{}).
+		WithValidator(&DruidCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&DruidCustomWebhook{mgr.GetClient()}).
+		Complete()
+}
+
+//+kubebuilder:webhook:path=/mutate-druid-kubedb-com-v1alpha1-druid,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=druids,verbs=create;update,versions=v1alpha1,name=mdruid.kb.io,admissionReviewVersions={v1,v1beta1}
+
+// +kubebuilder:object:generate=false
+type DruidCustomWebhook struct {
+	DefaultClient client.Client
+}
+
+var _ webhook.CustomDefaulter = &DruidCustomWebhook{}
+
 // log is for logging in this package.
 var druidlog = logf.Log.WithName("druid-resource")
 
-//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-druid,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=druids,verbs=create;update,versions=v1alpha2,name=mdruid.kb.io,admissionReviewVersions=v1
-
-var _ webhook.CustomDefaulter = &Druid{}
-
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (d *Druid) Default(ctx context.Context, obj runtime.Object) error {
-	if d == nil {
-		return nil
+func (w *DruidCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	db, ok := obj.(*olddbapi.Druid)
+	if !ok {
+		return fmt.Errorf("expected an Druid object but got %T", obj)
 	}
-	druidlog.Info("default", "name", d.Name)
 
-	d.SetDefaults()
+	druidlog.Info("default", "name", db.Name)
+
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
 //+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-druid,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=druids,verbs=create;update,versions=v1alpha2,name=vdruid.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &Druid{}
+var _ webhook.CustomValidator = &DruidCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (d *Druid) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	druidlog.Info("validate create", "name", d.Name)
+func (w *DruidCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.Druid)
+	if !ok {
+		return nil, fmt.Errorf("expected an Druid object but got %T", obj)
+	}
 
-	allErr := d.validateCreateOrUpdate()
+	allErr := w.validateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Druid"}, d.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Druid"}, db.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (d *Druid) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	druidlog.Info("validate update", "name", d.Name)
-	_ = old.(*Druid)
-	allErr := d.validateCreateOrUpdate()
+func (w *DruidCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	db, ok := newObj.(*olddbapi.Druid)
+	if !ok {
+		return nil, fmt.Errorf("expected an Druid object but got %T", newObj)
+	}
+
+	druidlog.Info("validate update", "name", db.Name)
+	_ = old.(*olddbapi.Druid)
+	allErr := w.validateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Druid"}, d.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Druid"}, db.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (d *Druid) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	druidlog.Info("validate delete", "name", d.Name)
+func (w *DruidCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.Druid)
+	if !ok {
+		return nil, fmt.Errorf("expected an Druid object but got %T", obj)
+	}
+
+	druidlog.Info("validate delete", "name", db.Name)
 	return nil, nil
 }
 
@@ -99,100 +131,100 @@ var druidReservedVolumeMountPaths = []string{
 	kubedb.DruidCustomConfigDir,
 }
 
-func (d *Druid) validateCreateOrUpdate() field.ErrorList {
+func (w *DruidCustomWebhook) validateCreateOrUpdate(db *olddbapi.Druid) field.ErrorList {
 	var allErr field.ErrorList
 
-	if d.Spec.Version == "" {
+	if db.Spec.Version == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			d.Name,
+			db.Name,
 			"spec.version is missing"))
 	} else {
-		err := druidValidateVersion(d)
+		err := druidValidateVersion(db)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-				d.Name,
+				db.Name,
 				err.Error()))
 		}
 	}
 
-	if d.Spec.DeepStorage == nil {
+	if db.Spec.DeepStorage == nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deepStorage"),
-			d.Name,
+			db.Name,
 			"spec.deepStorage is missing"))
 	} else {
-		if d.Spec.DeepStorage.Type == "" {
+		if db.Spec.DeepStorage.Type == "" {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deepStorage").Child("type"),
-				d.Name,
+				db.Name,
 				"spec.deepStorage.type is missing"))
 		}
 	}
 
-	if d.Spec.MetadataStorage.Name == "" {
+	if db.Spec.MetadataStorage.Name == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("metadataStorage").Child("name"),
-			d.Name,
+			db.Name,
 			"spec.metadataStorage.name can not be empty"))
 	}
-	if d.Spec.MetadataStorage.Namespace == "" {
+	if db.Spec.MetadataStorage.Namespace == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("metadataStorage").Child("namespace"),
-			d.Name,
+			db.Name,
 			"spec.metadataStorage.namespace can not be empty"))
 	}
 
-	if d.Spec.ZookeeperRef.Name == "" {
+	if db.Spec.ZookeeperRef.Name == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("zookeeperRef").Child("name"),
-			d.Name,
+			db.Name,
 			"spec.zookeeperRef.name can not be empty"))
 	}
-	if d.Spec.ZookeeperRef.Namespace == "" {
+	if db.Spec.ZookeeperRef.Namespace == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("zookeeperRef").Child("namespace"),
-			d.Name,
+			db.Name,
 			"spec.zookeeperRef.namespace can not be empty"))
 	}
 
-	if d.Spec.Topology == nil {
+	if db.Spec.Topology == nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology"),
-			d.Name,
+			db.Name,
 			"spec.topology can not be empty"))
 	} else {
 		// Required Nodes
-		if d.Spec.Topology.Coordinators == nil {
+		if db.Spec.Topology.Coordinators == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinators"),
-				d.Name,
+				db.Name,
 				"spec.topology.coordinators can not be empty"))
 		} else {
-			d.validateDruidNode(DruidNodeRoleCoordinators, &allErr)
+			w.validateDruidNode(db, olddbapi.DruidNodeRoleCoordinators, &allErr)
 		}
 
-		if d.Spec.Topology.Brokers == nil {
+		if db.Spec.Topology.Brokers == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("brokers"),
-				d.Name,
+				db.Name,
 				"spec.topology.brokers can not be empty"))
 		} else {
-			d.validateDruidNode(DruidNodeRoleBrokers, &allErr)
+			w.validateDruidNode(db, olddbapi.DruidNodeRoleBrokers, &allErr)
 		}
 
 		// Optional Nodes
-		if d.Spec.Topology.Overlords != nil {
-			d.validateDruidNode(DruidNodeRoleOverlords, &allErr)
+		if db.Spec.Topology.Overlords != nil {
+			w.validateDruidNode(db, olddbapi.DruidNodeRoleOverlords, &allErr)
 		}
-		if d.Spec.Topology.Routers != nil {
-			d.validateDruidNode(DruidNodeRoleRouters, &allErr)
+		if db.Spec.Topology.Routers != nil {
+			w.validateDruidNode(db, olddbapi.DruidNodeRoleRouters, &allErr)
 		}
 
 		// Data Nodes
-		if d.Spec.Topology.MiddleManagers == nil {
+		if db.Spec.Topology.MiddleManagers == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("middleManagers"),
-				d.Name,
+				db.Name,
 				"spec.topology.middleManagers can not be empty"))
 		} else {
-			d.validateDruidDataNode(DruidNodeRoleMiddleManagers, &allErr)
+			w.validateDruidDataNode(db, olddbapi.DruidNodeRoleMiddleManagers, &allErr)
 		}
-		if d.Spec.Topology.Historicals == nil {
+		if db.Spec.Topology.Historicals == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("historicals"),
-				d.Name,
+				db.Name,
 				"spec.topology.historicals can not be empty"))
 		} else {
-			d.validateDruidDataNode(DruidNodeRoleHistoricals, &allErr)
+			w.validateDruidDataNode(db, olddbapi.DruidNodeRoleHistoricals, &allErr)
 		}
 	}
 	if len(allErr) == 0 {
@@ -201,68 +233,68 @@ func (d *Druid) validateCreateOrUpdate() field.ErrorList {
 	return allErr
 }
 
-func (d *Druid) validateDruidNode(nodeType DruidNodeRoleType, allErr *field.ErrorList) {
-	node, dataNode := d.GetNodeSpec(nodeType)
+func (w *DruidCustomWebhook) validateDruidNode(db *olddbapi.Druid, nodeType olddbapi.DruidNodeRoleType, allErr *field.ErrorList) {
+	node, dataNode := db.GetNodeSpec(nodeType)
 	if dataNode != nil {
 		node = &dataNode.DruidNode
 	}
 
 	if *node.Replicas <= 0 {
 		*allErr = append(*allErr, field.Invalid(field.NewPath("spec").Child("topology").Child(string(nodeType)).Child("replicas"),
-			d.Name,
+			db.Name,
 			"number of replicas can not be 0 or less"))
 	}
 
 	err := druidValidateVolumes(&node.PodTemplate, nodeType)
 	if err != nil {
 		*allErr = append(*allErr, field.Invalid(field.NewPath("spec").Child("topology").Child(string(nodeType)).Child("podTemplate").Child("spec").Child("volumes"),
-			d.Name,
+			db.Name,
 			err.Error()))
 	}
 	err = druidValidateVolumesMountPaths(&node.PodTemplate, nodeType)
 	if err != nil {
 		*allErr = append(*allErr, field.Invalid(field.NewPath("spec").Child("topology").Child(string(nodeType)).Child("podTemplate").Child("spec").Child("volumes"),
-			d.Name,
+			db.Name,
 			err.Error()))
 	}
 }
 
-func (d *Druid) validateDruidDataNode(nodeType DruidNodeRoleType, allErr *field.ErrorList) {
-	d.validateDruidNode(nodeType, allErr)
+func (w *DruidCustomWebhook) validateDruidDataNode(db *olddbapi.Druid, nodeType olddbapi.DruidNodeRoleType, allErr *field.ErrorList) {
+	w.validateDruidNode(db, nodeType, allErr)
 
-	_, dataNode := d.GetNodeSpec(nodeType)
+	_, dataNode := db.GetNodeSpec(nodeType)
 	if dataNode.StorageType == "" {
 		*allErr = append(*allErr, field.Invalid(field.NewPath("spec").Child("topology").Child(string(nodeType)).Child("storageType"),
-			d.Name,
+			db.Name,
 			fmt.Sprintf("spec.topology.%s.storageType can not be empty", string(nodeType))))
 	} else {
-		if dataNode.StorageType != StorageTypeDurable && dataNode.StorageType != StorageTypeEphemeral {
+		if dataNode.StorageType != olddbapi.StorageTypeDurable && dataNode.StorageType != olddbapi.StorageTypeEphemeral {
 			*allErr = append(*allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-				d.Name,
+				db.Name,
 				fmt.Sprintf("spec.topology.%s.storageType should either be durable or ephemeral", string(nodeType))))
 		}
 	}
-	if dataNode.StorageType == StorageTypeEphemeral && dataNode.Storage != nil {
+	if dataNode.StorageType == olddbapi.StorageTypeEphemeral && dataNode.Storage != nil {
 		*allErr = append(*allErr, field.Invalid(field.NewPath("spec").Child("topology").Child(string(nodeType)).Child("storage"),
-			d.Name,
-			fmt.Sprintf("spec.topology.%s.storage can not be set when d.spec.topology.%s.storageType is Ephemeral", string(nodeType), string(nodeType))))
+			db.Name,
+			fmt.Sprintf("spec.topology.%s.storage can not be set when db.Spec.topology.%s.storageType is Ephemeral", string(nodeType), string(nodeType))))
 	}
-	if dataNode.StorageType == StorageTypeDurable && dataNode.EphemeralStorage != nil {
+	if dataNode.StorageType == olddbapi.StorageTypeDurable && dataNode.EphemeralStorage != nil {
 		*allErr = append(*allErr, field.Invalid(field.NewPath("spec").Child("topology").Child(string(nodeType)).Child("ephemeralStorage"),
-			d.Name,
+			db.Name,
 			fmt.Sprintf("spec.topology.%s.ephemeralStorage can not be set when d.spec.topology.%s.storageType is Durable", string(nodeType), string(nodeType))))
 	}
-	if dataNode.StorageType == StorageTypeDurable && dataNode.Storage == nil {
+	if dataNode.StorageType == olddbapi.StorageTypeDurable && dataNode.Storage == nil {
 		*allErr = append(*allErr, field.Invalid(field.NewPath("spec").Child("topology").Child(string(nodeType)).Child("storage"),
-			d.Name,
+			db.Name,
 			fmt.Sprintf("spec.topology.%s.storage needs to be set when spec.topology.%s.storageType is Durable", string(nodeType), string(nodeType))))
 	}
 }
 
-func druidValidateVersion(d *Druid) error {
+func druidValidateVersion(db *olddbapi.Druid) error {
 	var druidVersion catalog.DruidVersion
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: d.Spec.Version,
+	err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.Spec.Version,
 	}, &druidVersion)
 	if err != nil {
 		return errors.New("version not supported")
@@ -270,7 +302,7 @@ func druidValidateVersion(d *Druid) error {
 	return nil
 }
 
-func druidValidateVolumes(podTemplate *ofst.PodTemplateSpec, nodeType DruidNodeRoleType) error {
+func druidValidateVolumes(podTemplate *ofst.PodTemplateSpec, nodeType olddbapi.DruidNodeRoleType) error {
 	if podTemplate == nil {
 		return nil
 	}
@@ -278,9 +310,9 @@ func druidValidateVolumes(podTemplate *ofst.PodTemplateSpec, nodeType DruidNodeR
 		return nil
 	}
 
-	if nodeType == DruidNodeRoleHistoricals {
+	if nodeType == olddbapi.DruidNodeRoleHistoricals {
 		druidReservedVolumes = append(druidReservedVolumes, kubedb.DruidVolumeHistoricalsSegmentCache)
-	} else if nodeType == DruidNodeRoleMiddleManagers {
+	} else if nodeType == olddbapi.DruidNodeRoleMiddleManagers {
 		druidReservedVolumes = append(druidReservedVolumes, kubedb.DruidVolumeMiddleManagersBaseTaskDir)
 	}
 
@@ -295,7 +327,7 @@ func druidValidateVolumes(podTemplate *ofst.PodTemplateSpec, nodeType DruidNodeR
 	return nil
 }
 
-func druidValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec, nodeType DruidNodeRoleType) error {
+func druidValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec, nodeType olddbapi.DruidNodeRoleType) error {
 	if podTemplate == nil {
 		return nil
 	}
@@ -303,10 +335,10 @@ func druidValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec, nodeType 
 		return nil
 	}
 
-	if nodeType == DruidNodeRoleHistoricals {
+	if nodeType == olddbapi.DruidNodeRoleHistoricals {
 		druidReservedVolumeMountPaths = append(druidReservedVolumeMountPaths, kubedb.DruidHistoricalsSegmentCacheDir)
 	}
-	if nodeType == DruidNodeRoleMiddleManagers {
+	if nodeType == olddbapi.DruidNodeRoleMiddleManagers {
 		druidReservedVolumeMountPaths = append(druidReservedVolumeMountPaths, kubedb.DruidWorkerTaskBaseTaskDir)
 	}
 

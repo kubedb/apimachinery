@@ -66,7 +66,7 @@ func (w *CassandraCustomWebhook) Default(ctx context.Context, obj runtime.Object
 		return fmt.Errorf("expected an Cassandra object but got %T", obj)
 	}
 	cassandralog.Info("default", "name", db.GetName())
-	db.SetDefaults()
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
