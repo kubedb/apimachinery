@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
+
 	gocmp "github.com/google/go-cmp/cmp"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -40,10 +42,10 @@ func (in *MySQLDatabase) SetupWebhookWithManager(mgr manager.Manager) error {
 
 // +kubebuilder:webhook:path=/mutate-schema-kubedb-com-v1alpha1-mysqldatabase,mutating=true,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mysqldatabases,verbs=create;update,versions=v1alpha1,name=mmysqldatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &MySQLDatabase{}
+var _ webhook.CustomDefaulter = &MySQLDatabase{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MySQLDatabase) Default() {
+func (in *MySQLDatabase) Default(ctx context.Context, obj runtime.Object) error {
 	mysqldatabaselog.Info("default", "name", in.Name)
 
 	if in.Spec.Init != nil {
@@ -65,14 +67,15 @@ func (in *MySQLDatabase) Default() {
 	if in.Spec.Database.Config.CharacterSet == "" {
 		in.Spec.Database.Config.CharacterSet = "utf8"
 	}
+	return nil
 }
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mysqldatabase,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mysqldatabases,verbs=create;update;delete,versions=v1alpha1,name=vmysqldatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &MySQLDatabase{}
+var _ webhook.CustomValidator = &MySQLDatabase{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MySQLDatabase) ValidateCreate() (admission.Warnings, error) {
+func (in *MySQLDatabase) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mysqldatabaselog.Info("validate create", "name", in.Name)
 	var allErrs field.ErrorList
 	//if in.Spec.Database.Config.ReadOnly == 1 { //todo handle this case if possible
@@ -88,7 +91,7 @@ func (in *MySQLDatabase) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MySQLDatabase) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *MySQLDatabase) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	mysqldatabaselog.Info("validate update", "name", in.Name)
 	oldobj := old.(*MySQLDatabase)
 	return nil, ValidateMySQLDatabaseUpdate(in, oldobj)
@@ -137,7 +140,7 @@ func ValidateMySQLDatabaseUpdate(newobj *MySQLDatabase, oldobj *MySQLDatabase) e
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (in *MySQLDatabase) ValidateDelete() (admission.Warnings, error) {
+func (in *MySQLDatabase) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mysqldatabaselog.Info("validate delete", "name", in.Name)
 	if in.Spec.DeletionPolicy == DeletionPolicyDoNotDelete {
 		return nil, field.Invalid(field.NewPath("spec").Child("terminationPolicy"), in.Name, `cannot delete object when terminationPolicy is set to "DoNotDelete"`)

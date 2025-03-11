@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"fmt"
 
 	gocmp "github.com/google/go-cmp/cmp"
@@ -39,19 +40,20 @@ func (r *PostgresDatabase) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 //+kubebuilder:webhook:path=/mutate-schema-kubedb-com-v1alpha1-postgresdatabase,mutating=true,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=postgresdatabases,verbs=create;update,versions=v1alpha1,name=mpostgresdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &PostgresDatabase{}
+var _ webhook.CustomDefaulter = &PostgresDatabase{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (r *PostgresDatabase) Default() {
+func (r *PostgresDatabase) Default(ctx context.Context, obj runtime.Object) error {
 	postgresdatabaselog.Info("default", "name", r.Name)
+	return nil
 }
 
 //+kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-postgresdatabase,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=postgresdatabases,verbs=create;update;delete,versions=v1alpha1,name=vpostgresdatabase.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &PostgresDatabase{}
+var _ webhook.CustomValidator = &PostgresDatabase{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *PostgresDatabase) ValidateCreate() (admission.Warnings, error) {
+func (r *PostgresDatabase) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	postgresdatabaselog.Info("validate create", "name", r.Name)
 	if r.Spec.Init != nil && r.Spec.Init.Initialized {
 		return nil, field.Invalid(field.NewPath("spec").Child("init").Child("initialized"), r.Spec.Init.Initialized, fmt.Sprintf(`can't set spec.init.initialized true while creating postgresSchema %s/%s`, r.Namespace, r.Name))
@@ -60,14 +62,14 @@ func (r *PostgresDatabase) ValidateCreate() (admission.Warnings, error) {
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *PostgresDatabase) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (r *PostgresDatabase) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	postgresdatabaselog.Info("validate update", "name", r.Name)
 	oldobj := old.(*PostgresDatabase)
 	return nil, r.ValidatePostgresDatabaseUpdate(oldobj, r)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (r *PostgresDatabase) ValidateDelete() (admission.Warnings, error) {
+func (r *PostgresDatabase) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	postgresdatabaselog.Info("validate delete", "name", r.Name)
 	if r.Spec.DeletionPolicy == DeletionPolicyDoNotDelete {
 		return nil, field.Invalid(field.NewPath("spec").Child("deletionPolicy"), r.Spec.DeletionPolicy, fmt.Sprintf(`can't delete postgresSchema %s/%s when deletionPolicy is "DoNotDelete"`, r.Namespace, r.Name))

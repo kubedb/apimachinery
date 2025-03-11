@@ -44,12 +44,13 @@ func (in *MongoDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error 
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-mongodbautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=mongodbautoscaler,verbs=create;update,versions=v1alpha1,name=mmongodbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &MongoDBAutoscaler{}
+var _ webhook.CustomDefaulter = &MongoDBAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MongoDBAutoscaler) Default() {
+func (in *MongoDBAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	mongoLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
+	return nil
 }
 
 func (in *MongoDBAutoscaler) setDefaults() {
@@ -105,21 +106,21 @@ func (in *MongoDBAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mongodbautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mongodbautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vmongodbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &MongoDBAutoscaler{}
+var _ webhook.CustomValidator = &MongoDBAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (in *MongoDBAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mongoLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBAutoscaler) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *MongoDBAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	mongoLog.Info("validate update", "name", in.Name)
 	return nil, in.validate()
 }
 
-func (_ MongoDBAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ MongoDBAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

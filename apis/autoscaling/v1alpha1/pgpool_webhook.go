@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var pgpoolLog = logf.Log.WithName("pgpool-autoscaler")
 
-var _ webhook.Defaulter = &PgpoolAutoscaler{}
+var _ webhook.CustomDefaulter = &PgpoolAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *PgpoolAutoscaler) Default() {
+func (r *PgpoolAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	pgpoolLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
+	return nil
 }
 
 func (r *PgpoolAutoscaler) setDefaults() {
@@ -71,21 +72,21 @@ func (r *PgpoolAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &PgpoolAutoscaler{}
+var _ webhook.CustomValidator = &PgpoolAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *PgpoolAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (r *PgpoolAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pgpoolLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *PgpoolAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (r *PgpoolAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	pgpoolLog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *PgpoolAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (r *PgpoolAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

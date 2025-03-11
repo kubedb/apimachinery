@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"errors"
 
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -40,12 +41,13 @@ func (in *ProxySQLAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-proxysqlautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=proxysqlautoscaler,verbs=create;update,versions=v1alpha1,name=mproxysqlautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &ProxySQLAutoscaler{}
+var _ webhook.CustomDefaulter = &ProxySQLAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *ProxySQLAutoscaler) Default() {
+func (in *ProxySQLAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	proxyLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
+	return nil
 }
 
 func (in *ProxySQLAutoscaler) setDefaults() {
@@ -69,21 +71,21 @@ func (in *ProxySQLAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-proxysqlautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=proxysqlautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vproxysqlautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &ProxySQLAutoscaler{}
+var _ webhook.CustomValidator = &ProxySQLAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *ProxySQLAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (in *ProxySQLAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	proxyLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *ProxySQLAutoscaler) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *ProxySQLAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	proxyLog.Info("validate update", "name", in.Name)
 	return nil, in.validate()
 }
 
-func (_ ProxySQLAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ ProxySQLAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

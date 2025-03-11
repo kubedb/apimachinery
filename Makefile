@@ -21,7 +21,7 @@ BIN      := apimachinery
 
 CRD_OPTIONS          ?= "crd:maxDescLen=0,generateEmbeddedObjectMeta=true,allowDangerousTypes=true"
 # https://github.com/appscodelabs/gengo-builder
-CODE_GENERATOR_IMAGE ?= ghcr.io/appscode/gengo:release-1.29
+CODE_GENERATOR_IMAGE ?= ghcr.io/appscode/gengo:release-1.32
 CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 kubedb:v1 gitops:v1alpha1 postgres:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1 elasticsearch:v1alpha1 schema:v1alpha1 archiver:v1alpha1 kafka:v1alpha1
 API_GROUPS           ?= $(CORE_API_GROUPS) ui:v1alpha1
 
@@ -49,7 +49,7 @@ endif
 ### These variables should not need tweaking.
 ###
 
-SRC_PKGS := apis client crds pkg # directories which hold app source (not vendored)
+SRC_PKGS := apis client crds pkg webhooks # directories which hold app source (not vendored)
 SRC_DIRS := $(SRC_PKGS) hack/gencrd
 
 DOCKER_PLATFORMS := linux/amd64 linux/arm linux/arm64

@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"context"
 	"errors"
 
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -40,12 +41,13 @@ func (in *RedisSentinelAutoscaler) SetupWebhookWithManager(mgr manager.Manager) 
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-redissentinelautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=redissentinelautoscaler,verbs=create;update,versions=v1alpha1,name=mredissentinelautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Defaulter = &RedisSentinelAutoscaler{}
+var _ webhook.CustomDefaulter = &RedisSentinelAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *RedisSentinelAutoscaler) Default() {
+func (in *RedisSentinelAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	rsLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
+	return nil
 }
 
 func (in *RedisSentinelAutoscaler) setDefaults() {
@@ -69,21 +71,21 @@ func (in *RedisSentinelAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-redissentinelautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=redissentinelautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vredissentinelautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.Validator = &RedisSentinelAutoscaler{}
+var _ webhook.CustomValidator = &RedisSentinelAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *RedisSentinelAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (in *RedisSentinelAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	rsLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *RedisSentinelAutoscaler) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
+func (in *RedisSentinelAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	rsLog.Info("validate update", "name", in.Name)
 	return nil, in.validate()
 }
 
-func (_ RedisSentinelAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (_ RedisSentinelAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

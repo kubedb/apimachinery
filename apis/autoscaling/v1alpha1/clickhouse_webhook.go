@@ -34,12 +34,13 @@ import (
 // log is for logging in this package.
 var chLog = logf.Log.WithName("clickhouse-autoscaler")
 
-var _ webhook.Defaulter = &ClickHouseAutoscaler{}
+var _ webhook.CustomDefaulter = &ClickHouseAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *ClickHouseAutoscaler) Default() {
+func (r *ClickHouseAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	chLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
+	return nil
 }
 
 func (r *ClickHouseAutoscaler) setDefaults() {
@@ -75,21 +76,21 @@ func (r *ClickHouseAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.Validator = &ClickHouseAutoscaler{}
+var _ webhook.CustomValidator = &ClickHouseAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *ClickHouseAutoscaler) ValidateCreate() (admission.Warnings, error) {
+func (r *ClickHouseAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	chLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *ClickHouseAutoscaler) ValidateUpdate(oldObj runtime.Object) (admission.Warnings, error) {
+func (r *ClickHouseAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	chLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *ClickHouseAutoscaler) ValidateDelete() (admission.Warnings, error) {
+func (r *ClickHouseAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
