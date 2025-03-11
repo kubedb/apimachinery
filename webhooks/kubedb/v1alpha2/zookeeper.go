@@ -21,10 +21,9 @@ import (
 	"errors"
 	"fmt"
 
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
@@ -245,9 +246,9 @@ func (p *Pgpool) GetSSLMODE(appBinding *appcat.AppBinding) (PgpoolSSLMode, error
 	return PgpoolSSLMode(strings.TrimSpace(temps[1])), nil
 }
 
-func (p *Pgpool) IsBackendTLSEnabled() (bool, error) {
+func (p *Pgpool) IsBackendTLSEnabled(client client.Client) (bool, error) {
 	apb := appcat.AppBinding{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := client.Get(context.TODO(), types.NamespacedName{
 		Name:      p.Spec.PostgresRef.Name,
 		Namespace: p.Spec.PostgresRef.Namespace,
 	}, &apb)
@@ -344,7 +345,7 @@ func (p *Pgpool) setContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
 	}
 }
 
-func (p *Pgpool) SetDefaults() {
+func (p *Pgpool) SetDefaults(client client.Client) {
 	if p == nil {
 		return
 	}
@@ -370,7 +371,7 @@ func (p *Pgpool) SetDefaults() {
 	}
 
 	ppVersion := catalog.PgpoolVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := client.Get(context.TODO(), types.NamespacedName{
 		Name: p.Spec.Version,
 	}, &ppVersion)
 	if err != nil {

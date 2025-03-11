@@ -71,7 +71,7 @@ func (p *PgpoolCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 		return fmt.Errorf("expected an pgpool object but got %T", obj)
 	}
 	pgpoollog.Info("default", "name", pp.Name)
-	pp.SetDefaults()
+	pp.SetDefaults(p.DefaultClient)
 	return nil
 }
 
@@ -170,7 +170,7 @@ func (p *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 			))
 		}
 
-		backendSSL, err := pp.IsBackendTLSEnabled()
+		backendSSL, err := pp.IsBackendTLSEnabled(p.DefaultClient)
 		if err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("postgresRef"),
 				pp.Name,
