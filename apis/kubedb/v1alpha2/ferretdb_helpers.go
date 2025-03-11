@@ -43,6 +43,7 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func (f *FerretDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -172,7 +173,7 @@ func (f *FerretDB) SetHealthCheckerDefaults() {
 	}
 }
 
-func (f *FerretDB) SetDefaults() {
+func (f *FerretDB) SetDefaults(kc client.Client) {
 	if f == nil {
 		return
 	}
@@ -197,7 +198,7 @@ func (f *FerretDB) SetDefaults() {
 	}
 
 	var frVersion catalog.FerretDBVersion
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := kc.Get(context.TODO(), types.NamespacedName{
 		Name: f.Spec.Version,
 	}, &frVersion)
 	if err != nil {

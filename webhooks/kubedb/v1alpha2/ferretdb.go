@@ -23,6 +23,7 @@ import (
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -33,218 +34,239 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// log is for logging in this package.
-var ferretdblog = logf.Log.WithName("ferretdb-resource")
-
-func (f *FerretDB) SetupWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).
-		For(f).
+// SetupFerretDBWebhookWithManager registers the webhook for FerretDB in the manager.
+func SetupFerretDBWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.FerretDB{}).
+		WithValidator(&FerretDBCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&FerretDBCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-ferretdb,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=ferretdbs,verbs=create;update,versions=v1alpha2,name=mferretdb.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/mutate-ferretdb-kubedb-com-v1alpha1-ferretdb,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=ferretdbs,verbs=create;update,versions=v1alpha1,name=mferretdb.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomDefaulter = &FerretDB{}
+// +kubebuilder:object:generate=false
+type FerretDBCustomWebhook struct {
+	DefaultClient client.Client
+}
+
+// log is for logging in this package.
+var ferretdblog = logf.Log.WithName("ferretdb-resource")
+
+var _ webhook.CustomDefaulter = &FerretDBCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (f *FerretDB) Default(ctx context.Context, obj runtime.Object) error {
-	if f == nil {
-		return nil
+func (w *FerretDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	db, ok := obj.(*olddbapi.FerretDB)
+	if !ok {
+		return fmt.Errorf("expected an FerretDB object but got %T", obj)
 	}
-	ferretdblog.Info("default", "name", f.Name)
-	f.SetDefaults()
+
+	ferretdblog.Info("default", "name", db.Name)
+
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
-//+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-ferretdb,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=ferretdbs,verbs=create;update;delete,versions=v1alpha2,name=vferretdb.kb.io,admissionReviewVersions=v1
-
-var _ webhook.CustomValidator = &FerretDB{}
+var _ webhook.CustomValidator = &FerretDBCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (f *FerretDB) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	ferretdblog.Info("validate create", "name", f.Name)
+func (w *FerretDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.FerretDB)
+	if !ok {
+		return nil, fmt.Errorf("expected an FerretDB object but got %T", obj)
+	}
 
-	allErr := f.ValidateCreateOrUpdate()
+	ferretdblog.Info("validate create", "name", db.Name)
+	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "FerretDB"}, f.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "FerretDB"}, db.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (f *FerretDB) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	ferretdblog.Info("validate update", "name", f.Name)
+func (w *FerretDBCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	db, ok := newObj.(*olddbapi.FerretDB)
+	if !ok {
+		return nil, fmt.Errorf("expected an FerretDB object but got %T", newObj)
+	}
+	ferretdblog.Info("validate update", "name", db.Name)
 
-	_ = old.(*FerretDB)
-	allErr := f.ValidateCreateOrUpdate()
+	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "FerretDB"}, f.Name, allErr)
+
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "FerretDB"}, db.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (f *FerretDB) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	ferretdblog.Info("validate delete", "name", f.Name)
+func (w *FerretDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.FerretDB)
+	if !ok {
+		return nil, fmt.Errorf("expected an FerretDB object but got %T", obj)
+	}
+	ferretdblog.Info("validate delete", "name", db.Name)
 
 	var allErr field.ErrorList
-	if f.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
+	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
-			f.Name,
+			db.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "FerretDB"}, f.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "FerretDB"}, db.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (f *FerretDB) ValidateCreateOrUpdate() field.ErrorList {
+func (w *FerretDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.FerretDB) field.ErrorList {
 	var allErr field.ErrorList
 
-	err := f.validateFerretDBVersion()
+	err := w.validateFerretDBVersion(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			f.Name,
+			db.Name,
 			err.Error()))
 	}
-	if f.Spec.Replicas == nil || *f.Spec.Replicas < 1 {
+	if db.Spec.Replicas == nil || *db.Spec.Replicas < 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			f.Name,
-			fmt.Sprintf(`spec.replicas "%v" invalid. Must be greater than zero`, f.Spec.Replicas)))
+			db.Name,
+			fmt.Sprintf(`spec.replicas "%v" invalid. Must be greater than zero`, db.Spec.Replicas)))
 	}
 
-	if f.Spec.PodTemplate != nil {
-		if err := FerretDBValidateEnvVar(getMainContainerEnvs(f), forbiddenEnvVars, f.ResourceKind()); err != nil {
+	if db.Spec.PodTemplate != nil {
+		if err := FerretDBValidateEnvVar(getMainContainerEnvs(db), forbiddenEnvVars, db.ResourceKind()); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
-				f.Name,
+				db.Name,
 				err.Error()))
 		}
 	}
 
 	// Storage related
-	if f.Spec.StorageType == "" {
+	if db.Spec.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-			f.Name,
+			db.Name,
 			`'spec.storageType' is missing`))
 	}
-	if f.Spec.StorageType != StorageTypeDurable && f.Spec.StorageType != StorageTypeEphemeral {
+	if db.Spec.StorageType != olddbapi.StorageTypeDurable && db.Spec.StorageType != olddbapi.StorageTypeEphemeral {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-			f.Name,
-			fmt.Sprintf(`'spec.storageType' %s is invalid`, f.Spec.StorageType)))
+			db.Name,
+			fmt.Sprintf(`'spec.storageType' %s is invalid`, db.Spec.StorageType)))
 	}
-	if f.Spec.StorageType == StorageTypeEphemeral && f.Spec.Storage != nil {
+	if db.Spec.StorageType == olddbapi.StorageTypeEphemeral && db.Spec.Storage != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-			f.Name,
+			db.Name,
 			`'spec.storageType' is set to Ephemeral, so 'spec.storage' needs to be empty`))
 	}
-	if !f.Spec.Backend.ExternallyManaged && f.Spec.StorageType == StorageTypeDurable && f.Spec.Storage == nil {
+	if !db.Spec.Backend.ExternallyManaged && db.Spec.StorageType == olddbapi.StorageTypeDurable && db.Spec.Storage == nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"),
-			f.Name,
+			db.Name,
 			`'spec.storage' is missing for durable storage type when postgres is internally managed`))
 	}
 
 	// Auth secret related
-	if f.Spec.AuthSecret != nil && f.Spec.AuthSecret.ExternallyManaged && f.Spec.AuthSecret.Name == "" {
+	if db.Spec.AuthSecret != nil && db.Spec.AuthSecret.ExternallyManaged && db.Spec.AuthSecret.Name == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authSecret"),
-			f.Name,
+			db.Name,
 			`'spec.authSecret.name' need to specify when auth secret is externally managed`))
 	}
 
 	// Termination policy related
-	if f.Spec.DeletionPolicy == DeletionPolicyHalt {
+	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
-			f.Name,
+			db.Name,
 			`'spec.terminationPolicy' value 'Halt' is not supported yet for FerretDB`))
 	}
 
 	// FerretDBBackend related
-	if f.Spec.Backend.ExternallyManaged {
-		if f.Spec.Backend.PostgresRef == nil {
+	if db.Spec.Backend.ExternallyManaged {
+		if db.Spec.Backend.PostgresRef == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-				f.Name,
+				db.Name,
 				`'backend.postgresRef' is missing when backend is externally managed`))
 		} else {
-			if f.Spec.Backend.PostgresRef.Namespace == "" {
+			if db.Spec.Backend.PostgresRef.Namespace == "" {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-					f.Name,
+					db.Name,
 					`'backend.postgresRef.namespace' is needed when backend is externally managed`))
 			}
 			apb := appcat.AppBinding{}
-			err := DefaultClient.Get(context.TODO(), types.NamespacedName{
-				Name:      f.Spec.Backend.PostgresRef.Name,
-				Namespace: f.Spec.Backend.PostgresRef.Namespace,
+			err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+				Name:      db.Spec.Backend.PostgresRef.Name,
+				Namespace: db.Spec.Backend.PostgresRef.Namespace,
 			}, &apb)
 			if err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					f.Name,
+					db.Name,
 					err.Error(),
 				))
 			}
 
 			if apb.Spec.Secret == nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-					f.Name,
+					db.Name,
 					`spec.secret needed in external pg appbinding`))
 			}
 
 			if apb.Spec.ClientConfig.Service == nil && apb.Spec.ClientConfig.URL == nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					f.Name,
+					db.Name,
 					`'clientConfig.url' or 'clientConfig.service' needed in the external pg appbinding`,
 				))
 			}
-			sslMode, err := f.GetSSLModeFromAppBinding(&apb)
+			sslMode, err := db.GetSSLModeFromAppBinding(&apb)
 			if err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					f.Name,
+					db.Name,
 					err.Error(),
 				))
 			}
 
-			if sslMode == PostgresSSLModeRequire || sslMode == PostgresSSLModeVerifyCA || sslMode == PostgresSSLModeVerifyFull {
+			if sslMode == olddbapi.PostgresSSLModeRequire || sslMode == olddbapi.PostgresSSLModeVerifyCA || sslMode == olddbapi.PostgresSSLModeVerifyFull {
 				if apb.Spec.ClientConfig.CABundle == nil && apb.Spec.TLSSecret == nil {
 					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-						f.Name,
+						db.Name,
 						"backend postgres connection is ssl encrypted but 'spec.clientConfig.caBundle' or 'spec.tlsSecret' is not provided in appbinding",
 					))
 				}
 			}
-			if (apb.Spec.ClientConfig.CABundle != nil || apb.Spec.TLSSecret != nil) && sslMode == PostgresSSLModeDisable {
+			if (apb.Spec.ClientConfig.CABundle != nil || apb.Spec.TLSSecret != nil) && sslMode == olddbapi.PostgresSSLModeDisable {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					f.Name,
+					db.Name,
 					"no client certificate or ca bundle possible when sslMode set to disable in backend postgres",
 				))
 			}
 		}
 	} else {
-		if f.Spec.Backend.Version != nil {
-			err := f.validatePostgresVersion()
+		if db.Spec.Backend.Version != nil {
+			err := w.validatePostgresVersion(db)
 			if err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-					f.Name,
+					db.Name,
 					err.Error()))
 			}
 		}
 	}
 
 	// TLS related
-	if f.Spec.SSLMode == SSLModeAllowSSL || f.Spec.SSLMode == SSLModePreferSSL {
+	if db.Spec.SSLMode == olddbapi.SSLModeAllowSSL || db.Spec.SSLMode == olddbapi.SSLModePreferSSL {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sslMode"),
-			f.Name,
+			db.Name,
 			`'spec.sslMode' value 'allowSSL' or 'preferSSL' is not supported yet for FerretDB`))
 	}
-	if f.Spec.SSLMode == SSLModeRequireSSL && f.Spec.TLS == nil {
+	if db.Spec.SSLMode == olddbapi.SSLModeRequireSSL && db.Spec.TLS == nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sslMode"),
-			f.Name,
+			db.Name,
 			`'spec.sslMode' is requireSSL but 'spec.tls' is not set`))
 	}
-	if f.Spec.SSLMode == SSLModeDisabled && f.Spec.TLS != nil {
+	if db.Spec.SSLMode == olddbapi.SSLModeDisabled && db.Spec.TLS != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sslMode"),
-			f.Name,
+			db.Name,
 			`'spec.tls' is can't set when 'spec.sslMode' is disabled`))
 	}
 
@@ -266,8 +288,8 @@ var forbiddenEnvVars = []string{
 	kubedb.EnvFerretDBTLSPort, kubedb.EnvFerretDBCAPath, kubedb.EnvFerretDBCertPath, kubedb.EnvFerretDBKeyPath,
 }
 
-func getMainContainerEnvs(f *FerretDB) []core.EnvVar {
-	for _, container := range f.Spec.PodTemplate.Spec.Containers {
+func getMainContainerEnvs(db *olddbapi.FerretDB) []core.EnvVar {
+	for _, container := range db.Spec.PodTemplate.Spec.Containers {
 		if container.Name == kubedb.FerretDBContainerName {
 			return container.Env
 		}
@@ -275,18 +297,18 @@ func getMainContainerEnvs(f *FerretDB) []core.EnvVar {
 	return []core.EnvVar{}
 }
 
-func (f *FerretDB) validateFerretDBVersion() error {
+func (w *FerretDBCustomWebhook) validateFerretDBVersion(db *olddbapi.FerretDB) error {
 	frVersion := v1alpha1.FerretDBVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: f.Spec.Version}, &frVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &frVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
 	return nil
 }
 
-func (f *FerretDB) validatePostgresVersion() error {
+func (w *FerretDBCustomWebhook) validatePostgresVersion(db *olddbapi.FerretDB) error {
 	pgVersion := v1alpha1.PostgresVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *f.Spec.Backend.Version}, &pgVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *db.Spec.Backend.Version}, &pgVersion)
 	if err != nil {
 		return errors.New("postgres version not supported in KubeDB")
 	}
