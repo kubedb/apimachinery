@@ -66,7 +66,7 @@ func (k *ConnectClusterCustomWebhook) Default(ctx context.Context, obj runtime.O
 	}
 
 	connectClusterLog.Info("default", "name", c.Name)
-	c.SetDefaults()
+	c.SetDefaults(k.DefaultClient)
 	return nil
 }
 

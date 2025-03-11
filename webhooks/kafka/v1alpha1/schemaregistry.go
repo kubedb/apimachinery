@@ -63,7 +63,7 @@ func (k *SchemaRegistryCustomWebhook) Default(ctx context.Context, obj runtime.O
 		return fmt.Errorf("expected an schema-registry object but got %T", obj)
 	}
 	schemaregistrylog.Info("default", "name", sr.Name)
-	sr.SetDefaults()
+	sr.SetDefaults(k.DefaultClient)
 	return nil
 }
 

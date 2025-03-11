@@ -66,7 +66,7 @@ func (k *KafkaCustomWebhook) Default(ctx context.Context, obj runtime.Object) er
 	}
 	kafkalog.Info("default", "name", db.Name)
 
-	db.SetDefaults()
+	db.SetDefaults(k.DefaultClient)
 	return nil
 }
 

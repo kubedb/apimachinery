@@ -63,7 +63,7 @@ func (k *RestProxyCustomWebhook) Default(ctx context.Context, obj runtime.Object
 		return fmt.Errorf("expected an RestProxy object but got %T", obj)
 	}
 	restproxylog.Info("default", "name", rp.Name)
-	rp.SetDefaults()
+	rp.SetDefaults(k.DefaultClient)
 	return nil
 }
 

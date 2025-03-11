@@ -60,9 +60,8 @@ func (k ConnectorCustomWebhook) Default(ctx context.Context, obj runtime.Object)
 	}
 
 	connectClusterLog.Info("default", "name", c.Name)
-	if c.Spec.DeletionPolicy == "" {
-		c.Spec.DeletionPolicy = dbapi.DeletionPolicyDelete
-	}
+	c.Default()
+
 	return nil
 }
 
