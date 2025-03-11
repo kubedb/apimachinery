@@ -20,6 +20,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -37,59 +40,86 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+// SetupSolrWebhookWithManager registers the webhook for Solr in the manager.
+func SetupSolrWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&v1alpha2.Solr{}).
+		WithValidator(&SolrCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&SolrCustomWebhook{mgr.GetClient()}).
+		Complete()
+}
+
+//+kubebuilder:webhook:path=/mutate-solr-kubedb-com-v1alpha1-solr,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=solr,verbs=create;update,versions=v1alpha1,name=msolr.kb.io,admissionReviewVersions={v1,v1beta1}
+
+// +kubebuilder:object:generate=false
+type SolrCustomWebhook struct {
+	DefaultClient client.Client
+}
+
+var _ webhook.CustomDefaulter = &SolrCustomWebhook{}
+
 // log is for logging in this package.
 var solrlog = logf.Log.WithName("solr-resource")
 
-var _ webhook.CustomDefaulter = &Solr{}
-
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (s *Solr) Default(ctx context.Context, obj runtime.Object) error {
-	if s == nil {
-		return nil
+func (w *SolrCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	db, ok := obj.(*v1alpha2.Solr)
+	if !ok {
+		return fmt.Errorf("expected an Solr object but got %T", obj)
 	}
-	solrlog.Info("default", "name", s.Name)
 
-	s.SetDefaults()
+	solrlog.Info("default", "name", db.Name)
+
+	db.SetDefaults()
 	return nil
 }
 
-var _ webhook.CustomValidator = &Solr{}
+var _ webhook.CustomValidator = &SolrCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (s *Solr) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	solrlog.Info("validate create", "name", s.Name)
+func (w *SolrCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*v1alpha2.Solr)
+	if !ok {
+		return nil, fmt.Errorf("expected an Solr object but got %T", obj)
+	}
 
-	allErr := s.ValidateCreateOrUpdate()
+	solrlog.Info("validate create", "name", db.Name)
+	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Solr"}, s.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Solr"}, db.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (s *Solr) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	solrlog.Info("validate update", "name", s.Name)
+func (w *SolrCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	db, ok := newObj.(*v1alpha2.Solr)
+	if !ok {
+		return nil, fmt.Errorf("expected an Solr object but got %T", newObj)
+	}
+	solrlog.Info("validate update", "name", db.Name)
 
-	_ = old.(*Solr)
-	allErr := s.ValidateCreateOrUpdate()
-
+	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
 
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Solr"}, s.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Solr"}, db.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (s *Solr) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	solrlog.Info("validate delete", "name", s.Name)
+func (w *SolrCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*v1alpha2.Solr)
+	if !ok {
+		return nil, fmt.Errorf("expected an Solr object but got %T", obj)
+	}
+	solrlog.Info("validate delete", "name", db.Name)
 
 	var allErr field.ErrorList
-	if s.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
+	if db.Spec.DeletionPolicy == v1alpha2.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
-			s.Name,
+			db.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Solr"}, s.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Solr"}, db.Name, allErr)
 	}
 	return nil, nil
 }
@@ -115,161 +145,161 @@ var solrAvailableModules = []string{
 	"clustering", "hadoop-auth", "jwt-auth", "opentelemetry", "scripting",
 }
 
-func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
+func (w *SolrCustomWebhook) ValidateCreateOrUpdate(db *v1alpha2.Solr) field.ErrorList {
 	var allErr field.ErrorList
 
-	if s.Spec.EnableSSL {
-		if s.Spec.TLS == nil {
+	if db.Spec.EnableSSL {
+		if db.Spec.TLS == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-				s.Name,
+				db.Name,
 				".spec.tls can't be nil, if .spec.enableSSL is true"))
 		}
 	} else {
-		if s.Spec.TLS != nil {
+		if db.Spec.TLS != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-				s.Name,
+				db.Name,
 				".spec.tls must be nil, if .spec.enableSSL is disabled"))
 		}
 	}
 
-	if s.Spec.Version == "" {
+	if db.Spec.Version == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			s.Name,
+			db.Name,
 			"spec.version' is missing"))
 	} else {
-		err := solrValidateVersion(s)
+		err := solrValidateVersion(db)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
 	}
 
-	version := semver.New(s.Spec.Version)
-	if version.Major == 8 && s.Spec.Topology != nil {
+	version := semver.New(db.Spec.Version)
+	if version.Major == 8 && db.Spec.Topology != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-			s.Name,
+			db.Name,
 			".spec.topology not supported for version 8"))
 	}
 
-	err := solrValidateModules(s)
+	err := solrValidateModules(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("solrmodules"),
-			s.Name,
+			db.Name,
 			err.Error()))
 	}
 
-	if s.Spec.Topology == nil {
-		if s.Spec.Replicas != nil && *s.Spec.Replicas <= 0 {
+	if db.Spec.Topology == nil {
+		if db.Spec.Replicas != nil && *db.Spec.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-				s.Name,
+				db.Name,
 				"number of replicas can not be less be 0 or less"))
 		}
-		err := solrValidateVolumes(&s.Spec.PodTemplate)
+		err := solrValidateVolumes(&db.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
-		err = solrValidateVolumesMountPaths(&s.Spec.PodTemplate)
+		err = solrValidateVolumesMountPaths(&db.Spec.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
 
 	} else {
-		if s.Spec.Topology.Data == nil {
+		if db.Spec.Topology.Data == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("data"),
-				s.Name,
+				db.Name,
 				".spec.topology.data can't be empty in cluster mode"))
 		}
-		if s.Spec.Topology.Data.Replicas != nil && *s.Spec.Topology.Data.Replicas <= 0 {
+		if db.Spec.Topology.Data.Replicas != nil && *db.Spec.Topology.Data.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("data").Child("replicas"),
-				s.Name,
+				db.Name,
 				"number of replicas can not be less be 0 or less"))
 		}
-		err := solrValidateVolumes(&s.Spec.Topology.Data.PodTemplate)
+		err := solrValidateVolumes(&db.Spec.Topology.Data.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("data").Child("podTemplate").Child("spec").Child("volumes"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
-		err = solrValidateVolumesMountPaths(&s.Spec.Topology.Data.PodTemplate)
+		err = solrValidateVolumesMountPaths(&db.Spec.Topology.Data.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("data").Child("podTemplate").Child("spec").Child("containers"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
 
-		if s.Spec.Topology.Overseer == nil {
+		if db.Spec.Topology.Overseer == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("overseer"),
-				s.Name,
+				db.Name,
 				".spec.topology.overseer can't be empty in cluster mode"))
 		}
-		if s.Spec.Topology.Overseer.Replicas != nil && *s.Spec.Topology.Overseer.Replicas <= 0 {
+		if db.Spec.Topology.Overseer.Replicas != nil && *db.Spec.Topology.Overseer.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("overseer").Child("replicas"),
-				s.Name,
+				db.Name,
 				"number of replicas can not be less be 0 or less"))
 		}
-		err = solrValidateVolumes(&s.Spec.Topology.Overseer.PodTemplate)
+		err = solrValidateVolumes(&db.Spec.Topology.Overseer.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("overseer").Child("podTemplate").Child("spec").Child("volumes"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
-		err = solrValidateVolumesMountPaths(&s.Spec.Topology.Overseer.PodTemplate)
+		err = solrValidateVolumesMountPaths(&db.Spec.Topology.Overseer.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("overseer").Child("podTemplate").Child("spec").Child("containers"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
 
-		if s.Spec.Topology.Coordinator == nil {
+		if db.Spec.Topology.Coordinator == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinator"),
-				s.Name,
+				db.Name,
 				".spec.topology.coordinator can't be empty in cluster mode"))
 		}
-		if s.Spec.Topology.Coordinator.Replicas != nil && *s.Spec.Topology.Coordinator.Replicas <= 0 {
+		if db.Spec.Topology.Coordinator.Replicas != nil && *db.Spec.Topology.Coordinator.Replicas <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinator").Child("replicas"),
-				s.Name,
+				db.Name,
 				"number of replicas can not be less be 0 or less"))
 		}
-		err = solrValidateVolumes(&s.Spec.Topology.Coordinator.PodTemplate)
+		err = solrValidateVolumes(&db.Spec.Topology.Coordinator.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinator").Child("podTemplate").Child("spec").Child("volumes"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
-		err = solrValidateVolumesMountPaths(&s.Spec.Topology.Coordinator.PodTemplate)
+		err = solrValidateVolumesMountPaths(&db.Spec.Topology.Coordinator.PodTemplate)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("coordinator").Child("podTemplate").Child("spec").Child("containers"),
-				s.Name,
+				db.Name,
 				err.Error()))
 		}
 	}
 
-	if s.Spec.StorageType == "" {
+	if db.Spec.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-			s.Name,
+			db.Name,
 			"StorageType can not be empty"))
 	} else {
-		if s.Spec.StorageType != StorageTypeDurable && s.Spec.StorageType != StorageTypeEphemeral {
+		if db.Spec.StorageType != v1alpha2.StorageTypeDurable && db.Spec.StorageType != v1alpha2.StorageTypeEphemeral {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-				s.Name,
+				db.Name,
 				"StorageType should be either durable or ephemeral"))
 		}
 	}
 
-	for _, x := range s.Spec.SolrOpts {
+	for _, x := range db.Spec.SolrOpts {
 		if strings.Count(x, " ") > 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("solropts"),
-				s.Name,
+				db.Name,
 				"solropt jvm env variables must not contain space"))
 		}
 		if x[0] != '-' || x[1] != 'D' {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("solropts"),
-				s.Name,
+				db.Name,
 				"solropt jvm env variables must start with -D"))
 		}
 	}
@@ -280,17 +310,17 @@ func (s *Solr) ValidateCreateOrUpdate() field.ErrorList {
 	return allErr
 }
 
-func solrValidateVersion(s *Solr) error {
+func solrValidateVersion(s *v1alpha2.Solr) error {
 	slVersion := catalog.SolrVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, &slVersion)
+	err := v1alpha2.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, &slVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
 	return nil
 }
 
-func solrValidateModules(s *Solr) error {
-	modules := s.Spec.SolrModules
+func solrValidateModules(db *v1alpha2.Solr) error {
+	modules := db.Spec.SolrModules
 	for _, mod := range modules {
 		fl := false
 		for _, av_mod := range solrAvailableModules {
