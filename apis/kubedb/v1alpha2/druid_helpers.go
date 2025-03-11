@@ -575,6 +575,14 @@ func (d *Druid) SetDefaults(kc client.Client) {
 			d.Spec.Monitor.Prometheus.Exporter.Port = kubedb.DruidExporterPort
 		}
 		d.Spec.Monitor.SetDefaults()
+		if d.Spec.Monitor.Prometheus != nil {
+			if d.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+				d.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = druidVersion.Spec.SecurityContext.RunAsUser
+			}
+			if d.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+				d.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = druidVersion.Spec.SecurityContext.RunAsUser
+			}
+		}
 	}
 
 	if d.Spec.EnableSSL {

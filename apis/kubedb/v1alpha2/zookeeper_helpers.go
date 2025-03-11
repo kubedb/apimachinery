@@ -235,6 +235,14 @@ func (z *ZooKeeper) SetDefaults(kc client.Client) {
 			z.Spec.Monitor.Prometheus.Exporter.Port = kubedb.ZooKeeperMetricsPort
 		}
 		z.Spec.Monitor.SetDefaults()
+		if z.Spec.Monitor.Prometheus != nil {
+			if z.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+				z.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = zkVersion.Spec.SecurityContext.RunAsUser
+			}
+			if z.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+				z.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = zkVersion.Spec.SecurityContext.RunAsUser
+			}
+		}
 	}
 }
 

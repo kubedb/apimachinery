@@ -377,6 +377,14 @@ func (s *Singlestore) SetDefaults() {
 			s.Spec.Monitor.Prometheus.Exporter.Port = kubedb.SinglestoreExporterPort
 		}
 		s.Spec.Monitor.SetDefaults()
+		if s.Spec.Monitor.Prometheus != nil {
+			if s.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+				s.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = sdbVersion.Spec.SecurityContext.RunAsUser
+			}
+			if s.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+				s.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = sdbVersion.Spec.SecurityContext.RunAsGroup
+			}
+		}
 	}
 
 	if s.IsClustering() {
