@@ -21,6 +21,11 @@ import (
 	"errors"
 	"fmt"
 
+	"k8s.io/apimachinery/pkg/types"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 
@@ -29,152 +34,171 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/utils/ptr"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	ctrl "sigs.k8s.io/controller-runtime"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// log is for logging in this package.
-var mssqllog = logf.Log.WithName("mssql-resource")
-
-// SetupWebhookWithManager will setup the manager to manage the webhooks
-func (r *MSSQLServer) SetupWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).
-		For(r).
+// SetupMSSQLServerWebhookWithManager registers the webhook for MSSQLServer in the manager.
+func SetupMSSQLServerWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.MSSQLServer{}).
+		WithValidator(&MSSQLServerCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&MSSQLServerCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
 
 //+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-mssqlserver,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqlservers,verbs=create;update,versions=v1alpha2,name=mmssqlserver.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomDefaulter = &MSSQLServer{}
+// +kubebuilder:object:generate=false
+type MSSQLServerCustomWebhook struct {
+	DefaultClient client.Client
+}
+
+var _ webhook.CustomDefaulter = &MSSQLServerCustomWebhook{}
+
+// log is for logging in this package.
+var mssqllog = logf.Log.WithName("mssql-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (m *MSSQLServer) Default(ctx context.Context, obj runtime.Object) error {
-	if m == nil {
-		return nil
+func (m *MSSQLServerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	db, ok := obj.(*olddbapi.MSSQLServer)
+	if !ok {
+		return fmt.Errorf("expected a MSSQLServer object, got a %T", obj)
 	}
-	mssqllog.Info("default", "name", m.Name)
 
-	m.SetDefaults()
+	mssqllog.Info("default", "name", db.Name)
+
+	db.SetDefaults()
 	return nil
 }
 
-//+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-mssqlserver,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=mssqlservers,verbs=create;update,versions=v1alpha2,name=vmssqlserver.kb.io,admissionReviewVersions=v1
-
-var _ webhook.CustomValidator = &MSSQLServer{}
+var _ webhook.CustomValidator = &MSSQLServerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQLServer) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	mssqllog.Info("validate create", "name", m.Name)
+func (m *MSSQLServerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.MSSQLServer)
+	if !ok {
+		return nil, fmt.Errorf("expected a MSSQLServer object, got a %T", obj)
+	}
 
-	allErr := m.ValidateCreateOrUpdate()
+	mssqllog.Info("validate create", "name", db.Name)
+
+	allErr := m.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindMSSQLServer}, m.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMSSQLServer}, db.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQLServer) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	mssqllog.Info("validate update", "name", m.Name)
+func (m *MSSQLServerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	db, ok := newObj.(*olddbapi.MSSQLServer)
+	if !ok {
+		return nil, fmt.Errorf("expected a MSSQLServer object, got a %T", newObj)
+	}
 
-	allErr := m.ValidateCreateOrUpdate()
+	mssqllog.Info("validate update", "name", db.Name)
+
+	allErr := m.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
 
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindMSSQLServer}, m.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMSSQLServer}, db.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (m *MSSQLServer) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	mssqllog.Info("validate delete", "name", m.Name)
+func (m *MSSQLServerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.MSSQLServer)
+	if !ok {
+		return nil, fmt.Errorf("expected a MSSQLServer object, got a %T", obj)
+	}
+
+	mssqllog.Info("validate delete", "name", db.Name)
 
 	var allErr field.ErrorList
-	if m.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
+	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
-			m.Name,
+			db.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: ResourceKindMSSQLServer}, m.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMSSQLServer}, db.Name, allErr)
 	}
 	return nil, nil
 }
 
-func (m *MSSQLServer) ValidateCreateOrUpdate() field.ErrorList {
+func (m *MSSQLServerCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.MSSQLServer) field.ErrorList {
 	var allErr field.ErrorList
 
-	err := mssqlValidateVersion(m)
+	err := mssqlValidateVersion(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
-			m.Name,
+			db.Name,
 			err.Error()))
 	}
 
-	if m.IsStandalone() {
-		if ptr.Deref(m.Spec.Replicas, 0) != 1 {
+	if db.IsStandalone() {
+		if ptr.Deref(db.Spec.Replicas, 0) != 1 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-				m.Name,
+				db.Name,
 				"number of replicas for standalone must be one "))
 		}
 	} else {
-		if m.Spec.Topology.Mode == nil {
+		if db.Spec.Topology.Mode == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("mode"),
-				m.Name,
+				db.Name,
 				".spec.topology.mode can't be empty in cluster mode"))
 		}
 
-		if ptr.Deref(m.Spec.Replicas, 0) <= 0 {
+		if ptr.Deref(db.Spec.Replicas, 0) <= 0 {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-				m.Name,
+				db.Name,
 				"number of replicas can not be nil and can not be less than or equal to 0"))
 		}
 	}
 
-	if m.Spec.TLS == nil {
+	if db.Spec.TLS == nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
-			m.Name, "spec.tls is missing"))
+			db.Name, "spec.tls is missing"))
 	} else {
-		if m.Spec.TLS.IssuerRef == nil {
+		if db.Spec.TLS.IssuerRef == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("issuerRef"),
-				m.Name, "spec.tls.issuerRef' is missing"))
+				db.Name, "spec.tls.issuerRef' is missing"))
 		}
 	}
 
-	if m.Spec.PodTemplate != nil {
-		if err = ValidateMSSQLServerEnvVar(getMSSQLServerContainerEnvs(m), forbiddenMSSQLServerEnvVars, m.ResourceKind()); err != nil {
+	if db.Spec.PodTemplate != nil {
+		if err = ValidateMSSQLServerEnvVar(getMSSQLServerContainerEnvs(db), forbiddenMSSQLServerEnvVars, db.ResourceKind()); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
-				m.Name,
+				db.Name,
 				err.Error()))
 		}
 	}
 
-	err = mssqlValidateVolumes(m.Spec.PodTemplate)
+	err = mssqlValidateVolumes(db.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-			m.Name,
+			db.Name,
 			err.Error()))
 	}
 
-	err = mssqlValidateVolumesMountPaths(m.Spec.PodTemplate)
+	err = mssqlValidateVolumesMountPaths(db.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
-			m.Name,
+			db.Name,
 			err.Error()))
 	}
 
-	if m.Spec.StorageType == "" {
+	if db.Spec.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-			m.Name,
+			db.Name,
 			"StorageType can not be empty"))
 	} else {
-		if m.Spec.StorageType != StorageTypeDurable && m.Spec.StorageType != StorageTypeEphemeral {
+		if db.Spec.StorageType != olddbapi.StorageTypeDurable && db.Spec.StorageType != olddbapi.StorageTypeEphemeral {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-				m.Name,
+				db.Name,
 				"StorageType should be either durable or ephemeral"))
 		}
 	}
@@ -209,11 +233,11 @@ var mssqlReservedVolumesMountPaths = []string{
 	kubedb.MSSQLVolumeMountPathCACerts,
 }
 
-func mssqlValidateVersion(m *MSSQLServer) error {
+func mssqlValidateVersion(db *olddbapi.MSSQLServer) error {
 	var mssqlVersion catalog.MSSQLServerVersion
 
-	return DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: m.Spec.Version,
+	return olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.Spec.Version,
 	}, &mssqlVersion)
 }
 
@@ -282,8 +306,8 @@ var forbiddenMSSQLServerEnvVars = []string{
 	kubedb.EnvMSSQLVersion,
 }
 
-func getMSSQLServerContainerEnvs(m *MSSQLServer) []core.EnvVar {
-	for _, container := range m.Spec.PodTemplate.Spec.Containers {
+func getMSSQLServerContainerEnvs(db *olddbapi.MSSQLServer) []core.EnvVar {
+	for _, container := range db.Spec.PodTemplate.Spec.Containers {
 		if container.Name == kubedb.MSSQLContainerName {
 			return container.Env
 		}
