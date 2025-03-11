@@ -19,6 +19,8 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -40,179 +42,204 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// log is for logging in this package.
-var pgpoollog = logf.Log.WithName("pgpool-resource")
-
-func (p *Pgpool) SetupWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).
-		For(p).
+// SetupPgpoolWebhookWithManager registers the webhook for Pgpool in the manager.
+func SetupPgpoolWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Pgpool{}).
+		WithValidator(&PgpoolCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&PgpoolCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-pgpool,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=pgpools,verbs=create;update,versions=v1alpha2,name=mpgpool.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/mutate-pgpool-kubedb-com-v1alpha1-pgpool,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=pgpools,verbs=create;update,versions=v1alpha1,name=mpgpool.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomDefaulter = &Pgpool{}
+// +kubebuilder:object:generate=false
+type PgpoolCustomWebhook struct {
+	DefaultClient client.Client
+}
+
+var _ webhook.CustomDefaulter = &PgpoolCustomWebhook{}
+
+// log is for logging in this package.
+var pgpoollog = logf.Log.WithName("pgpool-resource")
+
+var _ webhook.CustomDefaulter = &PgpoolCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (p *Pgpool) Default(ctx context.Context, obj runtime.Object) error {
-	pgpoollog.Info("default", "name", p.Name)
-	p.SetDefaults()
+func (p *PgpoolCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	pp, ok := obj.(*olddbapi.Pgpool)
+	if !ok {
+		return fmt.Errorf("expected an pgpool object but got %T", obj)
+	}
+	pgpoollog.Info("default", "name", pp.Name)
+	pp.SetDefaults()
 	return nil
 }
 
 // TODO(user): change verbs to "verbs=create;update;delete" if you want to enable deletion validation.
 //+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-pgpool,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=pgpools,verbs=create;update;delete,versions=v1alpha2,name=vpgpool.kb.io,admissionReviewVersions=v1
 
-var _ webhook.CustomValidator = &Pgpool{}
+var _ webhook.CustomValidator = &PgpoolCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (p *Pgpool) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	pgpoollog.Info("validate create", "name", p.Name)
-	errorList := p.ValidateCreateOrUpdate()
+func (p *PgpoolCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	pp, ok := obj.(*olddbapi.Pgpool)
+	if !ok {
+		return nil, fmt.Errorf("expected an pgpool object but got %T", obj)
+	}
+	pgpoollog.Info("validate create", "name", pp.Name)
+	errorList := p.ValidateCreateOrUpdate(pp)
 	if len(errorList) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Pgpool"}, p.Name, errorList)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Pgpool"}, pp.Name, errorList)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (p *Pgpool) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	pgpoollog.Info("validate update", "name", p.Name)
+func (p *PgpoolCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	pp, ok := newObj.(*olddbapi.Pgpool)
+	if !ok {
+		return nil, fmt.Errorf("expected an pgpool object but got %T", pp)
+	}
+	pgpoollog.Info("validate update", "name", pp.Name)
 
-	errorList := p.ValidateCreateOrUpdate()
+	errorList := p.ValidateCreateOrUpdate(pp)
 	if len(errorList) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Pgpool"}, p.Name, errorList)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Pgpool"}, pp.Name, errorList)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (p *Pgpool) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	pgpoollog.Info("validate delete", "name", p.Name)
+func (p *PgpoolCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	pp, ok := obj.(*olddbapi.Pgpool)
+	if !ok {
+		return nil, fmt.Errorf("expected an pgpool object but got %T", pp)
+	}
+	pgpoollog.Info("validate delete", "name", pp.Name)
 
 	var errorList field.ErrorList
-	if p.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
+	if pp.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
 		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
-			p.Name,
+			pp.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Pgpool"}, p.Name, errorList)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Pgpool"}, pp.Name, errorList)
 	}
 	return nil, nil
 }
 
-func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
+func (p *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.ErrorList {
 	var errorList field.ErrorList
-	if p.Spec.Version == "" {
+	if pp.Spec.Version == "" {
 		errorList = append(errorList, field.Required(field.NewPath("spec").Child("version"),
 			"`spec.version` is missing",
 		))
 	} else {
-		err := PgpoolValidateVersion(p)
+		err := p.PgpoolValidateVersion(pp)
 		if err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("version"),
-				p.Name,
+				pp.Name,
 				err.Error()))
 		}
 	}
 
-	if p.Spec.PostgresRef == nil {
+	if pp.Spec.PostgresRef == nil {
 		errorList = append(errorList, field.Required(field.NewPath("spec").Child("postgresRef"),
 			"`spec.postgresRef` is missing",
 		))
 	}
 
-	if p.Spec.ConfigSecret != nil && (p.Spec.InitConfiguration != nil && p.Spec.InitConfiguration.PgpoolConfig != nil) {
+	if pp.Spec.ConfigSecret != nil && (pp.Spec.InitConfiguration != nil && pp.Spec.InitConfiguration.PgpoolConfig != nil) {
 		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configSecret"),
-			p.Name,
+			pp.Name,
 			"use either `spec.configSecret` or `spec.initConfig`"))
 		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("initConfig"),
-			p.Name,
+			pp.Name,
 			"use either `spec.configSecret` or `spec.initConfig`"))
 	}
 
-	if p.ObjectMeta.DeletionTimestamp == nil {
+	if pp.ObjectMeta.DeletionTimestamp == nil {
 		apb := appcat.AppBinding{}
-		err := DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      p.Spec.PostgresRef.Name,
-			Namespace: p.Spec.PostgresRef.Namespace,
+		err := p.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      pp.Spec.PostgresRef.Name,
+			Namespace: pp.Spec.PostgresRef.Namespace,
 		}, &apb)
 		if err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-				p.Name,
+				pp.Name,
 				err.Error(),
 			))
 		}
 
-		backendSSL, err := p.IsBackendTLSEnabled()
+		backendSSL, err := pp.IsBackendTLSEnabled()
 		if err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-				p.Name,
+				pp.Name,
 				err.Error(),
 			))
 		}
 
-		if p.Spec.TLS == nil && backendSSL {
+		if pp.Spec.TLS == nil && backendSSL {
 			errorList = append(errorList, field.Required(field.NewPath("spec").Child("tls"),
 				"`spec.tls` must be set because backend postgres is tls enabled",
 			))
 		}
 	}
 
-	if p.Spec.TLS == nil {
-		if p.Spec.SSLMode != "disable" {
+	if pp.Spec.TLS == nil {
+		if pp.Spec.SSLMode != "disable" {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("sslMode"),
-				p.Name,
+				pp.Name,
 				"Tls is not enabled, enable it to use this sslMode",
 			))
 		}
 
-		if p.Spec.ClientAuthMode == "cert" {
+		if pp.Spec.ClientAuthMode == "cert" {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("clientAuthMode"),
-				p.Name,
+				pp.Name,
 				"Tls is not enabled, enable it to use this clientAuthMode",
 			))
 		}
 	}
 
-	if p.Spec.Replicas != nil {
-		if *p.Spec.Replicas <= 0 {
+	if pp.Spec.Replicas != nil {
+		if *pp.Spec.Replicas <= 0 {
 			errorList = append(errorList, field.Required(field.NewPath("spec").Child("replicas"),
 				"`spec.replica` must be greater than 0",
 			))
 		}
-		if *p.Spec.Replicas > 9 {
+		if *pp.Spec.Replicas > 9 {
 			errorList = append(errorList, field.Required(field.NewPath("spec").Child("replicas"),
 				"`spec.replica` must be less than 10",
 			))
 		}
 	}
 
-	if p.Spec.PodTemplate != nil {
-		if err := p.ValidateEnvVar(PgpoolGetMainContainerEnvs(p), PgpoolForbiddenEnvVars, p.ResourceKind()); err != nil {
+	if pp.Spec.PodTemplate != nil {
+		if err := p.ValidateEnvVar(PgpoolGetMainContainerEnvs(pp), PgpoolForbiddenEnvVars, pp.ResourceKind()); err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Child("env"),
-				p.Name,
+				pp.Name,
 				err.Error(),
 			))
 		}
-		err := PgpoolValidateVolumes(p)
+		err := PgpoolValidateVolumes(pp)
 		if err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-				p.Name,
+				pp.Name,
 				err.Error(),
 			))
 		}
 
-		err = PgpoolValidateVolumesMountPaths(p.Spec.PodTemplate)
+		err = PgpoolValidateVolumesMountPaths(pp.Spec.PodTemplate)
 		if err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumeMounts"),
-				p.Name,
+				pp.Name,
 				err.Error()))
 		}
 	}
 
-	if err := p.ValidateHealth(&p.Spec.HealthChecker); err != nil {
+	if err := p.ValidateHealth(&pp.Spec.HealthChecker); err != nil {
 		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("healthChecker"),
-			p.Name,
+			pp.Name,
 			err.Error(),
 		))
 	}
@@ -223,7 +250,7 @@ func (p *Pgpool) ValidateCreateOrUpdate() field.ErrorList {
 	return errorList
 }
 
-func (p *Pgpool) ValidateEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceType string) error {
+func (p *PgpoolCustomWebhook) ValidateEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceType string) error {
 	for _, env := range envs {
 		present, _ := arrays.Contains(forbiddenEnvs, env.Name)
 		if present {
@@ -233,7 +260,7 @@ func (p *Pgpool) ValidateEnvVar(envs []core.EnvVar, forbiddenEnvs []string, reso
 	return nil
 }
 
-func (p *Pgpool) ValidateHealth(health *kmapi.HealthCheckSpec) error {
+func (p *PgpoolCustomWebhook) ValidateHealth(health *kmapi.HealthCheckSpec) error {
 	if health.PeriodSeconds != nil && *health.PeriodSeconds <= 0 {
 		return fmt.Errorf(`spec.healthCheck.periodSeconds: can not be less than 1`)
 	}
@@ -248,10 +275,10 @@ func (p *Pgpool) ValidateHealth(health *kmapi.HealthCheckSpec) error {
 	return nil
 }
 
-func PgpoolValidateVersion(p *Pgpool) error {
+func (p *PgpoolCustomWebhook) PgpoolValidateVersion(pp *olddbapi.Pgpool) error {
 	ppVersion := catalog.PgpoolVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: p.Spec.Version,
+	err := p.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: pp.Spec.Version,
 	}, &ppVersion)
 	if err != nil {
 		return errors.New("version not supported")
@@ -264,13 +291,13 @@ var PgpoolReservedVolumes = []string{
 	kubedb.PgpoolTlsVolumeName,
 }
 
-func PgpoolValidateVolumes(p *Pgpool) error {
-	if p.Spec.PodTemplate.Spec.Volumes == nil {
+func PgpoolValidateVolumes(pp *olddbapi.Pgpool) error {
+	if pp.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
 
 	for _, rv := range PgpoolReservedVolumes {
-		for _, ugv := range p.Spec.PodTemplate.Spec.Volumes {
+		for _, ugv := range pp.Spec.PodTemplate.Spec.Volumes {
 			if ugv.Name == rv {
 				return errors.New("Cannot use a reserve volume name: " + rv)
 			}
@@ -284,8 +311,8 @@ var PgpoolForbiddenEnvVars = []string{
 	kubedb.EnvPgpoolPasswordEncryptionMethod, kubedb.EnvEnablePoolPasswd, kubedb.EnvSkipPasswdEncryption,
 }
 
-func PgpoolGetMainContainerEnvs(p *Pgpool) []core.EnvVar {
-	for _, container := range p.Spec.PodTemplate.Spec.Containers {
+func PgpoolGetMainContainerEnvs(pp *olddbapi.Pgpool) []core.EnvVar {
+	for _, container := range pp.Spec.PodTemplate.Spec.Containers {
 		if container.Name == kubedb.PgpoolContainerName {
 			return container.Env
 		}

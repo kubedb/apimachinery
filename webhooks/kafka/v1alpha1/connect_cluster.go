@@ -21,11 +21,8 @@ import (
 	"fmt"
 	"strings"
 
-	kafkapi "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	kafkapi "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 
 	"github.com/pkg/errors"
@@ -36,6 +33,8 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/klog/v2"
 	coreutil "kmodules.xyz/client-go/core/v1"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
