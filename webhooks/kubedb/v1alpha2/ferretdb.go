@@ -196,7 +196,7 @@ func (w *FerretDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.FerretDB) fi
 					`'backend.postgresRef.namespace' is needed when backend is externally managed`))
 			}
 			apb := appcat.AppBinding{}
-			err := olddbapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 				Name:      db.Spec.Backend.PostgresRef.Name,
 				Namespace: db.Spec.Backend.PostgresRef.Namespace,
 			}, &apb)
