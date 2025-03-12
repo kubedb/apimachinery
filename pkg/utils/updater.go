@@ -19,6 +19,7 @@ package utils
 import (
 	"context"
 	"os"
+	"time"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -75,6 +76,32 @@ func UpdateReadinessGateCondition(ctx context.Context, kc client.Client) error {
 
 	klog.Infoln("Successfully updated the readiness gate condition to True")
 	return nil
+}
+
+func CheckForShardIdUpdate(kc client.Client, shardConfigName string) {
+	ticker := time.NewTicker(100 * time.Millisecond)
+	defer ticker.Stop()
+	// 5 second is enough imo
+	timeout := time.After(5 * time.Minute)
+	hostName := os.Getenv("HOSTNAME")
+	for {
+		select {
+		case <-timeout:
+			return
+		case <-ticker.C:
+			pods, err := scutil.GetPodListsFromShardConfig(kc, shardConfigName)
+			// TODO: Attention
+			// Should we print this err log?
+			if err != nil {
+				continue
+			}
+			for _, pod := range pods {
+				if pod == hostName {
+					return
+				}
+			}
+		}
+	}
 }
 
 type Predicator interface {
