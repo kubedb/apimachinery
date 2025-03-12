@@ -510,6 +510,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.ConnectorList":                                  schema_apimachinery_apis_kafka_v1alpha1_ConnectorList(ref),
 		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.ConnectorSpec":                                  schema_apimachinery_apis_kafka_v1alpha1_ConnectorSpec(ref),
 		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.ConnectorStatus":                                schema_apimachinery_apis_kafka_v1alpha1_ConnectorStatus(ref),
+		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.ObjectReference":                                schema_apimachinery_apis_kafka_v1alpha1_ObjectReference(ref),
 		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.RestProxy":                                      schema_apimachinery_apis_kafka_v1alpha1_RestProxy(ref),
 		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.RestProxyApp":                                   schema_apimachinery_apis_kafka_v1alpha1_RestProxyApp(ref),
 		"kubedb.dev/apimachinery/apis/kafka/v1alpha1.RestProxyList":                                  schema_apimachinery_apis_kafka_v1alpha1_RestProxyList(ref),
@@ -26264,6 +26265,32 @@ func schema_apimachinery_apis_kafka_v1alpha1_ConnectorStatus(ref common.Referenc
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kafka_v1alpha1_ObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the referent.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the referent.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 

@@ -15,3 +15,12 @@ limitations under the License.
 */
 
 package v1alpha1
+
+type ObjectReference struct {
+	// Namespace of the referent.
+	// +optional
+	Namespace string `json:"namespace,omitempty"`
+	// Name of the referent.
+	// +optional
+	Name string `json:"name,omitempty"`
+}
