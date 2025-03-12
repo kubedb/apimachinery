@@ -15,20 +15,3 @@ limitations under the License.
 */
 
 package v1alpha1
-
-import (
-	"sync"
-
-	"sigs.k8s.io/controller-runtime/pkg/client"
-)
-
-var (
-	once          sync.Once
-	DefaultClient client.Client
-)
-
-func SetDefaultClient(kc client.Client) {
-	once.Do(func() {
-		DefaultClient = kc
-	})
-}
