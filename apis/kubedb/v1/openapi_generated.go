@@ -31599,14 +31599,14 @@ func schema_apimachinery_apis_kubedb_v1_SecretReference(ref common.ReferenceCall
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"group": {
+					"apiGroup": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Two possible groups: \"\", virtual-secrets.dev",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"secretSource": {
+					"secretSourceName": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecretSource references the secret manager used for virtual secret",
 							Type:        []string{"string"},

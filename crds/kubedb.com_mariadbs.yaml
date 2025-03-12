@@ -139,16 +139,16 @@ spec:
                   activeFrom:
                     format: date-time
                     type: string
+                  apiGroup:
+                    type: string
                   externallyManaged:
                     type: boolean
-                  group:
-                    type: string
                   name:
                     default: ""
                     type: string
                   rotateAfter:
                     type: string
-                  secretSource:
+                  secretSourceName:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
@@ -8181,12 +8181,16 @@ spec:
                   activeFrom:
                     format: date-time
                     type: string
+                  apiGroup:
+                    type: string
                   externallyManaged:
                     type: boolean
                   name:
                     default: ""
                     type: string
                   rotateAfter:
+                    type: string
+                  secretSourceName:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic

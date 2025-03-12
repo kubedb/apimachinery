@@ -1610,6 +1610,8 @@ const (
 	VirtualSecretsKeyUsername     = "vs:///var/run/secrets/virtual-secrets/" + core.BasicAuthUsernameKey
 	VirtualSecretsKeyPassword     = "vs:///var/run/secrets/virtual-secrets/" + core.BasicAuthPasswordKey
 	VirtualSecretsVENV            = "/var/run/secrets/virtual-secrets/bin/venv"
+	SecretProviderClass           = "secretProviderClass"
+	SecretStoreCSIDriver          = "secrets-store.csi.k8s.io"
 )
 
 // Resource kind related constants
