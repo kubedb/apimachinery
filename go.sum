@@ -684,8 +684,8 @@ kmodules.xyz/webhook-runtime v0.29.1 h1:SQ8NvwJpxv5CUuXIubSg9g0Bk8BBnj4dhCWEk6Ou
 kmodules.xyz/webhook-runtime v0.29.1/go.mod h1:WVgNO4NqFdYwYZ82L6QIycN1Ax47y+yXi7XIHekYylo=
 kubeops.dev/csi-driver-cacerts v0.1.0 h1:WDgKNo5QAiMoVy4c/4ARWeCXJbqdcXdcn8VLImV4VZU=
 kubeops.dev/csi-driver-cacerts v0.1.0/go.mod h1:5a/ZOn5LFw26PPBpTKvsivBjcvVArOrJX24C+k+przk=
-kubeops.dev/operator-shard-manager v0.0.2-0.20250307043015-f24541485447 h1:aOaotER+qqFtb6lDlVMx8x2/mIwAKCouQ4vLuDptLsY=
-kubeops.dev/operator-shard-manager v0.0.2-0.20250307043015-f24541485447/go.mod h1:SH8Q6qW6OjRaGkSxrDlpPxBpSLXwtWBSiJhxQqzTud0=
+kubeops.dev/operator-shard-manager v0.0.2-0.20250312084806-6783a90b294f h1:rXxWSU0qoDqBYWEehoNELEUH5OaGMxLLdWTg83X1Tv4=
+kubeops.dev/operator-shard-manager v0.0.2-0.20250312084806-6783a90b294f/go.mod h1:vGZMysCaNAR4igdllIBIfTZ6P/F1m+3SQaQf/02zdAY=
 kubeops.dev/petset v0.0.8-0.20250221072845-c4b7c4af4678 h1:LDLDoYYgYziOZq7ws8Ra3e1DIc8pq03bEJduIBsl0Fo=
 kubeops.dev/petset v0.0.8-0.20250221072845-c4b7c4af4678/go.mod h1:j/14AVeCqFTrB9doR+/2SnFeVZ/ObX9MEtvJjpDhvbI=
 kubeops.dev/sidekick v0.0.10 h1:/lOT+yV920F6TTPLc7bKR9HLAG/Yx+sTRm1C7rUz744=

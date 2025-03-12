@@ -19,30 +19,32 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
-	apps "k8s.io/api/apps/v1"
-	kerr "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/klog/v2"
 	"os"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strconv"
 	"strings"
+
+	apps "k8s.io/api/apps/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func ShouldEnqueueObjectForShard(labels map[string]string, shardConfig string, kbClient client.Client) bool {
+func ShouldEnqueueObjectForShard(kbClient client.Client, shardConfig string, labels map[string]string) bool {
 	if shardConfig == "" {
 		return true
 	}
 	if labels == nil {
+		klog.Warningf("shard-config provided, but labels is nil, skip enqueuing object")
 		return false
 	}
 	shardId := ExtractShardKeyFromLabels(labels, shardConfig)
 	if shardId == "" {
+		klog.Warningf("shard-config provided, but no shardId found in the labels, skip enqueuing object")
 		return false
 	}
 	requeue, err := ShouldReconcileByShard(shardId, shardConfig, kbClient)
 	if err != nil {
-		klog.Warningf("ShouldRequeue failed: %v", err)
+		klog.Warningf("ShouldReconcileByShard failed with err: %v", err)
 		return false
 	}
 	return requeue
@@ -70,11 +72,8 @@ func ShouldReconcileByShard(shardId, shardConfigName string, c client.Client) (b
 
 	deploymentName := deploymentNameFromHostname(hostName)
 	shardConfig, err := fetchShardConfiguration(shardConfigName, c)
-	if err != nil && !kerr.IsNotFound(err) {
+	if err != nil {
 		return false, err
-	}
-	if kerr.IsNotFound(err) {
-		return false, nil
 	}
 	pods := getPodNamesFromShardConfig(deploymentName, ns, shardConfig)
 	return isShardIdAndHostnameMatched(hostName, shardId, pods), nil

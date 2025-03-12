@@ -229,7 +229,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
-		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(pg.GetLabels(), c.ShardConfig, c.KBClient)
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, pg.GetLabels())
 
 	case dbapi.ResourceKindProxySQL:
 		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralProxySQL
