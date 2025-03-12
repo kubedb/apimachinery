@@ -20,9 +20,23 @@ import (
 	"context"
 	"os"
 
+	"kubedb.dev/apimachinery/apis/kubedb"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
+	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
+	kerr "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
+	core_util "kmodules.xyz/client-go/core/v1"
+	health "kmodules.xyz/client-go/tools/healthchecker"
+	scutil "kubeops.dev/operator-shard-manager/api/v1alpha1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/event"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 )
 
 const (
@@ -61,4 +75,137 @@ func UpdateReadinessGateCondition(ctx context.Context, kc client.Client) error {
 
 	klog.Infoln("Successfully updated the readiness gate condition to True")
 	return nil
+}
+
+type Predicator interface {
+	GetOwnerObject(obj client.Object) (*unstructured.Unstructured, error)
+	GetPredicateFuncsForDatabase() predicate.Funcs
+	GetPredicateFuncsForOwnerObjects() predicate.Funcs
+}
+
+type dbPredicate struct {
+	kc            client.Client
+	shardConfig   string
+	healthChecker *health.HealthChecker
+	gvk           schema.GroupVersionKind
+}
+
+func NewPredicator(kc client.Client, gvk schema.GroupVersionKind, shardConfig string, healthChecker *health.HealthChecker) Predicator {
+	return &dbPredicate{
+		kc:            kc,
+		shardConfig:   shardConfig,
+		healthChecker: healthChecker,
+		gvk:           gvk,
+	}
+}
+
+func (p *dbPredicate) GetOwnerObject(obj client.Object) (*unstructured.Unstructured, error) {
+	ctrl := metav1.GetControllerOf(obj)
+	if ctrl == nil {
+		return nil, nil
+	}
+	ok, err := core_util.IsOwnerOfGroupKind(ctrl, kubedb.GroupName, api.ResourceKindRabbitmq)
+	if err != nil || !ok {
+		return nil, errors.Wrap(err, "cannot find rabbitmq controller ref")
+	}
+
+	var un unstructured.Unstructured
+	un.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   p.gvk.Group,
+		Version: p.gvk.Version,
+		Kind:    p.gvk.Kind,
+	})
+
+	err = p.kc.Get(context.TODO(), types.NamespacedName{
+		Namespace: obj.GetNamespace(),
+		Name:      obj.GetName(),
+	}, &un)
+	if err != nil {
+		return nil, err
+	}
+
+	return &un, err
+}
+
+func (p *dbPredicate) GetPredicateFuncsForDatabase() predicate.Funcs {
+	return predicate.Funcs{
+		UpdateFunc: func(e event.UpdateEvent) bool {
+			newObj := e.ObjectNew // .(*api.RabbitMQ)
+			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, newObj.GetLabels())
+			if !rq && p.healthChecker != nil {
+				p.healthChecker.Stop(newObj.GetNamespace() + "/" + newObj.GetName())
+			}
+			return rq
+		},
+
+		CreateFunc: func(e event.CreateEvent) bool {
+			obj := e.Object.(*api.RabbitMQ)
+			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, obj.GetLabels())
+			if !rq && p.healthChecker != nil {
+				p.healthChecker.Stop(obj.GetNamespace() + "/" + obj.GetName())
+			}
+			return rq
+		},
+
+		DeleteFunc: func(e event.DeleteEvent) bool {
+			obj := e.Object.(*api.RabbitMQ)
+			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, obj.GetLabels())
+			if !rq && p.healthChecker != nil {
+				p.healthChecker.Stop(obj.GetNamespace() + "/" + obj.GetName())
+			}
+			return rq
+		},
+	}
+}
+
+func (p *dbPredicate) GetPredicateFuncsForOwnerObjects() predicate.Funcs {
+	return predicate.Funcs{
+		UpdateFunc: func(e event.UpdateEvent) bool {
+			dbObj, err := p.GetOwnerObject(e.ObjectNew)
+			if err != nil && !kerr.IsNotFound(err) {
+				klog.Errorln(err)
+				return false
+			}
+			if dbObj == nil {
+				return false
+			}
+			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, dbObj.GetLabels())
+			if !rq && p.healthChecker != nil {
+				p.healthChecker.Stop(dbObj.GetNamespace() + "/" + dbObj.GetName())
+			}
+			return rq
+		},
+
+		CreateFunc: func(e event.CreateEvent) bool {
+			dbObj, err := p.GetOwnerObject(e.Object)
+			if err != nil && !kerr.IsNotFound(err) {
+				klog.Errorln(err)
+				return false
+			}
+			if dbObj == nil {
+				return false
+			}
+			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, dbObj.GetLabels())
+			if !rq && p.healthChecker != nil {
+				p.healthChecker.Stop(dbObj.GetNamespace() + "/" + dbObj.GetName())
+			}
+			return rq
+		},
+
+		DeleteFunc: func(e event.DeleteEvent) bool {
+			dbObj, err := p.GetOwnerObject(e.Object)
+			if err != nil && !kerr.IsNotFound(err) {
+				klog.Errorln(err)
+				return false
+			}
+			if dbObj == nil {
+				return false
+			}
+			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, dbObj.GetLabels())
+			if !rq && p.healthChecker != nil {
+				p.healthChecker.Stop(dbObj.GetNamespace() + "/" + dbObj.GetName())
+			}
+			return rq
+		},
+	}
 }

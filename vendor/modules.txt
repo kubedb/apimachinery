@@ -1750,6 +1750,7 @@ kmodules.xyz/client-go/policy/secomp
 kmodules.xyz/client-go/policy/v1
 kmodules.xyz/client-go/policy/v1beta1
 kmodules.xyz/client-go/tools/clusterid
+kmodules.xyz/client-go/tools/healthchecker
 kmodules.xyz/client-go/tools/queue
 # kmodules.xyz/crd-schema-fuzz v0.29.2-0.20250302110413-c5b140ca984a
 ## explicit; go 1.23.0
