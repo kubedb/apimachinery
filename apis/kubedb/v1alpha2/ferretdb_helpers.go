@@ -188,6 +188,10 @@ func (f *FerretDB) GetExternalBackendClientSecretName() string {
 	return f.Name + "-ext-pg-client-cert"
 }
 
+func (f *FerretDB) GetBackendConnectionSecretName() string {
+	return f.OffshootName() + "-backend-connection"
+}
+
 func (f *FerretDB) GetSecretVolumeName(secretName string) string {
 	return secretName + "-vol"
 }

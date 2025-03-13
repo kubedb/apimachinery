@@ -32,7 +32,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
-	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -137,13 +136,13 @@ func (w *FerretDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.FerretDB) fi
 	if db.Spec.Server.Primary == nil || *db.Spec.Server.Primary.Replicas < 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("server.primary.replicas"),
 			db.Name,
-			fmt.Sprintf(`spec.server.primary.replicas "%v" invalid. Must be greater than zero`, db.Spec.Server.Primary.Replicas)))
+			fmt.Sprintf(`spec.server.primary.replicas "%v" invalid. Must be greater than zero`, *db.Spec.Server.Primary.Replicas)))
 	}
 
-	if db.Spec.Server.Secondary != nil || *db.Spec.Server.Secondary.Replicas < 1 {
+	if db.Spec.Server.Secondary != nil && *db.Spec.Server.Secondary.Replicas < 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("server.secondary.replicas"),
 			db.Name,
-			fmt.Sprintf(`spec.server.secondary.replicas "%v" invalid. Must be greater than zero`, db.Spec.Server.Secondary.Replicas)))
+			fmt.Sprintf(`spec.server.secondary.replicas "%v" invalid. Must be greater than zero`, *db.Spec.Server.Secondary.Replicas)))
 	}
 
 	if db.Spec.Server.Primary != nil && db.Spec.Server.Primary.PodTemplate != nil {
@@ -209,52 +208,6 @@ func (w *FerretDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.FerretDB) fi
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
 					db.Name,
 					`'backend.postgresRef.namespace' is needed when backend is externally managed`))
-			}
-			apb := appcat.AppBinding{}
-			err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-				Name:      db.Spec.Backend.PostgresRef.Name,
-				Namespace: db.Spec.Backend.PostgresRef.Namespace,
-			}, &apb)
-			if err != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					db.Name,
-					err.Error(),
-				))
-			}
-
-			if apb.Spec.Secret == nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-					db.Name,
-					`spec.secret needed in external pg appbinding`))
-			}
-
-			if apb.Spec.ClientConfig.Service == nil && apb.Spec.ClientConfig.URL == nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					db.Name,
-					`'clientConfig.url' or 'clientConfig.service' needed in the external pg appbinding`,
-				))
-			}
-			sslMode, err := db.GetSSLModeFromAppBinding(&apb)
-			if err != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					db.Name,
-					err.Error(),
-				))
-			}
-
-			if sslMode == olddbapi.PostgresSSLModeRequire || sslMode == olddbapi.PostgresSSLModeVerifyCA || sslMode == olddbapi.PostgresSSLModeVerifyFull {
-				if apb.Spec.ClientConfig.CABundle == nil && apb.Spec.TLSSecret == nil {
-					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-						db.Name,
-						"backend postgres connection is ssl encrypted but 'spec.clientConfig.caBundle' or 'spec.tlsSecret' is not provided in appbinding",
-					))
-				}
-			}
-			if (apb.Spec.ClientConfig.CABundle != nil || apb.Spec.TLSSecret != nil) && sslMode == olddbapi.PostgresSSLModeDisable {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					db.Name,
-					"no client certificate or ca bundle possible when sslMode set to disable in backend postgres",
-				))
 			}
 		}
 	} else {
