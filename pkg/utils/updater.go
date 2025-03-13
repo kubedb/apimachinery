@@ -78,21 +78,20 @@ func UpdateReadinessGateCondition(ctx context.Context, kc client.Client) error {
 	return nil
 }
 
-func CheckForShardIdUpdate(kc client.Client, shardConfigName string) {
-	ticker := time.NewTicker(100 * time.Millisecond)
+func WaitForShardIdUpdate(kc client.Client, shardConfigName string) {
+	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
-	// 5 second is enough imo
 	timeout := time.After(5 * time.Minute)
 	hostName := os.Getenv("HOSTNAME")
+	klog.Infof("Waiting for the shard-id to be updated for %v in shardConfig %v \n", hostName, shardConfigName)
 	for {
 		select {
 		case <-timeout:
 			return
 		case <-ticker.C:
 			pods, err := scutil.GetPodListsFromShardConfig(kc, shardConfigName)
-			// TODO: Attention
-			// Should we print this err log?
 			if err != nil {
+				klog.V(6).Infoln(err.Error())
 				continue
 			}
 			for _, pod := range pods {
