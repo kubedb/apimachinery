@@ -10,7 +10,7 @@ require (
 	github.com/coreos/go-semver v0.3.1
 	github.com/evanphx/json-patch v5.9.11+incompatible
 	github.com/fatih/structs v1.1.0
-	github.com/google/go-cmp v0.6.0
+	github.com/google/go-cmp v0.7.0
 	github.com/google/gofuzz v1.2.0
 	github.com/google/uuid v1.6.0
 	github.com/iancoleman/orderedmap v0.3.0
@@ -21,6 +21,7 @@ require (
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.80.1
 	go.bytebuilders.dev/audit v0.0.42
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.6
+	go.virtual-secrets.dev/apimachinery v0.0.0-20250313131002-5cd148a87220
 	gomodules.xyz/encoding v0.0.8
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0
@@ -37,7 +38,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20241212222426-2c72e554b1e7
 	k8s.io/metrics v0.32.2
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
-	kmodules.xyz/client-go v0.30.47-0.20250303073751-80d02d19452f
+	kmodules.xyz/client-go v0.30.47-0.20250308053642-38a9e7b6982e
 	kmodules.xyz/crd-schema-fuzz v0.29.2-0.20250302110413-c5b140ca984a
 	kmodules.xyz/custom-resources v0.30.2-0.20250303080226-05eb1392c05f
 	kmodules.xyz/monitoring-agent-api v0.30.4
@@ -101,7 +102,7 @@ require (
 	github.com/go-sql-driver/mysql v1.9.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/btree v1.1.3 // indirect
@@ -144,7 +145,7 @@ require (
 	github.com/rancher/norman v0.5.2 // indirect
 	github.com/rancher/rancher/pkg/client v0.0.0-20250220153925-3abb578f42fe // indirect
 	github.com/rancher/wrangler/v3 v3.2.0-rc.3 // indirect
-	github.com/sergi/go-diff v1.2.0 // indirect
+	github.com/sergi/go-diff v1.3.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/spf13/cast v1.7.0 // indirect

@@ -259,7 +259,7 @@ github.com/gogo/protobuf/gogoproto
 github.com/gogo/protobuf/proto
 github.com/gogo/protobuf/protoc-gen-gogo/descriptor
 github.com/gogo/protobuf/sortkeys
-# github.com/golang-jwt/jwt/v4 v4.5.0
+# github.com/golang-jwt/jwt/v4 v4.5.1
 ## explicit; go 1.16
 github.com/golang-jwt/jwt/v4
 # github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
@@ -302,8 +302,8 @@ github.com/google/gnostic-models/extensions
 github.com/google/gnostic-models/jsonschema
 github.com/google/gnostic-models/openapiv2
 github.com/google/gnostic-models/openapiv3
-# github.com/google/go-cmp v0.6.0
-## explicit; go 1.13
+# github.com/google/go-cmp v0.7.0
+## explicit; go 1.21
 github.com/google/go-cmp/cmp
 github.com/google/go-cmp/cmp/internal/diff
 github.com/google/go-cmp/cmp/internal/flags
@@ -542,7 +542,7 @@ github.com/rancher/rancher/pkg/client/generated/management/v3
 # github.com/rancher/wrangler/v3 v3.2.0-rc.3
 ## explicit; go 1.23.0
 github.com/rancher/wrangler/v3/pkg/name
-# github.com/sergi/go-diff v1.2.0
+# github.com/sergi/go-diff v1.3.1
 ## explicit; go 1.12
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/shopspring/decimal v1.4.0
@@ -720,6 +720,10 @@ go.uber.org/zap/internal/pool
 go.uber.org/zap/internal/stacktrace
 go.uber.org/zap/zapcore
 go.uber.org/zap/zapgrpc
+# go.virtual-secrets.dev/apimachinery v0.0.0-20250313131002-5cd148a87220
+## explicit; go 1.23.0
+go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1
+go.virtual-secrets.dev/apimachinery/crds
 # golang.org/x/crypto v0.35.0
 ## explicit; go 1.23.0
 golang.org/x/crypto/bcrypt
@@ -1728,7 +1732,7 @@ k8s.io/utils/trace
 # kmodules.xyz/apiversion v0.2.0
 ## explicit; go 1.14
 kmodules.xyz/apiversion
-# kmodules.xyz/client-go v0.30.47-0.20250303073751-80d02d19452f
+# kmodules.xyz/client-go v0.30.47-0.20250308053642-38a9e7b6982e
 ## explicit; go 1.23.0
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1

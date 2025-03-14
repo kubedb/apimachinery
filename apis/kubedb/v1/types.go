@@ -190,6 +190,14 @@ type SystemUserSecretsSpec struct {
 }
 
 type SecretReference struct {
+	// +optional
+	// Two possible groups: "", virtual-secrets.dev
+	ApiGroup string `json:"apiGroup,omitempty"`
+
+	// +optional
+	// SecretSource references the secret manager used for virtual secret
+	SecretSourceName string `json:"secretSourceName,omitempty"`
+
 	core.LocalObjectReference `json:",inline,omitempty"`
 	// Recommendation engine will generate RotateAuth opsReq using this field
 	// +optional
