@@ -23061,6 +23061,10 @@
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
           "type": "boolean"
         },
+        "distribution": {
+          "description": "Distribution determines the type of the database(Valkey or Redis)",
+          "type": "string"
+        },
         "exporter": {
           "description": "Exporter Image",
           "default": {},

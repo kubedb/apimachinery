@@ -608,6 +608,13 @@ const (
 	EnvRedisMode              = "REDIS_MODE"
 	EnvRedisMajorRedisVersion = "MAJOR_REDIS_VERSION"
 
+	// =========================== Valkey Constants ============================
+	ValkeyConfigKey = "valkey.conf" // ValkeyConfigKey is going to create for the customize valkey configuration
+	// DefaultConfigKey is going to create for the default valkey configuration
+
+	EnvValkeyPassword          = "VALKEYCLI_AUTH"
+	EnvValkeyMajorRedisVersion = "MAJOR_VALKEY_VERSION"
+
 	// =========================== PgBouncer Constants ============================
 	PgBouncerUpstreamServerCA               = "upstream-server-ca.crt"
 	PgBouncerUpstreamServerClientCert       = "upstream-server-client.crt"
