@@ -18,13 +18,13 @@ package v1alpha1
 
 type GitOpsStatus struct {
 	// Trim this slice to 10 ?
-	GitOpInfo []GitOpsInfo `json:"gitOpInfo,omitempty"`
+	GitOpsInfo []GitOpsInfo `json:"gitOpsInfo,omitempty"`
 }
 
 type GitOpsInfo struct {
-	ObservedGeneration  int64       `json:"observedGeneration,omitempty"`
-	Operations          []Operation `json:"operations,omitempty"`
-	ChangeRequestStatus string      `json:"changeRequestStatus,omitempty"`
+	ObservedGeneration  int64               `json:"observedGeneration,omitempty"`
+	Operations          []Operation         `json:"operations,omitempty"`
+	ChangeRequestStatus ChangeRequestStatus `json:"changeRequestStatus,omitempty"`
 }
 
 type Operation struct {

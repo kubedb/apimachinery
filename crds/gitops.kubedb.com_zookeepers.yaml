@@ -3695,10 +3695,15 @@ spec:
                 type: array
               gitops:
                 properties:
-                  gitOpInfo:
+                  gitOpsInfo:
                     items:
                       properties:
                         changeRequestStatus:
+                          enum:
+                          - Pending
+                          - InProgress
+                          - Current
+                          - Failed
                           type: string
                         observedGeneration:
                           format: int64
