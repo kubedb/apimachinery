@@ -18,11 +18,9 @@ package utils
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"time"
-
-	"kubedb.dev/apimachinery/apis/kubedb"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
@@ -141,9 +139,10 @@ func (p *dbPredicate) GetOwnerObject(obj client.Object) (*unstructured.Unstructu
 	if ctrl == nil {
 		return nil, nil
 	}
-	ok, err := core_util.IsOwnerOfGroupKind(ctrl, kubedb.GroupName, api.ResourceKindRabbitmq)
+
+	ok, err := core_util.IsOwnerOfGroupKind(ctrl, p.gvk.Group, p.gvk.Kind)
 	if err != nil || !ok {
-		return nil, errors.Wrap(err, "cannot find rabbitmq controller ref")
+		return nil, errors.Wrap(err, fmt.Sprintf("%v/%v is not controlled by %v ", obj.GetNamespace(), obj.GetName(), p.gvk))
 	}
 
 	var un unstructured.Unstructured
@@ -166,17 +165,8 @@ func (p *dbPredicate) GetOwnerObject(obj client.Object) (*unstructured.Unstructu
 
 func (p *dbPredicate) GetPredicateFuncsForDatabase() predicate.Funcs {
 	return predicate.Funcs{
-		UpdateFunc: func(e event.UpdateEvent) bool {
-			newObj := e.ObjectNew // .(*api.RabbitMQ)
-			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, newObj.GetLabels())
-			if !rq && p.healthChecker != nil {
-				p.healthChecker.Stop(newObj.GetNamespace() + "/" + newObj.GetName())
-			}
-			return rq
-		},
-
 		CreateFunc: func(e event.CreateEvent) bool {
-			obj := e.Object.(*api.RabbitMQ)
+			obj := e.Object
 			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, obj.GetLabels())
 			if !rq && p.healthChecker != nil {
 				p.healthChecker.Stop(obj.GetNamespace() + "/" + obj.GetName())
@@ -184,8 +174,17 @@ func (p *dbPredicate) GetPredicateFuncsForDatabase() predicate.Funcs {
 			return rq
 		},
 
+		UpdateFunc: func(e event.UpdateEvent) bool {
+			newObj := e.ObjectNew
+			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, newObj.GetLabels())
+			if !rq && p.healthChecker != nil {
+				p.healthChecker.Stop(newObj.GetNamespace() + "/" + newObj.GetName())
+			}
+			return rq
+		},
+
 		DeleteFunc: func(e event.DeleteEvent) bool {
-			obj := e.Object.(*api.RabbitMQ)
+			obj := e.Object
 			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, obj.GetLabels())
 			if !rq && p.healthChecker != nil {
 				p.healthChecker.Stop(obj.GetNamespace() + "/" + obj.GetName())
@@ -197,8 +196,8 @@ func (p *dbPredicate) GetPredicateFuncsForDatabase() predicate.Funcs {
 
 func (p *dbPredicate) GetPredicateFuncsForOwnerObjects() predicate.Funcs {
 	return predicate.Funcs{
-		UpdateFunc: func(e event.UpdateEvent) bool {
-			dbObj, err := p.GetOwnerObject(e.ObjectNew)
+		CreateFunc: func(e event.CreateEvent) bool {
+			dbObj, err := p.GetOwnerObject(e.Object)
 			if err != nil && !kerr.IsNotFound(err) {
 				klog.Errorln(err)
 				return false
@@ -213,8 +212,8 @@ func (p *dbPredicate) GetPredicateFuncsForOwnerObjects() predicate.Funcs {
 			return rq
 		},
 
-		CreateFunc: func(e event.CreateEvent) bool {
-			dbObj, err := p.GetOwnerObject(e.Object)
+		UpdateFunc: func(e event.UpdateEvent) bool {
+			dbObj, err := p.GetOwnerObject(e.ObjectNew)
 			if err != nil && !kerr.IsNotFound(err) {
 				klog.Errorln(err)
 				return false
