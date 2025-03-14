@@ -32,7 +32,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
-	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -133,15 +133,29 @@ func (w *FerretDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.FerretDB) fi
 			db.Name,
 			err.Error()))
 	}
-	if db.Spec.Replicas == nil || *db.Spec.Replicas < 1 {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+	if db.Spec.Server.Primary == nil || *db.Spec.Server.Primary.Replicas < 1 {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("server.primary.replicas"),
 			db.Name,
-			fmt.Sprintf(`spec.replicas "%v" invalid. Must be greater than zero`, db.Spec.Replicas)))
+			fmt.Sprintf(`spec.server.primary.replicas "%v" invalid. Must be greater than zero`, *db.Spec.Server.Primary.Replicas)))
 	}
 
-	if db.Spec.PodTemplate != nil {
-		if err := FerretDBValidateEnvVar(getMainContainerEnvs(db), forbiddenEnvVars, db.ResourceKind()); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
+	if db.Spec.Server.Secondary != nil && *db.Spec.Server.Secondary.Replicas < 1 {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("server.secondary.replicas"),
+			db.Name,
+			fmt.Sprintf(`spec.server.secondary.replicas "%v" invalid. Must be greater than zero`, *db.Spec.Server.Secondary.Replicas)))
+	}
+
+	if db.Spec.Server.Primary != nil && db.Spec.Server.Primary.PodTemplate != nil {
+		if err := FerretDBValidateEnvVar(getMainContainerEnvs(db.Spec.Server.Primary.PodTemplate), forbiddenEnvVars, db.ResourceKind()); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("server.primary.podTemplate"),
+				db.Name,
+				err.Error()))
+		}
+	}
+
+	if db.Spec.Server.Secondary != nil && db.Spec.Server.Secondary.PodTemplate != nil {
+		if err := FerretDBValidateEnvVar(getMainContainerEnvs(db.Spec.Server.Secondary.PodTemplate), forbiddenEnvVars, db.ResourceKind()); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("server.secondary.podTemplate"),
 				db.Name,
 				err.Error()))
 		}
@@ -195,52 +209,6 @@ func (w *FerretDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.FerretDB) fi
 					db.Name,
 					`'backend.postgresRef.namespace' is needed when backend is externally managed`))
 			}
-			apb := appcat.AppBinding{}
-			err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-				Name:      db.Spec.Backend.PostgresRef.Name,
-				Namespace: db.Spec.Backend.PostgresRef.Namespace,
-			}, &apb)
-			if err != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					db.Name,
-					err.Error(),
-				))
-			}
-
-			if apb.Spec.Secret == nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-					db.Name,
-					`spec.secret needed in external pg appbinding`))
-			}
-
-			if apb.Spec.ClientConfig.Service == nil && apb.Spec.ClientConfig.URL == nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					db.Name,
-					`'clientConfig.url' or 'clientConfig.service' needed in the external pg appbinding`,
-				))
-			}
-			sslMode, err := db.GetSSLModeFromAppBinding(&apb)
-			if err != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					db.Name,
-					err.Error(),
-				))
-			}
-
-			if sslMode == olddbapi.PostgresSSLModeRequire || sslMode == olddbapi.PostgresSSLModeVerifyCA || sslMode == olddbapi.PostgresSSLModeVerifyFull {
-				if apb.Spec.ClientConfig.CABundle == nil && apb.Spec.TLSSecret == nil {
-					allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-						db.Name,
-						"backend postgres connection is ssl encrypted but 'spec.clientConfig.caBundle' or 'spec.tlsSecret' is not provided in appbinding",
-					))
-				}
-			}
-			if (apb.Spec.ClientConfig.CABundle != nil || apb.Spec.TLSSecret != nil) && sslMode == olddbapi.PostgresSSLModeDisable {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("postgresRef"),
-					db.Name,
-					"no client certificate or ca bundle possible when sslMode set to disable in backend postgres",
-				))
-			}
 		}
 	} else {
 		if db.Spec.Backend.Version != nil {
@@ -288,8 +256,8 @@ var forbiddenEnvVars = []string{
 	kubedb.EnvFerretDBTLSPort, kubedb.EnvFerretDBCAPath, kubedb.EnvFerretDBCertPath, kubedb.EnvFerretDBKeyPath,
 }
 
-func getMainContainerEnvs(db *olddbapi.FerretDB) []core.EnvVar {
-	for _, container := range db.Spec.PodTemplate.Spec.Containers {
+func getMainContainerEnvs(podTemplate *ofstv2.PodTemplateSpec) []core.EnvVar {
+	for _, container := range podTemplate.Spec.Containers {
 		if container.Name == kubedb.FerretDBContainerName {
 			return container.Env
 		}

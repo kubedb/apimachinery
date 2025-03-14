@@ -538,12 +538,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpdateVersionSpec":                            schema_apimachinery_apis_ops_v1alpha1_EtcdUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVerticalScalingSpec":                          schema_apimachinery_apis_ops_v1alpha1_EtcdVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVolumeExpansionSpec":                          schema_apimachinery_apis_ops_v1alpha1_EtcdVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBHorizontalScalingReplicas":                schema_apimachinery_apis_ops_v1alpha1_FerretDBHorizontalScalingReplicas(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBHorizontalScalingSpec":                    schema_apimachinery_apis_ops_v1alpha1_FerretDBHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBOpsRequest":                               schema_apimachinery_apis_ops_v1alpha1_FerretDBOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBOpsRequestList":                           schema_apimachinery_apis_ops_v1alpha1_FerretDBOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBOpsRequestSpec":                           schema_apimachinery_apis_ops_v1alpha1_FerretDBOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBTLSSpec":                                  schema_apimachinery_apis_ops_v1alpha1_FerretDBTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBUpdateVersionSpec":                        schema_apimachinery_apis_ops_v1alpha1_FerretDBUpdateVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBVerticalScalingResource":                  schema_apimachinery_apis_ops_v1alpha1_FerretDBVerticalScalingResource(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBVerticalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_FerretDBVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HiddenNode":                                       schema_apimachinery_apis_ops_v1alpha1_HiddenNode(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.KafkaCustomConfigurationSpec":                     schema_apimachinery_apis_ops_v1alpha1_KafkaCustomConfigurationSpec(ref),
@@ -27556,6 +27558,24 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdVolumeExpansionSpec(ref common.Re
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_FerretDBHorizontalScalingReplicas(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_FerretDBHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27563,16 +27583,21 @@ func schema_apimachinery_apis_ops_v1alpha1_FerretDBHorizontalScalingSpec(ref com
 				Description: "FerretDBHorizontalScalingSpec contains the horizontal scaling information of a FerretDB cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"node": {
+					"primary": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of node",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBHorizontalScalingReplicas"),
+						},
+					},
+					"secondary": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBHorizontalScalingReplicas"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBHorizontalScalingReplicas"},
 	}
 }
 
@@ -27833,12 +27858,11 @@ func schema_apimachinery_apis_ops_v1alpha1_FerretDBUpdateVersionSpec(ref common.
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_FerretDBVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ops_v1alpha1_FerretDBVerticalScalingResource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "FerretDBVerticalScalingSpec contains the vertical scaling information of a FerretDB cluster",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"node": {
 						SchemaProps: spec.SchemaProps{
@@ -27851,6 +27875,31 @@ func schema_apimachinery_apis_ops_v1alpha1_FerretDBVerticalScalingSpec(ref commo
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_FerretDBVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FerretDBVerticalScalingSpec contains the vertical scaling information of a FerretDB cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"primary": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBVerticalScalingResource"),
+						},
+					},
+					"secondary": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBVerticalScalingResource"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBVerticalScalingResource"},
 	}
 }
 
