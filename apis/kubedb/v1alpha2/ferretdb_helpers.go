@@ -100,28 +100,11 @@ func (f *FerretDB) OffshootLabels() map[string]string {
 	return f.offshootLabels(f.OffshootSelectors(), nil)
 }
 
-func (f *FerretDB) PrimaryServerName() string {
-	if f.Spec.Server.Primary == nil {
-		return ""
-	}
-	return fmt.Sprintf("%s-%s", f.OffshootName(), kubedb.FerretDBServerTypePrimary)
-}
-
 func (f *FerretDB) SecondaryServerName() string {
 	if f.Spec.Server.Secondary == nil {
 		return ""
 	}
 	return fmt.Sprintf("%s-%s", f.OffshootName(), kubedb.FerretDBServerTypeSecondary)
-}
-
-func (f *FerretDB) PrimaryServerSelectors() map[string]string {
-	return meta_util.OverwriteKeys(f.OffshootSelectors(), map[string]string{
-		kubedb.FerretDBPrimaryLabelKey: f.PrimaryServerName(),
-	})
-}
-
-func (f *FerretDB) PrimaryServerLabels() map[string]string {
-	return meta_util.OverwriteKeys(f.OffshootLabels(), f.PrimaryServerSelectors())
 }
 
 func (f *FerretDB) SecondaryServerSelectors() map[string]string {
@@ -286,7 +269,7 @@ func (f *FerretDB) SetDefaults(kc client.Client) {
 		}
 	}
 	defaultVersion := "16.4-bookworm"
-	if f.isLaterVersion(&frVersion, 2) {
+	if f.IsLaterVersion(&frVersion, 2) {
 		defaultVersion = "16.7-doc"
 	}
 	if !f.Spec.Backend.ExternallyManaged {
@@ -321,7 +304,7 @@ func (f *FerretDB) setDefaultPodTemplateValues(podTemplate *ofst.PodTemplateSpec
 	f.setDefaultPodTemplateSecurityContext(frVersion, podTemplate)
 }
 
-func (f *FerretDB) isLaterVersion(frVersion *catalog.FerretDBVersion, version uint64) bool {
+func (f *FerretDB) IsLaterVersion(frVersion *catalog.FerretDBVersion, version uint64) bool {
 	v, _ := semver.NewVersion(frVersion.Spec.Version)
 	return v.Major() >= version
 }
@@ -441,8 +424,8 @@ func (f *FerretDB) StatsService() mona.StatsAccessor {
 	return &FerretDBStatsService{f}
 }
 
-func (f *FerretDB) PrimaryGoverningServiceName() string {
-	return f.PrimaryServerName() + "-pods"
+func (f *FerretDB) GoverningServiceName() string {
+	return f.OffshootName() + "-pods"
 }
 
 func (f *FerretDB) SecondaryGoverningServiceName() string {

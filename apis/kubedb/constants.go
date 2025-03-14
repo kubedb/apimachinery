@@ -1460,6 +1460,9 @@ const (
 
 	FerretDBPrimaryLabelKey   = "ferretdb.kubedb.com/server.primary"
 	FerretDBSecondaryLabelKey = "ferretdb.kubedb.com/server.secondary"
+
+	FerretDBBackendInitFile   = "data.sh"
+	FerretDBBackendConfigFile = "user.conf"
 )
 
 // =========================== ClickHouse Constants ============================
