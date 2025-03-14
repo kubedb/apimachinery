@@ -66,7 +66,6 @@ const (
 	PerconaXtraDBKey = "perconaxtradb" + "." + GroupName
 	MongoDBKey       = "mongodb" + "." + GroupName
 	RedisKey         = "redis" + "." + GroupName
-	ValkeyKey        = "valkey" + "." + GroupName
 	MemcachedKey     = "memcached" + "." + GroupName
 	EtcdKey          = "etcd" + "." + GroupName
 	ProxySQLKey      = "proxysql" + "." + GroupName
@@ -612,27 +611,8 @@ const (
 	// =========================== Valkey Constants ============================
 	ValkeyConfigKey = "valkey.conf" // ValkeyConfigKey is going to create for the customize valkey configuration
 	// DefaultConfigKey is going to create for the default valkey configuration
-	ValkeyContainerName             = "valkey"
-	ValkeySentinelContainerName     = "valkeysentinel"
-	ValkeyShardKey                  = ValkeyKey + "/shard"
-	ValkeyInitContainerName         = "valkey-init"
-	ValkeyCoordinatorContainerName  = "vk-coordinator"
-	ValkeySentinelInitContainerName = "sentinel-init"
-
-	ValkeyScriptVolumeName      = "script-vol"
-	ValkeyScriptVolumePath      = "/scripts"
-	ValkeyDataVolumeName        = "data"
-	ValkeyDataVolumePath        = "/data"
-	ValkeyTLSVolumeName         = "tls-volume"
-	ValkeyExporterTLSVolumeName = "exporter-tls-volume"
-	ValkeyTLSVolumePath         = "/certs"
-	ValkeySentinelTLSVolumeName = "sentinel-tls-volume"
-	ValkeySentinelTLSVolumePath = "/sentinel-certs"
-	ValkeyConfigVolumeName      = "valkey-config"
-	ValkeyConfigVolumePath      = "/usr/local/etc/valkey/"
 
 	EnvValkeyPassword          = "VALKEYCLI_AUTH"
-	EnvValkeyMode              = "VALKEY_MODE"
 	EnvValkeyMajorRedisVersion = "MAJOR_VALKEY_VERSION"
 
 	// =========================== PgBouncer Constants ============================

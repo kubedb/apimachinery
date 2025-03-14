@@ -53,7 +53,7 @@ type RedisVersionSpec struct {
 	// Version
 	Version string `json:"version"`
 	// Distribution determines the type of the database(Valkey or Redis)
-	Distribution RedisDistro `json:"distribution"`
+	Distribution RedisDistro `json:"distribution,omitempty"`
 	// init container image
 	InitContainer RedisVersionInitContainer `json:"initContainer,omitempty"`
 	// Database Image

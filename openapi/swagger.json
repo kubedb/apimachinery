@@ -22842,7 +22842,6 @@
       "type": "object",
       "required": [
         "version",
-        "distribution",
         "db",
         "exporter",
         "podSecurityPolicies"
@@ -22864,8 +22863,7 @@
         },
         "distribution": {
           "description": "Distribution determines the type of the database(Valkey or Redis)",
-          "type": "string",
-          "default": ""
+          "type": "string"
         },
         "exporter": {
           "description": "Exporter Image",
