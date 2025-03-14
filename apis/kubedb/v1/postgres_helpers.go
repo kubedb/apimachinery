@@ -29,7 +29,6 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -506,8 +505,4 @@ func (m *Postgres) SetHealthCheckerDefaults() {
 
 func (m *Postgres) IsRemoteReplica() bool {
 	return m.Spec.RemoteReplica != nil
-}
-
-func (m *Postgres) IsVitualAuthSecretReferred() bool {
-	return m.Spec.AuthSecret != nil && m.Spec.AuthSecret.ApiGroup == vsecretapi.GroupName
 }
