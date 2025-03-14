@@ -26355,6 +26355,10 @@
           "description": "ActiveFrom holds the RFC3339 time. The referred authSecret is in-use from this timestamp.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
+        "apiGroup": {
+          "description": "Two possible groups: \"\", virtual-secrets.dev",
+          "type": "string"
+        },
         "externallyManaged": {
           "type": "boolean"
         },
@@ -26366,6 +26370,10 @@
         "rotateAfter": {
           "description": "Recommendation engine will generate RotateAuth opsReq using this field",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "secretSourceName": {
+          "description": "SecretSource references the secret manager used for virtual secret",
+          "type": "string"
         }
       }
     },
