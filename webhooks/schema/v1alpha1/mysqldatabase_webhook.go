@@ -36,8 +36,8 @@ import (
 // log is for logging in this package.
 var mysqldatabaselog = logf.Log.WithName("mysqldatabase-resource")
 
-// SetupMySQLSchemaWebhookWithManager registers the webhook for Cassandra in the manager.
-func SetupMySQLSchemaWebhookWithManager(mgr ctrl.Manager) error {
+// SetupMySQLDatabaseWebhookWithManager registers the webhook for Cassandra in the manager.
+func SetupMySQLDatabaseWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&smapi.MySQLDatabase{}).
 		WithValidator(&MySQLDatabaseCustomWebhook{}).
 		WithDefaulter(&MySQLDatabaseCustomWebhook{}).

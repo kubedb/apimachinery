@@ -34,8 +34,8 @@ import (
 // log is for logging in this package.
 var postgresdatabaselog = logf.Log.WithName("postgresdatabase-resource")
 
-// SetupPostgresSchemaWebhookWithManager registers the webhook for SchemaManager in the managedb.
-func SetupPostgresSchemaWebhookWithManager(mgr ctrl.Manager) error {
+// SetupPostgresDatabaseWebhookWithManager registers the webhook for SchemaManager in the managedb.
+func SetupPostgresDatabaseWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&smapi.PostgresDatabase{}).
 		WithValidator(&PostgresDatabaseCustomWebhook{}).
 		WithDefaulter(&PostgresDatabaseCustomWebhook{}).

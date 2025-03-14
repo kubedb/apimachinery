@@ -34,8 +34,8 @@ import (
 // log is for logging in this package.
 var mongodbdatabaselog = logf.Log.WithName("mongodbdatabase-resource")
 
-// SetupMongoDBSchemaWebhookWithManager registers the webhook for Cassandra in the manager.
-func SetupMongoDBSchemaWebhookWithManager(mgr ctrl.Manager) error {
+// SetupMongoDBDatabaseWebhookWithManager registers the webhook for Cassandra in the manager.
+func SetupMongoDBDatabaseWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&smapi.MongoDBDatabase{}).
 		WithValidator(&MongoDatabaseCustomWebhook{}).
 		WithDefaulter(&MongoDatabaseCustomWebhook{}).

@@ -36,8 +36,8 @@ import (
 // log is for logging in this package.
 var mariadbdatabaselog = logf.Log.WithName("mariadbdatabase-resource")
 
-// SetupMariaDBSchemaWebhookWithManager registers the webhook for SchemaManager in the manager.
-func SetupMariaDBSchemaWebhookWithManager(mgr ctrl.Manager) error {
+// SetupMariaDBDatabaseWebhookWithManager registers the webhook for SchemaManager in the manager.
+func SetupMariaDBDatabaseWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&smapi.MariaDBDatabase{}).
 		WithValidator(&MariaDBDatabaseCustomWebhook{}).
 		WithDefaulter(&MariaDBDatabaseCustomWebhook{}).
