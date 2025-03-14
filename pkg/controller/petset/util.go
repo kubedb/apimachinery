@@ -109,6 +109,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, es.GetLabels())
 
 	case olddbapi.ResourceKindFerretDB:
 		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralFerretDB
@@ -141,6 +142,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, md.GetLabels())
 
 	case olddbapi.ResourceKindMemcached:
 		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralMemcached
@@ -152,6 +154,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, mc.GetLabels())
 
 	case dbapi.ResourceKindMongoDB:
 		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralMongoDB
@@ -163,6 +166,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, mg.GetLabels())
 
 	case olddbapi.ResourceKindMSSQLServer:
 		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralMSSQLServer
@@ -185,6 +189,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, my.GetLabels())
 
 	case dbapi.ResourceKindPerconaXtraDB:
 		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralPerconaXtraDB
@@ -196,6 +201,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, px.GetLabels())
 
 	case olddbapi.ResourceKindPgBouncer:
 		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralPgBouncer
@@ -207,6 +213,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, pp.GetLabels())
 
 	case olddbapi.ResourceKindPgpool:
 		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralPgpool
@@ -241,6 +248,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, psq.GetLabels())
 
 	case olddbapi.ResourceKindRabbitmq:
 		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralRabbitmq
@@ -263,6 +271,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, rd.GetLabels())
 
 	case olddbapi.ResourceKindRedisSentinel:
 		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralRedisSentinel
@@ -274,6 +283,7 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		if err != nil {
 			return nil, err
 		}
+		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, rds.GetLabels())
 
 	case olddbapi.ResourceKindSinglestore:
 		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralSinglestore

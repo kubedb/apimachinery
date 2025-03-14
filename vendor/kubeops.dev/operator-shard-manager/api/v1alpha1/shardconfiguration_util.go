@@ -44,7 +44,7 @@ func ShouldEnqueueObjectForShard(kbClient client.Client, shardConfig string, lab
 		klog.Warningf("shard-config provided, but no shardId found in the labels, skip enqueuing object")
 		return false
 	}
-	requeue, err := ShouldReconcileByShard(shardId, shardConfig, kbClient)
+	requeue, err := ShouldReconcileByShard(kbClient, shardConfig, shardId)
 	if err != nil {
 		klog.Warningf("ShouldReconcileByShard failed with err: %v", err)
 		return false
@@ -53,8 +53,7 @@ func ShouldEnqueueObjectForShard(kbClient client.Client, shardConfig string, lab
 }
 
 func ExtractShardKeyFromLabels(labels map[string]string, shardConfigName string) string {
-	// klog.Infof("got pg labels: %v", labels)
-	shardKey := fmt.Sprintf("shard-index.%s/%s", SchemeGroupVersion.Group, shardConfigName)
+	shardKey := fmt.Sprintf("shard.%s/%s", SchemeGroupVersion.Group, shardConfigName)
 	val, ok := labels[shardKey]
 	if !ok {
 		return ""
@@ -62,15 +61,20 @@ func ExtractShardKeyFromLabels(labels map[string]string, shardConfigName string)
 	return val
 }
 
-func ShouldReconcileByShard(shardId, shardConfigName string, kbClient client.Client) (bool, error) {
-	pods, err := GetPodListsFromShardConfig(kbClient, shardConfigName)
+func ShouldReconcileByShard(kbClient client.Client, shardConfigName, shardId string) (bool, error) {
+	head, err := FindHeadOfLineage(kbClient)
+	if err != nil {
+		return false, err
+	}
+
+	pods, err := GetPodListsFromShardConfig(kbClient, *head, shardConfigName)
 	if err != nil {
 		return false, err
 	}
 	return isShardIdAndHostnameMatched(shardId, pods), nil
 }
 
-func GetPodListsFromShardConfig(kbClient client.Client, shardConfigName string) ([]string, error) {
+func FindHeadOfLineage(kbClient client.Client) (*kmapi.ObjectInfo, error) {
 	hostName, err := getPodHostname()
 	if err != nil {
 		return nil, err
@@ -98,12 +102,15 @@ func GetPodListsFromShardConfig(kbClient client.Client, shardConfigName string) 
 	if len(lineage) == 0 {
 		return nil, fmt.Errorf("no owner found for pod %s/%s", pod.Namespace, pod.Name)
 	}
+	return &lineage[0], nil
+}
 
-	shardConfig, err := fetchShardConfiguration(shardConfigName, kbClient)
+func GetPodListsFromShardConfig(kbClient client.Client, head kmapi.ObjectInfo, shardConfigName string) ([]string, error) {
+	shardConfig, err := fetchShardConfiguration(kbClient, shardConfigName)
 	if err != nil {
 		return nil, err
 	}
-	return getPodNamesFromShardConfig(lineage[0], shardConfig), nil
+	return getPodNamesFromShardConfig(head, shardConfig), nil
 }
 
 func getPodHostname() (string, error) {
@@ -122,9 +129,9 @@ func getPodNamespace() (string, error) {
 	return string(out), nil
 }
 
-func fetchShardConfiguration(shardConfigName string, c client.Client) (*ShardConfiguration, error) {
+func fetchShardConfiguration(kbClient client.Client, shardConfigName string) (*ShardConfiguration, error) {
 	shardConfig := &ShardConfiguration{}
-	err := c.Get(context.TODO(), types.NamespacedName{
+	err := kbClient.Get(context.TODO(), types.NamespacedName{
 		Name: shardConfigName,
 	}, shardConfig)
 	if err != nil {
