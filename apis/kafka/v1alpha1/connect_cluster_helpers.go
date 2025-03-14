@@ -264,7 +264,7 @@ func (k *ConnectCluster) SetDefaults(kc client.Client) {
 	}
 
 	k.setDefaultContainerSecurityContext(&kfVersion, &k.Spec.PodTemplate)
-	k.setDefaultInitContainerSecurityContext(&k.Spec.PodTemplate)
+	k.setDefaultInitContainerSecurityContext(kc, &k.Spec.PodTemplate)
 
 	dbContainer := coreutil.GetContainerByName(k.Spec.PodTemplate.Spec.Containers, ConnectClusterContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
@@ -304,13 +304,13 @@ func (k *ConnectCluster) SetDefaultEnvs() {
 	}
 }
 
-func (k *ConnectCluster) setDefaultInitContainerSecurityContext(podTemplate *ofstv2.PodTemplateSpec) {
+func (k *ConnectCluster) setDefaultInitContainerSecurityContext(kc client.Client, podTemplate *ofstv2.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
 	for _, name := range k.Spec.ConnectorPlugins {
 		connectorVersion := &catalog.KafkaConnectorVersion{}
-		err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: name}, connectorVersion)
+		err := kc.Get(context.TODO(), types.NamespacedName{Name: name}, connectorVersion)
 		if err != nil {
 			klog.Errorf("can't get the kafka connector version object %s for %s \n", err.Error(), name)
 			return

@@ -182,7 +182,7 @@ func (k *SchemaRegistryCustomWebhook) validateEnvVars() error {
 
 func (k *SchemaRegistryCustomWebhook) validateVersion(sr *kafkapi.SchemaRegistry) error {
 	ksrVersion := &catalog.SchemaRegistryVersion{}
-	err := kafkapi.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: sr.Spec.Version}, ksrVersion)
+	err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: sr.Spec.Version}, ksrVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
