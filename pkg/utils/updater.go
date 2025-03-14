@@ -78,6 +78,7 @@ func UpdateReadinessGateCondition(ctx context.Context, kc client.Client) error {
 
 func WaitForShardIdUpdate(kc client.Client, shardConfigName string) {
 	hostName := os.Getenv("HOSTNAME")
+	var err error
 	head, err := scutil.FindHeadOfLineage(kc)
 	if err != nil {
 		panic(fmt.Sprintf("failed to find the head of the lineage for %v, err: %v", hostName, err))
@@ -89,8 +90,7 @@ func WaitForShardIdUpdate(kc client.Client, shardConfigName string) {
 	for {
 		select {
 		case <-timeout:
-			panic("shardConfig flag provided but no shard object is found with that name")
-			return
+			panic(fmt.Sprintf("failed waiting for the shard index of %v to update on %v/%v, err= %v", hostName, scutil.SchemeGroupVersion.Group, shardConfigName, err))
 		case <-ticker.C:
 			pods, err := scutil.GetPodListsFromShardConfig(kc, *head, shardConfigName)
 			if err != nil {
