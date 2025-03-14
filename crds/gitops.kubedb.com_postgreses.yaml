@@ -4975,7 +4975,7 @@ spec:
                 type: array
               gitops:
                 properties:
-                  gitOpInfo:
+                  gitOpsInfo:
                     items:
                       properties:
                         changeRequestStatus:

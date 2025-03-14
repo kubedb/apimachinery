@@ -18,7 +18,7 @@ package v1alpha1
 
 type GitOpsStatus struct {
 	// Trim this slice to 10 ?
-	GitOpsInfo []GitOpsInfo `json:"gitOpInfo,omitempty"`
+	GitOpsInfo []GitOpsInfo `json:"gitOpsInfo,omitempty"`
 }
 
 type GitOpsInfo struct {
