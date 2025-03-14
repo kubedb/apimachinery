@@ -61,7 +61,7 @@ spec:
                 type: object
               deprecated:
                 type: boolean
-              engine:
+              distribution:
                 enum:
                 - Redis
                 - Valkey
@@ -177,7 +177,7 @@ spec:
                 type: string
             required:
             - db
-            - engine
+            - distribution
             - exporter
             - podSecurityPolicies
             - version

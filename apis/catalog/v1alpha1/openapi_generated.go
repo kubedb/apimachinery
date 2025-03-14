@@ -31159,9 +31159,9 @@ func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref common.Refer
 							Format:      "",
 						},
 					},
-					"engine": {
+					"distribution": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Engine determines the type of the database(Valkey or Redis)",
+							Description: "Distribution determines the type of the database(Valkey or Redis)",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -31250,7 +31250,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "engine", "db", "exporter", "podSecurityPolicies"},
+				Required: []string{"version", "distribution", "db", "exporter", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{

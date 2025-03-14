@@ -52,8 +52,8 @@ type RedisVersion struct {
 type RedisVersionSpec struct {
 	// Version
 	Version string `json:"version"`
-	// Engine determines the type of the database(Valkey or Redis)
-	Engine Engine `json:"engine"`
+	// Distribution determines the type of the database(Valkey or Redis)
+	Distribution RedisDistro `json:"distribution"`
 	// init container image
 	InitContainer RedisVersionInitContainer `json:"initContainer,omitempty"`
 	// Database Image
@@ -117,9 +117,9 @@ type RedisVersionList struct {
 }
 
 // +kubebuilder:validation:Enum=Redis;Valkey
-type Engine string
+type RedisDistro string
 
 const (
-	EngineRedis  Engine = "Redis"
-	EngineValkey Engine = "Valkey"
+	RedisDistroRedis  RedisDistro = "Redis"
+	RedisDistroValkey RedisDistro = "Valkey"
 )

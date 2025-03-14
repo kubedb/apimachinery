@@ -22842,7 +22842,7 @@
       "type": "object",
       "required": [
         "version",
-        "engine",
+        "distribution",
         "db",
         "exporter",
         "podSecurityPolicies"
@@ -22862,8 +22862,8 @@
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
           "type": "boolean"
         },
-        "engine": {
-          "description": "Engine determines the type of the database(Valkey or Redis)",
+        "distribution": {
+          "description": "Distribution determines the type of the database(Valkey or Redis)",
           "type": "string",
           "default": ""
         },
