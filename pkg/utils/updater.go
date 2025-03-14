@@ -77,30 +77,24 @@ func UpdateReadinessGateCondition(ctx context.Context, kc client.Client) error {
 }
 
 func WaitForShardIdUpdate(kc client.Client, shardConfigName string) {
+	hostName := os.Getenv("HOSTNAME")
 	head, err := scutil.FindHeadOfLineage(kc)
 	if err != nil {
-		panic("failed to find the owner from the ownerReference, err: " + err.Error())
+		panic(fmt.Sprintf("failed to find the head of the lineage for %v, err: %v", hostName, err))
 	}
-	shardNotFoundCounter := 0
 	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
 	timeout := time.After(5 * time.Minute)
-	hostName := os.Getenv("HOSTNAME")
 	klog.Infof("Waiting for the shard-id to be updated for %v in shardConfig %v \n", hostName, shardConfigName)
 	for {
 		select {
 		case <-timeout:
+			panic("shardConfig flag provided but no shard object is found with that name")
 			return
 		case <-ticker.C:
 			pods, err := scutil.GetPodListsFromShardConfig(kc, *head, shardConfigName)
 			if err != nil {
 				klog.V(6).Infoln(err.Error())
-				if kerr.IsNotFound(err) {
-					shardNotFoundCounter++
-				}
-				if shardNotFoundCounter >= 10 {
-					panic("shardConfig flag provided but no shard object is found with that name")
-				}
 				continue
 			}
 			for _, pod := range pods {
