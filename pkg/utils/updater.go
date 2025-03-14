@@ -90,7 +90,6 @@ func WaitForShardIdUpdate(kc client.Client, shardConfigName string) {
 		select {
 		case <-timeout:
 			panic("shardConfig flag provided but no shard object is found with that name")
-			return
 		case <-ticker.C:
 			pods, err := scutil.GetPodListsFromShardConfig(kc, *head, shardConfigName)
 			if err != nil {
