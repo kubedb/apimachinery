@@ -829,7 +829,7 @@ gomodules.xyz/counter/hourly
 ## explicit; go 1.22.1
 gomodules.xyz/encoding/json
 gomodules.xyz/encoding/json/types
-# gomodules.xyz/jsonpatch/v2 v2.4.0
+# gomodules.xyz/jsonpatch/v2 v2.5.0
 ## explicit; go 1.20
 gomodules.xyz/jsonpatch/v2
 # gomodules.xyz/mergo v0.3.13
@@ -1732,7 +1732,7 @@ k8s.io/utils/trace
 # kmodules.xyz/apiversion v0.2.0
 ## explicit; go 1.14
 kmodules.xyz/apiversion
-# kmodules.xyz/client-go v0.30.47-0.20250308053642-38a9e7b6982e
+# kmodules.xyz/client-go v0.30.47-0.20250315002849-2fe5e2230651
 ## explicit; go 1.23.0
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1829,7 +1829,7 @@ kubeops.dev/csi-driver-cacerts/crds
 # kubeops.dev/operator-shard-manager v0.0.2-0.20250314053713-82e0002285a5
 ## explicit; go 1.22.1
 kubeops.dev/operator-shard-manager/api/v1alpha1
-# kubeops.dev/petset v0.0.8-0.20250221072845-c4b7c4af4678
+# kubeops.dev/petset v0.0.8-0.20250315015425-94b85514c003
 ## explicit; go 1.23.0
 kubeops.dev/petset/apis/apps/v1
 kubeops.dev/petset/client/clientset/versioned

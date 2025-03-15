@@ -38,7 +38,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20241212222426-2c72e554b1e7
 	k8s.io/metrics v0.32.2
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
-	kmodules.xyz/client-go v0.30.47-0.20250308053642-38a9e7b6982e
+	kmodules.xyz/client-go v0.30.47-0.20250315002849-2fe5e2230651
 	kmodules.xyz/crd-schema-fuzz v0.29.2-0.20250302110413-c5b140ca984a
 	kmodules.xyz/custom-resources v0.30.2-0.20250303080226-05eb1392c05f
 	kmodules.xyz/monitoring-agent-api v0.30.4
@@ -48,7 +48,7 @@ require (
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/operator-shard-manager v0.0.2-0.20250314053713-82e0002285a5
-	kubeops.dev/petset v0.0.8-0.20250221072845-c4b7c4af4678
+	kubeops.dev/petset v0.0.8-0.20250315015425-94b85514c003
 	kubeops.dev/sidekick v0.0.10
 	kubestash.dev/apimachinery v0.16.1-0.20250311062248-74531c6cf9ea
 	sigs.k8s.io/controller-runtime v0.20.2
@@ -185,7 +185,7 @@ require (
 	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/time v0.10.0 // indirect
 	gomodules.xyz/counter v0.0.1 // indirect
-	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
+	gomodules.xyz/jsonpatch/v2 v2.5.0 // indirect
 	gomodules.xyz/mergo v0.3.13 // indirect
 	gomodules.xyz/sets v0.2.1 // indirect
 	gomodules.xyz/sync v0.1.0 // indirect
