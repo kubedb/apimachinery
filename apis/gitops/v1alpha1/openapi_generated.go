@@ -26323,7 +26323,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_GitOpsStatus(ref common.ReferenceC
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"gitOpInfo": {
+					"gitOpsInfo": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Trim this slice to 10 ?",
 							Type:        []string{"array"},

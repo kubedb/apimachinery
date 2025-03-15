@@ -26372,7 +26372,7 @@
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "secretSourceName": {
-          "description": "SecretSource references the secret manager used for virtual secret",
+          "description": "SecretSourceName references the secret manager used for virtual secret",
           "type": "string"
         }
       }
