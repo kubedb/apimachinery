@@ -109,14 +109,16 @@ func validateKafkaOpsRequest(req *opsapi.KafkaOpsRequest, oldReq *opsapi.KafkaOp
 }
 
 func (k *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaOpsRequest) error {
+	var (
+		err   error
+		kafka *dbapi.Kafka
+	)
+	if kafka, err = k.hasDatabaseRef(req); err != nil {
+		return err
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.KafkaOpsRequestType) {
-	case opsapi.KafkaOpsRequestTypeRestart:
-		if _, err := k.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
 	case opsapi.KafkaOpsRequestTypeUpdateVersion:
 		if err := k.validateKafkaUpdateVersionOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
@@ -124,19 +126,19 @@ func (k *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaO
 				err.Error()))
 		}
 	case opsapi.KafkaOpsRequestTypeHorizontalScaling:
-		if err := k.validateKafkaHorizontalScalingOpsRequest(req); err != nil {
+		if err := k.validateKafkaHorizontalScalingOpsRequest(kafka, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.KafkaOpsRequestTypeVerticalScaling:
-		if err := k.validateKafkaVerticalScalingOpsRequest(req); err != nil {
+		if err := k.validateKafkaVerticalScalingOpsRequest(kafka, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.KafkaOpsRequestTypeVolumeExpansion:
-		if err := k.validateKafkaVolumeExpansionOpsRequest(req); err != nil {
+		if err := k.validateKafkaVolumeExpansionOpsRequest(kafka, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -159,7 +161,6 @@ func (k *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaO
 				req.Name,
 				err.Error()))
 		}
-
 	default:
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for kafka are %s", req.Spec.Type, strings.Join(opsapi.KafkaOpsRequestTypeNames(), ", "))))
@@ -187,10 +188,6 @@ func (k *KafkaOpsRequestCustomWebhook) validateKafkaUpdateVersionOpsRequest(req 
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	if _, err := k.hasDatabaseRef(req); err != nil {
-		return err
-	}
-
 	nextKafkaVersion := catalogapi.KafkaVersion{}
 	err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.Spec.UpdateVersion.TargetVersion,
@@ -206,14 +203,10 @@ func (k *KafkaOpsRequestCustomWebhook) validateKafkaUpdateVersionOpsRequest(req 
 	return nil
 }
 
-func (k *KafkaOpsRequestCustomWebhook) validateKafkaHorizontalScalingOpsRequest(req *opsapi.KafkaOpsRequest) error {
+func (k *KafkaOpsRequestCustomWebhook) validateKafkaHorizontalScalingOpsRequest(kafka *dbapi.Kafka, req *opsapi.KafkaOpsRequest) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
 		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
-	}
-	kafka, err := k.hasDatabaseRef(req)
-	if err != nil {
-		return err
 	}
 
 	if horizontalScalingSpec.Topology != nil && horizontalScalingSpec.Node != nil {
@@ -242,15 +235,12 @@ func (k *KafkaOpsRequestCustomWebhook) validateKafkaHorizontalScalingOpsRequest(
 	return nil
 }
 
-func (k *KafkaOpsRequestCustomWebhook) validateKafkaVerticalScalingOpsRequest(req *opsapi.KafkaOpsRequest) error {
+func (k *KafkaOpsRequestCustomWebhook) validateKafkaVerticalScalingOpsRequest(kafka *dbapi.Kafka, req *opsapi.KafkaOpsRequest) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
-	kafka, err := k.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
+
 	if (verticalScalingSpec.Broker != nil || verticalScalingSpec.Controller != nil) && verticalScalingSpec.Node != nil {
 		return errors.New("spec.verticalScaling.Node && spec.verticalScaling.Topology both can't be non-empty at the same ops request")
 	}
@@ -264,15 +254,12 @@ func (k *KafkaOpsRequestCustomWebhook) validateKafkaVerticalScalingOpsRequest(re
 	return nil
 }
 
-func (k *KafkaOpsRequestCustomWebhook) validateKafkaVolumeExpansionOpsRequest(req *opsapi.KafkaOpsRequest) error {
+func (k *KafkaOpsRequestCustomWebhook) validateKafkaVolumeExpansionOpsRequest(kafka *dbapi.Kafka, req *opsapi.KafkaOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
-	kafka, err := k.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
+
 	if (volumeExpansionSpec.Broker != nil || volumeExpansionSpec.Controller != nil) && volumeExpansionSpec.Node != nil {
 		return errors.New("spec.volumeExpansion.Node && spec.volumeExpansion.Topology both can't be non-empty at the same ops request")
 	}
@@ -291,9 +278,6 @@ func (k *KafkaOpsRequestCustomWebhook) validateKafkaReconfigurationOpsRequest(re
 	if configurationSpec == nil {
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
-	if _, err := k.hasDatabaseRef(req); err != nil {
-		return err
-	}
 
 	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
 		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
@@ -306,9 +290,7 @@ func (k *KafkaOpsRequestCustomWebhook) validateKafkaReconfigurationTLSOpsRequest
 	if TLSSpec == nil {
 		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
 	}
-	if _, err := k.hasDatabaseRef(req); err != nil {
-		return err
-	}
+
 	configCount := 0
 	if req.Spec.TLS.Remove {
 		configCount++
@@ -332,9 +314,6 @@ func (k *KafkaOpsRequestCustomWebhook) validateKafkaReconfigurationTLSOpsRequest
 
 func (k *KafkaOpsRequestCustomWebhook) validateKafkaRotateAuthenticationOpsRequest(req *opsapi.KafkaOpsRequest) error {
 	authSpec := req.Spec.Authentication
-	if _, err := k.hasDatabaseRef(req); err != nil {
-		return err
-	}
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
 			return errors.New("spec.authentication.secretRef.name can not be empty")
