@@ -177,7 +177,7 @@ func (k *KafkaOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.KafkaOpsReques
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &kafka); err != nil {
-		return nil, errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
 	return &kafka, nil
 }
@@ -194,11 +194,11 @@ func (k *KafkaOpsRequestCustomWebhook) validateKafkaUpdateVersionOpsRequest(req 
 		Namespace: req.GetNamespace(),
 	}, &nextKafkaVersion)
 	if err != nil {
-		return errors.New(fmt.Sprintf("spec.updateVersion.targetVersion - %s, is not supported!", req.Spec.UpdateVersion.TargetVersion))
+		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is not supported", req.Spec.UpdateVersion.TargetVersion)
 	}
 	// check if nextKafkaVersion is deprecated.if deprecated, return error
 	if nextKafkaVersion.Spec.Deprecated {
-		return errors.New(fmt.Sprintf("spec.updateVersion.targetVersion - %s, is depricated!", req.Spec.UpdateVersion.TargetVersion))
+		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is depricated!", req.Spec.UpdateVersion.TargetVersion)
 	}
 	return nil
 }
