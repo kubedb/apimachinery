@@ -157,7 +157,7 @@ func (z *ZooKeeperOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ZooKeeperO
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &sdb); err != nil {
-		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
 	return nil
 }
@@ -210,7 +210,7 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperReconfigureOpsReques
 	if applyConfigExists(req.Spec.Configuration.ApplyConfig) {
 		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.ZooKeeperConfigFileName]
 		if !ok {
-			return errors.New(fmt.Sprintf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.ZooKeeperConfigFileName))
+			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.ZooKeeperConfigFileName)
 		}
 	}
 
