@@ -65,7 +65,7 @@ func (in *SolrAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.
 
 func (in *SolrAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.SolrAutoscaler) {
 	var db olddbapi.Solr
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -134,7 +134,7 @@ func (in *SolrAutoscalerCustomWebhook) validate(scaler *autoscalingapi.SolrAutos
 		return errors.New("databaseRef can't be empty")
 	}
 	var sl olddbapi.Solr
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &sl)

@@ -64,7 +64,7 @@ func (r *ClickHouseAutoscalerCustomWebhook) Default(ctx context.Context, obj run
 
 func (r *ClickHouseAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ClickHouseAutoscaler) {
 	var db olddbapi.ClickHouse
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := r.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -126,7 +126,7 @@ func (r *ClickHouseAutoscalerCustomWebhook) validate(scaler *autoscalingapi.Clic
 		return errors.New("databaseRef can't be empty")
 	}
 	var kf olddbapi.ClickHouse
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := r.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &kf)

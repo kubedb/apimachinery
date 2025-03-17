@@ -66,7 +66,7 @@ func (s *SinglestoreAutoscalerCustomWebhook) Default(ctx context.Context, obj ru
 
 func (s *SinglestoreAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.SinglestoreAutoscaler) {
 	var db olddbapi.Singlestore
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := s.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -138,7 +138,7 @@ func (s *SinglestoreAutoscalerCustomWebhook) validate(scaler *autoscalingapi.Sin
 		return errors.New("databaseRef can't be empty")
 	}
 	var sdb olddbapi.Singlestore
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := s.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &sdb)

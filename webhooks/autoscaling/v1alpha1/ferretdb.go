@@ -67,7 +67,7 @@ func (in *FerretDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runt
 
 func (in *FerretDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.FerretDBAutoscaler) {
 	var db olddbapi.FerretDB
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -132,7 +132,7 @@ func (in *FerretDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.Ferre
 		return errors.New("databaseRef can't be empty")
 	}
 	var kf olddbapi.FerretDB
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &kf)

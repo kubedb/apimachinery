@@ -140,7 +140,7 @@ func (k *KafkaAutoscalerCustomWebhook) validate(scaler *autoscalingapi.KafkaAuto
 		return errors.New("databaseRef can't be empty")
 	}
 	var kf dbapi.Kafka
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &kf)
