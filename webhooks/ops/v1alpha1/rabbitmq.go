@@ -20,19 +20,20 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	meta_util "kmodules.xyz/client-go/meta"
-	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
-	"strings"
-
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -155,6 +156,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "RabbitMQopsrequests.kubedb.com", Kind: "RabbitMQOpsRequest"}, req.Name, allErr)
 }
+
 func (rv *RabbitMQOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RabbitMQOpsRequest) error {
 	rabbitmq := &olddbapi.RabbitMQ{}
 	if err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
@@ -181,6 +183,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVerticalScalingOpsReq
 
 	return nil
 }
+
 func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVolumeExpansionOpsRequest(req *opsapi.RabbitMQOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
