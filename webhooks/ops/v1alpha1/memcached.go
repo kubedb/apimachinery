@@ -159,7 +159,7 @@ func (c *MemcachedOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MemcachedO
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &db); err != nil {
-		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
 	return nil
 }

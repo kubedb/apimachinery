@@ -163,7 +163,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RabbitMQOp
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, rabbitmq); err != nil {
-		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
 	return nil
 }
@@ -216,11 +216,11 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQUpdateVersionOpsReque
 		Namespace: req.GetNamespace(),
 	}, &nextRabbitMQVersion)
 	if err != nil {
-		return errors.New(fmt.Sprintf("spec.updateVersion.targetVersion - %s, is not supported!", req.Spec.UpdateVersion.TargetVersion))
+		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is not supported", req.Spec.UpdateVersion.TargetVersion)
 	}
 	// check if nextRabbitMQVersion is deprecated.if deprecated, return error
 	if nextRabbitMQVersion.Spec.Deprecated {
-		return errors.New(fmt.Sprintf("spec.updateVersion.targetVersion - %s, is depricated!", req.Spec.UpdateVersion.TargetVersion))
+		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is depricated", req.Spec.UpdateVersion.TargetVersion)
 	}
 	return nil
 }
