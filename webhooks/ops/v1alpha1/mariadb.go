@@ -21,13 +21,11 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
-	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -91,18 +89,6 @@ func (in *MariaDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, ob
 	return nil, nil
 }
 
-func validateMariaDBOpsRequest(obj, oldObj runtime.Object) error {
-	preconditions := meta_util.PreConditionSet{Set: sets.New[string]("spec")}
-	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)
-	if err != nil {
-		if mergepatch.IsPreconditionFailed(err) {
-			return fmt.Errorf("%v.%v", err, preconditions.Error())
-		}
-		return err
-	}
-	return nil
-}
-
 func (in *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MariaDBOpsRequest) error {
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.MariaDBOpsRequestType) {
@@ -142,6 +128,12 @@ func (in *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mar
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.MariaDBOpsRequestTypeVolumeExpansion:
+		if err := in.validateMariaDBVolumeExpansionOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
 	default:
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MariaDB are %s", req.Spec.Type, strings.Join(opsapi.MariaDBOpsRequestTypeNames(), ", "))))
@@ -159,6 +151,18 @@ func (in *MariaDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MariaDBOpsR
 		Namespace: req.GetNamespace(),
 	}, &md); err != nil {
 		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+	}
+	return nil
+}
+
+func validateMariaDBOpsRequest(obj, oldObj runtime.Object) error {
+	preconditions := meta_util.PreConditionSet{Set: sets.New[string]("spec")}
+	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)
+	if err != nil {
+		if mergepatch.IsPreconditionFailed(err) {
+			return fmt.Errorf("%v.%v", err, preconditions.Error())
+		}
+		return err
 	}
 	return nil
 }
@@ -225,12 +229,12 @@ func (in *MariaDBOpsRequestCustomWebhook) ensureMariaDBGroupReplication(req *ops
 	return nil
 }
 
-func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsRequest(client cs.Interface, req *opsapi.MariaDBOpsRequest) error {
+func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsRequest(req *opsapi.MariaDBOpsRequest) error {
 	if req.Spec.VolumeExpansion == nil || req.Spec.VolumeExpansion.MariaDB == nil {
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
 	}
-
-	db, err := client.KubedbV1().MariaDBs(req.Namespace).Get(context.TODO(), req.Spec.DatabaseRef.Name, metav1.GetOptions{})
+	db := &dbapi.MariaDB{}
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
