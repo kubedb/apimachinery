@@ -28,7 +28,6 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -105,12 +104,6 @@ func validatePgpoolOpsRequest(req *opsapi.PgpoolOpsRequest, oldReq *opsapi.Pgpoo
 }
 
 func (k *PgpoolOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.PgpoolOpsRequest) error {
-	pp := &olddbapi.Pgpool{ObjectMeta: metav1.ObjectMeta{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}}
-	err := k.DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(pp), pp)
-	if err != nil && apierrors.IsNotFound(err) {
-		return fmt.Errorf("referenced database %s/%s is not found", req.Namespace, req.Spec.DatabaseRef.Name)
-	}
-
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.PgpoolOpsRequestType) {
 	case opsapi.PgpoolOpsRequestTypeRestart:
