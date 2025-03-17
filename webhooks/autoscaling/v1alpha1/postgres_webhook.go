@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -33,7 +34,7 @@ import (
 // log is for logging in this package.
 var pgLog = logf.Log.WithName("postgres-autoscaler")
 
-func (in *PostgresAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
+func (in *autoscalingapi.PostgresAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
 	return builder.WebhookManagedBy(mgr).
 		For(in).
 		Complete()
@@ -41,16 +42,16 @@ func (in *PostgresAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-postgresautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=postgresautoscaler,verbs=create;update,versions=v1alpha1,name=mpostgresautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomDefaulter = &PostgresAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.PostgresAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *PostgresAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+func (in *autoscalingapi.PostgresAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	pgLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
 	return nil
 }
 
-func (in *PostgresAutoscaler) setDefaults() {
+func (in *autoscalingapi.PostgresAutoscaler) setDefaults() {
 	in.setOpsReqOptsDefaults()
 
 	if in.Spec.Storage != nil {
@@ -62,9 +63,9 @@ func (in *PostgresAutoscaler) setDefaults() {
 	}
 }
 
-func (in *PostgresAutoscaler) setOpsReqOptsDefaults() {
+func (in *autoscalingapi.PostgresAutoscaler) setOpsReqOptsDefaults() {
 	if in.Spec.OpsRequestOptions == nil {
-		in.Spec.OpsRequestOptions = &PostgresOpsRequestOptions{}
+		in.Spec.OpsRequestOptions = &autoscalingapi.PostgresOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -75,25 +76,25 @@ func (in *PostgresAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-postgresautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=postgresautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vpostgresautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomValidator = &PostgresAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.PostgresAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *PostgresAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (in *autoscalingapi.PostgresAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pgLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *PostgresAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (in *autoscalingapi.PostgresAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	pgLog.Info("validate update", "name", in.Name)
 	return nil, in.validate()
 }
 
-func (_ PostgresAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ autoscalingapi.PostgresAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *PostgresAutoscaler) validate() error {
+func (in *autoscalingapi.PostgresAutoscaler) validate() error {
 	if in.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

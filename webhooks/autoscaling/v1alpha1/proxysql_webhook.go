@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -33,7 +34,7 @@ import (
 // log is for logging in this package.
 var proxyLog = logf.Log.WithName("ProxySQL-autoscaler")
 
-func (in *ProxySQLAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
+func (in *autoscalingapi.ProxySQLAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
 	return builder.WebhookManagedBy(mgr).
 		For(in).
 		Complete()
@@ -41,16 +42,16 @@ func (in *ProxySQLAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-proxysqlautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=proxysqlautoscaler,verbs=create;update,versions=v1alpha1,name=mproxysqlautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomDefaulter = &ProxySQLAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.ProxySQLAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *ProxySQLAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+func (in *autoscalingapi.ProxySQLAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	proxyLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
 	return nil
 }
 
-func (in *ProxySQLAutoscaler) setDefaults() {
+func (in *autoscalingapi.ProxySQLAutoscaler) setDefaults() {
 	in.setOpsReqOptsDefaults()
 
 	if in.Spec.Compute != nil {
@@ -58,9 +59,9 @@ func (in *ProxySQLAutoscaler) setDefaults() {
 	}
 }
 
-func (in *ProxySQLAutoscaler) setOpsReqOptsDefaults() {
+func (in *autoscalingapi.ProxySQLAutoscaler) setOpsReqOptsDefaults() {
 	if in.Spec.OpsRequestOptions == nil {
-		in.Spec.OpsRequestOptions = &ProxySQLOpsRequestOptions{}
+		in.Spec.OpsRequestOptions = &autoscalingapi.ProxySQLOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -71,25 +72,25 @@ func (in *ProxySQLAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-proxysqlautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=proxysqlautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vproxysqlautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomValidator = &ProxySQLAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.ProxySQLAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *ProxySQLAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (in *autoscalingapi.ProxySQLAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	proxyLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *ProxySQLAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (in *autoscalingapi.ProxySQLAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	proxyLog.Info("validate update", "name", in.Name)
 	return nil, in.validate()
 }
 
-func (_ ProxySQLAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ autoscalingapi.ProxySQLAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *ProxySQLAutoscaler) validate() error {
+func (in *autoscalingapi.ProxySQLAutoscaler) validate() error {
 	if in.Spec.DatabaseRef == nil {
 		return errors.New("proxyRef can't be empty")
 	}

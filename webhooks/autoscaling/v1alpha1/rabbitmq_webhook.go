@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -32,48 +33,42 @@ import (
 )
 
 // log is for logging in this package.
-var sllog = logf.Log.WithName("solr-autoscaler")
+var rabbitLog = logf.Log.WithName("rabbitmq-autoscaler")
 
-var _ webhook.CustomDefaulter = &SolrAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.RabbitMQAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *SolrAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
-	sllog.Info("defaulting", "name", r.Name)
+func (r *autoscalingapi.RabbitMQAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+	rabbitLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
 	return nil
 }
 
-func (r *SolrAutoscaler) setDefaults() {
-	var db olddbapi.Solr
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+func (r *autoscalingapi.RabbitMQAutoscaler) setDefaults() {
+	var db olddbapi.RabbitMQ
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get Solr %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get RabbitMQ %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return
 	}
 
 	r.setOpsReqOptsDefaults()
 
 	if r.Spec.Storage != nil {
-		setDefaultStorageValues(r.Spec.Storage.Node)
-		setDefaultStorageValues(r.Spec.Storage.Overseer)
-		setDefaultStorageValues(r.Spec.Storage.Data)
-		setDefaultStorageValues(r.Spec.Storage.Coordinator)
+		setDefaultStorageValues(r.Spec.Storage.RabbitMQ)
 	}
 
 	if r.Spec.Compute != nil {
-		setDefaultStorageValues(r.Spec.Storage.Node)
-		setDefaultStorageValues(r.Spec.Storage.Overseer)
-		setDefaultStorageValues(r.Spec.Storage.Data)
-		setDefaultStorageValues(r.Spec.Storage.Coordinator)
+		setDefaultComputeValues(r.Spec.Compute.RabbitMQ)
 	}
 }
 
-func (r *SolrAutoscaler) setOpsReqOptsDefaults() {
+func (r *autoscalingapi.RabbitMQAutoscaler) setOpsReqOptsDefaults() {
 	if r.Spec.OpsRequestOptions == nil {
-		r.Spec.OpsRequestOptions = &SolrOpsRequestOptions{}
+		r.Spec.OpsRequestOptions = &autoscalingapi.RabbitMQOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -82,35 +77,35 @@ func (r *SolrAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &SolrAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.RabbitMQAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *SolrAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	sllog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.RabbitMQAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	rabbitLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *SolrAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
-	sllog.Info("validate update", "name", r.Name)
+func (r *autoscalingapi.RabbitMQAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	rabbitLog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *SolrAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *autoscalingapi.RabbitMQAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *SolrAutoscaler) validate() error {
+func (r *autoscalingapi.RabbitMQAutoscaler) validate() error {
 	if r.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
-	var kf olddbapi.Solr
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	var kf olddbapi.RabbitMQ
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &kf)
 	if err != nil {
-		_ = fmt.Errorf("can't get Solr %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get RabbitMQ %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return err
 	}
 

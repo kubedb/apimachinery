@@ -21,7 +21,8 @@ import (
 	"errors"
 	"fmt"
 
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -32,42 +33,42 @@ import (
 )
 
 // log is for logging in this package.
-var mcLog = logf.Log.WithName("memcached-autoscaler")
+var zkLog = logf.Log.WithName("zookeeper-autoscaler")
 
-var _ webhook.CustomDefaulter = &MemcachedAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.ZooKeeperAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *MemcachedAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
-	mcLog.Info("defaulting", "name", r.Name)
+func (r *autoscalingapi.ZooKeeperAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+	zkLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
 	return nil
 }
 
-func (r *MemcachedAutoscaler) setDefaults() {
-	var db dbapi.Memcached
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+func (r *autoscalingapi.ZooKeeperAutoscaler) setDefaults() {
+	var db olddbapi.ZooKeeper
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get Memcached %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get ZooKeeper %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return
 	}
 
 	r.setOpsReqOptsDefaults()
 
 	if r.Spec.Storage != nil {
-		setDefaultStorageValues(r.Spec.Storage.Memcached)
+		setDefaultStorageValues(r.Spec.Storage.ZooKeeper)
 	}
 
 	if r.Spec.Compute != nil {
-		setDefaultComputeValues(r.Spec.Compute.Memcached)
+		setDefaultComputeValues(r.Spec.Compute.ZooKeeper)
 	}
 }
 
-func (r *MemcachedAutoscaler) setOpsReqOptsDefaults() {
+func (r *autoscalingapi.ZooKeeperAutoscaler) setOpsReqOptsDefaults() {
 	if r.Spec.OpsRequestOptions == nil {
-		r.Spec.OpsRequestOptions = &MemcachedOpsRequestOptions{}
+		r.Spec.OpsRequestOptions = &autoscalingapi.ZooKeeperOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -76,35 +77,35 @@ func (r *MemcachedAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &MemcachedAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.ZooKeeperAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *MemcachedAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	mcLog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.ZooKeeperAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	zkLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *MemcachedAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
-	mcLog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.ZooKeeperAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	zkLog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *MemcachedAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *autoscalingapi.ZooKeeperAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *MemcachedAutoscaler) validate() error {
+func (r *autoscalingapi.ZooKeeperAutoscaler) validate() error {
 	if r.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
-	var kf dbapi.Memcached
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	var kf olddbapi.ZooKeeper
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &kf)
 	if err != nil {
-		_ = fmt.Errorf("can't get Memcached %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get ZooKeeper %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return err
 	}
 

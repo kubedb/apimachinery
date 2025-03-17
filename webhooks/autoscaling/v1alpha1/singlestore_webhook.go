@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -34,18 +35,18 @@ import (
 // log is for logging in this package.
 var singlestoreLog = logf.Log.WithName("singlestore-autoscaler")
 
-var _ webhook.CustomDefaulter = &SinglestoreAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.SinglestoreAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (s *SinglestoreAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+func (s *autoscalingapi.SinglestoreAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	singlestoreLog.Info("defaulting", "name", s.Name)
 	s.setDefaults()
 	return nil
 }
 
-func (s *SinglestoreAutoscaler) setDefaults() {
+func (s *autoscalingapi.SinglestoreAutoscaler) setDefaults() {
 	var db olddbapi.Singlestore
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      s.Spec.DatabaseRef.Name,
 		Namespace: s.Namespace,
 	}, &db)
@@ -75,9 +76,9 @@ func (s *SinglestoreAutoscaler) setDefaults() {
 	}
 }
 
-func (s *SinglestoreAutoscaler) setOpsReqOptsDefaults() {
+func (s *autoscalingapi.SinglestoreAutoscaler) setOpsReqOptsDefaults() {
 	if s.Spec.OpsRequestOptions == nil {
-		s.Spec.OpsRequestOptions = &SinglestoreOpsRequestOptions{}
+		s.Spec.OpsRequestOptions = &autoscalingapi.SinglestoreOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -86,30 +87,30 @@ func (s *SinglestoreAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &SinglestoreAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.SinglestoreAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (s *SinglestoreAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (s *autoscalingapi.SinglestoreAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	kafkaLog.Info("validate create", "name", s.Name)
 	return nil, s.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (s *SinglestoreAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (s *autoscalingapi.SinglestoreAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	kafkaLog.Info("validate update", "name", s.Name)
 	return nil, s.validate()
 }
 
-func (_ *SinglestoreAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *autoscalingapi.SinglestoreAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (s *SinglestoreAutoscaler) validate() error {
+func (s *autoscalingapi.SinglestoreAutoscaler) validate() error {
 	if s.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var sdb olddbapi.Singlestore
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      s.Spec.DatabaseRef.Name,
 		Namespace: s.Namespace,
 	}, &sdb)

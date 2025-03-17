@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -32,42 +33,48 @@ import (
 )
 
 // log is for logging in this package.
-var frLog = logf.Log.WithName("ferretdb-autoscaler")
+var sllog = logf.Log.WithName("solr-autoscaler")
 
-var _ webhook.CustomDefaulter = &FerretDBAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.SolrAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *FerretDBAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
-	frLog.Info("defaulting", "name", r.Name)
+func (r *autoscalingapi.SolrAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+	sllog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
 	return nil
 }
 
-func (r *FerretDBAutoscaler) setDefaults() {
-	var db olddbapi.FerretDB
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+func (r *autoscalingapi.SolrAutoscaler) setDefaults() {
+	var db olddbapi.Solr
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get FerretDB %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get Solr %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return
 	}
 
 	r.setOpsReqOptsDefaults()
 
 	if r.Spec.Storage != nil {
-		setDefaultStorageValues(r.Spec.Storage.FerretDB)
+		setDefaultStorageValues(r.Spec.Storage.Node)
+		setDefaultStorageValues(r.Spec.Storage.Overseer)
+		setDefaultStorageValues(r.Spec.Storage.Data)
+		setDefaultStorageValues(r.Spec.Storage.Coordinator)
 	}
 
 	if r.Spec.Compute != nil {
-		setDefaultComputeValues(r.Spec.Compute.FerretDB)
+		setDefaultStorageValues(r.Spec.Storage.Node)
+		setDefaultStorageValues(r.Spec.Storage.Overseer)
+		setDefaultStorageValues(r.Spec.Storage.Data)
+		setDefaultStorageValues(r.Spec.Storage.Coordinator)
 	}
 }
 
-func (r *FerretDBAutoscaler) setOpsReqOptsDefaults() {
+func (r *autoscalingapi.SolrAutoscaler) setOpsReqOptsDefaults() {
 	if r.Spec.OpsRequestOptions == nil {
-		r.Spec.OpsRequestOptions = &FerretDBOpsRequestOptions{}
+		r.Spec.OpsRequestOptions = &autoscalingapi.SolrOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -76,35 +83,35 @@ func (r *FerretDBAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &FerretDBAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.SolrAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *FerretDBAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	frLog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.SolrAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	sllog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *FerretDBAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
-	frLog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.SolrAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	sllog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *FerretDBAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *autoscalingapi.SolrAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *FerretDBAutoscaler) validate() error {
+func (r *autoscalingapi.SolrAutoscaler) validate() error {
 	if r.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
-	var kf olddbapi.FerretDB
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	var kf olddbapi.Solr
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &kf)
 	if err != nil {
-		_ = fmt.Errorf("can't get FerretDB %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get Solr %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return err
 	}
 

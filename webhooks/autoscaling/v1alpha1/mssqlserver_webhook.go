@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -32,42 +33,42 @@ import (
 )
 
 // log is for logging in this package.
-var zkLog = logf.Log.WithName("zookeeper-autoscaler")
+var msLog = logf.Log.WithName("mssqlserver-autoscaler")
 
-var _ webhook.CustomDefaulter = &ZooKeeperAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.MSSQLServerAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *ZooKeeperAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
-	zkLog.Info("defaulting", "name", r.Name)
+func (r *autoscalingapi.MSSQLServerAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+	msLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
 	return nil
 }
 
-func (r *ZooKeeperAutoscaler) setDefaults() {
-	var db olddbapi.ZooKeeper
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+func (r *autoscalingapi.MSSQLServerAutoscaler) setDefaults() {
+	var db olddbapi.MSSQLServer
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get ZooKeeper %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get MSSQLServer %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return
 	}
 
 	r.setOpsReqOptsDefaults()
 
 	if r.Spec.Storage != nil {
-		setDefaultStorageValues(r.Spec.Storage.ZooKeeper)
+		setDefaultStorageValues(r.Spec.Storage.MSSQLServer)
 	}
 
 	if r.Spec.Compute != nil {
-		setDefaultComputeValues(r.Spec.Compute.ZooKeeper)
+		setDefaultComputeValues(r.Spec.Compute.MSSQLServer)
 	}
 }
 
-func (r *ZooKeeperAutoscaler) setOpsReqOptsDefaults() {
+func (r *autoscalingapi.MSSQLServerAutoscaler) setOpsReqOptsDefaults() {
 	if r.Spec.OpsRequestOptions == nil {
-		r.Spec.OpsRequestOptions = &ZooKeeperOpsRequestOptions{}
+		r.Spec.OpsRequestOptions = &autoscalingapi.MSSQLServerOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -76,35 +77,35 @@ func (r *ZooKeeperAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &ZooKeeperAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.MSSQLServerAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *ZooKeeperAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	zkLog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.MSSQLServerAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	msLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *ZooKeeperAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
-	zkLog.Info("validate update", "name", r.Name)
+func (r *autoscalingapi.MSSQLServerAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	msLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *ZooKeeperAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *autoscalingapi.MSSQLServerAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *ZooKeeperAutoscaler) validate() error {
+func (r *autoscalingapi.MSSQLServerAutoscaler) validate() error {
 	if r.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
-	var kf olddbapi.ZooKeeper
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	var kf olddbapi.MSSQLServer
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &kf)
 	if err != nil {
-		_ = fmt.Errorf("can't get ZooKeeper %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get MSSQLServer %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return err
 	}
 

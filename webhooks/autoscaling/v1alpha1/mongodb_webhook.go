@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -36,7 +37,7 @@ import (
 // log is for logging in this package.
 var mongoLog = logf.Log.WithName("mongodb-autoscaler")
 
-func (in *MongoDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
+func (in *autoscalingapi.MongoDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
 	return builder.WebhookManagedBy(mgr).
 		For(in).
 		Complete()
@@ -44,18 +45,18 @@ func (in *MongoDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error 
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-mongodbautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=mongodbautoscaler,verbs=create;update,versions=v1alpha1,name=mmongodbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomDefaulter = &MongoDBAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.MongoDBAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MongoDBAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+func (in *autoscalingapi.MongoDBAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	mongoLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
 	return nil
 }
 
-func (in *MongoDBAutoscaler) setDefaults() {
+func (in *autoscalingapi.MongoDBAutoscaler) setDefaults() {
 	var db dbapi.MongoDB
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      in.Spec.DatabaseRef.Name,
 		Namespace: in.Namespace,
 	}, &db)
@@ -93,9 +94,9 @@ func (in *MongoDBAutoscaler) setDefaults() {
 	}
 }
 
-func (in *MongoDBAutoscaler) setOpsReqOptsDefaults() {
+func (in *autoscalingapi.MongoDBAutoscaler) setOpsReqOptsDefaults() {
 	if in.Spec.OpsRequestOptions == nil {
-		in.Spec.OpsRequestOptions = &MongoDBOpsRequestOptions{}
+		in.Spec.OpsRequestOptions = &autoscalingapi.MongoDBOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -106,30 +107,30 @@ func (in *MongoDBAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mongodbautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mongodbautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vmongodbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomValidator = &MongoDBAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.MongoDBAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (in *autoscalingapi.MongoDBAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mongoLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (in *autoscalingapi.MongoDBAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	mongoLog.Info("validate update", "name", in.Name)
 	return nil, in.validate()
 }
 
-func (_ MongoDBAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ autoscalingapi.MongoDBAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *MongoDBAutoscaler) validate() error {
+func (in *autoscalingapi.MongoDBAutoscaler) validate() error {
 	if in.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var mg dbapi.MongoDB
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      in.Spec.DatabaseRef.Name,
 		Namespace: in.Namespace,
 	}, &mg)

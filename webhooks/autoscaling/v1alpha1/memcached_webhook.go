@@ -21,7 +21,8 @@ import (
 	"errors"
 	"fmt"
 
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -32,42 +33,42 @@ import (
 )
 
 // log is for logging in this package.
-var casLog = logf.Log.WithName("cassandra-autoscaler")
+var mcLog = logf.Log.WithName("memcached-autoscaler")
 
-var _ webhook.CustomDefaulter = &CassandraAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.MemcachedAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *CassandraAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
-	casLog.Info("defaulting", "name", r.Name)
+func (r *autoscalingapi.MemcachedAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+	mcLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
 	return nil
 }
 
-func (r *CassandraAutoscaler) setDefaults() {
-	var db olddbapi.Cassandra
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+func (r *autoscalingapi.MemcachedAutoscaler) setDefaults() {
+	var db dbapi.Memcached
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get Cassandra %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get Memcached %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return
 	}
 
 	r.setOpsReqOptsDefaults()
 
 	if r.Spec.Storage != nil {
-		setDefaultStorageValues(r.Spec.Storage.Cassandra)
+		setDefaultStorageValues(r.Spec.Storage.Memcached)
 	}
 
 	if r.Spec.Compute != nil {
-		setDefaultComputeValues(r.Spec.Compute.Cassandra)
+		setDefaultComputeValues(r.Spec.Compute.Memcached)
 	}
 }
 
-func (r *CassandraAutoscaler) setOpsReqOptsDefaults() {
+func (r *autoscalingapi.MemcachedAutoscaler) setOpsReqOptsDefaults() {
 	if r.Spec.OpsRequestOptions == nil {
-		r.Spec.OpsRequestOptions = &CassandraOpsRequestOptions{}
+		r.Spec.OpsRequestOptions = &autoscalingapi.MemcachedOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -76,35 +77,35 @@ func (r *CassandraAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &CassandraAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.MemcachedAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *CassandraAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	casLog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.MemcachedAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	mcLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *CassandraAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
-	casLog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.MemcachedAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	mcLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *CassandraAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *autoscalingapi.MemcachedAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *CassandraAutoscaler) validate() error {
+func (r *autoscalingapi.MemcachedAutoscaler) validate() error {
 	if r.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
-	var kf olddbapi.Cassandra
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	var kf dbapi.Memcached
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &kf)
 	if err != nil {
-		_ = fmt.Errorf("can't get Cassandra %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get Memcached %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return err
 	}
 

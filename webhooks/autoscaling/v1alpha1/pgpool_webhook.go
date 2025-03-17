@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -34,18 +35,18 @@ import (
 // log is for logging in this package.
 var pgpoolLog = logf.Log.WithName("pgpool-autoscaler")
 
-var _ webhook.CustomDefaulter = &PgpoolAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.PgpoolAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *PgpoolAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+func (r *autoscalingapi.PgpoolAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	pgpoolLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
 	return nil
 }
 
-func (r *PgpoolAutoscaler) setDefaults() {
+func (r *autoscalingapi.PgpoolAutoscaler) setDefaults() {
 	var db olddbapi.Pgpool
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &db)
@@ -61,9 +62,9 @@ func (r *PgpoolAutoscaler) setDefaults() {
 	}
 }
 
-func (r *PgpoolAutoscaler) setOpsReqOptsDefaults() {
+func (r *autoscalingapi.PgpoolAutoscaler) setOpsReqOptsDefaults() {
 	if r.Spec.OpsRequestOptions == nil {
-		r.Spec.OpsRequestOptions = &PgpoolOpsRequestOptions{}
+		r.Spec.OpsRequestOptions = &autoscalingapi.PgpoolOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -72,30 +73,30 @@ func (r *PgpoolAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &PgpoolAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.PgpoolAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *PgpoolAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *autoscalingapi.PgpoolAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pgpoolLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *PgpoolAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (r *autoscalingapi.PgpoolAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	pgpoolLog.Info("validate update", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *PgpoolAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *autoscalingapi.PgpoolAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *PgpoolAutoscaler) validate() error {
+func (r *autoscalingapi.PgpoolAutoscaler) validate() error {
 	if r.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var pp olddbapi.Pgpool
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &pp)

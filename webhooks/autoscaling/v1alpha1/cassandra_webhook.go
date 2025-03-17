@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -32,42 +33,42 @@ import (
 )
 
 // log is for logging in this package.
-var msLog = logf.Log.WithName("mssqlserver-autoscaler")
+var casLog = logf.Log.WithName("cassandra-autoscaler")
 
-var _ webhook.CustomDefaulter = &MSSQLServerAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.CassandraAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *MSSQLServerAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
-	msLog.Info("defaulting", "name", r.Name)
+func (r *autoscalingapi.CassandraAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+	casLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
 	return nil
 }
 
-func (r *MSSQLServerAutoscaler) setDefaults() {
-	var db olddbapi.MSSQLServer
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+func (r *autoscalingapi.CassandraAutoscaler) setDefaults() {
+	var db olddbapi.Cassandra
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get MSSQLServer %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get Cassandra %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return
 	}
 
 	r.setOpsReqOptsDefaults()
 
 	if r.Spec.Storage != nil {
-		setDefaultStorageValues(r.Spec.Storage.MSSQLServer)
+		setDefaultStorageValues(r.Spec.Storage.Cassandra)
 	}
 
 	if r.Spec.Compute != nil {
-		setDefaultComputeValues(r.Spec.Compute.MSSQLServer)
+		setDefaultComputeValues(r.Spec.Compute.Cassandra)
 	}
 }
 
-func (r *MSSQLServerAutoscaler) setOpsReqOptsDefaults() {
+func (r *autoscalingapi.CassandraAutoscaler) setOpsReqOptsDefaults() {
 	if r.Spec.OpsRequestOptions == nil {
-		r.Spec.OpsRequestOptions = &MSSQLServerOpsRequestOptions{}
+		r.Spec.OpsRequestOptions = &autoscalingapi.CassandraOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -76,35 +77,35 @@ func (r *MSSQLServerAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &MSSQLServerAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.CassandraAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *MSSQLServerAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	msLog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.CassandraAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	casLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *MSSQLServerAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
-	msLog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.CassandraAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	casLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *MSSQLServerAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *autoscalingapi.CassandraAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *MSSQLServerAutoscaler) validate() error {
+func (r *autoscalingapi.CassandraAutoscaler) validate() error {
 	if r.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
-	var kf olddbapi.MSSQLServer
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	var kf olddbapi.Cassandra
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &kf)
 	if err != nil {
-		_ = fmt.Errorf("can't get MSSQLServer %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get Cassandra %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return err
 	}
 

@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -32,42 +33,42 @@ import (
 )
 
 // log is for logging in this package.
-var rabbitLog = logf.Log.WithName("rabbitmq-autoscaler")
+var chLog = logf.Log.WithName("clickhouse-autoscaler")
 
-var _ webhook.CustomDefaulter = &RabbitMQAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.ClickHouseAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *RabbitMQAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
-	rabbitLog.Info("defaulting", "name", r.Name)
+func (r *autoscalingapi.ClickHouseAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+	chLog.Info("defaulting", "name", r.Name)
 	r.setDefaults()
 	return nil
 }
 
-func (r *RabbitMQAutoscaler) setDefaults() {
-	var db olddbapi.RabbitMQ
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+func (r *autoscalingapi.ClickHouseAutoscaler) setDefaults() {
+	var db olddbapi.ClickHouse
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get RabbitMQ %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get ClickHouse %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return
 	}
 
 	r.setOpsReqOptsDefaults()
 
 	if r.Spec.Storage != nil {
-		setDefaultStorageValues(r.Spec.Storage.RabbitMQ)
+		setDefaultStorageValues(r.Spec.Storage.ClickHouse)
 	}
 
 	if r.Spec.Compute != nil {
-		setDefaultComputeValues(r.Spec.Compute.RabbitMQ)
+		setDefaultComputeValues(r.Spec.Compute.ClickHouse)
 	}
 }
 
-func (r *RabbitMQAutoscaler) setOpsReqOptsDefaults() {
+func (r *autoscalingapi.ClickHouseAutoscaler) setOpsReqOptsDefaults() {
 	if r.Spec.OpsRequestOptions == nil {
-		r.Spec.OpsRequestOptions = &RabbitMQOpsRequestOptions{}
+		r.Spec.OpsRequestOptions = &autoscalingapi.ClickHouseOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -76,35 +77,35 @@ func (r *RabbitMQAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &RabbitMQAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.ClickHouseAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *RabbitMQAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	rabbitLog.Info("validate create", "name", r.Name)
+func (r *autoscalingapi.ClickHouseAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	chLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *RabbitMQAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
-	rabbitLog.Info("validate update", "name", r.Name)
+func (r *autoscalingapi.ClickHouseAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	chLog.Info("validate create", "name", r.Name)
 	return nil, r.validate()
 }
 
-func (r *RabbitMQAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (r *autoscalingapi.ClickHouseAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *RabbitMQAutoscaler) validate() error {
+func (r *autoscalingapi.ClickHouseAutoscaler) validate() error {
 	if r.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
-	var kf olddbapi.RabbitMQ
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	var kf olddbapi.ClickHouse
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      r.Spec.DatabaseRef.Name,
 		Namespace: r.Namespace,
 	}, &kf)
 	if err != nil {
-		_ = fmt.Errorf("can't get RabbitMQ %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get ClickHouse %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
 		return err
 	}
 

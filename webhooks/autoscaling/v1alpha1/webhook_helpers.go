@@ -22,6 +22,7 @@ import (
 	"strconv"
 	"strings"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 
 	core "k8s.io/api/core/v1"
@@ -31,18 +32,18 @@ import (
 	"k8s.io/utils/ptr"
 )
 
-func setDefaultStorageValues(storageSpec *StorageAutoscalerSpec) {
+func setDefaultStorageValues(storageSpec *autoscalingapi.StorageAutoscalerSpec) {
 	if storageSpec == nil {
 		return
 	}
 	if storageSpec.Trigger == "" {
-		storageSpec.Trigger = AutoscalerTriggerOff
+		storageSpec.Trigger = autoscalingapi.AutoscalerTriggerOff
 	}
 	if storageSpec.UsageThreshold == nil {
-		storageSpec.UsageThreshold = ptr.To[int32](DefaultStorageUsageThreshold)
+		storageSpec.UsageThreshold = ptr.To[int32](autoscalingapi.DefaultStorageUsageThreshold)
 	}
 	if storageSpec.ScalingThreshold == nil {
-		storageSpec.ScalingThreshold = ptr.To[int32](DefaultStorageScalingThreshold)
+		storageSpec.ScalingThreshold = ptr.To[int32](autoscalingapi.DefaultStorageScalingThreshold)
 	}
 	setDefaultScalingRules(storageSpec)
 }
@@ -54,9 +55,9 @@ type quantity struct {
 }
 
 // sort them by the appliesUpto value. The items with empty threshold
-func setDefaultScalingRules(storageSpec *StorageAutoscalerSpec) {
+func setDefaultScalingRules(storageSpec *autoscalingapi.StorageAutoscalerSpec) {
 	if storageSpec.ScalingRules == nil {
-		storageSpec.ScalingRules = []StorageScalingRule{
+		storageSpec.ScalingRules = []autoscalingapi.StorageScalingRule{
 			{
 				AppliesUpto: "",
 				Threshold:   fmt.Sprintf("%spc", strconv.Itoa(int(*storageSpec.ScalingThreshold))),
@@ -80,15 +81,15 @@ func setDefaultScalingRules(storageSpec *StorageAutoscalerSpec) {
 		return quantities[i].InQuantity.Cmp(quantities[j].InQuantity) < 0
 	})
 
-	storageSpec.ScalingRules = make([]StorageScalingRule, 0)
+	storageSpec.ScalingRules = make([]autoscalingapi.StorageScalingRule, 0)
 	for _, q := range quantities {
-		storageSpec.ScalingRules = append(storageSpec.ScalingRules, StorageScalingRule{
+		storageSpec.ScalingRules = append(storageSpec.ScalingRules, autoscalingapi.StorageScalingRule{
 			AppliesUpto: q.InString,
 			Threshold:   q.Threshold,
 		})
 	}
 	for _, threshold := range zeroQuantityThresholds {
-		storageSpec.ScalingRules = append(storageSpec.ScalingRules, StorageScalingRule{
+		storageSpec.ScalingRules = append(storageSpec.ScalingRules, autoscalingapi.StorageScalingRule{
 			AppliesUpto: "",
 			Threshold:   threshold,
 		})
@@ -96,45 +97,45 @@ func setDefaultScalingRules(storageSpec *StorageAutoscalerSpec) {
 	klog.Infof("scaling Rules = %v \n", storageSpec.ScalingRules)
 }
 
-func setDefaultComputeValues(computeSpec *ComputeAutoscalerSpec) {
+func setDefaultComputeValues(computeSpec *autoscalingapi.ComputeAutoscalerSpec) {
 	if computeSpec == nil {
 		return
 	}
 	if computeSpec.Trigger == "" {
-		computeSpec.Trigger = AutoscalerTriggerOff
+		computeSpec.Trigger = autoscalingapi.AutoscalerTriggerOff
 	}
 	if computeSpec.ControlledResources == nil {
 		computeSpec.ControlledResources = []core.ResourceName{core.ResourceCPU, core.ResourceMemory}
 	}
 	if computeSpec.ContainerControlledValues == nil {
-		reqAndLim := ContainerControlledValuesRequestsAndLimits
+		reqAndLim := autoscalingapi.ContainerControlledValuesRequestsAndLimits
 		computeSpec.ContainerControlledValues = &reqAndLim
 	}
 	if computeSpec.ResourceDiffPercentage == 0 {
-		computeSpec.ResourceDiffPercentage = DefaultResourceDiffPercentage
+		computeSpec.ResourceDiffPercentage = autoscalingapi.DefaultResourceDiffPercentage
 	}
 	if computeSpec.PodLifeTimeThreshold.Duration == 0 {
-		computeSpec.PodLifeTimeThreshold = metav1.Duration{Duration: DefaultPodLifeTimeThreshold}
+		computeSpec.PodLifeTimeThreshold = metav1.Duration{Duration: autoscalingapi.DefaultPodLifeTimeThreshold}
 	}
 }
 
-func setInMemoryDefaults(computeSpec *ComputeAutoscalerSpec, storageEngine dbapi.StorageEngine) {
+func setInMemoryDefaults(computeSpec *autoscalingapi.ComputeAutoscalerSpec, storageEngine dbapi.StorageEngine) {
 	if computeSpec == nil || storageEngine != dbapi.StorageEngineInMemory {
 		return
 	}
 	if computeSpec.InMemoryStorage == nil {
 		// assigning a dummy pointer to set the defaults
-		computeSpec.InMemoryStorage = &ComputeInMemoryStorageSpec{}
+		computeSpec.InMemoryStorage = &autoscalingapi.ComputeInMemoryStorageSpec{}
 	}
 	if computeSpec.InMemoryStorage.UsageThresholdPercentage == 0 {
-		computeSpec.InMemoryStorage.UsageThresholdPercentage = DefaultInMemoryStorageUsageThresholdPercentage
+		computeSpec.InMemoryStorage.UsageThresholdPercentage = autoscalingapi.DefaultInMemoryStorageUsageThresholdPercentage
 	}
 	if computeSpec.InMemoryStorage.ScalingFactorPercentage == 0 {
-		computeSpec.InMemoryStorage.ScalingFactorPercentage = DefaultInMemoryStorageScalingFactorPercentage
+		computeSpec.InMemoryStorage.ScalingFactorPercentage = autoscalingapi.DefaultInMemoryStorageScalingFactorPercentage
 	}
 }
 
-func validateScalingRules(storageSpec *StorageAutoscalerSpec) error {
+func validateScalingRules(storageSpec *autoscalingapi.StorageAutoscalerSpec) error {
 	var zeroQuantityThresholds []string
 	for _, sr := range storageSpec.ScalingRules {
 		if sr.AppliesUpto == "" {

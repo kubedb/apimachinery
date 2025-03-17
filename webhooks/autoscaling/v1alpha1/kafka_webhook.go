@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -34,18 +35,18 @@ import (
 // log is for logging in this package.
 var kafkaLog = logf.Log.WithName("kafka-autoscaler")
 
-var _ webhook.CustomDefaulter = &KafkaAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.KafkaAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (k *KafkaAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+func (k *autoscalingapi.KafkaAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	kafkaLog.Info("defaulting", "name", k.Name)
 	k.setDefaults()
 	return nil
 }
 
-func (k *KafkaAutoscaler) setDefaults() {
+func (k *autoscalingapi.KafkaAutoscaler) setDefaults() {
 	var db dbapi.Kafka
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      k.Spec.DatabaseRef.Name,
 		Namespace: k.Namespace,
 	}, &db)
@@ -75,9 +76,9 @@ func (k *KafkaAutoscaler) setDefaults() {
 	}
 }
 
-func (k *KafkaAutoscaler) setOpsReqOptsDefaults() {
+func (k *autoscalingapi.KafkaAutoscaler) setOpsReqOptsDefaults() {
 	if k.Spec.OpsRequestOptions == nil {
-		k.Spec.OpsRequestOptions = &KafkaOpsRequestOptions{}
+		k.Spec.OpsRequestOptions = &autoscalingapi.KafkaOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -86,30 +87,30 @@ func (k *KafkaAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &KafkaAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.KafkaAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (k *autoscalingapi.KafkaAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	kafkaLog.Info("validate create", "name", k.Name)
 	return nil, k.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (k *autoscalingapi.KafkaAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	kafkaLog.Info("validate create", "name", k.Name)
 	return nil, k.validate()
 }
 
-func (_ *KafkaAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *autoscalingapi.KafkaAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (k *KafkaAutoscaler) validate() error {
+func (k *autoscalingapi.KafkaAutoscaler) validate() error {
 	if k.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var kf dbapi.Kafka
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      k.Spec.DatabaseRef.Name,
 		Namespace: k.Namespace,
 	}, &kf)

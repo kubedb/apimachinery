@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -34,18 +35,18 @@ import (
 // log is for logging in this package.
 var druidLog = logf.Log.WithName("druid-autoscaler")
 
-var _ webhook.CustomDefaulter = &DruidAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.DruidAutoscaler{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (d *DruidAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+func (d *autoscalingapi.DruidAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	druidLog.Info("defaulting", "name", d.Name)
 	d.setDefaults()
 	return nil
 }
 
-func (d *DruidAutoscaler) setDefaults() {
+func (d *autoscalingapi.DruidAutoscaler) setDefaults() {
 	var db olddbapi.Druid
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      d.Spec.DatabaseRef.Name,
 		Namespace: d.Namespace,
 	}, &db)
@@ -92,9 +93,9 @@ func (d *DruidAutoscaler) setDefaults() {
 	}
 }
 
-func (d *DruidAutoscaler) setOpsReqOptsDefaults() {
+func (d *autoscalingapi.DruidAutoscaler) setOpsReqOptsDefaults() {
 	if d.Spec.OpsRequestOptions == nil {
-		d.Spec.OpsRequestOptions = &DruidOpsRequestOptions{}
+		d.Spec.OpsRequestOptions = &autoscalingapi.DruidOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -103,30 +104,30 @@ func (d *DruidAutoscaler) setOpsReqOptsDefaults() {
 	}
 }
 
-var _ webhook.CustomValidator = &DruidAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.DruidAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (d *DruidAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (d *autoscalingapi.DruidAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	druidLog.Info("validate create", "name", d.Name)
 	return nil, d.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (d *DruidAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (d *autoscalingapi.DruidAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	druidLog.Info("validate create", "name", d.Name)
 	return nil, d.validate()
 }
 
-func (_ *DruidAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ *autoscalingapi.DruidAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (d *DruidAutoscaler) validate() error {
+func (d *autoscalingapi.DruidAutoscaler) validate() error {
 	if d.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var dr olddbapi.Druid
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      d.Spec.DatabaseRef.Name,
 		Namespace: d.Namespace,
 	}, &dr)

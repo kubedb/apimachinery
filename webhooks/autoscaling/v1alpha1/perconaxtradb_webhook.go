@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"k8s.io/apimachinery/pkg/runtime"
@@ -33,7 +34,7 @@ import (
 // log is for logging in this package.
 var pxLog = logf.Log.WithName("perconaxtradb-autoscaler")
 
-func (in *PerconaXtraDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
+func (in *autoscalingapi.PerconaXtraDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
 	return builder.WebhookManagedBy(mgr).
 		For(in).
 		Complete()
@@ -41,16 +42,16 @@ func (in *PerconaXtraDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) 
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-perconaxtradbautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=perconaxtradbautoscaler,verbs=create;update,versions=v1alpha1,name=mperconaxtradbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomDefaulter = &PerconaXtraDBAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.PerconaXtraDBAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *PerconaXtraDBAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+func (in *autoscalingapi.PerconaXtraDBAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	pxLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
 	return nil
 }
 
-func (in *PerconaXtraDBAutoscaler) setDefaults() {
+func (in *autoscalingapi.PerconaXtraDBAutoscaler) setDefaults() {
 	in.setOpsReqOptsDefaults()
 
 	if in.Spec.Storage != nil {
@@ -61,9 +62,9 @@ func (in *PerconaXtraDBAutoscaler) setDefaults() {
 	}
 }
 
-func (in *PerconaXtraDBAutoscaler) setOpsReqOptsDefaults() {
+func (in *autoscalingapi.PerconaXtraDBAutoscaler) setOpsReqOptsDefaults() {
 	if in.Spec.OpsRequestOptions == nil {
-		in.Spec.OpsRequestOptions = &PerconaXtraDBOpsRequestOptions{}
+		in.Spec.OpsRequestOptions = &autoscalingapi.PerconaXtraDBOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -74,24 +75,24 @@ func (in *PerconaXtraDBAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-perconaxtradbautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=perconaxtradbautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vperconaxtradbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomValidator = &PerconaXtraDBAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.PerconaXtraDBAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *PerconaXtraDBAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (in *autoscalingapi.PerconaXtraDBAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pxLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *PerconaXtraDBAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (in *autoscalingapi.PerconaXtraDBAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	return nil, in.validate()
 }
 
-func (_ PerconaXtraDBAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ autoscalingapi.PerconaXtraDBAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *PerconaXtraDBAutoscaler) validate() error {
+func (in *autoscalingapi.PerconaXtraDBAutoscaler) validate() error {
 	if in.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -36,7 +37,7 @@ import (
 // log is for logging in this package.
 var redisLog = logf.Log.WithName("redis-autoscaler")
 
-func (in *RedisAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
+func (in *autoscalingapi.RedisAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
 	return builder.WebhookManagedBy(mgr).
 		For(in).
 		Complete()
@@ -44,16 +45,16 @@ func (in *RedisAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-redisautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=redisautoscaler,verbs=create;update,versions=v1alpha1,name=mredisautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomDefaulter = &RedisAutoscaler{}
+var _ webhook.CustomDefaulter = &autoscalingapi.RedisAutoscaler{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *RedisAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
+func (in *autoscalingapi.RedisAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
 	redisLog.Info("defaulting", "name", in.Name)
 	in.setDefaults()
 	return nil
 }
 
-func (in *RedisAutoscaler) setDefaults() {
+func (in *autoscalingapi.RedisAutoscaler) setDefaults() {
 	in.setOpsReqOptsDefaults()
 
 	if in.Spec.Storage != nil {
@@ -69,9 +70,9 @@ func (in *RedisAutoscaler) setDefaults() {
 	}
 }
 
-func (in *RedisAutoscaler) setOpsReqOptsDefaults() {
+func (in *autoscalingapi.RedisAutoscaler) setOpsReqOptsDefaults() {
 	if in.Spec.OpsRequestOptions == nil {
-		in.Spec.OpsRequestOptions = &RedisOpsRequestOptions{}
+		in.Spec.OpsRequestOptions = &autoscalingapi.RedisOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
@@ -82,31 +83,31 @@ func (in *RedisAutoscaler) setOpsReqOptsDefaults() {
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-redisautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=redisautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vredisautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomValidator = &RedisAutoscaler{}
+var _ webhook.CustomValidator = &autoscalingapi.RedisAutoscaler{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *RedisAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (in *autoscalingapi.RedisAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	redisLog.Info("validate create", "name", in.Name)
 	return nil, in.validate()
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *RedisAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (in *autoscalingapi.RedisAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	redisLog.Info("validate update", "name", in.Name)
 	return nil, in.validate()
 }
 
-func (_ RedisAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ autoscalingapi.RedisAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *RedisAutoscaler) validate() error {
+func (in *autoscalingapi.RedisAutoscaler) validate() error {
 	if in.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 
 	var rd dbapi.Redis
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      in.Spec.DatabaseRef.Name,
 		Namespace: in.Namespace,
 	}, &rd)
