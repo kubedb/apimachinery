@@ -173,7 +173,7 @@ func (k *MSSQLServerOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MSSQLSer
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &mssqlserver); err != nil {
-		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
 	return nil
 }
@@ -188,7 +188,7 @@ func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVerticalScalingO
 		return err
 	}
 	if verticalScalingSpec.MSSQLServer == nil {
-		return errors.New("`spec.verticalScaling.mssqlserver` can't be nil in vertical scaling ops request")
+		return fmt.Errorf("`spec.verticalScaling.mssqlserver` can't be nil in vertical scaling ops request")
 	}
 
 	return nil
@@ -197,14 +197,14 @@ func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVerticalScalingO
 func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVolumeExpansionOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
-		return errors.New("spec.volumeExpansion is nil, not supported in VolumeExpansion type")
+		return fmt.Errorf("spec.volumeExpansion is nil, not supported in VolumeExpansion type")
 	}
 	err := k.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
 	if volumeExpansionSpec.MSSQLServer == nil {
-		return errors.New("spec.volumeExpansion.mssqlserver is nil, not supported in VolumeExpansion type")
+		return fmt.Errorf("spec.volumeExpansion.mssqlserver is nil, not supported in VolumeExpansion type")
 	}
 
 	return nil
@@ -213,17 +213,17 @@ func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVolumeExpansionO
 func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerHorizontalScalingOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
-		return errors.New("`spec.horizontalScaling` is nil. Not supported in HorizontalScaling type")
+		return fmt.Errorf("`spec.horizontalScaling` is nil. Not supported in HorizontalScaling type")
 	}
 	err := k.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
 	if horizontalScalingSpec.Replicas == nil {
-		return errors.New("`spec.horizontalScaling.replicas` can't be nil in HorizontalScaling ops request")
+		return fmt.Errorf("`spec.horizontalScaling.replicas` can't be nil in HorizontalScaling ops request")
 	}
 	if *horizontalScalingSpec.Replicas <= 0 {
-		return errors.New("`spec.horizontalScaling.replicas` can't be less than or equal 0")
+		return fmt.Errorf("`spec.horizontalScaling.replicas` can't be less than or equal 0")
 	}
 	return nil
 }
@@ -231,7 +231,7 @@ func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerHorizontalScalin
 func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
 	reconfigureSpec := req.Spec.Configuration
 	if reconfigureSpec == nil {
-		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
+		return fmt.Errorf("`spec.configuration` nil not supported in Reconfigure type")
 	}
 	err := k.hasDatabaseRef(req)
 	if err != nil {
@@ -241,12 +241,12 @@ func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 	if mssqlApplyConfigExists(req.Spec.Configuration.ApplyConfig) {
 		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.MSSQLConfigKey]
 		if !ok {
-			return errors.New(fmt.Sprintf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.MSSQLConfigKey))
+			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.MSSQLConfigKey)
 		}
 	}
 
 	if req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret != nil {
-		return errors.New("`spec.configuration.removeCustomConfig` and `spec.configuration.configSecret` is not supported together")
+		return fmt.Errorf("`spec.configuration.removeCustomConfig` and `spec.configuration.configSecret` is not supported together")
 	}
 
 	return nil
@@ -255,7 +255,7 @@ func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerUpdateVersionOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
-		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
+		return fmt.Errorf("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
 	err := k.hasDatabaseRef(req)
 	if err != nil {
@@ -274,7 +274,7 @@ func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerUpdateVersionOps
 func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureTLSOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
 	tls := req.Spec.TLS
 	if tls == nil {
-		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
+		return fmt.Errorf("`spec.tls` nil not supported in ReconfigureTLS type")
 	}
 	err := k.hasDatabaseRef(req)
 	if err != nil {
@@ -293,11 +293,11 @@ func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureTLSOp
 	}
 
 	if configCount == 0 {
-		return errors.New("no reconfiguration is provided in TLS Spec")
+		return fmt.Errorf("no reconfiguration is provided in TLS Spec")
 	}
 
 	if configCount > 1 {
-		return errors.New("more than 1 field have assigned to spec.reconfigureTLS but at a time one is allowed to run one operation")
+		return fmt.Errorf("more than 1 field have assigned to spec.reconfigureTLS but at a time one is allowed to run one operation")
 	}
 
 	return nil
@@ -310,7 +310,7 @@ func (k *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerRotateAuthentica
 	}
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
+			return fmt.Errorf("spec.authentication.secretRef.name can not be empty")
 		}
 		err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      authSpec.SecretRef.Name,
