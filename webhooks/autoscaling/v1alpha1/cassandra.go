@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	ctrl "sigs.k8s.io/controller-runtime"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -31,6 +32,14 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
+
+// SetupCassandraAutoscalerWebhookWithManager registers the webhook for CassandraAutoscaler in the manager.
+func SetupCassandraAutoscalerWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&autoscalingapi.CassandraAutoscaler{}).
+		WithValidator(&CassandraAutoscalerCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&CassandraAutoscalerCustomWebhook{mgr.GetClient()}).
+		Complete()
+}
 
 type CassandraAutoscalerCustomWebhook struct {
 	DefaultClient client.Client
