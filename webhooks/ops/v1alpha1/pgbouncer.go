@@ -60,7 +60,9 @@ func (in *PgBouncerOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, 
 	if !ok {
 		return nil, fmt.Errorf("expected an PgBouncerOpsRequest object but got %T", obj)
 	}
-	return nil, in.validateCreateOrUpdate(ctx, req)
+
+	pgbouncerLog.Info("validate create", "name", req.Name)
+	return nil, in.validateCreateOrUpdate(req)
 }
 
 func (in *PgBouncerOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -76,14 +78,14 @@ func (in *PgBouncerOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, 
 	if err := validatePgBouncerOpsRequest(newReq, oldReq); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return nil, in.validateCreateOrUpdate(ctx, newReq)
+	return nil, in.validateCreateOrUpdate(newReq)
 }
 
 func (in *PgBouncerOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(ctx context.Context, obj *opsapi.PgBouncerOpsRequest) error {
+func (in *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.PgBouncerOpsRequest) error {
 	if !in.isDatabaseRefValid(obj) {
 		return fmt.Errorf("target database pgbouncer %s is not valid", obj.GetDBRefName())
 	}

@@ -56,6 +56,8 @@ func (in *RedisOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj 
 	if !ok {
 		return nil, fmt.Errorf("expected an RedisOpsRequest object but got %T", obj)
 	}
+
+	redisLog.Info("validate create", "name", req.Name)
 	return nil, in.isDatabaseRefValid(req)
 }
 

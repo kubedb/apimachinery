@@ -56,6 +56,8 @@ func (in *RedisSentinelOpsRequestCustomWebhook) ValidateCreate(ctx context.Conte
 	if !ok {
 		return nil, fmt.Errorf("expected an RedisSentinelOpsRequest object but got %T", obj)
 	}
+
+	redissentinelLog.Info("validate create", "name", req.Name)
 	return nil, in.isDatabaseRefValid(req)
 }
 
