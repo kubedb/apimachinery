@@ -32,9 +32,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// SetupPerconaXtraDBAutoscalerWebhookWithManager registers the webhook for MariaDBAutoscaler in the manager.
+// SetupPerconaXtraDBAutoscalerWebhookWithManager registers the webhook for PerconaXtraDBAutoscaler in the manager.
 func SetupPerconaXtraDBAutoscalerWebhookWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewWebhookManagedBy(mgr).For(&autoscalingapi.MariaDBAutoscaler{}).
+	return ctrl.NewWebhookManagedBy(mgr).For(&autoscalingapi.PerconaXtraDBAutoscaler{}).
 		WithValidator(&PerconaXtraDBAutoscalerCustomWebhook{mgr.GetClient()}).
 		WithDefaulter(&PerconaXtraDBAutoscalerCustomWebhook{mgr.GetClient()}).
 		Complete()
