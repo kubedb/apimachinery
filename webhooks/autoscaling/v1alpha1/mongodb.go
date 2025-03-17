@@ -21,125 +21,146 @@ import (
 	"errors"
 	"fmt"
 
+	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/builder"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
-	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// log is for logging in this package.
-var mongoLog = logf.Log.WithName("mongodb-autoscaler")
-
-func (in *MongoDBAutoscaler) SetupWebhookWithManager(mgr manager.Manager) error {
-	return builder.WebhookManagedBy(mgr).
-		For(in).
+// SetupMongoDBAutoscalerWebhookWithManager registers the webhook for MongoDBAutoscaler in the manager.
+func SetupMongoDBAutoscalerWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&autoscalingapi.MongoDBAutoscaler{}).
+		WithValidator(&MongoDBAutoscalerCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&MongoDBAutoscalerCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
 
+type MongoDBAutoscalerCustomWebhook struct {
+	DefaultClient client.Client
+}
+
+// log is for logging in this package.
+var mongoLog = logf.Log.WithName("mongodb-autoscaler")
+
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-mongodbautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=mongodbautoscaler,verbs=create;update,versions=v1alpha1,name=mmongodbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomDefaulter = &MongoDBAutoscaler{}
+var _ webhook.CustomDefaulter = &MongoDBAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MongoDBAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
-	mongoLog.Info("defaulting", "name", in.Name)
-	in.setDefaults()
+func (in *MongoDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	scaler, ok := obj.(*autoscalingapi.MongoDBAutoscaler)
+	if !ok {
+		return fmt.Errorf("expected an MongoDBAutoscaler object but got %T", obj)
+	}
+
+	mariaLog.Info("defaulting", "name", scaler.Name)
+	in.setDefaults(scaler)
 	return nil
 }
 
-func (in *MongoDBAutoscaler) setDefaults() {
+func (in *MongoDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MongoDBAutoscaler) {
 	var db dbapi.MongoDB
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name:      in.Spec.DatabaseRef.Name,
-		Namespace: in.Namespace,
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      scaler.Spec.DatabaseRef.Name,
+		Namespace: scaler.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get MongoDB %s/%s \n", in.Namespace, in.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get MongoDB %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return
 	}
 
-	in.setOpsReqOptsDefaults()
+	in.setOpsReqOptsDefaults(scaler)
 
-	if in.Spec.Storage != nil {
-		setDefaultStorageValues(in.Spec.Storage.Standalone)
-		setDefaultStorageValues(in.Spec.Storage.ReplicaSet)
-		setDefaultStorageValues(in.Spec.Storage.Shard)
-		setDefaultStorageValues(in.Spec.Storage.ConfigServer)
-		setDefaultStorageValues(in.Spec.Storage.Hidden)
+	if scaler.Spec.Storage != nil {
+		setDefaultStorageValues(scaler.Spec.Storage.Standalone)
+		setDefaultStorageValues(scaler.Spec.Storage.ReplicaSet)
+		setDefaultStorageValues(scaler.Spec.Storage.Shard)
+		setDefaultStorageValues(scaler.Spec.Storage.ConfigServer)
+		setDefaultStorageValues(scaler.Spec.Storage.Hidden)
 	}
 
-	if in.Spec.Compute != nil {
-		setDefaultComputeValues(in.Spec.Compute.Standalone)
-		setDefaultComputeValues(in.Spec.Compute.ReplicaSet)
-		setDefaultComputeValues(in.Spec.Compute.Shard)
-		setDefaultComputeValues(in.Spec.Compute.ConfigServer)
-		setDefaultComputeValues(in.Spec.Compute.Mongos)
-		setDefaultComputeValues(in.Spec.Compute.Arbiter)
-		setDefaultComputeValues(in.Spec.Compute.Hidden)
+	if scaler.Spec.Compute != nil {
+		setDefaultComputeValues(scaler.Spec.Compute.Standalone)
+		setDefaultComputeValues(scaler.Spec.Compute.ReplicaSet)
+		setDefaultComputeValues(scaler.Spec.Compute.Shard)
+		setDefaultComputeValues(scaler.Spec.Compute.ConfigServer)
+		setDefaultComputeValues(scaler.Spec.Compute.Mongos)
+		setDefaultComputeValues(scaler.Spec.Compute.Arbiter)
+		setDefaultComputeValues(scaler.Spec.Compute.Hidden)
 
-		setInMemoryDefaults(in.Spec.Compute.Standalone, db.Spec.StorageEngine)
-		setInMemoryDefaults(in.Spec.Compute.ReplicaSet, db.Spec.StorageEngine)
-		setInMemoryDefaults(in.Spec.Compute.Shard, db.Spec.StorageEngine)
-		setInMemoryDefaults(in.Spec.Compute.ConfigServer, db.Spec.StorageEngine)
-		setInMemoryDefaults(in.Spec.Compute.Mongos, db.Spec.StorageEngine)
+		setInMemoryDefaults(scaler.Spec.Compute.Standalone, db.Spec.StorageEngine)
+		setInMemoryDefaults(scaler.Spec.Compute.ReplicaSet, db.Spec.StorageEngine)
+		setInMemoryDefaults(scaler.Spec.Compute.Shard, db.Spec.StorageEngine)
+		setInMemoryDefaults(scaler.Spec.Compute.ConfigServer, db.Spec.StorageEngine)
+		setInMemoryDefaults(scaler.Spec.Compute.Mongos, db.Spec.StorageEngine)
 		// no need for Defaulting the Arbiter & Hidden PodResources.
 		// As arbiter is not a data-node.  And hidden doesn't have the impact of storageEngine (it can't be InMemory).
 	}
 }
 
-func (in *MongoDBAutoscaler) setOpsReqOptsDefaults() {
-	if in.Spec.OpsRequestOptions == nil {
-		in.Spec.OpsRequestOptions = &MongoDBOpsRequestOptions{}
+func (in *MongoDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MongoDBAutoscaler) {
+	if scaler.Spec.OpsRequestOptions == nil {
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.MongoDBOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if in.Spec.OpsRequestOptions.Apply == "" {
-		in.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
+	if scaler.Spec.OpsRequestOptions.Apply == "" {
+		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
 	}
 }
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-mongodbautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=mongodbautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vmongodbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
 
-var _ webhook.CustomValidator = &MongoDBAutoscaler{}
+var _ webhook.CustomValidator = &MongoDBAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	mongoLog.Info("validate create", "name", in.Name)
-	return nil, in.validate()
+func (in *MongoDBAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	scaler, ok := obj.(*autoscalingapi.MongoDBAutoscaler)
+	if !ok {
+		return nil, fmt.Errorf("expected an MongoDBAutoscaler object but got %T", obj)
+	}
+
+	mariaLog.Info("validate create", "name", scaler.Name)
+	return nil, in.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBAutoscaler) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
-	mongoLog.Info("validate update", "name", in.Name)
-	return nil, in.validate()
+func (in *MongoDBAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	scaler, ok := newObj.(*autoscalingapi.MongoDBAutoscaler)
+	if !ok {
+		return nil, fmt.Errorf("expected an MongoDBAutoscaler object but got %T", newObj)
+	}
+
+	return nil, in.validate(scaler)
 }
 
-func (_ MongoDBAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (_ MongoDBAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *MongoDBAutoscaler) validate() error {
-	if in.Spec.DatabaseRef == nil {
+func (in *MongoDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MongoDBAutoscaler) error {
+	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var mg dbapi.MongoDB
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name:      in.Spec.DatabaseRef.Name,
-		Namespace: in.Namespace,
+	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      scaler.Spec.DatabaseRef.Name,
+		Namespace: scaler.Namespace,
 	}, &mg)
 	if err != nil {
-		_ = fmt.Errorf("can't get MongoDB %s/%s \n", in.Namespace, in.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get MongoDB %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return err
 	}
 
-	if in.Spec.Compute != nil {
-		cm := in.Spec.Compute
+	if scaler.Spec.Compute != nil {
+		cm := scaler.Spec.Compute
 		if mg.Spec.ShardTopology != nil {
 			if cm.ReplicaSet != nil {
 				return errors.New("Spec.Compute.ReplicaSet is invalid for sharded mongoDB")
@@ -182,8 +203,8 @@ func (in *MongoDBAutoscaler) validate() error {
 		}
 	}
 
-	if in.Spec.Storage != nil {
-		st := in.Spec.Storage
+	if scaler.Spec.Storage != nil {
+		st := scaler.Spec.Storage
 		if mg.Spec.ShardTopology != nil {
 			if st.ReplicaSet != nil {
 				return errors.New("Spec.Storage.ReplicaSet is invalid for sharded mongoDB")
