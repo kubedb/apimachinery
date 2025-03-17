@@ -107,6 +107,16 @@ func (f *FerretDB) SecondaryServerName() string {
 	return fmt.Sprintf("%s-%s", f.OffshootName(), kubedb.FerretDBServerTypeSecondary)
 }
 
+func (f *FerretDB) PrimaryServerSelectors() map[string]string {
+	return meta_util.OverwriteKeys(f.OffshootSelectors(), map[string]string{
+		kubedb.FerretDBPrimaryLabelKey: f.OffshootName(),
+	})
+}
+
+func (f *FerretDB) PrimaryServerLabels() map[string]string {
+	return meta_util.OverwriteKeys(f.OffshootLabels(), f.PrimaryServerSelectors())
+}
+
 func (f *FerretDB) SecondaryServerSelectors() map[string]string {
 	return meta_util.OverwriteKeys(f.OffshootSelectors(), map[string]string{
 		kubedb.FerretDBSecondaryLabelKey: f.SecondaryServerName(),
