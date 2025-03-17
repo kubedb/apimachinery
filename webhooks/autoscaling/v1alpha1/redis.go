@@ -125,7 +125,7 @@ func (in *RedisAutoscalerCustomWebhook) validate(scaler *autoscalingapi.RedisAut
 	}
 
 	var rd dbapi.Redis
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &rd)

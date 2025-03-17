@@ -66,7 +66,7 @@ func (in *PgBouncerAutoscalerCustomWebhook) Default(ctx context.Context, obj run
 
 func (in *PgBouncerAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.PgBouncerAutoscaler) {
 	var db dbapi.PgBouncer
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -126,7 +126,7 @@ func (in *PgBouncerAutoscalerCustomWebhook) validate(scaler *autoscalingapi.PgBo
 		return errors.New("databaseRef can't be empty")
 	}
 	var bouncer dbapi.PgBouncer
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &bouncer)
