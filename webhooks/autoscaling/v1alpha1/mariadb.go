@@ -45,9 +45,6 @@ type MariaDBAutoscalerCustomWebhook struct {
 }
 
 // log is for logging in this package.
-var mysqlautoscalerlog = logf.Log.WithName("mysqlautoscaler-resource")
-
-// log is for logging in this package.
 var mariaLog = logf.Log.WithName("mariadb-autoscaler")
 
 // +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-mariadbautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=mariadbautoscaler,verbs=create;update,versions=v1alpha1,name=mmariadbautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
