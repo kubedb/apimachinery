@@ -67,7 +67,7 @@ func (in *DruidAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime
 
 func (in *DruidAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.DruidAutoscaler) {
 	var db olddbapi.Druid
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -157,7 +157,7 @@ func (in *DruidAutoscalerCustomWebhook) validate(scaler *autoscalingapi.DruidAut
 		return errors.New("databaseRef can't be empty")
 	}
 	var dr olddbapi.Druid
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &dr)
