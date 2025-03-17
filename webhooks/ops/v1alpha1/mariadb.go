@@ -173,7 +173,7 @@ func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBUpgradeOpsRequest(req *
 		return errors.New("spec.Upgrade is nil")
 	}
 	db := &dbapi.MariaDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -214,13 +214,9 @@ func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBScalingOpsRequest(req *
 
 func (in *MariaDBOpsRequestCustomWebhook) ensureMariaDBGroupReplication(req *opsapi.MariaDBOpsRequest) error {
 	db := &dbapi.MariaDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
-
-	if db == nil {
-		return errors.New("MariaDB object is empty")
 	}
 
 	if !db.IsCluster() {
@@ -234,7 +230,7 @@ func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReque
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
 	}
 	db := &dbapi.MariaDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -275,9 +271,7 @@ func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBReconfigurationOpsReque
 
 func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBReconfigurationTLSOpsRequest(req *opsapi.MariaDBOpsRequest) error {
 	db := &dbapi.MariaDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: req.Spec.DatabaseRef.Name,
-	}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}

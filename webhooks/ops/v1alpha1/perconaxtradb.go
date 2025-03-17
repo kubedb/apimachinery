@@ -174,9 +174,7 @@ func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBUpgradeOpsR
 	}
 
 	db := &dbapi.PerconaXtraDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: req.Spec.DatabaseRef.Name,
-	}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get percona-xtradbdb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -218,9 +216,7 @@ func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpan
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
 	}
 	db := &dbapi.PerconaXtraDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: req.Spec.DatabaseRef.Name,
-	}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get percona-xtradb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}

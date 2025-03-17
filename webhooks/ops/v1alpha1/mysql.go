@@ -169,7 +169,7 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLUpgradeOpsRequest(req *opsa
 		return errors.New("spec.Upgrade & spec.UpdateVersion both nil not supported")
 	}
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -277,7 +277,7 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLVolumeExpansionOpsRequest(r
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
 	}
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -296,7 +296,7 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLVolumeExpansionOpsRequest(r
 
 func (in *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(req *opsapi.MySQLOpsRequest) error {
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -327,7 +327,7 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(r
 
 func (in *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest(req *opsapi.MySQLOpsRequest) error {
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -341,7 +341,7 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsReques
 
 func (in *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformation(req *opsapi.MySQLOpsRequest) error {
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -365,13 +365,9 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformati
 
 func (in *MySQLOpsRequestCustomWebhook) ensureMySQLGroupReplication(req *opsapi.MySQLOpsRequest) error {
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name}, db)
+	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
-
-	if db == nil {
-		return errors.New("MySQL object is empty")
 	}
 
 	if db.Spec.Topology == nil || db.Spec.Topology.Mode == nil {
