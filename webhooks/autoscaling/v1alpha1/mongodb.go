@@ -54,20 +54,20 @@ var mongoLog = logf.Log.WithName("mongodb-autoscaler")
 var _ webhook.CustomDefaulter = &MongoDBAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MongoDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *MongoDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.MongoDBAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an MongoDBAutoscaler object but got %T", obj)
 	}
 
 	mongoLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *MongoDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MongoDBAutoscaler) {
+func (w *MongoDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MongoDBAutoscaler) {
 	var db dbapi.MongoDB
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -76,7 +76,7 @@ func (in *MongoDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Mon
 		return
 	}
 
-	in.setOpsReqOptsDefaults(scaler)
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.Standalone)
@@ -105,11 +105,11 @@ func (in *MongoDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Mon
 	}
 }
 
-func (in *MongoDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MongoDBAutoscaler) {
+func (w *MongoDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MongoDBAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.MongoDBOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -121,36 +121,36 @@ func (in *MongoDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscal
 var _ webhook.CustomValidator = &MongoDBAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MongoDBAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.MongoDBAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an MongoDBAutoscaler object but got %T", obj)
 	}
 
 	mongoLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *MongoDBAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.MongoDBAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an MongoDBAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ MongoDBAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w MongoDBAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *MongoDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MongoDBAutoscaler) error {
+func (w *MongoDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MongoDBAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var mg dbapi.MongoDB
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &mg)

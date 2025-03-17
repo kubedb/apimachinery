@@ -54,18 +54,18 @@ var redisLog = logf.Log.WithName("redis-autoscaler")
 var _ webhook.CustomDefaulter = &RedisAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *RedisAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *RedisAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.RedisAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an RedisAutoscaler object but got %T", obj)
 	}
 	redisLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *RedisAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.RedisAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *RedisAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.RedisAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.Standalone)
@@ -80,11 +80,11 @@ func (in *RedisAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Redis
 	}
 }
 
-func (in *RedisAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.RedisAutoscaler) {
+func (w *RedisAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.RedisAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.RedisOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -96,36 +96,36 @@ func (in *RedisAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalin
 var _ webhook.CustomValidator = &RedisAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *RedisAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RedisAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.RedisAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an RedisAutoscaler object but got %T", obj)
 	}
 	redisLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *RedisAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *RedisAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.RedisAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an RedisAutoscaler object but got %T", newObj)
 	}
 	redisLog.Info("validate update", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ RedisAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w RedisAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *RedisAutoscalerCustomWebhook) validate(scaler *autoscalingapi.RedisAutoscaler) error {
+func (w *RedisAutoscalerCustomWebhook) validate(scaler *autoscalingapi.RedisAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 
 	var rd dbapi.Redis
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &rd)

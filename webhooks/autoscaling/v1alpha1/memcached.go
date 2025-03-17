@@ -52,30 +52,30 @@ var memcachedLog = logf.Log.WithName("Memcached-autoscaler")
 var _ webhook.CustomDefaulter = &MemcachedAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MemcachedAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *MemcachedAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.MemcachedAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an MemcachedAutoscaler object but got %T", obj)
 	}
 
 	memcachedLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *MemcachedAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MemcachedAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *MemcachedAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MemcachedAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Compute != nil {
 		setDefaultComputeValues(scaler.Spec.Compute.Memcached)
 	}
 }
 
-func (in *MemcachedAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MemcachedAutoscaler) {
+func (w *MemcachedAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MemcachedAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.MemcachedOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -87,31 +87,31 @@ func (in *MemcachedAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosc
 var _ webhook.CustomValidator = &MemcachedAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MemcachedAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MemcachedAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.MemcachedAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an MemcachedAutoscaler object but got %T", obj)
 	}
 
 	memcachedLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MemcachedAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *MemcachedAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.MemcachedAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an MemcachedAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ MemcachedAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w MemcachedAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *MemcachedAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MemcachedAutoscaler) error {
+func (w *MemcachedAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MemcachedAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

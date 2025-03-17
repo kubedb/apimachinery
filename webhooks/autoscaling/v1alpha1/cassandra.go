@@ -52,19 +52,19 @@ var casLog = logf.Log.WithName("cassandra-autoscaler")
 var _ webhook.CustomDefaulter = &CassandraAutoscalerCustomWebhook{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *CassandraAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *CassandraAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.CassandraAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an CassandraAutoscaler object but got %T", obj)
 	}
 	casLog.Info("defaulting", "name", scaler.Name)
-	r.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (r *CassandraAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.CassandraAutoscaler) {
+func (w *CassandraAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.CassandraAutoscaler) {
 	var db olddbapi.Cassandra
-	err := r.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -73,7 +73,7 @@ func (r *CassandraAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Ca
 		return
 	}
 
-	r.setOpsReqOptsDefaults(scaler)
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.Cassandra)
@@ -84,7 +84,7 @@ func (r *CassandraAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Ca
 	}
 }
 
-func (r *CassandraAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.CassandraAutoscaler) {
+func (w *CassandraAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.CassandraAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.CassandraOpsRequestOptions{}
 	}
@@ -98,35 +98,35 @@ func (r *CassandraAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosca
 var _ webhook.CustomValidator = &CassandraAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *CassandraAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *CassandraAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.CassandraAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an CassandraAutoscaler object but got %T", obj)
 	}
 	casLog.Info("validate create", "name", scaler.Name)
-	return nil, r.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *CassandraAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *CassandraAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.CassandraAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an CassandraAutoscaler object but got %T", newObj)
 	}
 	casLog.Info("validate create", "name", scaler.Name)
-	return nil, r.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (r *CassandraAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *CassandraAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *CassandraAutoscalerCustomWebhook) validate(scaler *autoscalingapi.CassandraAutoscaler) error {
+func (w *CassandraAutoscalerCustomWebhook) validate(scaler *autoscalingapi.CassandraAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var kf olddbapi.Cassandra
-	err := r.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &kf)

@@ -52,19 +52,19 @@ var mssqlLog = logf.Log.WithName("mssqlserver-autoscaler")
 var _ webhook.CustomDefaulter = &MSSQLServerAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MSSQLServerAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *MSSQLServerAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.MSSQLServerAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an MSSQLServerAutoscaler object but got %T", obj)
 	}
 
 	mssqlLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *MSSQLServerAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MSSQLServerAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *MSSQLServerAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MSSQLServerAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.MSSQLServer)
@@ -74,11 +74,11 @@ func (in *MSSQLServerAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi
 	}
 }
 
-func (in *MSSQLServerAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MSSQLServerAutoscaler) {
+func (w *MSSQLServerAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MSSQLServerAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.MSSQLServerOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
 	}
@@ -89,31 +89,31 @@ func (in *MSSQLServerAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *auto
 var _ webhook.CustomValidator = &MSSQLServerAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MSSQLServerAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MSSQLServerAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.MSSQLServerAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an MSSQLServerAutoscaler object but got %T", obj)
 	}
 
 	mssqlLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MSSQLServerAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *MSSQLServerAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.MSSQLServerAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an MSSQLServerAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ MSSQLServerAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w MSSQLServerAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *MSSQLServerAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MSSQLServerAutoscaler) error {
+func (w *MSSQLServerAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MSSQLServerAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
