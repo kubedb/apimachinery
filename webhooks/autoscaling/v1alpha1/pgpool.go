@@ -27,81 +27,107 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+// SetupPgpoolAutoscalerWebhookWithManager registers the webhook for PgpoolAutoscaler in the manager.
+func SetupPgpoolAutoscalerWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&autoscalingapi.PgpoolAutoscaler{}).
+		WithValidator(&PgpoolAutoscalerCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&PgpoolAutoscalerCustomWebhook{mgr.GetClient()}).
+		Complete()
+}
+
+type PgpoolAutoscalerCustomWebhook struct {
+	DefaultClient client.Client
+}
+
 // log is for logging in this package.
 var pgpoolLog = logf.Log.WithName("pgpool-autoscaler")
 
-var _ webhook.CustomDefaulter = &autoscalingapi.PgpoolAutoscaler{}
+var _ webhook.CustomDefaulter = &PgpoolAutoscalerCustomWebhook{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *autoscalingapi.PgpoolAutoscaler) Default(ctx context.Context, obj runtime.Object) error {
-	pgpoolLog.Info("defaulting", "name", r.Name)
-	r.setDefaults()
+func (in *PgpoolAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	scaler, ok := obj.(*autoscalingapi.PgpoolAutoscaler)
+	if !ok {
+		return fmt.Errorf("expected an PgpoolAutoscaler object but got %T", obj)
+	}
+	pgpoolLog.Info("defaulting", "name", scaler.Name)
+	in.setDefaults(scaler)
 	return nil
 }
 
-func (r *autoscalingapi.PgpoolAutoscaler) setDefaults() {
+func (in *PgpoolAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.PgpoolAutoscaler) {
 	var db olddbapi.Pgpool
 	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name:      r.Spec.DatabaseRef.Name,
-		Namespace: r.Namespace,
+		Name:      scaler.Spec.DatabaseRef.Name,
+		Namespace: scaler.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get Pgpool %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get Pgpool %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return
 	}
 
-	r.setOpsReqOptsDefaults()
+	in.setOpsReqOptsDefaults(scaler)
 
-	if r.Spec.Compute != nil {
-		setDefaultComputeValues(r.Spec.Compute.Pgpool)
+	if scaler.Spec.Compute != nil {
+		setDefaultComputeValues(scaler.Spec.Compute.Pgpool)
 	}
 }
 
-func (r *autoscalingapi.PgpoolAutoscaler) setOpsReqOptsDefaults() {
-	if r.Spec.OpsRequestOptions == nil {
-		r.Spec.OpsRequestOptions = &autoscalingapi.PgpoolOpsRequestOptions{}
+func (in *PgpoolAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.PgpoolAutoscaler) {
+	if scaler.Spec.OpsRequestOptions == nil {
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.PgpoolOpsRequestOptions{}
 	}
 	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if r.Spec.OpsRequestOptions.Apply == "" {
-		r.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
+	if scaler.Spec.OpsRequestOptions.Apply == "" {
+		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
 	}
 }
 
-var _ webhook.CustomValidator = &autoscalingapi.PgpoolAutoscaler{}
+var _ webhook.CustomValidator = &PgpoolAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *autoscalingapi.PgpoolAutoscaler) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	pgpoolLog.Info("validate create", "name", r.Name)
-	return nil, r.validate()
+func (in *PgpoolAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	scaler, ok := obj.(*autoscalingapi.PgpoolAutoscaler)
+	if !ok {
+		return nil, fmt.Errorf("expected an PgpoolAutoscaler object but got %T", obj)
+	}
+	pgpoolLog.Info("validate create", "name", scaler.Name)
+	return nil, in.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *autoscalingapi.PgpoolAutoscaler) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
-	pgpoolLog.Info("validate update", "name", r.Name)
-	return nil, r.validate()
+func (in *PgpoolAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	scaler, ok := newObj.(*autoscalingapi.PgpoolAutoscaler)
+	if !ok {
+		return nil, fmt.Errorf("expected an PgpoolAutoscaler object but got %T", newObj)
+	}
+	pgpoolLog.Info("validate update", "name", scaler.Name)
+	return nil, in.validate(scaler)
 }
 
-func (r *autoscalingapi.PgpoolAutoscaler) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (in *PgpoolAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *autoscalingapi.PgpoolAutoscaler) validate() error {
-	if r.Spec.DatabaseRef == nil {
+func (in *PgpoolAutoscalerCustomWebhook) validate(scaler *autoscalingapi.PgpoolAutoscaler) error {
+	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var pp olddbapi.Pgpool
 	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name:      r.Spec.DatabaseRef.Name,
-		Namespace: r.Namespace,
+		Name:      scaler.Spec.DatabaseRef.Name,
+		Namespace: scaler.Namespace,
 	}, &pp)
 	if err != nil {
-		_ = fmt.Errorf("can't get Pgpool %s/%s \n", r.Namespace, r.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get Pgpool %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return err
 	}
 
