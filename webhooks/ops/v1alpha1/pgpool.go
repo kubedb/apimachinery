@@ -165,7 +165,7 @@ func (k *PgpoolOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PgpoolOpsRequ
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &pgpool); err != nil {
-		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
 	return nil
 }
@@ -217,7 +217,7 @@ func (k *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(req 
 	if applyConfigExists(req.Spec.Configuration.ApplyConfig) {
 		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.PgpoolCustomConfigFile]
 		if !ok {
-			return errors.New(fmt.Sprintf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.PgpoolCustomConfigFile))
+			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.PgpoolCustomConfigFile)
 		}
 	}
 
