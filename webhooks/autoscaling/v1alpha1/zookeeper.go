@@ -52,19 +52,19 @@ var zkLog = logf.Log.WithName("zookeeper-autoscaler")
 var _ webhook.CustomDefaulter = &ZooKeeperAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *ZooKeeperAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *ZooKeeperAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.ZooKeeperAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an ZooKeeperAutoscaler object but got %T", obj)
 	}
 
 	zkLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *ZooKeeperAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ZooKeeperAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *ZooKeeperAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ZooKeeperAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.ZooKeeper)
@@ -74,11 +74,11 @@ func (in *ZooKeeperAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Z
 	}
 }
 
-func (in *ZooKeeperAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ZooKeeperAutoscaler) {
+func (w *ZooKeeperAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ZooKeeperAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.ZooKeeperOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -90,31 +90,31 @@ func (in *ZooKeeperAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosc
 var _ webhook.CustomValidator = &ZooKeeperAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *ZooKeeperAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ZooKeeperAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.ZooKeeperAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an ZooKeeperAutoscaler object but got %T", obj)
 	}
 
 	zkLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *ZooKeeperAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *ZooKeeperAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.ZooKeeperAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an ZooKeeperAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ ZooKeeperAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w ZooKeeperAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *ZooKeeperAutoscalerCustomWebhook) validate(scaler *autoscalingapi.ZooKeeperAutoscaler) error {
+func (w *ZooKeeperAutoscalerCustomWebhook) validate(scaler *autoscalingapi.ZooKeeperAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

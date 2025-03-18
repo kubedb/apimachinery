@@ -52,19 +52,19 @@ var chLog = logf.Log.WithName("clickhouse-autoscaler")
 var _ webhook.CustomDefaulter = &ClickHouseAutoscalerCustomWebhook{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (r *ClickHouseAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *ClickHouseAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.ClickHouseAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an ClickHouseAutoscaler object but got %T", obj)
 	}
 	chLog.Info("defaulting", "name", scaler.Name)
-	r.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (r *ClickHouseAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ClickHouseAutoscaler) {
+func (w *ClickHouseAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ClickHouseAutoscaler) {
 	var db olddbapi.ClickHouse
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -73,7 +73,7 @@ func (r *ClickHouseAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.C
 		return
 	}
 
-	r.setOpsReqOptsDefaults(scaler)
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.ClickHouse)
@@ -84,7 +84,7 @@ func (r *ClickHouseAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.C
 	}
 }
 
-func (r *ClickHouseAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ClickHouseAutoscaler) {
+func (w *ClickHouseAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ClickHouseAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.ClickHouseOpsRequestOptions{}
 	}
@@ -98,35 +98,35 @@ func (r *ClickHouseAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosc
 var _ webhook.CustomValidator = &ClickHouseAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (r *ClickHouseAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ClickHouseAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.ClickHouseAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an ClickHouseAutoscaler object but got %T", obj)
 	}
 	chLog.Info("validate create", "name", scaler.Name)
-	return nil, r.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (r *ClickHouseAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *ClickHouseAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.ClickHouseAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an ClickHouseAutoscaler object but got %T", newObj)
 	}
 	chLog.Info("validate create", "name", scaler.Name)
-	return nil, r.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (r *ClickHouseAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ClickHouseAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (r *ClickHouseAutoscalerCustomWebhook) validate(scaler *autoscalingapi.ClickHouseAutoscaler) error {
+func (w *ClickHouseAutoscalerCustomWebhook) validate(scaler *autoscalingapi.ClickHouseAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var kf olddbapi.ClickHouse
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &kf)
