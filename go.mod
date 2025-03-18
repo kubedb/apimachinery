@@ -38,7 +38,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20241212222426-2c72e554b1e7
 	k8s.io/metrics v0.32.2
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
-	kmodules.xyz/client-go v0.30.47-0.20250315002849-2fe5e2230651
+	kmodules.xyz/client-go v0.32.0
 	kmodules.xyz/crd-schema-fuzz v0.29.2-0.20250302110413-c5b140ca984a
 	kmodules.xyz/custom-resources v0.30.2-0.20250303080226-05eb1392c05f
 	kmodules.xyz/monitoring-agent-api v0.30.4
@@ -48,7 +48,7 @@ require (
 	kmodules.xyz/webhook-runtime v0.29.1
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/operator-shard-manager v0.0.2-0.20250314053713-82e0002285a5
-	kubeops.dev/petset v0.0.8-0.20250315015425-94b85514c003
+	kubeops.dev/petset v0.0.9
 	kubeops.dev/sidekick v0.0.10
 	kubestash.dev/apimachinery v0.16.1-0.20250311062248-74531c6cf9ea
 	sigs.k8s.io/controller-runtime v0.20.2
@@ -65,7 +65,7 @@ require (
 	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible // indirect
 	github.com/Azure/go-autorest v14.2.0+incompatible // indirect
 	github.com/Azure/go-autorest/autorest v0.11.29 // indirect
-	github.com/Azure/go-autorest/autorest/adal v0.9.23 // indirect
+	github.com/Azure/go-autorest/autorest/adal v0.9.24 // indirect
 	github.com/Azure/go-autorest/autorest/date v0.3.0 // indirect
 	github.com/Azure/go-autorest/logger v0.2.1 // indirect
 	github.com/Azure/go-autorest/tracing v0.6.0 // indirect
@@ -149,7 +149,7 @@ require (
 	github.com/shopspring/decimal v1.4.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/spf13/cast v1.7.0 // indirect
-	github.com/spf13/cobra v1.8.1 // indirect
+	github.com/spf13/cobra v1.9.1 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
 	github.com/vbatts/tar-split v0.11.6 // indirect
@@ -201,7 +201,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/kms v0.32.2 // indirect
 	kmodules.xyz/apiversion v0.2.0 // indirect
-	kmodules.xyz/go-containerregistry v0.0.12 // indirect
+	kmodules.xyz/go-containerregistry v0.0.14 // indirect
 	kmodules.xyz/prober v0.29.0 // indirect
 	kmodules.xyz/resource-metrics v0.30.5 // indirect
 	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect
