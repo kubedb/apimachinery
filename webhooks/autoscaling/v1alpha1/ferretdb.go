@@ -83,7 +83,8 @@ func (w *FerretDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Fer
 	}
 
 	if scaler.Spec.Compute != nil {
-		setDefaultComputeValues(scaler.Spec.Compute.FerretDB)
+		setDefaultComputeValues(scaler.Spec.Compute.Primary)
+		setDefaultComputeValues(scaler.Spec.Compute.Secondary)
 	}
 }
 
