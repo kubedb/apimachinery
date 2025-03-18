@@ -54,19 +54,19 @@ var pbLog = logf.Log.WithName("pgbouncer-autoscaler")
 var _ webhook.CustomDefaulter = &PgBouncerAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *PgBouncerAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *PgBouncerAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.PgBouncerAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an PgBouncerAutoscaler object but got %T", obj)
 	}
 	pbLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *PgBouncerAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.PgBouncerAutoscaler) {
+func (w *PgBouncerAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.PgBouncerAutoscaler) {
 	var db dbapi.PgBouncer
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -75,18 +75,18 @@ func (in *PgBouncerAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.P
 		return
 	}
 
-	in.setOpsReqOptsDefaults(scaler)
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Compute != nil {
 		setDefaultComputeValues(scaler.Spec.Compute.PgBouncer)
 	}
 }
 
-func (in *PgBouncerAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.PgBouncerAutoscaler) {
+func (w *PgBouncerAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.PgBouncerAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.PgBouncerOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -98,35 +98,35 @@ func (in *PgBouncerAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosc
 var _ webhook.CustomValidator = &PgBouncerAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *PgBouncerAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PgBouncerAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.PgBouncerAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an PgBouncerAutoscaler object but got %T", obj)
 	}
 	pbLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *PgBouncerAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *PgBouncerAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.PgBouncerAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an PgBouncerAutoscaler object but got %T", newObj)
 	}
 	pbLog.Info("validate update", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (in *PgBouncerAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PgBouncerAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *PgBouncerAutoscalerCustomWebhook) validate(scaler *autoscalingapi.PgBouncerAutoscaler) error {
+func (w *PgBouncerAutoscalerCustomWebhook) validate(scaler *autoscalingapi.PgBouncerAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var bouncer dbapi.PgBouncer
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &bouncer)

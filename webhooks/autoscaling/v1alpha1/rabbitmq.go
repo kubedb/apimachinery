@@ -52,19 +52,19 @@ var RabbitMQLog = logf.Log.WithName("RabbitMQ-autoscaler")
 var _ webhook.CustomDefaulter = &RabbitMQAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *RabbitMQAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *RabbitMQAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.RabbitMQAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an RabbitMQAutoscaler object but got %T", obj)
 	}
 
 	RabbitMQLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *RabbitMQAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.RabbitMQAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *RabbitMQAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.RabbitMQAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.RabbitMQ)
@@ -74,11 +74,11 @@ func (in *RabbitMQAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Ra
 	}
 }
 
-func (in *RabbitMQAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.RabbitMQAutoscaler) {
+func (w *RabbitMQAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.RabbitMQAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.RabbitMQOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -90,31 +90,31 @@ func (in *RabbitMQAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosca
 var _ webhook.CustomValidator = &RabbitMQAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *RabbitMQAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RabbitMQAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.RabbitMQAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an RabbitMQAutoscaler object but got %T", obj)
 	}
 
 	RabbitMQLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *RabbitMQAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *RabbitMQAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.RabbitMQAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an RabbitMQAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ RabbitMQAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w RabbitMQAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *RabbitMQAutoscalerCustomWebhook) validate(scaler *autoscalingapi.RabbitMQAutoscaler) error {
+func (w *RabbitMQAutoscalerCustomWebhook) validate(scaler *autoscalingapi.RabbitMQAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

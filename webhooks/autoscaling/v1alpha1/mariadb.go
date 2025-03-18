@@ -52,19 +52,19 @@ var mariaLog = logf.Log.WithName("mariadb-autoscaler")
 var _ webhook.CustomDefaulter = &MariaDBAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MariaDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *MariaDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.MariaDBAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an MariaDBAutoscaler object but got %T", obj)
 	}
 
 	mariaLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *MariaDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MariaDBAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *MariaDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MariaDBAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.MariaDB)
@@ -74,11 +74,11 @@ func (in *MariaDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Mar
 	}
 }
 
-func (in *MariaDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MariaDBAutoscaler) {
+func (w *MariaDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MariaDBAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.MariaDBOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -90,31 +90,31 @@ func (in *MariaDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscal
 var _ webhook.CustomValidator = &MariaDBAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MariaDBAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MariaDBAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.MariaDBAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an MariaDBAutoscaler object but got %T", obj)
 	}
 
 	mariaLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MariaDBAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *MariaDBAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.MariaDBAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an MariaDBAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ MariaDBAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w MariaDBAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *MariaDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MariaDBAutoscaler) error {
+func (w *MariaDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MariaDBAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

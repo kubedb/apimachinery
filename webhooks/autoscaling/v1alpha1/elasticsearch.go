@@ -20,15 +20,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	ctrl "sigs.k8s.io/controller-runtime"
 
 	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
@@ -54,19 +54,19 @@ type ElasticsearchAutoscalerCustomWebhook struct {
 var _ webhook.CustomDefaulter = &ElasticsearchAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *ElasticsearchAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *ElasticsearchAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.ElasticsearchAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an MariaDBAutoscaler object but got %T", obj)
 	}
 
 	esLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *ElasticsearchAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ElasticsearchAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *ElasticsearchAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ElasticsearchAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.Node)
@@ -98,11 +98,11 @@ func (in *ElasticsearchAutoscalerCustomWebhook) setDefaults(scaler *autoscalinga
 	}
 }
 
-func (in *ElasticsearchAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ElasticsearchAutoscaler) {
+func (w *ElasticsearchAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ElasticsearchAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.ElasticsearchOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -114,37 +114,37 @@ func (in *ElasticsearchAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *au
 var _ webhook.CustomValidator = &ElasticsearchAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *ElasticsearchAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ElasticsearchAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.ElasticsearchAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an ElasticsearchAutoscaler object but got %T", obj)
 	}
 
 	esLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *ElasticsearchAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *ElasticsearchAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.ElasticsearchAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an ElasticsearchAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ ElasticsearchAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w ElasticsearchAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *ElasticsearchAutoscalerCustomWebhook) validate(scaler *autoscalingapi.ElasticsearchAutoscaler) error {
+func (w *ElasticsearchAutoscalerCustomWebhook) validate(scaler *autoscalingapi.ElasticsearchAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 
 	var es dbapi.Elasticsearch
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &es)

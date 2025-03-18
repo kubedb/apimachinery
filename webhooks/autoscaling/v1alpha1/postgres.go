@@ -52,18 +52,18 @@ var pgLog = logf.Log.WithName("postgres-autoscaler")
 var _ webhook.CustomDefaulter = &PostgresAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *PostgresAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *PostgresAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.PostgresAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an PostgresAutoscaler object but got %T", obj)
 	}
 	pgLog.Info("defaulting", "name", scaler.GetName())
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *PostgresAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.PostgresAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *PostgresAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.PostgresAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.Postgres)
@@ -74,11 +74,11 @@ func (in *PostgresAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Po
 	}
 }
 
-func (in *PostgresAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.PostgresAutoscaler) {
+func (w *PostgresAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.PostgresAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.PostgresOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -90,30 +90,30 @@ func (in *PostgresAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosca
 var _ webhook.CustomValidator = &PostgresAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *PostgresAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PostgresAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.PostgresAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an PostgresAutoscaler object but got %T", obj)
 	}
 	pgLog.Info("validate create", "name", scaler.GetName())
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *PostgresAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *PostgresAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.PostgresAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an PostgresAutoscaler object but got %T", newObj)
 	}
 	pgLog.Info("validate update", "name", scaler.GetName())
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ PostgresAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w PostgresAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *PostgresAutoscalerCustomWebhook) validate(scaler *autoscalingapi.PostgresAutoscaler) error {
+func (w *PostgresAutoscalerCustomWebhook) validate(scaler *autoscalingapi.PostgresAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

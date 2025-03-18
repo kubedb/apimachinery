@@ -54,20 +54,20 @@ var druidLog = logf.Log.WithName("druid-autoscaler")
 var _ webhook.CustomDefaulter = &DruidAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *DruidAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *DruidAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.DruidAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an DruidAutoscaler object but got %T", obj)
 	}
 
 	druidLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *DruidAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.DruidAutoscaler) {
+func (w *DruidAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.DruidAutoscaler) {
 	var db olddbapi.Druid
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -76,7 +76,7 @@ func (in *DruidAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Druid
 		return
 	}
 
-	in.setOpsReqOptsDefaults(scaler)
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		if db.Spec.Topology.MiddleManagers != nil && scaler.Spec.Storage.MiddleManagers != nil {
@@ -112,7 +112,7 @@ func (in *DruidAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Druid
 	}
 }
 
-func (in *DruidAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.DruidAutoscaler) {
+func (w *DruidAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.DruidAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.DruidOpsRequestOptions{}
 	}
@@ -128,36 +128,36 @@ func (in *DruidAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalin
 var _ webhook.CustomValidator = &DruidAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *DruidAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *DruidAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.DruidAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an DruidAutoscaler object but got %T", obj)
 	}
 
 	druidLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *DruidAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *DruidAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.DruidAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an DruidAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ DruidAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w DruidAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *DruidAutoscalerCustomWebhook) validate(scaler *autoscalingapi.DruidAutoscaler) error {
+func (w *DruidAutoscalerCustomWebhook) validate(scaler *autoscalingapi.DruidAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var dr olddbapi.Druid
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &dr)

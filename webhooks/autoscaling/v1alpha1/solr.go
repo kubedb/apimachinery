@@ -20,15 +20,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	ctrl "sigs.k8s.io/controller-runtime"
 
 	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
@@ -52,20 +52,20 @@ type SolrAutoscalerCustomWebhook struct {
 var _ webhook.CustomDefaulter = &SolrAutoscalerCustomWebhook{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (in *SolrAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *SolrAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.SolrAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an SolrAutoscaler object but got %T", obj)
 	}
 
 	slLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *SolrAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.SolrAutoscaler) {
+func (w *SolrAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.SolrAutoscaler) {
 	var db olddbapi.Solr
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -74,7 +74,7 @@ func (in *SolrAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.SolrAu
 		return
 	}
 
-	in.setOpsReqOptsDefaults(scaler)
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.Node)
@@ -91,11 +91,11 @@ func (in *SolrAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.SolrAu
 	}
 }
 
-func (in *SolrAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.SolrAutoscaler) {
+func (w *SolrAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.SolrAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.SolrOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -105,36 +105,36 @@ func (in *SolrAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscaling
 var _ webhook.CustomValidator = &SolrAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *SolrAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *SolrAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.SolrAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an SolrAutoscaler object but got %T", obj)
 	}
 
 	mariaLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *SolrAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *SolrAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.SolrAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an SolrAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ *SolrAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *SolrAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *SolrAutoscalerCustomWebhook) validate(scaler *autoscalingapi.SolrAutoscaler) error {
+func (w *SolrAutoscalerCustomWebhook) validate(scaler *autoscalingapi.SolrAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var sl olddbapi.Solr
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &sl)

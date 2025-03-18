@@ -51,18 +51,18 @@ var (
 )
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *PerconaXtraDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *PerconaXtraDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.PerconaXtraDBAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an PerconaXtraDBAutoscaler object but got %T", obj)
 	}
 	pxLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *PerconaXtraDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.PerconaXtraDBAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *PerconaXtraDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.PerconaXtraDBAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.PerconaXtraDB)
@@ -72,11 +72,11 @@ func (in *PerconaXtraDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalinga
 	}
 }
 
-func (in *PerconaXtraDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.PerconaXtraDBAutoscaler) {
+func (w *PerconaXtraDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.PerconaXtraDBAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.PerconaXtraDBOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -88,29 +88,29 @@ func (in *PerconaXtraDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *au
 var _ webhook.CustomValidator = &PerconaXtraDBAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *PerconaXtraDBAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PerconaXtraDBAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.PerconaXtraDBAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an PerconaXtraDBAutoscaler object but got %T", obj)
 	}
 	pxLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *PerconaXtraDBAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *PerconaXtraDBAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.PerconaXtraDBAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an PerconaXtraDBAutoscaler object but got %T", newObj)
 	}
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ PerconaXtraDBAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w PerconaXtraDBAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *PerconaXtraDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.PerconaXtraDBAutoscaler) error {
+func (w *PerconaXtraDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.PerconaXtraDBAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
