@@ -49,7 +49,7 @@ endif
 ### These variables should not need tweaking.
 ###
 
-SRC_PKGS := apis client crds pkg webhooks # directories which hold app source (not vendored)
+SRC_PKGS := apis client crds pkg # directories which hold app source (not vendored)
 SRC_DIRS := $(SRC_PKGS) hack/gencrd
 
 DOCKER_PLATFORMS := linux/amd64 linux/arm linux/arm64
