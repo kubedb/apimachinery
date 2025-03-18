@@ -60,7 +60,7 @@ func (in *MongoDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runti
 		return fmt.Errorf("expected an MongoDBAutoscaler object but got %T", obj)
 	}
 
-	mariaLog.Info("defaulting", "name", scaler.Name)
+	mongoLog.Info("defaulting", "name", scaler.Name)
 	in.setDefaults(scaler)
 	return nil
 }
@@ -127,7 +127,7 @@ func (in *MongoDBAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, ob
 		return nil, fmt.Errorf("expected an MongoDBAutoscaler object but got %T", obj)
 	}
 
-	mariaLog.Info("validate create", "name", scaler.Name)
+	mongoLog.Info("validate create", "name", scaler.Name)
 	return nil, in.validate(scaler)
 }
 

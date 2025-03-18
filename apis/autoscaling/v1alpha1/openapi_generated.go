@@ -654,7 +654,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperComputeAutoscalerSpec":           schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperComputeAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperOpsRequestOptions":               schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperOpsRequestOptions(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperStorageAutoscalerSpec":           schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperStorageAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.quantity":                                 schema_apimachinery_apis_autoscaling_v1alpha1_quantity(ref),
 	}
 }
 
@@ -27677,7 +27676,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_FerretDBComputeAutoscalerSpec
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.NodeTopology"),
 						},
 					},
-					"ferretdb": {
+					"primary": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
+						},
+					},
+					"secondary": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
 						},
@@ -31827,39 +31831,5 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperStorageAutoscalerSpe
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"},
-	}
-}
-
-func schema_apimachinery_apis_autoscaling_v1alpha1_quantity(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"InString": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"InQuantity": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
-						},
-					},
-					"Threshold": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"InString", "InQuantity", "Threshold"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
