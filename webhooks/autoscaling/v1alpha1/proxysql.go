@@ -52,30 +52,30 @@ var proxyLog = logf.Log.WithName("proxysql-autoscaler")
 var _ webhook.CustomDefaulter = &ProxySQLAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *ProxySQLAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *ProxySQLAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.ProxySQLAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an ProxySQLAutoscaler object but got %T", obj)
 	}
 
 	proxyLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *ProxySQLAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ProxySQLAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *ProxySQLAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ProxySQLAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Compute != nil {
 		setDefaultComputeValues(scaler.Spec.Compute.ProxySQL)
 	}
 }
 
-func (in *ProxySQLAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ProxySQLAutoscaler) {
+func (w *ProxySQLAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ProxySQLAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.ProxySQLOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -87,31 +87,31 @@ func (in *ProxySQLAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosca
 var _ webhook.CustomValidator = &ProxySQLAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *ProxySQLAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ProxySQLAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.ProxySQLAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an ProxySQLAutoscaler object but got %T", obj)
 	}
 
 	proxyLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *ProxySQLAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *ProxySQLAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.ProxySQLAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an ProxySQLAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ ProxySQLAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w ProxySQLAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *ProxySQLAutoscalerCustomWebhook) validate(scaler *autoscalingapi.ProxySQLAutoscaler) error {
+func (w *ProxySQLAutoscalerCustomWebhook) validate(scaler *autoscalingapi.ProxySQLAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

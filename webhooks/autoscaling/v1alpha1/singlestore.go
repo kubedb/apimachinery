@@ -54,28 +54,28 @@ var singlestoreLog = logf.Log.WithName("singlestore-autoscaler")
 var _ webhook.CustomDefaulter = &SinglestoreAutoscalerCustomWebhook{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (s *SinglestoreAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *SinglestoreAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.SinglestoreAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an SinglestoreAutoscaler object but got %T", obj)
 	}
 	singlestoreLog.Info("defaulting", "name", scaler.GetName())
-	s.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (s *SinglestoreAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.SinglestoreAutoscaler) {
+func (w *SinglestoreAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.SinglestoreAutoscaler) {
 	var db olddbapi.Singlestore
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get Singlestore %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get Singlestore %v/%v \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return
 	}
 
-	s.setOpsReqOptsDefaults(scaler)
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		if db.Spec.Topology != nil {
@@ -96,7 +96,7 @@ func (s *SinglestoreAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.
 	}
 }
 
-func (s *SinglestoreAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.SinglestoreAutoscaler) {
+func (w *SinglestoreAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.SinglestoreAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.SinglestoreOpsRequestOptions{}
 	}
@@ -110,40 +110,40 @@ func (s *SinglestoreAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autos
 var _ webhook.CustomValidator = &SinglestoreAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (s *SinglestoreAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *SinglestoreAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.SinglestoreAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an SinglestoreAutoscaler object but got %T", obj)
 	}
 	sdbLog.Info("validate create", "name", scaler.Name)
-	return nil, s.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (s *SinglestoreAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *SinglestoreAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.SinglestoreAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an SinglestoreAutoscaler object but got %T", newObj)
 	}
 	sdbLog.Info("validate update", "name", scaler.Name)
-	return nil, s.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ *SinglestoreAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *SinglestoreAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (s *SinglestoreAutoscalerCustomWebhook) validate(scaler *autoscalingapi.SinglestoreAutoscaler) error {
+func (w *SinglestoreAutoscalerCustomWebhook) validate(scaler *autoscalingapi.SinglestoreAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var sdb olddbapi.Singlestore
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &sdb)
 	if err != nil {
-		_ = fmt.Errorf("can't get Singlestore %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		_ = fmt.Errorf("can't get Singlestore %v/%v \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return err
 	}
 

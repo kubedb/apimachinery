@@ -52,19 +52,19 @@ type KafkaAutoscalerCustomWebhook struct {
 var _ webhook.CustomDefaulter = &KafkaAutoscalerCustomWebhook{}
 
 // Default implements webhook.CustomDefaulter so a webhook will be registered for the type
-func (k *KafkaAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *KafkaAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.KafkaAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an KafkaAutoscaler object but got %T", obj)
 	}
 	kafkaLog.Info("defaulting", "name", scaler.Name)
-	k.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (k *KafkaAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.KafkaAutoscaler) {
+func (w *KafkaAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.KafkaAutoscaler) {
 	var db dbapi.Kafka
-	err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -73,7 +73,7 @@ func (k *KafkaAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.KafkaA
 		return
 	}
 
-	k.setOpsReqOptsDefaults(scaler)
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		if db.Spec.Topology != nil {
@@ -94,7 +94,7 @@ func (k *KafkaAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.KafkaA
 	}
 }
 
-func (k *KafkaAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.KafkaAutoscaler) {
+func (w *KafkaAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.KafkaAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.KafkaOpsRequestOptions{}
 	}
@@ -108,26 +108,26 @@ func (k *KafkaAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscaling
 var _ webhook.CustomValidator = &KafkaAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *KafkaAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.KafkaAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an KafkaAutoscaler object but got %T", obj)
 	}
 	kafkaLog.Info("validate create", "name", scaler.Name)
-	return nil, k.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (k *KafkaAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *KafkaAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.KafkaAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an KafkaAutoscaler object but got %T", newObj)
 	}
 	kafkaLog.Info("validate create", "name", scaler.Name)
-	return nil, k.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ *KafkaAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *KafkaAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	_, ok := obj.(*autoscalingapi.KafkaAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an KafkaAutoscaler object but got %T", obj)
@@ -135,12 +135,12 @@ func (_ *KafkaAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj r
 	return nil, nil
 }
 
-func (k *KafkaAutoscalerCustomWebhook) validate(scaler *autoscalingapi.KafkaAutoscaler) error {
+func (w *KafkaAutoscalerCustomWebhook) validate(scaler *autoscalingapi.KafkaAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var kf dbapi.Kafka
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &kf)

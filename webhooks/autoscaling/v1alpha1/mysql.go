@@ -52,19 +52,19 @@ var mylog = logf.Log.WithName("mysql-autoscaler")
 var _ webhook.CustomDefaulter = &MySQLAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *MySQLAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *MySQLAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.MySQLAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an MySQLAutoscaler object but got %T", obj)
 	}
 
 	mylog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *MySQLAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MySQLAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *MySQLAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MySQLAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.MySQL)
@@ -74,11 +74,11 @@ func (in *MySQLAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MySQL
 	}
 }
 
-func (in *MySQLAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MySQLAutoscaler) {
+func (w *MySQLAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MySQLAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.MySQLOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -90,31 +90,31 @@ func (in *MySQLAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalin
 var _ webhook.CustomValidator = &MySQLAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MySQLAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MySQLAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.MySQLAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an MySQLAutoscaler object but got %T", obj)
 	}
 
 	mylog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MySQLAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *MySQLAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.MySQLAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an MySQLAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ MySQLAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w MySQLAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *MySQLAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MySQLAutoscaler) error {
+func (w *MySQLAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MySQLAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

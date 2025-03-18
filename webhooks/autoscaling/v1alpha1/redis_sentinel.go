@@ -52,29 +52,29 @@ var rsLog = logf.Log.WithName("redis-sentinel-autoscaler")
 var _ webhook.CustomDefaulter = &RedisSentinelAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *RedisSentinelAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *RedisSentinelAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.RedisSentinelAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an RedisSentinelAutoscaler object but got %T", obj)
 	}
 	rsLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *RedisSentinelAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.RedisSentinelAutoscaler) {
-	in.setOpsReqOptsDefaults(scaler)
+func (w *RedisSentinelAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.RedisSentinelAutoscaler) {
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Compute != nil {
 		setDefaultComputeValues(scaler.Spec.Compute.Sentinel)
 	}
 }
 
-func (in *RedisSentinelAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.RedisSentinelAutoscaler) {
+func (w *RedisSentinelAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.RedisSentinelAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.RedisSentinelOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -86,30 +86,30 @@ func (in *RedisSentinelAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *au
 var _ webhook.CustomValidator = &RedisSentinelAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *RedisSentinelAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RedisSentinelAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.RedisSentinelAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an RedisSentinelAutoscaler object but got %T", obj)
 	}
 	rsLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *RedisSentinelAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+func (w *RedisSentinelAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.RedisSentinelAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an RedisSentinelAutoscaler object but got %T", newObj)
 	}
 	rsLog.Info("validate update", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ RedisSentinelAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w RedisSentinelAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *RedisSentinelAutoscalerCustomWebhook) validate(scaler *autoscalingapi.RedisSentinelAutoscaler) error {
+func (w *RedisSentinelAutoscalerCustomWebhook) validate(scaler *autoscalingapi.RedisSentinelAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}

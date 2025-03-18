@@ -54,20 +54,20 @@ var ferretdbLog = logf.Log.WithName("ferretdb-autoscaler")
 var _ webhook.CustomDefaulter = &FerretDBAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
-func (in *FerretDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *FerretDBAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	scaler, ok := obj.(*autoscalingapi.FerretDBAutoscaler)
 	if !ok {
 		return fmt.Errorf("expected an FerretDBAutoscaler object but got %T", obj)
 	}
 
 	ferretdbLog.Info("defaulting", "name", scaler.Name)
-	in.setDefaults(scaler)
+	w.setDefaults(scaler)
 	return nil
 }
 
-func (in *FerretDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.FerretDBAutoscaler) {
+func (w *FerretDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.FerretDBAutoscaler) {
 	var db olddbapi.FerretDB
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &db)
@@ -76,7 +76,7 @@ func (in *FerretDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Fe
 		return
 	}
 
-	in.setOpsReqOptsDefaults(scaler)
+	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
 		setDefaultStorageValues(scaler.Spec.Storage.FerretDB)
@@ -88,11 +88,11 @@ func (in *FerretDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Fe
 	}
 }
 
-func (in *FerretDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.FerretDBAutoscaler) {
+func (w *FerretDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.FerretDBAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.FerretDBOpsRequestOptions{}
 	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
+	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
 	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
@@ -104,36 +104,36 @@ func (in *FerretDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosca
 var _ webhook.CustomValidator = &FerretDBAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *FerretDBAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *FerretDBAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := obj.(*autoscalingapi.FerretDBAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an FerretDBAutoscaler object but got %T", obj)
 	}
 
 	ferretdbLog.Info("validate create", "name", scaler.Name)
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *FerretDBAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *FerretDBAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	scaler, ok := newObj.(*autoscalingapi.FerretDBAutoscaler)
 	if !ok {
 		return nil, fmt.Errorf("expected an FerretDBAutoscaler object but got %T", newObj)
 	}
 
-	return nil, in.validate(scaler)
+	return nil, w.validate(scaler)
 }
 
-func (_ FerretDBAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w FerretDBAutoscalerCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *FerretDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.FerretDBAutoscaler) error {
+func (w *FerretDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.FerretDBAutoscaler) error {
 	if scaler.Spec.DatabaseRef == nil {
 		return errors.New("databaseRef can't be empty")
 	}
 	var kf olddbapi.FerretDB
-	err := autoscalingapi.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      scaler.Spec.DatabaseRef.Name,
 		Namespace: scaler.Namespace,
 	}, &kf)
