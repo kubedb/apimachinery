@@ -60,17 +60,17 @@ var esLog = logf.Log.WithName("Elasticsearch-opsrequest")
 var _ webhook.CustomValidator = &ElasticsearchOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *ElasticsearchOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ElasticsearchOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.ElasticsearchOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an ElasticsearchOpsRequest object but got %T", obj)
 	}
 	esLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *ElasticsearchOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *ElasticsearchOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.ElasticsearchOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an ElasticsearchOpsRequest object but got %T", newObj)
@@ -85,10 +85,10 @@ func (in *ElasticsearchOpsRequestCustomWebhook) ValidateUpdate(ctx context.Conte
 	if err := validateElasticsearchOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *ElasticsearchOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ElasticsearchOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
@@ -104,12 +104,12 @@ func validateElasticsearchOpsRequest(obj, oldObj runtime.Object) error {
 	return nil
 }
 
-func (in ElasticsearchOpsRequestCustomWebhook) validateOpensearchVersionCompatibility(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) (bool, error) {
+func (w *ElasticsearchOpsRequestCustomWebhook) validateOpensearchVersionCompatibility(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) (bool, error) {
 	if req.Spec.Type != opsapi.ElasticsearchOpsRequestTypeReconfigure && req.Spec.Type != opsapi.ElasticsearchOpsRequestTypeRotateAuth {
 		return false, nil
 	}
 	esversion := &catalog.ElasticsearchVersion{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
 	}, esversion)
 	if err != nil {
@@ -127,10 +127,10 @@ func (in ElasticsearchOpsRequestCustomWebhook) validateOpensearchVersionCompatib
 	return false, nil
 }
 
-func (in *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ElasticsearchOpsRequest) error {
+func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ElasticsearchOpsRequest) error {
 	var allErr field.ErrorList
 	db := &dbapi.Elasticsearch{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, db)
@@ -140,13 +140,13 @@ func (in *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsa
 	}
 	switch req.GetRequestType().(opsapi.ElasticsearchOpsRequestType) {
 	case opsapi.ElasticsearchOpsRequestTypeReconfigure:
-		if err := in.validateElasticsearchReconfigureOpsRequest(req, db); err != nil {
+		if err := w.validateElasticsearchReconfigureOpsRequest(req, db); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.ElasticsearchOpsRequestTypeRotateAuth:
-		if err := in.validateElasticsearchRotateAuthenticationOpsRequest(req, db); err != nil {
+		if err := w.validateElasticsearchRotateAuthenticationOpsRequest(req, db); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
@@ -158,8 +158,8 @@ func (in *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsa
 	return apierrors.NewInvalid(schema.GroupKind{Group: "elasticsearchopsrequests.kubedb.com", Kind: "ElasticsearchOpsRequest"}, req.Name, allErr)
 }
 
-func (in *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchRotateAuthenticationOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
-	issue, err := in.validateOpensearchVersionCompatibility(req, db)
+func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchRotateAuthenticationOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
+	issue, err := w.validateOpensearchVersionCompatibility(req, db)
 	if err != nil {
 		return err
 	}
@@ -171,7 +171,7 @@ func (in *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchRotateAuthe
 		if authSpec.SecretRef.Name == "" {
 			return errors.New("spec.authentication.secretRef.name can not be empty")
 		}
-		err = in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      authSpec.SecretRef.Name,
 			Namespace: req.Namespace,
 		}, &core.Secret{})
@@ -186,8 +186,8 @@ func (in *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchRotateAuthe
 	return nil
 }
 
-func (in *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchReconfigureOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
-	issue, err := in.validateOpensearchVersionCompatibility(req, db)
+func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchReconfigureOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
+	issue, err := w.validateOpensearchVersionCompatibility(req, db)
 	if err != nil {
 		return err
 	}

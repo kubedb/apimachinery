@@ -58,17 +58,17 @@ var rabbitmqLog = logf.Log.WithName("rabbitmq-opsrequest")
 var _ webhook.CustomValidator = &RabbitMQOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *RabbitMQOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RabbitMQOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.RabbitMQOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an RabbitMQOpsRequest object but got %T", obj)
 	}
 	rabbitmqLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *RabbitMQOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *RabbitMQOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.RabbitMQOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an RabbitMQOpsRequest object but got %T", newObj)
@@ -83,10 +83,10 @@ func (in *RabbitMQOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, o
 	if err := validateRabbitMQOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *RabbitMQOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RabbitMQOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

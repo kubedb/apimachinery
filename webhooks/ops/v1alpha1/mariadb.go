@@ -57,17 +57,17 @@ var mdLog = logf.Log.WithName("mariadb-opsrequest")
 var _ webhook.CustomValidator = &MariaDBOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhooin.Validator so a webhook will be registered for the type
-func (in *MariaDBOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MariaDBOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.MariaDBOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an MariaDBOpsRequest object but got %T", obj)
 	}
 	mdLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhooin.Validator so a webhook will be registered for the type
-func (in *MariaDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *MariaDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.MariaDBOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an MariaDBOpsRequest object but got %T", newObj)
@@ -82,54 +82,54 @@ func (in *MariaDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, ol
 	if err := validateMariaDBOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *MariaDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MariaDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MariaDBOpsRequest) error {
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.MariaDBOpsRequestType) {
 	case opsapi.MariaDBOpsRequestTypeRestart:
-		if err := in.hasDatabaseRef(req); err != nil {
+		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MariaDBOpsRequestTypeVerticalScaling:
-		if err := in.validateMariaDBScalingOpsRequest(req); err != nil {
+		if err := w.validateMariaDBScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MariaDBOpsRequestTypeHorizontalScaling:
-		if err := in.validateMariaDBScalingOpsRequest(req); err != nil {
+		if err := w.validateMariaDBScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MariaDBOpsRequestTypeReconfigure:
-		if err := in.validateMariaDBReconfigurationOpsRequest(req); err != nil {
+		if err := w.validateMariaDBReconfigurationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MariaDBOpsRequestTypeUpdateVersion:
-		if err := in.validateMariaDBUpgradeOpsRequest(req); err != nil {
+		if err := w.validateMariaDBUpgradeOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MariaDBOpsRequestTypeReconfigureTLS:
-		if err := in.validateMariaDBReconfigurationTLSOpsRequest(req); err != nil {
+		if err := w.validateMariaDBReconfigurationTLSOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MariaDBOpsRequestTypeVolumeExpansion:
-		if err := in.validateMariaDBVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateMariaDBVolumeExpansionOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -144,9 +144,9 @@ func (in *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mar
 	return apierrors.NewInvalid(schema.GroupKind{Group: "MariaDBopsrequests.kubedb.com", Kind: "MariaDBOpsRequest"}, req.Name, allErr)
 }
 
-func (in *MariaDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MariaDBOpsRequest) error {
 	md := dbapi.MariaDB{}
-	if err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &md); err != nil {
@@ -167,18 +167,18 @@ func validateMariaDBOpsRequest(obj, oldObj runtime.Object) error {
 	return nil
 }
 
-func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBUpgradeOpsRequest(req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBUpgradeOpsRequest(req *opsapi.MariaDBOpsRequest) error {
 	// right now, kubeDB support the following mariadb version: 10.4.17 and 10.5.8
 	if req.Spec.UpdateVersion == nil {
 		return errors.New("spec.Upgrade is nil")
 	}
 	db := &dbapi.MariaDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 	mdNextVersion := &catalog.MariaDBVersion{}
-	err = in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.UpdateVersion.TargetVersion}, mdNextVersion)
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.UpdateVersion.TargetVersion}, mdNextVersion)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadbVersion: %s", req.Spec.UpdateVersion.TargetVersion))
 	}
@@ -189,13 +189,13 @@ func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBUpgradeOpsRequest(req *
 	return nil
 }
 
-func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBScalingOpsRequest(req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBScalingOpsRequest(req *opsapi.MariaDBOpsRequest) error {
 	if req.Spec.Type == opsapi.MariaDBOpsRequestTypeHorizontalScaling {
 		if req.Spec.HorizontalScaling == nil {
 			return errors.New("`spec.Scale.HorizontalScaling` field is nil")
 		}
 
-		if err := in.ensureMariaDBGroupReplication(req); err != nil {
+		if err := w.ensureMariaDBGroupReplication(req); err != nil {
 			return err
 		}
 
@@ -212,9 +212,9 @@ func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBScalingOpsRequest(req *
 	return nil
 }
 
-func (in *MariaDBOpsRequestCustomWebhook) ensureMariaDBGroupReplication(req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) ensureMariaDBGroupReplication(req *opsapi.MariaDBOpsRequest) error {
 	db := &dbapi.MariaDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -225,12 +225,12 @@ func (in *MariaDBOpsRequestCustomWebhook) ensureMariaDBGroupReplication(req *ops
 	return nil
 }
 
-func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsRequest(req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsRequest(req *opsapi.MariaDBOpsRequest) error {
 	if req.Spec.VolumeExpansion == nil || req.Spec.VolumeExpansion.MariaDB == nil {
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
 	}
 	db := &dbapi.MariaDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -247,7 +247,7 @@ func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReque
 	return nil
 }
 
-func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBReconfigurationOpsRequest(req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBReconfigurationOpsRequest(req *opsapi.MariaDBOpsRequest) error {
 	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && len(req.Spec.Configuration.ApplyConfig) == 0 && req.Spec.Configuration.ConfigSecret == nil) {
 		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
 	}
@@ -269,14 +269,14 @@ func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBReconfigurationOpsReque
 	return nil
 }
 
-func (in *MariaDBOpsRequestCustomWebhook) validateMariaDBReconfigurationTLSOpsRequest(req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBReconfigurationTLSOpsRequest(req *opsapi.MariaDBOpsRequest) error {
 	db := &dbapi.MariaDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 	dbVersion := &catalog.MariaDBVersion{}
-	err = in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, dbVersion)
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, dbVersion)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadbversion: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}

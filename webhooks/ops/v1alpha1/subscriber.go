@@ -53,17 +53,17 @@ var subscriberLog = logf.Log.WithName("postgres-subscriber")
 var _ webhook.CustomValidator = &SubscriberCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *SubscriberCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *SubscriberCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	sub, ok := obj.(*replapi.Subscriber)
 	if !ok {
 		return nil, fmt.Errorf("expected an Subscriber object but got %T", sub)
 	}
 	subscriberLog.Info("validate create", "name", sub.Name)
-	return nil, in.validateCreateOrUpdate(sub)
+	return nil, w.validateCreateOrUpdate(sub)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *SubscriberCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *SubscriberCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	newSub, ok := newObj.(*replapi.Subscriber)
 	if !ok {
 		return nil, fmt.Errorf("expected an Subscriber object but got %T", newObj)
@@ -78,13 +78,13 @@ func (in *SubscriberCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, n
 	if err := validateSubUpdate(newSub, oldSub); err != nil {
 		return nil, err
 	}
-	if err := in.validateAlterParams(newSub, oldSub); err != nil {
+	if err := w.validateAlterParams(newSub, oldSub); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(newSub)
+	return nil, w.validateCreateOrUpdate(newSub)
 }
 
-func (in *SubscriberCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *SubscriberCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
@@ -100,17 +100,17 @@ func validateSubUpdate(obj, oldObj *replapi.Subscriber) error {
 	return nil
 }
 
-func (k *SubscriberCustomWebhook) validateCreateOrUpdate(req *replapi.Subscriber) error {
+func (w *SubscriberCustomWebhook) validateCreateOrUpdate(req *replapi.Subscriber) error {
 	pg := &dbapi.Postgres{}
 	pgVersion := &catalog.PostgresVersion{}
-	err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.Spec.DatabaseRef.Name,
 		Namespace: req.Namespace,
 	}, pg)
 	if err != nil {
 		return err
 	}
-	err = k.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: pg.Spec.Version,
 	}, pgVersion)
 	if err != nil {
@@ -125,7 +125,7 @@ func (k *SubscriberCustomWebhook) validateCreateOrUpdate(req *replapi.Subscriber
 	}
 
 	if majorVersion <= 13 {
-		err = k.validateSubForMajorVersion13(req, pgVersion)
+		err = w.validateSubForMajorVersion13(req, pgVersion)
 		if err != nil {
 			return err
 		}
@@ -145,7 +145,7 @@ func (k *SubscriberCustomWebhook) validateCreateOrUpdate(req *replapi.Subscriber
 	return nil
 }
 
-func (k *SubscriberCustomWebhook) validateSubForMajorVersion13(sub *replapi.Subscriber, dbVersion *catalog.PostgresVersion) error {
+func (w *SubscriberCustomWebhook) validateSubForMajorVersion13(sub *replapi.Subscriber, dbVersion *catalog.PostgresVersion) error {
 	if sub.Spec.Parameters != nil {
 		if sub.Spec.Parameters.Streaming != nil {
 			return fmt.Errorf("streaming in parameters is not allowed in postgresVersion %s", dbVersion.Spec.Version)
@@ -157,7 +157,7 @@ func (k *SubscriberCustomWebhook) validateSubForMajorVersion13(sub *replapi.Subs
 	return nil
 }
 
-func (k *SubscriberCustomWebhook) validateAlterParams(sub *replapi.Subscriber, oldSub *replapi.Subscriber) error {
+func (w *SubscriberCustomWebhook) validateAlterParams(sub *replapi.Subscriber, oldSub *replapi.Subscriber) error {
 	if (oldSub.Spec.Parameters.CopyData != nil) &&
 		(sub.Spec.Parameters.CopyData != nil) &&
 		(*oldSub.Spec.Parameters.CopyData != *sub.Spec.Parameters.CopyData) {

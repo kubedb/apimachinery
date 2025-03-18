@@ -59,17 +59,17 @@ var postgresLog = logf.Log.WithName("postgres-opsrequest")
 var _ webhook.CustomValidator = &PostgresOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *PostgresOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PostgresOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.PostgresOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an PostgresOpsRequest object but got %T", obj)
 	}
 	postgresLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *PostgresOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *PostgresOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.PostgresOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an PostgresOpsRequest object but got %T", newObj)
@@ -84,10 +84,10 @@ func (in *PostgresOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, o
 	if err := validatePostgresOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *PostgresOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PostgresOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
@@ -103,41 +103,41 @@ func validatePostgresOpsRequest(req *opsapi.PostgresOpsRequest, oldReq *opsapi.P
 	return nil
 }
 
-func (k *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.PostgresOpsRequest) error {
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.PostgresOpsRequestType) {
 	case opsapi.PostgresOpsRequestTypeRestart:
-		if err := k.hasDatabaseRef(req); err != nil {
+		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PostgresOpsRequestTypeVerticalScaling:
-		if err := k.validatePostgresVerticalScalingOpsRequest(req); err != nil {
+		if err := w.validatePostgresVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PostgresOpsRequestTypeHorizontalScaling:
-		if err := k.validatePostgresHorizontalScalingOpsRequest(req); err != nil {
+		if err := w.validatePostgresHorizontalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PostgresOpsRequestTypeReconfigure:
-		if err := k.validatePostgresReconfigureOpsRequest(req); err != nil {
+		if err := w.validatePostgresReconfigureOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PostgresOpsRequestTypeUpdateVersion:
-		if err := k.validatePostgresUpdateVersionOpsRequest(req); err != nil {
+		if err := w.validatePostgresUpdateVersionOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PostgresOpsRequestTypeReconfigureTLS:
-		if err := k.validatePostgresReconfigureTLSOpsRequest(req); err != nil {
+		if err := w.validatePostgresReconfigureTLSOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 				req.Name,
 				err.Error()))
@@ -152,9 +152,9 @@ func (k *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Postgresopsrequests.kubedb.com", Kind: "PostgresOpsRequest"}, req.Name, allErr)
 }
 
-func (k *PostgresOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PostgresOpsRequest) error {
 	postgres := olddbapi.Postgres{}
-	if err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &postgres); err != nil {
@@ -163,12 +163,12 @@ func (k *PostgresOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PostgresOps
 	return nil
 }
 
-func (k *PostgresOpsRequestCustomWebhook) validatePostgresVerticalScalingOpsRequest(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresVerticalScalingOpsRequest(req *opsapi.PostgresOpsRequest) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
 		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
 	}
-	err := k.hasDatabaseRef(req)
+	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -179,12 +179,12 @@ func (k *PostgresOpsRequestCustomWebhook) validatePostgresVerticalScalingOpsRequ
 	return nil
 }
 
-func (k *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRequest(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRequest(req *opsapi.PostgresOpsRequest) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
 		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
 	}
-	err := k.hasDatabaseRef(req)
+	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -194,12 +194,12 @@ func (k *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRe
 	return nil
 }
 
-func (k *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureOpsRequest(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureOpsRequest(req *opsapi.PostgresOpsRequest) error {
 	reconfigureSpec := req.Spec.Configuration
 	if reconfigureSpec == nil {
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
-	err := k.hasDatabaseRef(req)
+	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -218,17 +218,17 @@ func (k *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureOpsRequest(
 	return nil
 }
 
-func (k *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsRequest(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsRequest(req *opsapi.PostgresOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
-	err := k.hasDatabaseRef(req)
+	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
 	postgresTargetVersion := &catalog.PostgresVersion{}
-	err = k.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: updateVersionSpec.TargetVersion,
 	}, postgresTargetVersion)
 	if err != nil {
@@ -237,12 +237,12 @@ func (k *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsReques
 	return nil
 }
 
-func (k *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureTLSOpsRequest(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureTLSOpsRequest(req *opsapi.PostgresOpsRequest) error {
 	tls := req.Spec.TLS
 	if tls == nil {
 		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
 	}
-	err := k.hasDatabaseRef(req)
+	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}

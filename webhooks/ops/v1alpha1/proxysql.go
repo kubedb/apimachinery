@@ -68,17 +68,17 @@ func validateProxySQLOpsRequest(obj, oldObj runtime.Object) error {
 }
 
 // ValidateCreate implements webhooin.Validator so a webhook will be registered for the type
-func (in *ProxySQLOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ProxySQLOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.ProxySQLOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an ProxySQLOpsRequest object but got %T", obj)
 	}
 	proxyLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhooin.Validator so a webhook will be registered for the type
-func (in *ProxySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *ProxySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.ProxySQLOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an ProxySQLOpsRequest object but got %T", newObj)
@@ -93,48 +93,48 @@ func (in *ProxySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, o
 	if err := validateProxySQLOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *ProxySQLOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ProxySQLOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ProxySQLOpsRequest) error {
+func (w *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ProxySQLOpsRequest) error {
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.ProxySQLOpsRequestType) {
 	case opsapi.ProxySQLOpsRequestTypeRestart:
-		if err := in.hasDatabaseRef(req); err != nil {
+		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.ProxySQLOpsRequestTypeVerticalScaling:
-		if err := in.validateProxySQLScalingOpsRequest(req); err != nil {
+		if err := w.validateProxySQLScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.ProxySQLOpsRequestTypeHorizontalScaling:
-		if err := in.validateProxySQLScalingOpsRequest(req); err != nil {
+		if err := w.validateProxySQLScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.ProxySQLOpsRequestTypeReconfigure:
-		if err := in.validateProxySQLReconfigurationOpsRequest(req); err != nil {
+		if err := w.validateProxySQLReconfigurationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.ProxySQLOpsRequestTypeUpdateVersion:
-		if err := in.validateProxySQLUpgradeOpsRequest(req); err != nil {
+		if err := w.validateProxySQLUpgradeOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.ProxySQLOpsRequestTypeReconfigureTLS:
-		if err := in.validateProxySQLReconfigurationTLSOpsRequest(req); err != nil {
+		if err := w.validateProxySQLReconfigurationTLSOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 				req.Name,
 				err.Error()))
@@ -149,9 +149,9 @@ func (in *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pr
 	return apierrors.NewInvalid(schema.GroupKind{Group: "ProxySQLopsrequests.kubedb.com", Kind: "ProxySQLOpsRequest"}, req.Name, allErr)
 }
 
-func (in *ProxySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ProxySQLOpsRequest) error {
+func (w *ProxySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ProxySQLOpsRequest) error {
 	prx := dbapi.ProxySQL{}
-	if err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &prx); err != nil {
@@ -160,17 +160,17 @@ func (in *ProxySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ProxySQLOp
 	return nil
 }
 
-func (in *ProxySQLOpsRequestCustomWebhook) validateProxySQLUpgradeOpsRequest(req *opsapi.ProxySQLOpsRequest) error {
+func (w *ProxySQLOpsRequestCustomWebhook) validateProxySQLUpgradeOpsRequest(req *opsapi.ProxySQLOpsRequest) error {
 	if req.Spec.UpdateVersion == nil {
 		return errors.New("spec.Upgrade is nil")
 	}
 	db := &dbapi.ProxySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get proxysql: %s/%s", req.Namespace, req.Spec.ProxyRef.Name))
 	}
 	prxNextVersion := &catalog.ProxySQLVersion{}
-	err = in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.UpdateVersion.TargetVersion}, prxNextVersion)
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.UpdateVersion.TargetVersion}, prxNextVersion)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get proxysqlVersion: %s", req.Spec.UpdateVersion.TargetVersion))
 	}
@@ -181,7 +181,7 @@ func (in *ProxySQLOpsRequestCustomWebhook) validateProxySQLUpgradeOpsRequest(req
 	return nil
 }
 
-func (in *ProxySQLOpsRequestCustomWebhook) validateProxySQLScalingOpsRequest(req *opsapi.ProxySQLOpsRequest) error {
+func (w *ProxySQLOpsRequestCustomWebhook) validateProxySQLScalingOpsRequest(req *opsapi.ProxySQLOpsRequest) error {
 	if req.Spec.Type == opsapi.ProxySQLOpsRequestTypeHorizontalScaling {
 		if req.Spec.HorizontalScaling == nil {
 			return errors.New("`spec.Scale.HorizontalScaling` field is nil")
@@ -200,7 +200,7 @@ func (in *ProxySQLOpsRequestCustomWebhook) validateProxySQLScalingOpsRequest(req
 	return nil
 }
 
-func (in *ProxySQLOpsRequestCustomWebhook) validateProxySQLReconfigurationOpsRequest(req *opsapi.ProxySQLOpsRequest) error {
+func (w *ProxySQLOpsRequestCustomWebhook) validateProxySQLReconfigurationOpsRequest(req *opsapi.ProxySQLOpsRequest) error {
 	qRulesConfig := req.Spec.Configuration.MySQLQueryRules
 	if qRulesConfig != nil {
 		mp, err := GetMySQLQueryRulesMapConfig(qRulesConfig.Rules)
@@ -219,14 +219,14 @@ func (in *ProxySQLOpsRequestCustomWebhook) validateProxySQLReconfigurationOpsReq
 	return nil
 }
 
-func (in *ProxySQLOpsRequestCustomWebhook) validateProxySQLReconfigurationTLSOpsRequest(req *opsapi.ProxySQLOpsRequest) error {
+func (w *ProxySQLOpsRequestCustomWebhook) validateProxySQLReconfigurationTLSOpsRequest(req *opsapi.ProxySQLOpsRequest) error {
 	db := &dbapi.ProxySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get proxysql: %s/%s", req.Namespace, req.Spec.ProxyRef.Name))
 	}
 	dbVersion := &catalog.ProxySQLVersion{}
-	err = in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, dbVersion)
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, dbVersion)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get proxysqlversion: %s/%s", req.Namespace, req.Spec.ProxyRef.Name))
 	}

@@ -59,17 +59,17 @@ var slLog = logf.Log.WithName("Solr-opsrequest")
 var _ webhook.CustomValidator = &SolrOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *SolrOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *SolrOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.SolrOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an SolrOpsRequest object but got %T", obj)
 	}
 	slLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *SolrOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *SolrOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.SolrOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an SolrOpsRequest object but got %T", newObj)
@@ -84,10 +84,10 @@ func (in *SolrOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err := validateSolrOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *SolrOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *SolrOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
@@ -103,53 +103,53 @@ func validateSolrOpsRequest(req *opsapi.SolrOpsRequest, oldReq *opsapi.SolrOpsRe
 	return nil
 }
 
-func (in *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOpsRequest) error {
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.SolrOpsRequestType) {
 	case opsapi.SolrOpsRequestTypeRestart:
-		if err := in.hasDatabaseRef(req); err != nil {
+		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeHorizontalScaling:
-		if err := in.validateSolrHorizontalScalingOpsRequest(req); err != nil {
+		if err := w.validateSolrHorizontalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type").Child("HorizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeReconfigure:
-		if err := in.hasDatabaseRef(req); err != nil {
+		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeUpdateVersion:
-		if err := in.hasDatabaseRef(req); err != nil {
+		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeVerticalScaling:
-		if err := in.validateSolrVerticalScalingOpsRequest(req); err != nil {
+		if err := w.validateSolrVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeVolumeExpansion:
-		if err := in.validateSolrVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateSolrVolumeExpansionOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeReconfigureTLS:
-		if err := in.validateSolrReconfigureTLSOpsRequest(req); err != nil {
+		if err := w.validateSolrReconfigureTLSOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type").Child("ReconfigureTLS"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeRotateAuth:
-		if err := in.validateSolrRotateAuthenticationOpsRequest(req); err != nil {
+		if err := w.validateSolrRotateAuthenticationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
@@ -164,9 +164,9 @@ func (in *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOp
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Solropsrequests.kubedb.com", Kind: "SolrOpsRequest"}, req.Name, allErr)
 }
 
-func (in *SolrOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.SolrOpsRequest) error {
 	solr := dbapi.Solr{}
-	if err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &solr); err != nil {
@@ -175,12 +175,12 @@ func (in *SolrOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.SolrOpsRequest
 	return nil
 }
 
-func (in *SolrOpsRequestCustomWebhook) validateSolrVerticalScalingOpsRequest(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateSolrVerticalScalingOpsRequest(req *opsapi.SolrOpsRequest) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
-	err := in.hasDatabaseRef(req)
+	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -191,12 +191,12 @@ func (in *SolrOpsRequestCustomWebhook) validateSolrVerticalScalingOpsRequest(req
 	return nil
 }
 
-func (in *SolrOpsRequestCustomWebhook) validateSolrHorizontalScalingOpsRequest(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateSolrHorizontalScalingOpsRequest(req *opsapi.SolrOpsRequest) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
 		return errors.New("spec.horizontalScaling nil not supported in VerticalScaling type")
 	}
-	err := in.hasDatabaseRef(req)
+	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -207,12 +207,12 @@ func (in *SolrOpsRequestCustomWebhook) validateSolrHorizontalScalingOpsRequest(r
 	return nil
 }
 
-func (in *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req *opsapi.SolrOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
-	err := in.hasDatabaseRef(req)
+	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -223,12 +223,12 @@ func (in *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req
 	return nil
 }
 
-func (in *SolrOpsRequestCustomWebhook) validateSolrReconfigureTLSOpsRequest(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigureTLSOpsRequest(req *opsapi.SolrOpsRequest) error {
 	TLSSpec := req.Spec.TLS
 	if TLSSpec == nil {
 		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
 	}
-	if err := in.hasDatabaseRef(req); err != nil {
+	if err := w.hasDatabaseRef(req); err != nil {
 		return err
 	}
 	configCount := 0
@@ -252,16 +252,16 @@ func (in *SolrOpsRequestCustomWebhook) validateSolrReconfigureTLSOpsRequest(req 
 	return nil
 }
 
-func (in *SolrOpsRequestCustomWebhook) validateSolrRotateAuthenticationOpsRequest(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateSolrRotateAuthenticationOpsRequest(req *opsapi.SolrOpsRequest) error {
 	authSpec := req.Spec.Authentication
-	if err := in.hasDatabaseRef(req); err != nil {
+	if err := w.hasDatabaseRef(req); err != nil {
 		return err
 	}
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
 			return errors.New("spec.authentication.secretRef.name can not be empty")
 		}
-		err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      authSpec.SecretRef.Name,
 			Namespace: req.Namespace,
 		}, &core.Secret{})

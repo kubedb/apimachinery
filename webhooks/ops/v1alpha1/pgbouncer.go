@@ -55,17 +55,17 @@ var pgbouncerLog = logf.Log.WithName("pgbouncer-opsrequest")
 
 var _ webhook.CustomValidator = &PgBouncerOpsRequestCustomWebhook{}
 
-func (in *PgBouncerOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PgBouncerOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	req, ok := obj.(*opsapi.PgBouncerOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an PgBouncerOpsRequest object but got %T", obj)
 	}
 
 	pgbouncerLog.Info("validate create", "name", req.Name)
-	return nil, in.validateCreateOrUpdate(req)
+	return nil, w.validateCreateOrUpdate(req)
 }
 
-func (in *PgBouncerOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *PgBouncerOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	newReq, ok := newObj.(*opsapi.PgBouncerOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an PgBouncerOpsRequest object but got %T", newObj)
@@ -78,15 +78,15 @@ func (in *PgBouncerOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, 
 	if err := validatePgBouncerOpsRequest(newReq, oldReq); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return nil, in.validateCreateOrUpdate(newReq)
+	return nil, w.validateCreateOrUpdate(newReq)
 }
 
-func (in *PgBouncerOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PgBouncerOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.PgBouncerOpsRequest) error {
-	if !in.isDatabaseRefValid(obj) {
+func (w *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.PgBouncerOpsRequest) error {
+	if !w.isDatabaseRefValid(obj) {
 		return fmt.Errorf("target database pgbouncer %s is not valid", obj.GetDBRefName())
 	}
 
@@ -96,13 +96,13 @@ func (in *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.P
 	case opsapi.PgBouncerOpsRequestTypeVerticalScaling:
 		return validatePgBouncerVerticalScalingOpsRequest(obj)
 	case opsapi.PgBouncerOpsRequestTypeUpdateVersion:
-		return validatePgBouncerUpdateVersionOpsRequest(obj, in.DefaultClient)
+		return validatePgBouncerUpdateVersionOpsRequest(obj, w.DefaultClient)
 	case opsapi.PgBouncerOpsRequestTypeReconfigure:
-		return validatePgBouncerReconfigurationOpsRequest(obj, in.DefaultClient)
+		return validatePgBouncerReconfigurationOpsRequest(obj, w.DefaultClient)
 	case opsapi.PgBouncerOpsRequestTypeRestart:
 		return nil
 	case opsapi.PgBouncerOpsRequestTypeReconfigureTLS:
-		return in.validatePgBouncerReconfigureTLSOpsRequest(obj)
+		return w.validatePgBouncerReconfigureTLSOpsRequest(obj)
 	default:
 		return fmt.Errorf("defined OpsRequestType %s is not supported, supported types for PgBouncer are %s", obj.Spec.Type, strings.Join(opsapi.PgBouncerOpsRequestTypeNames(), ", "))
 	}
@@ -120,8 +120,8 @@ func validatePgBouncerOpsRequest(obj, oldObj runtime.Object) error {
 	return nil
 }
 
-func (in *PgBouncerOpsRequestCustomWebhook) isDatabaseRefValid(obj *opsapi.PgBouncerOpsRequest) bool {
-	_, err := getPgBouncer(in.DefaultClient, obj)
+func (w *PgBouncerOpsRequestCustomWebhook) isDatabaseRefValid(obj *opsapi.PgBouncerOpsRequest) bool {
+	_, err := getPgBouncer(w.DefaultClient, obj)
 	return err == nil
 }
 
@@ -133,7 +133,7 @@ func getPgBouncer(client client.Client, opsReq *opsapi.PgBouncerOpsRequest) (*db
 	return bouncer, nil
 }
 
-func (in *PgBouncerOpsRequestCustomWebhook) validatePgBouncerReconfigureTLSOpsRequest(req *opsapi.PgBouncerOpsRequest) error {
+func (w *PgBouncerOpsRequestCustomWebhook) validatePgBouncerReconfigureTLSOpsRequest(req *opsapi.PgBouncerOpsRequest) error {
 	tls := req.Spec.TLS
 	if tls == nil {
 		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")

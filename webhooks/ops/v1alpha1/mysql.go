@@ -57,17 +57,17 @@ var myLog = logf.Log.WithName("mysql-opsrequest")
 var _ webhook.CustomValidator = &MySQLOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhooin.Validator so a webhook will be registered for the type
-func (in *MySQLOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MySQLOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.MySQLOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an MySQLOpsRequest object but got %T", obj)
 	}
 	myLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhooin.Validator so a webhook will be registered for the type
-func (in *MySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *MySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.MySQLOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an MySQLOpsRequest object but got %T", newObj)
@@ -79,63 +79,63 @@ func (in *MySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldO
 		return nil, fmt.Errorf("expected an MySQLOpsRequest object but got %T", oldObj)
 	}
 
-	if err := in.validateMySQLOpsRequest(ops, oldOps); err != nil {
+	if err := w.validateMySQLOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *MySQLOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MySQLOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLOpsRequest) error {
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.MySQLOpsRequestType) {
 	case opsapi.MySQLOpsRequestTypeRestart:
-		if err := in.hasDatabaseRef(req); err != nil {
+		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeVerticalScaling:
-		if err := in.validateMySQLScalingOpsRequest(req); err != nil {
+		if err := w.validateMySQLScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeHorizontalScaling:
-		if err := in.validateMySQLScalingOpsRequest(req); err != nil {
+		if err := w.validateMySQLScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeReconfigure:
-		if err := in.validateMySQLReconfigurationOpsRequest(req); err != nil {
+		if err := w.validateMySQLReconfigurationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeUpdateVersion:
-		if err := in.validateMySQLUpgradeOpsRequest(req); err != nil {
+		if err := w.validateMySQLUpgradeOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeReconfigureTLS:
-		if err := in.validateMySQLReconfigurationTLSOpsRequest(req); err != nil {
+		if err := w.validateMySQLReconfigurationTLSOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeVolumeExpansion:
-		if err := in.validateMySQLVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateMySQLVolumeExpansionOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeReplicationModeTransformation:
-		if err := in.validateMySQLReplicationModeTransformation(req); err != nil {
+		if err := w.validateMySQLReplicationModeTransformation(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicationModeTransformation"),
 				req.Name,
 				err.Error()))
@@ -151,9 +151,9 @@ func (in *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQL
 	return apierrors.NewInvalid(schema.GroupKind{Group: "MySQLopsrequests.kubedb.com", Kind: "MySQLOpsRequest"}, req.Name, allErr)
 }
 
-func (in *MySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MySQLOpsRequest) error {
 	md := dbapi.MySQL{}
-	if err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &md); err != nil {
@@ -162,24 +162,24 @@ func (in *MySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MySQLOpsReque
 	return nil
 }
 
-func (in *MySQLOpsRequestCustomWebhook) validateMySQLUpgradeOpsRequest(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpgradeOpsRequest(req *opsapi.MySQLOpsRequest) error {
 	// right now, kubeDB support the following mysql version: 5.7.25, 5.7.29, 5.7.31, 8.0.3, 8.0.14, 8.0.18, 8.0.20 and 8.0.21
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.Upgrade & spec.UpdateVersion both nil not supported")
 	}
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 	myCurVersion := &catalog.MySQLVersion{}
-	err = in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, myCurVersion)
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, myCurVersion)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysqlVersion: %s", updateVersionSpec.TargetVersion))
 	}
 	myNextVersion := &catalog.MySQLVersion{}
-	err = in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: updateVersionSpec.TargetVersion}, myNextVersion)
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: updateVersionSpec.TargetVersion}, myNextVersion)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysqlVersion: %s", updateVersionSpec.TargetVersion))
 	}
@@ -249,13 +249,13 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLUpgradeOpsRequest(req *opsa
 	return nil
 }
 
-func (in *MySQLOpsRequestCustomWebhook) validateMySQLScalingOpsRequest(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLScalingOpsRequest(req *opsapi.MySQLOpsRequest) error {
 	if req.Spec.Type == opsapi.MySQLOpsRequestTypeHorizontalScaling {
 		if req.Spec.HorizontalScaling == nil {
 			return errors.New("`spec.Scale.HorizontalScaling` field is nil")
 		}
 
-		if err := in.ensureMySQLGroupReplication(req); err != nil {
+		if err := w.ensureMySQLGroupReplication(req); err != nil {
 			return err
 		}
 
@@ -272,12 +272,12 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLScalingOpsRequest(req *opsa
 	return nil
 }
 
-func (in *MySQLOpsRequestCustomWebhook) validateMySQLVolumeExpansionOpsRequest(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLVolumeExpansionOpsRequest(req *opsapi.MySQLOpsRequest) error {
 	if req.Spec.VolumeExpansion == nil || req.Spec.VolumeExpansion.MySQL == nil {
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
 	}
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -294,9 +294,9 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLVolumeExpansionOpsRequest(r
 	return nil
 }
 
-func (in *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(req *opsapi.MySQLOpsRequest) error {
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -325,9 +325,9 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(r
 	return nil
 }
 
-func (in *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest(req *opsapi.MySQLOpsRequest) error {
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -339,9 +339,9 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsReques
 	return nil
 }
 
-func (in *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformation(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformation(req *opsapi.MySQLOpsRequest) error {
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -363,9 +363,9 @@ func (in *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformati
 	return nil
 }
 
-func (in *MySQLOpsRequestCustomWebhook) ensureMySQLGroupReplication(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) ensureMySQLGroupReplication(req *opsapi.MySQLOpsRequest) error {
 	db := &dbapi.MySQL{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -376,7 +376,7 @@ func (in *MySQLOpsRequestCustomWebhook) ensureMySQLGroupReplication(req *opsapi.
 	return nil
 }
 
-func (in *MySQLOpsRequestCustomWebhook) validateMySQLOpsRequest(obj, oldObj runtime.Object) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLOpsRequest(obj, oldObj runtime.Object) error {
 	preconditions := meta_util.PreConditionSet{Set: sets.New[string]("spec")}
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)
 	if err != nil {

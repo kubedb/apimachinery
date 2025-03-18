@@ -58,17 +58,17 @@ var mongodbLog = logf.Log.WithName("mongodb-opsrequest")
 var _ webhook.CustomValidator = &MongoDBOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MongoDBOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.MongoDBOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an MongoDBOpsRequest object but got %T", obj)
 	}
 	mongodbLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MongoDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *MongoDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.MongoDBOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an MongoDBOpsRequest object but got %T", newObj)
@@ -83,14 +83,14 @@ func (in *MongoDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, ol
 	if err := validateMongoDBOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *MongoDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MongoDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MongoDBOpsRequest) error {
+func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MongoDBOpsRequest) error {
 	var allErr field.ErrorList
 	// validate MongoDBOpsRequest specs
 	if !IsOpsTypeSupported(opsapi.MongoDBOpsRequestTypeNames(), string(req.Spec.Type)) {
@@ -99,7 +99,7 @@ func (in *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mon
 	}
 
 	var db dbapi.MongoDB
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &db)
@@ -109,7 +109,7 @@ func (in *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mon
 	}
 
 	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeHorizontalScaling {
-		if err = in.validateMongoDBHorizontalScalingOpsRequest(&db, req); err != nil {
+		if err = w.validateMongoDBHorizontalScalingOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec"),
 				req.Name,
 				err.Error()))
@@ -121,7 +121,7 @@ func (in *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mon
 	return apierrors.NewInvalid(schema.GroupKind{Group: "MongoDBopsrequests.kubedb.com", Kind: "MongoDBOpsRequest"}, req.Name, allErr)
 }
 
-func (in *MongoDBOpsRequestCustomWebhook) validateMongoDBHorizontalScalingOpsRequest(db *dbapi.MongoDB, req *opsapi.MongoDBOpsRequest) error {
+func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBHorizontalScalingOpsRequest(db *dbapi.MongoDB, req *opsapi.MongoDBOpsRequest) error {
 	if req.Spec.HorizontalScaling == nil {
 		return errors.New("`spec.horizontalScaling` field is nil")
 	}

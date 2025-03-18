@@ -51,17 +51,17 @@ var redissentinelLog = logf.Log.WithName("redissentinel-opsrequest")
 
 var _ webhook.CustomValidator = &RedisSentinelOpsRequestCustomWebhook{}
 
-func (in *RedisSentinelOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RedisSentinelOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	req, ok := obj.(*opsapi.RedisSentinelOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an RedisSentinelOpsRequest object but got %T", obj)
 	}
 
 	redissentinelLog.Info("validate create", "name", req.Name)
-	return nil, in.isDatabaseRefValid(req)
+	return nil, w.isDatabaseRefValid(req)
 }
 
-func (in *RedisSentinelOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *RedisSentinelOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	newReq, ok := newObj.(*opsapi.RedisSentinelOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an RedisSentinelOpsRequest object but got %T", newObj)
@@ -74,10 +74,10 @@ func (in *RedisSentinelOpsRequestCustomWebhook) ValidateUpdate(ctx context.Conte
 	if err := validateRedisSentinelOpsRequest(newReq, oldReq); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return nil, in.isDatabaseRefValid(newReq)
+	return nil, w.isDatabaseRefValid(newReq)
 }
 
-func (in *RedisSentinelOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RedisSentinelOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
@@ -93,7 +93,7 @@ func validateRedisSentinelOpsRequest(obj, oldObj runtime.Object) error {
 	return nil
 }
 
-func (in *RedisSentinelOpsRequestCustomWebhook) isDatabaseRefValid(obj *opsapi.RedisSentinelOpsRequest) error {
+func (w *RedisSentinelOpsRequestCustomWebhook) isDatabaseRefValid(obj *opsapi.RedisSentinelOpsRequest) error {
 	rs := &v1.RedisSentinel{ObjectMeta: metav1.ObjectMeta{Name: obj.Spec.DatabaseRef.Name, Namespace: obj.Namespace}}
-	return in.DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(rs), rs)
+	return w.DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(rs), rs)
 }

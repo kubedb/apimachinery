@@ -56,17 +56,17 @@ var pxLog = logf.Log.WithName("percona-opsrequest")
 var _ webhook.CustomValidator = &PerconaXtraDBOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhooin.Validator so a webhook will be registered for the type
-func (in *PerconaXtraDBOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.PerconaXtraDBOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an PerconaXtraDBOpsRequest object but got %T", obj)
 	}
 	pxLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhooin.Validator so a webhook will be registered for the type
-func (in *PerconaXtraDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.PerconaXtraDBOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an PerconaXtraDBOpsRequest object but got %T", newObj)
@@ -78,57 +78,57 @@ func (in *PerconaXtraDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Conte
 		return nil, fmt.Errorf("expected an PerconaXtraDBOpsRequest object but got %T", oldObj)
 	}
 
-	if err := in.validatePerconaXtraDBOpsRequest(ops, oldOps); err != nil {
+	if err := w.validatePerconaXtraDBOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *PerconaXtraDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
-func (in *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.PerconaXtraDBOpsRequest) error {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.PerconaXtraDBOpsRequest) error {
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.PerconaXtraDBOpsRequestType) {
 	case opsapi.PerconaXtraDBOpsRequestTypeRestart:
-		if err := in.hasDatabaseRef(req); err != nil {
+		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PerconaXtraDBOpsRequestTypeVerticalScaling:
-		if err := in.validatePerconaXtraDBScalingOpsRequest(req); err != nil {
+		if err := w.validatePerconaXtraDBScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PerconaXtraDBOpsRequestTypeHorizontalScaling:
-		if err := in.validatePerconaXtraDBScalingOpsRequest(req); err != nil {
+		if err := w.validatePerconaXtraDBScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PerconaXtraDBOpsRequestTypeReconfigure:
-		if err := in.validatePerconaXtraDBReconfigurationOpsRequest(req); err != nil {
+		if err := w.validatePerconaXtraDBReconfigurationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PerconaXtraDBOpsRequestTypeUpdateVersion:
-		if err := in.validatePerconaXtraDBUpgradeOpsRequest(req); err != nil {
+		if err := w.validatePerconaXtraDBUpgradeOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PerconaXtraDBOpsRequestTypeReconfigureTLS:
-		if err := in.validatePerconaXtraDBReconfigurationTLSOpsRequest(req); err != nil {
+		if err := w.validatePerconaXtraDBReconfigurationTLSOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PerconaXtraDBOpsRequestTypeVolumeExpansion:
-		if err := in.validatePerconaXtraDBVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validatePerconaXtraDBVolumeExpansionOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -144,9 +144,9 @@ func (in *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsa
 	return apierrors.NewInvalid(schema.GroupKind{Group: "PerconaXtraDBopsrequests.kubedb.com", Kind: "PerconaXtraDBOpsRequest"}, req.Name, allErr)
 }
 
-func (in *PerconaXtraDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PerconaXtraDBOpsRequest) error {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PerconaXtraDBOpsRequest) error {
 	px := dbapi.PerconaXtraDB{}
-	if err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &px); err != nil {
@@ -155,7 +155,7 @@ func (in *PerconaXtraDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.Perco
 	return nil
 }
 
-func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBOpsRequest(obj, oldObj runtime.Object) error {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBOpsRequest(obj, oldObj runtime.Object) error {
 	preconditions := meta_util.PreConditionSet{Set: sets.New[string]("spec")}
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)
 	if err != nil {
@@ -167,19 +167,19 @@ func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBOpsRequest(
 	return nil
 }
 
-func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBUpgradeOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBUpgradeOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.Upgrade & spec.UpdateVersion both nil not supported")
 	}
 
 	db := &dbapi.PerconaXtraDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get percona-xtradbdb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 	pxNextVersion := &catalog.PerconaXtraDBVersion{}
-	err = in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: updateVersionSpec.TargetVersion,
 	}, pxNextVersion)
 	if err != nil {
@@ -192,7 +192,7 @@ func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBUpgradeOpsR
 	return nil
 }
 
-func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBScalingOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBScalingOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
 	if req.Spec.Type == opsapi.PerconaXtraDBOpsRequestTypeHorizontalScaling {
 		if req.Spec.HorizontalScaling == nil {
 			return errors.New("`spec.Scale.HorizontalScaling` field is nil")
@@ -211,12 +211,12 @@ func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBScalingOpsR
 	return nil
 }
 
-func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpansionOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpansionOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
 	if req.Spec.VolumeExpansion == nil || req.Spec.VolumeExpansion.PerconaXtraDB == nil {
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
 	}
 	db := &dbapi.PerconaXtraDB{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get percona-xtradb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
@@ -232,7 +232,7 @@ func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpan
 	return nil
 }
 
-func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBReconfigurationOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBReconfigurationOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
 	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && len(req.Spec.Configuration.ApplyConfig) == 0 && req.Spec.Configuration.ConfigSecret == nil) {
 		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
 	}
@@ -254,7 +254,7 @@ func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBReconfigura
 	return nil
 }
 
-func (in *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBReconfigurationTLSOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBReconfigurationTLSOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
 	if req.Spec.TLS == nil {
 		return errors.New("TLS Spec is empty")
 	}

@@ -58,17 +58,17 @@ var memcachedLog = logf.Log.WithName("memcached-opsrequest")
 var _ webhook.CustomValidator = &MemcachedOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *MemcachedOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MemcachedOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.MemcachedOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an MemcachedOpsRequest object but got %T", obj)
 	}
 	memcachedLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *MemcachedOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *MemcachedOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.MemcachedOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an MemcachedOpsRequest object but got %T", newObj)
@@ -83,10 +83,10 @@ func (in *MemcachedOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, 
 	if err := validateMemcachedOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *MemcachedOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *MemcachedOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

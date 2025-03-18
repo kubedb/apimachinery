@@ -55,17 +55,17 @@ var ferretdbLog = logf.Log.WithName("ferretdb-opsrequest")
 var _ webhook.CustomValidator = &FerretDBOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *FerretDBOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *FerretDBOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.FerretDBOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an FerretDBOpsRequest object but got %T", obj)
 	}
 	ferretdbLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *FerretDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *FerretDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.FerretDBOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an FerretDBOpsRequest object but got %T", newObj)
@@ -80,10 +80,10 @@ func (in *FerretDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, o
 	if err := validateFerretDBOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *FerretDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *FerretDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
@@ -99,24 +99,24 @@ func validateFerretDBOpsRequest(req *opsapi.FerretDBOpsRequest, oldReq *opsapi.F
 	return nil
 }
 
-func (in *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.FerretDBOpsRequest) error {
+func (w *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.FerretDBOpsRequest) error {
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.FerretDBOpsRequestType) {
 	case opsapi.FerretDBOpsRequestTypeRestart:
 	case opsapi.FerretDBOpsRequestTypeVerticalScaling:
-		if err := in.validateFerretDBVerticalScalingOpsRequest(req); err != nil {
+		if err := w.validateFerretDBVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.FerretDBOpsRequestTypeHorizontalScaling:
-		if err := in.validateFerretDBHorizontalScalingOpsRequest(req); err != nil {
+		if err := w.validateFerretDBHorizontalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.FerretDBOpsRequestTypeReconfigureTLS:
-		if err := in.validateFerretDBReconfigureTLSOpsRequest(req); err != nil {
+		if err := w.validateFerretDBReconfigureTLSOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 				req.Name,
 				err.Error()))
@@ -131,7 +131,7 @@ func (in *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Fe
 	return apierrors.NewInvalid(schema.GroupKind{Group: "FerretDBopsrequests.kubedb.com", Kind: "FerretDBOpsRequest"}, req.Name, allErr)
 }
 
-func (in *FerretDBOpsRequestCustomWebhook) validateFerretDBVerticalScalingOpsRequest(req *opsapi.FerretDBOpsRequest) error {
+func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBVerticalScalingOpsRequest(req *opsapi.FerretDBOpsRequest) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
 		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
@@ -143,7 +143,7 @@ func (in *FerretDBOpsRequestCustomWebhook) validateFerretDBVerticalScalingOpsReq
 	return nil
 }
 
-func (in *FerretDBOpsRequestCustomWebhook) validateFerretDBHorizontalScalingOpsRequest(req *opsapi.FerretDBOpsRequest) error {
+func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBHorizontalScalingOpsRequest(req *opsapi.FerretDBOpsRequest) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
 		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
@@ -160,7 +160,7 @@ func (in *FerretDBOpsRequestCustomWebhook) validateFerretDBHorizontalScalingOpsR
 	return nil
 }
 
-func (in *FerretDBOpsRequestCustomWebhook) validateFerretDBReconfigureTLSOpsRequest(req *opsapi.FerretDBOpsRequest) error {
+func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBReconfigureTLSOpsRequest(req *opsapi.FerretDBOpsRequest) error {
 	tls := req.Spec.TLS
 	if tls == nil {
 		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")

@@ -55,17 +55,17 @@ var publisherLog = logf.Log.WithName("postgres-publisher")
 var _ webhook.CustomValidator = &PublisherCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *PublisherCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PublisherCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	pub, ok := obj.(*replapi.Publisher)
 	if !ok {
 		return nil, fmt.Errorf("expected an Publisher object but got %T", pub)
 	}
 	publisherLog.Info("validate create", "name", pub.Name)
-	return nil, in.validateCreateOrUpdate(pub)
+	return nil, w.validateCreateOrUpdate(pub)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *PublisherCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *PublisherCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	newPub, ok := newObj.(*replapi.Publisher)
 	if !ok {
 		return nil, fmt.Errorf("expected an Publisher object but got %T", newObj)
@@ -80,10 +80,10 @@ func (in *PublisherCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, ne
 	if err := validatePubUpdate(newPub, oldPub); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(newPub)
+	return nil, w.validateCreateOrUpdate(newPub)
 }
 
-func (in *PublisherCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *PublisherCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
@@ -99,17 +99,17 @@ func validatePubUpdate(obj, oldObj *replapi.Publisher) error {
 	return nil
 }
 
-func (k *PublisherCustomWebhook) validateCreateOrUpdate(req *replapi.Publisher) error {
+func (w *PublisherCustomWebhook) validateCreateOrUpdate(req *replapi.Publisher) error {
 	pgVersion := &catalog.PostgresVersion{}
 	pg := &dbapi.Postgres{}
-	err := k.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.Spec.DatabaseRef.Name,
 		Namespace: req.Namespace,
 	}, pg)
 	if err != nil {
 		return err
 	}
-	err = k.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: pg.Spec.Version,
 	}, pgVersion)
 	if err != nil {
@@ -123,13 +123,13 @@ func (k *PublisherCustomWebhook) validateCreateOrUpdate(req *replapi.Publisher) 
 		return fmt.Errorf("logical replication is not allowed in postgresVersion %s", pgVersion.Spec.Version)
 	}
 	if majorVersion <= 10 {
-		err = k.validatePubForMajorVersion10(req, pgVersion)
+		err = w.validatePubForMajorVersion10(req, pgVersion)
 		if err != nil {
 			return err
 		}
 	}
 	if majorVersion <= 12 {
-		err = k.validatePubForMajorVersion12(req, pgVersion)
+		err = w.validatePubForMajorVersion12(req, pgVersion)
 		if err != nil {
 			return err
 		}
@@ -148,7 +148,7 @@ func (k *PublisherCustomWebhook) validateCreateOrUpdate(req *replapi.Publisher) 
 	return nil
 }
 
-func (k *PublisherCustomWebhook) validatePubForMajorVersion10(pub *replapi.Publisher, dbVersion *catalog.PostgresVersion) error {
+func (w *PublisherCustomWebhook) validatePubForMajorVersion10(pub *replapi.Publisher, dbVersion *catalog.PostgresVersion) error {
 	if pub.Spec.Parameters != nil && pub.Spec.Parameters.Operations != nil {
 		for _, value := range pub.Spec.Parameters.Operations {
 			if value == replapi.DMLOpTruncate {
@@ -160,7 +160,7 @@ func (k *PublisherCustomWebhook) validatePubForMajorVersion10(pub *replapi.Publi
 	return nil
 }
 
-func (k *PublisherCustomWebhook) validatePubForMajorVersion12(pub *replapi.Publisher, dbVersion *catalog.PostgresVersion) error {
+func (w *PublisherCustomWebhook) validatePubForMajorVersion12(pub *replapi.Publisher, dbVersion *catalog.PostgresVersion) error {
 	if pub.Spec.Parameters != nil && pub.Spec.Parameters.PublishViaPartitionRoot != nil {
 		msg := fmt.Sprintf("publish_via_partition_root is not allowed in postgresVersion %s", dbVersion.Spec.Version)
 		return errors.New(msg)

@@ -51,17 +51,17 @@ var redisLog = logf.Log.WithName("redis-opsrequest")
 
 var _ webhook.CustomValidator = &RedisOpsRequestCustomWebhook{}
 
-func (in *RedisOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RedisOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	req, ok := obj.(*opsapi.RedisOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an RedisOpsRequest object but got %T", obj)
 	}
 
 	redisLog.Info("validate create", "name", req.Name)
-	return nil, in.isDatabaseRefValid(req)
+	return nil, w.isDatabaseRefValid(req)
 }
 
-func (in *RedisOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *RedisOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	newReq, ok := newObj.(*opsapi.RedisOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an RedisOpsRequest object but got %T", newObj)
@@ -74,10 +74,10 @@ func (in *RedisOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldO
 	if err := validateRedisOpsRequest(newReq, oldReq); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return nil, in.isDatabaseRefValid(newReq)
+	return nil, w.isDatabaseRefValid(newReq)
 }
 
-func (in *RedisOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *RedisOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
@@ -93,7 +93,7 @@ func validateRedisOpsRequest(obj, oldObj runtime.Object) error {
 	return nil
 }
 
-func (in *RedisOpsRequestCustomWebhook) isDatabaseRefValid(req *opsapi.RedisOpsRequest) error {
+func (w *RedisOpsRequestCustomWebhook) isDatabaseRefValid(req *opsapi.RedisOpsRequest) error {
 	redis := &v1.Redis{ObjectMeta: metav1.ObjectMeta{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}}
-	return in.DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(redis), redis)
+	return w.DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(redis), redis)
 }

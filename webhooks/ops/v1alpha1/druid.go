@@ -60,17 +60,17 @@ var druidLog = logf.Log.WithName("druid-opsrequest")
 var _ webhook.CustomValidator = &DruidOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *DruidOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *DruidOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.DruidOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an DruidOpsRequest object but got %T", obj)
 	}
 	druidLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *DruidOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *DruidOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.DruidOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an DruidOpsRequest object but got %T", newObj)
@@ -85,10 +85,10 @@ func (in *DruidOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldO
 	if err := validateDruidOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *DruidOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *DruidOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	_, ok := obj.(*opsapi.DruidOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an DruidOpsRequest object but got %T", obj)
@@ -108,8 +108,8 @@ func validateDruidOpsRequest(req *opsapi.DruidOpsRequest, oldReq *opsapi.DruidOp
 	return nil
 }
 
-func (in *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidOpsRequest) error {
-	druid, err := in.hasDatabaseRef(req)
+func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidOpsRequest) error {
+	druid, err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -119,49 +119,49 @@ func (in *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Druid
 
 	switch opsType {
 	case opsapi.DruidOpsRequestTypeRestart:
-		if _, err := in.hasDatabaseRef(req); err != nil {
+		if _, err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.DruidOpsRequestTypeUpdateVersion:
-		if err := in.validateDruidUpdateVersionOpsRequest(req); err != nil {
+		if err := w.validateDruidUpdateVersionOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.DruidOpsRequestTypeHorizontalScaling:
-		if err := in.validateDruidHorizontalScalingOpsRequest(req, druid); err != nil {
+		if err := w.validateDruidHorizontalScalingOpsRequest(req, druid); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.DruidOpsRequestTypeVerticalScaling:
-		if err := in.validateDruidVerticalScalingOpsRequest(req, druid); err != nil {
+		if err := w.validateDruidVerticalScalingOpsRequest(req, druid); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.DruidOpsRequestTypeVolumeExpansion:
-		if err := in.validateDruidVolumeExpansionOpsRequest(req, druid); err != nil {
+		if err := w.validateDruidVolumeExpansionOpsRequest(req, druid); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.DruidOpsRequestTypeReconfigure:
-		if err := in.validateDruidReconfigurationOpsRequest(req); err != nil {
+		if err := w.validateDruidReconfigurationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.DruidOpsRequestTypeReconfigureTLS:
-		if err := in.validateDruidReconfigurationTLSOpsRequest(req); err != nil {
+		if err := w.validateDruidReconfigurationTLSOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.DruidOpsRequestTypeRotateAuth:
-		if err := in.validateDruidRotateAuthenticationOpsRequest(req); err != nil {
+		if err := w.validateDruidRotateAuthenticationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
@@ -176,9 +176,9 @@ func (in *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Druid
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Druidopsrequests.kubedb.com", Kind: "DruidOpsRequest"}, req.Name, allErr)
 }
 
-func (in *DruidOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.DruidOpsRequest) (*dbapi.Druid, error) {
+func (w *DruidOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.DruidOpsRequest) (*dbapi.Druid, error) {
 	druid := dbapi.Druid{}
-	if err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &druid); err != nil {
@@ -187,7 +187,7 @@ func (in *DruidOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.DruidOpsReque
 	return &druid, nil
 }
 
-func (in *DruidOpsRequestCustomWebhook) validateDruidUpdateVersionOpsRequest(req *opsapi.DruidOpsRequest) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidUpdateVersionOpsRequest(req *opsapi.DruidOpsRequest) error {
 	// right now, kubeDB support the following Druid version: 25.0.0, 28.0.1, 30.0.0, 30.0.1
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
@@ -195,7 +195,7 @@ func (in *DruidOpsRequestCustomWebhook) validateDruidUpdateVersionOpsRequest(req
 	}
 
 	nextDruidVersion := catalog.DruidVersion{}
-	err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.Spec.UpdateVersion.TargetVersion,
 		Namespace: req.GetNamespace(),
 	}, &nextDruidVersion)
@@ -209,7 +209,7 @@ func (in *DruidOpsRequestCustomWebhook) validateDruidUpdateVersionOpsRequest(req
 	return nil
 }
 
-func (in *DruidOpsRequestCustomWebhook) validateDruidHorizontalScalingOpsRequest(req *opsapi.DruidOpsRequest, druid *dbapi.Druid) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidHorizontalScalingOpsRequest(req *opsapi.DruidOpsRequest, druid *dbapi.Druid) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
 		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
@@ -243,7 +243,7 @@ func (in *DruidOpsRequestCustomWebhook) validateDruidHorizontalScalingOpsRequest
 	return nil
 }
 
-func (in *DruidOpsRequestCustomWebhook) validateDruidVerticalScalingOpsRequest(req *opsapi.DruidOpsRequest, druid *dbapi.Druid) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidVerticalScalingOpsRequest(req *opsapi.DruidOpsRequest, druid *dbapi.Druid) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 
 	if verticalScalingSpec == nil {
@@ -275,7 +275,7 @@ func (in *DruidOpsRequestCustomWebhook) validateDruidVerticalScalingOpsRequest(r
 	return nil
 }
 
-func (in *DruidOpsRequestCustomWebhook) validateDruidVolumeExpansionOpsRequest(req *opsapi.DruidOpsRequest, druid *dbapi.Druid) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidVolumeExpansionOpsRequest(req *opsapi.DruidOpsRequest, druid *dbapi.Druid) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 
 	if volumeExpansionSpec == nil {
@@ -303,12 +303,12 @@ func (in *DruidOpsRequestCustomWebhook) validateDruidVolumeExpansionOpsRequest(r
 	return nil
 }
 
-func (in *DruidOpsRequestCustomWebhook) validateDruidReconfigurationOpsRequest(req *opsapi.DruidOpsRequest) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidReconfigurationOpsRequest(req *opsapi.DruidOpsRequest) error {
 	configurationSpec := req.Spec.Configuration
 	if configurationSpec == nil {
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
-	if _, err := in.hasDatabaseRef(req); err != nil {
+	if _, err := w.hasDatabaseRef(req); err != nil {
 		return err
 	}
 
@@ -321,12 +321,12 @@ func (in *DruidOpsRequestCustomWebhook) validateDruidReconfigurationOpsRequest(r
 	return nil
 }
 
-func (in *DruidOpsRequestCustomWebhook) validateDruidReconfigurationTLSOpsRequest(req *opsapi.DruidOpsRequest) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidReconfigurationTLSOpsRequest(req *opsapi.DruidOpsRequest) error {
 	TLSSpec := req.Spec.TLS
 	if TLSSpec == nil {
 		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
 	}
-	if _, err := in.hasDatabaseRef(req); err != nil {
+	if _, err := w.hasDatabaseRef(req); err != nil {
 		return err
 	}
 	configCount := 0
@@ -351,13 +351,13 @@ func (in *DruidOpsRequestCustomWebhook) validateDruidReconfigurationTLSOpsReques
 	return nil
 }
 
-func (in *DruidOpsRequestCustomWebhook) validateDruidRotateAuthenticationOpsRequest(req *opsapi.DruidOpsRequest) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidRotateAuthenticationOpsRequest(req *opsapi.DruidOpsRequest) error {
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
 			return errors.New("spec.authentication.secretRef.name can not be empty")
 		}
-		err := in.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      authSpec.SecretRef.Name,
 			Namespace: req.Namespace,
 		}, &core.Secret{})

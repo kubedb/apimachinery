@@ -59,17 +59,17 @@ var zookeeperLog = logf.Log.WithName("zookeeper-opsrequest")
 var _ webhook.CustomValidator = &ZooKeeperOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *ZooKeeperOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ZooKeeperOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.ZooKeeperOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an ZooKeeperOpsRequest object but got %T", obj)
 	}
 	zookeeperLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *ZooKeeperOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *ZooKeeperOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.ZooKeeperOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an ZooKeeperOpsRequest object but got %T", newObj)
@@ -85,10 +85,10 @@ func (in *ZooKeeperOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, 
 		return nil, err
 	}
 
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *ZooKeeperOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ZooKeeperOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 

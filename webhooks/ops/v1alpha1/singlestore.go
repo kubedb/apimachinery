@@ -59,17 +59,17 @@ var sdbLog = logf.Log.WithName("singlestore-opsrequest")
 var _ webhook.CustomValidator = &SinglestoreOpsRequestCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
-func (in *SinglestoreOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *SinglestoreOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	ops, ok := obj.(*opsapi.SinglestoreOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an SinglestoreOpsRequest object but got %T", obj)
 	}
 	sdbLog.Info("validate create", "name", ops.Name)
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
-func (in *SinglestoreOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w *SinglestoreOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.SinglestoreOpsRequest)
 	if !ok {
 		return nil, fmt.Errorf("expected an SinglestoreOpsRequest object but got %T", newObj)
@@ -84,10 +84,10 @@ func (in *SinglestoreOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context
 	if err := validateSinglestoreOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, in.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops)
 }
 
-func (in *SinglestoreOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *SinglestoreOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
 }
 
