@@ -26371,8 +26371,8 @@
           "description": "Recommendation engine will generate RotateAuth opsReq using this field",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
-        "secretSourceName": {
-          "description": "SecretSourceName references the secret manager used for virtual secret",
+        "secretStoreName": {
+          "description": "SecretStoreName references the secret manager used for virtual secret",
           "type": "string"
         }
       }

@@ -470,9 +470,9 @@ func schema_apimachinery_apis_virtual_v1alpha1_Secret(ref common.ReferenceCallba
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
-					"secretSourceName": {
+					"secretStoreName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name of the SecretSourceName object",
+							Description: "Name of the SecretStoreName object",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -524,7 +524,7 @@ func schema_apimachinery_apis_virtual_v1alpha1_Secret(ref common.ReferenceCallba
 						},
 					},
 				},
-				Required: []string{"secretSourceName"},
+				Required: []string{"secretStoreName"},
 			},
 		},
 		Dependencies: []string{
