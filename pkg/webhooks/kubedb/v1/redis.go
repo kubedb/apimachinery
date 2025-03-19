@@ -58,11 +58,17 @@ type RedisCustomWebhook struct {
 
 var _ webhook.CustomDefaulter = &RedisCustomWebhook{}
 
-func (w RedisCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
-	log := logf.FromContext(ctx)
-	log.Info("defaulting Redis")
+// log is for logging in this package.
+var redisLog = logf.Log.WithName("redis-resource")
 
-	redis := obj.(*dbapi.Redis)
+func (w RedisCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	redis, ok := obj.(*dbapi.Redis)
+	if !ok {
+		return fmt.Errorf("expected a Redis but got a %T", obj)
+	}
+
+	redisLog.Info("defaulting", "name", redis.GetName())
+
 	if redis.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}

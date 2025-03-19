@@ -40,6 +40,7 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
@@ -58,8 +59,17 @@ type PgBouncerCustomWebhook struct {
 
 var _ webhook.CustomDefaulter = &PgBouncerCustomWebhook{}
 
+// log is for logging in this package.
+var pgBouncerLog = logf.Log.WithName("pqbouncer-resource")
+
 func (pw PgBouncerCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
-	db := obj.(*dbapi.PgBouncer)
+	db, ok := obj.(*dbapi.PgBouncer)
+	if !ok {
+		return fmt.Errorf("expected an PgBouncer object but got %T", obj)
+	}
+
+	pgBouncerLog.Info("defaulting", "name", db.GetName())
+
 	if db.Spec.Replicas == nil {
 		db.Spec.Replicas = pointer.Int32P(1)
 	}
