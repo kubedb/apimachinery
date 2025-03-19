@@ -3,6 +3,13 @@ package v1
 import (
 	"context"
 	"fmt"
+	"strings"
+
+	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	amv "kubedb.dev/apimachinery/pkg/validator"
+
 	cm_api "github.com/cert-manager/cert-manager/pkg/apis/certmanager/v1"
 	"github.com/pkg/errors"
 	"gomodules.xyz/pointer"
@@ -15,15 +22,10 @@ import (
 	"k8s.io/klog/v2"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
-	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
-	amv "kubedb.dev/apimachinery/pkg/validator"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
-	"strings"
 )
 
 // SetupPgBouncerWebhookWithManager registers the webhook for PgBouncer in the manager.
