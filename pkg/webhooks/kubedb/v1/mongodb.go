@@ -51,21 +51,22 @@ import (
 // SetupMongoDBWebhookWithManager registers the webhook for MongoDB in the manager.
 func SetupMongoDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MongoDB{}).
-		WithValidator(&MongoDBCustomWebhook{mgr.GetClient()}).
-		WithDefaulter(&MongoDBCustomWebhook{mgr.GetClient()}).
+		WithValidator(&MongoDBCustomWebhook{mgr.GetClient(), true}).
+		WithDefaulter(&MongoDBCustomWebhook{mgr.GetClient(), true}).
 		Complete()
 }
 
 type MongoDBCustomWebhook struct {
-	DefaultClient client.Client
+	DefaultClient    client.Client
+	StrictValidation bool
 }
 
 var _ webhook.CustomDefaulter = &MongoDBCustomWebhook{}
 
 func (w MongoDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	log := logf.FromContext(ctx)
-	db := obj.(*dbapi.MongoDB)
 	log.Info("defaulting MongoDB")
+	db := obj.(*dbapi.MongoDB)
 
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
@@ -94,10 +95,14 @@ func (w MongoDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 var _ webhook.CustomValidator = &MongoDBCustomWebhook{}
 
 func (w MongoDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
-	return w.validate(ctx, obj.(*dbapi.MongoDB))
+	log := logf.FromContext(ctx)
+	log.Info("creating MongoDB")
+	return nil, w.ValidateMongoDB(obj.(*dbapi.MongoDB))
 }
 
 func (w MongoDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
+	log := logf.FromContext(ctx)
+	log.Info("updating MongoDB")
 	oldMongoDB, ok := oldObj.(*dbapi.MongoDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a MongoDB but got a %T", oldMongoDB)
@@ -121,10 +126,12 @@ func (w MongoDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj
 	if err := w.validateUpdate(mongodb, oldMongoDB); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return w.validate(ctx, mongodb)
+	return nil, w.ValidateMongoDB(mongodb)
 }
 
 func (w MongoDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
+	log := logf.FromContext(ctx)
+	log.Info("deleting MongoDB")
 	mongodb, ok := obj.(*dbapi.MongoDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a Mongodb but got a %T", obj)
@@ -150,8 +157,8 @@ var forbiddenMongoDBEnvVars = []string{
 
 // ValidateMongoDB checks if the object satisfies all the requirements.
 // It is not method of Interface, because it is referenced from controller package too.
-func ValidateMongoDB(client client.Client, db *dbapi.MongoDB, strictValidation bool) error {
-	if err := checkVersion(db, client); err != nil {
+func (w MongoDBCustomWebhook) ValidateMongoDB(db *dbapi.MongoDB) error {
+	if err := checkVersion(db, w.DefaultClient); err != nil {
 		return err
 	}
 	if err := checkInvalidFieldsAndReplicaCounts(db); err != nil {
@@ -161,7 +168,7 @@ func ValidateMongoDB(client client.Client, db *dbapi.MongoDB, strictValidation b
 		return err
 	}
 
-	if err := checkStorageStuffs(client, db); err != nil {
+	if err := checkStorageStuffs(w.DefaultClient, db); err != nil {
 		return err
 	}
 	if err := checkSSLStuffs(db); err != nil {
@@ -171,7 +178,7 @@ func ValidateMongoDB(client client.Client, db *dbapi.MongoDB, strictValidation b
 	if db.Spec.AuthSecret != nil && db.Spec.AuthSecret.ExternallyManaged && db.Spec.AuthSecret.Name == "" {
 		return fmt.Errorf(`for externallyManaged auth secret, user must configure "spec.authSecret.name"`)
 	}
-	if err := strictValidations(client, db, strictValidation); err != nil {
+	if err := strictValidations(w.DefaultClient, db, w.StrictValidation); err != nil {
 		return err
 	}
 
@@ -624,61 +631,4 @@ func getVolumesMountsForAllContainers(podTemplate *ofstv2.PodTemplateSpec) []cor
 		mounts = append(mounts, container.VolumeMounts...)
 	}
 	return mounts
-}
-
-func (w MongoDBCustomWebhook) validate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	log := logf.FromContext(ctx)
-	db, ok := obj.(*dbapi.MongoDB)
-	if !ok {
-		return nil, fmt.Errorf("expected a MongoDB but got a %T", obj)
-	}
-	log.Info("Validating MongoDB", db.Namespace, "/", db.Name)
-
-	var mongodbVersion catalogapi.MongoDBVersion
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: db.Spec.Version,
-	}, &mongodbVersion)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := checkInvalidFieldsAndReplicaCounts(db); err != nil {
-		return nil, err
-	}
-	if err := checkEnvs(db); err != nil {
-		return nil, err
-	}
-
-	if err := checkStorageStuffs(w.DefaultClient, db); err != nil {
-		return nil, err
-	}
-	if err := checkSSLStuffs(db); err != nil {
-		return nil, err
-	}
-
-	if db.Spec.AuthSecret != nil && db.Spec.AuthSecret.ExternallyManaged && db.Spec.AuthSecret.Name == "" {
-		return nil, fmt.Errorf(`for externallyManaged auth secret, user must configure "spec.authSecret.name"`)
-	}
-
-	// Deletion Policy
-	if db.Spec.DeletionPolicy == "" {
-		return nil, fmt.Errorf(`'spec.deletionPolicy' is missing`)
-	}
-
-	if db.Spec.StorageType == dbapi.StorageTypeEphemeral && db.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
-		return nil, fmt.Errorf(`'spec.deletionPolicy: Halt' can not be used for 'Ephemeral' storage`)
-	}
-
-	// Monitoring
-	monitorSpec := db.Spec.Monitor
-	if monitorSpec != nil {
-		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
-			return nil, err
-		}
-	}
-
-	if err := validateVolumesAndMounts(db); err != nil {
-		return nil, err
-	}
-	return nil, amv.ValidateHealth(&db.Spec.HealthChecker)
 }
