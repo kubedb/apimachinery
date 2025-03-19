@@ -137,7 +137,7 @@ func (mv MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.O
 	mariadb := obj.(*dbapi.MariaDB)
 	mariadbLog.Info("validating", "name", mariadb.Name)
 
-	return mv.validateMariaDB(ctx, obj)
+	return mv.ValidateMariaDB(ctx, obj)
 }
 
 func (mv MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -164,7 +164,7 @@ func (mv MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newOb
 	if err := mv.validateUpdate(mariadb, oldMariaDB); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return mv.validateMariaDB(ctx, mariadb)
+	return mv.ValidateMariaDB(ctx, mariadb)
 }
 
 func (mv MariaDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -322,7 +322,7 @@ func validateWsrepSSTMethod(db *dbapi.MariaDB) error {
 	return nil
 }
 
-func (mv MariaDBCustomWebhook) validateMariaDB(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (mv MariaDBCustomWebhook) ValidateMariaDB(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	log := logf.FromContext(ctx)
 	mariadb, ok := obj.(*dbapi.MariaDB)
 	if !ok {
