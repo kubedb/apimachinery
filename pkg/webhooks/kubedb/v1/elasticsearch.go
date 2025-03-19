@@ -19,13 +19,13 @@ package v1
 import (
 	"context"
 	"fmt"
+	"kubedb.dev/elasticsearch/pkg/util"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
-	"kubedb.dev/elasticsearch/pkg/util"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
@@ -430,10 +430,18 @@ func (w *ElasticsearchCustomWebhook) validateNodeReplicas(topology *dbapi.Elasti
 	var err error
 	for key, node := range tMap {
 		if ptr.Deref(node.Replicas, 0) <= 0 {
-			err = util.AppendError(err, errors.Errorf("replicas for node role %s must be alteast 1", string(key)))
+			err = appendError(err, errors.Errorf("replicas for node role %s must be alteast 1", string(key)))
 		}
 	}
 	return err
+}
+
+func appendError(err error, newError error) error {
+	if err == nil {
+		return newError
+	} else {
+		return errors.Wrap(err, newError.Error())
+	}
 }
 
 func (w *ElasticsearchCustomWebhook) validateNodeSpecs(kc client.Client, db *dbapi.Elasticsearch, esVersion *catalogapi.ElasticsearchVersion) error {
