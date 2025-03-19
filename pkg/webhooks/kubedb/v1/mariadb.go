@@ -58,13 +58,12 @@ type MariaDBCustomWebhook struct {
 	DefaultClient client.Client
 }
 
-var (
-	_          webhook.CustomDefaulter = &MariaDBCustomWebhook{}
-	mariadbLog                         = logf.Log.WithName("mariadb-resource")
-)
+var _ webhook.CustomDefaulter = &MariaDBCustomWebhook{}
+
+var mariadbLog = logf.Log.WithName("mariadb-resource")
 
 // setDefaultValues provides the defaulting that is performed in mutating stage of creating/updating a MySQL database
-func (a *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+func (w *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db := obj.(*dbapi.MariaDB)
 	mariadbLog.Info("defaulting", "name", db.GetName())
 	if db.Spec.Version == "" {
@@ -82,7 +81,7 @@ func (a *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 	}
 
 	var mdVersion catalogapi.MariaDBVersion
-	err := a.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
 	}, &mdVersion)
 	if err != nil {
@@ -91,14 +90,14 @@ func (a *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 	db.SetDefaults(&mdVersion)
 
 	archiverList := &archiverapi.MariaDBArchiverList{}
-	err = a.DefaultClient.List(context.TODO(), archiverList)
+	err = w.DefaultClient.List(context.TODO(), archiverList)
 	if err != nil {
 		return err
 	}
 
 	for _, archiver := range archiverList.Items {
 		var archiverNs core.Namespace
-		err = a.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name: archiver.Namespace,
 		}, &archiverNs)
 		if err != nil {
@@ -106,7 +105,7 @@ func (a *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 		}
 
 		var dbNs core.Namespace
-		err = a.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name: db.Namespace,
 		}, &dbNs)
 		if err != nil {
@@ -133,14 +132,14 @@ func (a *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 
 var _ webhook.CustomValidator = &MariaDBCustomWebhook{}
 
-func (mv MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mariadb := obj.(*dbapi.MariaDB)
 	mariadbLog.Info("validating", "name", mariadb.Name)
 
-	return mv.ValidateMariaDB(ctx, obj)
+	return w.ValidateMariaDB(ctx, obj)
 }
 
-func (mv MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+func (w MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	oldMariaDB, ok := oldObj.(*dbapi.MariaDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a MariaDB but got a %T", oldMariaDB)
@@ -151,7 +150,7 @@ func (mv MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newOb
 	}
 
 	var mariadbVersion catalogapi.MariaDBVersion
-	err := mv.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: oldMariaDB.Spec.Version,
 	}, &mariadbVersion)
 	if err != nil {
@@ -161,20 +160,20 @@ func (mv MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newOb
 	if oldMariaDB.Spec.AuthSecret == nil {
 		oldMariaDB.Spec.AuthSecret = mariadb.Spec.AuthSecret
 	}
-	if err := mv.validateUpdate(mariadb, oldMariaDB); err != nil {
+	if err := w.validateUpdate(mariadb, oldMariaDB); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return mv.ValidateMariaDB(ctx, mariadb)
+	return w.ValidateMariaDB(ctx, mariadb)
 }
 
-func (mv MariaDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w MariaDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	mariadb, ok := obj.(*dbapi.MariaDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a MariaDB but got a %T", obj)
 	}
 
 	var pg dbapi.MariaDB
-	err := mv.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      mariadb.Name,
 		Namespace: mariadb.Namespace,
 	}, &pg)
@@ -194,7 +193,7 @@ var mariaDBforbiddenEnvVars = []string{
 }
 
 // validateCluster checks whether the configurations for MariaDB Cluster are ok
-func (mv MariaDBCustomWebhook) validateCluster(db *dbapi.MariaDB) error {
+func (w MariaDBCustomWebhook) validateCluster(db *dbapi.MariaDB) error {
 	if db.IsCluster() {
 		clusterName := db.ClusterName()
 		if len(clusterName) > kubedb.MariaDBMaxClusterNameLength {
@@ -219,7 +218,7 @@ func validateMariaDBReplicationSpec(db *dbapi.MariaDB) error {
 	return nil
 }
 
-func (mv MariaDBCustomWebhook) validateEnvsForAllContainers(db *dbapi.MariaDB) error {
+func (w MariaDBCustomWebhook) validateEnvsForAllContainers(db *dbapi.MariaDB) error {
 	var err error
 	for _, container := range db.Spec.PodTemplate.Spec.Containers {
 		if errC := amv.ValidateEnvVar(container.Env, mariaDBforbiddenEnvVars, dbapi.ResourceKindMariaDB); errC != nil {
@@ -233,7 +232,7 @@ func (mv MariaDBCustomWebhook) validateEnvsForAllContainers(db *dbapi.MariaDB) e
 	return err
 }
 
-func (mv MariaDBCustomWebhook) validateUpdate(obj, oldObj *dbapi.MariaDB) error {
+func (w MariaDBCustomWebhook) validateUpdate(obj, oldObj *dbapi.MariaDB) error {
 	preconditions := meta_util.PreConditionSet{
 		Set: sets.New[string](
 			"spec.storageType",
@@ -272,7 +271,7 @@ func getTLSReservedVolumes() []string {
 	return volumes
 }
 
-func (mv MariaDBCustomWebhook) validateVolumes(db *dbapi.MariaDB) error {
+func (w MariaDBCustomWebhook) validateVolumes(db *dbapi.MariaDB) error {
 	return amv.ValidateVolumes(ofstv1.ConvertVolumes(db.Spec.PodTemplate.Spec.Volumes), append(mariaDBreservedVolumes, getTLSReservedVolumes()...))
 }
 
@@ -294,11 +293,7 @@ func getTLSReservedVolumeMounts(db *dbapi.MariaDB) []string {
 	return volumes
 }
 
-func (mv MariaDBCustomWebhook) validateVolumeMounts(db *dbapi.MariaDB) error {
-	return mv.validateVolumeMountsForAllContainers(db)
-}
-
-func (mv MariaDBCustomWebhook) validateVolumeMountsForAllContainers(db *dbapi.MariaDB) error {
+func (w MariaDBCustomWebhook) validateVolumeMountsForAllContainers(db *dbapi.MariaDB) error {
 	var err error
 	for _, container := range db.Spec.PodTemplate.Spec.Containers {
 		if errC := amv.ValidateMountPaths(container.VolumeMounts, append(reservedVolumeMounts, getTLSReservedVolumeMounts(db)...)); errC != nil {
@@ -322,7 +317,7 @@ func validateWsrepSSTMethod(db *dbapi.MariaDB) error {
 	return nil
 }
 
-func (mv MariaDBCustomWebhook) ValidateMariaDB(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w MariaDBCustomWebhook) ValidateMariaDB(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	log := logf.FromContext(ctx)
 	mariadb, ok := obj.(*dbapi.MariaDB)
 	if !ok {
@@ -333,7 +328,7 @@ func (mv MariaDBCustomWebhook) ValidateMariaDB(ctx context.Context, obj runtime.
 		return nil, errors.New(`'spec.version' is missing`)
 	}
 	var mariadbVersion catalogapi.MariaDBVersion
-	err := mv.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: mariadb.Spec.Version,
 	}, &mariadbVersion)
 	if err != nil {
@@ -344,7 +339,7 @@ func (mv MariaDBCustomWebhook) ValidateMariaDB(ctx context.Context, obj runtime.
 		return nil, fmt.Errorf(`spec.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(mariadb.Spec.Replicas, 0))
 	}
 
-	if err := mv.validateEnvsForAllContainers(mariadb); err != nil {
+	if err := w.validateEnvsForAllContainers(mariadb); err != nil {
 		return nil, err
 	}
 
@@ -354,15 +349,24 @@ func (mv MariaDBCustomWebhook) ValidateMariaDB(ctx context.Context, obj runtime.
 	if mariadb.Spec.StorageType != dbapi.StorageTypeDurable && mariadb.Spec.StorageType != dbapi.StorageTypeEphemeral {
 		return nil, fmt.Errorf(`'spec.storageType' %s is invalid`, mariadb.Spec.StorageType)
 	}
-	if err := amv.ValidateStorage(mv.DefaultClient, olddbapi.StorageType(mariadb.Spec.StorageType), mariadb.Spec.Storage); err != nil {
+	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(mariadb.Spec.StorageType), mariadb.Spec.Storage); err != nil {
 		return nil, err
 	}
 
-	err = mv.validateVolumes(mariadb)
+	if err = w.validateCluster(mariadb); err != nil {
+		return nil, err
+	}
+
+	if err = validateWsrepSSTMethod(mariadb); err != nil {
+		return nil, err
+	}
+
+	err = w.validateVolumes(mariadb)
 	if err != nil {
 		return nil, err
 	}
-	err = mv.validateVolumeMountsForAllContainers(mariadb)
+
+	err = w.validateVolumeMountsForAllContainers(mariadb)
 	if err != nil {
 		return nil, err
 	}
