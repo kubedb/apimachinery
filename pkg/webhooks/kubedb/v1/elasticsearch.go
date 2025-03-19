@@ -3,6 +3,14 @@ package v1
 import (
 	"context"
 	"fmt"
+
+	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
+	"kubedb.dev/elasticsearch/pkg/util"
+
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	"gomodules.xyz/pointer"
@@ -16,12 +24,6 @@ import (
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
-	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	amv "kubedb.dev/apimachinery/pkg/validator"
-	"kubedb.dev/elasticsearch/pkg/util"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
