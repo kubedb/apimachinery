@@ -30,7 +30,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/utils/ptr"
 	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -42,21 +41,24 @@ import (
 // SetupProxySQLWebhookWithManager registers the webhook for ProxySQL in the manager.
 func SetupProxySQLWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.ProxySQL{}).
-		WithValidator(&ProxySQLCustomWebhook{mgr.GetClient()}).
-		WithDefaulter(&ProxySQLCustomWebhook{mgr.GetClient()}).
+		WithValidator(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
+		WithDefaulter(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
 		Complete()
 }
 
 type ProxySQLCustomWebhook struct {
-	DefaultClient client.Client
+	DefaultClient    client.Client
+	StrictValidation bool
 }
 
-var _ webhook.CustomDefaulter = &ProxySQLCustomWebhook{}
+var (
+	proxyLog                         = logf.Log.WithName("proxysql-resource")
+	_        webhook.CustomDefaulter = &ProxySQLCustomWebhook{}
+)
 
 func (w ProxySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
-	log := logf.FromContext(ctx)
 	db := obj.(*dbapi.ProxySQL)
-	log.Info("defaulting proxySQL")
+	proxyLog.Info("defaulting", "name", db.GetName())
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
@@ -84,7 +86,10 @@ func (w ProxySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 var _ webhook.CustomValidator = &ProxySQLCustomWebhook{}
 
 func (w ProxySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
-	return w.validate(ctx, obj.(*dbapi.ProxySQL))
+	proxysql := obj.(*dbapi.ProxySQL)
+	proxyLog.Info("validating", "name", proxysql.Name)
+	err = w.ValidateProxySQL(proxysql)
+	return admission.Warnings{}, err
 }
 
 func (w ProxySQLCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -119,7 +124,8 @@ func (w ProxySQLCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newOb
 	if err := proxyValidateUpdate(newObj, oldObj); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return w.validate(ctx, proxy)
+	err = w.ValidateProxySQL(proxy)
+	return nil, err
 }
 
 func (w ProxySQLCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -143,13 +149,13 @@ func (w ProxySQLCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.O
 
 // ValidateProxySQL checks if the object satisfies all the requirements.
 // It is not method of Interface, because it is referenced from controller package too.
-func ValidateProxySQL(kc client.Client, db *dbapi.ProxySQL, strictValidation bool) error {
+func (w ProxySQLCustomWebhook) ValidateProxySQL(db *dbapi.ProxySQL) error {
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
 
 	var proxysqlVersion catalogapi.ProxySQLVersion
-	err := kc.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &proxysqlVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &proxysqlVersion)
 	if err != nil {
 		return err
 	}
@@ -169,7 +175,7 @@ func ValidateProxySQL(kc client.Client, db *dbapi.ProxySQL, strictValidation boo
 		return fmt.Errorf("for externallyManaged auth secret, user need to provide \"proxysql.Spec.AuthSecret.Name\"")
 	}
 
-	if strictValidation {
+	if w.StrictValidation {
 		// Check if proxysql Version is deprecated.
 		// If deprecated, return error
 		if proxysqlVersion.Spec.Deprecated {
@@ -197,64 +203,6 @@ func ValidateProxySQL(kc client.Client, db *dbapi.ProxySQL, strictValidation boo
 	}
 
 	return nil
-}
-
-func (w ProxySQLCustomWebhook) validate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	log := logf.FromContext(ctx)
-
-	proxysql, ok := obj.(*dbapi.ProxySQL)
-	if !ok {
-		return nil, fmt.Errorf("expected a ProxySQL but got a %T", obj)
-	}
-	log.Info("validate ProxySQL", "name", proxysql.Name, "/", "namespace", proxysql.Namespace, "version", proxysql.Spec.Version)
-
-	if proxysql.Spec.Version == "" {
-		return nil, errors.New(`'spec.version' is missing`)
-	}
-	var proxysqlVersion catalogapi.ProxySQLVersion
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: proxysql.Spec.Version,
-	}, &proxysqlVersion)
-	if err != nil {
-		return nil, err
-	}
-
-	if proxysql.Spec.Replicas == nil || ptr.Deref(proxysql.Spec.Replicas, 0) < 1 {
-		return nil, fmt.Errorf(`spec.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(proxysql.Spec.Replicas, 0))
-	}
-
-	if proxysql.Spec.Backend == nil || proxysql.Spec.Backend.Name == "" {
-		return nil, fmt.Errorf("backend specification missing")
-	}
-
-	if err := proxyValidateEnvsForAllContainers(proxysql); err != nil {
-		return nil, err
-	}
-
-	if proxysql.Spec.AuthSecret != nil && proxysql.Spec.AuthSecret.ExternallyManaged && proxysql.Spec.AuthSecret.Name == "" {
-		return nil, fmt.Errorf("for externallyManaged auth secret, user need to provide \"proxysql.Spec.AuthSecret.Name\"")
-	}
-
-	monitorSpec := proxysql.Spec.Monitor
-	if monitorSpec != nil {
-		if err = amv.ValidateMonitorSpec(monitorSpec); err != nil {
-			return nil, err
-		}
-	}
-
-	if proxysql.Spec.HealthChecker.PeriodSeconds != nil && *proxysql.Spec.HealthChecker.PeriodSeconds <= 0 {
-		return nil, fmt.Errorf(`spec.healthCheck.periodSeconds: can not be less than 1`)
-	}
-
-	if proxysql.Spec.HealthChecker.TimeoutSeconds != nil && *proxysql.Spec.HealthChecker.TimeoutSeconds <= 0 {
-		return nil, fmt.Errorf(`spec.healthCheck.timeoutSeconds: can not be less than 1`)
-	}
-
-	if proxysql.Spec.HealthChecker.FailureThreshold != nil && *proxysql.Spec.HealthChecker.FailureThreshold <= 0 {
-		return nil, fmt.Errorf(`spec.healthCheck.failureThreshold: can not be less than 1`)
-	}
-
-	return nil, nil
 }
 
 var forbiddenEnvVarsForProxySQL = []string{
