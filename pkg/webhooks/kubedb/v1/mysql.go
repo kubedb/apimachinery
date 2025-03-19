@@ -19,6 +19,7 @@ package v1
 import (
 	"context"
 	"fmt"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"time"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -59,10 +60,13 @@ type MySQLCustomWebhook struct {
 	StrictValidation bool
 }
 
+var mysqlLog = logf.Log.WithName("mysql-resource")
+
 var _ webhook.CustomDefaulter = &MySQLCustomWebhook{}
 
 func (w MySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db := obj.(*dbapi.MySQL)
+	mysqlLog.Info("defaulting", "name", db.GetName())
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
@@ -126,7 +130,9 @@ func (w MySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 var _ webhook.CustomValidator = &MySQLCustomWebhook{}
 
 func (w MySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
-	err = w.ValidateMySQL(obj.(*dbapi.MySQL))
+	mysql := obj.(*dbapi.MySQL)
+	err = w.ValidateMySQL(mysql)
+	mysqlLog.Info("validating", "name", mysql.Name)
 	return admission.Warnings{}, err
 }
 
