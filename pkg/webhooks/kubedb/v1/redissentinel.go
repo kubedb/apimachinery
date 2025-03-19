@@ -86,7 +86,12 @@ func (w RedisSentinelCustomWebhook) Default(ctx context.Context, obj runtime.Obj
 var _ webhook.CustomValidator = &RedisSentinelCustomWebhook{}
 
 func (w RedisSentinelCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
-	return w.validate(ctx, obj.(*dbapi.RedisSentinel))
+	sentinel, ok := obj.(*dbapi.RedisSentinel)
+	if !ok {
+		return nil, fmt.Errorf("expected a RedisSentinel but got a %T", obj)
+	}
+	err = w.ValidateSentinel(sentinel)
+	return admission.Warnings{}, err
 }
 
 func (w RedisSentinelCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
@@ -118,7 +123,7 @@ func (w RedisSentinelCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, 
 	if err := validateSentinelUpdate(sentinel, oldRedisSentinel); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return w.validate(ctx, sentinel)
+	return nil, w.ValidateSentinel(sentinel)
 }
 
 func (w RedisSentinelCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
@@ -159,14 +164,9 @@ func validateSentinelUpdate(obj, oldObj *dbapi.RedisSentinel) error {
 	return nil
 }
 
-func (w RedisSentinelCustomWebhook) validate(_ context.Context, obj runtime.Object) (admission.Warnings, error) {
-	sentinel, ok := obj.(*dbapi.RedisSentinel)
-	if !ok {
-		return nil, fmt.Errorf("expected a RedisSentinel but got a %T", obj)
-	}
-
+func (w RedisSentinelCustomWebhook) ValidateSentinel(sentinel *dbapi.RedisSentinel) error {
 	if sentinel.Spec.Version == "" {
-		return nil, errors.New(`'spec.version' is missing`)
+		return errors.New(`'spec.version' is missing`)
 	}
 
 	var redisVersion catalogapi.RedisVersion
@@ -174,51 +174,51 @@ func (w RedisSentinelCustomWebhook) validate(_ context.Context, obj runtime.Obje
 		Name: sentinel.Spec.Version,
 	}, &redisVersion)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if sentinel.Spec.StorageType == "" {
-		return nil, fmt.Errorf(`'spec.storageType' is missing`)
+		return fmt.Errorf(`'spec.storageType' is missing`)
 	}
 	if sentinel.Spec.StorageType != dbapi.StorageTypeDurable && sentinel.Spec.StorageType != dbapi.StorageTypeEphemeral {
-		return nil, fmt.Errorf(`'spec.storageType' %s is invalid`, sentinel.Spec.StorageType)
+		return fmt.Errorf(`'spec.storageType' %s is invalid`, sentinel.Spec.StorageType)
 	}
 	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(sentinel.Spec.StorageType), sentinel.Spec.Storage); err != nil {
-		return nil, err
+		return err
 	}
 
 	err = amv.ValidateVolumes(ofstv1.ConvertVolumes(sentinel.Spec.PodTemplate.Spec.Volumes), redisReservedVolumes)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	// err = amv.ValidateMountPaths(sentinel.Spec.PodTemplate.Spec.VolumeMounts, redisReservedMountPaths)
 	err = validateSentinelVolumeMountsForAllContainers(sentinel)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	err = validateSentinelVersion(redisVersion.Spec.Version)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	if sentinel.Spec.DisableAuth && sentinel.Spec.AuthSecret != nil {
-		return nil, fmt.Errorf("auth Secret is not supported when disableAuth is true")
+		return fmt.Errorf("auth Secret is not supported when disableAuth is true")
 	}
 	err = amv.ValidateHealth(&sentinel.Spec.HealthChecker)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if w.StrictValidation {
 		// Check if redisVersion is deprecated.
 		// If deprecated, return error
 		if redisVersion.Spec.Deprecated {
-			return nil, fmt.Errorf("redis Sentinel %s/%s is using deprecated version %v. Skipped processing",
+			return fmt.Errorf("redis Sentinel %s/%s is using deprecated version %v. Skipped processing",
 				sentinel.Namespace, sentinel.Name, redisVersion.Name)
 		}
 
 		if err := redisVersion.ValidateSpecs(); err != nil {
-			return nil, fmt.Errorf("redis Sentinel %s/%s is using invalid redisVersion %v. Skipped processing. reason: %v", sentinel.Namespace,
+			return fmt.Errorf("redis Sentinel %s/%s is using invalid redisVersion %v. Skipped processing. reason: %v", sentinel.Namespace,
 				sentinel.Name, redisVersion.Name, err)
 		}
 	}
@@ -227,42 +227,42 @@ func (w RedisSentinelCustomWebhook) validate(_ context.Context, obj runtime.Obje
 		if sentinel.Spec.AuthSecret != nil &&
 			sentinel.Spec.AuthSecret.ExternallyManaged &&
 			sentinel.Spec.AuthSecret.Name == "" {
-			return nil, fmt.Errorf("for externallyManaged auth secret, user need to provide \"redis.Spec.AuthSecret.Name\"")
+			return fmt.Errorf("for externallyManaged auth secret, user need to provide \"redis.Spec.AuthSecret.Name\"")
 		}
 	}
 
 	if sentinel.Spec.DeletionPolicy == "" {
-		return nil, fmt.Errorf(`'spec.DeletionPolicy' is missing`)
+		return fmt.Errorf(`'spec.DeletionPolicy' is missing`)
 	}
 
 	if sentinel.Spec.StorageType == dbapi.StorageTypeEphemeral && sentinel.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
-		return nil, fmt.Errorf(`'spec.DeletionPolicy: Halt' can not be used for 'Ephemeral' storage`)
+		return fmt.Errorf(`'spec.DeletionPolicy: Halt' can not be used for 'Ephemeral' storage`)
 	}
 
 	if sentinel.Spec.TLS != nil {
 		if err := checkTLSSupport(redisVersion.Spec.Version); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
 	if err := validateSentinelEnvsForAllContainers(sentinel); err != nil {
-		return nil, err
+		return err
 	}
 
 	monitorSpec := sentinel.Spec.Monitor
 	if monitorSpec != nil {
 		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
-	return nil, nil
+	return nil
 }
 
 func validateSentinelEnvsForAllContainers(sentinel *dbapi.RedisSentinel) error {
 	var err error
 	for _, container := range sentinel.Spec.PodTemplate.Spec.Containers {
-		if errC := amv.ValidateEnvVar(container.Env, forbiddenEnvVars, dbapi.ResourceKindRedisSentinel); errC != nil {
+		if errC := amv.ValidateEnvVar(container.Env, forbiddenRedisEnvVars, dbapi.ResourceKindRedisSentinel); errC != nil {
 			if err == nil {
 				err = errC
 			} else {

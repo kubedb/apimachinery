@@ -178,7 +178,7 @@ func (w MySQLCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Obje
 	return nil, nil
 }
 
-var forbiddenEnvVars = []string{
+var forbiddenMySQLEnvVars = []string{
 	"MYSQL_ROOT_PASSWORD",
 	"MYSQL_ALLOW_EMPTY_PASSWORD",
 	"MYSQL_RANDOM_ROOT_PASSWORD",
@@ -328,7 +328,7 @@ func (w MySQLCustomWebhook) ValidateMySQL(mysql *dbapi.MySQL) error {
 func validateEnvsForAllContainers(mysql *dbapi.MySQL) error {
 	var err error
 	for _, container := range mysql.Spec.PodTemplate.Spec.Containers {
-		if errC := amv.ValidateEnvVar(container.Env, forbiddenEnvVars, dbapi.ResourceKindMySQL); errC != nil {
+		if errC := amv.ValidateEnvVar(container.Env, forbiddenMySQLEnvVars, dbapi.ResourceKindMySQL); errC != nil {
 			if err == nil {
 				err = errC
 			} else {

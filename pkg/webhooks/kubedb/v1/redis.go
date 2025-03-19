@@ -88,7 +88,12 @@ func (w RedisCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 var _ webhook.CustomValidator = &RedisCustomWebhook{}
 
 func (w RedisCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
-	return w.validate(ctx, obj.(*dbapi.Redis))
+	redis, ok := obj.(*dbapi.Redis)
+	if !ok {
+		return nil, fmt.Errorf("expected a Redis but got a %T", obj)
+	}
+	err = w.ValidateRedis(redis)
+	return admission.Warnings{}, err
 }
 
 func (w RedisCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
@@ -120,7 +125,9 @@ func (w RedisCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj r
 	if err := validateRedisUpdate(redis, oldRedis); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return w.validate(ctx, redis)
+
+	err = w.ValidateRedis(redis)
+	return nil, err
 }
 
 func (w RedisCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
@@ -222,72 +229,67 @@ func checkTLSSupport(v string) error {
 	return nil
 }
 
-func (w RedisCustomWebhook) validate(_ context.Context, obj runtime.Object) (admission.Warnings, error) {
-	redis, ok := obj.(*dbapi.Redis)
-	if !ok {
-		return nil, fmt.Errorf("expected a Redis but got a %T", obj)
-	}
-
+func (w RedisCustomWebhook) ValidateRedis(redis *dbapi.Redis) error {
 	if redis.Spec.Version == "" {
-		return nil, errors.New(`'spec.version' is missing`)
+		return errors.New(`'spec.version' is missing`)
 	}
 	var redisVersion catalogapi.RedisVersion
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: redis.Spec.Version,
 	}, &redisVersion)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if redis.Spec.Mode != dbapi.RedisModeStandalone && redis.Spec.Mode != dbapi.RedisModeCluster && redis.Spec.Mode != dbapi.RedisModeSentinel {
-		return nil, fmt.Errorf(`spec.mode "%v" invalid. Value must be one of "%v", "%v" or "%v"`,
+		return fmt.Errorf(`spec.mode "%v" invalid. Value must be one of "%v", "%v" or "%v"`,
 			redis.Spec.Mode, dbapi.RedisModeStandalone, dbapi.RedisModeCluster, dbapi.RedisModeSentinel)
 	}
 
 	if redis.Spec.Mode == dbapi.RedisModeStandalone && ptr.Deref(redis.Spec.Replicas, 0) != 1 {
-		return nil, fmt.Errorf(`spec.replicas "%d" invalid for standalone mode. Value must be one`, ptr.Deref(redis.Spec.Replicas, 0))
+		return fmt.Errorf(`spec.replicas "%d" invalid for standalone mode. Value must be one`, ptr.Deref(redis.Spec.Replicas, 0))
 	}
 
 	if redis.Spec.Mode == dbapi.RedisModeCluster && ptr.Deref(redis.Spec.Cluster.Shards, 0) < 3 {
-		return nil, fmt.Errorf(`spec.cluster.shards "%d" invalid. Value must be >= 3`, ptr.Deref(redis.Spec.Cluster.Shards, 0))
+		return fmt.Errorf(`spec.cluster.shards "%d" invalid. Value must be >= 3`, ptr.Deref(redis.Spec.Cluster.Shards, 0))
 	}
 
 	if redis.Spec.Mode == dbapi.RedisModeCluster && ptr.Deref(redis.Spec.Cluster.Replicas, 0) < 2 {
-		return nil, fmt.Errorf(`spec.cluster.replicas "%d" invalid. Value must be > 1`, ptr.Deref(redis.Spec.Cluster.Replicas, 0))
+		return fmt.Errorf(`spec.cluster.replicas "%d" invalid. Value must be > 1`, ptr.Deref(redis.Spec.Cluster.Replicas, 0))
 	}
 	if redis.Spec.Mode == dbapi.RedisModeSentinel && (redis.Spec.SentinelRef == nil || redis.Spec.SentinelRef.Name == "" || redis.Spec.SentinelRef.Namespace == "") {
-		return nil, fmt.Errorf("need to provide sentinelRef Name and Namespace while redis Mode set to Sentinel for redis %s/%s", redis.Namespace, redis.Name)
+		return fmt.Errorf("need to provide sentinelRef Name and Namespace while redis Mode set to Sentinel for redis %s/%s", redis.Namespace, redis.Name)
 	}
 
 	if redis.Spec.StorageType == "" {
-		return nil, fmt.Errorf(`'spec.storageType' is missing`)
+		return fmt.Errorf(`'spec.storageType' is missing`)
 	}
 	if redis.Spec.StorageType != dbapi.StorageTypeDurable && redis.Spec.StorageType != dbapi.StorageTypeEphemeral {
-		return nil, fmt.Errorf(`'spec.storageType' %s is invalid`, redis.Spec.StorageType)
+		return fmt.Errorf(`'spec.storageType' %s is invalid`, redis.Spec.StorageType)
 	}
 	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(redis.Spec.StorageType), redis.Spec.Storage); err != nil {
-		return nil, err
+		return err
 	}
 	err = amv.ValidateVolumes(ofstv1.ConvertVolumes(redis.Spec.PodTemplate.Spec.Volumes), redisReservedVolumes)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	err = validateRedisVolumeMountsForAllContainers(redis)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	err = amv.ValidateHealth(&redis.Spec.HealthChecker)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	if redis.Spec.DisableAuth && redis.Spec.AuthSecret != nil {
-		return nil, fmt.Errorf("auth Secret is not supported when disableAuth is true")
+		return fmt.Errorf("auth Secret is not supported when disableAuth is true")
 	}
 	if redis.Spec.Mode == dbapi.RedisModeSentinel {
 		err = validateSentinelVersion(redisVersion.Spec.Version)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	}
 	// if secret managed externally verify auth secret name is not empty
@@ -295,7 +297,7 @@ func (w RedisCustomWebhook) validate(_ context.Context, obj runtime.Object) (adm
 		if redis.Spec.AuthSecret != nil &&
 			redis.Spec.AuthSecret.ExternallyManaged &&
 			redis.Spec.AuthSecret.Name == "" {
-			return nil, fmt.Errorf("for externallyManaged auth secret, user need to provide \"redis.Spec.AuthSecret.Name\"")
+			return fmt.Errorf("for externallyManaged auth secret, user need to provide \"redis.Spec.AuthSecret.Name\"")
 		}
 	}
 
@@ -303,42 +305,42 @@ func (w RedisCustomWebhook) validate(_ context.Context, obj runtime.Object) (adm
 		// Check if redisVersion is deprecated.
 		// If deprecated, return error
 		if redisVersion.Spec.Deprecated {
-			return nil, fmt.Errorf("redis %s/%s is using deprecated version %v. Skipped processing",
+			return fmt.Errorf("redis %s/%s is using deprecated version %v. Skipped processing",
 				redis.Namespace, redis.Name, redisVersion.Name)
 		}
 
 		if err := redisVersion.ValidateSpecs(); err != nil {
-			return nil, fmt.Errorf("redis %s/%s is using invalid redisVersion %v. Skipped processing. reason: %v", redis.Namespace,
+			return fmt.Errorf("redis %s/%s is using invalid redisVersion %v. Skipped processing. reason: %v", redis.Namespace,
 				redis.Name, redisVersion.Name, err)
 		}
 	}
 
 	if redis.Spec.DeletionPolicy == "" {
-		return nil, fmt.Errorf(`'spec.DeletionPolicy' is missing`)
+		return fmt.Errorf(`'spec.DeletionPolicy' is missing`)
 	}
 
 	if redis.Spec.StorageType == dbapi.StorageTypeEphemeral && redis.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
-		return nil, fmt.Errorf(`'spec.DeletionPolicy: Halt' can not be used for 'Ephemeral' storage`)
+		return fmt.Errorf(`'spec.DeletionPolicy: Halt' can not be used for 'Ephemeral' storage`)
 	}
 
 	if redis.Spec.TLS != nil {
 		if err := checkTLSSupport(redisVersion.Spec.Version); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
 	if err := validateRedisEnvsForAllContainers(redis); err != nil {
-		return nil, err
+		return err
 	}
 
 	monitorSpec := redis.Spec.Monitor
 	if monitorSpec != nil {
 		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
-	return nil, nil
+	return nil
 }
 
 func ValidateForSentinel(kbClient client.Client, redis *dbapi.Redis) error {
