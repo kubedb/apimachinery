@@ -22,6 +22,9 @@ cloud.google.com/go/auth/oauth2adapt
 # cloud.google.com/go/compute/metadata v0.6.0
 ## explicit; go 1.21
 cloud.google.com/go/compute/metadata
+# dario.cat/mergo v1.0.1
+## explicit; go 1.13
+dario.cat/mergo
 # filippo.io/edwards25519 v1.1.0
 ## explicit; go 1.20
 filippo.io/edwards25519
@@ -55,8 +58,8 @@ github.com/Masterminds/goutils
 # github.com/Masterminds/semver/v3 v3.3.1
 ## explicit; go 1.21
 github.com/Masterminds/semver/v3
-# github.com/Masterminds/sprig/v3 v3.2.3
-## explicit; go 1.13
+# github.com/Masterminds/sprig/v3 v3.3.0
+## explicit; go 1.21
 github.com/Masterminds/sprig/v3
 # github.com/NYTimes/gziphandler v1.1.1
 ## explicit; go 1.11
@@ -70,7 +73,7 @@ github.com/antlr4-go/antlr/v4
 # github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 ## explicit; go 1.13
 github.com/asaskevich/govalidator
-# github.com/aws/aws-sdk-go v1.55.5
+# github.com/aws/aws-sdk-go v1.55.6
 ## explicit; go 1.19
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/arn
@@ -497,13 +500,13 @@ github.com/opencontainers/image-spec/specs-go/v1
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
-# github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.80.1
+# github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.81.0
 ## explicit; go 1.23.0
 github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring
 github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1
 github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1alpha1
 github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1beta1
-# github.com/prometheus-operator/prometheus-operator/pkg/client v0.80.1
+# github.com/prometheus-operator/prometheus-operator/pkg/client v0.81.0
 ## explicit; go 1.23.0
 github.com/prometheus-operator/prometheus-operator/pkg/client/versioned/scheme
 # github.com/prometheus/client_golang v1.20.5
@@ -726,7 +729,7 @@ go.uber.org/zap/zapgrpc
 ## explicit; go 1.23.0
 go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1
 go.virtual-secrets.dev/apimachinery/crds
-# golang.org/x/crypto v0.35.0
+# golang.org/x/crypto v0.36.0
 ## explicit; go 1.23.0
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blake2b
@@ -749,7 +752,7 @@ golang.org/x/crypto/scrypt
 # golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67
 ## explicit; go 1.22.0
 golang.org/x/exp/slices
-# golang.org/x/net v0.36.0
+# golang.org/x/net v0.37.0
 ## explicit; go 1.23.0
 golang.org/x/net/context
 golang.org/x/net/html
@@ -775,22 +778,22 @@ golang.org/x/oauth2/google/internal/stsexchange
 golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
-# golang.org/x/sync v0.11.0
-## explicit; go 1.18
+# golang.org/x/sync v0.12.0
+## explicit; go 1.23.0
 golang.org/x/sync/errgroup
 golang.org/x/sync/singleflight
-# golang.org/x/sys v0.30.0
-## explicit; go 1.18
+# golang.org/x/sys v0.31.0
+## explicit; go 1.23.0
 golang.org/x/sys/cpu
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
 golang.org/x/sys/windows/registry
-# golang.org/x/term v0.29.0
-## explicit; go 1.18
+# golang.org/x/term v0.30.0
+## explicit; go 1.23.0
 golang.org/x/term
-# golang.org/x/text v0.22.0
-## explicit; go 1.18
+# golang.org/x/text v0.23.0
+## explicit; go 1.23.0
 golang.org/x/text/cases
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
@@ -1734,7 +1737,7 @@ k8s.io/utils/trace
 # kmodules.xyz/apiversion v0.2.0
 ## explicit; go 1.14
 kmodules.xyz/apiversion
-# kmodules.xyz/client-go v0.32.0
+# kmodules.xyz/client-go v0.32.1
 ## explicit; go 1.23.0
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1758,10 +1761,10 @@ kmodules.xyz/client-go/policy/v1beta1
 kmodules.xyz/client-go/tools/clusterid
 kmodules.xyz/client-go/tools/healthchecker
 kmodules.xyz/client-go/tools/queue
-# kmodules.xyz/crd-schema-fuzz v0.29.2-0.20250302110413-c5b140ca984a
+# kmodules.xyz/crd-schema-fuzz v0.32.0
 ## explicit; go 1.23.0
 kmodules.xyz/crd-schema-fuzz
-# kmodules.xyz/custom-resources v0.30.2-0.20250303080226-05eb1392c05f
+# kmodules.xyz/custom-resources v0.32.0
 ## explicit; go 1.23.0
 kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
@@ -1783,23 +1786,23 @@ kmodules.xyz/custom-resources/crds
 # kmodules.xyz/go-containerregistry v0.0.14
 ## explicit; go 1.23.0
 kmodules.xyz/go-containerregistry/name
-# kmodules.xyz/monitoring-agent-api v0.30.4
-## explicit; go 1.22.0
+# kmodules.xyz/monitoring-agent-api v0.32.0
+## explicit; go 1.23.0
 kmodules.xyz/monitoring-agent-api/api/v1
-# kmodules.xyz/objectstore-api v0.29.1
-## explicit; go 1.21
+# kmodules.xyz/objectstore-api v0.32.0
+## explicit; go 1.23.0
 kmodules.xyz/objectstore-api/api/v1
-# kmodules.xyz/offshoot-api v0.30.1
-## explicit; go 1.22.0
+# kmodules.xyz/offshoot-api v0.32.0
+## explicit; go 1.23.0
 kmodules.xyz/offshoot-api/api/v1
 kmodules.xyz/offshoot-api/api/v1/conversion
 kmodules.xyz/offshoot-api/api/v2
 kmodules.xyz/offshoot-api/util
-# kmodules.xyz/prober v0.29.0
-## explicit; go 1.21.5
+# kmodules.xyz/prober v0.32.0
+## explicit; go 1.23.0
 kmodules.xyz/prober/api/v1
-# kmodules.xyz/resource-metadata v0.25.2
-## explicit; go 1.22.1
+# kmodules.xyz/resource-metadata v0.26.1
+## explicit; go 1.23.0
 kmodules.xyz/resource-metadata/apis/core/v1alpha1
 kmodules.xyz/resource-metadata/apis/identity/v1alpha1
 kmodules.xyz/resource-metadata/apis/node
@@ -1820,16 +1823,16 @@ kmodules.xyz/resource-metrics/kubedb.com/v1
 kmodules.xyz/resource-metrics/kubedb.com/v1alpha2
 kmodules.xyz/resource-metrics/kubevault.com/v1alpha2
 kmodules.xyz/resource-metrics/ops.kubedb.com/v1alpha1
-# kmodules.xyz/webhook-runtime v0.29.1
-## explicit; go 1.21.5
+# kmodules.xyz/webhook-runtime v0.32.0
+## explicit; go 1.23.0
 kmodules.xyz/webhook-runtime/admission/v1
 # kubeops.dev/csi-driver-cacerts v0.1.0
 ## explicit; go 1.22.0
 kubeops.dev/csi-driver-cacerts/apis/cacerts
 kubeops.dev/csi-driver-cacerts/apis/cacerts/v1alpha1
 kubeops.dev/csi-driver-cacerts/crds
-# kubeops.dev/operator-shard-manager v0.0.2-0.20250314053713-82e0002285a5
-## explicit; go 1.22.1
+# kubeops.dev/operator-shard-manager v0.0.2
+## explicit; go 1.23.0
 kubeops.dev/operator-shard-manager/api/v1alpha1
 # kubeops.dev/petset v0.0.9
 ## explicit; go 1.23.0
@@ -1848,7 +1851,7 @@ kubeops.dev/petset/crds
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
 kubeops.dev/sidekick/crds
-# kubestash.dev/apimachinery v0.16.1-0.20250311062248-74531c6cf9ea
+# kubestash.dev/apimachinery v0.17.0-rc.0
 ## explicit; go 1.23.0
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/addons/v1alpha1

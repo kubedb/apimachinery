@@ -17,8 +17,8 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/kubernetes-csi/external-snapshotter/client/v7 v7.0.0
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.80.1
-	github.com/prometheus-operator/prometheus-operator/pkg/client v0.80.1
+	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.81.0
+	github.com/prometheus-operator/prometheus-operator/pkg/client v0.81.0
 	go.bytebuilders.dev/audit v0.0.42
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.6
 	go.virtual-secrets.dev/apimachinery v0.0.1
@@ -38,19 +38,19 @@ require (
 	k8s.io/kube-openapi v0.0.0-20250318172550-b98be4ee1595
 	k8s.io/metrics v0.32.3
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
-	kmodules.xyz/client-go v0.32.0
-	kmodules.xyz/crd-schema-fuzz v0.29.2-0.20250302110413-c5b140ca984a
-	kmodules.xyz/custom-resources v0.30.2-0.20250303080226-05eb1392c05f
-	kmodules.xyz/monitoring-agent-api v0.30.4
-	kmodules.xyz/objectstore-api v0.29.1
-	kmodules.xyz/offshoot-api v0.30.1
-	kmodules.xyz/resource-metadata v0.25.2
-	kmodules.xyz/webhook-runtime v0.29.1
+	kmodules.xyz/client-go v0.32.1
+	kmodules.xyz/crd-schema-fuzz v0.32.0
+	kmodules.xyz/custom-resources v0.32.0
+	kmodules.xyz/monitoring-agent-api v0.32.0
+	kmodules.xyz/objectstore-api v0.32.0
+	kmodules.xyz/offshoot-api v0.32.0
+	kmodules.xyz/resource-metadata v0.26.1
+	kmodules.xyz/webhook-runtime v0.32.0
 	kubeops.dev/csi-driver-cacerts v0.1.0
-	kubeops.dev/operator-shard-manager v0.0.2-0.20250314053713-82e0002285a5
+	kubeops.dev/operator-shard-manager v0.0.2
 	kubeops.dev/petset v0.0.9
 	kubeops.dev/sidekick v0.0.10
-	kubestash.dev/apimachinery v0.16.1-0.20250311062248-74531c6cf9ea
+	kubestash.dev/apimachinery v0.17.0-rc.0
 	sigs.k8s.io/controller-runtime v0.20.3
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.39.0
@@ -61,6 +61,7 @@ require (
 	cloud.google.com/go/auth v0.9.4 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.4 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
+	dario.cat/mergo v1.0.1 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible // indirect
 	github.com/Azure/go-autorest v14.2.0+incompatible // indirect
@@ -70,12 +71,12 @@ require (
 	github.com/Azure/go-autorest/logger v0.2.1 // indirect
 	github.com/Azure/go-autorest/tracing v0.6.0 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
-	github.com/Masterminds/sprig/v3 v3.2.3 // indirect
+	github.com/Masterminds/sprig/v3 v3.3.0 // indirect
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
 	github.com/PuerkitoBio/purell v1.2.1 // indirect
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
-	github.com/aws/aws-sdk-go v1.55.5 // indirect
+	github.com/aws/aws-sdk-go v1.55.6 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
@@ -176,14 +177,14 @@ require (
 	go.opentelemetry.io/proto/otlp v1.4.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/crypto v0.35.0 // indirect
+	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
-	golang.org/x/net v0.36.0 // indirect
+	golang.org/x/net v0.37.0 // indirect
 	golang.org/x/oauth2 v0.27.0 // indirect
-	golang.org/x/sync v0.11.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/term v0.29.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/sync v0.12.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/term v0.30.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/time v0.10.0 // indirect
 	gomodules.xyz/counter v0.0.1 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.5.0 // indirect
@@ -203,7 +204,7 @@ require (
 	k8s.io/kms v0.32.3 // indirect
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.14 // indirect
-	kmodules.xyz/prober v0.29.0 // indirect
+	kmodules.xyz/prober v0.32.0 // indirect
 	kmodules.xyz/resource-metrics v0.30.5 // indirect
 	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.31.1 // indirect
