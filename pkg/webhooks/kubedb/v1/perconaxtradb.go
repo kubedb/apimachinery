@@ -343,15 +343,6 @@ func getXtraDBTLSReservedVolumes() []string {
 }
 
 func validateXtraDBVolumes(db *dbapi.PerconaXtraDB) error {
-	if db.Spec.PodTemplate.Spec.Volumes == nil {
-		return nil
-	}
-	rsv := reservedVolumes
-	if db.Spec.TLS != nil && db.Spec.TLS.Certificates != nil {
-		for _, c := range db.Spec.TLS.Certificates {
-			rsv = append(rsv, db.CertificateName(dbapi.PerconaXtraDBCertificateAlias(c.Alias)))
-		}
-	}
 	return amv.ValidateVolumes(ofstv1.ConvertVolumes(db.Spec.PodTemplate.Spec.Volumes), append(reservedXtraDBVolumes, getXtraDBTLSReservedVolumes()...))
 }
 
