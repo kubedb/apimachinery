@@ -29,9 +29,7 @@ import (
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/kubernetes"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -118,9 +116,13 @@ func IsStorageTypeCompatibleWithSpecV1(storageType dbapi.StorageType, storage *c
 	return nil
 }
 
-func CheckSecretsExist(client kubernetes.Interface, secNames []string, namespace string) error {
+func CheckSecretsExist(client client.Client, secNames []string, namespace string) error {
+	var secret core.Secret
 	for _, sec := range secNames {
-		_, err := client.CoreV1().Secrets(namespace).Get(context.TODO(), sec, metav1.GetOptions{})
+		err := client.Get(context.TODO(), types.NamespacedName{
+			Name:      sec,
+			Namespace: namespace,
+		}, &secret)
 		if err != nil {
 			return err
 		}
