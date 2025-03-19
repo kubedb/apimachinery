@@ -49,8 +49,8 @@ import (
 // SetupElasticsearchWebhookWithManager registers the webhook for Elasticsearch in the manager.
 func SetupElasticsearchWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Elasticsearch{}).
-		WithValidator(&ElasticsearchCustomWebhook{mgr.GetClient()}).
-		WithDefaulter(&ElasticsearchCustomWebhook{mgr.GetClient()}).
+		WithValidator(&ElasticsearchCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithDefaulter(&ElasticsearchCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
 
