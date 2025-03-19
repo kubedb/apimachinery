@@ -99,6 +99,7 @@ func (w RedisCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obje
 		return nil, fmt.Errorf("expected a Redis but got a %T", obj)
 	}
 	err = w.ValidateRedis(redis)
+	redisLog.Info("validating", "name", redis.Name)
 	return admission.Warnings{}, err
 }
 

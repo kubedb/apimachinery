@@ -56,11 +56,17 @@ type RedisSentinelCustomWebhook struct {
 
 var _ webhook.CustomDefaulter = &RedisSentinelCustomWebhook{}
 
-func (w RedisSentinelCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
-	log := logf.FromContext(ctx)
-	log.Info("defaulting RedisSentinel")
+// log is for logging in this package.
+var sentinelLog = logf.Log.WithName("redissentinel-resource")
 
-	sentinel := obj.(*dbapi.RedisSentinel)
+func (w RedisSentinelCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	sentinel, ok := obj.(*dbapi.RedisSentinel)
+	if !ok {
+		return fmt.Errorf("expected a RedisSentinel but got a %T", obj)
+	}
+
+	sentinelLog.Info("defaulting", "name", sentinel.GetName())
+
 	if sentinel.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
@@ -90,6 +96,7 @@ func (w RedisSentinelCustomWebhook) ValidateCreate(ctx context.Context, obj runt
 	if !ok {
 		return nil, fmt.Errorf("expected a RedisSentinel but got a %T", obj)
 	}
+	sentinelLog.Info("validating", "name", sentinel.Name)
 	err = w.ValidateSentinel(sentinel)
 	return admission.Warnings{}, err
 }

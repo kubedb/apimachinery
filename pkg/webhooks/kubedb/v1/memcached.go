@@ -40,6 +40,7 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
@@ -73,8 +74,17 @@ var forbiddenMemcachedEnvVars = []string{}
 
 var _ webhook.CustomDefaulter = &MemcachedCustomWebhook{}
 
+// log is for logging in this package.
+var memLog = logf.Log.WithName("redis-resource")
+
 func (mv *MemcachedCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
-	db := obj.(*dbapi.Memcached)
+	db, ok := obj.(*dbapi.Memcached)
+	if !ok {
+		return fmt.Errorf("expected a Memcached but got a %T", obj)
+	}
+
+	memLog.Info("defaulting", "name", db.GetName())
+
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
@@ -265,6 +275,8 @@ func (mv MemcachedCustomWebhook) validate(_ context.Context, obj runtime.Object)
 }
 
 func (mv MemcachedCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	memcached := obj.(*dbapi.Memcached)
+	memLog.Info("validating", "name", memcached.Name)
 	return mv.validate(ctx, obj)
 }
 
