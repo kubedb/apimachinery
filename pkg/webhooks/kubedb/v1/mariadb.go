@@ -25,15 +25,12 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 	"kubedb.dev/apimachinery/pkg/double_optin"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
@@ -61,13 +58,15 @@ type MariaDBCustomWebhook struct {
 	DefaultClient client.Client
 }
 
-var _ webhook.CustomDefaulter = &MariaDBCustomWebhook{}
+var (
+	_          webhook.CustomDefaulter = &MariaDBCustomWebhook{}
+	mariadbLog                         = logf.Log.WithName("mariadb-resource")
+)
 
 // setDefaultValues provides the defaulting that is performed in mutating stage of creating/updating a MySQL database
 func (a *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
-	log := logf.FromContext(ctx)
 	db := obj.(*dbapi.MariaDB)
-	log.Info("defaulting MariDB")
+	mariadbLog.Info("defaulting", "name", db.GetName())
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
@@ -135,7 +134,11 @@ func (a *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 var _ webhook.CustomValidator = &MariaDBCustomWebhook{}
 
 func (mv MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	return mv.validate(ctx, obj)
+	mariadb := obj.(*dbapi.MariaDB)
+	mariadbLog.Info("validating", "name", mariadb.Name)
+
+	return mv.validateMariaDB(ctx, obj)
+
 }
 
 func (mv MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -162,7 +165,7 @@ func (mv MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newOb
 	if err := mv.validateUpdate(mariadb, oldMariaDB); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return mv.validate(ctx, mariadb)
+	return mv.validateMariaDB(ctx, mariadb)
 }
 
 func (mv MariaDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -204,121 +207,6 @@ func (mv MariaDBCustomWebhook) validateCluster(db *dbapi.MariaDB) error {
 		}
 	}
 
-	return nil
-}
-
-// ValidateMariaDB checks if the object satisfies all the requirements.
-// It is not method of Interface, because it is referenced from controller package too.
-func (mv MariaDBCustomWebhook) ValidateMariaDB(kc client.Client, extClient cs.Interface, db *dbapi.MariaDB, strictValidation bool) error {
-	if db.Spec.Version == "" {
-		return errors.New(`'spec.version' is missing`)
-	}
-
-	if db.Spec.Replicas == nil {
-		return fmt.Errorf(`'spec.replicas' "%v" invalid. Value must be 1 for standalone mariadb server, but for mariadb cluster, value must be greater than 0`,
-			*db.Spec.Replicas)
-	}
-
-	if *db.Spec.Replicas == 1 && db.Spec.Topology != nil {
-		return fmt.Errorf(`'spec.replicas' "%d" invalid. Value must be greater than or equal to %d for topology mode or topology should be nil for standalone mode`,
-			ptr.Deref(db.Spec.Replicas, 0), kubedb.MariaDBDefaultClusterSize)
-	}
-
-	if db.IsCluster() && *db.Spec.Replicas < kubedb.MariaDBDefaultClusterSize {
-		return fmt.Errorf(`'spec.replicas' "%d" invalid. Value must be %d for mariadb cluster`,
-			ptr.Deref(db.Spec.Replicas, 0), kubedb.MariaDBDefaultClusterSize)
-	}
-
-	if err := mv.validateCluster(db); err != nil {
-		return err
-	}
-
-	if err := mv.validateEnvsForAllContainers(db); err != nil {
-		return err
-	}
-
-	if db.Spec.StorageType == "" {
-		return fmt.Errorf(`'spec.storageType' is missing`)
-	}
-	if db.Spec.StorageType != dbapi.StorageTypeDurable && db.Spec.StorageType != dbapi.StorageTypeEphemeral {
-		return fmt.Errorf(`'spec.storageType' %s is invalid`, db.Spec.StorageType)
-	}
-	if err := amv.ValidateStorage(kc, olddbapi.StorageType(db.Spec.StorageType), db.Spec.Storage); err != nil {
-		return err
-	}
-
-	// if secret managed externally verify auth secret name is not empty
-	if db.Spec.AuthSecret != nil && db.Spec.AuthSecret.ExternallyManaged && db.Spec.AuthSecret.Name == "" {
-		return fmt.Errorf("for externallyManaged auth secret, user need to provide \"spec.authSecret.name\"")
-	}
-
-	dbVersion, err := extClient.CatalogV1alpha1().MariaDBVersions().Get(context.TODO(), db.Spec.Version, metav1.GetOptions{})
-	if err != nil {
-		return err
-	}
-
-	if strictValidation {
-		// Check if mariadb Version is deprecated.
-		// If deprecated, return error
-		if dbVersion.Spec.Deprecated {
-			return fmt.Errorf("mariadb %s/%s is using deprecated version %v. Skipped processing", db.Namespace, db.Name, dbVersion.Name)
-		}
-
-		if err := dbVersion.ValidateSpecs(); err != nil {
-			return fmt.Errorf("mariadbVersion %s/%s is using invalid mariadbVersion %v. Skipped processing. reason: %v", dbVersion.Namespace,
-				dbVersion.Name, dbVersion.Name, err)
-		}
-	}
-
-	if db.Spec.DeletionPolicy == "" {
-		return fmt.Errorf(`'spec.deletionPolicy' is missing`)
-	}
-
-	if db.Spec.StorageType == dbapi.StorageTypeEphemeral && db.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
-		return fmt.Errorf(`'spec.deletionPolicy: Halt' can not be used for 'Ephemeral' storage`)
-	}
-
-	monitorSpec := db.Spec.Monitor
-	if monitorSpec != nil {
-		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
-			return err
-		}
-	}
-
-	curVersion, err := semver.NewVersion(dbVersion.Spec.Version)
-	if err != nil {
-		return fmt.Errorf(`unable to parse spec.version`)
-	}
-
-	supportedVersion, err := semver.NewVersion("10.5.2")
-	if err != nil {
-		return fmt.Errorf(`unable to parse spec.version`)
-	}
-
-	if db.Spec.RequireSSL && curVersion.LessThan(supportedVersion) {
-		return fmt.Errorf(`requireSSL is not supported for the MariaDDB Versions lower than 10.5.2`)
-	}
-
-	if err := amv.ValidateHealth(&db.Spec.HealthChecker); err != nil {
-		return err
-	}
-
-	if err := mv.validateVolumes(db); err != nil {
-		return err
-	}
-
-	if err := mv.validateVolumeMounts(db); err != nil {
-		return err
-	}
-
-	if err := validateWsrepSSTMethod(db); err != nil {
-		return err
-	}
-	if db.IsMariaDBReplication() {
-		if err := validateMariaDBReplicationSpec(db); err != nil {
-			return err
-		}
-	}
 	return nil
 }
 
@@ -435,7 +323,7 @@ func validateWsrepSSTMethod(db *dbapi.MariaDB) error {
 	return nil
 }
 
-func (mv MariaDBCustomWebhook) validate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (mv MariaDBCustomWebhook) validateMariaDB(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	log := logf.FromContext(ctx)
 	mariadb, ok := obj.(*dbapi.MariaDB)
 	if !ok {
