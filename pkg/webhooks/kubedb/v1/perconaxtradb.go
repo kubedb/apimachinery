@@ -32,7 +32,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/utils/ptr"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -45,21 +44,23 @@ import (
 // SetupPerconaXtraDBWebhookWithManager registers the webhook for PerconaXtraDB in the manager.
 func SetupPerconaXtraDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.PerconaXtraDB{}).
-		WithValidator(&PerconaXtraDBCustomWebhook{mgr.GetClient()}).
-		WithDefaulter(&PerconaXtraDBCustomWebhook{mgr.GetClient()}).
+		WithValidator(&PerconaXtraDBCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
+		WithDefaulter(&PerconaXtraDBCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
 		Complete()
 }
 
 type PerconaXtraDBCustomWebhook struct {
-	DefaultClient client.Client
+	DefaultClient    client.Client
+	StrictValidation bool
 }
+
+var pxlLog = logf.Log.WithName("perconaxtradb-resource")
 
 var _ webhook.CustomDefaulter = &PerconaXtraDBCustomWebhook{}
 
 func (w PerconaXtraDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
-	log := logf.FromContext(ctx)
 	db := obj.(*dbapi.PerconaXtraDB)
-	log.Info("defaulting PerconaXtraDB")
+	pxlLog.Info("defaulting", "name", db.GetName())
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
@@ -86,7 +87,10 @@ func (w PerconaXtraDBCustomWebhook) Default(ctx context.Context, obj runtime.Obj
 var _ webhook.CustomValidator = &PerconaXtraDBCustomWebhook{}
 
 func (w PerconaXtraDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
-	return w.validate(ctx, obj.(*dbapi.PerconaXtraDB))
+	perconaxtradb := obj.(*dbapi.PerconaXtraDB)
+	err = w.ValidatePerconaXtraDB(perconaxtradb)
+	pxlLog.Info("validating", "name", perconaxtradb.GetName())
+	return admission.Warnings{}, err
 }
 
 func (w PerconaXtraDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -113,7 +117,9 @@ func (w PerconaXtraDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, 
 	if err := validateXtraDBUpdate(perconaxtradb, oldPerconaXtraDB); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return w.validate(ctx, perconaxtradb)
+
+	err = w.ValidatePerconaXtraDB(perconaxtradb)
+	return nil, err
 }
 
 func (w PerconaXtraDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
@@ -137,7 +143,7 @@ func (w PerconaXtraDBCustomWebhook) ValidateDelete(ctx context.Context, obj runt
 
 // ValidatePerconaXtraDB checks if the object satisfies all the requirements.
 // It is not method of Interface, because it is referenced from controller package too.
-func ValidatePerconaXtraDB(kc client.Client, db *dbapi.PerconaXtraDB, strictValidation bool) error {
+func (w PerconaXtraDBCustomWebhook) ValidatePerconaXtraDB(db *dbapi.PerconaXtraDB) error {
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
@@ -147,7 +153,7 @@ func ValidatePerconaXtraDB(kc client.Client, db *dbapi.PerconaXtraDB, strictVali
 	}
 
 	var pxVersion catalogapi.PerconaXtraDBVersion
-	err := kc.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &pxVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &pxVersion)
 	if err != nil {
 		return err
 	}
@@ -171,7 +177,7 @@ func ValidatePerconaXtraDB(kc client.Client, db *dbapi.PerconaXtraDB, strictVali
 	if db.Spec.StorageType != dbapi.StorageTypeDurable && db.Spec.StorageType != dbapi.StorageTypeEphemeral {
 		return fmt.Errorf(`'spec.storageType' %s is invalid`, db.Spec.StorageType)
 	}
-	if err := amv.ValidateStorage(kc, olddbapi.StorageType(db.Spec.StorageType), db.Spec.Storage); err != nil {
+	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(db.Spec.StorageType), db.Spec.Storage); err != nil {
 		return err
 	}
 
@@ -179,7 +185,7 @@ func ValidatePerconaXtraDB(kc client.Client, db *dbapi.PerconaXtraDB, strictVali
 	if db.Spec.AuthSecret != nil && db.Spec.AuthSecret.ExternallyManaged && db.Spec.AuthSecret.Name == "" {
 		return fmt.Errorf("for externallyManaged auth secret, user need to provide \"spec.authSecret.name\"")
 	}
-	if strictValidation {
+	if w.StrictValidation {
 		// Check if percona-xtradb Version is deprecated.
 		// If deprecated, return error
 		if pxVersion.Spec.Deprecated {
@@ -220,75 +226,6 @@ func ValidatePerconaXtraDB(kc client.Client, db *dbapi.PerconaXtraDB, strictVali
 	}
 
 	return nil
-}
-
-func (w PerconaXtraDBCustomWebhook) validate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	log := logf.FromContext(ctx)
-	perconaxtradb, ok := obj.(*dbapi.PerconaXtraDB)
-	if !ok {
-		return nil, fmt.Errorf("expected a PerconaXtraDB but got a %T", obj)
-	}
-	log.Info("Validating PerconaXtraDB", perconaxtradb.Namespace, "/", perconaxtradb.Name)
-	if perconaxtradb.Spec.Version == "" {
-		return nil, errors.New(`'spec.version' is missing`)
-	}
-	var perconaxtradbVersion catalogapi.PerconaXtraDBVersion
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: perconaxtradb.Spec.Version,
-	}, &perconaxtradbVersion)
-	if err != nil {
-		return nil, err
-	}
-
-	if perconaxtradb.Spec.Replicas == nil || ptr.Deref(perconaxtradb.Spec.Replicas, 0) < 1 {
-		return nil, fmt.Errorf(`spec.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(perconaxtradb.Spec.Replicas, 0))
-	}
-
-	if err := validateXtraDBEnvsForAllContainers(perconaxtradb); err != nil {
-		return nil, err
-	}
-
-	if perconaxtradb.Spec.StorageType == "" {
-		return nil, fmt.Errorf(`'spec.storageType' is missing`)
-	}
-	if perconaxtradb.Spec.StorageType != dbapi.StorageTypeDurable && perconaxtradb.Spec.StorageType != dbapi.StorageTypeEphemeral {
-		return nil, fmt.Errorf(`'spec.storageType' %s is invalid`, perconaxtradb.Spec.StorageType)
-	}
-	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(perconaxtradb.Spec.StorageType), perconaxtradb.Spec.Storage); err != nil {
-		return nil, err
-	}
-
-	err = validateXtraDBVolumes(perconaxtradb)
-	if err != nil {
-		return nil, err
-	}
-	err = validateXtraDBEnvsForAllContainers(perconaxtradb)
-	if err != nil {
-		return nil, err
-	}
-
-	// if secret managed externally verify auth secret name is not empty
-
-	if perconaxtradb.Spec.DeletionPolicy == "" {
-		return nil, fmt.Errorf(`'spec.terminationPolicy' is missing`)
-	}
-
-	if perconaxtradb.Spec.StorageType == dbapi.StorageTypeEphemeral && perconaxtradb.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
-		return nil, fmt.Errorf(`'spec.terminationPolicy: Halt' can not be used for 'Ephemeral' storage`)
-	}
-
-	monitorSpec := perconaxtradb.Spec.Monitor
-	if monitorSpec != nil {
-		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
-			return nil, err
-		}
-	}
-
-	if err = amv.ValidateHealth(&perconaxtradb.Spec.HealthChecker); err != nil {
-		return nil, err
-	}
-
-	return nil, nil
 }
 
 // validateCluster checks whether the configurations for PerconaXtraDB Cluster are ok
