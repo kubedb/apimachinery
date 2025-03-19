@@ -21,22 +21,22 @@ require (
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.80.1
 	go.bytebuilders.dev/audit v0.0.42
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.6
-	go.virtual-secrets.dev/apimachinery v0.0.0-20250313131002-5cd148a87220
+	go.virtual-secrets.dev/apimachinery v0.0.1
 	gomodules.xyz/encoding v0.0.8
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0
 	gomodules.xyz/stow v0.2.4
 	gomodules.xyz/x v0.0.17
-	k8s.io/api v0.32.2
-	k8s.io/apiextensions-apiserver v0.32.2
-	k8s.io/apimachinery v0.32.2
-	k8s.io/apiserver v0.32.2
-	k8s.io/client-go v0.32.2
-	k8s.io/component-base v0.32.2
+	k8s.io/api v0.32.3
+	k8s.io/apiextensions-apiserver v0.32.3
+	k8s.io/apimachinery v0.32.3
+	k8s.io/apiserver v0.32.3
+	k8s.io/client-go v0.32.3
+	k8s.io/component-base v0.32.3
 	k8s.io/klog/v2 v2.130.1
-	k8s.io/kube-aggregator v0.32.2
-	k8s.io/kube-openapi v0.0.0-20241212222426-2c72e554b1e7
-	k8s.io/metrics v0.32.2
+	k8s.io/kube-aggregator v0.32.3
+	k8s.io/kube-openapi v0.0.0-20250318172550-b98be4ee1595
+	k8s.io/metrics v0.32.3
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
 	kmodules.xyz/client-go v0.32.0
 	kmodules.xyz/crd-schema-fuzz v0.29.2-0.20250302110413-c5b140ca984a
@@ -52,7 +52,7 @@ require (
 	kubeops.dev/petset v0.0.9
 	kubeops.dev/sidekick v0.0.10
 	kubestash.dev/apimachinery v0.16.1-0.20250311062248-74531c6cf9ea
-	sigs.k8s.io/controller-runtime v0.20.2
+	sigs.k8s.io/controller-runtime v0.20.3
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.39.0
 )
@@ -222,7 +222,7 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/kms v0.32.2 // indirect
+	k8s.io/kms v0.32.3 // indirect
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.14 // indirect
 	kmodules.xyz/prober v0.29.0 // indirect
@@ -232,6 +232,7 @@ require (
 	sigs.k8s.io/cli-utils v0.37.2 // indirect
 	sigs.k8s.io/gateway-api v1.1.0 // indirect
 	sigs.k8s.io/json v0.0.0-20241014173422-cfa47c3a1cc8 // indirect
-	sigs.k8s.io/structured-merge-diff/v4 v4.5.0 // indirect
+	sigs.k8s.io/randfill v1.0.0 // indirect
+	sigs.k8s.io/structured-merge-diff/v4 v4.6.0 // indirect
 	x-helm.dev/apimachinery v0.0.17 // indirect
 )

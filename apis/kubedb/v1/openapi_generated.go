@@ -31606,7 +31606,7 @@ func schema_apimachinery_apis_kubedb_v1_SecretReference(ref common.ReferenceCall
 							Format:      "",
 						},
 					},
-					"secretSourceName": {
+					"secretStoreName": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecretSource references the secret manager used for virtual secret",
 							Type:        []string{"string"},

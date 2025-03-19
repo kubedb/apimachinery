@@ -196,7 +196,7 @@ type SecretReference struct {
 
 	// +optional
 	// SecretSource references the secret manager used for virtual secret
-	SecretSourceName string `json:"secretSourceName,omitempty"`
+	SecretStoreName string `json:"secretStoreName,omitempty"`
 
 	core.LocalObjectReference `json:",inline,omitempty"`
 	// Recommendation engine will generate RotateAuth opsReq using this field
