@@ -16,7 +16,6 @@ import (
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
@@ -136,8 +135,8 @@ var forbiddenMongoDBEnvVars = []string{
 
 // ValidateMongoDB checks if the object satisfies all the requirements.
 // It is not method of Interface, because it is referenced from controller package too.
-func ValidateMongoDB(client client.Client, extClient cs.Interface, db *dbapi.MongoDB, strictValidation bool) error {
-	if err := checkVersion(db, extClient); err != nil {
+func ValidateMongoDB(client client.Client, db *dbapi.MongoDB, strictValidation bool) error {
+	if err := checkVersion(db, client); err != nil {
 		return err
 	}
 	if err := checkInvalidFieldsAndReplicaCounts(db); err != nil {
@@ -157,7 +156,7 @@ func ValidateMongoDB(client client.Client, extClient cs.Interface, db *dbapi.Mon
 	if db.Spec.AuthSecret != nil && db.Spec.AuthSecret.ExternallyManaged && db.Spec.AuthSecret.Name == "" {
 		return fmt.Errorf(`for externallyManaged auth secret, user must configure "spec.authSecret.name"`)
 	}
-	if err := strictValidations(client, extClient, db, strictValidation); err != nil {
+	if err := strictValidations(client, db, strictValidation); err != nil {
 		return err
 	}
 
@@ -209,11 +208,17 @@ func (w MongoDBCustomWebhook) validateUpdate(obj, oldObj *dbapi.MongoDB) error {
 	return nil
 }
 
-func checkVersion(db *dbapi.MongoDB, extClient cs.Interface) error {
+func checkVersion(db *dbapi.MongoDB, client client.Client) error {
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
-	_, err := extClient.CatalogV1alpha1().MongoDBVersions().Get(context.TODO(), db.Spec.Version, metav1.GetOptions{})
+	var mongodbVersion catalogapi.MongoDBVersion
+	err := client.Get(context.TODO(), types.NamespacedName{
+		Name: db.Spec.Version,
+	}, &mongodbVersion)
+	if err != nil {
+		return err
+	}
 	return err
 }
 
@@ -510,7 +515,7 @@ func validateSecrets(client client.Client, db *dbapi.MongoDB) error {
 	return amv.CheckSecretsExist(client, secrets, db.Namespace)
 }
 
-func strictValidations(client client.Client, extClient cs.Interface, db *dbapi.MongoDB, on bool) error {
+func strictValidations(client client.Client, db *dbapi.MongoDB, on bool) error {
 	if !on {
 		return nil
 	}
@@ -520,7 +525,10 @@ func strictValidations(client client.Client, extClient cs.Interface, db *dbapi.M
 
 	// Check if mongodbVersion is deprecated.
 	// If deprecated, return error
-	mongodbVersion, err := extClient.CatalogV1alpha1().MongoDBVersions().Get(context.TODO(), db.Spec.Version, metav1.GetOptions{})
+	var mongodbVersion catalogapi.MongoDBVersion
+	err := client.Get(context.TODO(), types.NamespacedName{
+		Name: db.Spec.Version,
+	}, &mongodbVersion)
 	if err != nil {
 		return err
 	}
