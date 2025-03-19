@@ -333,7 +333,7 @@ var reservedXtraDBVolumes = []string{
 	kubedb.PerconaXtraDBRunScriptVolumeName,
 }
 
-func getTLSReservedVolumes() []string {
+func getXtraDBTLSReservedVolumes() []string {
 	var volumes []string
 	volumes = append(volumes, kubedb.PerconaXtraDBServerTLSVolumeName)
 	volumes = append(volumes, kubedb.PerconaXtraDBClientTLSVolumeName)
@@ -352,13 +352,13 @@ func validateXtraDBVolumes(db *dbapi.PerconaXtraDB) error {
 			rsv = append(rsv, db.CertificateName(dbapi.PerconaXtraDBCertificateAlias(c.Alias)))
 		}
 	}
-	return amv.ValidateVolumes(ofstv1.ConvertVolumes(db.Spec.PodTemplate.Spec.Volumes), append(reservedXtraDBVolumes, getTLSReservedVolumes()...))
+	return amv.ValidateVolumes(ofstv1.ConvertVolumes(db.Spec.PodTemplate.Spec.Volumes), append(reservedXtraDBVolumes, getXtraDBTLSReservedVolumes()...))
 }
 
 func validateXtraDBVolumeMountsForAllContainers(db *dbapi.PerconaXtraDB) error {
 	var err error
 	for _, container := range db.Spec.PodTemplate.Spec.Containers {
-		if errC := amv.ValidateMountPaths(container.VolumeMounts, append(reservedVolumeMounts, getTLSReservedVolumeMounts(db)...)); errC != nil {
+		if errC := amv.ValidateMountPaths(container.VolumeMounts, append(reservedXtraDBVolumeMounts, getXtraDBTLSReservedVolumeMounts(db)...)); errC != nil {
 			if err == nil {
 				err = errC
 			} else {
@@ -369,14 +369,14 @@ func validateXtraDBVolumeMountsForAllContainers(db *dbapi.PerconaXtraDB) error {
 	return err
 }
 
-var reservedVolumeMounts = []string{
+var reservedXtraDBVolumeMounts = []string{
 	kubedb.PerconaXtraDBDataMountPath,
 	kubedb.PerconaXtraDBClusterCustomConfigMountPath,
 	kubedb.PerconaXtraDBInitScriptVolumeMountPath,
 	kubedb.PerconaXtraDBRunScriptVolumeMountPath,
 }
 
-func getTLSReservedVolumeMounts(db *dbapi.PerconaXtraDB) []string {
+func getXtraDBTLSReservedVolumeMounts(db *dbapi.PerconaXtraDB) []string {
 	var volumes []string
 	volumes = append(volumes, db.CertMountPath(dbapi.PerconaXtraDBServerCert))
 	volumes = append(volumes, db.CertMountPath(dbapi.PerconaXtraDBClientCert))
