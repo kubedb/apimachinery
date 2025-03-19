@@ -19,7 +19,6 @@ package v1
 import (
 	"context"
 	"fmt"
-	"kubedb.dev/elasticsearch/pkg/util"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -451,28 +450,28 @@ func (w *ElasticsearchCustomWebhook) validateNodeSpecs(kc client.Client, db *dba
 
 	for nodeRole, node := range tMap {
 		if err := amv.ValidateStorage(kc, olddbapi.StorageType(db.Spec.StorageType), node.Storage); err != nil {
-			errForNodeContainer = util.AppendError(errForNodeContainer, err)
+			errForNodeContainer = appendError(errForNodeContainer, err)
 		}
 		// Resources validation
 		// Heap size is the 50% of memory & it cannot be less than 128Mi(some say 97Mi)
 		// So, minimum memory request should be twice of 128Mi, i.e. 256Mi.
 		dbContainer := core_util.GetContainerByName(node.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 		if value, ok := dbContainer.Resources.Requests[core.ResourceMemory]; ok && value.Value() < 2*kubedb.ElasticsearchMinHeapSize {
-			errForNodeContainer = util.AppendError(errForNodeContainer, fmt.Errorf("%s.resources.reqeusts.memory cannot be less than %dMi, given %dMi", string(nodeRole), (2*kubedb.ElasticsearchMinHeapSize)/(1024*1024), value.Value()/(1024*1024)))
+			errForNodeContainer = appendError(errForNodeContainer, fmt.Errorf("%s.resources.reqeusts.memory cannot be less than %dMi, given %dMi", string(nodeRole), (2*kubedb.ElasticsearchMinHeapSize)/(1024*1024), value.Value()/(1024*1024)))
 		}
 
 		if err := w.validateContainerSecurityContext(dbContainer.SecurityContext, esVersion); err != nil {
-			errForNodeContainer = util.AppendError(errForNodeContainer, err)
+			errForNodeContainer = appendError(errForNodeContainer, err)
 		}
 
 		if node.MaxUnavailable != nil {
 			if int32(node.MaxUnavailable.IntValue()) > *node.Replicas {
-				errForNodeContainer = util.AppendError(errForNodeContainer, fmt.Errorf("MaxUnavailable replicas can't be greater that number of replicas in %s node", nodeRole))
+				errForNodeContainer = appendError(errForNodeContainer, fmt.Errorf("MaxUnavailable replicas can't be greater that number of replicas in %s node", nodeRole))
 			}
 		}
 
 		if err := amv.ValidateEnvVar(dbContainer.Env, forbiddenElasticsearchEnvVars, dbapi.ResourceKindElasticsearch); err != nil {
-			errForNodeContainer = util.AppendError(errForNodeContainer, err)
+			errForNodeContainer = appendError(errForNodeContainer, err)
 		}
 	}
 	return errForNodeContainer
@@ -554,7 +553,7 @@ func (w *ElasticsearchCustomWebhook) validateVolumeMountPaths(db *dbapi.Elastics
 			dbContainer := core_util.GetContainerByName(node.PodTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
 			if dbContainer.VolumeMounts != nil {
 				errForNodeContainer := amv.ValidateMountPaths(dbContainer.VolumeMounts, rPaths)
-				err = util.AppendError(err, errForNodeContainer)
+				err = appendError(err, errForNodeContainer)
 			}
 		}
 
