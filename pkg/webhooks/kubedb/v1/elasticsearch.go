@@ -19,6 +19,7 @@ package v1
 import (
 	"context"
 	"fmt"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -58,6 +59,8 @@ type ElasticsearchCustomWebhook struct {
 	StrictValidation bool
 }
 
+var eslog = logf.Log.WithName("elasticsearch-resource")
+
 var _ webhook.CustomDefaulter = &ElasticsearchCustomWebhook{}
 
 func (w *ElasticsearchCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
@@ -65,6 +68,8 @@ func (w *ElasticsearchCustomWebhook) Default(_ context.Context, obj runtime.Obje
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
+
+	eslog.Info("default", "name", db.GetName())
 
 	if db.Spec.Halted {
 		if db.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
@@ -135,7 +140,7 @@ var reservedElasticsearchMountPaths = []string{
 
 var _ webhook.CustomValidator = &ElasticsearchCustomWebhook{}
 
-func (w *ElasticsearchCustomWebhook) validate(_ context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(_ context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*dbapi.Elasticsearch)
 	if !ok {
 		return nil, fmt.Errorf("expected a ElasticSearch but got a %T", obj)
@@ -310,7 +315,7 @@ func (w *ElasticsearchCustomWebhook) validate(_ context.Context, obj runtime.Obj
 }
 
 func (w *ElasticsearchCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	return w.validate(ctx, obj)
+	return w.ValidateElasticsearch(ctx, obj)
 }
 
 func (w *ElasticsearchCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -337,7 +342,7 @@ func (w *ElasticsearchCustomWebhook) ValidateUpdate(ctx context.Context, oldObj,
 	if err := w.validatePreconditions(elasticsearch, oldElasticsearch); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return w.validate(ctx, elasticsearch)
+	return w.ValidateElasticsearch(ctx, elasticsearch)
 }
 
 func (w *ElasticsearchCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
