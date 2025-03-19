@@ -27,14 +27,15 @@ import (
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
+	"k8s.io/apimachinery/pkg/types"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func ValidateStorage(client kubernetes.Interface, storageType olddbapi.StorageType, spec *core.PersistentVolumeClaimSpec, storageSpecPath ...string) error {
+func ValidateStorage(kc client.Client, storageType olddbapi.StorageType, spec *core.PersistentVolumeClaimSpec, storageSpecPath ...string) error {
 	if storageType == olddbapi.StorageTypeEphemeral {
 		return nil
 	}
@@ -49,41 +50,10 @@ func ValidateStorage(client kubernetes.Interface, storageType olddbapi.StorageTy
 	}
 
 	if spec.StorageClassName != nil {
-		if _, err := client.StorageV1().StorageClasses().Get(context.TODO(), *spec.StorageClassName, metav1.GetOptions{}); err != nil {
-			if kerr.IsNotFound(err) {
-				return fmt.Errorf(`%v.storageClassName "%v" not found`, storagePath, *spec.StorageClassName)
-			}
-			return err
-		}
-	}
-
-	if val, found := spec.Resources.Requests[core.ResourceStorage]; found {
-		if val.Value() <= 0 {
-			return errors.New("invalid ResourceStorage request")
-		}
-	} else {
-		return errors.New("missing ResourceStorage request")
-	}
-
-	return nil
-}
-
-func ValidateStorageV1(client kubernetes.Interface, storageType dbapi.StorageType, spec *core.PersistentVolumeClaimSpec, storageSpecPath ...string) error {
-	if storageType == dbapi.StorageTypeEphemeral {
-		return nil
-	}
-
-	storagePath := "spec.storage"
-	if len(storageSpecPath) != 0 {
-		storagePath = strings.Join(storageSpecPath, ".")
-	}
-
-	if spec == nil {
-		return fmt.Errorf(`%v is missing for durable storage type`, storagePath)
-	}
-
-	if spec.StorageClassName != nil {
-		if _, err := client.StorageV1().StorageClasses().Get(context.TODO(), *spec.StorageClassName, metav1.GetOptions{}); err != nil {
+		var sc storagev1.StorageClass
+		if err := kc.Get(context.TODO(), types.NamespacedName{
+			Name: *spec.StorageClassName,
+		}, &sc); err != nil {
 			if kerr.IsNotFound(err) {
 				return fmt.Errorf(`%v.storageClassName "%v" not found`, storagePath, *spec.StorageClassName)
 			}
@@ -146,9 +116,13 @@ func IsStorageTypeCompatibleWithSpecV1(storageType dbapi.StorageType, storage *c
 	return nil
 }
 
-func CheckSecretsExist(client kubernetes.Interface, secNames []string, namespace string) error {
+func CheckSecretsExist(client client.Client, secNames []string, namespace string) error {
+	var secret core.Secret
 	for _, sec := range secNames {
-		_, err := client.CoreV1().Secrets(namespace).Get(context.TODO(), sec, metav1.GetOptions{})
+		err := client.Get(context.TODO(), types.NamespacedName{
+			Name:      sec,
+			Namespace: namespace,
+		}, &secret)
 		if err != nil {
 			return err
 		}
