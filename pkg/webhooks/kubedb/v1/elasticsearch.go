@@ -55,7 +55,8 @@ func SetupElasticsearchWebhookWithManager(mgr ctrl.Manager) error {
 }
 
 type ElasticsearchCustomWebhook struct {
-	DefaultClient client.Client
+	DefaultClient    client.Client
+	StrictValidation bool
 }
 
 var _ webhook.CustomDefaulter = &ElasticsearchCustomWebhook{}
