@@ -49,13 +49,14 @@ import (
 // SetupMySQLWebhookWithManager registers the webhook for MySQL in the manager.
 func SetupMySQLWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MySQL{}).
-		WithValidator(&MySQLCustomWebhook{mgr.GetClient()}).
-		WithDefaulter(&MySQLCustomWebhook{mgr.GetClient()}).
+		WithValidator(&MySQLCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
+		WithDefaulter(&MySQLCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
 		Complete()
 }
 
 type MySQLCustomWebhook struct {
-	DefaultClient client.Client
+	DefaultClient    client.Client
+	StrictValidation bool
 }
 
 var _ webhook.CustomDefaulter = &MySQLCustomWebhook{}
@@ -125,7 +126,8 @@ func (w MySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 var _ webhook.CustomValidator = &MySQLCustomWebhook{}
 
 func (w MySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
-	return w.validate(ctx, obj.(*dbapi.MySQL))
+	err = w.ValidateMySQL(obj.(*dbapi.MySQL))
+	return admission.Warnings{}, err
 }
 
 func (w MySQLCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
@@ -152,7 +154,9 @@ func (w MySQLCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj r
 	if err := validateUpdate(mysql, oldMySQL); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return w.validate(ctx, mysql)
+
+	err = w.ValidateMySQL(mysql)
+	return nil, err
 }
 
 func (w MySQLCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
@@ -213,13 +217,13 @@ func validateMySQLGroup(replicas int32, version string, group dbapi.MySQLGroupSp
 
 // ValidateMySQL checks if the object satisfies all the requirements.
 // It is not method of Interface, because it is referenced from controller package too.
-func ValidateMySQL(kc client.Client, mysql *dbapi.MySQL, strictValidation bool) error {
+func (w MySQLCustomWebhook) ValidateMySQL(mysql *dbapi.MySQL) error {
 	if mysql.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
 
 	var mysqlVersion catalogapi.MySQLVersion
-	err := kc.Get(context.TODO(), types.NamespacedName{Name: mysql.Spec.Version}, &mysqlVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: mysql.Spec.Version}, &mysqlVersion)
 	if err != nil {
 		return err
 	}
@@ -262,11 +266,11 @@ func ValidateMySQL(kc client.Client, mysql *dbapi.MySQL, strictValidation bool) 
 		return fmt.Errorf(`'spec.storageType' %s is invalid`, mysql.Spec.StorageType)
 	}
 
-	if err := amv.ValidateStorage(kc, olddbapi.StorageType(mysql.Spec.StorageType), mysql.Spec.Storage); err != nil {
+	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(mysql.Spec.StorageType), mysql.Spec.Storage); err != nil {
 		return err
 	}
 
-	if strictValidation {
+	if w.StrictValidation {
 
 		// Check if mysqlVersion is deprecated.
 		// If deprecated, return error
@@ -319,112 +323,6 @@ func ValidateMySQL(kc client.Client, mysql *dbapi.MySQL, strictValidation bool) 
 	}
 
 	return nil
-}
-
-func (w MySQLCustomWebhook) validate(_ context.Context, obj runtime.Object) (admission.Warnings, error) {
-	mysql, ok := obj.(*dbapi.MySQL)
-	if !ok {
-		return nil, fmt.Errorf("expected a MySQL but got a %T", obj)
-	}
-	if mysql.Spec.Version == "" {
-		return nil, errors.New(`'spec.version' is missing`)
-	}
-
-	var mysqlVersion catalogapi.MySQLVersion
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: mysql.Spec.Version,
-	}, &mysqlVersion)
-	if err != nil {
-		return nil, err
-	}
-
-	if mysql.Spec.Replicas == nil {
-		return nil, fmt.Errorf(`spec.replicas "%d" invalid. Value must be greater than 0, but for group replication this value shouldn't be more than %d'`,
-			ptr.Deref(mysql.Spec.Replicas, 0), kubedb.MySQLMaxGroupMembers)
-	}
-
-	if mysql.Spec.Topology != nil {
-		if mysql.Spec.Topology.Mode == nil {
-			return nil, errors.New("a valid 'spec.topology.mode' must be set for MySQL clustering")
-		}
-
-		if mysql.IsInnoDBCluster() && mysqlVersion.Spec.Router.Image == "" {
-			return nil, errors.Errorf("InnoDBCluster mode is not supported for MySQL version %s", mysqlVersion.Name)
-		}
-
-		// validation for group configuration is performed only when
-		// 'spec.topology.mode' is set to "GroupReplication"
-		if *mysql.Spec.Topology.Mode == dbapi.MySQLModeGroupReplication {
-			// if spec.topology.mode is "GroupReplication", spec.topology.group is set to default during mutating
-			if mysql.Spec.Init == nil || mysql.Spec.Init.Archiver == nil || mysql.Spec.Init.Initialized {
-				if err := validateMySQLGroup(ptr.Deref(mysql.Spec.Replicas, 0), mysql.Spec.Version, *mysql.Spec.Topology.Group); err != nil {
-					return nil, err
-				}
-			}
-		}
-	}
-
-	if err := validateEnvsForAllContainers(mysql); err != nil {
-		return nil, err
-	}
-
-	if mysql.Spec.StorageType == "" {
-		return nil, fmt.Errorf(`'spec.storageType' is missing`)
-	}
-
-	if mysql.Spec.StorageType != dbapi.StorageTypeDurable && mysql.Spec.StorageType != dbapi.StorageTypeEphemeral {
-		return nil, fmt.Errorf(`'spec.storageType' %s is invalid`, mysql.Spec.StorageType)
-	}
-
-	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(mysql.Spec.StorageType), mysql.Spec.Storage); err != nil {
-		return nil, err
-	}
-
-	if err := mysqlVersion.ValidateSpecs(); err != nil {
-		return nil, fmt.Errorf("mysql %s/%s is using invalid mysqlVersion %v. Skipped processing. reason: %v", mysql.Namespace,
-			mysql.Name, mysqlVersion.Name, err)
-	}
-
-	// if secret managed externally verify auth secret name is not empty
-	if mysql.Spec.AuthSecret != nil && mysql.Spec.AuthSecret.ExternallyManaged && mysql.Spec.AuthSecret.Name == "" {
-		return nil, fmt.Errorf("for externallyManaged auth secret, user need to provide \"mysql.Spec.AuthSecret.Name\"")
-	}
-
-	if mysql.Spec.DeletionPolicy == "" {
-		return nil, fmt.Errorf(`'spec.deletionPolicy' is missing`)
-	}
-
-	if mysql.Spec.StorageType == dbapi.StorageTypeEphemeral && mysql.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
-		return nil, fmt.Errorf(`'spec.deletionPolicy: Halt' can not be used for 'Ephemeral' storage`)
-	}
-
-	monitorSpec := mysql.Spec.Monitor
-	if monitorSpec != nil {
-		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
-			return nil, err
-		}
-	}
-
-	if mysql.Spec.Version[0] == '5' {
-		dnsName := mysql.Name + "." + mysql.Name + "-pods." + mysql.Namespace + ".svc"
-		if len(dnsName) > 60 {
-			return nil, fmt.Errorf("MySQL 5.*.* does not support dns name longer than 60 characters. 'name.name-pods.namespace.svc' should not exceed 60 characters")
-		}
-	}
-
-	if err := amv.ValidateHealth(&mysql.Spec.HealthChecker); err != nil {
-		return nil, err
-	}
-
-	if err := validateVolumes(mysql); err != nil {
-		return nil, err
-	}
-
-	if err := validateVolumeMountsForAllContainers(mysql); err != nil {
-		return nil, err
-	}
-
-	return nil, nil
 }
 
 func validateEnvsForAllContainers(mysql *dbapi.MySQL) error {
