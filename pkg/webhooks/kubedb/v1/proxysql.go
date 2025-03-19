@@ -166,7 +166,7 @@ func ValidateProxySQL(kc client.Client, db *dbapi.ProxySQL, strictValidation boo
 	}
 
 	if db.Spec.AuthSecret != nil && db.Spec.AuthSecret.ExternallyManaged && db.Spec.AuthSecret.Name == "" {
-		return fmt.Errorf("for externallyManaged auth secret, user need to provide \"mysql.Spec.AuthSecret.Name\"")
+		return fmt.Errorf("for externallyManaged auth secret, user need to provide \"proxysql.Spec.AuthSecret.Name\"")
 	}
 
 	if strictValidation {
@@ -232,7 +232,7 @@ func (w ProxySQLCustomWebhook) validate(ctx context.Context, obj runtime.Object)
 	}
 
 	if proxysql.Spec.AuthSecret != nil && proxysql.Spec.AuthSecret.ExternallyManaged && proxysql.Spec.AuthSecret.Name == "" {
-		return nil, fmt.Errorf("for externallyManaged auth secret, user need to provide \"mysql.Spec.AuthSecret.Name\"")
+		return nil, fmt.Errorf("for externallyManaged auth secret, user need to provide \"proxysql.Spec.AuthSecret.Name\"")
 	}
 
 	monitorSpec := proxysql.Spec.Monitor
