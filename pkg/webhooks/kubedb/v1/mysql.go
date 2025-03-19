@@ -445,7 +445,7 @@ func validateVolumes(db *dbapi.MySQL) error {
 	if db.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
-	rsv := reservedVolumes
+	rsv := mySqlReservedVolumes
 	if db.Spec.TLS != nil && db.Spec.TLS.Certificates != nil {
 		for _, c := range db.Spec.TLS.Certificates {
 			rsv = append(rsv, db.CertificateName(dbapi.MySQLCertificateAlias(c.Alias)))
@@ -458,7 +458,7 @@ func validateVolumes(db *dbapi.MySQL) error {
 func validateVolumeMountsForAllContainers(mysql *dbapi.MySQL) error {
 	var err error
 	for _, container := range mysql.Spec.PodTemplate.Spec.Containers {
-		if errC := amv.ValidateMountPaths(container.VolumeMounts, reservedVolumeMountPaths); errC != nil {
+		if errC := amv.ValidateMountPaths(container.VolumeMounts, mySqlReservedVolumeMountPaths); errC != nil {
 			if err == nil {
 				err = errC
 			} else {
@@ -470,7 +470,7 @@ func validateVolumeMountsForAllContainers(mysql *dbapi.MySQL) error {
 }
 
 // reserved volume and volumes mounts for mysql
-var reservedVolumes = []string{
+var mySqlReservedVolumes = []string{
 	kubedb.MySQLVolumeNameTemp,
 	kubedb.MySQLVolumeNameData,
 	kubedb.MySQLVolumeNameInitScript,
@@ -481,7 +481,7 @@ var reservedVolumes = []string{
 	kubedb.MySQLVolumeNameSourceCA,
 }
 
-var reservedVolumeMountPaths = []string{
+var mySqlReservedVolumeMountPaths = []string{
 	kubedb.MySQLVolumeMountPathTemp,
 	kubedb.MySQLVolumeMountPathData,
 	kubedb.MySQLVolumeMountPathInitScript,

@@ -95,7 +95,7 @@ var forbiddenPostgresEnvVars = []string{
 	"POSTGRES_USER",
 }
 
-var reservedMountPaths = []string{
+var postgresReservedMountPaths = []string{
 	kubedb.PostgresInitDir,
 	kubedb.PostgresSharedMemoryDir,
 	kubedb.PostgresDataDir,
@@ -134,7 +134,7 @@ func (wh *PostgresCustomWebhook) validateEnvsForAllContainers(postgres *dbapi.Po
 func (wh *PostgresCustomWebhook) validateVolumeMountsForAllContainers(postgres *dbapi.Postgres) error {
 	var err error
 	for _, container := range postgres.Spec.PodTemplate.Spec.Containers {
-		if errC := amv.ValidateMountPaths(container.VolumeMounts, reservedMountPaths); errC != nil {
+		if errC := amv.ValidateMountPaths(container.VolumeMounts, postgresReservedMountPaths); errC != nil {
 			if err == nil {
 				err = errC
 			} else {
@@ -318,7 +318,7 @@ func (wh *PostgresCustomWebhook) validate(_ context.Context, obj runtime.Object)
 	}
 
 	if postgres.Spec.ClientAuthMode == dbapi.ClientAuthModeScram {
-		if err := checkScramAuthMethodSupport(postgresVersion.Spec.Version); err != nil {
+		if err := checkPgScramAuthMethodSupport(postgresVersion.Spec.Version); err != nil {
 			return nil, err
 		}
 	}
@@ -433,7 +433,7 @@ func (wh *PostgresCustomWebhook) ValidateDelete(ctx context.Context, obj runtime
 	return nil, nil
 }
 
-func checkScramAuthMethodSupport(v string) error {
+func checkPgScramAuthMethodSupport(v string) error {
 	pgVersion, err := semver.NewVersion(v)
 	if err != nil {
 		return err

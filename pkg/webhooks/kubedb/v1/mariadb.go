@@ -386,7 +386,7 @@ func getTLSReservedVolumes() []string {
 }
 
 func (mv MariaDBCustomWebhook) validateVolumes(db *dbapi.MariaDB) error {
-	return amv.ValidateVolumes(ofstv1.ConvertVolumes(db.Spec.PodTemplate.Spec.Volumes), append(reservedVolumes, getTLSReservedVolumes()...))
+	return amv.ValidateVolumes(ofstv1.ConvertVolumes(db.Spec.PodTemplate.Spec.Volumes), append(mariaDBreservedVolumes, getTLSReservedVolumes()...))
 }
 
 var reservedVolumeMounts = []string{

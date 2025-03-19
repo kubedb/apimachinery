@@ -259,10 +259,10 @@ func (pw PgBouncerCustomWebhook) Validate(ctx context.Context, db *dbapi.PgBounc
 		return nil, err
 	}
 
-	reservedVolumes = append(reservedVolumes, db.GetCertSecretName(dbapi.PgBouncerServerCert))
-	reservedVolumes = append(reservedVolumes, db.GetCertSecretName(dbapi.PgBouncerClientCert))
-	reservedVolumes = append(reservedVolumes, db.GetCertSecretName(dbapi.PgBouncerMetricsExporterCert))
-	reservedVolumes = append(reservedVolumes, db.PgBouncerFinalConfigSecretName())
+	pbReservedVolumes = append(pbReservedVolumes, db.GetCertSecretName(dbapi.PgBouncerServerCert))
+	pbReservedVolumes = append(pbReservedVolumes, db.GetCertSecretName(dbapi.PgBouncerClientCert))
+	pbReservedVolumes = append(pbReservedVolumes, db.GetCertSecretName(dbapi.PgBouncerMetricsExporterCert))
+	pbReservedVolumes = append(pbReservedVolumes, db.PgBouncerFinalConfigSecretName())
 
 	err = validatePgBouncerVolumes(db)
 	if err != nil {
@@ -302,7 +302,7 @@ func validateEnvsForAllPbContainers(pgbouncer *dbapi.PgBouncer) error {
 	var err error
 	for _, container := range pgbouncer.Spec.PodTemplate.Spec.Containers {
 		if container.Env != nil {
-			if errC := amv.ValidateEnvVar(container.Env, forbiddenEnvVars, dbapi.ResourceKindPgBouncer); errC != nil {
+			if errC := amv.ValidateEnvVar(container.Env, pbForbiddenEnvVars, dbapi.ResourceKindPgBouncer); errC != nil {
 				if err == nil {
 					err = errC
 				} else {
@@ -318,7 +318,7 @@ func validateVolumeMountsForAllPbContainers(pgbouncer *dbapi.PgBouncer) error {
 	var err error
 	for _, container := range pgbouncer.Spec.PodTemplate.Spec.Containers {
 		if container.VolumeMounts != nil {
-			if errC := amv.ValidateMountPaths(container.VolumeMounts, reservedMountPaths); errC != nil {
+			if errC := amv.ValidateMountPaths(container.VolumeMounts, pbReservedMountPaths); errC != nil {
 				if err == nil {
 					err = errC
 				} else {
@@ -334,7 +334,7 @@ func validatePgBouncerVolumes(db *dbapi.PgBouncer) error {
 	if db.Spec.PodTemplate.Spec.Volumes == nil {
 		return nil
 	}
-	return amv.ValidateVolumes(ofst.ConvertVolumes(db.Spec.PodTemplate.Spec.Volumes), reservedVolumes)
+	return amv.ValidateVolumes(ofst.ConvertVolumes(db.Spec.PodTemplate.Spec.Volumes), pbReservedVolumes)
 }
 
 func validateGivenPbConfigSecret(db *dbapi.PgBouncer, client client.Client) error {

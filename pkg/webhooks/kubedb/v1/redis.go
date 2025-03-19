@@ -200,7 +200,7 @@ func validateRedisEnvsForAllContainers(redis *dbapi.Redis) error {
 func validateRedisVolumeMountsForAllContainers(redis *dbapi.Redis) error {
 	var err error
 	for _, container := range redis.Spec.PodTemplate.Spec.Containers {
-		if errC := amv.ValidateMountPaths(container.VolumeMounts, reservedMountPaths); errC != nil {
+		if errC := amv.ValidateMountPaths(container.VolumeMounts, redisReservedMountPaths); errC != nil {
 			if err == nil {
 				err = errC
 			} else {
@@ -268,7 +268,7 @@ func (w RedisCustomWebhook) validate(_ context.Context, obj runtime.Object) (adm
 	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(redis.Spec.StorageType), redis.Spec.Storage); err != nil {
 		return nil, err
 	}
-	err = amv.ValidateVolumes(ofstv1.ConvertVolumes(redis.Spec.PodTemplate.Spec.Volumes), reservedVolumes)
+	err = amv.ValidateVolumes(ofstv1.ConvertVolumes(redis.Spec.PodTemplate.Spec.Volumes), redisReservedVolumes)
 	if err != nil {
 		return nil, err
 	}

@@ -187,11 +187,11 @@ func (w RedisSentinelCustomWebhook) validate(_ context.Context, obj runtime.Obje
 		return nil, err
 	}
 
-	err = amv.ValidateVolumes(ofstv1.ConvertVolumes(sentinel.Spec.PodTemplate.Spec.Volumes), reservedVolumes)
+	err = amv.ValidateVolumes(ofstv1.ConvertVolumes(sentinel.Spec.PodTemplate.Spec.Volumes), redisReservedVolumes)
 	if err != nil {
 		return nil, err
 	}
-	// err = amv.ValidateMountPaths(sentinel.Spec.PodTemplate.Spec.VolumeMounts, reservedMountPaths)
+	// err = amv.ValidateMountPaths(sentinel.Spec.PodTemplate.Spec.VolumeMounts, redisReservedMountPaths)
 	err = validateSentinelVolumeMountsForAllContainers(sentinel)
 	if err != nil {
 		return nil, err
@@ -276,7 +276,7 @@ func validateSentinelEnvsForAllContainers(sentinel *dbapi.RedisSentinel) error {
 func validateSentinelVolumeMountsForAllContainers(sentinel *dbapi.RedisSentinel) error {
 	var err error
 	for _, container := range sentinel.Spec.PodTemplate.Spec.Containers {
-		if errC := amv.ValidateMountPaths(container.VolumeMounts, reservedMountPaths); errC != nil {
+		if errC := amv.ValidateMountPaths(container.VolumeMounts, redisReservedMountPaths); errC != nil {
 			if err == nil {
 				err = errC
 			} else {
