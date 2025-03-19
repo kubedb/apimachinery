@@ -186,7 +186,7 @@ func validateRedisUpdate(obj, oldObj *dbapi.Redis) error {
 func validateRedisEnvsForAllContainers(redis *dbapi.Redis) error {
 	var err error
 	for _, container := range redis.Spec.PodTemplate.Spec.Containers {
-		if errC := amv.ValidateEnvVar(container.Env, forbiddenEnvVars, dbapi.ResourceKindRedis); errC != nil {
+		if errC := amv.ValidateEnvVar(container.Env, forbiddenRedisEnvVars, dbapi.ResourceKindRedis); errC != nil {
 			if err == nil {
 				err = errC
 			} else {
