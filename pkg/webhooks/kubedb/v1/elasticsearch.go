@@ -140,18 +140,14 @@ var reservedElasticsearchMountPaths = []string{
 
 var _ webhook.CustomValidator = &ElasticsearchCustomWebhook{}
 
-func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(_ context.Context, obj runtime.Object) (admission.Warnings, error) {
-	db, ok := obj.(*dbapi.Elasticsearch)
-	if !ok {
-		return nil, fmt.Errorf("expected a ElasticSearch but got a %T", obj)
-	}
+func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(db *dbapi.Elasticsearch) error {
 	if db.Spec.Version == "" {
-		return nil, errors.New(`'spec.version' is missing`)
+		return errors.New(`'spec.version' is missing`)
 	}
 
 	if db.Spec.Topology == nil {
 		if db.Spec.Replicas == nil || ptr.Deref(db.Spec.Replicas, 0) < 1 {
-			return nil, fmt.Errorf(`spec.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(db.Spec.Replicas, 0))
+			return fmt.Errorf(`spec.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(db.Spec.Replicas, 0))
 		}
 	}
 
@@ -160,69 +156,69 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(_ context.Context, ob
 		Name: db.Spec.Version,
 	}, &esVersion)
 	if err != nil {
-		return nil, fmt.Errorf(`expected version "%v" "%v"`, db.Spec.Version, err.Error())
+		return fmt.Errorf(`expected version "%v" "%v"`, db.Spec.Version, err.Error())
 	}
 
 	if db.Spec.StorageType == "" {
-		return nil, fmt.Errorf(`'spec.storageType' is missing`)
+		return fmt.Errorf(`'spec.storageType' is missing`)
 	}
 	if db.Spec.StorageType != dbapi.StorageTypeDurable && db.Spec.StorageType != dbapi.StorageTypeEphemeral {
-		return nil, fmt.Errorf(`'spec.storageType' %s is invalid`, db.Spec.StorageType)
+		return fmt.Errorf(`'spec.storageType' %s is invalid`, db.Spec.StorageType)
 	}
 
 	err = w.validateVolumes(db)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	err = w.validateVolumeMountPaths(db)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	err = w.validateSecureConfig(db, &esVersion)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	topology := db.Spec.Topology
 	if topology != nil {
 		if db.Spec.Replicas != nil {
-			return nil, errors.New("doesn't support spec.replicas when spec.topology is set")
+			return errors.New("doesn't support spec.replicas when spec.topology is set")
 		}
 		if db.Spec.Storage != nil {
-			return nil, errors.New("doesn't support spec.storage when spec.topology is set")
+			return errors.New("doesn't support spec.storage when spec.topology is set")
 		}
 		err = w.validateNodeRoles(topology, &esVersion)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		// Check node name suffix
 		err = w.validateNodeSuffix(topology)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		err = w.validateNodeReplicas(topology)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		err = w.validateNodeSpecs(w.DefaultClient, db, &esVersion)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 	} else {
 		if db.Spec.Replicas == nil || ptr.Deref(db.Spec.Replicas, 0) < 1 {
-			return nil, fmt.Errorf(`spec.replicas "%d" invalid. Must be greater than zero`, ptr.Deref(db.Spec.Replicas, 0))
+			return fmt.Errorf(`spec.replicas "%d" invalid. Must be greater than zero`, ptr.Deref(db.Spec.Replicas, 0))
 		}
 
 		if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(db.Spec.StorageType), db.Spec.Storage); err != nil {
-			return nil, err
+			return err
 		}
 
 		if db.Spec.MaxUnavailable != nil {
 			if int32(db.Spec.MaxUnavailable.IntValue()) > ptr.Deref(db.Spec.Replicas, 0) {
-				return nil, fmt.Errorf("MaxUnavailable replicas can't be greater that number of replicas")
+				return fmt.Errorf("MaxUnavailable replicas can't be greater that number of replicas")
 			}
 		}
 
@@ -231,15 +227,15 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(_ context.Context, ob
 		// Heap size is the 50% of memory & it cannot be less than 128Mi(some say 97Mi)
 		// So, minimum memory request should be twice of 128Mi, i.e. 256Mi.
 		if value, ok := dbContainer.Resources.Requests[core.ResourceMemory]; ok && value.Value() < 2*kubedb.ElasticsearchMinHeapSize {
-			return nil, fmt.Errorf("PodTemplate.Spec.Resources.Requests.memory cannot be less than %dMi, given %dMi", (2*kubedb.ElasticsearchMinHeapSize)/(1024*1024), value.Value()/(1024*1024))
+			return fmt.Errorf("PodTemplate.Spec.Resources.Requests.memory cannot be less than %dMi, given %dMi", (2*kubedb.ElasticsearchMinHeapSize)/(1024*1024), value.Value()/(1024*1024))
 		}
 
 		if err = w.validateContainerSecurityContext(dbContainer.SecurityContext, &esVersion); err != nil {
-			return nil, err
+			return err
 		}
 
 		if err := amv.ValidateEnvVar(dbContainer.Env, forbiddenElasticsearchEnvVars, dbapi.ResourceKindElasticsearch); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
@@ -251,14 +247,14 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(_ context.Context, ob
 		if esVersion.Spec.AuthPlugin == catalogapi.ElasticsearchAuthPluginXpack {
 			version, err := semver.NewVersion(esVersion.Spec.Version)
 			if err != nil {
-				return nil, nil
+				return err
 			}
 			if version.Major() >= 8 || (version.Major() == 7 && version.Minor() >= 8) {
 				if err := amv.ValidateInternalUsersV1(db.Spec.InternalUsers, allowedInternalUsers, dbapi.ResourceKindElasticsearch); err != nil {
-					return nil, err
+					return err
 				}
 			} else {
-				return nil, fmt.Errorf(`'spec.internalUsers' is not unsupported for versions < 7.8`)
+				return fmt.Errorf(`'spec.internalUsers' is not unsupported for versions < 7.8`)
 			}
 		}
 	}
@@ -266,29 +262,29 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(_ context.Context, ob
 	if db.Spec.AuthSecret != nil &&
 		db.Spec.AuthSecret.ExternallyManaged &&
 		db.Spec.AuthSecret.Name == "" {
-		return nil, fmt.Errorf(`for externallyManaged auth secret, user must configure "spec.authSecret.name"`)
+		return fmt.Errorf(`for externallyManaged auth secret, user must configure "spec.authSecret.name"`)
 	}
 
 	if esVersion.Spec.Deprecated {
-		return nil, fmt.Errorf("elasticsearch %s/%s is using deprecated version %v. Skipped processing", db.Namespace,
+		return fmt.Errorf("elasticsearch %s/%s is using deprecated version %v. Skipped processing", db.Namespace,
 			db.Name, esVersion.Name)
 	}
 
 	if err := esVersion.ValidateSpecs(); err != nil {
-		return nil, fmt.Errorf("elasticsearch %s/%s is using invalid elasticsearchVersion %v. Skipped processing. reason: %v", db.Namespace,
+		return fmt.Errorf("elasticsearch %s/%s is using invalid elasticsearchVersion %v. Skipped processing. reason: %v", db.Namespace,
 			db.Name, esVersion.Name, err)
 	}
 
 	if db.Spec.DeletionPolicy == "" {
-		return nil, fmt.Errorf(`'spec.deletionPolicy' is missing`)
+		return fmt.Errorf(`'spec.deletionPolicy' is missing`)
 	}
 
 	if db.Spec.StorageType == dbapi.StorageTypeEphemeral && db.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
-		return nil, fmt.Errorf(`'spec.deletionPolicy: Halt' can not be set for 'Ephemeral' storage`)
+		return fmt.Errorf(`'spec.deletionPolicy: Halt' can not be set for 'Ephemeral' storage`)
 	}
 
 	if db.Spec.DisableSecurity && db.Spec.EnableSSL {
-		return nil, fmt.Errorf(`to enable 'spec.enableSSL', 'spec.disableSecurity' needs to be set to false`)
+		return fmt.Errorf(`to enable 'spec.enableSSL', 'spec.disableSecurity' needs to be set to false`)
 	}
 
 	// TODO:
@@ -296,26 +292,29 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(_ context.Context, ob
 	//		- Remove the validation, once the issue is fixed.
 	//		- Issue Ref: https://github.com/opensearch-project/security/issues/1481
 	if db.Spec.DisableSecurity && esVersion.Spec.AuthPlugin == catalogapi.ElasticsearchAuthPluginOpenSearch {
-		return nil, fmt.Errorf(`'spec.disableSecurity' cannot be 'true' for opensearch`)
+		return fmt.Errorf(`'spec.disableSecurity' cannot be 'true' for opensearch`)
 	}
 
 	monitorSpec := db.Spec.Monitor
 	if monitorSpec != nil {
 		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
 	err = amv.ValidateHealth(&db.Spec.HealthChecker)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return nil, nil
+	return nil
 }
 
 func (w *ElasticsearchCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	return w.ValidateElasticsearch(ctx, obj)
+	es := obj.(*dbapi.Elasticsearch)
+	err := w.ValidateElasticsearch(es)
+	mysqlLog.Info("validating", "name", es.Name)
+	return admission.Warnings{}, err
 }
 
 func (w *ElasticsearchCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -342,7 +341,8 @@ func (w *ElasticsearchCustomWebhook) ValidateUpdate(ctx context.Context, oldObj,
 	if err := w.validatePreconditions(elasticsearch, oldElasticsearch); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return w.ValidateElasticsearch(ctx, elasticsearch)
+	err = w.ValidateElasticsearch(elasticsearch)
+	return admission.Warnings{}, err
 }
 
 func (w *ElasticsearchCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
