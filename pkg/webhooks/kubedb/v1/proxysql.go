@@ -41,20 +41,19 @@ import (
 // SetupProxySQLWebhookWithManager registers the webhook for ProxySQL in the manager.
 func SetupProxySQLWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.ProxySQL{}).
-		WithValidator(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
-		WithDefaulter(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
+		WithValidator(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithDefaulter(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
+
+var proxyLog = logf.Log.WithName("proxysql-resource")
 
 type ProxySQLCustomWebhook struct {
 	DefaultClient    client.Client
 	StrictValidation bool
 }
 
-var (
-	proxyLog                         = logf.Log.WithName("proxysql-resource")
-	_        webhook.CustomDefaulter = &ProxySQLCustomWebhook{}
-)
+var _ webhook.CustomDefaulter = &ProxySQLCustomWebhook{}
 
 func (w ProxySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db := obj.(*dbapi.ProxySQL)

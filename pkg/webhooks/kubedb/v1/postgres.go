@@ -40,6 +40,7 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
@@ -57,10 +58,14 @@ type PostgresCustomWebhook struct {
 	StrictValidation bool
 }
 
+var pgLog = logf.Log.WithName("postgres-resource")
+
 var _ webhook.CustomDefaulter = &PostgresCustomWebhook{}
 
 func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
 	db := obj.(*dbapi.Postgres)
+
+	pgLog.Info("defaulting", "name", db.GetName())
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
@@ -271,6 +276,8 @@ func (wh *PostgresCustomWebhook) validate(_ context.Context, obj runtime.Object)
 	if !ok {
 		return nil, fmt.Errorf("expected a Postgres but got a %T", obj)
 	}
+	pgLog.Info("validating", "name", postgres.GetName())
+
 	if postgres.Spec.Version == "" {
 		return nil, errors.New(`'spec.version' is missing`)
 	}

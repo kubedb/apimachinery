@@ -138,7 +138,6 @@ func (mv MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.O
 	mariadbLog.Info("validating", "name", mariadb.Name)
 
 	return mv.validateMariaDB(ctx, obj)
-
 }
 
 func (mv MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {

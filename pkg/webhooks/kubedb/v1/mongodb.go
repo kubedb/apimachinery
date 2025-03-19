@@ -51,8 +51,8 @@ import (
 // SetupMongoDBWebhookWithManager registers the webhook for MongoDB in the manager.
 func SetupMongoDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MongoDB{}).
-		WithValidator(&MongoDBCustomWebhook{mgr.GetClient(), true}).
-		WithDefaulter(&MongoDBCustomWebhook{mgr.GetClient(), true}).
+		WithValidator(&MongoDBCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithDefaulter(&MongoDBCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
 

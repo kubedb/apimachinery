@@ -46,8 +46,8 @@ import (
 // SetupRedisWebhookWithManager registers the webhook for Redis in the manager.
 func SetupRedisWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Redis{}).
-		WithValidator(&RedisCustomWebhook{mgr.GetClient(), true}).
-		WithDefaulter(&RedisCustomWebhook{mgr.GetClient(), true}).
+		WithValidator(&RedisCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithDefaulter(&RedisCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
 

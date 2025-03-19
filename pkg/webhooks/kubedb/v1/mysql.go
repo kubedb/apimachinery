@@ -50,8 +50,8 @@ import (
 // SetupMySQLWebhookWithManager registers the webhook for MySQL in the manager.
 func SetupMySQLWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MySQL{}).
-		WithValidator(&MySQLCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
-		WithDefaulter(&MySQLCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
+		WithValidator(&MySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithDefaulter(&MySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
 

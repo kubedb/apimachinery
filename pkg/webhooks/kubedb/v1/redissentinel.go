@@ -44,8 +44,8 @@ import (
 // SetupRedisSentinelWebhookWithManager registers the webhook for RedisSentinel in the manager.
 func SetupRedisSentinelWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.RedisSentinel{}).
-		WithValidator(&RedisSentinelCustomWebhook{mgr.GetClient(), true}).
-		WithDefaulter(&RedisSentinelCustomWebhook{mgr.GetClient(), true}).
+		WithValidator(&RedisSentinelCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithDefaulter(&RedisSentinelCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
 
