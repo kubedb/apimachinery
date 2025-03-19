@@ -24,6 +24,7 @@ import (
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	cs "kubedb.dev/apimachinery/client/clientset/versioned"
 	"kubedb.dev/apimachinery/pkg/double_optin"
 	amv "kubedb.dev/apimachinery/pkg/validator"
@@ -242,7 +243,7 @@ func (mv MariaDBCustomWebhook) ValidateMariaDB(kc client.Client, extClient cs.In
 	if db.Spec.StorageType != dbapi.StorageTypeDurable && db.Spec.StorageType != dbapi.StorageTypeEphemeral {
 		return fmt.Errorf(`'spec.storageType' %s is invalid`, db.Spec.StorageType)
 	}
-	if err := amv.ValidateStorageV1(kc, db.Spec.StorageType, db.Spec.Storage); err != nil {
+	if err := amv.ValidateStorage(kc, olddbapi.StorageType(db.Spec.StorageType), db.Spec.Storage); err != nil {
 		return err
 	}
 
@@ -466,7 +467,7 @@ func (mv MariaDBCustomWebhook) validate(ctx context.Context, obj runtime.Object)
 	if mariadb.Spec.StorageType != dbapi.StorageTypeDurable && mariadb.Spec.StorageType != dbapi.StorageTypeEphemeral {
 		return nil, fmt.Errorf(`'spec.storageType' %s is invalid`, mariadb.Spec.StorageType)
 	}
-	if err := amv.ValidateStorageV1(mv.DefaultClient, mariadb.Spec.StorageType, mariadb.Spec.Storage); err != nil {
+	if err := amv.ValidateStorage(mv.DefaultClient, olddbapi.StorageType(mariadb.Spec.StorageType), mariadb.Spec.Storage); err != nil {
 		return nil, err
 	}
 
