@@ -65,9 +65,6 @@ type ZooKeeperVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
-	// PSP names
-	// +optional
-	PodSecurityPolicies ZooKeeperVersionPodSecurityPolicy `json:"podSecurityPolicies"`
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
@@ -99,11 +96,6 @@ type ZooKeeperVersionCoordinator struct {
 // ZooKeeperVersionExporter is the image for the ZooKeeper exporter
 type ZooKeeperVersionExporter struct {
 	Image string `json:"image"`
-}
-
-// ZooKeeperVersionPodSecurityPolicy is the ZooKeeper pod security policies
-type ZooKeeperVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

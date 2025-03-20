@@ -682,7 +682,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionExporter":                     schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionExporter(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionInitContainer":                schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionList":                         schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionPodSecurityPolicy":            schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionSpec(ref),
 	}
 }
@@ -27090,13 +27089,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionPodSecurityPo
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -27222,7 +27219,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 						},
 					},
 				},
-				Required: []string{"version", "authPlugin", "db", "exporter", "initContainer", "podSecurityPolicies"},
+				Required: []string{"version", "authPlugin", "db", "exporter", "initContainer"},
 			},
 		},
 		Dependencies: []string{
@@ -27922,13 +27919,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionPodSecurityPolicy(ref
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -28552,13 +28547,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionPodSecurityPolicy(r
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -28676,7 +28669,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionSpec(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter", "initContainer"},
 			},
 		},
 		Dependencies: []string{
@@ -28824,13 +28817,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionPodSecurityPolicy
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -28907,7 +28898,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionSpec(ref common.R
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter"},
 			},
 		},
 		Dependencies: []string{
@@ -29103,13 +29094,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionPodSecurityPolicy(r
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -29227,7 +29216,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies", "replicationModeDetector"},
+				Required: []string{"version", "db", "exporter", "initContainer", "replicationModeDetector"},
 			},
 		},
 		Dependencies: []string{
@@ -29529,13 +29518,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionPodSecurityPolicy(ref
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -29715,7 +29702,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter", "initContainer"},
 			},
 		},
 		Dependencies: []string{
@@ -29905,13 +29892,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionPodSecurityPo
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -30015,7 +30000,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionSpec(ref comm
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter", "initContainer"},
 			},
 		},
 		Dependencies: []string{
@@ -30739,13 +30724,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionPodSecurityPolicy(
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -30869,7 +30852,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref common.Re
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter"},
 			},
 		},
 		Dependencies: []string{
@@ -31016,13 +30999,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionPodSecurityPolicy(
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -31119,7 +31100,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref common.Re
 						},
 					},
 				},
-				Required: []string{"version", "proxysql", "podSecurityPolicies"},
+				Required: []string{"version", "proxysql"},
 			},
 		},
 		Dependencies: []string{
@@ -31505,13 +31486,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionPodSecurityPolicy(ref
 				Properties: map[string]spec.Schema{
 					"databasePolicyName": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
 	}
@@ -31622,7 +31601,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter"},
 			},
 		},
 		Dependencies: []string{
@@ -32565,27 +32544,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionList(ref common.R
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ZooKeeperVersionPodSecurityPolicy is the ZooKeeper pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -32636,13 +32594,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionSpec(ref common.R
 							Format:      "",
 						},
 					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionPodSecurityPolicy"),
-						},
-					},
 					"stash": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Stash defines backup and restore task definitions.",
@@ -32675,6 +32626,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionPodSecurityPolicy"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionInitContainer"},
 	}
 }

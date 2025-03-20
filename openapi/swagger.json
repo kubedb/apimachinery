@@ -21362,13 +21362,9 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionPodSecurityPolicy": {
       "description": "ElasticsearchVersionPodSecurityPolicy is the Elasticsearch pod security policies",
       "type": "object",
-      "required": [
-        "databasePolicyName"
-      ],
       "properties": {
         "databasePolicyName": {
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -21380,8 +21376,7 @@
         "authPlugin",
         "db",
         "exporter",
-        "initContainer",
-        "podSecurityPolicies"
+        "initContainer"
       ],
       "properties": {
         "authPlugin": {
@@ -21742,13 +21737,9 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionPodSecurityPolicy": {
       "description": "MemcachedVersionPodSecurityPolicy is the Memcached pod security policies",
       "type": "object",
-      "required": [
-        "databasePolicyName"
-      ],
       "properties": {
         "databasePolicyName": {
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -21758,8 +21749,7 @@
       "required": [
         "version",
         "db",
-        "exporter",
-        "podSecurityPolicies"
+        "exporter"
       ],
       "properties": {
         "db": {
@@ -21924,13 +21914,9 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionPodSecurityPolicy": {
       "description": "MongoDBVersionPodSecurityPolicy is the MongoDB pod security policies",
       "type": "object",
-      "required": [
-        "databasePolicyName"
-      ],
       "properties": {
         "databasePolicyName": {
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -21942,7 +21928,6 @@
         "db",
         "exporter",
         "initContainer",
-        "podSecurityPolicies",
         "replicationModeDetector"
       ],
       "properties": {
@@ -22190,13 +22175,9 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionPodSecurityPolicy": {
       "description": "MySQLVersionPodSecurityPolicy is the MySQL pod security policies",
       "type": "object",
-      "required": [
-        "databasePolicyName"
-      ],
       "properties": {
         "databasePolicyName": {
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -22233,8 +22214,7 @@
         "version",
         "db",
         "exporter",
-        "initContainer",
-        "podSecurityPolicies"
+        "initContainer"
       ],
       "properties": {
         "archiver": {
@@ -22438,13 +22418,9 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PerconaXtraDBVersionPodSecurityPolicy": {
       "description": "PerconaXtraDBVersionPodSecurityPolicy is the PerconaXtraDB pod security policies",
       "type": "object",
-      "required": [
-        "databasePolicyName"
-      ],
       "properties": {
         "databasePolicyName": {
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -22455,8 +22431,7 @@
         "version",
         "db",
         "exporter",
-        "initContainer",
-        "podSecurityPolicies"
+        "initContainer"
       ],
       "properties": {
         "coordinator": {
@@ -22655,13 +22630,9 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy": {
       "description": "PostgresVersionPodSecurityPolicy is the Postgres pod security policies",
       "type": "object",
-      "required": [
-        "databasePolicyName"
-      ],
       "properties": {
         "databasePolicyName": {
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -22671,8 +22642,7 @@
       "required": [
         "version",
         "db",
-        "exporter",
-        "podSecurityPolicies"
+        "exporter"
       ],
       "properties": {
         "archiver": {
@@ -22837,13 +22807,9 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ProxySQLVersionPodSecurityPolicy": {
       "description": "ProxySQLVersionPodSecurityPolicy is the ProxySQL pod security policies",
       "type": "object",
-      "required": [
-        "databasePolicyName"
-      ],
       "properties": {
         "databasePolicyName": {
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -22865,8 +22831,7 @@
       "type": "object",
       "required": [
         "version",
-        "proxysql",
-        "podSecurityPolicies"
+        "proxysql"
       ],
       "properties": {
         "deprecated": {
@@ -23027,13 +22992,9 @@
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.RedisVersionPodSecurityPolicy": {
       "description": "RedisVersionPodSecurityPolicy is the Redis pod security policies",
       "type": "object",
-      "required": [
-        "databasePolicyName"
-      ],
       "properties": {
         "databasePolicyName": {
-          "type": "string",
-          "default": ""
+          "type": "string"
         }
       }
     },
@@ -23043,8 +23004,7 @@
       "required": [
         "version",
         "db",
-        "exporter",
-        "podSecurityPolicies"
+        "exporter"
       ],
       "properties": {
         "coordinator": {

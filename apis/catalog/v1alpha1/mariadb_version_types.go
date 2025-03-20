@@ -68,7 +68,8 @@ type MariaDBVersionSpec struct {
 	// TODO: remove if not needed
 	InitContainer MariaDBVersionInitContainer `json:"initContainer"`
 	// PSP names
-	PodSecurityPolicies MariaDBVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	// +optional
+	PodSecurityPolicies MariaDBVersionPodSecurityPolicy `json:"podSecurityPolicies,omitempty"`
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
@@ -115,7 +116,7 @@ type MariaDBVersionCoordinator struct {
 
 // MariaDBVersionPodSecurityPolicy is the MariaDB pod security policies
 type MariaDBVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

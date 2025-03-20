@@ -67,7 +67,8 @@ type PostgresVersionSpec struct {
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
 	// PSP names
-	PodSecurityPolicies PostgresVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	// +optional
+	PodSecurityPolicies PostgresVersionPodSecurityPolicy `json:"podSecurityPolicies,omitempty"`
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
@@ -110,7 +111,7 @@ type PostgresVersionExporter struct {
 
 // PostgresVersionPodSecurityPolicy is the Postgres pod security policies
 type PostgresVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName,omitempty"`
 }
 
 // PostgresVersionTLSSpec is used to set postgres version specific tls settings

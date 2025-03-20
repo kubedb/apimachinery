@@ -56,7 +56,8 @@ type ProxySQLVersionSpec struct {
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
 	// PSP names
-	PodSecurityPolicies ProxySQLVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	// +optional
+	PodSecurityPolicies ProxySQLVersionPodSecurityPolicy `json:"podSecurityPolicies,omitempty"`
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 	// SecurityContext is for the additional config for the DB container
@@ -78,7 +79,7 @@ type ProxySQLVersionExporter struct {
 
 // ProxySQLVersionPodSecurityPolicy is the ProxySQL pod security policies
 type ProxySQLVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

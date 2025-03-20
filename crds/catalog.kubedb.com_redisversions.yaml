@@ -91,8 +91,6 @@ spec:
                 properties:
                   databasePolicyName:
                     type: string
-                required:
-                - databasePolicyName
                 type: object
               securityContext:
                 properties:
@@ -178,7 +176,6 @@ spec:
             required:
             - db
             - exporter
-            - podSecurityPolicies
             - version
             type: object
         type: object

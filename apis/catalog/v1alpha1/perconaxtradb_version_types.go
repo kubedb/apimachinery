@@ -65,7 +65,8 @@ type PerconaXtraDBVersionSpec struct {
 	// TODO: remove if not needed
 	InitContainer PerconaXtraDBVersionInitContainer `json:"initContainer"`
 	// PSP names
-	PodSecurityPolicies PerconaXtraDBVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	// +optional
+	PodSecurityPolicies PerconaXtraDBVersionPodSecurityPolicy `json:"podSecurityPolicies,omitempty"`
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
@@ -102,7 +103,7 @@ type PerconaXtraDBVersionCoordinator struct {
 
 // PerconaXtraDBVersionPodSecurityPolicy is the PerconaXtraDB pod security policies
 type PerconaXtraDBVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

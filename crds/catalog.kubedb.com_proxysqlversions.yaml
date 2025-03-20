@@ -58,8 +58,6 @@ spec:
                 properties:
                   databasePolicyName:
                     type: string
-                required:
-                - databasePolicyName
                 type: object
               proxysql:
                 properties:
@@ -103,7 +101,6 @@ spec:
               version:
                 type: string
             required:
-            - podSecurityPolicies
             - proxysql
             - version
             type: object

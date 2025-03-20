@@ -63,7 +63,7 @@ type KafkaVersionSpec struct {
 	CruiseControl CruiseControlVersionDatabase `json:"cruiseControl"`
 	// PSP names
 	// +optional
-	PodSecurityPolicies KafkaVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	PodSecurityPolicies KafkaVersionPodSecurityPolicy `json:"podSecurityPolicies,omitempty"`
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
@@ -93,7 +93,7 @@ type CruiseControlVersionDatabase struct {
 
 // KafkaVersionPodSecurityPolicy is the Kafka pod security policies
 type KafkaVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

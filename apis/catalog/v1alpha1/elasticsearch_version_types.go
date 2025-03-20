@@ -73,7 +73,8 @@ type ElasticsearchVersionSpec struct {
 	// +optional
 	DashboardInitContainer ElasticsearchVersionDashboardInitContainer `json:"dashboardInitContainer,omitempty"`
 	// PSP names
-	PodSecurityPolicies ElasticsearchVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	// +optional
+	PodSecurityPolicies ElasticsearchVersionPodSecurityPolicy `json:"podSecurityPolicies,omitempty"`
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
@@ -111,7 +112,7 @@ type ElasticsearchVersionDashboardInitContainer struct {
 
 // ElasticsearchVersionPodSecurityPolicy is the Elasticsearch pod security policies
 type ElasticsearchVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

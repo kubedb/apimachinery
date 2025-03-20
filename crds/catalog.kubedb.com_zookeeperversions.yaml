@@ -82,13 +82,6 @@ spec:
                 required:
                 - image
                 type: object
-              podSecurityPolicies:
-                properties:
-                  databasePolicyName:
-                    type: string
-                required:
-                - databasePolicyName
-                type: object
               securityContext:
                 properties:
                   runAsUser:

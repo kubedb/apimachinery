@@ -71,7 +71,8 @@ type MySQLVersionSpec struct {
 	// Init container Image
 	InitContainer MySQLVersionInitContainer `json:"initContainer"`
 	// PSP names
-	PodSecurityPolicies MySQLVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	// +optional
+	PodSecurityPolicies MySQLVersionPodSecurityPolicy `json:"podSecurityPolicies,omitempty"`
 	// update constraints
 	UpdateConstraints MySQLUpdateConstraints `json:"updateConstraints,omitempty"`
 	// Stash defines backup and restore task definitions.
@@ -126,7 +127,7 @@ type MySQLVersionRouterInitContainer struct {
 
 // MySQLVersionPodSecurityPolicy is the MySQL pod security policies
 type MySQLVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName,omitempty"`
 }
 
 type MySQLUpdateConstraints struct {

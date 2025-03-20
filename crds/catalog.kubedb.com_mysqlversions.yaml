@@ -156,8 +156,6 @@ spec:
                 properties:
                   databasePolicyName:
                     type: string
-                required:
-                - databasePolicyName
                 type: object
               replicationModeDetector:
                 properties:
@@ -279,7 +277,6 @@ spec:
             - db
             - exporter
             - initContainer
-            - podSecurityPolicies
             - version
             type: object
         type: object

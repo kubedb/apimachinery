@@ -65,7 +65,8 @@ type MongoDBVersionSpec struct {
 	// Init container Image
 	InitContainer MongoDBVersionInitContainer `json:"initContainer"`
 	// PSP names
-	PodSecurityPolicies MongoDBVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	// +optional
+	PodSecurityPolicies MongoDBVersionPodSecurityPolicy `json:"podSecurityPolicies,omitempty"`
 	// ReplicationModeDetector Image
 	ReplicationModeDetector ReplicationModeDetector `json:"replicationModeDetector"`
 	// Stash defines backup and restore task definitions.
@@ -101,7 +102,7 @@ type MongoDBVersionInitContainer struct {
 
 // MongoDBVersionPodSecurityPolicy is the MongoDB pod security policies
 type MongoDBVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName,omitempty"`
 }
 
 // MongoDBSecurityContext provides additional securityContext settings for the MongoDBSecurityContext Image

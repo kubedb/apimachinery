@@ -72,8 +72,6 @@ spec:
                 properties:
                   databasePolicyName:
                     type: string
-                required:
-                - databasePolicyName
                 type: object
               securityContext:
                 properties:

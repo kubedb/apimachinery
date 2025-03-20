@@ -66,7 +66,8 @@ type RedisVersionSpec struct {
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
 	// PSP names
-	PodSecurityPolicies RedisVersionPodSecurityPolicy `json:"podSecurityPolicies"`
+	// +optional
+	PodSecurityPolicies RedisVersionPodSecurityPolicy `json:"podSecurityPolicies,omitempty"`
 	// Stash defines backup and restore task definitions.
 	// +optional
 	Stash appcat.StashAddonSpec `json:"stash,omitempty"`
@@ -103,7 +104,7 @@ type RedisVersionExporter struct {
 
 // RedisVersionPodSecurityPolicy is the Redis pod security policies
 type RedisVersionPodSecurityPolicy struct {
-	DatabasePolicyName string `json:"databasePolicyName"`
+	DatabasePolicyName string `json:"databasePolicyName,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
