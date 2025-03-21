@@ -53,6 +53,10 @@ func (c *FakeKubedbV1alpha2) FerretDBs(namespace string) v1alpha2.FerretDBInterf
 	return &FakeFerretDBs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Ignites(namespace string) v1alpha2.IgniteInterface {
+	return &FakeIgnites{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Kafkas(namespace string) v1alpha2.KafkaInterface {
 	return &FakeKafkas{c, namespace}
 }
