@@ -177,11 +177,6 @@ func (w *FerretDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.FerretDB) fi
 			db.Name,
 			`'spec.storageType' is set to Ephemeral, so 'spec.storage' needs to be empty`))
 	}
-	if !db.Spec.Backend.ExternallyManaged && db.Spec.StorageType == olddbapi.StorageTypeDurable && db.Spec.Storage == nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"),
-			db.Name,
-			`'spec.storage' is missing for durable storage type when postgres is internally managed`))
-	}
 
 	// Auth secret related
 	if db.Spec.AuthSecret != nil && db.Spec.AuthSecret.ExternallyManaged && db.Spec.AuthSecret.Name == "" {
@@ -195,30 +190,6 @@ func (w *FerretDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.FerretDB) fi
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			db.Name,
 			`'spec.terminationPolicy' value 'Halt' is not supported yet for FerretDB`))
-	}
-
-	// FerretDBBackend related
-	if db.Spec.Backend.ExternallyManaged {
-		if db.Spec.Backend.PostgresRef == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-				db.Name,
-				`'backend.postgresRef' is missing when backend is externally managed`))
-		} else {
-			if db.Spec.Backend.PostgresRef.Namespace == "" {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-					db.Name,
-					`'backend.postgresRef.namespace' is needed when backend is externally managed`))
-			}
-		}
-	} else {
-		if db.Spec.Backend.Version != nil {
-			err := w.validatePostgresVersion(db)
-			if err != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-					db.Name,
-					err.Error()))
-			}
-		}
 	}
 
 	// TLS related
@@ -271,12 +242,9 @@ func (w *FerretDBCustomWebhook) validateFerretDBVersion(db *olddbapi.FerretDB) e
 	if err != nil {
 		return errors.New("version not supported")
 	}
-	return nil
-}
 
-func (w *FerretDBCustomWebhook) validatePostgresVersion(db *olddbapi.FerretDB) error {
 	pgVersion := v1alpha1.PostgresVersion{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *db.Spec.Backend.Version}, &pgVersion)
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: frVersion.Spec.Postgres.Version}, &pgVersion)
 	if err != nil {
 		return errors.New("postgres version not supported in KubeDB")
 	}

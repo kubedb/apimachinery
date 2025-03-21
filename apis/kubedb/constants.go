@@ -1443,6 +1443,7 @@ const (
 	FerretDBContainerName = "ferretdb"
 	FerretDBMainImage     = "ghcr.io/ferretdb/ferretdb"
 	FerretDBUser          = "postgres"
+	FerretDBLinkedDBName  = "ferretdb"
 
 	FerretDBServerPath = "/etc/certs/server"
 
