@@ -38,6 +38,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type HazelcastApp struct {
@@ -138,7 +139,7 @@ func (h *Hazelcast) SetHealthCheckerDefaults() {
 	}
 }
 
-func (h *Hazelcast) SetDefaults() {
+func (h *Hazelcast) SetDefaults(kc client.Client) {
 	if h.Spec.DeletionPolicy == "" {
 		h.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
@@ -148,7 +149,7 @@ func (h *Hazelcast) SetDefaults() {
 	}
 
 	var hzVersion catalog.HazelcastVersion
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := kc.Get(context.TODO(), types.NamespacedName{
 		Name: h.Spec.Version,
 	}, &hzVersion)
 	if err != nil {
