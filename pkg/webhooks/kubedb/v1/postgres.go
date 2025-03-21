@@ -271,13 +271,7 @@ func (wh *PostgresCustomWebhook) validateVolumes(db *dbapi.Postgres) error {
 	return amv.ValidateVolumes(ofst.ConvertVolumes(db.Spec.PodTemplate.Spec.Volumes), rsv)
 }
 
-func (wh *PostgresCustomWebhook) validate(_ context.Context, obj runtime.Object) (admission.Warnings, error) {
-	postgres, ok := obj.(*dbapi.Postgres)
-	if !ok {
-		return nil, fmt.Errorf("expected a Postgres but got a %T", obj)
-	}
-	pgLog.Info("validating", "name", postgres.GetName())
-
+func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.Warnings, error) {
 	if postgres.Spec.Version == "" {
 		return nil, errors.New(`'spec.version' is missing`)
 	}
@@ -391,7 +385,13 @@ func (wh *PostgresCustomWebhook) validate(_ context.Context, obj runtime.Object)
 }
 
 func (wh *PostgresCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	return wh.validate(ctx, obj)
+	postgres, ok := obj.(*dbapi.Postgres)
+	if !ok {
+		return nil, fmt.Errorf("expected a Postgres but got a %T", obj)
+	}
+	pgLog.Info("validating", "name", postgres.GetName())
+
+	return wh.validate(postgres)
 }
 
 func (wh *PostgresCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -418,7 +418,7 @@ func (wh *PostgresCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 	if err := wh.validateUpdate(postgres, oldPostgres); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return wh.validate(ctx, postgres)
+	return wh.validate(postgres)
 }
 
 func (wh *PostgresCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
