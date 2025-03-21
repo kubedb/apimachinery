@@ -136,7 +136,7 @@ func (w MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 	mariadb := obj.(*dbapi.MariaDB)
 	mariadbLog.Info("validating", "name", mariadb.Name)
 
-	return w.ValidateMariaDB(ctx, obj)
+	return admission.Warnings{}, w.ValidateMariaDB(mariadb)
 }
 
 func (w MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -163,7 +163,7 @@ func (w MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj
 	if err := w.validateUpdate(mariadb, oldMariaDB); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return w.ValidateMariaDB(ctx, mariadb)
+	return admission.Warnings{}, w.ValidateMariaDB(mariadb)
 }
 
 func (w MariaDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -317,84 +317,82 @@ func validateWsrepSSTMethod(db *dbapi.MariaDB) error {
 	return nil
 }
 
-func (w MariaDBCustomWebhook) ValidateMariaDB(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
-	log := logf.FromContext(ctx)
-	mariadb, ok := obj.(*dbapi.MariaDB)
-	if !ok {
-		return nil, fmt.Errorf("expected a MariaDB but got a %T", obj)
-	}
-	log.Info("Validating MariaDB", mariadb.Namespace, "/", mariadb.Name)
+func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 	if mariadb.Spec.Version == "" {
-		return nil, errors.New(`'spec.version' is missing`)
+		return errors.New(`'spec.version' is missing`)
 	}
+
 	var mariadbVersion catalogapi.MariaDBVersion
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: mariadb.Spec.Version,
-	}, &mariadbVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: mariadb.Spec.Version}, &mariadbVersion)
 	if err != nil {
-		return nil, err
+		return err
+	}
+
+	mariadbLog.Info("Validating MariaDB", mariadb.Namespace, "/", mariadb.Name)
+	if mariadb.Spec.Version == "" {
+		return errors.New(`'spec.version' is missing`)
 	}
 
 	if mariadb.Spec.Replicas == nil || ptr.Deref(mariadb.Spec.Replicas, 0) < 1 {
-		return nil, fmt.Errorf(`spec.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(mariadb.Spec.Replicas, 0))
+		return fmt.Errorf(`spec.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(mariadb.Spec.Replicas, 0))
 	}
 
 	if err := w.validateEnvsForAllContainers(mariadb); err != nil {
-		return nil, err
+		return err
 	}
 
 	if mariadb.Spec.StorageType == "" {
-		return nil, fmt.Errorf(`'spec.storageType' is missing`)
+		return fmt.Errorf(`'spec.storageType' is missing`)
 	}
 	if mariadb.Spec.StorageType != dbapi.StorageTypeDurable && mariadb.Spec.StorageType != dbapi.StorageTypeEphemeral {
-		return nil, fmt.Errorf(`'spec.storageType' %s is invalid`, mariadb.Spec.StorageType)
+		return fmt.Errorf(`'spec.storageType' %s is invalid`, mariadb.Spec.StorageType)
 	}
 	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(mariadb.Spec.StorageType), mariadb.Spec.Storage); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err = w.validateCluster(mariadb); err != nil {
-		return nil, err
+		return err
 	}
 
 	if err = validateWsrepSSTMethod(mariadb); err != nil {
-		return nil, err
+		return err
 	}
 
 	err = w.validateVolumes(mariadb)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	err = w.validateVolumeMountsForAllContainers(mariadb)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// if secret managed externally verify auth secret name is not empty
 
 	if mariadb.Spec.DeletionPolicy == "" {
-		return nil, fmt.Errorf(`'spec.deletionPolicy' is missing`)
+		return fmt.Errorf(`'spec.deletionPolicy' is missing`)
 	}
 
 	if mariadb.Spec.StorageType == dbapi.StorageTypeEphemeral && mariadb.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
-		return nil, fmt.Errorf(`'spec.deletionPolicy: Halt' can not be used for 'Ephemeral' storage`)
+		return fmt.Errorf(`'spec.deletionPolicy: Halt' can not be used for 'Ephemeral' storage`)
 	}
 
 	monitorSpec := mariadb.Spec.Monitor
 	if monitorSpec != nil {
 		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
-			return nil, err
+			return err
 		}
 	}
 
 	if err = amv.ValidateHealth(&mariadb.Spec.HealthChecker); err != nil {
-		return nil, err
+		return err
 	}
 	if mariadb.IsMariaDBReplication() {
 		if err := validateMariaDBReplicationSpec(mariadb); err != nil {
-			return nil, err
+			return err
 		}
 	}
-	return nil, nil
+	return nil
 }
