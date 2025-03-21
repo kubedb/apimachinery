@@ -42,6 +42,10 @@ type EtcdVersionListerExpansion interface{}
 // FerretDBVersionLister.
 type FerretDBVersionListerExpansion interface{}
 
+// IgniteVersionListerExpansion allows custom methods to be added to
+// IgniteVersionLister.
+type IgniteVersionListerExpansion interface{}
+
 // KafkaConnectorVersionListerExpansion allows custom methods to be added to
 // KafkaConnectorVersionLister.
 type KafkaConnectorVersionListerExpansion interface{}
