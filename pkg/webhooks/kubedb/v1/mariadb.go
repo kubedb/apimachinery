@@ -28,6 +28,7 @@ import (
 	"kubedb.dev/apimachinery/pkg/double_optin"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -49,13 +50,14 @@ import (
 // SetupMariaDBWebhookWithManager registers the webhook for MariaDB in the manager.
 func SetupMariaDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MariaDB{}).
-		WithValidator(&MariaDBCustomWebhook{mgr.GetClient()}).
-		WithDefaulter(&MariaDBCustomWebhook{mgr.GetClient()}).
+		WithValidator(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithDefaulter(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
 
 type MariaDBCustomWebhook struct {
-	DefaultClient client.Client
+	DefaultClient    client.Client
+	StrictValidation bool
 }
 
 var _ webhook.CustomDefaulter = &MariaDBCustomWebhook{}
@@ -308,7 +310,7 @@ func (w MariaDBCustomWebhook) validateVolumeMountsForAllContainers(db *dbapi.Mar
 }
 
 func validateWsrepSSTMethod(db *dbapi.MariaDB) error {
-	if !db.IsCluster() {
+	if !db.IsCluster() || db.IsMariaDBReplication() {
 		return nil
 	}
 	if db.Spec.WsrepSSTMethod != dbapi.GaleraWsrepSSTMethodRsync && db.Spec.WsrepSSTMethod != dbapi.GaleraWsrepSSTMethodMariabackup {
@@ -327,14 +329,26 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 	if err != nil {
 		return err
 	}
-
-	mariadbLog.Info("Validating MariaDB", mariadb.Namespace, "/", mariadb.Name)
 	if mariadb.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
 
 	if mariadb.Spec.Replicas == nil || ptr.Deref(mariadb.Spec.Replicas, 0) < 1 {
 		return fmt.Errorf(`spec.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(mariadb.Spec.Replicas, 0))
+	}
+
+	if *mariadb.Spec.Replicas == 1 && mariadb.Spec.Topology != nil {
+		return fmt.Errorf(`'spec.replicas' "%d" invalid. Value must be greater than or equal to %d for topology mode or topology should be nil for standalone mode`,
+			ptr.Deref(mariadb.Spec.Replicas, 0), kubedb.MariaDBDefaultClusterSize)
+	}
+
+	if mariadb.Spec.Topology != nil && *mariadb.Spec.Replicas < kubedb.MariaDBDefaultClusterSize {
+		return fmt.Errorf(`'spec.replicas' "%d" invalid. Value must be %d for mariadb cluster`,
+			ptr.Deref(mariadb.Spec.Replicas, 0), kubedb.MariaDBDefaultClusterSize)
+	}
+
+	if err = w.validateCluster(mariadb); err != nil {
+		return err
 	}
 
 	if err := w.validateEnvsForAllContainers(mariadb); err != nil {
@@ -344,14 +358,12 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 	if mariadb.Spec.StorageType == "" {
 		return fmt.Errorf(`'spec.storageType' is missing`)
 	}
+
 	if mariadb.Spec.StorageType != dbapi.StorageTypeDurable && mariadb.Spec.StorageType != dbapi.StorageTypeEphemeral {
 		return fmt.Errorf(`'spec.storageType' %s is invalid`, mariadb.Spec.StorageType)
 	}
-	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(mariadb.Spec.StorageType), mariadb.Spec.Storage); err != nil {
-		return err
-	}
 
-	if err = w.validateCluster(mariadb); err != nil {
+	if err := amv.ValidateStorage(w.DefaultClient, olddbapi.StorageType(mariadb.Spec.StorageType), mariadb.Spec.Storage); err != nil {
 		return err
 	}
 
@@ -369,6 +381,19 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 		return err
 	}
 
+	if w.StrictValidation {
+		// Check if mariadb Version is deprecated.
+		// If deprecated, return error
+		if mariadbVersion.Spec.Deprecated {
+			return fmt.Errorf("mariadb %s/%s is using deprecated version %v. Skipped processing", mariadb.Namespace, mariadb.Name, mariadbVersion.Name)
+		}
+
+		if err := mariadbVersion.ValidateSpecs(); err != nil {
+			return fmt.Errorf("mariadbVersion %s/%s is using invalid mariadbVersion %v. Skipped processing. reason: %v", mariadbVersion.Namespace,
+				mariadbVersion.Name, mariadbVersion.Name, err)
+		}
+	}
+
 	// if secret managed externally verify auth secret name is not empty
 
 	if mariadb.Spec.DeletionPolicy == "" {
@@ -384,6 +409,20 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
 			return err
 		}
+	}
+
+	curVersion, err := semver.NewVersion(mariadbVersion.Spec.Version)
+	if err != nil {
+		return fmt.Errorf(`unable to parse spec.version`)
+	}
+
+	supportedVersion, err := semver.NewVersion("10.5.2")
+	if err != nil {
+		return fmt.Errorf(`unable to parse spec.version`)
+	}
+
+	if mariadb.Spec.RequireSSL && curVersion.LessThan(supportedVersion) {
+		return fmt.Errorf(`requireSSL is not supported for the MariaDDB Versions lower than 10.5.2`)
 	}
 
 	if err = amv.ValidateHealth(&mariadb.Spec.HealthChecker); err != nil {
