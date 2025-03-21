@@ -66,6 +66,14 @@ type FerretDBListerExpansion interface{}
 // FerretDBNamespaceLister.
 type FerretDBNamespaceListerExpansion interface{}
 
+// IgniteListerExpansion allows custom methods to be added to
+// IgniteLister.
+type IgniteListerExpansion interface{}
+
+// IgniteNamespaceListerExpansion allows custom methods to be added to
+// IgniteNamespaceLister.
+type IgniteNamespaceListerExpansion interface{}
+
 // KafkaListerExpansion allows custom methods to be added to
 // KafkaLister.
 type KafkaListerExpansion interface{}
