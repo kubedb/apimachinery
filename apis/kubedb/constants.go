@@ -984,6 +984,7 @@ const (
 	SolrCustomConfigDir   = "/custom-config"
 	SolrSecurityConfigDir = "/var/security"
 	SolrZkReadyCondition  = "SolrZkReady"
+	SolrZkReady           = "ZookeeperReady"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""
