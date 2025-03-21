@@ -983,6 +983,7 @@ const (
 	SolrTempConfigDir     = "/temp-config"
 	SolrCustomConfigDir   = "/custom-config"
 	SolrSecurityConfigDir = "/var/security"
+	SolrZkReadyCondition  = "SolrZkReady"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""
