@@ -19,9 +19,11 @@ package v1alpha2
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -29,6 +31,8 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
@@ -37,15 +41,33 @@ import (
 // log is for logging in this package.
 var hazelcastlog = logf.Log.WithName("hazelcast-resource")
 
-var _ webhook.Defaulter = &Hazelcast{}
+// SetupHazelcastWebhookWithManager registers the webhook for Hazelcast in the manager.
+func SetupHazelcastWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Hazelcast{}).
+		WithValidator(&HazelcastCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&HazelcastCustomWebhook{mgr.GetClient()}).
+		Complete()
+}
 
-func (h *Hazelcast) Default() {
-	if h == nil {
-		return
+//+kubebuilder:webhook:path=/mutate-hazelcast-kubedb-com-v1alpha1-hazelcast,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=hazelcasts,verbs=create;update,versions=v1alpha1,name=mhazelcast.kb.io,admissionReviewVersions={v1,v1beta1}
+
+// +kubebuilder:object:generate=false
+type HazelcastCustomWebhook struct {
+	DefaultClient client.Client
+}
+
+var _ webhook.CustomDefaulter = &HazelcastCustomWebhook{}
+
+func (w *HazelcastCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	db, ok := obj.(*olddbapi.Hazelcast)
+	if !ok {
+		return fmt.Errorf("expected an Hazelcast object but got %T", obj)
 	}
-	hazelcastlog.Info("default", "name", h.Name)
 
-	h.SetDefaults()
+	hazelcastlog.Info("default", "name", db.Name)
+
+	db.SetDefaults(w.DefaultClient)
+	return nil
 }
 
 var hazelcastReservedVolumes = []string{
@@ -61,19 +83,23 @@ var hazelcastReservedVolumeMountPaths = []string{
 	kubedb.HazelcastDataDir,
 }
 
-var _ webhook.Validator = &Hazelcast{}
+var _ webhook.CustomValidator = &HazelcastCustomWebhook{}
 
-func (h *Hazelcast) ValidateCreate() (admission.Warnings, error) {
-	hazelcastlog.Info("validate create", "name", h.Name)
+func (w *HazelcastCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.Hazelcast)
+	if !ok {
+		return nil, fmt.Errorf("expected an Hazelcast object but got %T", obj)
+	}
 
-	allErr := h.ValidateCreateOrUpdate()
+	hazelcastlog.Info("validate create", "name", db.Name)
+	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "hazelcast"}, h.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Hazelcast"}, db.Name, allErr)
 }
 
-func (h *Hazelcast) ValidateCreateOrUpdate() field.ErrorList {
+func (w *HazelcastCustomWebhook) ValidateCreateOrUpdate(h *olddbapi.Hazelcast) field.ErrorList {
 	var allErr field.ErrorList
 
 	if h.Spec.Version == "" {
@@ -81,7 +107,7 @@ func (h *Hazelcast) ValidateCreateOrUpdate() field.ErrorList {
 			h.Name,
 			"spec.version' is missing"))
 	} else {
-		err := hazelcastValidateVersion(h)
+		err := w.hazelcastValidateVersion(h)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 				h.Name,
@@ -94,13 +120,13 @@ func (h *Hazelcast) ValidateCreateOrUpdate() field.ErrorList {
 			h.Name,
 			"number of replicas can not be less than 3"))
 	}
-	err := hazelcastValidateVolumes(&h.Spec.PodTemplate)
+	err := w.hazelcastValidateVolumes(&h.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
 			h.Name,
 			err.Error()))
 	}
-	err = hazelcastValidateVolumesMountPaths(&h.Spec.PodTemplate)
+	err = w.hazelcastValidateVolumesMountPaths(&h.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
 			h.Name,
@@ -112,7 +138,7 @@ func (h *Hazelcast) ValidateCreateOrUpdate() field.ErrorList {
 			h.Name,
 			"StorageType can not be empty"))
 	} else {
-		if h.Spec.StorageType != StorageTypeDurable && h.Spec.StorageType != StorageTypeEphemeral {
+		if h.Spec.StorageType != olddbapi.StorageTypeDurable && h.Spec.StorageType != olddbapi.StorageTypeEphemeral {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 				h.Name,
 				"StorageType should be either durable or ephemeral"))
@@ -122,7 +148,7 @@ func (h *Hazelcast) ValidateCreateOrUpdate() field.ErrorList {
 	return allErr
 }
 
-func hazelcastValidateVolumes(podTemplate *ofst.PodTemplateSpec) error {
+func (w *HazelcastCustomWebhook) hazelcastValidateVolumes(podTemplate *ofst.PodTemplateSpec) error {
 	if podTemplate == nil {
 		return nil
 	}
@@ -141,16 +167,16 @@ func hazelcastValidateVolumes(podTemplate *ofst.PodTemplateSpec) error {
 	return nil
 }
 
-func hazelcastValidateVersion(s *Hazelcast) error {
+func (w *HazelcastCustomWebhook) hazelcastValidateVersion(h *olddbapi.Hazelcast) error {
 	hzVersion := catalog.HazelcastVersion{}
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{Name: s.Spec.Version}, &hzVersion)
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: h.Spec.Version}, &hzVersion)
 	if err != nil {
 		return errors.New("version not supported")
 	}
 	return nil
 }
 
-func hazelcastValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
+func (w *HazelcastCustomWebhook) hazelcastValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 	if podTemplate == nil {
 		return nil
 	}
@@ -189,29 +215,35 @@ func hazelcastValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error
 	return nil
 }
 
-func (h *Hazelcast) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
-	hazelcastlog.Info("validate update", "name", h.Name)
+func (w *HazelcastCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	db, ok := newObj.(*olddbapi.Hazelcast)
+	if !ok {
+		return nil, fmt.Errorf("expected an Hazelcast object but got %T", newObj)
+	}
+	hazelcastlog.Info("validate update", "name", db.Name)
 
-	_ = old.(*Hazelcast)
-	allErr := h.ValidateCreateOrUpdate()
-
+	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
 
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "hazelcast"}, h.Name, allErr)
+	return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Hazelcast"}, db.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
-func (h *Hazelcast) ValidateDelete() (admission.Warnings, error) {
-	hazelcastlog.Info("validate delete", "name", h.Name)
+func (w *HazelcastCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	db, ok := obj.(*olddbapi.Hazelcast)
+	if !ok {
+		return nil, fmt.Errorf("expected an Hazelcast object but got %T", obj)
+	}
+	hazelcastlog.Info("validate delete", "name", db.Name)
 
 	var allErr field.ErrorList
-	if h.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
+	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
-			h.Name,
+			db.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "hazelcast"}, h.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "Hazelcast"}, db.Name, allErr)
 	}
 	return nil, nil
 }
