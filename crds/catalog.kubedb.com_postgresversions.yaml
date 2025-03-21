@@ -131,7 +131,7 @@ spec:
                 - TimescaleDB
                 - PostGIS
                 - KubeDB
-                - FerretDB
+                - DocumentDB
                 - PostgreSQL
                 type: string
               exporter:
