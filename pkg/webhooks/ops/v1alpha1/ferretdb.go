@@ -136,8 +136,8 @@ func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBVerticalScalingOpsRequ
 	if verticalScalingSpec == nil {
 		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
 	}
-	if verticalScalingSpec.Primary.Node == nil && verticalScalingSpec.Secondary.Node == nil {
-		return errors.New("both `spec.verticalScaling.primary.node` and `spec.verticalScaling.secondary.node` can't be non-empty at vertical scaling ops request")
+	if verticalScalingSpec.Primary == nil && verticalScalingSpec.Secondary == nil {
+		return errors.New("both `spec.verticalScaling.primary` and `spec.verticalScaling.secondary` can't be non-empty at vertical scaling ops request")
 	}
 
 	return nil
