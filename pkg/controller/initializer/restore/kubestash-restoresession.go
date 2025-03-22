@@ -76,6 +76,7 @@ func (r *RestoreSessionReconciler) SetupWithManager(mgr ctrl.Manager, selector m
 				return hasRequiredLabels(object.GetLabels(), selector.MatchLabels)
 			}),
 		)).
+		Named(coreapi.GroupVersion.WithKind(coreapi.ResourceKindRestoreSession).GroupKind().String()).
 		Complete(r)
 }
 
