@@ -31,7 +31,7 @@ import (
 	"go.bytebuilders.dev/license-verifier/apis/licenses/v1alpha1"
 	"go.bytebuilders.dev/license-verifier/info"
 
-	"github.com/pkg/errors"
+	"errors"
 	proxyserver "go.bytebuilders.dev/license-proxyserver/apis/proxyserver/v1alpha1"
 	proxyclient "go.bytebuilders.dev/license-proxyserver/client/clientset/versioned"
 	verifier "go.bytebuilders.dev/license-verifier"
@@ -109,15 +109,18 @@ func (le *LicenseEnforcer) getLicense() ([]byte, error) {
 		}
 		pc, err := proxyclient.NewForConfig(le.config)
 		if err != nil {
-			return nil, errors.Wrap(err, "failed create client for license-proxyserver")
+			return nil, fmt.Errorf("failed to instantiate proxy client, err: %w", err)
 		}
 		resp, err := pc.ProxyserverV1alpha1().LicenseRequests().Create(context.TODO(), &req, metav1.CreateOptions{})
 		if err != nil {
-			return nil, errors.Wrap(err, "failed to read license")
+			return nil, fmt.Errorf("failed to read license from proxy, err: %w", err)
+		}
+		if resp.Response.License == "" {
+			return nil, errors.New("missing license from proxy")
 		}
 		licenseBytes = []byte(resp.Response.License)
 	} else if err != nil {
-		return nil, errors.Wrap(err, "failed to read license")
+		return nil, fmt.Errorf("failed to read license from file, err: %w", err)
 	}
 	return licenseBytes, nil
 }
