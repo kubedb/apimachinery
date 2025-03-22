@@ -18,6 +18,7 @@ package restore
 
 import (
 	"context"
+	"fmt"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/klog/v2"
@@ -31,7 +32,8 @@ import (
 
 // RestoreSessionReconciler reconciles a RestoreSession object
 type RestoreSessionReconciler struct {
-	ctrl *Controller
+	ctrl   *Controller
+	dbKind string
 }
 
 func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
@@ -76,7 +78,7 @@ func (r *RestoreSessionReconciler) SetupWithManager(mgr ctrl.Manager, selector m
 				return hasRequiredLabels(object.GetLabels(), selector.MatchLabels)
 			}),
 		)).
-		Named(coreapi.GroupVersion.WithKind(coreapi.ResourceKindRestoreSession).GroupKind().String()).
+		Named(fmt.Sprintf("%s-%s", r.dbKind, coreapi.ResourceKindRestoreSession)).
 		Complete(r)
 }
 
