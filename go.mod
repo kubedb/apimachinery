@@ -35,7 +35,7 @@ require (
 	k8s.io/component-base v0.32.3
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/kube-aggregator v0.32.3
-	k8s.io/kube-openapi v0.0.0-20250318172550-b98be4ee1595
+	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff
 	k8s.io/metrics v0.32.3
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
 	kmodules.xyz/client-go v0.32.1
@@ -47,9 +47,9 @@ require (
 	kmodules.xyz/resource-metadata v0.26.1
 	kmodules.xyz/webhook-runtime v0.32.0
 	kubeops.dev/csi-driver-cacerts v0.1.0
-	kubeops.dev/operator-shard-manager v0.0.2
-	kubeops.dev/petset v0.0.9
-	kubeops.dev/sidekick v0.0.10
+	kubeops.dev/operator-shard-manager v0.0.3
+	kubeops.dev/petset v0.0.10
+	kubeops.dev/sidekick v0.0.11
 	kubestash.dev/apimachinery v0.17.0-rc.0
 	sigs.k8s.io/controller-runtime v0.20.3
 	sigs.k8s.io/yaml v1.4.0
@@ -104,7 +104,7 @@ require (
 	github.com/go-sql-driver/mysql v1.9.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
-	github.com/golang-jwt/jwt/v4 v4.5.1 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/btree v1.1.3 // indirect

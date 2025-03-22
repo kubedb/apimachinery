@@ -264,7 +264,7 @@ github.com/gogo/protobuf/gogoproto
 github.com/gogo/protobuf/proto
 github.com/gogo/protobuf/protoc-gen-gogo/descriptor
 github.com/gogo/protobuf/sortkeys
-# github.com/golang-jwt/jwt/v4 v4.5.1
+# github.com/golang-jwt/jwt/v4 v4.5.2
 ## explicit; go 1.16
 github.com/golang-jwt/jwt/v4
 # github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
@@ -1693,7 +1693,7 @@ k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset
 k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset/scheme
 k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset/typed/apiregistration/v1
 k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset/typed/apiregistration/v1beta1
-# k8s.io/kube-openapi v0.0.0-20250318172550-b98be4ee1595
+# k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff
 ## explicit; go 1.21
 k8s.io/kube-openapi/pkg/builder
 k8s.io/kube-openapi/pkg/builder3
@@ -1831,10 +1831,10 @@ kmodules.xyz/webhook-runtime/admission/v1
 kubeops.dev/csi-driver-cacerts/apis/cacerts
 kubeops.dev/csi-driver-cacerts/apis/cacerts/v1alpha1
 kubeops.dev/csi-driver-cacerts/crds
-# kubeops.dev/operator-shard-manager v0.0.2
+# kubeops.dev/operator-shard-manager v0.0.3
 ## explicit; go 1.23.0
 kubeops.dev/operator-shard-manager/api/v1alpha1
-# kubeops.dev/petset v0.0.9
+# kubeops.dev/petset v0.0.10
 ## explicit; go 1.23.0
 kubeops.dev/petset/apis/apps/v1
 kubeops.dev/petset/client/clientset/versioned
@@ -1846,8 +1846,8 @@ kubeops.dev/petset/client/informers/externalversions/apps/v1
 kubeops.dev/petset/client/informers/externalversions/internalinterfaces
 kubeops.dev/petset/client/listers/apps/v1
 kubeops.dev/petset/crds
-# kubeops.dev/sidekick v0.0.10
-## explicit; go 1.22.1
+# kubeops.dev/sidekick v0.0.11
+## explicit; go 1.23.0
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
 kubeops.dev/sidekick/crds
