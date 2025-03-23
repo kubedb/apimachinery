@@ -18,9 +18,9 @@ package restore
 
 import (
 	"context"
-	"fmt"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+
 	"k8s.io/klog/v2"
 	coreapi "kubestash.dev/apimachinery/apis/core/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -32,8 +32,7 @@ import (
 
 // RestoreSessionReconciler reconciles a RestoreSession object
 type RestoreSessionReconciler struct {
-	ctrl   *Controller
-	dbKind string
+	ctrl *Controller
 }
 
 func (r *RestoreSessionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
@@ -71,22 +70,17 @@ func shouldIgnoreReconcile(rs *coreapi.RestoreSession) bool {
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *RestoreSessionReconciler) SetupWithManager(mgr ctrl.Manager, selector metav1.LabelSelector) error {
+func (r *RestoreSessionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&coreapi.RestoreSession{}, builder.WithPredicates(
 			predicate.NewPredicateFuncs(func(object client.Object) bool {
-				return hasRequiredLabels(object.GetLabels(), selector.MatchLabels)
+				rs, ok := object.(*coreapi.RestoreSession)
+				if !ok {
+					return false
+				}
+				return rs.Spec.Target != nil && rs.Spec.Target.APIGroup == kubedb.GroupName
 			}),
 		)).
-		Named(fmt.Sprintf("%s-%s", r.dbKind, coreapi.ResourceKindRestoreSession)).
+		Named(coreapi.GroupVersion.WithKind(coreapi.ResourceKindRestoreSession).GroupKind().String()).
 		Complete(r)
-}
-
-func hasRequiredLabels(actualLabels, requiredLabels map[string]string) bool {
-	for key, value := range requiredLabels {
-		if actualValue, found := actualLabels[key]; !found || actualValue != value {
-			return false
-		}
-	}
-	return true
 }

@@ -106,10 +106,8 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 
 		// kubestash information
 		ri.kubestash = &kubestashInfo{
-			phase: inv.Status.Phase,
-		}
-		if ri.kubestash.target, err = c.getTargetInfoForKubestash(inv); err != nil {
-			return nil, err
+			phase:  inv.Status.Phase,
+			target: inv.Spec.Target,
 		}
 	default:
 		return ri, fmt.Errorf("unknown restore invoker type")
@@ -120,50 +118,6 @@ func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
 		return nil, err
 	}
 	return ri, nil
-}
-
-func (c *Controller) getTargetInfoForKubestash(inv *coreapi.RestoreSession) (*kmapi.TypedObjectReference, error) {
-	// If a target is specified in the RestoreSession spec, return it directly
-	if inv.Spec.Target != nil {
-		return inv.Spec.Target, nil
-	}
-
-	snapshot, err := c.getSnapshot(inv)
-	if err != nil {
-		return nil, err
-	}
-
-	targetObjRef := inv.GetTargetObjectRef(snapshot)
-	return &kmapi.TypedObjectReference{
-		APIGroup:  snapshot.Spec.AppRef.APIGroup,
-		Kind:      snapshot.Spec.AppRef.Kind,
-		Name:      targetObjRef.Name,
-		Namespace: targetObjRef.Namespace,
-	}, nil
-}
-
-func (c *Controller) getSnapshot(inv *coreapi.RestoreSession) (*storageapi.Snapshot, error) {
-	// Look for the snapshot dependency in the RestoreSession status
-	var snapRef *kmapi.ObjectReference
-	for _, dep := range inv.Status.Dependencies {
-		if dep.Found == pointer.TrueP() &&
-			dep.Kind == storageapi.ResourceKindSnapshot {
-			snapRef = &kmapi.ObjectReference{
-				Name:      dep.Name,
-				Namespace: dep.Namespace,
-			}
-			break
-		}
-	}
-	if snapRef == nil {
-		return nil, fmt.Errorf("snapshot dependency not found in restoreSession")
-	}
-
-	snapshot := &storageapi.Snapshot{}
-	if err := c.KBClient.Get(context.Background(), snapRef.ObjectKey(), snapshot); err != nil {
-		return nil, fmt.Errorf("failed to get snapshot %s/%s: %w", snapRef.Namespace, snapRef.Name, err)
-	}
-	return snapshot, nil
 }
 
 func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
