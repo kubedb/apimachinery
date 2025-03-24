@@ -595,13 +595,13 @@ go.bytebuilders.dev/license-proxyserver/apis/proxyserver/v1alpha1
 go.bytebuilders.dev/license-proxyserver/client/clientset/versioned
 go.bytebuilders.dev/license-proxyserver/client/clientset/versioned/scheme
 go.bytebuilders.dev/license-proxyserver/client/clientset/versioned/typed/proxyserver/v1alpha1
-# go.bytebuilders.dev/license-verifier v0.14.8
+# go.bytebuilders.dev/license-verifier v0.14.9
 ## explicit; go 1.23.0
 go.bytebuilders.dev/license-verifier
 go.bytebuilders.dev/license-verifier/apis/licenses
 go.bytebuilders.dev/license-verifier/apis/licenses/v1alpha1
 go.bytebuilders.dev/license-verifier/info
-# go.bytebuilders.dev/license-verifier/kubernetes v0.14.8
+# go.bytebuilders.dev/license-verifier/kubernetes v0.14.9
 ## explicit; go 1.23.0
 go.bytebuilders.dev/license-verifier/kubernetes
 # go.etcd.io/etcd/api/v3 v3.5.17
@@ -1851,7 +1851,7 @@ kubeops.dev/petset/crds
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
 kubeops.dev/sidekick/crds
-# kubestash.dev/apimachinery v0.17.0-rc.0
+# kubestash.dev/apimachinery v0.17.0
 ## explicit; go 1.23.0
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/addons/v1alpha1

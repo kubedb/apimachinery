@@ -19,6 +19,7 @@ package kubernetes
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -31,7 +32,6 @@ import (
 	"go.bytebuilders.dev/license-verifier/apis/licenses/v1alpha1"
 	"go.bytebuilders.dev/license-verifier/info"
 
-	"errors"
 	proxyserver "go.bytebuilders.dev/license-proxyserver/apis/proxyserver/v1alpha1"
 	proxyclient "go.bytebuilders.dev/license-proxyserver/client/clientset/versioned"
 	verifier "go.bytebuilders.dev/license-verifier"
@@ -41,6 +41,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/apiserver/pkg/server/mux"
+	"k8s.io/client-go/discovery"
 	"k8s.io/client-go/kubernetes"
 	clientscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
@@ -48,7 +49,7 @@ import (
 	"k8s.io/klog/v2"
 	"k8s.io/kube-aggregator/pkg/client/clientset_generated/clientset"
 	core_util "kmodules.xyz/client-go/core/v1"
-	"kmodules.xyz/client-go/discovery"
+	disco "kmodules.xyz/client-go/discovery"
 	"kmodules.xyz/client-go/dynamic"
 	"kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/tools/clusterid"
@@ -401,13 +402,20 @@ func CheckLicenseEndpoint(config *rest.Config, apiServiceName string, features [
 }
 
 func LicenseProvided(cfg *rest.Config, licenseFile string) bool {
+	var client discovery.DiscoveryInterface
+	if cfg != nil {
+		client = kubernetes.NewForConfigOrDie(cfg).Discovery()
+	}
+	return LicenseProvidedForClient(client, licenseFile)
+}
+
+func LicenseProvidedForClient(client discovery.DiscoveryInterface, licenseFile string) bool {
 	if licenseFile != "" {
 		return true
 	}
-
-	if cfg != nil {
-		ok, _ := discovery.HasGVK(
-			kubernetes.NewForConfigOrDie(cfg).Discovery(),
+	if client != nil {
+		ok, _ := disco.HasGVK(
+			client,
 			proxyserver.SchemeGroupVersion.String(),
 			proxyserver.ResourceKindLicenseRequest)
 		return ok
