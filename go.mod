@@ -20,7 +20,7 @@ require (
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.81.0
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.81.0
 	go.bytebuilders.dev/audit v0.0.42
-	go.bytebuilders.dev/license-verifier/kubernetes v0.14.8
+	go.bytebuilders.dev/license-verifier/kubernetes v0.14.9
 	go.virtual-secrets.dev/apimachinery v0.0.1
 	gomodules.xyz/encoding v0.0.8
 	gomodules.xyz/pointer v0.1.0
@@ -50,7 +50,7 @@ require (
 	kubeops.dev/operator-shard-manager v0.0.3
 	kubeops.dev/petset v0.0.10
 	kubeops.dev/sidekick v0.0.11
-	kubestash.dev/apimachinery v0.17.0-rc.0
+	kubestash.dev/apimachinery v0.17.0
 	sigs.k8s.io/controller-runtime v0.20.3
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.39.0
@@ -160,7 +160,7 @@ require (
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
 	go.bytebuilders.dev/license-proxyserver v0.0.20 // indirect
-	go.bytebuilders.dev/license-verifier v0.14.8 // indirect
+	go.bytebuilders.dev/license-verifier v0.14.9 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.17 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.17 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.17 // indirect
