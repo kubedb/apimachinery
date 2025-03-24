@@ -750,6 +750,7 @@ const (
 	// ========================================== Hazelcast Constants =================================================//
 	HazelcastAdmin               = "admin"
 	HazelcastSecretKey           = "hazelcast.yaml"
+	HazelcastClientSecretKey     = "hazelcast-client.yaml"
 	HazelcastRestPort            = 5701
 	HazelcastPortName            = "hazelcast"
 	HazelcastConfigVolume        = "hzconfig"
