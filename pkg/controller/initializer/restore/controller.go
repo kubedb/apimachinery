@@ -143,16 +143,15 @@ func (c *Controller) startController(stopCh <-chan struct{}) {
 	c.RBQueue.Run(stopCh)
 }
 
-func (c *Controller) StartAfterKubeStashInstalled(stopCh <-chan struct{}, dbKind string, selector metav1.LabelSelector) {
+func (c *Controller) StartAfterKubeStashInstalled(stopCh <-chan struct{}) {
 	// Here Wait until KubeStash operator installed
 	if err := c.waitUntilKubeStashInstalled(stopCh); err != nil {
 		klog.Errorln("error during waiting for RestoreSession crd. Reason: ", err)
 		return
 	}
 	if err := (&RestoreSessionReconciler{
-		ctrl:   c,
-		dbKind: dbKind,
-	}).SetupWithManager(*c.manager, selector); err != nil {
+		ctrl: c,
+	}).SetupWithManager(*c.manager); err != nil {
 		klog.Info(fmt.Errorf("unable to create RestoreSession controller. Reason: %w", err))
 		return
 	}
