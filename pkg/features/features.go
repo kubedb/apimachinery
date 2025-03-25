@@ -58,6 +58,9 @@ const (
 	// Enables FoundationDB operator.
 	// FoundationDB featuregate.Feature = "FoundationDB"
 
+	// Enables Ignite operator.
+	Ignite featuregate.Feature = "Ignite"
+
 	// Enables Kafka operator.
 	Kafka featuregate.Feature = "Kafka"
 
@@ -138,6 +141,7 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	Elasticsearch: {Default: true, PreRelease: featuregate.GA},
 	// Etcd:               {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
 	FerretDB:    {Default: false, PreRelease: featuregate.Alpha},
+	Ignite:      {Default: true, PreRelease: featuregate.Alpha},
 	Kafka:       {Default: true, PreRelease: featuregate.Beta},
 	MariaDB:     {Default: true, PreRelease: featuregate.GA},
 	Memcached:   {Default: false, PreRelease: featuregate.Beta},
