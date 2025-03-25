@@ -147,7 +147,7 @@ func (p *dbPredicate) GetOwnerObject(obj client.Object) (*unstructured.Unstructu
 
 	err = p.kc.Get(context.TODO(), types.NamespacedName{
 		Namespace: obj.GetNamespace(),
-		Name:      obj.GetName(),
+		Name:      ctrl.Name,
 	}, &un)
 	if err != nil {
 		return nil, err
