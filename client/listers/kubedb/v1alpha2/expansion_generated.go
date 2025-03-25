@@ -66,6 +66,14 @@ type FerretDBListerExpansion interface{}
 // FerretDBNamespaceLister.
 type FerretDBNamespaceListerExpansion interface{}
 
+// HazelcastListerExpansion allows custom methods to be added to
+// HazelcastLister.
+type HazelcastListerExpansion interface{}
+
+// HazelcastNamespaceListerExpansion allows custom methods to be added to
+// HazelcastNamespaceLister.
+type HazelcastNamespaceListerExpansion interface{}
+
 // KafkaListerExpansion allows custom methods to be added to
 // KafkaLister.
 type KafkaListerExpansion interface{}
