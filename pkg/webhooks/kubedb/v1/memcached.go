@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 
-	core "k8s.io/api/core/v1"
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -28,6 +27,7 @@ import (
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
