@@ -27,8 +27,8 @@ import (
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
@@ -75,7 +75,7 @@ var forbiddenMemcachedEnvVars = []string{}
 var _ webhook.CustomDefaulter = &MemcachedCustomWebhook{}
 
 // log is for logging in this package.
-var memLog = logf.Log.WithName("redis-resource")
+var memLog = logf.Log.WithName("memcached-resource")
 
 func (mv *MemcachedCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
 	db, ok := obj.(*dbapi.Memcached)
@@ -175,7 +175,7 @@ func (mv MemcachedCustomWebhook) validateSpecForDB(memcached *dbapi.Memcached) e
 	return nil
 }
 
-func (mv MemcachedCustomWebhook) validate(_ context.Context, obj runtime.Object) (admission.Warnings, error) {
+func (mv MemcachedCustomWebhook) validate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	memcached, ok := obj.(*dbapi.Memcached)
 	if !ok {
 		return nil, fmt.Errorf("expected a Memcached but got a %T", obj)
@@ -197,8 +197,14 @@ func (mv MemcachedCustomWebhook) validate(_ context.Context, obj runtime.Object)
 	}
 
 	// if secret name is given, check the secret exists
+	// if secret name is given, check the secret exists
 	if memcached.Spec.ConfigSecret != nil {
-		_, err := mv.Client.CoreV1().Secrets(memcached.Namespace).Get(context.TODO(), memcached.Spec.ConfigSecret.Name, metav1.GetOptions{})
+		var configSecret core.Secret
+		// Get the configSecret
+		err := mv.DefaultClient.Get(ctx, types.NamespacedName{
+			Name:      memcached.Spec.ConfigSecret.Name,
+			Namespace: memcached.Namespace,
+		}, &configSecret)
 		if err != nil {
 			if !kerr.IsNotFound(err) {
 				return nil, fmt.Errorf(`no configSecret is found named %v, in namespace %v`, memcached.Spec.ConfigSecret.Name, memcached.Namespace)
@@ -207,10 +213,15 @@ func (mv MemcachedCustomWebhook) validate(_ context.Context, obj runtime.Object)
 		}
 	}
 	if memcached.Spec.AuthSecret != nil {
-		_, err := mv.Client.CoreV1().Secrets(memcached.Namespace).Get(context.TODO(), memcached.Spec.AuthSecret.Name, metav1.GetOptions{})
+		var authSecret core.Secret
+		// Get the authSecret
+		err := mv.DefaultClient.Get(ctx, types.NamespacedName{
+			Name:      memcached.GetMemcachedAuthSecretName(),
+			Namespace: memcached.Namespace,
+		}, &authSecret)
 		if err != nil {
 			if !kerr.IsNotFound(err) {
-				return nil, fmt.Errorf(`no authSecret is found named %v, in namespace %v`, memcached.Spec.AuthSecret.Name, memcached.Namespace)
+				return nil, fmt.Errorf(`no authSecret is found named %v, in namespace %v`, memcached.GetMemcachedAuthSecretName(), memcached.Namespace)
 			}
 			return nil, err
 		}
