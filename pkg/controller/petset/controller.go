@@ -90,7 +90,7 @@ func (c *Controller) InitPetSetWatcher() {
 					}
 				}
 
-				c.enqueueOnlyKubeDBPS(ps)
+				c.enqueueConditionally(ps)
 			}
 		},
 		UpdateFunc: func(oldObj, newObj interface{}) {
@@ -102,7 +102,7 @@ func (c *Controller) InitPetSetWatcher() {
 					}
 				}
 
-				c.enqueueOnlyKubeDBPS(ps)
+				c.enqueueConditionally(ps)
 			}
 		},
 		DeleteFunc: func(obj interface{}) {
@@ -153,19 +153,28 @@ func (c *Controller) InitPetSetWatcher() {
 	})
 }
 
-func (c *Controller) enqueueOnlyKubeDBPS(ps *petsetapps.PetSet) {
+func (c *Controller) enqueueConditionally(ps *petsetapps.PetSet) {
+	if c.isOwnedByKubeDB(ps) && c.isAcceptedByShardConfig(ps) {
+		queue.Enqueue(c.PSQueue.GetQueue(), cache.ExplicitKey(ps.Namespace+"/"+ps.Name))
+	}
+}
+
+func (c *Controller) isOwnedByKubeDB(ps *petsetapps.PetSet) bool {
 	// only enqueue if the controlling owner is a KubeDB resource
 	ok, _, err := core_util.IsOwnerOfGroup(metav1.GetControllerOf(ps), kubedb.GroupName)
 	if err != nil {
 		klog.Warningf("failed to enqueue PetSet: %s/%s. Reason: %v", ps.Namespace, ps.Name, err)
-		return
+		return false
 	}
-	if ok {
-		dbInfo, err := c.extractDatabaseInfo(ps)
-		if err == nil && dbInfo != nil && dbInfo.shouldRequeue {
-			queue.Enqueue(c.PSQueue.GetQueue(), cache.ExplicitKey(ps.Namespace+"/"+ps.Name))
-		}
+	return ok
+}
+
+func (c *Controller) isAcceptedByShardConfig(ps *petsetapps.PetSet) bool {
+	dbInfo, err := c.extractDatabaseInfo(ps)
+	if err == nil && dbInfo != nil {
+		return dbInfo.shouldRequeue
 	}
+	return false
 }
 
 func (c *Controller) processPetSet(k any) error {
