@@ -75,7 +75,7 @@ var forbiddenMemcachedEnvVars = []string{}
 var _ webhook.CustomDefaulter = &MemcachedCustomWebhook{}
 
 // log is for logging in this package.
-var memLog = logf.Log.WithName("redis-resource")
+var memLog = logf.Log.WithName("memcached-resource")
 
 func (mv *MemcachedCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
 	db, ok := obj.(*dbapi.Memcached)
