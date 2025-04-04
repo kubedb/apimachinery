@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
@@ -163,8 +164,40 @@ func (h *Hazelcast) SetDefaults(kc client.Client) {
 		h.Spec.PodTemplate.Spec.SecurityContext = &v1.PodSecurityContext{}
 	}
 	h.Spec.PodTemplate.Spec.SecurityContext.FSGroup = hzVersion.Spec.SecurityContext.RunAsUser
+	if h.Spec.PodTemplate.Spec.TerminationGracePeriodSeconds == nil {
+		h.Spec.PodTemplate.Spec.TerminationGracePeriodSeconds = pointer.Int64P(600)
+	}
 	h.setDefaultContainerSecurityContext(&hzVersion, &h.Spec.PodTemplate)
 	h.setDefaultContainerResourceLimits(&h.Spec.PodTemplate)
+	h.setDefaultProbes(&h.Spec.PodTemplate)
+}
+
+func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, "hazelcast")
+	if container == nil {
+		container = &v1.Container{
+			Name: "hazelcast",
+		}
+	}
+	probe := &v1.Probe{
+		ProbeHandler: v1.ProbeHandler{
+			HTTPGet: &v1.HTTPGetAction{
+				Port:   intstr.Parse("5701"),
+				Scheme: v1.URISchemeHTTP,
+			},
+		},
+		InitialDelaySeconds: 30,
+		TimeoutSeconds:      10,
+		PeriodSeconds:       10,
+		SuccessThreshold:    1,
+		FailureThreshold:    10,
+	}
+	container.LivenessProbe = probe
+	container.ReadinessProbe = probe
+	container.LivenessProbe.HTTPGet.Path = "/hazelcast/health/node-state"
+	container.ReadinessProbe.HTTPGet.Path = "/hazelcast/health/ready"
+	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
+
 }
 
 func (h *Hazelcast) setDefaultContainerSecurityContext(hzVersion *catalog.HazelcastVersion, podTemplate *ofst.PodTemplateSpec) {
