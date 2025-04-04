@@ -66,7 +66,7 @@ func (w *IgniteCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 	}
 
 	Ignitelog.Info("default", "name", db.GetName())
-	db.SetDefaults()
+	db.SetDefaults(w.DefaultClient)
 	return nil
 }
 
