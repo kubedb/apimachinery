@@ -110,7 +110,7 @@ func (i *Ignite) Owner() *meta.OwnerReference {
 	return meta.NewControllerRef(i, SchemeGroupVersion.WithKind(i.ResourceKind()))
 }
 
-func (i *Ignite) SetDefaults() {
+func (i *Ignite) SetDefaults(kc client.Client) {
 	if i.Spec.Replicas == nil {
 		i.Spec.Replicas = pointer.Int32P(1)
 	}
@@ -124,7 +124,7 @@ func (i *Ignite) SetDefaults() {
 	}
 
 	var igVersion catalog.IgniteVersion
-	err := DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := kc.Get(context.TODO(), types.NamespacedName{
 		Name: i.Spec.Version,
 	}, &igVersion)
 	if err != nil {
