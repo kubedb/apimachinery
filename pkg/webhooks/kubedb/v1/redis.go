@@ -174,6 +174,7 @@ var redisReservedMountPaths = []string{
 	kubedb.RedisScriptVolumePath,
 	kubedb.RedisTLSVolumePath,
 	kubedb.RedisConfigVolumePath,
+	kubedb.ValkeyConfigVolumePath,
 }
 
 func validateRedisUpdate(obj, oldObj *dbapi.Redis) error {
