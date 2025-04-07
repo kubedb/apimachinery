@@ -158,6 +158,7 @@ func (w RedisCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Obje
 
 var forbiddenRedisEnvVars = []string{
 	"REDISCLI_AUTH",
+	"VALKEYCLI_AUTH",
 	"SENTINEL_PASSWORD",
 }
 
@@ -299,6 +300,9 @@ func (w RedisCustomWebhook) ValidateRedis(redis *dbapi.Redis) error {
 		if err != nil {
 			return err
 		}
+		if err = redisDbCompatibleWithSentinel(w.DefaultClient, &redisVersion, redis.Spec.SentinelRef); err != nil {
+			return err
+		}
 	}
 	// if secret managed externally verify auth secret name is not empty
 	if !redis.Spec.DisableAuth {
@@ -380,4 +384,21 @@ func ValidateForSentinel(kbClient client.Client, redis *dbapi.Redis) error {
 		}
 	}
 	return nil
+}
+
+func redisDbCompatibleWithSentinel(kbClient client.Client, rdVersion *catalogapi.RedisVersion, sentinelRef *dbapi.RedisSentinelRef) error {
+	sentinelDB := dbapi.RedisSentinel{}
+	err := kbClient.Get(context.TODO(), types.NamespacedName{Name: sentinelRef.Name, Namespace: sentinelRef.Namespace}, &sentinelDB)
+	if err != nil {
+		return err
+	}
+	sentinelVersion := catalogapi.RedisVersion{}
+	err = kbClient.Get(context.TODO(), types.NamespacedName{Name: sentinelDB.Spec.Version}, &sentinelVersion)
+	if err != nil {
+		return err
+	}
+	if rdVersion.Spec.Distribution == sentinelVersion.Spec.Distribution {
+		return nil
+	}
+	return fmt.Errorf("redis version %v is not compatible with sentinel version %v")
 }
