@@ -300,9 +300,6 @@ func (w RedisCustomWebhook) ValidateRedis(redis *dbapi.Redis) error {
 		if err != nil {
 			return err
 		}
-		if err = redisDbCompatibleWithSentinel(w.DefaultClient, &redisVersion, redis.Spec.SentinelRef); err != nil {
-			return err
-		}
 	}
 	// if secret managed externally verify auth secret name is not empty
 	if !redis.Spec.DisableAuth {
@@ -371,6 +368,15 @@ func ValidateForSentinel(kbClient client.Client, redis *dbapi.Redis) error {
 	if err != nil {
 		return err
 	}
+
+	rdVersion := catalogapi.RedisVersion{}
+	if err = kbClient.Get(context.TODO(), types.NamespacedName{Name: redis.Spec.Version}, &rdVersion); err != nil {
+		return err
+	}
+	if err = redisDbCompatibleWithSentinel(kbClient, &rdVersion, redis.Spec.SentinelRef); err != nil {
+		return err
+	}
+
 	if redis.Spec.TLS == nil && sentinelDB.Spec.TLS != nil {
 		return fmt.Errorf("can not start monitoring with TLS enabled Sentinel as Redis is not TLS enabled")
 	}
