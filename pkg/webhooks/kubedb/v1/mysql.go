@@ -19,7 +19,6 @@ package v1
 import (
 	"context"
 	"fmt"
-	"time"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -31,7 +30,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
@@ -39,7 +37,6 @@ import (
 	"k8s.io/utils/ptr"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -67,6 +64,7 @@ var _ webhook.CustomDefaulter = &MySQLCustomWebhook{}
 func (w MySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db := obj.(*dbapi.MySQL)
 	mysqlLog.Info("defaulting", "name", db.GetName())
+
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
 	}
@@ -78,42 +76,6 @@ func (w MySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 		db.Spec.DeletionPolicy = dbapi.DeletionPolicyHalt
 	}
 
-	if db.UsesGroupReplication() {
-		if db.Spec.Topology.Group == nil {
-			db.Spec.Topology.Group = &dbapi.MySQLGroupSpec{}
-		}
-
-		if db.Spec.Topology.Group.Name == "" {
-			grName, err := uuid.NewRandom()
-			if err != nil {
-				return errors.New("failed to generate a new group name")
-			}
-			db.Spec.Topology.Group.Name = grName.String()
-		}
-	}
-
-	if db.IsSemiSync() {
-		if db.Spec.Topology.SemiSync == nil {
-			db.Spec.Topology.SemiSync = &dbapi.SemiSyncSpec{
-				SourceWaitForReplicaCount: 1,
-				SourceTimeout:             metav1.Duration{Duration: 24 * time.Hour},
-				ErrantTransactionRecoveryPolicy: func() *dbapi.ErrantTransactionRecoveryPolicy {
-					pseudoTransaction := olddbapi.ErrantTransactionRecoveryPolicyPseudoTransaction
-					return (*dbapi.ErrantTransactionRecoveryPolicy)(&pseudoTransaction)
-				}(),
-			}
-		}
-	}
-	if db.IsInnoDBCluster() {
-		if db.Spec.Topology.InnoDBCluster == nil {
-			// avoid needing to check for db.Spec.Topology.InnoDBCluster != nil later
-			db.Spec.Topology.InnoDBCluster = &dbapi.MySQLInnoDBClusterSpec{}
-		}
-		if db.Spec.Topology.InnoDBCluster.Router.PodTemplate == nil {
-			db.Spec.Topology.InnoDBCluster.Router.PodTemplate = &ofst.PodTemplateSpec{}
-		}
-	}
-
 	var myVersion catalogapi.MySQLVersion
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
@@ -122,7 +84,9 @@ func (w MySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 		return err
 	}
 
-	db.SetDefaults(&myVersion)
+	if err = db.SetDefaults(&myVersion); err != nil {
+		return err
+	}
 
 	return nil
 }
