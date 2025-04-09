@@ -296,7 +296,7 @@ func (w RedisCustomWebhook) ValidateRedis(redis *dbapi.Redis) error {
 		return fmt.Errorf("auth Secret is not supported when disableAuth is true")
 	}
 	if redis.Spec.Mode == dbapi.RedisModeSentinel {
-		err = validateSentinelVersion(redisVersion.Spec.Version)
+		err = validateSentinelVersion(&redisVersion)
 		if err != nil {
 			return err
 		}
