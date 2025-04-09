@@ -125,6 +125,15 @@ spec:
                 type: object
               horizontalScaling:
                 properties:
+                  backend:
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
+                    type: object
                   member:
                     format: int32
                     type: integer

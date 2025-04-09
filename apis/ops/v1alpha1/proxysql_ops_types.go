@@ -23,6 +23,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -96,6 +97,9 @@ type ProxySQLUpdateVersionSpec struct {
 type ProxySQLHorizontalScalingSpec struct {
 	// Number of nodes/members of the group
 	Member *int32 `json:"member,omitempty"`
+
+	// Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB server
+	Backend *kmapi.ObjectReference `json:"backend,omitempty"`
 }
 
 // ProxySQLVerticalScalingSpec is the spec for ProxySQL vertical scaling

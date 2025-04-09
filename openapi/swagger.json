@@ -28349,6 +28349,10 @@
       "description": "HorizontalScaling is the spec for ProxySQL horizontal scaling",
       "type": "object",
       "properties": {
+        "backend": {
+          "description": "Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB server",
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
         "member": {
           "description": "Number of nodes/members of the group",
           "type": "integer",
