@@ -84,10 +84,10 @@ func (w *SolrAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.SolrAut
 	}
 
 	if scaler.Spec.Compute != nil {
-		setDefaultStorageValues(scaler.Spec.Storage.Node)
-		setDefaultStorageValues(scaler.Spec.Storage.Overseer)
-		setDefaultStorageValues(scaler.Spec.Storage.Data)
-		setDefaultStorageValues(scaler.Spec.Storage.Coordinator)
+		setDefaultComputeValues(scaler.Spec.Compute.Node)
+		setDefaultComputeValues(scaler.Spec.Compute.Overseer)
+		setDefaultComputeValues(scaler.Spec.Compute.Data)
+		setDefaultComputeValues(scaler.Spec.Compute.Coordinator)
 	}
 }
 
