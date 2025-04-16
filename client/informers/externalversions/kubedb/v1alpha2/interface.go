@@ -36,6 +36,8 @@ type Interface interface {
 	Etcds() EtcdInformer
 	// FerretDBs returns a FerretDBInformer.
 	FerretDBs() FerretDBInformer
+	// Hazelcasts returns a HazelcastInformer.
+	Hazelcasts() HazelcastInformer
 	// Kafkas returns a KafkaInformer.
 	Kafkas() KafkaInformer
 	// MSSQLServers returns a MSSQLServerInformer.
@@ -111,6 +113,11 @@ func (v *version) Etcds() EtcdInformer {
 // FerretDBs returns a FerretDBInformer.
 func (v *version) FerretDBs() FerretDBInformer {
 	return &ferretDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Hazelcasts returns a HazelcastInformer.
+func (v *version) Hazelcasts() HazelcastInformer {
+	return &hazelcastInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Kafkas returns a KafkaInformer.
