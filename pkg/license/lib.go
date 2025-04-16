@@ -19,6 +19,7 @@ package license
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	configapi "kubedb.dev/apimachinery/apis/config/v1alpha1"
@@ -29,11 +30,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func MeetsLicenseRestrictions(kc client.Client, restrictions configapi.LicenseRestrictions, dbGK schema.GroupKind, dbVersion string) (bool, string, error) {
-	if len(restrictions) == 0 {
+func MeetsLicenseRestrictions(kc client.Client, lr configapi.LicenseRestrictions, dbGK schema.GroupKind, dbVersion string) (bool, string, error) {
+	if len(lr) == 0 {
 		return true, "", nil
 	}
-	restriction, found := restrictions[dbGK.Kind]
+	restrictions, found := lr[dbGK.Kind]
 	if !found {
 		return false, "Kind is not found in the restrictions map", nil
 	}
@@ -54,24 +55,29 @@ func MeetsLicenseRestrictions(kc client.Client, restrictions configapi.LicenseRe
 		return false, "", err
 	}
 
-	c, err := semver.NewConstraint(restriction.VersionConstraint)
-	if err != nil {
-		return false, "", err
-	}
-	if !c.Check(v) {
-		// write reason ?
-		return false, fmt.Sprintf("Doesn't satisfy the constraint: %v", restriction.VersionConstraint), nil
-	}
-	if len(restriction.Distributions) > 0 {
-		strDistro, ok, err := unstructured.NestedString(dbv.UnstructuredContent(), "spec", "distribution")
-		if err != nil || !ok {
+	var causes []string
+	for _, restriction := range restrictions {
+		c, err := semver.NewConstraint(restriction.VersionConstraint)
+		if err != nil {
 			return false, "", err
 		}
-		if !contains(restriction.Distributions, strDistro) {
-			return false, fmt.Sprintf("%v distro is not present in the allowed distributions list: %v", strDistro, restriction.Distributions), nil
+		if !c.Check(v) {
+			causes = append(causes, fmt.Sprintf("Doesn't satisfy the constraint: %v", restriction.VersionConstraint))
+			continue
 		}
+		if len(restriction.Distributions) > 0 {
+			strDistro, ok, err := unstructured.NestedString(dbv.UnstructuredContent(), "spec", "distribution")
+			if err != nil || !ok {
+				return false, "", err
+			}
+			if !contains(restriction.Distributions, strDistro) {
+				causes = append(causes, fmt.Sprintf("%v distro is not present in the allowed distributions list: %v", strDistro, restriction.Distributions))
+				continue
+			}
+		}
+		return true, "", nil
 	}
-	return true, "", nil
+	return false, strings.Join(causes, ","), nil
 }
 
 func contains(list []string, str string) bool {
