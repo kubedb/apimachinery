@@ -32367,9 +32367,17 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLHorizontalScalingSpec(ref com
 							Format:      "int32",
 						},
 					},
+					"backend": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB server",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
 	}
 }
 
