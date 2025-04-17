@@ -168,6 +168,7 @@ var redisReservedVolumes = []string{
 	kubedb.RedisTLSVolumeName,
 	kubedb.RedisExporterTLSVolumeName,
 	kubedb.RedisConfigVolumeName,
+	kubedb.ValkeyConfigVolumeName,
 }
 
 var redisReservedMountPaths = []string{
