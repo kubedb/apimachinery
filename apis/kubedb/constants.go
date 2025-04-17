@@ -614,6 +614,8 @@ const (
 
 	EnvValkeyPassword          = "VALKEYCLI_AUTH"
 	EnvValkeyMajorRedisVersion = "MAJOR_VALKEY_VERSION"
+	ValkeyConfigVolumePath     = "/usr/local/etc/valkey/"
+	ValkeyConfigVolumeName     = "valkey-config"
 
 	// =========================== PgBouncer Constants ============================
 	PgBouncerUpstreamServerCA               = "upstream-server-ca.crt"
