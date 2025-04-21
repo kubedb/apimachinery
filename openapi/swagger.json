@@ -26966,6 +26966,26 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.Horizons": {
+      "type": "object",
+      "required": [
+        "dns"
+      ],
+      "properties": {
+        "dns": {
+          "type": "string",
+          "default": ""
+        },
+        "pods": {
+          "description": "Pods contain the host:port for all the replicas. Its length will be same as db.spec.replicas",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedCustomConfigurationSpec": {
       "type": "object",
       "properties": {
@@ -27314,6 +27334,10 @@
           "description": "Specifies the MongoDB reference",
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "horizons": {
+          "description": "Horizons specifies the information for setting up replicaset horizons.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.Horizons"
         },
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
