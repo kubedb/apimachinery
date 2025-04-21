@@ -184,7 +184,7 @@ func (w *IgniteCustomWebhook) ValidateVersion(db *olddbapi.Ignite) error {
 }
 
 var IgniteReservedVolumes = []string{
-	kubedb.IgniteVolumeData,
+	kubedb.IgniteDataVolName,
 	kubedb.IgniteConfigVolName,
 }
 
