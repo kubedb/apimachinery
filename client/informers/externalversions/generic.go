@@ -308,6 +308,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ZooKeepers().Informer()}, nil
 
 		// Group=ops.kubedb.com, Version=v1alpha1
+	case opsv1alpha1.SchemeGroupVersion.WithResource("cassandraopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().CassandraOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("clickhouseopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().ClickHouseOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("druidopsrequests"):
