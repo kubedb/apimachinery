@@ -375,6 +375,7 @@ const (
 	MaxscaleDataVolumePath    = "/var/lib/maxscale"
 	MaxscaleUIPort            = 8989
 	MaxscaleUIPortName        = "ui"
+	MaxscaleCertMountPath     = "/etc/ssl/maxscale"
 
 	// =========================== SingleStore Constants ============================
 	SinglestoreDatabasePortName       = "db"
