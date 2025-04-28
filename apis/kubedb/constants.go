@@ -1589,7 +1589,7 @@ const (
 	CassandraServerLogDir                = "var/log/cassandra-server/cassandra-server.log"
 	CassandraServerErrorLogDir           = "var/log/cassandra-server/cassandra-server.err.log"
 	CassandraContainerName               = "cassandra"
-	CassandraInitMedusaContainerName     = "medusa-init"
+	CassandraMedusaInitContainerName     = "medusa-init"
 	CassandraMetricExporterContainerName = "exporter"
 	CassandraInitContainerName           = "cassandra-init"
 	CassandraMainConfigFile              = "cassandra.yaml"
