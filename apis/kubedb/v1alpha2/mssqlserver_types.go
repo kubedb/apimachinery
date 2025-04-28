@@ -177,7 +177,7 @@ type MSSQLServerAvailabilityGroupSpec struct {
 	LeaderElection *MSSQLServerLeaderElectionConfig `json:"leaderElection,omitempty"`
 
 	// secondaryAccess controls which connections are allowed to secondary replicas.
-	// https://learn.microsoft.com/en-us/sql/t-sql/statements/create-availability-group-transact-sql?view=sql-server-ver16#:~:text=SECONDARY_ROLE%20(%20...%20),availability%20groups).
+	// https://learn.microsoft.com/en-us/sql/t-sql/statements/create-availability-group-transact-sql?view=sql-server-ver16#secondary_role---
 	// +optional
 	SecondaryAccess SecondaryAccess `json:"secondaryAccess,omitempty"`
 }
