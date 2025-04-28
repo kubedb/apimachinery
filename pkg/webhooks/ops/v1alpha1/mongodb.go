@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -115,6 +116,13 @@ func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mong
 				err.Error()))
 		}
 	}
+	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeHorizons {
+		if err = w.validateMongoDBHorizons(&db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec"),
+				req.Name,
+				err.Error()))
+		}
+	}
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -168,6 +176,21 @@ func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBHorizontalScalingOpsRequ
 			if req.Spec.HorizontalScaling.Replicas != nil && *req.Spec.HorizontalScaling.Replicas < 3 {
 				return errors.New("`spec.horizontalScaling.replicas` field can not be less then 3 for inMemory storage engine")
 			}
+		}
+	}
+	return nil
+}
+
+func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBHorizons(db *dbapi.MongoDB, req *opsapi.MongoDBOpsRequest) error {
+	if db.Spec.ReplicaSet == nil {
+		return errors.New("horizon opsRequest is only supported for ReplicaSet")
+	}
+	if req.Spec.Horizons != nil {
+		if db.Spec.TLS == nil {
+			return errors.New("horizon opsRequest is only supported for TLS")
+		}
+		if len(req.Spec.Horizons.Pods) != int(*db.Spec.Replicas) {
+			return errors.New("the length of ops.spec.horizons.pods has to be " + strconv.Itoa(int(*db.Spec.Replicas)))
 		}
 	}
 	return nil
