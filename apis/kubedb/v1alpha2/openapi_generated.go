@@ -29664,9 +29664,9 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerAvailabilityGroupSpec(r
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerLeaderElectionConfig"),
 						},
 					},
-					"secondaryAccess": {
+					"secondaryAccessMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "secondaryAccess controls which connections are allowed to secondary replicas. https://learn.microsoft.com/en-us/sql/t-sql/statements/create-availability-group-transact-sql?view=sql-server-ver16#secondary_role---",
+							Description: "SecondaryAccessMode controls which connections are allowed to secondary replicas. https://learn.microsoft.com/en-us/sql/t-sql/statements/create-availability-group-transact-sql?view=sql-server-ver16#secondary_role---",
 							Type:        []string{"string"},
 							Format:      "",
 						},
