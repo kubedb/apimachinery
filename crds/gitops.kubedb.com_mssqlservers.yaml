@@ -4795,11 +4795,12 @@ spec:
                             default: 60s
                             type: string
                         type: object
-                      secondaryAccess:
+                      secondaryAccessMode:
+                        default: Passive
                         enum:
-                        - "NO"
-                        - READ_ONLY
-                        - ALL
+                        - Passive
+                        - ReadOnly
+                        - All
                         type: string
                     type: object
                   mode:
