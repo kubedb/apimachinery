@@ -29664,6 +29664,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerAvailabilityGroupSpec(r
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerLeaderElectionConfig"),
 						},
 					},
+					"secondaryAccess": {
+						SchemaProps: spec.SchemaProps{
+							Description: "secondaryAccess controls which connections are allowed to secondary replicas. https://learn.microsoft.com/en-us/sql/t-sql/statements/create-availability-group-transact-sql?view=sql-server-ver16#:~:text=SECONDARY_ROLE%20(%20...%20),availability%20groups).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
@@ -29819,13 +29826,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 					},
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret is an optional field to provide custom configuration file for database (i.e mssql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Description: "ConfigSecret is an optional field to provide a custom configuration file for the database (i.e., mssql.conf). If specified, this file will be used as a configuration file, otherwise a default configuration file will be used.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"init": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Init is used to initialize database",
+							Description: "Init is used to initialize a database",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec"),
 						},
 					},
