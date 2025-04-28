@@ -1472,9 +1472,9 @@ const (
 // =========================== Ignite Constants ============================
 const (
 	IgniteCustomConfigVolName = "custom-config"
-	IgniteCustomConfigDir     = "/tmp/config/custom_config/"
+	IgniteCustomConfigDir     = "/tmp/config/custom_config"
 	IgniteTempConfigVolName   = "temp-config"
-	IgniteTempConfigDir       = "/tmp/config/"
+	IgniteTempConfigDir       = "/tmp/config"
 	IgniteInitContainerName   = "ignite-init"
 	IgniteInitScriptVolName   = "init-scripts"
 	IgniteInitScriptDir       = "/scripts"
@@ -1705,16 +1705,6 @@ var (
 		},
 		Limits: core.ResourceList{
 			core.ResourceMemory: resource.MustParse("4Gi"),
-		},
-	}
-
-	IgniteDefaultResources = core.ResourceRequirements{
-		Requests: core.ResourceList{
-			core.ResourceCPU:    resource.MustParse("1"),
-			core.ResourceMemory: resource.MustParse("2Gi"),
-		},
-		Limits: core.ResourceList{
-			core.ResourceMemory: resource.MustParse("2Gi"),
 		},
 	}
 
