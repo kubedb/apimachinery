@@ -48,17 +48,16 @@ const (
 	MSSQLServerEndpointCert MSSQLServerCertificateAlias = "endpoint"
 )
 
-// +kubebuilder:validation:Enum=NO;READ_ONLY;ALL
-// +kubebuilder:default:=NO
-type SecondaryAccess string
+// +kubebuilder:validation:Enum=Passive;ReadOnly;All
+type SecondaryAccessMode string
 
 const (
-	// NO  = secondary is passive, no connections allowed
-	SecondaryAccessNo SecondaryAccess = "NO"
-	// READ_ONLY = secondary allows read-intent only
-	SecondaryAccessReadOnly SecondaryAccess = "READ_ONLY"
-	// ALL = secondary allows any connections
-	SecondaryAccessAll SecondaryAccess = "ALL"
+	// Passive  = secondary is passive, no connections allowed
+	SecondaryAccessModePassive SecondaryAccessMode = "Passive"
+	// ReadOnly = secondary allows read-intent only
+	SecondaryAccessModeReadOnly SecondaryAccessMode = "ReadOnly"
+	// All = secondary allows any connections
+	SecondaryAccessModeAll SecondaryAccessMode = "All"
 )
 
 // MSSQLServer defines a MSSQLServer database.
@@ -176,10 +175,11 @@ type MSSQLServerAvailabilityGroupSpec struct {
 	// +optional
 	LeaderElection *MSSQLServerLeaderElectionConfig `json:"leaderElection,omitempty"`
 
-	// secondaryAccess controls which connections are allowed to secondary replicas.
+	// SecondaryAccessMode controls which connections are allowed to secondary replicas.
 	// https://learn.microsoft.com/en-us/sql/t-sql/statements/create-availability-group-transact-sql?view=sql-server-ver16#secondary_role---
 	// +optional
-	SecondaryAccess SecondaryAccess `json:"secondaryAccess,omitempty"`
+	// +kubebuilder:default=Passive
+	SecondaryAccessMode SecondaryAccessMode `json:"secondaryAccessMode,omitempty"`
 }
 
 // MSSQLServerStatus defines the observed state of MSSQLServer
