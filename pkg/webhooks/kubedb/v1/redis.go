@@ -297,7 +297,7 @@ func (w RedisCustomWebhook) ValidateRedis(redis *dbapi.Redis) error {
 		return fmt.Errorf("auth Secret is not supported when disableAuth is true")
 	}
 	if redis.Spec.Mode == dbapi.RedisModeSentinel {
-		err = validateSentinelVersion(&redisVersion)
+		err = validateVersionForSentinelMode(&redisVersion)
 		if err != nil {
 			return err
 		}
@@ -374,7 +374,7 @@ func ValidateForSentinel(kbClient client.Client, redis *dbapi.Redis) error {
 	if err = kbClient.Get(context.TODO(), types.NamespacedName{Name: redis.Spec.Version}, &rdVersion); err != nil {
 		return err
 	}
-	if err = redisDbCompatibleWithSentinel(kbClient, &rdVersion, redis.Spec.SentinelRef); err != nil {
+	if err = checkSentinelDistributionMatches(kbClient, &rdVersion, redis.Spec.SentinelRef); err != nil {
 		return err
 	}
 
@@ -393,7 +393,7 @@ func ValidateForSentinel(kbClient client.Client, redis *dbapi.Redis) error {
 	return nil
 }
 
-func redisDbCompatibleWithSentinel(kbClient client.Client, rdVersion *catalogapi.RedisVersion, sentinelRef *dbapi.RedisSentinelRef) error {
+func checkSentinelDistributionMatches(kbClient client.Client, rdVersion *catalogapi.RedisVersion, sentinelRef *dbapi.RedisSentinelRef) error {
 	sentinelDB := dbapi.RedisSentinel{}
 	err := kbClient.Get(context.TODO(), types.NamespacedName{Name: sentinelRef.Name, Namespace: sentinelRef.Namespace}, &sentinelDB)
 	if err != nil {

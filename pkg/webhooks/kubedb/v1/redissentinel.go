@@ -204,7 +204,7 @@ func (w RedisSentinelCustomWebhook) ValidateSentinel(sentinel *dbapi.RedisSentin
 		return err
 	}
 
-	err = validateSentinelVersion(&redisVersion)
+	err = validateVersionForSentinelMode(&redisVersion)
 	if err != nil {
 		return err
 	}
@@ -294,10 +294,7 @@ func validateSentinelVolumeMountsForAllContainers(sentinel *dbapi.RedisSentinel)
 	return err
 }
 
-func validateSentinelVersion(redisVersion *catalogapi.RedisVersion) error {
-	if redisVersion.Spec.Distribution == catalogapi.RedisDistroValkey {
-		return nil
-	}
+func validateVersionForSentinelMode(redisVersion *catalogapi.RedisVersion) error {
 	rdVersion, err := semver.NewVersion(redisVersion.Spec.Version)
 	if err != nil {
 		return err
