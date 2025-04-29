@@ -407,5 +407,5 @@ func checkSentinelDistributionMatches(kbClient client.Client, rdVersion *catalog
 	if rdVersion.Spec.Distribution == sentinelVersion.Spec.Distribution {
 		return nil
 	}
-	return fmt.Errorf("redis version %v is not compatible with sentinel version %v", rdVersion.Spec.Version, sentinelVersion.Spec.Version)
+	return fmt.Errorf("redis distribution %v is not compatible with sentinel distribution %v", rdVersion.Spec.Distribution, sentinelVersion.Spec.Distribution)
 }
