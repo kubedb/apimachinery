@@ -1622,7 +1622,7 @@ const (
 	EnvNameMgmtApiListenTcpPort = "MGMT_API_LISTEN_TCP_PORT"
 	EnvValMgmtApiListenTcpPort  = "8081"
 	EnvNameMedusaMode           = "MEDUSA_MODE"
-	EnvValMedusaMode            = "RESTORE"
+	EnvValMedusaModeRestore     = "RESTORE"
 	EnvNameMedusaDebugSleep     = "DEBUG_SLEEP"
 	EnvValMedusaDebugSleep      = "0s"
 	CassandraNodetoolDir        = "/opt/cassandra/temp/bin"
