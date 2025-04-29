@@ -117,7 +117,11 @@ func (w MySQLCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj r
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to get mysqlversion: %s", oldMySQL.Spec.Version)
 	}
-	oldMySQL.SetDefaults(&mysqlVersion)
+
+	if err = oldMySQL.SetDefaults(&mysqlVersion); err != nil {
+		return nil, err
+	}
+
 	if oldMySQL.Spec.AuthSecret == nil {
 		oldMySQL.Spec.AuthSecret = mysql.Spec.AuthSecret
 	}
