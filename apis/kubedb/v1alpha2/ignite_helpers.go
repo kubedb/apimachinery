@@ -29,7 +29,6 @@ import (
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -118,7 +117,6 @@ func (i *Ignite) SetDefaults(kc client.Client) {
 		Name: i.Spec.Version,
 	}, &igVersion)
 	if err != nil {
-		klog.Errorf("can't get the ignite version object %s for %s \n", err.Error(), i.Spec.Version)
 		return
 	}
 
@@ -280,6 +278,5 @@ func (i *Ignite) PVCName(alias string) string {
 }
 
 func (i *Ignite) Address() string {
-	klog.Infof("%v.%v.svc", i.Name, i.Namespace)
 	return fmt.Sprintf("%v.%v.svc.cluster.local", i.Name, i.Namespace)
 }

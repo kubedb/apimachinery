@@ -80,10 +80,6 @@ type IgniteSpec struct {
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
-	// TLS contains tls configurations
-	// +optional
-	//	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
-
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
@@ -95,10 +91,6 @@ type IgniteSpec struct {
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional
 	Halted bool `json:"halted,omitempty"`
-
-	// Monitor is used monitor database instance
-	// +optional
-	//	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
