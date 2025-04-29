@@ -33602,11 +33602,6 @@ func schema_apimachinery_apis_ops_v1alpha1_RedisSentinelVerticalScalingSpec(ref 
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"),
 						},
 					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"),
-						},
-					},
 				},
 			},
 		},
