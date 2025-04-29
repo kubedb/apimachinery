@@ -68,8 +68,6 @@ type CassandraVersionSpec struct {
 	// Database Image
 	InitContainer CassandraInitContainer `json:"initContainer"`
 
-	MedusaInitContainer CassandraMedusaInitContainer `json:"medusaInitContainer"`
-
 	// SecurityContext is for the additional config for the DB container
 	// +optional
 	SecurityContext SecurityContext `json:"securityContext"`
@@ -90,16 +88,16 @@ type CassandraVersionDatabase struct {
 
 // CassandraVersionMedusa is the Cassandra-Medusa image
 type CassandraVersionMedusa struct {
+	Image string                     `json:"image"`
+	Init  CassandraVersionMedusaInit `json:"init"`
+}
+
+type CassandraVersionMedusaInit struct {
 	Image string `json:"image"`
 }
 
 // CassandraInitContainer is the Cassandra init Container image
 type CassandraInitContainer struct {
-	Image string `json:"image"`
-}
-
-// CassandraMedusaInitContainer is the Cassandra-Medusa init Container image
-type CassandraMedusaInitContainer struct {
 	Image string `json:"image"`
 }
 

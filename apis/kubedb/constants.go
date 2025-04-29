@@ -1586,8 +1586,8 @@ const (
 
 	CassandraVolumeData                  = "data"
 	CassandraDataDir                     = "/var/lib/cassandra"
-	CassandraServerLogDir                = "var/log/cassandra-server/cassandra-server.log"
-	CassandraServerErrorLogDir           = "var/log/cassandra-server/cassandra-server.err.log"
+	CassandraServerLogFile               = "var/log/cassandra-server/cassandra-server.log"
+	CassandraServerErrorLogFile          = "var/log/cassandra-server/cassandra-server.err.log"
 	CassandraContainerName               = "cassandra"
 	CassandraMedusaInitContainerName     = "medusa-init"
 	CassandraMetricExporterContainerName = "exporter"
@@ -1625,7 +1625,8 @@ const (
 	EnvValMedusaMode            = "RESTORE"
 	EnvNameMedusaDebugSleep     = "DEBUG_SLEEP"
 	EnvValMedusaDebugSleep      = "0s"
-	EnvNameCassandraNodetoolDir = "/opt/cassandra/temp/bin"
+	CassandraNodetoolDir        = "/opt/cassandra/temp/bin"
+	CassandraBackupBinary       = "nodetool"
 )
 
 // =========================== Virtual Secrets Constants ============================

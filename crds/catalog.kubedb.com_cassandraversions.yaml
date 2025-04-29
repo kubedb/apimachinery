@@ -70,15 +70,16 @@ spec:
                 properties:
                   image:
                     type: string
+                  init:
+                    properties:
+                      image:
+                        type: string
+                    required:
+                    - image
+                    type: object
                 required:
                 - image
-                type: object
-              medusaInitContainer:
-                properties:
-                  image:
-                    type: string
-                required:
-                - image
+                - init
                 type: object
               securityContext:
                 properties:
@@ -108,7 +109,6 @@ spec:
             - exporter
             - initContainer
             - medusa
-            - medusaInitContainer
             - version
             type: object
         type: object
