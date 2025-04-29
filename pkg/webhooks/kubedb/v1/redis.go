@@ -407,5 +407,5 @@ func redisDbCompatibleWithSentinel(kbClient client.Client, rdVersion *catalogapi
 	if rdVersion.Spec.Distribution == sentinelVersion.Spec.Distribution {
 		return nil
 	}
-	return fmt.Errorf("redis version %v is not compatible with sentinel version %v")
+	return fmt.Errorf("redis version %v is not compatible with sentinel version %v", rdVersion.Spec.Version, sentinelVersion.Spec.Version)
 }
