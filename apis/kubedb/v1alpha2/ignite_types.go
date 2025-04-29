@@ -51,9 +51,6 @@ type Ignite struct {
 	Status IgniteStatus `json:"status,omitempty"`
 }
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // IgniteSpec defines the desired state of Ignite.
 type IgniteSpec struct {
 	// Version of Ignite to be deployed.
@@ -78,7 +75,7 @@ type IgniteSpec struct {
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
-	// ConfigSecret is an optional field to provide custom configuration file for database (i.e config.properties).
+	// ConfigSecret is an optional field to provide custom configuration file for database (i.e node-configuration.xml).
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`

@@ -19,7 +19,6 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
-	"sync"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -39,17 +38,6 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
-
-var (
-	once          sync.Once
-	DefaultClient client.Client
-)
-
-func SetDefaultClient(kc client.Client) {
-	once.Do(func() {
-		DefaultClient = kc
-	})
-}
 
 func (i *Ignite) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralIgnite))
@@ -101,7 +89,9 @@ func (i *Ignite) GetAuthSecretName() string {
 
 func (i *Ignite) GetPersistentSecrets() []string {
 	var secrets []string
-	secrets = append(secrets, i.GetAuthSecretName())
+	if i.Spec.AuthSecret != nil {
+		secrets = append(secrets, i.GetAuthSecretName())
+	}
 	return secrets
 }
 
@@ -134,7 +124,7 @@ func (i *Ignite) SetDefaults(kc client.Client) {
 
 	i.setDefaultContainerSecurityContext(&igVersion, &i.Spec.PodTemplate)
 
-	dbContainer := coreutil.GetContainerByName(i.Spec.PodTemplate.Spec.Containers, "ignite")
+	dbContainer := coreutil.GetContainerByName(i.Spec.PodTemplate.Spec.Containers, kubedb.IgniteContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil || dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
@@ -175,10 +165,10 @@ func (i *Ignite) setDefaultContainerSecurityContext(igVersion *catalog.IgniteVer
 		podTemplate.Spec.SecurityContext.FSGroup = igVersion.Spec.SecurityContext.RunAsUser
 	}
 
-	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, "ignite")
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.IgniteContainerName)
 	if container == nil {
 		container = &core.Container{
-			Name: "ignite",
+			Name: kubedb.IgniteContainerName,
 		}
 		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 	}
@@ -188,10 +178,10 @@ func (i *Ignite) setDefaultContainerSecurityContext(igVersion *catalog.IgniteVer
 	}
 	i.assignDefaultContainerSecurityContext(igVersion, container.SecurityContext)
 
-	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, "ignite-init")
+	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.IgniteInitContainerName)
 	if initContainer == nil {
 		initContainer = &core.Container{
-			Name: "ignite-init",
+			Name: kubedb.IgniteInitContainerName,
 		}
 		podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 	}
