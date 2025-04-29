@@ -1471,6 +1471,35 @@ const (
 	FerretDBBackendConfigFile    = "user.conf"
 )
 
+// =========================== Ignite Constants ============================
+const (
+	IgniteCustomConfigVolName = "custom-config"
+	IgniteCustomConfigDir     = "/tmp/config/custom_config"
+	IgniteTempConfigVolName   = "temp-config"
+	IgniteTempConfigDir       = "/tmp/config"
+	IgniteInitContainerName   = "ignite-init"
+	IgniteInitScriptVolName   = "init-scripts"
+	IgniteInitScriptDir       = "/scripts"
+	IgniteConfigVolName       = "ignite-config"
+	IgniteWorkVolName         = "ignite-work"
+	IgniteConfigFileName      = "node-configuration.xml"
+	IgniteDataVolName         = "data"
+	IgniteDataDir             = "/ignite/data"
+	IgniteContainerName       = "ignite"
+	IgniteConfigDir           = "/ignite/config"
+	IgniteRestPortName        = "rest"
+	IgniteRestPort            = 8080
+	IgniteThinPortName        = "thin"
+	IgniteThinPort            = 10800
+	IgniteSPIPortName         = "spi"
+	IgniteSPIPort             = 47100
+	IgniteTCPPortName         = "tcp"
+	IgniteTCPPort             = 47500
+	IgniteJMXPortName         = "jmx"
+	IgniteJMXPort             = 49112
+	IgniteUserName            = "ignite"
+)
+
 // =========================== ClickHouse Constants ============================
 
 const (
@@ -1691,6 +1720,7 @@ var (
 			core.ResourceMemory: resource.MustParse("4Gi"),
 		},
 	}
+
 	// CoordinatorDefaultResources must be used for raft backed coordinators to avoid unintended leader switches
 	CoordinatorDefaultResources = core.ResourceRequirements{
 		Requests: core.ResourceList{

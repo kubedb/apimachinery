@@ -53,6 +53,10 @@ func (c *FakeCatalogV1alpha1) FerretDBVersions() v1alpha1.FerretDBVersionInterfa
 	return &FakeFerretDBVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) IgniteVersions() v1alpha1.IgniteVersionInterface {
+	return &FakeIgniteVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) KafkaConnectorVersions() v1alpha1.KafkaConnectorVersionInterface {
 	return &FakeKafkaConnectorVersions{c}
 }
