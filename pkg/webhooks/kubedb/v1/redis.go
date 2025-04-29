@@ -158,6 +158,7 @@ func (w RedisCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Obje
 
 var forbiddenRedisEnvVars = []string{
 	"REDISCLI_AUTH",
+	"VALKEYCLI_AUTH",
 	"SENTINEL_PASSWORD",
 }
 
@@ -167,6 +168,7 @@ var redisReservedVolumes = []string{
 	kubedb.RedisTLSVolumeName,
 	kubedb.RedisExporterTLSVolumeName,
 	kubedb.RedisConfigVolumeName,
+	kubedb.ValkeyConfigVolumeName,
 }
 
 var redisReservedMountPaths = []string{
@@ -174,6 +176,7 @@ var redisReservedMountPaths = []string{
 	kubedb.RedisScriptVolumePath,
 	kubedb.RedisTLSVolumePath,
 	kubedb.RedisConfigVolumePath,
+	kubedb.ValkeyConfigVolumePath,
 }
 
 func validateRedisUpdate(obj, oldObj *dbapi.Redis) error {
@@ -294,7 +297,7 @@ func (w RedisCustomWebhook) ValidateRedis(redis *dbapi.Redis) error {
 		return fmt.Errorf("auth Secret is not supported when disableAuth is true")
 	}
 	if redis.Spec.Mode == dbapi.RedisModeSentinel {
-		err = validateSentinelVersion(redisVersion.Spec.Version)
+		err = validateVersionForSentinelMode(&redisVersion)
 		if err != nil {
 			return err
 		}
@@ -366,6 +369,15 @@ func ValidateForSentinel(kbClient client.Client, redis *dbapi.Redis) error {
 	if err != nil {
 		return err
 	}
+
+	rdVersion := catalogapi.RedisVersion{}
+	if err = kbClient.Get(context.TODO(), types.NamespacedName{Name: redis.Spec.Version}, &rdVersion); err != nil {
+		return err
+	}
+	if err = checkSentinelDistributionMatches(kbClient, &rdVersion, redis.Spec.SentinelRef); err != nil {
+		return err
+	}
+
 	if redis.Spec.TLS == nil && sentinelDB.Spec.TLS != nil {
 		return fmt.Errorf("can not start monitoring with TLS enabled Sentinel as Redis is not TLS enabled")
 	}
@@ -379,4 +391,21 @@ func ValidateForSentinel(kbClient client.Client, redis *dbapi.Redis) error {
 		}
 	}
 	return nil
+}
+
+func checkSentinelDistributionMatches(kbClient client.Client, rdVersion *catalogapi.RedisVersion, sentinelRef *dbapi.RedisSentinelRef) error {
+	sentinelDB := dbapi.RedisSentinel{}
+	err := kbClient.Get(context.TODO(), types.NamespacedName{Name: sentinelRef.Name, Namespace: sentinelRef.Namespace}, &sentinelDB)
+	if err != nil {
+		return err
+	}
+	sentinelVersion := catalogapi.RedisVersion{}
+	err = kbClient.Get(context.TODO(), types.NamespacedName{Name: sentinelDB.Spec.Version}, &sentinelVersion)
+	if err != nil {
+		return err
+	}
+	if rdVersion.Spec.Distribution == sentinelVersion.Spec.Distribution {
+		return nil
+	}
+	return fmt.Errorf("redis distribution %v is not compatible with sentinel distribution %v", rdVersion.Spec.Distribution, sentinelVersion.Spec.Distribution)
 }
