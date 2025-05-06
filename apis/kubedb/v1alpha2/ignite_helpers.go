@@ -131,15 +131,7 @@ func (i *Ignite) SetDefaults(kc client.Client) {
 
 	i.SetHealthCheckerDefaults()
 
-	/*	if i.Spec.Monitor != nil {
-		if i.Spec.Monitor.Prometheus == nil {
-			i.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
-		}
-		if i.Spec.Monitor.Prometheus != nil && i.Spec.Monitor.Prometheus.Exporter.Port == 0 {
-			// i.Spec.Monitor.Prometheus.Exporter.Port =
-		}
-		i.Spec.Monitor.SetDefaults()
-	}*/
+	i.Spec.Monitor.SetDefaults()
 }
 
 func (i *Ignite) SetHealthCheckerDefaults() {
