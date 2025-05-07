@@ -26749,6 +26749,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseSpec(ref common.Referenc
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains tls configurations for client and server.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseTLSConfig"),
+						},
+					},
 					"serviceTemplates": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ServiceTemplates is an optional configuration for services used to expose database",
@@ -26795,7 +26801,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -26958,12 +26964,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClusterSpec(ref common.ReferenceCa
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
-					"tls": {
-						SchemaProps: spec.SchemaProps{
-							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseTLSConfig"),
-						},
-					},
 					"storage": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Storage to specify how storage shall be used.",
@@ -26981,7 +26981,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClusterSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseTLSConfig"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 

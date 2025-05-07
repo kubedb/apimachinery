@@ -538,6 +538,11 @@ func (in *ClickHouseSpec) DeepCopyInto(out *ClickHouseSpec) {
 		*out = new(v2.PodTemplateSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(ClickHouseTLSConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates
 		*out = make([]NamedServiceTemplateSpec, len(*in))
@@ -693,11 +698,6 @@ func (in *ClusterSpec) DeepCopyInto(out *ClusterSpec) {
 	if in.PodTemplate != nil {
 		in, out := &in.PodTemplate, &out.PodTemplate
 		*out = new(v2.PodTemplateSpec)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.TLS != nil {
-		in, out := &in.TLS, &out.TLS
-		*out = new(ClickHouseTLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.Storage != nil {

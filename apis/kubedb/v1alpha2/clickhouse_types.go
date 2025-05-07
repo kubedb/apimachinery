@@ -87,6 +87,9 @@ type ClickHouseSpec struct {
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
+	// TLS contains tls configurations for client and server.
+	// +optional
+	TLS *ClickHouseTLSConfig `json:"tls,omitempty"`
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
@@ -131,10 +134,6 @@ type ClusterSpec struct {
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
-
-	// TLS contains tls configurations for client and server.
-	// +optional
-	TLS *ClickHouseTLSConfig `json:"tls,omitempty"`
 
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
