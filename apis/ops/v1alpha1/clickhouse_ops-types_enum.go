@@ -16,12 +16,10 @@ const (
 	ClickHouseOpsRequestTypeRestart ClickHouseOpsRequestType = "Restart"
 	// ClickHouseOpsRequestTypeRotateAuth is a ClickHouseOpsRequestType of type RotateAuth.
 	ClickHouseOpsRequestTypeRotateAuth ClickHouseOpsRequestType = "RotateAuth"
-	// ClickHouseOpsRequestTypeUpdateVersion is a ClickHouseOpsRequestType of type UpdateVersion.
-	ClickHouseOpsRequestTypeUpdateVersion ClickHouseOpsRequestType = "UpdateVersion"
-	// ClickHouseOpsRequestTypeHorizontalScaling is a ClickHouseOpsRequestType of type HorizontalScaling.
-	ClickHouseOpsRequestTypeHorizontalScaling ClickHouseOpsRequestType = "HorizontalScaling"
 	// ClickHouseOpsRequestTypeVerticalScaling is a ClickHouseOpsRequestType of type VerticalScaling.
 	ClickHouseOpsRequestTypeVerticalScaling ClickHouseOpsRequestType = "VerticalScaling"
+	// ClickHouseOpsRequestTypeHorizontalScaling is a ClickHouseOpsRequestType of type HorizontalScaling.
+	ClickHouseOpsRequestTypeHorizontalScaling ClickHouseOpsRequestType = "HorizontalScaling"
 	// ClickHouseOpsRequestTypeVolumeExpansion is a ClickHouseOpsRequestType of type VolumeExpansion.
 	ClickHouseOpsRequestTypeVolumeExpansion ClickHouseOpsRequestType = "VolumeExpansion"
 )
@@ -31,9 +29,8 @@ var ErrInvalidClickHouseOpsRequestType = fmt.Errorf("not a valid ClickHouseOpsRe
 var _ClickHouseOpsRequestTypeNames = []string{
 	string(ClickHouseOpsRequestTypeRestart),
 	string(ClickHouseOpsRequestTypeRotateAuth),
-	string(ClickHouseOpsRequestTypeUpdateVersion),
-	string(ClickHouseOpsRequestTypeHorizontalScaling),
 	string(ClickHouseOpsRequestTypeVerticalScaling),
+	string(ClickHouseOpsRequestTypeHorizontalScaling),
 	string(ClickHouseOpsRequestTypeVolumeExpansion),
 }
 
@@ -49,9 +46,8 @@ func ClickHouseOpsRequestTypeValues() []ClickHouseOpsRequestType {
 	return []ClickHouseOpsRequestType{
 		ClickHouseOpsRequestTypeRestart,
 		ClickHouseOpsRequestTypeRotateAuth,
-		ClickHouseOpsRequestTypeUpdateVersion,
-		ClickHouseOpsRequestTypeHorizontalScaling,
 		ClickHouseOpsRequestTypeVerticalScaling,
+		ClickHouseOpsRequestTypeHorizontalScaling,
 		ClickHouseOpsRequestTypeVolumeExpansion,
 	}
 }
@@ -69,12 +65,11 @@ func (x ClickHouseOpsRequestType) IsValid() bool {
 }
 
 var _ClickHouseOpsRequestTypeValue = map[string]ClickHouseOpsRequestType{
-	"Restart":    ClickHouseOpsRequestTypeRestart,
-	"RotateAuth": ClickHouseOpsRequestTypeRotateAuth,
-	"UpdateVersion": ClickHouseOpsRequestTypeUpdateVersion,
+	"Restart":           ClickHouseOpsRequestTypeRestart,
+	"RotateAuth":        ClickHouseOpsRequestTypeRotateAuth,
+	"VerticalScaling":   ClickHouseOpsRequestTypeVerticalScaling,
 	"HorizontalScaling": ClickHouseOpsRequestTypeHorizontalScaling,
-	"VerticalScaling": ClickHouseOpsRequestTypeVerticalScaling,
-	"VolumeExpansion": ClickHouseOpsRequestTypeVolumeExpansion,
+	"VolumeExpansion":   ClickHouseOpsRequestTypeVolumeExpansion,
 }
 
 // ParseClickHouseOpsRequestType attempts to convert a string to a ClickHouseOpsRequestType.

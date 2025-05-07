@@ -75,8 +75,8 @@ type ClickHouseOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;RotateAuth
-// ENUM(Restart, RotateAuth)
+// +kubebuilder:validation:Enum=Restart;RotateAuth;VerticalScaling;HorizontalScaling;VolumeExpansion
+// ENUM(Restart, RotateAuth, VerticalScaling, HorizontalScaling, VolumeExpansion)
 type ClickHouseOpsRequestType string
 
 // ClickHouseHorizontalScalingSpec contains the horizontal scaling information of a clickhouse cluster

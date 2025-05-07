@@ -79,6 +79,9 @@ spec:
                 enum:
                 - Restart
                 - RotateAuth
+                - VerticalScaling
+                - HorizontalScaling
+                - VolumeExpansion
                 type: string
               updateVersion:
                 properties:
