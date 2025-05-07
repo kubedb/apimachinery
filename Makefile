@@ -292,7 +292,7 @@ gen-enum: $(BUILD_DIRS)
 manifests: gen-crds patch-crds label-crds
 
 .PHONY: gen
-gen: clientset gen-enum manifests openapi #gen-crd-protos
+gen: clientset gen-enum manifests openapi gen-conversion #gen-crd-protos
 
 fmt: $(BUILD_DIRS)
 	@docker run                                                 \
