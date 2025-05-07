@@ -132,6 +132,10 @@ type ClusterSpec struct {
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
+	// TLS contains tls configurations for client and server.
+	// +optional
+	TLS *ClickHouseTLSConfig `json:"tls,omitempty"`
+
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
@@ -192,4 +196,19 @@ type ClickHouseList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ClickHouse `json:"items"`
+}
+
+type ClickHouseTLSConfig struct {
+	// +optional
+	kmapi.TLSConfig `json:",omitempty"`
+
+	// +optional
+	ClientTLSIssuer *ClientTLSIssuer `json:"clientTlsIssuer,omitempty"`
+}
+
+type ClientTLSIssuer struct {
+	// +optional
+	ClientTLS *bool `json:"clientTLS"`
+	// +optional
+	Name *string `json:"name,omitempty"`
 }
