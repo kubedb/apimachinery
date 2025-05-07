@@ -16,6 +16,12 @@ const (
 	ClickHouseOpsRequestTypeRestart ClickHouseOpsRequestType = "Restart"
 	// ClickHouseOpsRequestTypeRotateAuth is a ClickHouseOpsRequestType of type RotateAuth.
 	ClickHouseOpsRequestTypeRotateAuth ClickHouseOpsRequestType = "RotateAuth"
+	// ClickHouseOpsRequestTypeVerticalScaling is a ClickHouseOpsRequestType of type VerticalScaling.
+	ClickHouseOpsRequestTypeVerticalScaling ClickHouseOpsRequestType = "VerticalScaling"
+	// ClickHouseOpsRequestTypeHorizontalScaling is a ClickHouseOpsRequestType of type HorizontalScaling.
+	ClickHouseOpsRequestTypeHorizontalScaling ClickHouseOpsRequestType = "HorizontalScaling"
+	// ClickHouseOpsRequestTypeVolumeExpansion is a ClickHouseOpsRequestType of type VolumeExpansion.
+	ClickHouseOpsRequestTypeVolumeExpansion ClickHouseOpsRequestType = "VolumeExpansion"
 )
 
 var ErrInvalidClickHouseOpsRequestType = fmt.Errorf("not a valid ClickHouseOpsRequestType, try [%s]", strings.Join(_ClickHouseOpsRequestTypeNames, ", "))
@@ -23,6 +29,9 @@ var ErrInvalidClickHouseOpsRequestType = fmt.Errorf("not a valid ClickHouseOpsRe
 var _ClickHouseOpsRequestTypeNames = []string{
 	string(ClickHouseOpsRequestTypeRestart),
 	string(ClickHouseOpsRequestTypeRotateAuth),
+	string(ClickHouseOpsRequestTypeVerticalScaling),
+	string(ClickHouseOpsRequestTypeHorizontalScaling),
+	string(ClickHouseOpsRequestTypeVolumeExpansion),
 }
 
 // ClickHouseOpsRequestTypeNames returns a list of possible string values of ClickHouseOpsRequestType.
@@ -37,6 +46,9 @@ func ClickHouseOpsRequestTypeValues() []ClickHouseOpsRequestType {
 	return []ClickHouseOpsRequestType{
 		ClickHouseOpsRequestTypeRestart,
 		ClickHouseOpsRequestTypeRotateAuth,
+		ClickHouseOpsRequestTypeVerticalScaling,
+		ClickHouseOpsRequestTypeHorizontalScaling,
+		ClickHouseOpsRequestTypeVolumeExpansion,
 	}
 }
 
@@ -53,8 +65,11 @@ func (x ClickHouseOpsRequestType) IsValid() bool {
 }
 
 var _ClickHouseOpsRequestTypeValue = map[string]ClickHouseOpsRequestType{
-	"Restart":    ClickHouseOpsRequestTypeRestart,
-	"RotateAuth": ClickHouseOpsRequestTypeRotateAuth,
+	"Restart":           ClickHouseOpsRequestTypeRestart,
+	"RotateAuth":        ClickHouseOpsRequestTypeRotateAuth,
+	"VerticalScaling":   ClickHouseOpsRequestTypeVerticalScaling,
+	"HorizontalScaling": ClickHouseOpsRequestTypeHorizontalScaling,
+	"VolumeExpansion":   ClickHouseOpsRequestTypeVolumeExpansion,
 }
 
 // ParseClickHouseOpsRequestType attempts to convert a string to a ClickHouseOpsRequestType.
