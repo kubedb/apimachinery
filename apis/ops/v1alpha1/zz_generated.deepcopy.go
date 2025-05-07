@@ -4686,6 +4686,11 @@ func (in *ProxySQLHorizontalScalingSpec) DeepCopyInto(out *ProxySQLHorizontalSca
 		*out = new(int32)
 		**out = **in
 	}
+	if in.Backend != nil {
+		in, out := &in.Backend, &out.Backend
+		*out = new(apiv1.ObjectReference)
+		**out = **in
+	}
 	return
 }
 
