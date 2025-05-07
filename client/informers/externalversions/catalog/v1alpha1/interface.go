@@ -36,6 +36,8 @@ type Interface interface {
 	EtcdVersions() EtcdVersionInformer
 	// FerretDBVersions returns a FerretDBVersionInformer.
 	FerretDBVersions() FerretDBVersionInformer
+	// HazelcastVersions returns a HazelcastVersionInformer.
+	HazelcastVersions() HazelcastVersionInformer
 	// IgniteVersions returns a IgniteVersionInformer.
 	IgniteVersions() IgniteVersionInformer
 	// KafkaConnectorVersions returns a KafkaConnectorVersionInformer.
@@ -115,6 +117,11 @@ func (v *version) EtcdVersions() EtcdVersionInformer {
 // FerretDBVersions returns a FerretDBVersionInformer.
 func (v *version) FerretDBVersions() FerretDBVersionInformer {
 	return &ferretDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// HazelcastVersions returns a HazelcastVersionInformer.
+func (v *version) HazelcastVersions() HazelcastVersionInformer {
+	return &hazelcastVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // IgniteVersions returns a IgniteVersionInformer.
