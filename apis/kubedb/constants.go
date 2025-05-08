@@ -165,7 +165,8 @@ const (
 	MemcachedUserName = "user"
 	MemcachedPassword = "pass"
 
-	click
+	// =========================== MongoDB Constants ============================
+
 	MongoDBDatabasePortName       = "db"
 	MongoDBPrimaryServicePortName = "primary"
 	MongoDBDatabasePort           = 27017
@@ -1526,8 +1527,10 @@ const (
 	ClickHouseUserConfigDir               = "/etc/clickhouse-server/user.d"
 	ClickHouseLogPath                     = "/var/log/clickhouse-server/clickhouse-server.log"
 	ClickHouseErrorLogPath                = "/var/log/clickhouse-server/clickhouse-server.err.log"
-	ClickHouseClientCerts                 = "/etc/clickhouse-server/certs/all"
+	ClickHouseClientCerts                 = "/etc/clickhouse-server/certs"
 	ClickHouseClientCertName              = "cacerts"
+	ClickHouseTmClientCertName            = "cacerts-tmp"
+	ClickHouseTmClientCertPath            = "/ch-tmp-certs"
 
 	// keeper
 	ClickHouseKeeperDataPath     = "/var/lib/clickhouse_keeper"
