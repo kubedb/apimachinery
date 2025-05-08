@@ -124,6 +124,14 @@ func (w *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 		}
 	}
 
+	if db.Spec.TLS != nil && db.Spec.TLS.ClientTLSCaCertRef != nil {
+		if db.Spec.TLS.ClientTLSCaCertRef.Name == "" {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("clientTLSCaCertRef").Child("name"),
+				db.Name,
+				"secret name is missing"))
+		}
+	}
+
 	if db.Spec.DisableSecurity {
 		if db.Spec.AuthSecret != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authSecret"),
