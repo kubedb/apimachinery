@@ -10060,12 +10060,14 @@ spec:
                       - alias
                       type: object
                     type: array
-                  clientTlsIssuer:
+                  clientTlsCaCertRef:
                     properties:
-                      clientTLS:
-                        type: boolean
                       name:
                         type: string
+                      namespace:
+                        type: string
+                    required:
+                    - name
                     type: object
                   issuerRef:
                     properties:

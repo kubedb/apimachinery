@@ -202,12 +202,11 @@ type ClickHouseTLSConfig struct {
 	kmapi.TLSConfig `json:",omitempty"`
 
 	// +optional
-	ClientTLSIssuer *ClientTLSIssuer `json:"clientTlsIssuer,omitempty"`
+	ClientTLSCaCertRef *ClientTLSCaCertRef `json:"clientTlsCaCertRef,omitempty"`
 }
 
-type ClientTLSIssuer struct {
+type ClientTLSCaCertRef struct {
+	// Name and namespace of the ca certs
 	// +optional
-	ClientTLS *bool `json:"clientTLS"`
-	// +optional
-	Name *string `json:"name,omitempty"`
+	*kmapi.ObjectReference `json:",omitempty"`
 }

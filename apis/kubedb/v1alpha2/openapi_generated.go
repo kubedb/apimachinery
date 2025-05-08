@@ -523,7 +523,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseTLSConfig":                           schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickhouseApp":                                 schema_apimachinery_apis_kubedb_v1alpha2_ClickhouseApp(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClientTLSIssuer":                               schema_apimachinery_apis_kubedb_v1alpha2_ClientTLSIssuer(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClientTLSCaCertRef":                            schema_apimachinery_apis_kubedb_v1alpha2_ClientTLSCaCertRef(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterSpec":                                   schema_apimachinery_apis_kubedb_v1alpha2_ClusterSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterTopology":                               schema_apimachinery_apis_kubedb_v1alpha2_ClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConnectionPoolConfig":                          schema_apimachinery_apis_kubedb_v1alpha2_ConnectionPoolConfig(ref),
@@ -26874,16 +26874,16 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseTLSConfig(ref common.Ref
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"clientTlsIssuer": {
+					"clientTlsCaCertRef": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClientTLSIssuer"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClientTLSCaCertRef"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClientTLSIssuer"},
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClientTLSCaCertRef"},
 	}
 }
 
@@ -26907,25 +26907,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickhouseApp(ref common.Reference
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_ClientTLSIssuer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_kubedb_v1alpha2_ClientTLSCaCertRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"clientTLS": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
 			},
 		},
 	}
