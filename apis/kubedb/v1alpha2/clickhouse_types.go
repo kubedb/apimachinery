@@ -202,7 +202,7 @@ type ClickHouseTLSConfig struct {
 	kmapi.TLSConfig `json:",omitempty"`
 
 	// +optional
-	ClientTLSCaCertRef *ClientTLSCaCertRef `json:"clientTlsCaCertRef,omitempty"`
+	ClientCACertificateRef []core.SecretKeySelector `json:"clientCaCertificateRef,omitempty"`
 }
 
 type ClientTLSCaCertRef struct {
