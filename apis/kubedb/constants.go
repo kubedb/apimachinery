@@ -1499,6 +1499,11 @@ const (
 	IgniteJMXPortName         = "jmx"
 	IgniteJMXPort             = 49112
 	IgniteUserName            = "ignite"
+	OPTION_LIBS               = "OPTION_LIBS"
+	CONFIG_URI                = "CONFIG_URI"
+	CONTROL_JVM_OPTS          = "CONTROL_JVM_OPTS"
+	IGNITE_PASSWORD           = "IGNITE_PASSWORD"
+	DISABLE_SECURITY          = "DISABLE_SECURITY"
 )
 
 // =========================== ClickHouse Constants ============================
