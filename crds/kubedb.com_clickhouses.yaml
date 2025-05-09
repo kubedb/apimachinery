@@ -10060,15 +10060,21 @@ spec:
                       - alias
                       type: object
                     type: array
-                  clientTlsCaCertRef:
-                    properties:
-                      name:
-                        type: string
-                      namespace:
-                        type: string
-                    required:
-                    - name
-                    type: object
+                  clientCaCertificateRef:
+                    items:
+                      properties:
+                        key:
+                          type: string
+                        name:
+                          default: ""
+                          type: string
+                        optional:
+                          type: boolean
+                      required:
+                      - key
+                      type: object
+                      x-kubernetes-map-type: atomic
+                    type: array
                   issuerRef:
                     properties:
                       apiGroup:

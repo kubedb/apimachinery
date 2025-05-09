@@ -26874,16 +26874,24 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseTLSConfig(ref common.Ref
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"clientTlsCaCertRef": {
+					"clientCaCertificateRef": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClientTLSCaCertRef"),
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.SecretKeySelector"),
+									},
+								},
+							},
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClientTLSCaCertRef"},
+			"k8s.io/api/core/v1.SecretKeySelector"},
 	}
 }
 
