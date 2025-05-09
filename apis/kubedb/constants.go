@@ -1527,10 +1527,10 @@ const (
 	ClickHouseUserConfigDir               = "/etc/clickhouse-server/user.d"
 	ClickHouseLogPath                     = "/var/log/clickhouse-server/clickhouse-server.log"
 	ClickHouseErrorLogPath                = "/var/log/clickhouse-server/clickhouse-server.err.log"
-	ClickHouseClientCerts                 = "/etc/clickhouse-server/certs"
+	ClickHouseClientCertPath              = "/etc/clickhouse-server/certs"
 	ClickHouseClientCertName              = "cacerts"
-	ClickHouseTmClientCertName            = "cacerts-tmp"
-	ClickHouseTmClientCertPath            = "/ch-tmp-certs"
+	ClickHouseTempClientCertName          = "cacerts-temp"
+	ClickHouseTempmClientCertPath         = "/ch-certs"
 
 	// keeper
 	ClickHouseKeeperDataPath     = "/var/lib/clickhouse_keeper"
