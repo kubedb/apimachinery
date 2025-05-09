@@ -204,9 +204,3 @@ type ClickHouseTLSConfig struct {
 	// +optional
 	ClientCACertificateRef []core.SecretKeySelector `json:"clientCaCertificateRef,omitempty"`
 }
-
-type ClientTLSCaCertRef struct {
-	// Name and namespace of the ca certs
-	// +optional
-	*kmapi.ObjectReference `json:",omitempty"`
-}

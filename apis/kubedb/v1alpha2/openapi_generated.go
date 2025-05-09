@@ -523,7 +523,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseTLSConfig":                           schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickhouseApp":                                 schema_apimachinery_apis_kubedb_v1alpha2_ClickhouseApp(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClientTLSCaCertRef":                            schema_apimachinery_apis_kubedb_v1alpha2_ClientTLSCaCertRef(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterSpec":                                   schema_apimachinery_apis_kubedb_v1alpha2_ClusterSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterTopology":                               schema_apimachinery_apis_kubedb_v1alpha2_ClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConnectionPoolConfig":                          schema_apimachinery_apis_kubedb_v1alpha2_ConnectionPoolConfig(ref),
@@ -26912,16 +26911,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickhouseApp(ref common.Reference
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouse"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_ClientTLSCaCertRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-			},
-		},
 	}
 }
 
