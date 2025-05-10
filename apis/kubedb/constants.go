@@ -1511,7 +1511,7 @@ const (
 	ClickhousePromethues  = 9363
 	ClickHouseRaftPort    = 9234
 
-	ComponentCoOrdinator = "co-ordinator"
+	ComponentCoOrdinator = "coordinator"
 
 	ClickHousePromethusEndpoint           = "/metrics"
 	ClickHouseDataDir                     = "/var/lib/clickhouse"
@@ -1527,6 +1527,10 @@ const (
 	ClickHouseUserConfigDir               = "/etc/clickhouse-server/user.d"
 	ClickHouseLogPath                     = "/var/log/clickhouse-server/clickhouse-server.log"
 	ClickHouseErrorLogPath                = "/var/log/clickhouse-server/clickhouse-server.err.log"
+	ClickHouseClientCertPath              = "/etc/clickhouse-server/certs"
+	ClickHouseClientCertName              = "cacerts"
+	ClickHouseTempClientCertName          = "cacerts-temp"
+	ClickHouseTempmClientCertPath         = "/ch-certs"
 
 	// keeper
 	ClickHouseKeeperDataPath     = "/var/lib/clickhouse_keeper"

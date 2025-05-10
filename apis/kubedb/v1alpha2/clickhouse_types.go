@@ -87,6 +87,10 @@ type ClickHouseSpec struct {
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
+	// TLS contains tls configurations for client and server.
+	// +optional
+	TLS *ClickHouseTLSConfig `json:"tls,omitempty"`
+
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
@@ -192,4 +196,12 @@ type ClickHouseList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []ClickHouse `json:"items"`
+}
+
+type ClickHouseTLSConfig struct {
+	// +optional
+	kmapi.TLSConfig `json:",omitempty"`
+
+	// +optional
+	ClientCACertificateRefs []core.SecretKeySelector `json:"clientCaCertificateRefs,omitempty"`
 }
