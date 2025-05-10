@@ -617,8 +617,8 @@ func (in *ClickHouseStatus) DeepCopy() *ClickHouseStatus {
 func (in *ClickHouseTLSConfig) DeepCopyInto(out *ClickHouseTLSConfig) {
 	*out = *in
 	in.TLSConfig.DeepCopyInto(&out.TLSConfig)
-	if in.ClientCACertificateRef != nil {
-		in, out := &in.ClientCACertificateRef, &out.ClientCACertificateRef
+	if in.ClientCACertificateRefs != nil {
+		in, out := &in.ClientCACertificateRefs, &out.ClientCACertificateRefs
 		*out = make([]corev1.SecretKeySelector, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])

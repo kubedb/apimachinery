@@ -90,6 +90,7 @@ type ClickHouseSpec struct {
 	// TLS contains tls configurations for client and server.
 	// +optional
 	TLS *ClickHouseTLSConfig `json:"tls,omitempty"`
+
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
@@ -202,5 +203,5 @@ type ClickHouseTLSConfig struct {
 	kmapi.TLSConfig `json:",omitempty"`
 
 	// +optional
-	ClientCACertificateRef []core.SecretKeySelector `json:"clientCaCertificateRef,omitempty"`
+	ClientCACertificateRefs []core.SecretKeySelector `json:"clientCaCertificateRefs,omitempty"`
 }

@@ -26873,7 +26873,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseTLSConfig(ref common.Ref
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"clientCaCertificateRef": {
+					"clientCaCertificateRefs": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
 							Items: &spec.SchemaOrArray{
