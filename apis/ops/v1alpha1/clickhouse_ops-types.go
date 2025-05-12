@@ -81,8 +81,8 @@ type ClickHouseOpsRequestType string
 
 // ClickHouseHorizontalScalingSpec contains the horizontal scaling information of a clickhouse cluster
 type ClickHouseHorizontalScalingSpec struct {
-	// Number of node
-	Node *int32 `json:"node,omitempty"`
+	// specifies the number of replica
+	Replicas *int32 `json:"replicas,omitempty"`
 }
 
 // ClickHouseVerticalScalingSpec contains the vertical scaling information of a clickhouse cluster
