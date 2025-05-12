@@ -64,7 +64,11 @@ func (w *RedisOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj r
 	}
 
 	redisLog.Info("validate create", "name", req.Name)
-	return nil, w.isDatabaseRefValid(req)
+	err := w.isDatabaseRefValid(req)
+	if err != nil {
+		return nil, err
+	}
+	return nil, w.validateCreateOrUpdate(req)
 }
 
 func (w *RedisOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -80,7 +84,11 @@ func (w *RedisOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err := validateRedisOpsRequest(newReq, oldReq); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return nil, w.isDatabaseRefValid(newReq)
+	err := w.isDatabaseRefValid(newReq)
+	if err != nil {
+		return nil, err
+	}
+	return nil, w.validateCreateOrUpdate(newReq)
 }
 
 func (w *RedisOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
