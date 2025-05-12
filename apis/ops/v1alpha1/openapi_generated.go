@@ -26067,9 +26067,9 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseHorizontalScalingSpec(ref c
 				Description: "ClickHouseHorizontalScalingSpec contains the horizontal scaling information of a clickhouse cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"node": {
+					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of node",
+							Description: "specifies the number of replica",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
