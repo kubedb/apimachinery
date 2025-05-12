@@ -124,8 +124,8 @@ func (w *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 		}
 	}
 
-	if db.Spec.TLS != nil && db.Spec.TLS.ClientCACertificateRef != nil {
-		for _, secret := range db.Spec.TLS.ClientCACertificateRef {
+	if db.Spec.TLS != nil && db.Spec.TLS.ClientCACertificateRefs != nil {
+		for _, secret := range db.Spec.TLS.ClientCACertificateRefs {
 			if secret.Name == "" {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("clientCaCertificateRef").Child("name"),
 					db.Name,
