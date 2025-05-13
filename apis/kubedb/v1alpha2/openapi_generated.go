@@ -26875,7 +26875,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseTLSConfig(ref common.Ref
 				Properties: map[string]spec.Schema{
 					"clientCaCertificateRefs": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "Specifies the external ca certificate secrets, which clickhouse will use as a client.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
