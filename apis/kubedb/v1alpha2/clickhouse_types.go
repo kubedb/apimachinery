@@ -199,9 +199,11 @@ type ClickHouseList struct {
 }
 
 type ClickHouseTLSConfig struct {
+	// TLS contains tls configurations for client and server.
 	// +optional
 	kmapi.TLSConfig `json:",omitempty"`
 
+	// Specifies the external ca certificate secrets, which clickhouse will use as a client.
 	// +optional
 	ClientCACertificateRefs []core.SecretKeySelector `json:"clientCaCertificateRefs,omitempty"`
 }

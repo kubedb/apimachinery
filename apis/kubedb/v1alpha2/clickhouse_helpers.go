@@ -309,6 +309,7 @@ func (c *ClickHouse) SetDefaults(kc client.Client) {
 		klog.Errorf("can't get the clickhouse version object %s for %s \n", err.Error(), c.Spec.Version)
 		return
 	}
+
 	if c.Spec.ClusterTopology != nil {
 		clusterName := map[string]bool{}
 		clusters := c.Spec.ClusterTopology.Cluster
