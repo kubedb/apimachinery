@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis"
@@ -34,6 +35,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/klog/v2"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -156,7 +158,7 @@ func (h *Hazelcast) SetDefaults(kc client.Client) {
 		Name: h.Spec.Version,
 	}, &hzVersion)
 	if err != nil {
-		klog.Errorf("can't get the solr version object %s for %s \n", err.Error(), h.Spec.Version)
+		klog.Errorf("can't get the hazelcast version object %s for %s \n", err.Error(), h.Spec.Version)
 		return
 	}
 	if h.Spec.Replicas == nil {
@@ -365,4 +367,37 @@ func (h *Hazelcast) StatsService() mona.StatsAccessor {
 
 func (h *Hazelcast) StatsServiceLabels() map[string]string {
 	return h.ServiceLabels(StatsServiceAlias, map[string]string{kube.LabelRole: kube.RoleStats})
+}
+
+// CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
+func (h *Hazelcast) CertificateName(alias HazelcastCertificateAlias) string {
+	return meta_util.NameWithSuffix(h.Name, fmt.Sprintf("%s-cert", string(alias)))
+}
+
+// ClientCertificateCN returns the CN for a client certificate
+func (h *Hazelcast) ClientCertificateCN(alias HazelcastCertificateAlias) string {
+	return fmt.Sprintf("%s-%s", h.Name, string(alias))
+}
+
+// GetCertSecretName returns the secret name for a certificate alias if any,
+// otherwise returns default certificate secret name for the given alias.
+func (h *Hazelcast) GetCertSecretName(alias HazelcastCertificateAlias) string {
+	if h.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(h.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return h.CertificateName(alias)
+}
+
+// CertSecretVolumeName returns the CertSecretVolumeName
+// Values will be like: client-certs, server-certs etc.
+func (h *Hazelcast) CertSecretVolumeName(alias HazelcastCertificateAlias) string {
+	return string(alias) + "-certs"
+}
+
+// CertSecretVolumeMountPath returns the CertSecretVolumeMountPath
+func (h *Hazelcast) CertSecretVolumeMountPath(configDir string, cert string) string {
+	return filepath.Join(configDir, cert)
 }
