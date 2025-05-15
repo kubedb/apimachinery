@@ -99,6 +99,19 @@ type HazelcastSpec struct {
 	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 
+	// To enable ssl for http layer
+	EnableSSL bool `json:"enableSSL,omitempty"`
+
+	// Client auth need or want
+	ClientAuthSSL string `json:"clientAuthSSL,omitempty"`
+
+	// TLS contains tls configurations for client and server.
+	// +optional
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+
+	// +optional
+	KeystoreSecret *core.LocalObjectReference `json:"keystoreSecret,omitempty"`
+
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`

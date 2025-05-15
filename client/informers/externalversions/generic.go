@@ -322,6 +322,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().EtcdOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("ferretdbopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().FerretDBOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("hazelcastopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().HazelcastOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("kafkaopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().KafkaOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("mssqlserveropsrequests"):

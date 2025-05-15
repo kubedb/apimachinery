@@ -2078,6 +2078,16 @@ func (in *HazelcastSpec) DeepCopyInto(out *HazelcastSpec) {
 		}
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(apiv1.TLSConfig)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.KeystoreSecret != nil {
+		in, out := &in.KeystoreSecret, &out.KeystoreSecret
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(monitoringagentapiapiv1.AgentSpec)

@@ -316,6 +316,9 @@ func (h *Hazelcast) AppBindingMeta() appcat.AppBindingMeta {
 
 func (h *Hazelcast) GetConnectionScheme() string {
 	scheme := "http"
+	if h.Spec.EnableSSL {
+		scheme = "https"
+	}
 	return scheme
 }
 
