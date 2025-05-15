@@ -503,9 +503,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ArchiverOptions":                                  schema_apimachinery_apis_ops_v1alpha1_ArchiverOptions(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec":                                         schema_apimachinery_apis_ops_v1alpha1_AuthSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseHorizontalScalingSpec":                  schema_apimachinery_apis_ops_v1alpha1_ClickHouseHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseOpsRequest":                             schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseOpsRequestList":                         schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseOpsRequestSpec":                         schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseUpdateVersionSpec":                      schema_apimachinery_apis_ops_v1alpha1_ClickHouseUpdateVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseVerticalScalingSpec":                    schema_apimachinery_apis_ops_v1alpha1_ClickHouseVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseVolumeExpansionSpec":                    schema_apimachinery_apis_ops_v1alpha1_ClickHouseVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ConfigNode":                                       schema_apimachinery_apis_ops_v1alpha1_ConfigNode(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources":                               schema_apimachinery_apis_ops_v1alpha1_ContainerResources(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidCustomConfigurationSpec":                     schema_apimachinery_apis_ops_v1alpha1_DruidCustomConfigurationSpec(ref),
@@ -26056,6 +26060,26 @@ func schema_apimachinery_apis_ops_v1alpha1_AuthSpec(ref common.ReferenceCallback
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_ClickHouseHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClickHouseHorizontalScalingSpec contains the horizontal scaling information of a clickhouse cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "specifies the number of replica",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -26185,9 +26209,33 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestSpec(ref common.R
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
+					"updateVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure. Specifies information necessary for upgrading ClickHouse",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseUpdateVersionSpec"),
+						},
+					},
+					"horizontalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for horizontal scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseHorizontalScalingSpec"),
+						},
+					},
+					"verticalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for vertical scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseVerticalScalingSpec"),
+						},
+					},
+					"volumeExpansion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for volume expansion",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseVolumeExpansionSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+							Description: "Specifies information necessary for custom configuration of ClickHouse",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
@@ -26203,7 +26251,77 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_ClickHouseUpdateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClickHouseUpdateVersionSpec contains the update version information of a clickhouse cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the target version name from catalog",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_ClickHouseVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClickHouseVerticalScalingSpec contains the vertical scaling information of a clickhouse cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for nodes",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_ClickHouseVolumeExpansionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ClickHouseVolumeExpansionSpec is the spec for ClickHouse volume expansion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for nodes",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
