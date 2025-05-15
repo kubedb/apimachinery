@@ -131,6 +131,17 @@ type HazelcastStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
+// +kubebuilder:validation:Enum=ca;transport;http;client;server
+type HazelcastCertificateAlias string
+
+const (
+	HazelcastCACert        HazelcastCertificateAlias = "ca"
+	HazelcastTransportCert HazelcastCertificateAlias = "transport"
+	HazelcastHTTPCert      HazelcastCertificateAlias = "http"
+	HazelcastClientCert    HazelcastCertificateAlias = "client"
+	HazelcastServerCert    HazelcastCertificateAlias = "server"
+)
+
 // HazelcastList contains a list of Hazelcast.
 
 // +kubebuilder:object:root=true
