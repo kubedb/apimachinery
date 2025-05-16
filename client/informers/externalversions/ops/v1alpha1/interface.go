@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// CassandraOpsRequests returns a CassandraOpsRequestInformer.
+	CassandraOpsRequests() CassandraOpsRequestInformer
 	// ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
 	ClickHouseOpsRequests() ClickHouseOpsRequestInformer
 	// DruidOpsRequests returns a DruidOpsRequestInformer.
@@ -79,6 +81,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// CassandraOpsRequests returns a CassandraOpsRequestInformer.
+func (v *version) CassandraOpsRequests() CassandraOpsRequestInformer {
+	return &cassandraOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
