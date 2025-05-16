@@ -767,8 +767,10 @@ const (
 	HazelcastInitContainerName    = "hazelcast-init"
 	HazelcastConfigDir            = "/data/hazelcast"
 	HazelcastKeystorePassKey      = "keystore-secret"
-	HazelcastServerKeystorePath   = "/data/etc/keystore.p12"
-	HazelcastServerTruststorePath = "/data/etc/truststore.p12"
+	HazelcastServerKeystorePath   = "/data/etc/server/keystore.p12"
+	HazelcastServerTruststorePath = "/data/etc/server/truststore.p12"
+	HazelcastClientKeystorePath   = "/data/etc/client/keystore.p12"
+	HazelcastClientTruststorePath = "/data/etc/client/truststore.p12"
 	HazelcastTLSMountPath         = "/data/etc"
 	HazelcastLicenseKey           = "licenseKey"
 )
