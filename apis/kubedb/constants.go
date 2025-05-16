@@ -771,7 +771,8 @@ const (
 	HazelcastServerTruststorePath = "/data/etc/server/truststore.p12"
 	HazelcastClientKeystorePath   = "/data/etc/client/keystore.p12"
 	HazelcastClientTruststorePath = "/data/etc/client/truststore.p12"
-	HazelcastTLSMountPath         = "/data/etc"
+	HazelcastTLSServerMountPath   = "/data/etc/server"
+	HazelcastTLSClientMountPath   = "/data/etc/client"
 	HazelcastLicenseKey           = "licenseKey"
 )
 
