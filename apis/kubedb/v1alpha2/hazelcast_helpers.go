@@ -33,7 +33,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/klog/v2"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
@@ -195,15 +194,11 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 			Name: "hazelcast",
 		}
 	}
-	scheme := v1.URISchemeHTTP
-	if h.Spec.EnableSSL {
-		scheme = v1.URISchemeHTTPS
-	}
-	probe := &v1.Probe{
+
+	liveProbe := &v1.Probe{
 		ProbeHandler: v1.ProbeHandler{
-			HTTPGet: &v1.HTTPGetAction{
-				Port:   intstr.Parse("5701"),
-				Scheme: scheme,
+			Exec: &v1.ExecAction{
+				Command: []string{"sh", "-c", "curl -ksf -u \"$USERNAME:$PASSWORD\" $SCHEME://localhost:5701/hazelcast/health/node-state || exit 1"},
 			},
 		},
 		InitialDelaySeconds: 30,
@@ -212,10 +207,21 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 		SuccessThreshold:    1,
 		FailureThreshold:    10,
 	}
-	container.LivenessProbe = probe
-	container.ReadinessProbe = probe
-	container.LivenessProbe.HTTPGet.Path = "/hazelcast/health/node-state"
-	container.ReadinessProbe.HTTPGet.Path = "/hazelcast/health/ready"
+
+	readyProbe := &v1.Probe{
+		ProbeHandler: v1.ProbeHandler{
+			Exec: &v1.ExecAction{
+				Command: []string{"sh", "-c", "curl -ksf -u \"$USERNAME:$PASSWORD\" $SCHEME://localhost:5701/hazelcast/health/ready || exit 1"},
+			},
+		},
+		InitialDelaySeconds: 30,
+		TimeoutSeconds:      10,
+		PeriodSeconds:       10,
+		SuccessThreshold:    1,
+		FailureThreshold:    10,
+	}
+	container.LivenessProbe = liveProbe
+	container.ReadinessProbe = readyProbe
 	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
