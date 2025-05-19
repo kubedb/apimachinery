@@ -197,7 +197,7 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 	}
 	scheme := v1.URISchemeHTTP
 
-	probe := &v1.Probe{
+	livenessProbe := &v1.Probe{
 		ProbeHandler: v1.ProbeHandler{
 			HTTPGet: &v1.HTTPGetAction{
 				Port:   intstr.Parse("5701"),
@@ -210,8 +210,21 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 		SuccessThreshold:    1,
 		FailureThreshold:    10,
 	}
-	container.LivenessProbe = probe
-	container.ReadinessProbe = probe
+	readynessProbe := &v1.Probe{
+		ProbeHandler: v1.ProbeHandler{
+			HTTPGet: &v1.HTTPGetAction{
+				Port:   intstr.Parse("5701"),
+				Scheme: scheme,
+			},
+		},
+		InitialDelaySeconds: 30,
+		TimeoutSeconds:      10,
+		PeriodSeconds:       10,
+		SuccessThreshold:    1,
+		FailureThreshold:    10,
+	}
+	container.LivenessProbe = livenessProbe
+	container.ReadinessProbe = readynessProbe
 	container.LivenessProbe.HTTPGet.Path = "/hazelcast/health/node-state"
 	container.ReadinessProbe.HTTPGet.Path = "/hazelcast/health/ready"
 	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
