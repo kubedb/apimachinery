@@ -196,9 +196,9 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 		}
 	}
 	scheme := v1.URISchemeHTTP
-	//if h.Spec.EnableSSL {
-	//	scheme = v1.URISchemeHTTPS
-	//}
+	if h.Spec.EnableSSL {
+		scheme = v1.URISchemeHTTPS
+	}
 	probe := &v1.Probe{
 		ProbeHandler: v1.ProbeHandler{
 			HTTPGet: &v1.HTTPGetAction{
