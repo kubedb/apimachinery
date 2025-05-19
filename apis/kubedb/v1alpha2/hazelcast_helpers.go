@@ -198,7 +198,7 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 	liveProbe := &v1.Probe{
 		ProbeHandler: v1.ProbeHandler{
 			Exec: &v1.ExecAction{
-				Command: []string{"sh", "-c", "curl -ksf -u \"$USERNAME:$PASSWORD\" $SCHEME://localhost:5701/hazelcast/health/node-state || exit 1"},
+				Command: []string{"sh", "-c", "curl -ksf -u \"admin:ohtpVMwnsLOCRG8A\" https://localhost:5701/hazelcast/health/node-state || exit 1"},
 			},
 		},
 		InitialDelaySeconds: 30,
