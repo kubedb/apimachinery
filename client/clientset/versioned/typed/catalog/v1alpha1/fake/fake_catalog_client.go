@@ -53,6 +53,10 @@ func (c *FakeCatalogV1alpha1) FerretDBVersions() v1alpha1.FerretDBVersionInterfa
 	return &FakeFerretDBVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) HazelcastVersions() v1alpha1.HazelcastVersionInterface {
+	return &FakeHazelcastVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) IgniteVersions() v1alpha1.IgniteVersionInterface {
 	return &FakeIgniteVersions{c}
 }

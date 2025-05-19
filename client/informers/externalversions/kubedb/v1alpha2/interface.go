@@ -36,6 +36,8 @@ type Interface interface {
 	Etcds() EtcdInformer
 	// FerretDBs returns a FerretDBInformer.
 	FerretDBs() FerretDBInformer
+	// Hazelcasts returns a HazelcastInformer.
+	Hazelcasts() HazelcastInformer
 	// Ignites returns a IgniteInformer.
 	Ignites() IgniteInformer
 	// Kafkas returns a KafkaInformer.
@@ -113,6 +115,11 @@ func (v *version) Etcds() EtcdInformer {
 // FerretDBs returns a FerretDBInformer.
 func (v *version) FerretDBs() FerretDBInformer {
 	return &ferretDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Hazelcasts returns a HazelcastInformer.
+func (v *version) Hazelcasts() HazelcastInformer {
+	return &hazelcastInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Ignites returns a IgniteInformer.
