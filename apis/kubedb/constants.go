@@ -1850,3 +1850,35 @@ const (
 	GitSecretMountPath   = "/etc/git-secret"
 	GitSyncContainerName = "git-sync"
 )
+
+const (
+	OracleDatabaseServiceName    = "ORCL"
+	OracleSqlNetPortName         = "sqlnet"
+	OraclePrimaryServicePortName = "primary"
+	OracleStandbyServicePortName = "standby"
+
+	OraclePrimaryRole = "primary"
+	OracleStandbyRole = "standby"
+
+	OracleDatabasePort = 1521
+
+	OracleSysDbaUser = "sys"
+
+	OracleContainerName             = "oracle"
+	OracleCoordinatorContainerName  = "oracle-coordinator"
+	OracleObserverContainerName     = "observer"
+	OracleInitContainerName         = "oracle-init"
+	OracleObserverInitContainerName = "observer-init"
+
+	OracleVolumeScripts = "oracle-scripts"
+	OracleDataVolume    = "data"
+
+	OracleVolumeMountScripts = "/scripts"
+	OracleDataDir            = "/opt/oracle/oradata"
+
+	OracleStandbyServiceSuffix = "standby"
+
+	OracleDatabaseRoleKey      = "oracle.db/role"
+	OracleDatabaseRoleObserver = "observer"
+	OracleDatabaseRoleInstance = "instance"
+)

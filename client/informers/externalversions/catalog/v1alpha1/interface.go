@@ -52,6 +52,8 @@ type Interface interface {
 	MongoDBVersions() MongoDBVersionInformer
 	// MySQLVersions returns a MySQLVersionInformer.
 	MySQLVersions() MySQLVersionInformer
+	// OracleVersions returns a OracleVersionInformer.
+	OracleVersions() OracleVersionInformer
 	// PerconaXtraDBVersions returns a PerconaXtraDBVersionInformer.
 	PerconaXtraDBVersions() PerconaXtraDBVersionInformer
 	// PgBouncerVersions returns a PgBouncerVersionInformer.
@@ -155,6 +157,11 @@ func (v *version) MongoDBVersions() MongoDBVersionInformer {
 // MySQLVersions returns a MySQLVersionInformer.
 func (v *version) MySQLVersions() MySQLVersionInformer {
 	return &mySQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// OracleVersions returns a OracleVersionInformer.
+func (v *version) OracleVersions() OracleVersionInformer {
+	return &oracleVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // PerconaXtraDBVersions returns a PerconaXtraDBVersionInformer.

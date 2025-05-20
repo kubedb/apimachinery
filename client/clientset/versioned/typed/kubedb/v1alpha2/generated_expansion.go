@@ -44,6 +44,8 @@ type MongoDBExpansion interface{}
 
 type MySQLExpansion interface{}
 
+type OracleExpansion interface{}
+
 type PerconaXtraDBExpansion interface{}
 
 type PgBouncerExpansion interface{}

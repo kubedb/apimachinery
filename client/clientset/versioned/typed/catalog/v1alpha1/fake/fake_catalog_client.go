@@ -85,6 +85,10 @@ func (c *FakeCatalogV1alpha1) MySQLVersions() v1alpha1.MySQLVersionInterface {
 	return &FakeMySQLVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) OracleVersions() v1alpha1.OracleVersionInterface {
+	return &FakeOracleVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) PerconaXtraDBVersions() v1alpha1.PerconaXtraDBVersionInterface {
 	return &FakePerconaXtraDBVersions{c}
 }
