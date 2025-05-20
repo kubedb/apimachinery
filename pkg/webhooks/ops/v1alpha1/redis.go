@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	core "k8s.io/api/core/v1"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -127,6 +128,12 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.RedisOpsRequestTypeRotateAuth:
+		if err := w.validateRedisRotateAuthenticationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("rotateauth"),
+				req.Name,
+				err.Error()))
+		}
 	}
 	if len(allErr) == 0 {
 		return nil
@@ -222,5 +229,36 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForSentinelMode(req 
 	} else {
 		return fmt.Errorf("pleaase specify replica for scaling")
 	}
+	return nil
+}
+
+func (w *RedisOpsRequestCustomWebhook) validateRedisRotateAuthenticationOpsRequest(req *opsapi.RedisOpsRequest) error {
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return fmt.Errorf("spec.authentication.secretRef.name can not be empty")
+		}
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &core.Secret{})
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name)
+			}
+			return err
+		}
+	}
+
+	redis := v1.Redis{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
+	if err != nil {
+		return err
+	}
+
+	if redis.Spec.DisableAuth {
+		return fmt.Errorf("%s is running in disable auth mode. RotateAuth is not applicable", req.GetDBRefName())
+	}
+
 	return nil
 }
