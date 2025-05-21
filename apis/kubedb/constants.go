@@ -1662,6 +1662,8 @@ const (
 	EnvValMedusaDebugSleep      = "0s"
 	CassandraNodetoolDir        = "/opt/cassandra/temp/bin"
 	CassandraBackupBinary       = "nodetool"
+
+	CassandraKeystoreSecretKey = "keystore-cred"
 )
 
 // =========================== Virtual Secrets Constants ============================
