@@ -90,7 +90,17 @@ spec:
                 type: object
               verticalScaling:
                 properties:
-                  node:
+                  cluster:
+                    items:
+                      properties:
+                        name:
+                          type: string
+                        node:
+                          format: int32
+                          type: integer
+                      type: object
+                    type: array
+                  standalone:
                     properties:
                       nodeSelectionPolicy:
                         type: string

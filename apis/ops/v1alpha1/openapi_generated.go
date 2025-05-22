@@ -503,6 +503,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ArchiverOptions":                                  schema_apimachinery_apis_ops_v1alpha1_ArchiverOptions(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec":                                         schema_apimachinery_apis_ops_v1alpha1_AuthSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseClusterVerticalScalingSpec":             schema_apimachinery_apis_ops_v1alpha1_ClickHouseClusterVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseHorizontalScalingSpec":                  schema_apimachinery_apis_ops_v1alpha1_ClickHouseHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseOpsRequest":                             schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseOpsRequestList":                         schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestList(ref),
@@ -26060,6 +26061,32 @@ func schema_apimachinery_apis_ops_v1alpha1_AuthSpec(ref common.ReferenceCallback
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_ClickHouseClusterVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Cluster Name",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for Cluster node",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_ClickHouseHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -26282,17 +26309,30 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseVerticalScalingSpec(ref com
 				Description: "ClickHouseVerticalScalingSpec contains the vertical scaling information of a clickhouse cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"node": {
+					"standalone": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resource spec for nodes",
+							Description: "Resource spec for Standalone node",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"cluster": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Cluster Specs",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseClusterVerticalScalingSpec"),
+									},
+								},
+							},
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseClusterVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
 	}
 }
 

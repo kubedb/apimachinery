@@ -87,8 +87,17 @@ type ClickHouseHorizontalScalingSpec struct {
 
 // ClickHouseVerticalScalingSpec contains the vertical scaling information of a clickhouse cluster
 type ClickHouseVerticalScalingSpec struct {
-	// Resource spec for nodes
-	Node *PodResources `json:"node,omitempty"`
+	// Resource spec for Standalone node
+	Standalone *PodResources `json:"standalone,omitempty"`
+	// Cluster Specs
+	Cluster []*ClickHouseClusterVerticalScalingSpec `json:"cluster,omitempty"`
+}
+
+type ClickHouseClusterVerticalScalingSpec struct {
+	// Cluster Name
+	Name string `json:"name,omitempty"`
+	// Resource spec for Cluster node
+	Node *int32 `json:"node,omitempty"`
 }
 
 // ClickHouseVolumeExpansionSpec is the spec for ClickHouse volume expansion
