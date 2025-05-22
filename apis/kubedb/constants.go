@@ -1881,4 +1881,8 @@ const (
 	OracleDatabaseRoleKey      = "oracle.db/role"
 	OracleDatabaseRoleObserver = "observer"
 	OracleDatabaseRoleInstance = "instance"
+	OracleEnvUserName          = "SYS_USER"
+	OracleEnvPassword          = "ORACLE_PWD"
+	OracleEnvOracleSID         = "ORACLE_SID"
+	OracleEnvDataDir           = "ORADATA"
 )

@@ -262,6 +262,14 @@ func (o *Oracle) AuthSecretName() string {
 	return metautil.NameWithSuffix(o.OffshootName(), "auth")
 }
 
+func (o *Oracle) IsStandalone() bool {
+	return o.Spec.Mode == OracleModeStandalone
+}
+
+func (o *Oracle) IsDataGuardEnabled() bool {
+	return o.Spec.Mode == OracleModeDataGuard
+}
+
 func (o *Oracle) SetHealthCheckerDefaults() {
 	if o.Spec.HealthChecker.PeriodSeconds == nil {
 		o.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
