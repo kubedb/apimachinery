@@ -97,7 +97,7 @@ type ClickHouseClusterVerticalScalingSpec struct {
 	// Cluster Name
 	Name string `json:"name,omitempty"`
 	// Resource spec for Cluster node
-	Node *int32 `json:"node,omitempty"`
+	Node *PodResources `json:"node,omitempty"`
 }
 
 // ClickHouseVolumeExpansionSpec is the spec for ClickHouse volume expansion

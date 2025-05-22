@@ -26077,13 +26077,14 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseClusterVerticalScalingSpec(
 					"node": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Resource spec for Cluster node",
-							Type:        []string{"integer"},
-							Format:      "int32",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
 	}
 }
 

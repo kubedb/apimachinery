@@ -74,8 +74,8 @@ func (in *ClickHouseClusterVerticalScalingSpec) DeepCopyInto(out *ClickHouseClus
 	*out = *in
 	if in.Node != nil {
 		in, out := &in.Node, &out.Node
-		*out = new(int32)
-		**out = **in
+		*out = new(PodResources)
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }
