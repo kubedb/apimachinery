@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	core "k8s.io/api/core/v1"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -147,6 +148,12 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.RabbitMQOpsRequestTypeRotateAuth:
+		if err := rv.validateRabbitMQRotateAuthenticationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				req.Name,
+				err.Error()))
+		}
 	default:
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RabbitMQ are %s", req.Spec.Type, strings.Join(opsapi.RabbitMQOpsRequestTypeNames(), ", "))))
@@ -165,6 +172,26 @@ func (rv *RabbitMQOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RabbitMQOp
 	}, rabbitmq); err != nil {
 		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
+	return nil
+}
+func (w *RabbitMQOpsRequestCustomWebhook) validateRabbitMQRotateAuthenticationOpsRequest(req *opsapi.RabbitMQOpsRequest) error {
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return errors.New("spec.authentication.secretRef.name can not be empty")
+		}
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &core.Secret{})
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
