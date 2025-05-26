@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"path/filepath"
 	"strings"
 
@@ -194,13 +195,18 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 			Name: "hazelcast",
 		}
 	}
-	nodeState := fmt.Sprintf("curl -ksfu \"$USERNAME:$PASSWORD\" %s://%s.%s.svc:5701/hazelcast/health/node-state", h.GetConnectionScheme(), h.Name, h.Namespace)
-	healthCheck := fmt.Sprintf("curl -ksfu \"$USERNAME:$PASSWORD\" %s://%s.%s.svc:5701/hazelcast/health/ready", h.GetConnectionScheme(), h.Name, h.Namespace)
+	nodeState := fmt.Sprintf("curl --cacert /data/etc/server/ca.crt -ksfu  \"$USERNAME:$PASSWORD\" %s://%s.%s.svc:5701/hazelcast/health/node-state", h.GetConnectionScheme(), h.Name, h.Namespace)
+	healthCheck := fmt.Sprintf("curl --cacert /data/etc/server/ca.crt -ksfu \"$USERNAME:$PASSWORD\" %s://%s.%s.svc:5701/hazelcast/health/ready", h.GetConnectionScheme(), h.Name, h.Namespace)
 	fmt.Println("--------------> ", nodeState, healthCheck)
+	scheme := v1.URISchemeHTTP
+	if h.Spec.EnableSSL {
+		scheme = v1.URISchemeHTTPS
+	}
 	livenessProbe := &v1.Probe{
 		ProbeHandler: v1.ProbeHandler{
-			Exec: &v1.ExecAction{
-				Command: []string{"sh", "-c", nodeState},
+			HTTPGet: &v1.HTTPGetAction{
+				Port:   intstr.Parse("5701"),
+				Scheme: scheme,
 			},
 		},
 		InitialDelaySeconds: 30,
@@ -209,10 +215,11 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 		SuccessThreshold:    1,
 		FailureThreshold:    10,
 	}
-	readinessProbe := &v1.Probe{
+	readynessProbe := &v1.Probe{
 		ProbeHandler: v1.ProbeHandler{
-			Exec: &v1.ExecAction{
-				Command: []string{"sh", "-c", healthCheck},
+			HTTPGet: &v1.HTTPGetAction{
+				Port:   intstr.Parse("5701"),
+				Scheme: scheme,
 			},
 		},
 		InitialDelaySeconds: 30,
@@ -222,8 +229,9 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 		FailureThreshold:    10,
 	}
 	container.LivenessProbe = livenessProbe
-	container.ReadinessProbe = readinessProbe
-
+	container.ReadinessProbe = readynessProbe
+	container.LivenessProbe.HTTPGet.Path = "/hazelcast/health/node-state"
+	container.ReadinessProbe.HTTPGet.Path = "/hazelcast/health/ready"
 	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
