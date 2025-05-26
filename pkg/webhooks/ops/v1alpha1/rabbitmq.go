@@ -150,7 +150,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 		}
 	case opsapi.RabbitMQOpsRequestTypeRotateAuth:
 		if err := rv.validateRabbitMQRotateAuthenticationOpsRequest(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
 		}
@@ -192,6 +192,17 @@ func (w *RabbitMQOpsRequestCustomWebhook) validateRabbitMQRotateAuthenticationOp
 		}
 	}
 
+	rabbitmq := &olddbapi.RabbitMQ{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: req.Namespace,
+		Name:      req.GetDBRefName(),
+	}, rabbitmq)
+	if err != nil {
+		return err
+	}
+	if rabbitmq.Spec.DisableSecurity {
+		return fmt.Errorf("DisableSecurity is on, RotateAuth is not applicable")
+	}
 	return nil
 }
 
