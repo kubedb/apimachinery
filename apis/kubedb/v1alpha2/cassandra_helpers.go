@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -470,4 +471,17 @@ func (m *Cassandra) GetCertSecretName(alias CassandraCertificateAlias) string {
 		}
 	}
 	return m.CertificateName(alias)
+}
+
+// CertSecretVolumeName returns the CertSecretVolumeName
+// Values will be like: client-certs, server-certs etc.
+func (c *Cassandra) CertSecretVolumeName(alias CassandraCertificateAlias) string {
+	return string(alias) + "-certs"
+}
+
+// CertSecretVolumeMountPath returns the CertSecretVolumeMountPath
+// if configDir is "/var/cassandra/ssl",
+// mountPath will be, "/var/cassandra/ssl/<alias>".
+func (c *Cassandra) CertSecretVolumeMountPath(configDir string, cert string) string {
+	return filepath.Join(configDir, cert)
 }
