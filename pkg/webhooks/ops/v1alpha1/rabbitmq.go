@@ -175,6 +175,17 @@ func (rv *RabbitMQOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RabbitMQOp
 	return nil
 }
 func (w *RabbitMQOpsRequestCustomWebhook) validateRabbitMQRotateAuthenticationOpsRequest(req *opsapi.RabbitMQOpsRequest) error {
+	rabbitmq := &olddbapi.RabbitMQ{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: req.Namespace,
+		Name:      req.GetDBRefName(),
+	}, rabbitmq)
+	if err != nil {
+		return err
+	}
+	if rabbitmq.Spec.DisableSecurity {
+		return fmt.Errorf("DisableSecurity is on, RotateAuth is not applicable")
+	}
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
@@ -190,18 +201,6 @@ func (w *RabbitMQOpsRequestCustomWebhook) validateRabbitMQRotateAuthenticationOp
 			}
 			return err
 		}
-	}
-
-	rabbitmq := &olddbapi.RabbitMQ{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Namespace: req.Namespace,
-		Name:      req.GetDBRefName(),
-	}, rabbitmq)
-	if err != nil {
-		return err
-	}
-	if rabbitmq.Spec.DisableSecurity {
-		return fmt.Errorf("DisableSecurity is on, RotateAuth is not applicable")
 	}
 	return nil
 }
