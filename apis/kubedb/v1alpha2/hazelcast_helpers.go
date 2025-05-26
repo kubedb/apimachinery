@@ -194,8 +194,8 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 			Name: "hazelcast",
 		}
 	}
-	nodeState := fmt.Sprintf("curl -ksfu \\\"$USERNAME:$PASSWORD\\\" %s://%s.%s.svc:5701/hazelcast/health/node-state", h.GetConnectionScheme(), h.Name, h.Namespace)
-	healthCheck := fmt.Sprintf("curl -ksfu \\\"$USERNAME:$PASSWORD\\\" %s://%s.%s.svc:5701/hazelcast/health/ready", h.GetConnectionScheme(), h.Name, h.Namespace)
+	nodeState := fmt.Sprintf("curl -ksfu \"$USERNAME:$PASSWORD\" %s://%s.%s.svc:5701/hazelcast/health/node-state", h.GetConnectionScheme(), h.Name, h.Namespace)
+	healthCheck := fmt.Sprintf("curl -ksfu \"$USERNAME:$PASSWORD\" %s://%s.%s.svc:5701/hazelcast/health/ready", h.GetConnectionScheme(), h.Name, h.Namespace)
 	fmt.Println("--------------> ", nodeState, healthCheck)
 	livenessProbe := &v1.Probe{
 		ProbeHandler: v1.ProbeHandler{
