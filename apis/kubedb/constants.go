@@ -1695,8 +1695,10 @@ const (
 	CassandraNodetoolDir        = "/opt/cassandra/temp/bin"
 	CassandraBackupBinary       = "nodetool"
 
-	CassandraKeystoreSecretKey = "keystore-cred"
-	CassandraCertDir           = "/opt/cassandra/ssl"
+	CassandraKeystoreSecretKey     = "keystore-cred"
+	CassandraCertDir               = "/opt/cassandra/ssl"
+	CassandraKeystorePasswordKey   = "keystore_password"
+	CassandraTrustStorePasswordKey = "truststore_password"
 )
 
 // =========================== Virtual Secrets Constants ============================
