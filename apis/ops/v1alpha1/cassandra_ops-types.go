@@ -19,7 +19,6 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -57,18 +56,8 @@ type CassandraOpsRequestSpec struct {
 	Type CassandraOpsRequestType `json:"type"`
 	// Specifies information necessary for upgrading cassandra
 	UpdateVersion *CassandraUpdateVersionSpec `json:"updateVersion,omitempty"`
-	// Specifies information necessary for horizontal scaling
-	HorizontalScaling *CassandraHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *CassandraVerticalScalingSpec `json:"verticalScaling,omitempty"`
-	// Specifies information necessary for volume expansion
-	VolumeExpansion *CassandraVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
-	// Specifies information necessary for custom configuration of cassandra
-	Configuration *CassandraCustomConfigurationSpec `json:"configuration,omitempty"`
-	// Specifies information necessary for configuring TLS
-	TLS *TLSSpec `json:"tls,omitempty"`
-	// Specifies information necessary for configuring authSecret of the database
-	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -78,8 +67,8 @@ type CassandraOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth)
+// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;Restart
+// ENUM(UpdateVersion, VerticalScaling, Restart)
 type CassandraOpsRequestType string
 
 // CassandraUpdateVersionSpec contains the update version information of a cassandra cluster
@@ -88,27 +77,10 @@ type CassandraUpdateVersionSpec struct {
 	TargetVersion string `json:"targetVersion,omitempty"`
 }
 
-// CassandraReplicaReadinessCriteria is the criteria for checking readiness of a Cassandra pod
-// after updating, horizontal scaling etc.
-type CassandraReplicaReadinessCriteria struct{}
-
-// CassandraHorizontalScalingSpec contains the horizontal scaling information of a Cassandra cluster
-type CassandraHorizontalScalingSpec struct {
-	// Number of node
-	Node *int32 `json:"node,omitempty"`
-}
-
 // CassandraVerticalScalingSpec contains the vertical scaling information of a Cassandra cluster
 type CassandraVerticalScalingSpec struct {
 	// Resource spec for nodes
 	Node *PodResources `json:"node,omitempty"`
-}
-
-// CassandraVolumeExpansionSpec is the spec for Cassandra volume expansion
-type CassandraVolumeExpansionSpec struct {
-	Mode VolumeExpansionMode `json:"mode"`
-	// volume specification for nodes
-	Node *resource.Quantity `json:"node,omitempty"`
 }
 
 // CassandraCustomConfigurationSpec is the spec for Reconfiguring the cassandra Settings

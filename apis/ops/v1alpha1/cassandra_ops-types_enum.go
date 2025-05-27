@@ -14,33 +14,18 @@ import (
 const (
 	// CassandraOpsRequestTypeUpdateVersion is a CassandraOpsRequestType of type UpdateVersion.
 	CassandraOpsRequestTypeUpdateVersion CassandraOpsRequestType = "UpdateVersion"
-	// CassandraOpsRequestTypeHorizontalScaling is a CassandraOpsRequestType of type HorizontalScaling.
-	CassandraOpsRequestTypeHorizontalScaling CassandraOpsRequestType = "HorizontalScaling"
 	// CassandraOpsRequestTypeVerticalScaling is a CassandraOpsRequestType of type VerticalScaling.
 	CassandraOpsRequestTypeVerticalScaling CassandraOpsRequestType = "VerticalScaling"
-	// CassandraOpsRequestTypeVolumeExpansion is a CassandraOpsRequestType of type VolumeExpansion.
-	CassandraOpsRequestTypeVolumeExpansion CassandraOpsRequestType = "VolumeExpansion"
 	// CassandraOpsRequestTypeRestart is a CassandraOpsRequestType of type Restart.
 	CassandraOpsRequestTypeRestart CassandraOpsRequestType = "Restart"
-	// CassandraOpsRequestTypeReconfigure is a CassandraOpsRequestType of type Reconfigure.
-	CassandraOpsRequestTypeReconfigure CassandraOpsRequestType = "Reconfigure"
-	// CassandraOpsRequestTypeReconfigureTLS is a CassandraOpsRequestType of type ReconfigureTLS.
-	CassandraOpsRequestTypeReconfigureTLS CassandraOpsRequestType = "ReconfigureTLS"
-	// CassandraOpsRequestTypeRotateAuth is a CassandraOpsRequestType of type RotateAuth.
-	CassandraOpsRequestTypeRotateAuth CassandraOpsRequestType = "RotateAuth"
 )
 
 var ErrInvalidCassandraOpsRequestType = fmt.Errorf("not a valid CassandraOpsRequestType, try [%s]", strings.Join(_CassandraOpsRequestTypeNames, ", "))
 
 var _CassandraOpsRequestTypeNames = []string{
 	string(CassandraOpsRequestTypeUpdateVersion),
-	string(CassandraOpsRequestTypeHorizontalScaling),
 	string(CassandraOpsRequestTypeVerticalScaling),
-	string(CassandraOpsRequestTypeVolumeExpansion),
 	string(CassandraOpsRequestTypeRestart),
-	string(CassandraOpsRequestTypeReconfigure),
-	string(CassandraOpsRequestTypeReconfigureTLS),
-	string(CassandraOpsRequestTypeRotateAuth),
 }
 
 // CassandraOpsRequestTypeNames returns a list of possible string values of CassandraOpsRequestType.
@@ -54,13 +39,8 @@ func CassandraOpsRequestTypeNames() []string {
 func CassandraOpsRequestTypeValues() []CassandraOpsRequestType {
 	return []CassandraOpsRequestType{
 		CassandraOpsRequestTypeUpdateVersion,
-		CassandraOpsRequestTypeHorizontalScaling,
 		CassandraOpsRequestTypeVerticalScaling,
-		CassandraOpsRequestTypeVolumeExpansion,
 		CassandraOpsRequestTypeRestart,
-		CassandraOpsRequestTypeReconfigure,
-		CassandraOpsRequestTypeReconfigureTLS,
-		CassandraOpsRequestTypeRotateAuth,
 	}
 }
 
@@ -77,14 +57,9 @@ func (x CassandraOpsRequestType) IsValid() bool {
 }
 
 var _CassandraOpsRequestTypeValue = map[string]CassandraOpsRequestType{
-	"UpdateVersion":     CassandraOpsRequestTypeUpdateVersion,
-	"HorizontalScaling": CassandraOpsRequestTypeHorizontalScaling,
-	"VerticalScaling":   CassandraOpsRequestTypeVerticalScaling,
-	"VolumeExpansion":   CassandraOpsRequestTypeVolumeExpansion,
-	"Restart":           CassandraOpsRequestTypeRestart,
-	"Reconfigure":       CassandraOpsRequestTypeReconfigure,
-	"ReconfigureTLS":    CassandraOpsRequestTypeReconfigureTLS,
-	"RotateAuth":        CassandraOpsRequestTypeRotateAuth,
+	"UpdateVersion":   CassandraOpsRequestTypeUpdateVersion,
+	"VerticalScaling": CassandraOpsRequestTypeVerticalScaling,
+	"Restart":         CassandraOpsRequestTypeRestart,
 }
 
 // ParseCassandraOpsRequestType attempts to convert a string to a CassandraOpsRequestType.
