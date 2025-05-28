@@ -99,6 +99,7 @@ type MariaDBHorizontalScalingSpec struct {
 
 type MariaDBVerticalScalingSpec struct {
 	MariaDB     *PodResources       `json:"mariadb,omitempty"`
+	MaxScale    *PodResources       `json:"maxscale,omitempty"`
 	Exporter    *ContainerResources `json:"exporter,omitempty"`
 	Coordinator *ContainerResources `json:"coordinator,omitempty"`
 }
