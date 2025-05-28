@@ -25,6 +25,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -127,6 +128,12 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.RedisOpsRequestTypeRotateAuth:
+		if err := w.validateRedisRotateAuthenticationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
+				req.Name,
+				err.Error()))
+		}
 	}
 	if len(allErr) == 0 {
 		return nil
@@ -222,5 +229,35 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForSentinelMode(req 
 	} else {
 		return fmt.Errorf("pleaase specify replica for scaling")
 	}
+	return nil
+}
+
+func (w *RedisOpsRequestCustomWebhook) validateRedisRotateAuthenticationOpsRequest(req *opsapi.RedisOpsRequest) error {
+	redis := v1.Redis{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
+	if err != nil {
+		return err
+	}
+	if redis.Spec.DisableAuth {
+		return fmt.Errorf("%s is running in disable auth mode. RotateAuth is not applicable", req.GetDBRefName())
+	}
+
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return fmt.Errorf("spec.authentication.secretRef.name can not be empty")
+		}
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &core.Secret{})
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name)
+			}
+			return err
+		}
+	}
+
 	return nil
 }
