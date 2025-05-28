@@ -1843,6 +1843,27 @@ var (
 		},
 	}
 
+	DefaultResourcesCoreAndMemoryIntensiveOracle = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("2"),
+			core.ResourceMemory: resource.MustParse("7Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("4"),
+			core.ResourceMemory: resource.MustParse("10Gi"),
+		},
+	}
+	DefaultResourcesCoreAndMemoryIntensiveOracleObserver = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("500m"),
+			core.ResourceMemory: resource.MustParse("2Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("1"),
+			core.ResourceMemory: resource.MustParse("3Gi"),
+		},
+	}
+
 	// DefaultResourcesMemoryIntensiveSDB must be used for Singlestore when enabled monitoring or version >= 8.5.x
 	DefaultResourcesMemoryIntensiveSDB = core.ResourceRequirements{
 		Requests: core.ResourceList{
@@ -1880,4 +1901,40 @@ const (
 	GitSecretVolume      = "git-secret"
 	GitSecretMountPath   = "/etc/git-secret"
 	GitSyncContainerName = "git-sync"
+)
+
+const (
+	OracleDatabaseServiceName    = "ORCL"
+	OracleSqlNetPortName         = "sqlnet"
+	OraclePrimaryServicePortName = "primary"
+	OracleStandbyServicePortName = "standby"
+
+	OraclePrimaryRole = "primary"
+	OracleStandbyRole = "standby"
+
+	OracleDatabasePort = 1521
+
+	OracleSysDbaUser = "sys"
+
+	OracleContainerName             = "oracle"
+	OracleCoordinatorContainerName  = "oracle-coordinator"
+	OracleObserverContainerName     = "observer"
+	OracleInitContainerName         = "oracle-init"
+	OracleObserverInitContainerName = "observer-init"
+
+	OracleVolumeScripts = "oracle-scripts"
+	OracleDataVolume    = "data"
+
+	OracleVolumeMountScripts = "/scripts"
+	OracleDataDir            = "/opt/oracle/oradata"
+
+	OracleStandbyServiceSuffix = "standby"
+
+	OracleDatabaseRoleKey      = "oracle.db/role"
+	OracleDatabaseRoleObserver = "observer"
+	OracleDatabaseRoleInstance = "instance"
+	OracleEnvUserName          = "SYS_USER"
+	OracleEnvPassword          = "ORACLE_PWD"
+	OracleEnvOracleSID         = "ORACLE_SID"
+	OracleEnvDataDir           = "ORADATA"
 )
