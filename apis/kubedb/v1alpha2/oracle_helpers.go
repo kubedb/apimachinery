@@ -330,7 +330,7 @@ func (o *Oracle) SetListenerDefaults() {
 	if o.Spec.Listener == nil {
 		o.Spec.Listener = &ListenerSpec{}
 	}
-	o.Spec.Listener.Port = kubedb.OracleDatabasePort
+	o.Spec.Listener.Port = ptr.To(int32(kubedb.OracleDatabasePort))
 	o.Spec.Listener.Protocol = OracleListenerProtocolTCP
 	o.Spec.Listener.Service = ptr.To(kubedb.OracleDatabaseServiceName)
 }
@@ -464,9 +464,22 @@ func (o *Oracle) SetDataGuardDefaults() {
 	if o.Spec.DataGuard.SyncMode == "" {
 		o.Spec.DataGuard.SyncMode = SyncModeSync
 	}
+	if o.Spec.DataGuard.StandbyType == "" {
+		o.Spec.DataGuard.StandbyType = StandbyTypePhysical
+	}
+
 	if o.Spec.DataGuard.FastStartFailover == nil {
 		o.Spec.DataGuard.FastStartFailover = &FastStartFailover{}
-		o.Spec.DataGuard.FastStartFailover.FastStartFailoverThreshold = 60
+		o.Spec.DataGuard.FastStartFailover.FastStartFailoverThreshold = ptr.To(int32(15))
+	}
+	if o.Spec.DataGuard.ApplyLagThreshold == nil {
+		o.Spec.DataGuard.ApplyLagThreshold = ptr.To(int32(0))
+	}
+	if o.Spec.DataGuard.TransportLagThreshold == nil {
+		o.Spec.DataGuard.TransportLagThreshold = ptr.To(int32(0))
+	}
+	if o.Spec.DataGuard.Observer == nil {
+		o.Spec.DataGuard.Observer = &ObserverSpec{}
 	}
 	if o.Spec.DataGuard.Observer.Storage == nil {
 		o.Spec.DataGuard.Observer.Storage = &core.PersistentVolumeClaimSpec{
