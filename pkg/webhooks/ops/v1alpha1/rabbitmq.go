@@ -20,13 +20,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	core "k8s.io/api/core/v1"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -174,6 +174,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RabbitMQOp
 	}
 	return nil
 }
+
 func (w *RabbitMQOpsRequestCustomWebhook) validateRabbitMQRotateAuthenticationOpsRequest(req *opsapi.RabbitMQOpsRequest) error {
 	rabbitmq := &olddbapi.RabbitMQ{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
