@@ -19,13 +19,13 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
-	core "k8s.io/api/core/v1"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -130,7 +130,7 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 		}
 	case opsapi.RedisOpsRequestTypeRotateAuth:
 		if err := w.validateRedisRotateAuthenticationOpsRequest(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("rotateauth"),
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
 		}
@@ -233,6 +233,15 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForSentinelMode(req 
 }
 
 func (w *RedisOpsRequestCustomWebhook) validateRedisRotateAuthenticationOpsRequest(req *opsapi.RedisOpsRequest) error {
+	redis := v1.Redis{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
+	if err != nil {
+		return err
+	}
+	if redis.Spec.DisableAuth {
+		return fmt.Errorf("%s is running in disable auth mode. RotateAuth is not applicable", req.GetDBRefName())
+	}
+
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
@@ -248,16 +257,6 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisRotateAuthenticationOpsReque
 			}
 			return err
 		}
-	}
-
-	redis := v1.Redis{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
-	if err != nil {
-		return err
-	}
-
-	if redis.Spec.DisableAuth {
-		return fmt.Errorf("%s is running in disable auth mode. RotateAuth is not applicable", req.GetDBRefName())
 	}
 
 	return nil
