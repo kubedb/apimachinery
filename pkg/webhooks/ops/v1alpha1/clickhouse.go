@@ -29,10 +29,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/mergepatch"
-	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
-	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -73,32 +70,11 @@ func (w *ClickHouseOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, 
 		return nil, fmt.Errorf("expected an ClickHouseOpsRequest object but got %T", newObj)
 	}
 	clickhouseLog.Info("validate update", "name", ops.Name)
-
-	oldOps, ok := oldObj.(*opsapi.ClickHouseOpsRequest)
-	if !ok {
-		return nil, fmt.Errorf("expected an ClickHouseOpsRequest object but got %T", oldObj)
-	}
-
-	if err := validateClickHouseOpsRequest(ops, oldOps); err != nil {
-		return nil, err
-	}
 	return nil, w.validateCreateOrUpdate(ops)
 }
 
 func (w *ClickHouseOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	return nil, nil
-}
-
-func validateClickHouseOpsRequest(req *opsapi.ClickHouseOpsRequest, oldReq *opsapi.ClickHouseOpsRequest) error {
-	preconditions := meta_util.PreConditionSet{Set: sets.New[string]("spec")}
-	_, err := meta_util.CreateStrategicPatch(oldReq, req, preconditions.PreconditionFunc()...)
-	if err != nil {
-		if mergepatch.IsPreconditionFailed(err) {
-			return fmt.Errorf("%v.%v", err, preconditions.Error())
-		}
-		return err
-	}
-	return nil
 }
 
 func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ClickHouseOpsRequest) error {
@@ -151,7 +127,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVerticalScalingOp
 	}
 	if verticalScalingSpec.Cluster != nil {
 		for _, cluster := range verticalScalingSpec.Cluster {
-			if cluster.Name == "" {
+			if cluster.ClusterName == "" {
 				return errors.New("spec.verticalScaling.Cluster.Name can't be empty")
 			}
 			if cluster.Node == nil {

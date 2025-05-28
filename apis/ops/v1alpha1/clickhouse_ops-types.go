@@ -19,7 +19,6 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -59,24 +58,17 @@ type ClickHouseOpsRequestSpec struct {
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
-	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
-	// Specifies information necessary for upgrading ClickHouse
-	UpdateVersion *ClickHouseUpdateVersionSpec `json:"updateVersion,omitempty"`
-	// Specifies information necessary for horizontal scaling
-	HorizontalScaling *ClickHouseHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *ClickHouseVerticalScalingSpec `json:"verticalScaling,omitempty"`
-	// Specifies information necessary for volume expansion
-	VolumeExpansion *ClickHouseVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
-	// Specifies information necessary for custom configuration of ClickHouse
+	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;RotateAuth;VerticalScaling;HorizontalScaling;VolumeExpansion
-// ENUM(Restart, RotateAuth, VerticalScaling, HorizontalScaling, VolumeExpansion)
+// +kubebuilder:validation:Enum=Restart;RotateAuth;VerticalScaling
+// ENUM(Restart,RotateAuth,VerticalScaling)
 type ClickHouseOpsRequestType string
 
 // ClickHouseHorizontalScalingSpec contains the horizontal scaling information of a clickhouse cluster
@@ -95,22 +87,9 @@ type ClickHouseVerticalScalingSpec struct {
 
 type ClickHouseClusterVerticalScalingSpec struct {
 	// Name of the ClickHouse cluster to which the vertical scaling configuration applies.
-	Name string `json:"name,omitempty"`
+	ClusterName string `json:"clusterName,omitempty"`
 	// Resource specifications for the nodes in this ClickHouse cluster.
 	Node *PodResources `json:"node,omitempty"`
-}
-
-// ClickHouseVolumeExpansionSpec is the spec for ClickHouse volume expansion
-type ClickHouseVolumeExpansionSpec struct {
-	Mode VolumeExpansionMode `json:"mode"`
-	// volume specification for nodes
-	Node *resource.Quantity `json:"node,omitempty"`
-}
-
-// ClickHouseUpdateVersionSpec contains the update version information of a clickhouse cluster
-type ClickHouseUpdateVersionSpec struct {
-	// Specifies the target version name from catalog
-	TargetVersion string `json:"targetVersion,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
