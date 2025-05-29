@@ -633,7 +633,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleList":                                    schema_apimachinery_apis_kubedb_v1alpha2_OracleList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_OracleSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_OracleStatus(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleTLSConfig":                               schema_apimachinery_apis_kubedb_v1alpha2_OracleTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PerconaXtraDB":                                 schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PerconaXtraDBList":                             schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PerconaXtraDBSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDBSpec(ref),
@@ -28748,7 +28747,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_FastStartFailover(ref common.Refer
 				Properties: map[string]spec.Schema{
 					"fastStartFailoverThreshold": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Enabled   bool  `json:\"enabled\"`",
+							Description: "FastStartFailoverThreshold configuration property defines the number of seconds the master observer attempts to reconnect to the primary database before initiating a fast-start failover.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -30331,7 +30330,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ListenerSpec(ref common.ReferenceC
 					},
 					"port": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Port number // TODO: validate > 0",
+							Description: "Port number",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -32850,22 +32849,10 @@ func schema_apimachinery_apis_kubedb_v1alpha2_OracleSpec(ref common.ReferenceCal
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
-					"enableSSL": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
-						},
-					},
-					"tls": {
-						SchemaProps: spec.SchemaProps{
-							Description: "TLS and Wallet configuration for secure client connections",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleTLSConfig"),
 						},
 					},
 					"serviceTemplates": {
@@ -32925,7 +32912,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_OracleSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DataGuardSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DataGuardSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -32969,39 +32956,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_OracleStatus(ref common.ReferenceC
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_OracleTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"useWallet": {
-						SchemaProps: spec.SchemaProps{
-							Description: "UseWallet indicates enabling Oracle Wallet",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"walletSecret": {
-						SchemaProps: spec.SchemaProps{
-							Description: "WalletSecret holds the secret containing wallet files (cwallet.sso, ewallet.p12)",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"listenerTLS": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Listener TCPS configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec"},
 	}
 }
 

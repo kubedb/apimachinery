@@ -89,8 +89,6 @@ spec:
                 enum:
                 - Official
                 type: string
-              edition:
-                type: string
               exporter:
                 properties:
                   image:

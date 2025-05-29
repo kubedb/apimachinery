@@ -1904,10 +1904,10 @@ const (
 )
 
 const (
-	OracleDatabaseServiceName    = "ORCL"
-	OracleSqlNetPortName         = "sqlnet"
-	OraclePrimaryServicePortName = "primary"
-	OracleStandbyServicePortName = "standby"
+	OracleDatabaseServiceName = "ORCL"
+	OracleSqlNetPortName      = "sqlnet"
+
+	OracleEditionEnterprise = "enterprise"
 
 	OraclePrimaryRole = "primary"
 	OracleStandbyRole = "standby"

@@ -54,8 +54,6 @@ type OracleVersionSpec struct {
 	Version string `json:"version"`
 	// Distribution
 	Distribution OracleDistro `json:"distribution,omitempty"`
-	// Oracle Edition
-	Edition string `json:"edition,omitempty"`
 	// init container image
 	InitContainer OracleVersionInitContainer `json:"initContainer,omitempty"`
 	// Database Image

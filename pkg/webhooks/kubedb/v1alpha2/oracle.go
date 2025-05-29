@@ -97,7 +97,13 @@ func (w *OracleCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 	if !ok {
 		return nil, fmt.Errorf("expected a Oracle object, got a %T", newObj)
 	}
-
+	olddb, ok := old.(*olddbapi.Oracle)
+	if !ok {
+		return nil, fmt.Errorf("expected a Oracle object, got a %T", old)
+	}
+	if ptr.Deref(olddb.Spec.Replicas, 0) > 1 && ptr.Deref(db.Spec.Replicas, 0) == 1 {
+		return nil, fmt.Errorf("can't scale down to 1 replica")
+	}
 	oraLog.Info("validate update", "name", db.Name)
 
 	allErr := w.ValidateCreateOrUpdate(db)
@@ -136,7 +142,7 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 			db.Name,
 			err.Error()))
 	}
-	if db.Spec.Edition != "enterprise" {
+	if db.Spec.Edition != kubedb.OracleEditionEnterprise {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("edition"), db.Name, "only enterprise edition is supported for now"))
 	}
 

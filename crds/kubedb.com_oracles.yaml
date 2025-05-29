@@ -3297,8 +3297,6 @@ spec:
                 - express
                 - free
                 type: string
-              enableSSL:
-                type: boolean
               halted:
                 type: boolean
               healthChecker:
@@ -3328,6 +3326,7 @@ spec:
                     type: string
                   port:
                     format: int32
+                    minimum: 1025
                     type: integer
                   protocol:
                     enum:
@@ -6806,33 +6805,6 @@ spec:
                 - Durable
                 - Ephemeral
                 type: string
-              tls:
-                properties:
-                  listenerTLS:
-                    properties:
-                      name:
-                        type: string
-                      port:
-                        format: int32
-                        type: integer
-                      protocol:
-                        enum:
-                        - TCP
-                        - TCPS
-                        type: string
-                      service:
-                        type: string
-                    type: object
-                  useWallet:
-                    type: boolean
-                  walletSecret:
-                    properties:
-                      name:
-                        default: ""
-                        type: string
-                    type: object
-                    x-kubernetes-map-type: atomic
-                type: object
               version:
                 type: string
             type: object

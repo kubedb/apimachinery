@@ -30499,13 +30499,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_OracleVersionSpec(ref common.Refe
 							Format:      "",
 						},
 					},
-					"edition": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Oracle Edition",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"initContainer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "init container image",

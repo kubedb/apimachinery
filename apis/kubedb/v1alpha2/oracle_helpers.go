@@ -311,9 +311,7 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 	if o.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		o.Spec.PodTemplate.Spec.ServiceAccountName = o.OffshootName()
 	}
-	if o.Spec.EnableSSL == nil {
-		o.Spec.EnableSSL = ptr.To(false)
-	}
+
 	if o.Spec.Mode == OracleModeDataGuard {
 		o.SetDataGuardDefaults()
 		o.SetObserverInitContainerDefaults(o.Spec.DataGuard.Observer.PodTemplate, oraVersion)
@@ -324,7 +322,6 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 	o.SetOracleContainerDefaults(o.Spec.PodTemplate, oraVersion)
 	o.SetCoordinatorContainerDefaults(o.Spec.PodTemplate, oraVersion)
 	o.SetInitContainerDefaults(o.Spec.PodTemplate, oraVersion)
-	o.SetTLSDefaults()
 	o.SetHealthCheckerDefaults()
 	o.Spec.Monitor.SetDefaults()
 	if o.Spec.Monitor != nil && o.Spec.Monitor.Prometheus != nil {
@@ -336,9 +333,6 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 		}
 	}
 
-	if o.Spec.TLS != nil {
-		o.SetTLSDefaults()
-	}
 	o.SetHealthCheckerDefaults()
 }
 
@@ -507,12 +501,4 @@ func (o *Oracle) SetDataGuardDefaults() {
 			},
 		}
 	}
-}
-
-func (o *Oracle) SetTLSDefaults() {
-	//if o.Spec.TLS == nil || o.Spec.TLS.IssuerRef == nil {
-	//	return
-	//}
-	//o.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(o.Spec.TLS.Certificates, string(OracleServerCert), o.CertificateName(OracleServerCert))
-	//o.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(o.Spec.TLS.Certificates, string(OracleClientCert), o.CertificateName(OracleClientCert))
 }

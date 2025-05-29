@@ -123,15 +123,9 @@ type OracleSpec struct {
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
-	EnableSSL *bool `json:"enableSSL,omitempty"`
-
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
-
-	// TLS and Wallet configuration for secure client connections
-	// +optional
-	TLS *OracleTLSConfig `json:"tls,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
@@ -162,24 +156,13 @@ type OracleSpec struct {
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 }
 
-type OracleTLSConfig struct {
-	// UseWallet indicates enabling Oracle Wallet
-	// +optional
-	UseWallet *bool `json:"useWallet,omitempty"`
-	// WalletSecret holds the secret containing wallet files (cwallet.sso, ewallet.p12)
-	// +optional
-	WalletSecret *core.LocalObjectReference `json:"walletSecret,omitempty"`
-	// Listener TCPS configuration
-	// +optional
-	ListenerTLS *ListenerSpec `json:"listenerTLS,omitempty"`
-}
-
 // ListenerSpec defines a TNS listener (TCP or TCPS)
 type ListenerSpec struct {
 	// Listener name
 	// +optional
 	Name string `json:"name,omitempty"`
-	// Port number // TODO: validate > 0
+	// Port number
+	// +kubebuilder:validation:Minimum=1025
 	Port *int32 `json:"port,omitempty"`
 	// Database Service
 	Service *string `json:"service,omitempty"`
@@ -206,7 +189,8 @@ type DataGuardSpec struct {
 }
 
 type FastStartFailover struct {
-	// Enabled   bool  `json:"enabled"`
+	// FastStartFailoverThreshold configuration property defines the number of seconds the master observer attempts
+	// to reconnect to the primary database before initiating a fast-start failover.
 	FastStartFailoverThreshold *int32 `json:"fastStartFailoverThreshold,omitempty"`
 }
 
