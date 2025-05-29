@@ -4000,6 +4000,7 @@ func autoConvert_v1alpha2_RedisClusterSpec_To_v1_RedisClusterSpec(in *RedisClust
 func autoConvert_v1_RedisClusterSpec_To_v1alpha2_RedisClusterSpec(in *v1.RedisClusterSpec, out *RedisClusterSpec, s conversion.Scope) error {
 	// WARNING: in.Shards requires manual conversion: does not exist in peer-type
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	// WARNING: in.Announce requires manual conversion: does not exist in peer-type
 	return nil
 }
 
