@@ -67,15 +67,9 @@ type ClickHouseOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;RotateAuth;VerticalScaling
-// ENUM(Restart,RotateAuth,VerticalScaling)
+// +kubebuilder:validation:Enum=Restart;VerticalScaling
+// ENUM(Restart, VerticalScaling)
 type ClickHouseOpsRequestType string
-
-// ClickHouseHorizontalScalingSpec contains the horizontal scaling information of a clickhouse cluster
-type ClickHouseHorizontalScalingSpec struct {
-	// specifies the number of replica
-	Replicas *int32 `json:"replicas,omitempty"`
-}
 
 // ClickHouseVerticalScalingSpec contains the vertical scaling information of a clickhouse cluster
 type ClickHouseVerticalScalingSpec struct {

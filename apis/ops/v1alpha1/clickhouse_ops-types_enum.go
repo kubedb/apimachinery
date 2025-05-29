@@ -14,8 +14,6 @@ import (
 const (
 	// ClickHouseOpsRequestTypeRestart is a ClickHouseOpsRequestType of type Restart.
 	ClickHouseOpsRequestTypeRestart ClickHouseOpsRequestType = "Restart"
-	// ClickHouseOpsRequestTypeRotateAuth is a ClickHouseOpsRequestType of type RotateAuth.
-	ClickHouseOpsRequestTypeRotateAuth ClickHouseOpsRequestType = "RotateAuth"
 	// ClickHouseOpsRequestTypeVerticalScaling is a ClickHouseOpsRequestType of type VerticalScaling.
 	ClickHouseOpsRequestTypeVerticalScaling ClickHouseOpsRequestType = "VerticalScaling"
 )
@@ -24,7 +22,6 @@ var ErrInvalidClickHouseOpsRequestType = fmt.Errorf("not a valid ClickHouseOpsRe
 
 var _ClickHouseOpsRequestTypeNames = []string{
 	string(ClickHouseOpsRequestTypeRestart),
-	string(ClickHouseOpsRequestTypeRotateAuth),
 	string(ClickHouseOpsRequestTypeVerticalScaling),
 }
 
@@ -39,7 +36,6 @@ func ClickHouseOpsRequestTypeNames() []string {
 func ClickHouseOpsRequestTypeValues() []ClickHouseOpsRequestType {
 	return []ClickHouseOpsRequestType{
 		ClickHouseOpsRequestTypeRestart,
-		ClickHouseOpsRequestTypeRotateAuth,
 		ClickHouseOpsRequestTypeVerticalScaling,
 	}
 }
@@ -58,7 +54,6 @@ func (x ClickHouseOpsRequestType) IsValid() bool {
 
 var _ClickHouseOpsRequestTypeValue = map[string]ClickHouseOpsRequestType{
 	"Restart":         ClickHouseOpsRequestTypeRestart,
-	"RotateAuth":      ClickHouseOpsRequestTypeRotateAuth,
 	"VerticalScaling": ClickHouseOpsRequestTypeVerticalScaling,
 }
 

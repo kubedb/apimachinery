@@ -72,7 +72,6 @@ spec:
               type:
                 enum:
                 - Restart
-                - RotateAuth
                 - VerticalScaling
                 type: string
               verticalScaling:
