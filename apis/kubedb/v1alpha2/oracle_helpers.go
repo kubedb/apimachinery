@@ -419,7 +419,7 @@ func (o *Oracle) SetCoordinatorContainerDefaults(podTemplate *ofst.PodTemplateSp
 	o.setContainerDefaultResources(container, *kubedb.CoordinatorDefaultResources.DeepCopy())
 }
 
-func (o *Oracle) setContainerDefaultSecurityContext(container *core.Container, oraVersion *catalog.OracleVersion) {
+func (o *Oracle) setContainerDefaultSecurityContext(container *core.Container, _ *catalog.OracleVersion) {
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
