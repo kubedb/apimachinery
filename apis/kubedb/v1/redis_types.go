@@ -155,6 +155,38 @@ type RedisClusterSpec struct {
 
 	// Number of replica(s) per shard. If not specified, defaults to 2.
 	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Announce is used to announce the redis cluster endpoints.
+	// It is used to set
+	// cluster-announce-ip, cluster-announce-port, cluster-announce-bus-port, cluster-announce-tls-port
+	// +optional
+	Announce *Announce `json:"announce,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=ip;hostname
+type PreferredEndpointType string
+
+const (
+	PreferredEndpointTypeIP       PreferredEndpointType = "ip"
+	PreferredEndpointTypeHostname PreferredEndpointType = "hostname"
+)
+
+type Announce struct {
+	// +kubebuilder:default=hostname
+	Type PreferredEndpointType `json:"type,omitempty"`
+	// This field is used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port
+	// and cluster-announce-bus-port for redis cluster of each shard.
+	// +optional
+	Shards []Shards `json:"shards,omitempty"`
+}
+
+type Shards struct {
+	// Endpoints contains the host:port for all the replicas in a shard.
+	// This will be used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port
+	Endpoints []string `json:"endpoints,omitempty"`
+	// ClusterBusPort is the port used for cluster bus communication
+	// +optional
+	ClusterBusPorts string `json:"clusterBusPort,omitempty"`
 }
 
 type RedisSentinelRef struct {
