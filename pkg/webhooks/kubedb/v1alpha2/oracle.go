@@ -145,6 +145,10 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 	if db.Spec.Edition != kubedb.OracleEditionEnterprise {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("edition"), db.Name, "only enterprise edition is supported for now"))
 	}
+	if db.Spec.Listener != nil && db.Spec.Listener.Service != nil && len(*db.Spec.Listener.Service) > 12 {
+		// TODO: research if we can have more than 12 characters following some other way
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("listener").Child("service"), db.Name, "maximum 12 characters supported for now"))
+	}
 
 	if db.Spec.Mode == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("mode"), db.Name, "db.spec.mode has to be defined"))

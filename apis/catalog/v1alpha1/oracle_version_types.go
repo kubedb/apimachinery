@@ -130,10 +130,6 @@ type OracleSecurityContext struct {
 	// oracle UID 999 for debian images https://github.com/docker-library/oracle/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/Dockerfile#L15
 	// oracle UID 70  for alpine images https://github.com/docker-library/oracle/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6
 	RunAsUser *int64 `json:"runAsUser,omitempty"`
-
-	// RunAsAnyNonRoot will be true if user can change the default db container user to other than oracle user.
-	// It will be always false for alpine images https://hub.docker.com/_/oracle/ # section : Arbitrary --user Notes
-	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Official

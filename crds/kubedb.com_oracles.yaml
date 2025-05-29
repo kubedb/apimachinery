@@ -3292,10 +3292,7 @@ spec:
                 type: string
               edition:
                 enum:
-                - standard
                 - enterprise
-                - express
-                - free
                 type: string
               halted:
                 type: boolean
@@ -3340,8 +3337,6 @@ spec:
                 enum:
                 - Standalone
                 - DataGuard
-                - RAC
-                - Sharding
                 type: string
               monitor:
                 properties:

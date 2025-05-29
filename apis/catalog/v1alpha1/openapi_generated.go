@@ -30264,13 +30264,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_OracleSecurityContext(ref common.
 							Format:      "int64",
 						},
 					},
-					"runAsAnyNonRoot": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default db container user to other than oracle user. It will be always false for alpine images https://hub.docker.com/_/oracle/ # section : Arbitrary --user Notes",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 				},
 			},
 		},

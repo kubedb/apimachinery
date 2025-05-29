@@ -31,7 +31,7 @@ const (
 	ResourcePluralOracle   = "oracles"
 )
 
-// +kubebuilder:validation:Enum=Standalone;DataGuard;RAC;Sharding
+// +kubebuilder:validation:Enum=Standalone;DataGuard
 // OracleMode defines supported deployment modes
 type OracleMode string
 
@@ -102,7 +102,8 @@ type OracleSpec struct {
 	// Deployment mode of Oracle
 	Mode OracleMode `json:"mode,omitempty"`
 
-	// +kubebuilder:validation:Enum=standard;enterprise;express;free
+	// future versions standard;express;free
+	// +kubebuilder:validation:Enum=enterprise
 	Edition string `json:"edition,omitempty"`
 
 	// Number of instances (for RAC or DataGuard primary+standby)

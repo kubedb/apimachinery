@@ -28,7 +28,6 @@ import (
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
@@ -257,10 +256,6 @@ func (o *Oracle) ConfigSecretName() string {
 	return metautil.NameWithSuffix(o.OffshootName(), "config")
 }
 
-func (o *Oracle) AuthSecretName() string {
-	return metautil.NameWithSuffix(o.OffshootName(), "auth")
-}
-
 func (o *Oracle) IsStandalone() bool {
 	return o.Spec.Mode == OracleModeStandalone
 }
@@ -302,7 +297,7 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 	o.initializePodTemplates()
 
 	oraVersion := &catalog.OracleVersion{}
-	err := kc.Get(context.TODO(), types.NamespacedName{Name: o.Spec.Version}, oraVersion)
+	err := kc.Get(context.Background(), types.NamespacedName{Name: o.Spec.Version}, oraVersion)
 	if err != nil {
 		klog.Errorf("can't get the oracle version object %s for %s \n", err.Error(), o.Spec.Version)
 		return
@@ -332,8 +327,6 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 			o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
 		}
 	}
-
-	o.SetHealthCheckerDefaults()
 }
 
 func (o *Oracle) SetListenerDefaults() {
@@ -405,7 +398,6 @@ func (o *Oracle) SetOracleContainerDefaults(podTemplate *ofst.PodTemplateSpec, o
 	}
 	container := ofstutil.EnsureContainerExists(podTemplate, kubedb.OracleContainerName)
 	o.setContainerDefaultSecurityContext(container, oraVersion)
-	// TODO: Change Default Resource
 	o.setContainerDefaultResources(container, *kubedb.DefaultResourcesCoreAndMemoryIntensiveOracle.DeepCopy())
 }
 
@@ -415,7 +407,6 @@ func (o *Oracle) SetOracleObserverContainerDefaults(podTemplate *ofst.PodTemplat
 	}
 	container := ofstutil.EnsureContainerExists(podTemplate, kubedb.OracleObserverContainerName)
 	o.setContainerDefaultSecurityContext(container, oraVersion)
-	// TODO: Change Default Resource
 	o.setContainerDefaultResources(container, *kubedb.DefaultResourcesCoreAndMemoryIntensiveOracleObserver.DeepCopy())
 }
 
@@ -432,36 +423,14 @@ func (o *Oracle) setContainerDefaultSecurityContext(container *core.Container, o
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
-	o.assignDefaultContainerSecurityContext(container.SecurityContext, oraVersion)
+	// TODO: Check what part of security context make oracle fail to run
+	// o.assignDefaultContainerSecurityContext(container.SecurityContext, oraVersion)
 }
 
 func (o *Oracle) setContainerDefaultResources(container *core.Container, defaultResources core.ResourceRequirements) {
 	if container.Resources.Requests == nil && container.Resources.Limits == nil {
 		apis.SetDefaultResourceLimits(&container.Resources, defaultResources)
 	}
-}
-
-func (o *Oracle) assignDefaultContainerSecurityContext(sc *core.SecurityContext, oraVersion *catalog.OracleVersion) {
-	//if sc.AllowPrivilegeEscalation == nil {
-	//	sc.AllowPrivilegeEscalation = pointer.BoolP(false)
-	//}
-	//if sc.Capabilities == nil {
-	//	//sc.Capabilities = &core.Capabilities{
-	//	//	Drop: []core.Capability{"ALL"},
-	//	//}
-	//}
-	//if sc.RunAsNonRoot == nil {
-	//	sc.RunAsNonRoot = pointer.BoolP(true)
-	//}
-	//if sc.RunAsUser == nil {
-	//	sc.RunAsUser = oraVersion.Spec.SecurityContext.RunAsUser
-	//}
-	//if sc.RunAsGroup == nil {
-	//	sc.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
-	//}
-	//if sc.SeccompProfile == nil {
-	//	sc.SeccompProfile = secomp.DefaultSeccompProfile()
-	//}
 }
 
 func (o *Oracle) SetDataGuardDefaults() {
@@ -493,12 +462,16 @@ func (o *Oracle) SetDataGuardDefaults() {
 	}
 	if o.Spec.DataGuard.Observer.Storage == nil {
 		o.Spec.DataGuard.Observer.Storage = &core.PersistentVolumeClaimSpec{
-			// TODO: use storage class from main pvc spec
-			Resources: core.VolumeResourceRequirements{
-				Requests: core.ResourceList{
-					core.ResourceStorage: resource.MustParse("1Gi"),
-				},
-			},
+			StorageClassName: func() *string {
+				if o.Spec.Storage == nil {
+					return nil
+				}
+				if o.Spec.Storage.StorageClassName == nil {
+					return nil
+				}
+				return o.Spec.Storage.StorageClassName
+			}(),
+			Resources: kubedb.DefaultResourceStorageOracleObserver,
 		}
 	}
 }

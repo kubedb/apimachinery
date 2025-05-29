@@ -32813,8 +32813,9 @@ func schema_apimachinery_apis_kubedb_v1alpha2_OracleSpec(ref common.ReferenceCal
 					},
 					"edition": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "future versions standard;express;free",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"replicas": {

@@ -1863,6 +1863,11 @@ var (
 			core.ResourceMemory: resource.MustParse("3Gi"),
 		},
 	}
+	DefaultResourceStorageOracleObserver = core.VolumeResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceStorage: resource.MustParse("1Gi"),
+		},
+	}
 
 	// DefaultResourcesMemoryIntensiveSDB must be used for Singlestore when enabled monitoring or version >= 8.5.x
 	DefaultResourcesMemoryIntensiveSDB = core.ResourceRequirements{
