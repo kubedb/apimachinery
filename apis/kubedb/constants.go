@@ -1597,6 +1597,7 @@ const (
 
 	ClickHouseHealthCheckerDatabase = "kubedb_system"
 	ClickHouseHealthCheckerTable    = "kubedb_write_check"
+	ClickHouseReplicationTableName  = "kubedb_events_local"
 
 	ClickHouseServerConfigFile   = "server-config.yaml"
 	ClickHouseKeeperFileConfig   = "keeper_config.yaml"
