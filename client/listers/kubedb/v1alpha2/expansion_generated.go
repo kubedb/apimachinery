@@ -130,6 +130,14 @@ type MySQLListerExpansion interface{}
 // MySQLNamespaceLister.
 type MySQLNamespaceListerExpansion interface{}
 
+// OracleListerExpansion allows custom methods to be added to
+// OracleLister.
+type OracleListerExpansion interface{}
+
+// OracleNamespaceListerExpansion allows custom methods to be added to
+// OracleNamespaceLister.
+type OracleNamespaceListerExpansion interface{}
+
 // PerconaXtraDBListerExpansion allows custom methods to be added to
 // PerconaXtraDBLister.
 type PerconaXtraDBListerExpansion interface{}

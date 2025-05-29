@@ -48,6 +48,8 @@ type MongoDBVersionExpansion interface{}
 
 type MySQLVersionExpansion interface{}
 
+type OracleVersionExpansion interface{}
+
 type PerconaXtraDBVersionExpansion interface{}
 
 type PgBouncerVersionExpansion interface{}

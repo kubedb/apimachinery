@@ -78,6 +78,10 @@ type MongoDBVersionListerExpansion interface{}
 // MySQLVersionLister.
 type MySQLVersionListerExpansion interface{}
 
+// OracleVersionListerExpansion allows custom methods to be added to
+// OracleVersionLister.
+type OracleVersionListerExpansion interface{}
+
 // PerconaXtraDBVersionListerExpansion allows custom methods to be added to
 // PerconaXtraDBVersionLister.
 type PerconaXtraDBVersionListerExpansion interface{}

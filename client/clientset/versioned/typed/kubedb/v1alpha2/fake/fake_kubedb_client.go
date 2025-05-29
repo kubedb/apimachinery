@@ -85,6 +85,10 @@ func (c *FakeKubedbV1alpha2) MySQLs(namespace string) v1alpha2.MySQLInterface {
 	return &FakeMySQLs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Oracles(namespace string) v1alpha2.OracleInterface {
+	return &FakeOracles{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) PerconaXtraDBs(namespace string) v1alpha2.PerconaXtraDBInterface {
 	return &FakePerconaXtraDBs{c, namespace}
 }

@@ -84,6 +84,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MSSQLServerVersionList{},
 		&MySQLVersion{},
 		&MySQLVersionList{},
+		&OracleVersion{},
+		&OracleVersionList{},
 		&PerconaXtraDBVersion{},
 		&PerconaXtraDBVersionList{},
 		&PgBouncerVersion{},
