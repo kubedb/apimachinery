@@ -183,10 +183,8 @@ type Announce struct {
 type Shards struct {
 	// Endpoints contains the host:port for all the replicas in a shard.
 	// This will be used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port
+	// format announce (host:port@busport) for redis cluster of each shard replica.
 	Endpoints []string `json:"endpoints,omitempty"`
-	// ClusterBusPort is the port used for cluster bus communication
-	// +optional
-	ClusterBusPorts string `json:"clusterBusPort,omitempty"`
 }
 
 type RedisSentinelRef struct {

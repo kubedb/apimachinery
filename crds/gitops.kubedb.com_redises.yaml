@@ -126,8 +126,6 @@ spec:
                       shards:
                         items:
                           properties:
-                            clusterBusPort:
-                              type: string
                             endpoints:
                               items:
                                 type: string
