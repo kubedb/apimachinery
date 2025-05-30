@@ -18,10 +18,11 @@ limitations under the License.
 package v1alpha1
 
 import (
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+
 	core "k8s.io/api/core/v1"
 	resource "k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 )
 
 const (
@@ -72,7 +73,9 @@ type RedisOpsRequestSpec struct {
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
-	// Specifies information necessary for announce redis cluster
+	// Announce is used to announce the redis cluster endpoints.
+	// It is used to set
+	// cluster-announce-ip, cluster-announce-port, cluster-announce-bus-port, cluster-announce-tls-port
 	Announce *dbapi.Announce `json:"announce,omitempty"`
 	// Specifies information necessary for replacing sentinel instances
 	Sentinel *RedisSentinelSpec `json:"sentinel,omitempty"`
@@ -83,7 +86,7 @@ type RedisOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;ReplaceSentinel;RotateAuth
+// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;ReplaceSentinel;RotateAuth;Announce
 // ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, ReplaceSentinel, RotateAuth, Announce)
 type RedisOpsRequestType string
 
