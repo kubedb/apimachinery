@@ -34299,7 +34299,7 @@ func schema_apimachinery_apis_ops_v1alpha1_RedisOpsRequestSpec(ref common.Refere
 					},
 					"announce": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies information necessary for announce redis cluster",
+							Description: "Announce is used to announce the redis cluster endpoints. It is used to set cluster-announce-ip, cluster-announce-port, cluster-announce-bus-port, cluster-announce-tls-port",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.Announce"),
 						},
 					},
