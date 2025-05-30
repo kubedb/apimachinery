@@ -23,6 +23,7 @@ import (
 	cataloginstall "kubedb.dev/apimachinery/apis/catalog/install"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
+	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsinstall "kubedb.dev/apimachinery/apis/ops/install"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -64,6 +65,7 @@ func generateSwaggerJson() {
 		},
 		OpenAPIDefinitions: []common.GetOpenAPIDefinitions{
 			kubedbv1alpha2.GetOpenAPIDefinitions,
+			kubedbv1.GetOpenAPIDefinitions,
 			catalogv1alpha1.GetOpenAPIDefinitions,
 			opsv1alpha1.GetOpenAPIDefinitions,
 		},
