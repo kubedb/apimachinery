@@ -24,16 +24,24 @@ const (
 	DBModeReplicaSet = "ReplicaSet"
 	DBModeDedicated  = "Dedicated"
 	DBModeCombined   = "Combined"
+
+	DBModePrimaryOnly = "PrimaryOnly"
 )
 
 const (
+	CassandraContainerName   = "cassandra"
 	ClickHouseContainerName  = "clickhouse"
 	DruidContainerName       = "druid"
+	HazelcastContainerName   = "hazelcast"
 	FerretDBContainerName    = "ferretdb"
+	IgniteContainerName      = "ignite"
 	MSSQLServerContainerName = "mssql"
 	PgpoolContainerName      = "pgpool"
 	RabbitMQContainerName    = "rabbitmq"
 	SinglestoreContainerName = "singlestore"
 	SolrContainerName        = "solr"
 	ZooKeeperContainerName   = "zookeeper"
+
+	SinglestoreSidecarContainerName = "singlestore-coordinator"
+	MSSQLServerSidecarContainerName = "mssql-coordinator"
 )

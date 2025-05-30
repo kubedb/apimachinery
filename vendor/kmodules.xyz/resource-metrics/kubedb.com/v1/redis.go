@@ -39,7 +39,7 @@ type Redis struct{}
 func (r Redis) ResourceCalculator() api.ResourceCalculator {
 	return &api.ResourceCalculatorFuncs{
 		AppRoles:               []api.PodRole{api.PodRoleDefault},
-		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleExporter},
+		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleSidecar, api.PodRoleExporter},
 		RoleReplicasFn:         r.roleReplicasFn,
 		ModeFn:                 r.modeFn,
 		UsesTLSFn:              r.usesTLSFn,
@@ -123,15 +123,22 @@ func (r Redis) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resourc
 			if err != nil {
 				return nil, err
 			}
-			// If spec.cluster.replicas = x
-			// That means in each shard there are (x+1) redis replicas
-			shardReplicas += 1
 			replicas = shards * shardReplicas
 		}
 
-		return map[api.PodRole]api.PodInfo{
+		ret := map[api.PodRole]api.PodInfo{
 			api.PodRoleDefault:  {Resource: container, Replicas: replicas},
 			api.PodRoleExporter: {Resource: exporter, Replicas: replicas},
-		}, nil
+		}
+
+		if mode == DBModeSentinel {
+			sidecar, err := api.SidecarNodeResourcesV2(obj, fn, RedisSidecarContainerName, "spec")
+			if err != nil {
+				return nil, err
+			}
+			ret[api.PodRoleSidecar] = api.PodInfo{Resource: sidecar, Replicas: replicas}
+		}
+
+		return ret, nil
 	}
 }

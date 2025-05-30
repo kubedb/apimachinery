@@ -81,9 +81,10 @@ type NamespaceInfo struct {
 	UID  types.UID `json:"uid,omitempty"`
 	Name string    `json:"name"`
 	// +optional
-	CreationTimestamp metav1.Time       `json:"creationTimestamp,omitempty"`
-	AceOrgID          string            `json:"aceOrgID,omitempty"`
-	AceOrgMetadata    map[string]string `json:"aceOrgMetadata,omitempty"`
+	CreationTimestamp   metav1.Time       `json:"creationTimestamp,omitempty"`
+	AceOrgID            string            `json:"aceOrgID,omitempty"`
+	AceOrgMetadata      map[string]string `json:"aceOrgMetadata,omitempty"`
+	EnableResourceTrial bool              `json:"enableResourceTrial,omitempty"`
 }
 
 type ComputeResource struct {

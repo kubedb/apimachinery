@@ -30,25 +30,25 @@ func init() {
 	api.Register(schema.GroupVersionKind{
 		Group:   "kubedb.com",
 		Version: "v1alpha2",
-		Kind:    "MSSQLServer",
-	}, MSSQLServer{}.ResourceCalculator())
+		Kind:    "Hazelcast",
+	}, Hazelcast{}.ResourceCalculator())
 }
 
-type MSSQLServer struct{}
+type Hazelcast struct{}
 
-func (r MSSQLServer) ResourceCalculator() api.ResourceCalculator {
+func (h Hazelcast) ResourceCalculator() api.ResourceCalculator {
 	return &api.ResourceCalculatorFuncs{
 		AppRoles:               []api.PodRole{api.PodRoleDefault},
-		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleSidecar, api.PodRoleExporter},
-		RoleReplicasFn:         r.roleReplicasFn,
-		ModeFn:                 r.modeFn,
-		UsesTLSFn:              r.usesTLSFn,
-		RoleResourceLimitsFn:   r.roleResourceFn(api.ResourceLimits),
-		RoleResourceRequestsFn: r.roleResourceFn(api.ResourceRequests),
+		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleExporter},
+		RoleReplicasFn:         h.roleReplicasFn,
+		ModeFn:                 h.modeFn,
+		UsesTLSFn:              h.usesTLSFn,
+		RoleResourceLimitsFn:   h.roleResourceFn(api.ResourceLimits),
+		RoleResourceRequestsFn: h.roleResourceFn(api.ResourceRequests),
 	}
 }
 
-func (r MSSQLServer) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
+func (h Hazelcast) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
 	replicas, found, err := unstructured.NestedInt64(obj, "spec", "replicas")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read spec.replicas %v: %w", obj, err)
@@ -59,32 +59,25 @@ func (r MSSQLServer) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList
 	return api.ReplicaList{api.PodRoleDefault: replicas}, nil
 }
 
-func (r MSSQLServer) modeFn(obj map[string]interface{}) (string, error) {
-	mode, found, err := unstructured.NestedString(obj, "spec", "topology", "mode")
+func (h Hazelcast) modeFn(obj map[string]interface{}) (string, error) {
+	replicas, _, err := unstructured.NestedInt64(obj, "spec", "replicas")
 	if err != nil {
 		return "", err
 	}
-	if found {
-		return mode, nil
+	if replicas > 1 {
+		return DBModeCluster, nil
 	}
 	return DBModeStandalone, nil
 }
 
-func (r MSSQLServer) usesTLSFn(obj map[string]interface{}) (bool, error) {
-	enabled, found, err := unstructured.NestedBool(obj, "spec", "tls", "clientTLS")
-	if err != nil {
-		return false, err
-	}
-
-	if found && enabled {
-		return true, nil
-	}
-	return false, nil
+func (h Hazelcast) usesTLSFn(obj map[string]interface{}) (bool, error) {
+	_, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "tls")
+	return found, err
 }
 
-func (r MSSQLServer) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
+func (h Hazelcast) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
 	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
-		container, replicas, err := api.AppNodeResourcesV2(obj, fn, MSSQLServerContainerName, "spec")
+		container, replicas, err := api.AppNodeResourcesV2(obj, fn, HazelcastContainerName, "spec")
 		if err != nil {
 			return nil, err
 		}
@@ -93,21 +86,9 @@ func (r MSSQLServer) roleResourceFn(fn func(rr core.ResourceRequirements) core.R
 		if err != nil {
 			return nil, err
 		}
-
-		ret := map[api.PodRole]api.PodInfo{
+		return map[api.PodRole]api.PodInfo{
 			api.PodRoleDefault:  {Resource: container, Replicas: replicas},
 			api.PodRoleExporter: {Resource: exporter, Replicas: replicas},
-		}
-
-		if replicas > 1 {
-			sidecar, err := api.SidecarNodeResourcesV2(obj, fn, MSSQLServerSidecarContainerName, "spec")
-			if err != nil {
-				return nil, err
-			}
-
-			ret[api.PodRoleSidecar] = api.PodInfo{Resource: sidecar, Replicas: replicas}
-		}
-
-		return ret, nil
+		}, nil
 	}
 }

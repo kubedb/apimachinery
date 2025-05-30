@@ -23,6 +23,7 @@ import (
 
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -38,8 +39,8 @@ type FerretDB struct{}
 
 func (r FerretDB) ResourceCalculator() api.ResourceCalculator {
 	return &api.ResourceCalculatorFuncs{
-		AppRoles:               []api.PodRole{api.PodRoleDefault},
-		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleExporter},
+		AppRoles:               []api.PodRole{api.PodRolePrimary, api.PodRoleSecondary},
+		RuntimeRoles:           []api.PodRole{api.PodRolePrimary, api.PodRoleSecondary, api.PodRoleExporter},
 		RoleReplicasFn:         r.roleReplicasFn,
 		ModeFn:                 r.modeFn,
 		UsesTLSFn:              r.usesTLSFn,
@@ -49,25 +50,28 @@ func (r FerretDB) ResourceCalculator() api.ResourceCalculator {
 }
 
 func (r FerretDB) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
-	replicas, found, err := unstructured.NestedInt64(obj, "spec", "replicas")
+	replicas, found, err := unstructured.NestedInt64(obj, "spec", "server", "primary", "replicas")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read spec.replicas %v: %w", obj, err)
 	}
 	if !found {
-		return api.ReplicaList{api.PodRoleDefault: 1}, nil
+		return api.ReplicaList{api.PodRolePrimary: 1}, nil
 	}
-	return api.ReplicaList{api.PodRoleDefault: replicas}, nil
+
+	ret := api.ReplicaList{api.PodRolePrimary: replicas}
+	secRepplicas, found, err := unstructured.NestedInt64(obj, "spec", "server", "secondary", "replicas")
+	if found && err == nil {
+		ret[api.PodRoleSecondary] = secRepplicas
+	}
+	return ret, nil
 }
 
 func (r FerretDB) modeFn(obj map[string]interface{}) (string, error) {
-	replicas, _, err := unstructured.NestedInt64(obj, "spec", "replicas")
-	if err != nil {
-		return "", err
+	_, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "server", "secondary")
+	if !found || err != nil {
+		return DBModePrimaryOnly, nil
 	}
-	if replicas > 1 {
-		return DBModeCluster, nil
-	}
-	return DBModeStandalone, nil
+	return DBModeCluster, nil
 }
 
 func (r FerretDB) usesTLSFn(obj map[string]interface{}) (bool, error) {
@@ -77,7 +81,7 @@ func (r FerretDB) usesTLSFn(obj map[string]interface{}) (bool, error) {
 
 func (r FerretDB) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
 	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
-		container, replicas, err := api.AppNodeResourcesV2(obj, fn, FerretDBContainerName, "spec")
+		pc, pr, err := api.AppNodeResourcesV2(obj, fn, FerretDBContainerName, "spec", "server", "primary")
 		if err != nil {
 			return nil, err
 		}
@@ -86,9 +90,38 @@ func (r FerretDB) roleResourceFn(fn func(rr core.ResourceRequirements) core.Reso
 		if err != nil {
 			return nil, err
 		}
-		return map[api.PodRole]api.PodInfo{
-			api.PodRoleDefault:  {Resource: container, Replicas: replicas},
-			api.PodRoleExporter: {Resource: exporter, Replicas: replicas},
-		}, nil
+
+		storage, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "storage")
+		if err != nil || !found {
+			return nil, err
+		}
+		var vol core.PersistentVolumeClaimSpec
+		err = runtime.DefaultUnstructuredConverter.FromUnstructured(storage.(map[string]interface{}), &vol)
+		if err != nil {
+			return nil, err
+		}
+
+		quantity, found := vol.Resources.Requests[core.ResourceStorage]
+		if !found || quantity.IsZero() {
+			return nil, fmt.Errorf("no storage found for %v", obj)
+		}
+		pc[core.ResourceStorage] = quantity
+
+		ret := map[api.PodRole]api.PodInfo{
+			api.PodRolePrimary:  {Resource: pc, Replicas: pr},
+			api.PodRoleExporter: {Resource: exporter, Replicas: pr},
+		}
+
+		_, found, err = unstructured.NestedFieldNoCopy(obj, "spec", "server", "secondary")
+		if found && err == nil {
+			sc, sr, err := api.AppNodeResourcesV2(obj, fn, FerretDBContainerName, "spec", "server", "secondary")
+			if err != nil {
+				return nil, err
+			}
+			sc[core.ResourceStorage] = pc[core.ResourceStorage]
+			ret[api.PodRoleSecondary] = api.PodInfo{Resource: sc, Replicas: sr}
+			ret[api.PodRoleExporter] = api.PodInfo{Resource: exporter, Replicas: pr + sr}
+		}
+		return ret, nil
 	}
 }
