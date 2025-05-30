@@ -59,7 +59,15 @@ func (r RedisSentinel) roleReplicasFn(obj map[string]interface{}) (api.ReplicaLi
 }
 
 func (r RedisSentinel) modeFn(obj map[string]interface{}) (string, error) {
-	return DBModeCluster, nil
+	mode, found, err := unstructured.NestedString(obj, "spec", "mode")
+	if err == nil && found {
+		return mode, nil
+	}
+	replicas, found, err := unstructured.NestedInt64(obj, "spec", "replicas")
+	if err == nil && found && replicas > 1 {
+		return DBModeCluster, nil
+	}
+	return DBModeStandalone, nil
 }
 
 func (r RedisSentinel) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {

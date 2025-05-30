@@ -39,7 +39,7 @@ type MySQL struct{}
 func (r MySQL) ResourceCalculator() api.ResourceCalculator {
 	return &api.ResourceCalculatorFuncs{
 		AppRoles:               []api.PodRole{api.PodRoleDefault, api.PodRoleRouter},
-		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleExporter, api.PodRoleRouter},
+		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleSidecar, api.PodRoleExporter, api.PodRoleRouter},
 		RoleReplicasFn:         r.roleReplicasFn,
 		ModeFn:                 r.modeFn,
 		UsesTLSFn:              r.usesTLSFn,
@@ -115,11 +115,20 @@ func (r MySQL) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resourc
 			api.PodRoleExporter: {Resource: exporter, Replicas: replicas},
 		}
 
+		if replicas > 1 {
+			sidecar, err := api.SidecarNodeResourcesV2(obj, fn, MySQLSidecarContainerName, "spec")
+			if err != nil {
+				return nil, err
+			}
+			result[api.PodRoleSidecar] = api.PodInfo{Resource: sidecar, Replicas: replicas}
+		}
+
 		// InnoDB Router
 		mode, found, err := unstructured.NestedString(obj, "spec", "topology", "mode")
 		if err != nil {
 			return nil, err
 		}
+
 		if found && mode == "InnoDBCluster" {
 			router, replicas, err := api.AppNodeResourcesV2(obj, fn, MySQLRouterContainerName, "spec", "topology", "innoDBCluster", "router")
 			if err != nil {
