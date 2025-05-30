@@ -25968,7 +25968,7 @@ func schema_apimachinery_apis_kubedb_v1_Announce(ref common.ReferenceCallback) c
 					},
 					"shards": {
 						SchemaProps: spec.SchemaProps{
-							Description: "This field is used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port and cluster-announce-bus-port for redis cluster of each shard.",
+							Description: "This field is used to set cluster-announce information for redis cluster of each shard.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -31777,7 +31777,7 @@ func schema_apimachinery_apis_kubedb_v1_Shards(ref common.ReferenceCallback) com
 				Properties: map[string]spec.Schema{
 					"endpoints": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Endpoints contains the host:port for all the replicas in a shard. This will be used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port format announce (host:port@busport) for redis cluster of each shard replica.",
+							Description: "Endpoints contains the cluster-announce information for all the replicas in a shard. This will be used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port and cluster-announce-bus-port format cluster-announce (host:port@busport)",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

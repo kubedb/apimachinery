@@ -174,16 +174,15 @@ const (
 type Announce struct {
 	// +kubebuilder:default=hostname
 	Type PreferredEndpointType `json:"type,omitempty"`
-	// This field is used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port
-	// and cluster-announce-bus-port for redis cluster of each shard.
-	// +optional
+	// This field is used to set cluster-announce information for redis cluster of each shard.
 	Shards []Shards `json:"shards,omitempty"`
 }
 
 type Shards struct {
-	// Endpoints contains the host:port for all the replicas in a shard.
+	// Endpoints contains the cluster-announce information for all the replicas in a shard.
 	// This will be used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port
-	// format announce (host:port@busport) for redis cluster of each shard replica.
+	// and cluster-announce-bus-port
+	// format cluster-announce (host:port@busport)
 	Endpoints []string `json:"endpoints,omitempty"`
 }
 
