@@ -152,7 +152,7 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	MongoDB:       {Default: true, PreRelease: featuregate.GA},
 	MSSQLServer:   {Default: false, PreRelease: featuregate.Alpha},
 	MySQL:         {Default: true, PreRelease: featuregate.GA},
-	Oracle:        {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
+	Oracle:        {Default: false, PreRelease: featuregate.Alpha},
 	PerconaXtraDB: {Default: false, PreRelease: featuregate.Beta},
 	PgBouncer:     {Default: false, PreRelease: featuregate.Beta},
 	Pgpool:        {Default: false, PreRelease: featuregate.Alpha},
