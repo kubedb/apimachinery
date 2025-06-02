@@ -5501,6 +5501,11 @@ func (in *RedisOpsRequestSpec) DeepCopyInto(out *RedisOpsRequestSpec) {
 		*out = new(RestartSpec)
 		**out = **in
 	}
+	if in.Announce != nil {
+		in, out := &in.Announce, &out.Announce
+		*out = new(kubedbv1.Announce)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Sentinel != nil {
 		in, out := &in.Sentinel, &out.Sentinel
 		*out = new(RedisSentinelSpec)
