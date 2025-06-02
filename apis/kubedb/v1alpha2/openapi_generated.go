@@ -589,6 +589,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServer":                                   schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServer(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerApp":                                schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerAvailabilityGroupSpec":              schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerAvailabilityGroupSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerDistributedAGSpec":                  schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerDistributedAGSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerLeaderElectionConfig":               schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerLeaderElectionConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerList":                               schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref),
@@ -30556,6 +30557,36 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerAvailabilityGroupSpec(r
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerDistributedAGSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLServerDistributedAGSpec defines the configuration for a Distributed Availability Group. This will hold `role` (Primary/Secondary) and `remoteURL`.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"role": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Role indicates if local Availability Group cluster is acting as Primary or Secondary in the Distributed Availability Group (DAG).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"remoteURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RemoteURL is the network address (listener endpoint) of the remote AG. Example: Use the external LoadBalancer IP or hostname that is reachable from this cluster, e.g., 10.2.0.64:5022 (instead of an internal cluster DNS name)",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"role", "remoteURL"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerLeaderElectionConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -30878,22 +30909,28 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerTopology(ref common.Ref
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "If set to - \"AvailabilityGroup\", MSSQLAvailabilityGroupSpec is required and MSSQLServer servers will start an Availability Group",
+							Description: "If set to - \"AvailabilityGroup\", MSSQLAvailabilityGroupSpec is required and MSSQLServer servers will start an Availability Group \"DistributedAG\", MSSQLServerDistributedAGSpec is required, and MSSQLServer servers will start a Distributed Availability Group",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"availabilityGroup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AvailabilityGroup info for MSSQLServer",
+							Description: "AvailabilityGroup info for MSSQLServer (used when Mode is \"AvailabilityGroup\" or \"DistributedAG\").",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerAvailabilityGroupSpec"),
+						},
+					},
+					"distributedAG": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DistributedAG contains information of the DAG (Distributed Availability Group) configuration. Used when Mode is \"DistributedAG\".",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerDistributedAGSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerAvailabilityGroupSpec"},
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerAvailabilityGroupSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerDistributedAGSpec"},
 	}
 }
 

@@ -4808,6 +4808,19 @@ spec:
                         - All
                         type: string
                     type: object
+                  distributedAG:
+                    properties:
+                      remoteURL:
+                        type: string
+                      role:
+                        enum:
+                        - Primary
+                        - Secondary
+                        type: string
+                    required:
+                    - remoteURL
+                    - role
+                    type: object
                   mode:
                     enum:
                     - AvailabilityGroup

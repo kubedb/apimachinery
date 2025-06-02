@@ -60,6 +60,14 @@ const (
 	SecondaryAccessModeAll SecondaryAccessMode = "All"
 )
 
+// +kubebuilder:validation:Enum=Primary;Secondary
+type DAGRole string
+
+const (
+	DAGRolePrimary   DAGRole = "Primary"
+	DAGRoleSecondary DAGRole = "Secondary"
+)
+
 // MSSQLServer defines a MSSQLServer database.
 
 // +genclient
@@ -162,11 +170,17 @@ type MSSQLServerTLSConfig struct {
 type MSSQLServerTopology struct {
 	// If set to -
 	// "AvailabilityGroup", MSSQLAvailabilityGroupSpec is required and MSSQLServer servers will start an Availability Group
+	// "DistributedAG", MSSQLServerDistributedAGSpec is required, and MSSQLServer servers will start a Distributed Availability Group
 	Mode *MSSQLServerMode `json:"mode,omitempty"`
 
-	// AvailabilityGroup info for MSSQLServer
+	// AvailabilityGroup info for MSSQLServer (used when Mode is "AvailabilityGroup" or "DistributedAG").
 	// +optional
 	AvailabilityGroup *MSSQLServerAvailabilityGroupSpec `json:"availabilityGroup,omitempty"`
+
+	// DistributedAG contains information of the DAG (Distributed Availability Group) configuration.
+	// Used when Mode is "DistributedAG".
+	// +optional
+	DistributedAG *MSSQLServerDistributedAGSpec `json:"distributedAG,omitempty"`
 }
 
 // MSSQLServerAvailabilityGroupSpec defines the availability group spec for MSSQLServer
@@ -184,6 +198,20 @@ type MSSQLServerAvailabilityGroupSpec struct {
 	// +optional
 	// +kubebuilder:default=Passive
 	SecondaryAccessMode SecondaryAccessMode `json:"secondaryAccessMode,omitempty"`
+}
+
+// MSSQLServerDistributedAGSpec defines the configuration for a Distributed Availability Group.
+// This will hold `role` (Primary/Secondary) and `remoteURL`.
+type MSSQLServerDistributedAGSpec struct {
+	// Role indicates if local Availability Group cluster is acting as Primary or Secondary in the Distributed Availability Group (DAG).
+	// +kubebuilder:validation:Required
+	Role DAGRole `json:"role"`
+
+	// RemoteURL is the network address (listener endpoint) of the remote AG.
+	// Example: Use the external LoadBalancer IP or hostname that is reachable from this cluster,
+	// e.g., 10.2.0.64:5022 (instead of an internal cluster DNS name)
+	// +kubebuilder:validation:Required
+	RemoteURL string `json:"remoteURL"`
 }
 
 // MSSQLServerStatus defines the observed state of MSSQLServer
