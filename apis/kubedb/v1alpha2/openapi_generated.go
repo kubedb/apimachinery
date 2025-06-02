@@ -26410,6 +26410,25 @@ func schema_apimachinery_apis_kubedb_v1alpha2_CassandraSpec(ref common.Reference
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"keystoreCredSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Keystore encryption secret",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"enableSSL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "To enable ssl for http layer",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains tls configurations",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
@@ -26455,7 +26474,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_CassandraSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Topology"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Topology"},
 	}
 }
 
