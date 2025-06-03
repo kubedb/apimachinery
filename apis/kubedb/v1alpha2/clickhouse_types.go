@@ -29,6 +29,10 @@ const (
 	ResourceSingularClickHouse = "clickhouse"
 	ResourcePluralClickHouse   = "clickhouses"
 	ResourceCodeClickHouse     = "ch"
+
+	ClickHouseCACert     RabbitMQCertificateAlias = "ca"
+	ClickHouseClientCert RabbitMQCertificateAlias = "client"
+	ClickHouseServerCert RabbitMQCertificateAlias = "server"
 )
 
 // +genclient

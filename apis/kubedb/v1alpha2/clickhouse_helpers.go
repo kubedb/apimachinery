@@ -185,6 +185,10 @@ func (c *ClickHouse) KeeperGoverningServiceName() string {
 	return meta_util.NameWithSuffix(c.KeeperServiceName(), "pods")
 }
 
+func (r *ClickHouse) DashboardServiceName() string {
+	return meta_util.NameWithSuffix(r.ServiceName(), "dashboard")
+}
+
 func (c *ClickHouse) ClusterGoverningServiceName(name string) string {
 	return meta_util.NameWithSuffix(name, "pods")
 }
