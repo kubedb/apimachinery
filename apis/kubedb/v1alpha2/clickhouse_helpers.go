@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"strconv"
 	"strings"
 
@@ -49,6 +50,9 @@ import (
 type ClickhouseApp struct {
 	*ClickHouse
 }
+
+// +kubebuilder:validation:Enum=ca;client;server
+type ClickHouseCertificateAlias string
 
 func (c *ClickHouse) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralClickHouse))
@@ -243,6 +247,23 @@ func (c *ClickHouse) ClusterPodLabels(petSetName string, labels map[string]strin
 func (c *ClickHouse) GetConnectionScheme() string {
 	scheme := "http"
 	return scheme
+}
+
+// CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
+func (c *ClickHouse) CertificateName(alias ClickHouseCertificateAlias) string {
+	return meta_util.NameWithSuffix(c.Name, fmt.Sprintf("%s-cert", string(alias)))
+}
+
+// GetCertSecretName returns the secret name for a certificate alias if any,
+// otherwise returns default certificate secret name for the given alias.
+func (c *ClickHouse) GetCertSecretName(alias ClickHouseCertificateAlias) string {
+	if c.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(c.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return c.CertificateName(alias)
 }
 
 func (c *ClickHouse) SetHealthCheckerDefaults() {
