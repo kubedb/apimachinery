@@ -31,12 +31,12 @@ const (
 	ResourcePluralMSSQLServer   = "mssqlservers"
 )
 
-// +kubebuilder:validation:Enum=AvailabilityGroup;RemoteReplica
+// +kubebuilder:validation:Enum=AvailabilityGroup;DistributedAG
 type MSSQLServerMode string
 
 const (
 	MSSQLServerModeAvailabilityGroup MSSQLServerMode = "AvailabilityGroup"
-	MSSQLServerModeRemoteReplica     MSSQLServerMode = "RemoteReplica"
+	MSSQLServerModeDistributedAG     MSSQLServerMode = "DistributedAG"
 )
 
 // +kubebuilder:validation:Enum=server;client;endpoint
