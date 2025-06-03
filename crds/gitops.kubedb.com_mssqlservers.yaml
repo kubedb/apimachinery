@@ -4824,7 +4824,7 @@ spec:
                   mode:
                     enum:
                     - AvailabilityGroup
-                    - RemoteReplica
+                    - DistributedAG
                     type: string
                 type: object
               version:
