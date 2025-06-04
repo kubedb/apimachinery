@@ -171,6 +171,13 @@ func (m *MSSQLServer) IsAvailabilityGroup() bool {
 		*m.Spec.Topology.Mode == MSSQLServerModeAvailabilityGroup
 }
 
+func (m *MSSQLServer) IsDistributedAG() bool {
+	return m.Spec.Topology != nil &&
+		m.Spec.Topology.Mode != nil &&
+		*m.Spec.Topology.Mode == MSSQLServerModeDistributedAG &&
+		m.Spec.Topology.DistributedAG != nil
+}
+
 func (m *MSSQLServer) IsStandalone() bool {
 	return m.Spec.Topology == nil
 }
