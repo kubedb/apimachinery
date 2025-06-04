@@ -178,6 +178,15 @@ func (m *MSSQLServer) IsDistributedAG() bool {
 		m.Spec.Topology.DistributedAG != nil
 }
 
+func (m *MSSQLServer) DistributedAGName() string {
+	if m.Spec.Topology != nil && m.Spec.Topology.DistributedAG != nil {
+		if m.Spec.Topology.DistributedAG.Name != "" {
+			return m.Spec.Topology.DistributedAG.Name
+		}
+	}
+	return "DAG"
+}
+
 func (m *MSSQLServer) IsStandalone() bool {
 	return m.Spec.Topology == nil
 }

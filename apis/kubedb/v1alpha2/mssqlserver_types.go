@@ -201,17 +201,34 @@ type MSSQLServerAvailabilityGroupSpec struct {
 }
 
 // MSSQLServerDistributedAGSpec defines the configuration for a Distributed Availability Group.
-// This will hold `role` (Primary/Secondary) and `remoteURL`.
 type MSSQLServerDistributedAGSpec struct {
-	// Role indicates if local Availability Group cluster is acting as Primary or Secondary in the Distributed Availability Group (DAG).
+	// Name is the desired name for the Distributed Availability Group (DAG).
+	// This name must be unique across the SQL Server instances involved in the DAG.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxLength=128 // Max length for AG names
+	Name string `json:"name"`
+
+	// Role indicates if the local Availability Group (defined in spec.topology.availabilityGroup)
+	// is acting as Primary or Secondary in this Distributed Availability Group (DAG).
 	// +kubebuilder:validation:Required
 	Role DAGRole `json:"role"`
 
-	// RemoteURL is the network address (listener endpoint) of the remote AG.
-	// Example: Use the external LoadBalancer IP or hostname that is reachable from this cluster,
-	// e.g., 10.2.0.64:5022 (instead of an internal cluster DNS name)
+	// MyURL is the listener endpoint URL of the *local* Availability Group that will participate in this DAG.
+	// This must be reachable by the SQL Server instance.
+	// Example: "ag1-listener.my-namespace.svc:5022" or an externally reachable IP:Port.
+	// +kubebuilder:validation:Required
+	MyURL string `json:"myURL"`
+
+	// RemoteURL is the listener endpoint URL of the *remote* Availability Group that will be the other member of this DAG.
+	// This URL must be reachable from the SQL Server instances in this cluster.
+	// Example: Use the external LoadBalancer IP or hostname
+	// e.g., "external-ip-of-remote-ag-listener:5022" or 10.2.0.64:5022 (instead of an internal cluster DNS name)
 	// +kubebuilder:validation:Required
 	RemoteURL string `json:"remoteURL"`
+
+	// RemoteAGName is the actual name of the Availability Group on the remote cluster.
+	// +kubebuilder:validation:Required
+	RemoteAGName string `json:"remoteAGName,omitempty"` // Name of the remote cluster's local AG.
 }
 
 // MSSQLServerStatus defines the observed state of MSSQLServer
