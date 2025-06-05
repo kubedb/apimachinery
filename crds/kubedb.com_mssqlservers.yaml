@@ -4832,6 +4832,12 @@ spec:
                     type: object
                   distributedAG:
                     properties:
+                      myURL:
+                        type: string
+                      name:
+                        type: string
+                      remoteAGName:
+                        type: string
                       remoteURL:
                         type: string
                       role:
@@ -4840,6 +4846,9 @@ spec:
                         - Secondary
                         type: string
                     required:
+                    - myURL
+                    - name
+                    - remoteAGName
                     - remoteURL
                     - role
                     type: object

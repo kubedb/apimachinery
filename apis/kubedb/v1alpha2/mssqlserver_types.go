@@ -205,7 +205,6 @@ type MSSQLServerDistributedAGSpec struct {
 	// Name is the desired name for the Distributed Availability Group (DAG).
 	// This name must be unique across the SQL Server instances involved in the DAG.
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:MaxLength=128 // Max length for AG names
 	Name string `json:"name"`
 
 	// Role indicates if the local Availability Group (defined in spec.topology.availabilityGroup)
