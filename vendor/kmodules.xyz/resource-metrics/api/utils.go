@@ -29,7 +29,6 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/klog/v2"
 )
 
 func ResourceListForRoles(rr map[PodRole]core.ResourceList, roles []PodRole) core.ResourceList {
@@ -392,7 +391,6 @@ func SidecarNodeResourcesV2(
 		return nil, fmt.Errorf("failed to parse %w", err)
 	}
 
-	klog.Infof("%+v \n\n", tpl)
 	sidecar := GetContainerByName(tpl.PodTemplate.Spec.Containers, containerName)
 	if sidecar == nil {
 		return nil, fmt.Errorf("failed to find container %s in podTemplate spec %v ", containerName, tpl.PodTemplate.Spec)
