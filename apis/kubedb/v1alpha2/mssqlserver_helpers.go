@@ -178,6 +178,10 @@ func (m *MSSQLServer) IsDistributedAG() bool {
 		m.Spec.Topology.DistributedAG != nil
 }
 
+func (m *MSSQLServer) IsCluster() bool {
+	return m.IsAvailabilityGroup() || m.IsDistributedAG()
+}
+
 func (m *MSSQLServer) DistributedAGName() string {
 	if m.Spec.Topology != nil && m.Spec.Topology.DistributedAG != nil {
 		if m.Spec.Topology.DistributedAG.Name != "" {
