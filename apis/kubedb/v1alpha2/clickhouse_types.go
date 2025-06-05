@@ -29,6 +29,10 @@ const (
 	ResourceSingularClickHouse = "clickhouse"
 	ResourcePluralClickHouse   = "clickhouses"
 	ResourceCodeClickHouse     = "ch"
+
+	ClickHouseCACert     ClickHouseCertificateAlias = "ca"
+	ClickHouseClientCert ClickHouseCertificateAlias = "client"
+	ClickHouseServerCert ClickHouseCertificateAlias = "server"
 )
 
 // +genclient
