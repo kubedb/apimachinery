@@ -206,7 +206,7 @@ require (
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.14 // indirect
 	kmodules.xyz/prober v0.32.0 // indirect
-	kmodules.xyz/resource-metrics v0.30.7 // indirect
+	kmodules.xyz/resource-metrics v0.30.8 // indirect
 	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.31.1 // indirect
 	sigs.k8s.io/cli-utils v0.37.2 // indirect

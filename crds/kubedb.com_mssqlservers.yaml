@@ -4825,10 +4825,32 @@ spec:
                         - All
                         type: string
                     type: object
+                  distributedAG:
+                    properties:
+                      myURL:
+                        type: string
+                      name:
+                        type: string
+                      remoteAGName:
+                        type: string
+                      remoteURL:
+                        type: string
+                      role:
+                        enum:
+                        - Primary
+                        - Secondary
+                        type: string
+                    required:
+                    - myURL
+                    - name
+                    - remoteAGName
+                    - remoteURL
+                    - role
+                    type: object
                   mode:
                     enum:
                     - AvailabilityGroup
-                    - RemoteReplica
+                    - DistributedAG
                     type: string
                 type: object
               version:

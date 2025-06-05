@@ -1815,7 +1815,7 @@ kmodules.xyz/resource-metadata/apis/node/v1alpha1
 kmodules.xyz/resource-metadata/apis/shared
 kmodules.xyz/resource-metadata/crds
 kmodules.xyz/resource-metadata/pkg/identity
-# kmodules.xyz/resource-metrics v0.30.7
+# kmodules.xyz/resource-metrics v0.30.8
 ## explicit; go 1.23.0
 kmodules.xyz/resource-metrics
 kmodules.xyz/resource-metrics/api
