@@ -364,7 +364,7 @@ func (m *MSSQLServer) SetDefaults(kc client.Client) {
 		if m.Spec.Replicas == nil {
 			m.Spec.Replicas = pointer.Int32P(1)
 		}
-	} else if m.IsAvailabilityGroup() {
+	} else if m.IsCluster() {
 		if m.Spec.Topology.AvailabilityGroup == nil {
 			m.Spec.Topology.AvailabilityGroup = &MSSQLServerAvailabilityGroupSpec{}
 		}
@@ -481,7 +481,7 @@ func (m *MSSQLServer) setDefaultContainerSecurityContext(mssqlVersion *catalog.M
 	m.assignDefaultContainerSecurityContext(mssqlVersion, initContainer.SecurityContext, false)
 	podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
 
-	if m.IsAvailabilityGroup() {
+	if m.IsCluster() {
 		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.MSSQLCoordinatorContainerName)
 		if coordinatorContainer == nil {
 			coordinatorContainer = &core.Container{
