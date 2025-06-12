@@ -857,6 +857,7 @@ const (
 	KafkaCCDefaultOutNetwork           = 500000
 
 	KafkaContainerName          = "kafka"
+	KafkaInitContainerName      = "kafka-init"
 	KafkaUserAdmin              = "admin"
 	KafkaNodeRoleSet            = "set"
 	KafkaNodeRolesCombined      = "controller,broker"
@@ -871,6 +872,7 @@ const (
 	KafkaDataDir                              = "/var/log/kafka"
 	KafkaMetaDataDir                          = "/var/log/kafka/metadata"
 	KafkaCertDir                              = "/var/private/ssl"
+	KafkaUserScriptsDir                       = "/opt/kafka/user-scripts"
 	KafkaConfigDir                            = "/opt/kafka/config/kafkaconfig"
 	KafkaTempConfigDir                        = "/opt/kafka/config/temp-config"
 	KafkaCustomConfigDir                      = "/opt/kafka/config/custom-config"
@@ -972,6 +974,7 @@ const (
 	KafkaVolumeConfig       = "kafkaconfig"
 	KafkaVolumeTempConfig   = "temp-config"
 	KafkaVolumeCustomConfig = "custom-config"
+	KafkaVolumeUserScripts  = "user-scripts"
 
 	EnvKafkaUser      = "KAFKA_USER"
 	EnvKafkaPassword  = "KAFKA_PASSWORD"
