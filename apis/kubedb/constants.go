@@ -1685,6 +1685,8 @@ const (
 	EnvNameCassandraPodName          = "CASSANDRA_POD_NAME"
 	EnvNameCassandraUser             = "CASSANDRA_USER"
 	EnvNameCassandraPassword         = "CASSANDRA_PASSWORD"
+	EnvNameCassandraSslCertFile      = "SSL_CERTFILE"
+	EnvValCassandraSslCertFile       = "/opt/cassandra/ssl/ca.crt"
 
 	EnvNameMgmtApiListenTcpPort = "MGMT_API_LISTEN_TCP_PORT"
 	EnvValMgmtApiListenTcpPort  = "8081"
@@ -1694,6 +1696,11 @@ const (
 	EnvValMedusaDebugSleep      = "0s"
 	CassandraNodetoolDir        = "/opt/cassandra/temp/bin"
 	CassandraBackupBinary       = "nodetool"
+
+	CassandraKeystoreSecretKey     = "keystore-cred"
+	CassandraCertDir               = "/opt/cassandra/ssl"
+	CassandraKeystorePasswordKey   = "keystore_password"
+	CassandraTrustStorePasswordKey = "truststore_password"
 )
 
 // =========================== Virtual Secrets Constants ============================
