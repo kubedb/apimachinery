@@ -1685,6 +1685,8 @@ const (
 	EnvNameCassandraPodName          = "CASSANDRA_POD_NAME"
 	EnvNameCassandraUser             = "CASSANDRA_USER"
 	EnvNameCassandraPassword         = "CASSANDRA_PASSWORD"
+	EnvNameCassandraSslCertFile      = "SSL_CERTFILE"
+	EnvValCassandraSslCertFile       = "/opt/cassandra/ssl/ca.crt"
 
 	EnvNameMgmtApiListenTcpPort = "MGMT_API_LISTEN_TCP_PORT"
 	EnvValMgmtApiListenTcpPort  = "8081"
@@ -1696,8 +1698,7 @@ const (
 	CassandraBackupBinary       = "nodetool"
 
 	CassandraKeystoreSecretKey     = "keystore-cred"
-	CassandraServerCertDir         = "/opt/cassandra/ssl/server"
-	CassandraClientCertDir         = "/opt/cassandra/ssl/client"
+	CassandraCertDir               = "/opt/cassandra/ssl"
 	CassandraKeystorePasswordKey   = "keystore_password"
 	CassandraTrustStorePasswordKey = "truststore_password"
 )
