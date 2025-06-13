@@ -1696,7 +1696,8 @@ const (
 	CassandraBackupBinary       = "nodetool"
 
 	CassandraKeystoreSecretKey     = "keystore-cred"
-	CassandraCertDir               = "/opt/cassandra/ssl"
+	CassandraServerCertDir         = "/opt/cassandra/ssl/server"
+	CassandraClientCertDir         = "/opt/cassandra/ssl/client"
 	CassandraKeystorePasswordKey   = "keystore_password"
 	CassandraTrustStorePasswordKey = "truststore_password"
 )
