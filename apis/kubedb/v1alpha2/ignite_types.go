@@ -106,6 +106,14 @@ type IgniteSpec struct {
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 
+	// TLS contains tls configurations for client and server.
+	// +optional
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+
+	// Keystore encryption secret
+	// +optional
+	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
+
 	// Monitor is used to monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
@@ -133,3 +141,14 @@ type IgniteList struct {
 	meta.ListMeta `json:"metadata,omitempty"`
 	Items         []Ignite `json:"items"`
 }
+
+// +kubebuilder:validation:Enum=ca;transport;http;client;server
+type IgniteCertificateAlias string
+
+const (
+	IgniteCACert        IgniteCertificateAlias = "ca"
+	IgniteTransportCert IgniteCertificateAlias = "transport"
+	IgniteHTTPCert      IgniteCertificateAlias = "http"
+	IgniteClientCert    IgniteCertificateAlias = "client"
+	IgniteServerCert    IgniteCertificateAlias = "server"
+)

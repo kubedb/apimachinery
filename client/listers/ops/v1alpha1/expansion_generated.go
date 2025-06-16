@@ -74,6 +74,14 @@ type HazelcastOpsRequestListerExpansion interface{}
 // HazelcastOpsRequestNamespaceLister.
 type HazelcastOpsRequestNamespaceListerExpansion interface{}
 
+// IgniteOpsRequestListerExpansion allows custom methods to be added to
+// IgniteOpsRequestLister.
+type IgniteOpsRequestListerExpansion interface{}
+
+// IgniteOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// IgniteOpsRequestNamespaceLister.
+type IgniteOpsRequestNamespaceListerExpansion interface{}
+
 // KafkaOpsRequestListerExpansion allows custom methods to be added to
 // KafkaOpsRequestLister.
 type KafkaOpsRequestListerExpansion interface{}

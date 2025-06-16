@@ -30,6 +30,7 @@ import (
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -318,4 +319,21 @@ func (i Ignite) StatsServiceLabels() map[string]string {
 func (i Ignite) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(i.Spec.ServiceTemplates, alias)
 	return i.offshootLabels(meta_util.OverwriteKeys(i.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
+
+// GetCertSecretName returns the secret name for a certificate alias if any,
+// otherwise returns default certificate secret name for the given alias.
+func (i Ignite) GetIgniteCertSecretName(alias IgniteCertificateAlias) string {
+	if i.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(i.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return i.IgniteCertificateName(alias)
+}
+
+// CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
+func (i Ignite) IgniteCertificateName(alias IgniteCertificateAlias) string {
+	return meta_util.NameWithSuffix(i.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
