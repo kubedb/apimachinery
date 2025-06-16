@@ -53,6 +53,10 @@ func (c *FakeOpsV1alpha1) FerretDBOpsRequests(namespace string) v1alpha1.FerretD
 	return &FakeFerretDBOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) IgniteOpsRequests(namespace string) v1alpha1.IgniteOpsRequestInterface {
+	return &FakeIgniteOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) KafkaOpsRequests(namespace string) v1alpha1.KafkaOpsRequestInterface {
 	return &FakeKafkaOpsRequests{c, namespace}
 }

@@ -36,6 +36,8 @@ type Interface interface {
 	EtcdOpsRequests() EtcdOpsRequestInformer
 	// FerretDBOpsRequests returns a FerretDBOpsRequestInformer.
 	FerretDBOpsRequests() FerretDBOpsRequestInformer
+	// IgniteOpsRequests returns a IgniteOpsRequestInformer.
+	IgniteOpsRequests() IgniteOpsRequestInformer
 	// KafkaOpsRequests returns a KafkaOpsRequestInformer.
 	KafkaOpsRequests() KafkaOpsRequestInformer
 	// MSSQLServerOpsRequests returns a MSSQLServerOpsRequestInformer.
@@ -111,6 +113,11 @@ func (v *version) EtcdOpsRequests() EtcdOpsRequestInformer {
 // FerretDBOpsRequests returns a FerretDBOpsRequestInformer.
 func (v *version) FerretDBOpsRequests() FerretDBOpsRequestInformer {
 	return &ferretDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// IgniteOpsRequests returns a IgniteOpsRequestInformer.
+func (v *version) IgniteOpsRequests() IgniteOpsRequestInformer {
+	return &igniteOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // KafkaOpsRequests returns a KafkaOpsRequestInformer.
