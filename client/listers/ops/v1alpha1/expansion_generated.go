@@ -66,6 +66,14 @@ type FerretDBOpsRequestListerExpansion interface{}
 // FerretDBOpsRequestNamespaceLister.
 type FerretDBOpsRequestNamespaceListerExpansion interface{}
 
+// HazelcastOpsRequestListerExpansion allows custom methods to be added to
+// HazelcastOpsRequestLister.
+type HazelcastOpsRequestListerExpansion interface{}
+
+// HazelcastOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// HazelcastOpsRequestNamespaceLister.
+type HazelcastOpsRequestNamespaceListerExpansion interface{}
+
 // KafkaOpsRequestListerExpansion allows custom methods to be added to
 // KafkaOpsRequestLister.
 type KafkaOpsRequestListerExpansion interface{}

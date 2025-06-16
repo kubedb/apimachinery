@@ -16,7 +16,7 @@ spec:
     listKind: HazelcastOpsRequestList
     plural: hazelcastopsrequests
     shortNames:
-    - hzops
+    - slops
     singular: hazelcastopsrequest
   scope: Namespaced
   versions:
@@ -198,13 +198,12 @@ spec:
                 type: object
               type:
                 enum:
-                - Upgrade
                 - UpdateVersion
                 - HorizontalScaling
                 - VerticalScaling
                 - VolumeExpansion
-                - Restart
                 - Reconfigure
+                - Restart
                 - ReconfigureTLS
                 - RotateAuth
                 type: string
