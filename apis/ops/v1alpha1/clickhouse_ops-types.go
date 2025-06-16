@@ -58,6 +58,8 @@ type ClickHouseOpsRequestSpec struct {
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
+	// Specifies information necessary for horizontal scaling
+	HorizontalScaling *ClickHouseHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *ClickHouseVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -77,6 +79,19 @@ type ClickHouseVerticalScalingSpec struct {
 	Standalone *PodResources `json:"standalone,omitempty"`
 	// List of cluster configurations for ClickHouse when running in cluster mode.
 	Cluster []*ClickHouseClusterVerticalScalingSpec `json:"cluster,omitempty"`
+}
+
+// ClickHouseHorizontalScalingSpec contains the horizontal scaling information of a clickhouse cluster
+type ClickHouseHorizontalScalingSpec struct {
+	// List of cluster configurations for ClickHouse when running in cluster mode.
+	Cluster []*ClickHouseClusterHorizontalScalingSpec `json:"cluster,omitempty"`
+}
+
+type ClickHouseClusterHorizontalScalingSpec struct {
+	// Name of the ClickHouse cluster to which the vertical scaling configuration applies.
+	ClusterName string `json:"clusterName,omitempty"`
+	// Number of node
+	Node *int32 `json:"node,omitempty"`
 }
 
 type ClickHouseClusterVerticalScalingSpec struct {
