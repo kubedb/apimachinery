@@ -1530,6 +1530,7 @@ const (
 	CONTROL_JVM_OPTS          = "CONTROL_JVM_OPTS"
 	IGNITE_PASSWORD           = "IGNITE_PASSWORD"
 	DISABLE_SECURITY          = "DISABLE_SECURITY"
+	IgniteKeystorePassKey     = "keystore-secret"
 )
 
 // =========================== ClickHouse Constants ============================
