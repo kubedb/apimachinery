@@ -337,3 +337,11 @@ func (i Ignite) GetIgniteCertSecretName(alias IgniteCertificateAlias) string {
 func (i Ignite) IgniteCertificateName(alias IgniteCertificateAlias) string {
 	return meta_util.NameWithSuffix(i.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
+
+func (i Ignite) GetIgniteConnectionScheme() string {
+	scheme := "http"
+	if i.Spec.EnableSSL {
+		scheme = "https"
+	}
+	return scheme
+}
