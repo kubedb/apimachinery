@@ -28808,6 +28808,13 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBHorizontalScalingSpec(ref comm
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"enableMaxScaleScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If true horizontal scaling performs on maxscale pod",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"member": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Number of nodes/members of the group",
@@ -29142,6 +29149,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBVolumeExpansionSpec(ref common
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"mariadb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"maxscale": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},

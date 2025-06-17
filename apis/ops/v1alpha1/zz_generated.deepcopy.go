@@ -2347,6 +2347,11 @@ func (in *MariaDBVolumeExpansionSpec) DeepCopyInto(out *MariaDBVolumeExpansionSp
 		x := (*in).DeepCopy()
 		*out = &x
 	}
+	if in.MaxScale != nil {
+		in, out := &in.MaxScale, &out.MaxScale
+		x := (*in).DeepCopy()
+		*out = &x
+	}
 	return
 }
 
