@@ -145,9 +145,7 @@ type IgniteList struct {
 type IgniteCertificateAlias string
 
 const (
-	IgniteCACert        IgniteCertificateAlias = "ca"
-	IgniteTransportCert IgniteCertificateAlias = "transport"
-	IgniteHTTPCert      IgniteCertificateAlias = "http"
-	IgniteClientCert    IgniteCertificateAlias = "client"
-	IgniteServerCert    IgniteCertificateAlias = "server"
+	IgniteCACert     IgniteCertificateAlias = "ca"
+	IgniteClientCert IgniteCertificateAlias = "client"
+	IgniteServerCert IgniteCertificateAlias = "server"
 )
