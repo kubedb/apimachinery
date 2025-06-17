@@ -356,7 +356,7 @@ func (i Ignite) GetIgniteKeystoreSecretName() string {
 
 // CertSecretVolumeName returns the CertSecretVolumeName
 // Values will be like: client-certs, server-certs etc.
-func (i Ignite) IgniteCertSecretVolumeName(alias HazelcastCertificateAlias) string {
+func (i Ignite) IgniteCertSecretVolumeName(alias IgniteCertificateAlias) string {
 	return string(alias) + "-certs"
 }
 
