@@ -345,3 +345,10 @@ func (i Ignite) GetIgniteConnectionScheme() string {
 	}
 	return scheme
 }
+
+func (i Ignite) GetIgniteKeystoreSecretName() string {
+	if i.Spec.KeystoreCredSecret != nil && i.Spec.KeystoreCredSecret.Name != "" {
+		return i.Spec.KeystoreCredSecret.Name
+	}
+	return meta_util.NameWithSuffix(i.OffshootName(), "keystore-cred")
+}
