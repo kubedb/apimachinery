@@ -1503,37 +1503,43 @@ const (
 
 // =========================== Ignite Constants ============================
 const (
-	IgniteCustomConfigVolName = "custom-config"
-	IgniteCustomConfigDir     = "/tmp/config/custom_config"
-	IgniteTempConfigVolName   = "temp-config"
-	IgniteTempConfigDir       = "/tmp/config"
-	IgniteInitContainerName   = "ignite-init"
-	IgniteInitScriptVolName   = "init-scripts"
-	IgniteInitScriptDir       = "/scripts"
-	IgniteConfigVolName       = "ignite-config"
-	IgniteWorkVolName         = "ignite-work"
-	IgniteConfigFileName      = "node-configuration.xml"
-	IgniteDataVolName         = "data"
-	IgniteDataDir             = "/ignite/data"
-	IgniteContainerName       = "ignite"
-	IgniteConfigDir           = "/ignite/config"
-	IgniteRestPortName        = "rest"
-	IgniteRestPort            = 8080
-	IgniteThinPortName        = "thin"
-	IgniteThinPort            = 10800
-	IgniteSPIPortName         = "spi"
-	IgniteSPIPort             = 47100
-	IgniteTCPPortName         = "tcp"
-	IgniteTCPPort             = 47500
-	IgniteJMXPortName         = "jmx"
-	IgniteJMXPort             = 49112
-	IgniteUserName            = "ignite"
-	OPTION_LIBS               = "OPTION_LIBS"
-	CONFIG_URI                = "CONFIG_URI"
-	CONTROL_JVM_OPTS          = "CONTROL_JVM_OPTS"
-	IGNITE_PASSWORD           = "IGNITE_PASSWORD"
-	DISABLE_SECURITY          = "DISABLE_SECURITY"
-	IgniteKeystorePassKey     = "keystore-secret"
+	IgniteCustomConfigVolName  = "custom-config"
+	IgniteCustomConfigDir      = "/tmp/config/custom_config"
+	IgniteTempConfigVolName    = "temp-config"
+	IgniteTempConfigDir        = "/tmp/config"
+	IgniteInitContainerName    = "ignite-init"
+	IgniteInitScriptVolName    = "init-scripts"
+	IgniteInitScriptDir        = "/scripts"
+	IgniteConfigVolName        = "ignite-config"
+	IgniteWorkVolName          = "ignite-work"
+	IgniteConfigFileName       = "node-configuration.xml"
+	IgniteDataVolName          = "data"
+	IgniteDataDir              = "/ignite/data"
+	IgniteContainerName        = "ignite"
+	IgniteConfigDir            = "/ignite/config"
+	IgniteRestPortName         = "rest"
+	IgniteRestPort             = 8080
+	IgniteThinPortName         = "thin"
+	IgniteThinPort             = 10800
+	IgniteSPIPortName          = "spi"
+	IgniteSPIPort              = 47100
+	IgniteTCPPortName          = "tcp"
+	IgniteTCPPort              = 47500
+	IgniteJMXPortName          = "jmx"
+	IgniteJMXPort              = 49112
+	IgniteUserName             = "ignite"
+	OPTION_LIBS                = "OPTION_LIBS"
+	CONFIG_URI                 = "CONFIG_URI"
+	CONTROL_JVM_OPTS           = "CONTROL_JVM_OPTS"
+	IGNITE_PASSWORD            = "IGNITE_PASSWORD"
+	DISABLE_SECURITY           = "DISABLE_SECURITY"
+	IgniteKeystorePassKey      = "keystore-secret"
+	IgniteServerKeystoreFile   = "/ignite/certs/server/keystore/node.p12"
+	IgniteServerTruststoreFile = "/ignite/certs/server/keystore/trust.p12"
+	IgniteClientKeystoreFile   = "/ignite/certs/client/keystore/node.p12"
+	IgniteClientTruststoreFile = "/ignite/certs/client/keystore/trust.p12"
+	IgniteTLSServerMountPath   = "/ignite/certs/server"
+	IgniteTLSClientMountPath   = "/ignite/certs/client"
 )
 
 // =========================== ClickHouse Constants ============================
