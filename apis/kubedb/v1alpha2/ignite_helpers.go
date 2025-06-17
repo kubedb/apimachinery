@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -351,4 +352,15 @@ func (i Ignite) GetIgniteKeystoreSecretName() string {
 		return i.Spec.KeystoreCredSecret.Name
 	}
 	return meta_util.NameWithSuffix(i.OffshootName(), "keystore-cred")
+}
+
+// CertSecretVolumeName returns the CertSecretVolumeName
+// Values will be like: client-certs, server-certs etc.
+func (i Ignite) IgniteCertSecretVolumeName(alias HazelcastCertificateAlias) string {
+	return string(alias) + "-certs"
+}
+
+// CertSecretVolumeMountPath returns the CertSecretVolumeMountPath
+func (i Ignite) IgniteCertSecretVolumeMountPath(configDir string, cert string) string {
+	return filepath.Join(configDir, cert)
 }
