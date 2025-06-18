@@ -180,7 +180,9 @@ func (c *ClickHouse) PrimaryServiceDNS() string {
 func (c *ClickHouse) KeeperPrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", c.KeeperServiceName(), c.Namespace)
 }
-
+func (c *ClickHouse) GoverningServiceDNS() string {
+	return fmt.Sprintf("%s.%s.svc", c.GoverningServiceName(), c.GetNamespace())
+}
 func (c *ClickHouse) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(c.ServiceName(), "pods")
 }
