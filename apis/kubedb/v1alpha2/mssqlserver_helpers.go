@@ -183,12 +183,7 @@ func (m *MSSQLServer) IsCluster() bool {
 }
 
 func (m *MSSQLServer) DistributedAGName() string {
-	if m.Spec.Topology != nil && m.Spec.Topology.DistributedAG != nil {
-		if m.Spec.Topology.DistributedAG.Name != "" {
-			return m.Spec.Topology.DistributedAG.Name
-		}
-	}
-	return "DAG"
+	return "dag"
 }
 
 func (m *MSSQLServer) IsStandalone() bool {
@@ -309,14 +304,23 @@ func (m *MSSQLServer) CAProviderClassName() string {
 }
 
 func (m *MSSQLServer) DbmLoginSecretName() string {
+	if m.Spec.Topology != nil && m.Spec.Topology.AvailabilityGroup != nil && m.Spec.Topology.AvailabilityGroup.LoginSecretName != "" {
+		return m.Spec.Topology.AvailabilityGroup.LoginSecretName
+	}
 	return metautil.NameWithSuffix(m.OffshootName(), "dbm-login")
 }
 
 func (m *MSSQLServer) MasterKeySecretName() string {
+	if m.Spec.Topology != nil && m.Spec.Topology.AvailabilityGroup != nil && m.Spec.Topology.AvailabilityGroup.MasterKeySecretName != "" {
+		return m.Spec.Topology.AvailabilityGroup.MasterKeySecretName
+	}
 	return metautil.NameWithSuffix(m.OffshootName(), "master-key")
 }
 
 func (m *MSSQLServer) EndpointCertSecretName() string {
+	if m.Spec.Topology != nil && m.Spec.Topology.AvailabilityGroup != nil && m.Spec.Topology.AvailabilityGroup.EndpointCertSecretName != "" {
+		return m.Spec.Topology.AvailabilityGroup.EndpointCertSecretName
+	}
 	return metautil.NameWithSuffix(m.OffshootName(), "endpoint-cert")
 }
 

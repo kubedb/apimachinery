@@ -30549,6 +30549,27 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerAvailabilityGroupSpec(r
 							Format:      "",
 						},
 					},
+					"loginSecretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LoginSecretName is the name of the secret containing the password for the 'dbm_login' user. For a Distributed AG, both the primary and secondary AGs must use the same login and password. This secret must be created by the user.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"masterKeySecretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MasterKeySecretName is the name of the secret containing the password for the database master key. For a Distributed AG, both sides must use the same master key password. This secret must be created by the user.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"endpointCertSecretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EndpointCertSecretName is the name of the secret containing the certificate and private key for the database mirroring endpoint. For a Distributed AG, both sides must use the same certificate. The secret should contain `tls.crt` and `tls.key`. This secret must be created by the user.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
@@ -30564,14 +30585,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerDistributedAGSpec(ref c
 				Description: "MSSQLServerDistributedAGSpec defines the configuration for a Distributed Availability Group.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name is the desired name for the Distributed Availability Group (DAG). This name must be unique across the SQL Server instances involved in the DAG.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"role": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Role indicates if the local Availability Group (defined in spec.topology.availabilityGroup) is acting as Primary or Secondary in this Distributed Availability Group (DAG).",
@@ -30604,7 +30617,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerDistributedAGSpec(ref c
 						},
 					},
 				},
-				Required: []string{"name", "role", "myURL", "remoteURL"},
+				Required: []string{"role", "myURL", "remoteURL"},
 			},
 		},
 	}

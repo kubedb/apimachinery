@@ -198,15 +198,28 @@ type MSSQLServerAvailabilityGroupSpec struct {
 	// +optional
 	// +kubebuilder:default=Passive
 	SecondaryAccessMode SecondaryAccessMode `json:"secondaryAccessMode,omitempty"`
+
+	// LoginSecretName is the name of the secret containing the password for the 'dbm_login' user.
+	// For a Distributed AG, both the primary and secondary AGs must use the same login and password.
+	// This secret must be created by the user.
+	// +optional
+	LoginSecretName string `json:"loginSecretName,omitempty"`
+
+	// MasterKeySecretName is the name of the secret containing the password for the database master key.
+	// For a Distributed AG, both sides must use the same master key password.
+	// This secret must be created by the user.
+	// +optional
+	MasterKeySecretName string `json:"masterKeySecretName,omitempty"`
+
+	// EndpointCertSecretName is the name of the secret containing the certificate and private key for the database mirroring endpoint.
+	// For a Distributed AG, both sides must use the same certificate. The secret should contain `tls.crt` and `tls.key`.
+	// This secret must be created by the user.
+	// +optional
+	EndpointCertSecretName string `json:"endpointCertSecretName,omitempty"`
 }
 
 // MSSQLServerDistributedAGSpec defines the configuration for a Distributed Availability Group.
 type MSSQLServerDistributedAGSpec struct {
-	// Name is the desired name for the Distributed Availability Group (DAG).
-	// This name must be unique across the SQL Server instances involved in the DAG.
-	// +kubebuilder:validation:Required
-	Name string `json:"name"`
-
 	// Role indicates if the local Availability Group (defined in spec.topology.availabilityGroup)
 	// is acting as Primary or Secondary in this Distributed Availability Group (DAG).
 	// +kubebuilder:validation:Required
