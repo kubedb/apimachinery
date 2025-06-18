@@ -1699,8 +1699,30 @@ const (
 
 	CassandraKeystoreSecretKey     = "keystore-cred"
 	CassandraCertDir               = "/opt/cassandra/ssl"
+	CassandraKeystoreFile          = "/opt/cassandra/ssl/keystore.jks"
+	CassandraTruststoreFile        = "/opt/cassandra/ssl/truststore.jks"
 	CassandraKeystorePasswordKey   = "keystore_password"
 	CassandraTrustStorePasswordKey = "truststore_password"
+
+	CassandraServerEncryptionOptions = "server_encryption_options"
+	CassandraClientEnctyptionOptions = "client_encryption_options"
+	CassandraTlsStoreTypeJKS         = "JKS"
+
+	CassandraAuthenticatorKey = "authenticator"
+
+	CassandraTlsEncryptionEnabledKey       = "enabled"
+	CassandraTlsInternodeEncryptionModeKey = "internode_encryption"
+	CassandraTlsKeystorePathKey            = "keystore"
+	CassandraTlsTruststorePathKey          = "truststore"
+	CassandraTlsRequireClientAuthKey       = "require_client_auth"
+	CassandraTlsProtocolKey                = "protocol"
+	CassandraTlsAlgorithmKey               = "algorithm"
+	CassandraTlsStoreTypeKey               = "store_type"
+	CassandraClientEncryptionOptionalKey   = "optional"
+	CassandraTlsEncryptionAllValue         = "all"
+	CassandraTlsProtocolTLSValue           = "TLS"
+	CassandraTlsDefaultAlgorithmValue      = "SunX509"
+	CassandraTlsStoreTypeJKSValue          = "JKS"
 )
 
 // =========================== Virtual Secrets Constants ============================
