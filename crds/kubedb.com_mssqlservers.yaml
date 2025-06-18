@@ -4797,6 +4797,8 @@ spec:
                         items:
                           type: string
                         type: array
+                      endpointCertSecretName:
+                        type: string
                       leaderElection:
                         properties:
                           electionTick:
@@ -4817,6 +4819,10 @@ spec:
                             default: 60s
                             type: string
                         type: object
+                      loginSecretName:
+                        type: string
+                      masterKeySecretName:
+                        type: string
                       secondaryAccessMode:
                         default: Passive
                         enum:
@@ -4829,8 +4835,6 @@ spec:
                     properties:
                       myURL:
                         type: string
-                      name:
-                        type: string
                       remoteAGName:
                         type: string
                       remoteURL:
@@ -4842,7 +4846,6 @@ spec:
                         type: string
                     required:
                     - myURL
-                    - name
                     - remoteAGName
                     - remoteURL
                     - role
