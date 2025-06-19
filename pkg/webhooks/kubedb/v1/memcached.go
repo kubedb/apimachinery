@@ -151,10 +151,7 @@ func (mv MemcachedCustomWebhook) validateReplica(obj, oldObj *dbapi.Memcached) e
 
 func (mv MemcachedCustomWebhook) validateUpdate(obj, oldObj *dbapi.Memcached) error {
 	preconditions := meta_util.PreConditionSet{
-		Set: sets.New[string](
-			"spec.podTemplate.spec.nodeSelector",
-			"spec.databaseSecret",
-		),
+		Set: sets.New[string](),
 	}
 
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)

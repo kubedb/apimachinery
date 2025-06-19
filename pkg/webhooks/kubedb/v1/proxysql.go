@@ -227,11 +227,8 @@ func proxyValidateEnvsForAllContainers(proxy *dbapi.ProxySQL) error {
 func proxyValidateUpdate(obj, oldObj runtime.Object) error {
 	preconditions := meta_util.PreConditionSet{
 		Set: sets.New[string](
-			"spec.authSecret",
 			"spec.initConfig",
-			"spec.configSecret",
 			"spec.backend",
-			"spec.podTemplate.spec.nodeSelector",
 		),
 	}
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)

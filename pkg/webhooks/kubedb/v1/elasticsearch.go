@@ -369,7 +369,6 @@ func (w *ElasticsearchCustomWebhook) validatePreconditions(obj, oldObj *dbapi.El
 		Set: sets.New[string](
 			"spec.topology.*.suffix",
 			"spec.storageType",
-			"spec.podTemplate.spec.nodeSelector",
 		),
 	}
 	// Once the database has been initialized, don't let update the "spec.init" section
