@@ -1533,6 +1533,8 @@ const (
 	CONTROL_JVM_OPTS           = "CONTROL_JVM_OPTS"
 	IGNITE_PASSWORD            = "IGNITE_PASSWORD"
 	DISABLE_SECURITY           = "DISABLE_SECURITY"
+	ENABLE_SSL                 = "ENABLE_SSL"
+	IGNITE_KEYSTORE_PASSWORD   = "IGNITE_KEYSTORE_PASSWORD"
 	IgniteKeystorePassKey      = "keystore-secret"
 	IgniteServerKeystoreFile   = "/ignite/certs/server/keystore.jks"
 	IgniteServerTruststoreFile = "/ignite/certs/server/truststore.jks"
