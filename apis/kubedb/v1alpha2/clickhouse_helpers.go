@@ -180,9 +180,7 @@ func (c *ClickHouse) PrimaryServiceDNS() string {
 func (c *ClickHouse) KeeperPrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", c.KeeperServiceName(), c.Namespace)
 }
-func (c *ClickHouse) GoverningServiceDNS() string {
-	return fmt.Sprintf("%s.%s.svc", c.GoverningServiceName(), c.GetNamespace())
-}
+
 func (c *ClickHouse) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(c.ServiceName(), "pods")
 }
@@ -200,7 +198,7 @@ func (c *ClickHouse) ClusterGoverningServiceName(name string) string {
 }
 
 func (c *ClickHouse) ClusterGoverningServiceDNS(petSetName string, replicaNo int) string {
-	return fmt.Sprintf("%s-%d.%s.%s.svc", petSetName, replicaNo, c.ClusterGoverningServiceName(petSetName), c.GetNamespace())
+	return fmt.Sprintf("%s-%d.%s.%s.svc", petSetName, replicaNo, c.GoverningServiceName(), c.GetNamespace())
 }
 
 func (c *ClickHouse) GetAuthSecretName() string {
