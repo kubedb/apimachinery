@@ -94,6 +94,14 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.C
 				req.Name,
 				err.Error()))
 		}
+
+	case opsapi.CassandraOpsRequestTypeVolumeExpansion:
+		if err := rv.validateCassandraVolumeExpansionOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
+
 	case opsapi.CassandraOpsRequestTypeUpdateVersion:
 		if err := rv.validateCassandraUpdateVersionOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
@@ -132,6 +140,22 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCassandraVerticalScalingOpsR
 	}
 	if verticalScalingSpec.Node == nil {
 		return errors.New("spec.verticalScaling.Node can't be empty")
+	}
+
+	return nil
+}
+
+func (rv *CassandraOpsRequestCustomWebhook) validateCassandraVolumeExpansionOpsRequest(req *opsapi.CassandraOpsRequest) error {
+	volumeExpansionSpec := req.Spec.VolumeExpansion
+	if volumeExpansionSpec == nil {
+		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
+	}
+	err := rv.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
+	if volumeExpansionSpec.Node == nil {
+		return errors.New("spec.volumeExpansion.Node can't be empty")
 	}
 
 	return nil
