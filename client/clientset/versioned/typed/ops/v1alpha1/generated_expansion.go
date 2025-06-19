@@ -30,6 +30,8 @@ type EtcdOpsRequestExpansion interface{}
 
 type FerretDBOpsRequestExpansion interface{}
 
+type HazelcastOpsRequestExpansion interface{}
+
 type KafkaOpsRequestExpansion interface{}
 
 type MSSQLServerOpsRequestExpansion interface{}
