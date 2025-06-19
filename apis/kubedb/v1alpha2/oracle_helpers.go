@@ -32,6 +32,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
 	"k8s.io/utils/ptr"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	metautil "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -474,4 +475,21 @@ func (o *Oracle) SetDataGuardDefaults() {
 			Resources: kubedb.DefaultResourceStorageOracleObserver,
 		}
 	}
+}
+
+// CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
+func (p *Oracle) CertificateName(alias OracleCertificateAlias) string {
+	return metautil.NameWithSuffix(p.Name, fmt.Sprintf("%s-cert", string(alias)))
+}
+
+// GetCertSecretName returns the secret name for a certificate alias if any provide,
+// otherwise returns default certificate secret name for the given alias.
+func (p *Oracle) GetCertSecretName(alias OracleCertificateAlias) string {
+	if p.Spec.TCPSConfig != nil && p.Spec.TCPSConfig.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(p.Spec.TCPSConfig.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return p.CertificateName(alias)
 }
