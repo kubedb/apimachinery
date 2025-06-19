@@ -160,9 +160,6 @@ func (wh *PostgresCustomWebhook) validateReplica(obj, oldObj *dbapi.Postgres) er
 func (wh *PostgresCustomWebhook) validateUpdate(obj, oldObj *dbapi.Postgres) error {
 	preconditions := meta_util.PreConditionSet{
 		Set: sets.New[string](
-			"spec.standby",
-			"spec.streaming",
-			"spec.databaseSecret",
 			"spec.storageType",
 		),
 	}

@@ -156,8 +156,6 @@ func validateSentinelUpdate(obj, oldObj *dbapi.RedisSentinel) error {
 	preconditions := meta_util.PreConditionSet{
 		Set: sets.New[string](
 			"spec.storageType",
-			"spec.storage",
-			"spec.podTemplate.spec.nodeSelector",
 		),
 	}
 

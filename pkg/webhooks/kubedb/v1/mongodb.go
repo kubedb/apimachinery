@@ -209,7 +209,6 @@ func (w MongoDBCustomWebhook) validateUpdate(obj, oldObj *dbapi.MongoDB) error {
 	preconditions := meta_util.PreConditionSet{
 		Set: sets.New[string](
 			"spec.storageType",
-			"spec.certificateSecret",
 			"spec.replicaSet.name",
 			"spec.shardTopology.*.prefix",
 		),
