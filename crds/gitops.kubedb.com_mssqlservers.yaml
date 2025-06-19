@@ -4775,6 +4775,8 @@ spec:
                         items:
                           type: string
                         type: array
+                      endpointCertSecretName:
+                        type: string
                       leaderElection:
                         properties:
                           electionTick:
@@ -4795,6 +4797,10 @@ spec:
                             default: 60s
                             type: string
                         type: object
+                      loginSecretName:
+                        type: string
+                      masterKeySecretName:
+                        type: string
                       secondaryAccessMode:
                         default: Passive
                         enum:
@@ -4803,10 +4809,29 @@ spec:
                         - All
                         type: string
                     type: object
+                  distributedAG:
+                    properties:
+                      myURL:
+                        type: string
+                      remoteAGName:
+                        type: string
+                      remoteURL:
+                        type: string
+                      role:
+                        enum:
+                        - Primary
+                        - Secondary
+                        type: string
+                    required:
+                    - myURL
+                    - remoteAGName
+                    - remoteURL
+                    - role
+                    type: object
                   mode:
                     enum:
                     - AvailabilityGroup
-                    - RemoteReplica
+                    - DistributedAG
                     type: string
                 type: object
               version:
