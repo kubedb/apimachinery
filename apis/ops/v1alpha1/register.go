@@ -68,6 +68,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&HazelcastOpsRequestList{},
 		&EtcdOpsRequest{},
 		&EtcdOpsRequestList{},
+		&IgniteOpsRequest{},
+		&IgniteOpsRequestList{},
 		&KafkaOpsRequest{},
 		&KafkaOpsRequestList{},
 		&MariaDBOpsRequest{},
