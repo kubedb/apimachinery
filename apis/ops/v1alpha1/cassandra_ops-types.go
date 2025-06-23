@@ -55,6 +55,8 @@ type CassandraOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type CassandraOpsRequestType `json:"type"`
+	// Specifies information necessary for horizontal scaling
+	HorizontalScaling *CassandraHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for upgrading cassandra
 	UpdateVersion *CassandraUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for vertical scaling
@@ -70,9 +72,15 @@ type CassandraOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;Restart;VolumeExpansion
-// ENUM(UpdateVersion, VerticalScaling, Restart, VolumeExpansion)
+// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;Restart;VolumeExpansion;HorizontalScaling
+// ENUM(UpdateVersion, VerticalScaling, Restart, VolumeExpansion, HorizontalScaling)
 type CassandraOpsRequestType string
+
+// CassandraHorizontalScalingSpec contains the horizontal scaling information of a Cassandra cluster
+type CassandraHorizontalScalingSpec struct {
+	// Number of node
+	Node *int32 `json:"node,omitempty"`
+}
 
 // CassandraUpdateVersionSpec contains the update version information of a cassandra cluster
 type CassandraUpdateVersionSpec struct {
@@ -86,7 +94,7 @@ type CassandraVerticalScalingSpec struct {
 	Node *PodResources `json:"node,omitempty"`
 }
 
-// CassandraVolumeExpansionSpec is the spec for RabbitMQ volume expansion
+// CassandraVolumeExpansionSpec is the spec for Cassandra volume expansion
 type CassandraVolumeExpansionSpec struct {
 	Mode VolumeExpansionMode `json:"mode"`
 	// volume specification for nodes

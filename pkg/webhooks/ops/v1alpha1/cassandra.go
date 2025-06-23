@@ -88,6 +88,12 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.C
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.CassandraOpsRequestTypeHorizontalScaling:
+		if err := rv.validateCassandraHorizontalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.CassandraOpsRequestTypeVerticalScaling:
 		if err := rv.validateCassandraVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -140,6 +146,27 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCassandraVerticalScalingOpsR
 	}
 	if verticalScalingSpec.Node == nil {
 		return errors.New("spec.verticalScaling.Node can't be empty")
+	}
+
+	return nil
+}
+
+func (rv *CassandraOpsRequestCustomWebhook) validateCassandraHorizontalScalingOpsRequest(req *opsapi.CassandraOpsRequest) error {
+	horizontalScalingSpec := req.Spec.HorizontalScaling
+	if horizontalScalingSpec == nil {
+		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
+	}
+	err := rv.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
+
+	if horizontalScalingSpec.Node == nil {
+		return errors.New("spec.horizontalScaling.node can not be empty")
+	}
+
+	if *horizontalScalingSpec.Node <= 0 {
+		return errors.New("spec.horizontalScaling.node must be positive")
 	}
 
 	return nil
