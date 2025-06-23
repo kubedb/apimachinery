@@ -55,16 +55,29 @@ type DruidVersionSpec struct {
 	InitContainer DruidInitContainer `json:"initContainer"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
+
+	// Coordinator Image
+	// +optional
+	Coordinator DruidVersionCoordinator `json:"coordinator,omitempty"`
+
 	Deprecated bool `json:"deprecated,omitempty"`
 	// SecurityContext is for the additional security information for the Druid container
 	// +optional
 	SecurityContext SecurityContext `json:"securityContext"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
+
+	// update constraints
+	UpdateConstraints DruidUpdateConstraints `json:"updateConstraints,omitempty"`
 }
 
 // DruidVersionDatabase is the Druid Database image
 type DruidVersionDatabase struct {
+	Image string `json:"image"`
+}
+
+// MySQLVersionCoordinator is the image for coordinator
+type DruidVersionCoordinator struct {
 	Image string `json:"image"`
 }
 
@@ -80,4 +93,11 @@ type DruidVersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []DruidVersion `json:"items,omitempty"`
+}
+
+type DruidUpdateConstraints struct {
+	// List of all accepted versions for upgrade request
+	Allowlist []string `json:"allowlist,omitempty"`
+	// List of all rejected versions for upgrade request
+	Denylist []string `json:"denylist,omitempty"`
 }
