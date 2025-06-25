@@ -364,3 +364,11 @@ func (i Ignite) IgniteCertSecretVolumeName(alias IgniteCertificateAlias) string 
 func (i Ignite) IgniteCertSecretVolumeMountPath(configDir string, cert string) string {
 	return filepath.Join(configDir, cert)
 }
+
+func (i Ignite) SetTLSDefaults() {
+	if i.Spec.TLS == nil || i.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	i.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(i.Spec.TLS.Certificates, string(IgniteServerCert), i.IgniteCertificateName(IgniteServerCert))
+	i.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(i.Spec.TLS.Certificates, string(IgniteClientCert), i.IgniteCertSecretVolumeName(IgniteClientCert))
+}
