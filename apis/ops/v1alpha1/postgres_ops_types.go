@@ -134,6 +134,11 @@ type PostgresHorizontalScalingSpec struct {
 	// Streaming mode
 	// +kubebuilder:default="Asynchronous"
 	StreamingMode *PostgresStreamingMode `json:"streamingMode,omitempty"`
+
+	// RemoveSlots defines the slots need to be removed in order to support
+	// transition from HA setup to Standalone setup
+	// +optional
+	RemoveSlots []string `json:"removeSlots,omitempty"`
 }
 
 // PostgresVerticalScalingSpec is the spec for Postgres vertical scaling

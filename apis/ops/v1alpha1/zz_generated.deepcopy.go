@@ -5082,6 +5082,11 @@ func (in *PostgresHorizontalScalingSpec) DeepCopyInto(out *PostgresHorizontalSca
 		*out = new(PostgresStreamingMode)
 		**out = **in
 	}
+	if in.RemoveSlots != nil {
+		in, out := &in.RemoveSlots, &out.RemoveSlots
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 
