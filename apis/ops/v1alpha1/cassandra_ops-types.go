@@ -51,6 +51,8 @@ type CassandraOpsRequest struct {
 
 // CassandraOpsRequestSpec is the spec for CassandraOpsRequest
 type CassandraOpsRequestSpec struct {
+	// Specifies information necessary for custom configuration of Cassandra
+	Configuration *CassandraCustomConfigurationSpec `json:"configuration,omitempty"`
 	// Specifies the Cassandra reference
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
@@ -72,8 +74,8 @@ type CassandraOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;Restart;VolumeExpansion;HorizontalScaling
-// ENUM(UpdateVersion, VerticalScaling, Restart, VolumeExpansion, HorizontalScaling)
+// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;Restart;VolumeExpansion;HorizontalScaling;Reconfigure
+// ENUM(UpdateVersion, VerticalScaling, Restart, VolumeExpansion, HorizontalScaling, Reconfigure)
 type CassandraOpsRequestType string
 
 // CassandraHorizontalScalingSpec contains the horizontal scaling information of a Cassandra cluster

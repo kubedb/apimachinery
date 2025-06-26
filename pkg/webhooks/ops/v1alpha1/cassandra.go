@@ -114,6 +114,12 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.C
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.CassandraOpsRequestTypeReconfigure:
+		if err := rv.validateCassandraReconfigurationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
+				req.Name,
+				err.Error()))
+		}
 	default:
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Cassandra are %s", req.Spec.Type, strings.Join(opsapi.CassandraOpsRequestTypeNames(), ", "))))
@@ -207,5 +213,19 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCassandraUpdateVersionOpsReq
 		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is not found", req.Spec.UpdateVersion.TargetVersion)
 	}
 
+	return nil
+}
+
+func (rv *CassandraOpsRequestCustomWebhook) validateCassandraReconfigurationOpsRequest(req *opsapi.CassandraOpsRequest) error {
+	configurationSpec := req.Spec.Configuration
+	if configurationSpec == nil {
+		return errors.New("spec.configuration nil not supported in Reconfigure type")
+	}
+	if err := rv.hasDatabaseRef(req); err != nil {
+		return err
+	}
+	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
+		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
+	}
 	return nil
 }
