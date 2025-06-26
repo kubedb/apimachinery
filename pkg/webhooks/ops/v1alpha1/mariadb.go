@@ -227,7 +227,6 @@ func (w *MariaDBOpsRequestCustomWebhook) ensureMariaDBGroupReplication(req *opsa
 }
 
 func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsRequest(req *opsapi.MariaDBOpsRequest) error {
-
 	if req.Spec.VolumeExpansion == nil || (req.Spec.VolumeExpansion.MariaDB == nil && req.Spec.VolumeExpansion.MaxScale == nil) {
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
 	}
