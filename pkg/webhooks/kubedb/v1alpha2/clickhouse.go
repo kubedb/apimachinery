@@ -135,9 +135,8 @@ func (w *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 				}
 			}
 		}
-		if db.Spec.SSLVerificationMode == nil {
-			db.Spec.SSLVerificationMode = new(olddbapi.SSLVerificationMode)
-			*db.Spec.SSLVerificationMode = olddbapi.SSLVerificationModeRelaxed
+		if db.Spec.SSLVerificationMode == "" {
+			db.Spec.SSLVerificationMode = olddbapi.SSLVerificationModeRelaxed
 		}
 	}
 

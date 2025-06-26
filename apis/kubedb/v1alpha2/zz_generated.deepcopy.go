@@ -538,11 +538,6 @@ func (in *ClickHouseSpec) DeepCopyInto(out *ClickHouseSpec) {
 		*out = new(v2.PodTemplateSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.SSLVerificationMode != nil {
-		in, out := &in.SSLVerificationMode, &out.SSLVerificationMode
-		*out = new(SSLVerificationMode)
-		**out = **in
-	}
 	if in.TLS != nil {
 		in, out := &in.TLS, &out.TLS
 		*out = new(ClickHouseTLSConfig)
