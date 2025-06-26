@@ -223,6 +223,11 @@ func (in *CassandraOpsRequestSpec) DeepCopyInto(out *CassandraOpsRequestSpec) {
 		*out = new(TLSSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.KeystoreCredSecret != nil {
+		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
+		*out = new(v1alpha2.SecretReference)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
