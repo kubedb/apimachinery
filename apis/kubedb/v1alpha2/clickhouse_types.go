@@ -91,6 +91,14 @@ type ClickHouseSpec struct {
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
+	// Indicates that how strictly the server verifies client certificate during a TLS/SSL handshake
+	// +optional
+	ServerVerificationModeTLS bool `json:"serverVerificationModeTLS,omitempty"`
+
+	// Indicates that how strictly the client verifies server certificate during a TLS/SSL handshake
+	// +optional
+	ClientVerificationModeTLS bool `json:"clientVerificationModeTLS,omitempty"`
+
 	// TLS contains tls configurations for client and server.
 	// +optional
 	TLS *ClickHouseTLSConfig `json:"tls,omitempty"`
