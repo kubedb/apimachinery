@@ -39,7 +39,7 @@ type MongoDB struct{}
 func (r MongoDB) ResourceCalculator() api.ResourceCalculator {
 	return &api.ResourceCalculatorFuncs{
 		AppRoles:               []api.PodRole{api.PodRoleDefault, api.PodRoleTotalShard, api.PodRoleConfigServer, api.PodRoleMongos},
-		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleTotalShard, api.PodRoleConfigServer, api.PodRoleMongos, api.PodRoleExporter},
+		RuntimeRoles:           []api.PodRole{api.PodRoleDefault, api.PodRoleTotalShard, api.PodRoleConfigServer, api.PodRoleMongos, api.PodRoleSidecar, api.PodRoleExporter},
 		RoleReplicasFn:         r.roleReplicasFn,
 		ModeFn:                 r.modeFn,
 		UsesTLSFn:              r.usesTLSFn,
@@ -136,6 +136,10 @@ func (r MongoDB) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resou
 			if err != nil {
 				return nil, err
 			}
+			sidecar, err := api.SidecarNodeResourcesV2(shardTopology, fn, MongoDBSidecarContainerName, "shard")
+			if err != nil {
+				return nil, err
+			}
 
 			// ConfigServer nodes resources
 			configServer, configServerReplicas, err := api.AppNodeResourcesV2(shardTopology, fn, MongoDBContainerName, "configServer")
@@ -153,6 +157,7 @@ func (r MongoDB) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resou
 				api.PodRoleTotalShard:   {Resource: shard, Replicas: shards * shardReplicas},
 				api.PodRoleConfigServer: {Resource: configServer, Replicas: configServerReplicas},
 				api.PodRoleMongos:       {Resource: mongos, Replicas: mongosReplicas},
+				api.PodRoleSidecar:      {Resource: sidecar, Replicas: shards*shardReplicas + configServerReplicas},
 				api.PodRoleExporter:     {Resource: exporter, Replicas: shards*shardReplicas + configServerReplicas + mongosReplicas},
 			}, nil
 		}
@@ -163,9 +168,20 @@ func (r MongoDB) roleResourceFn(fn func(rr core.ResourceRequirements) core.Resou
 			return nil, err
 		}
 
-		return map[api.PodRole]api.PodInfo{
+		ret := map[api.PodRole]api.PodInfo{
 			api.PodRoleDefault:  {Resource: container, Replicas: replicas},
 			api.PodRoleExporter: {Resource: exporter, Replicas: replicas},
-		}, nil
+		}
+
+		if replicas > 1 {
+			sidecar, err := api.SidecarNodeResourcesV2(obj, fn, MongoDBSidecarContainerName, "spec")
+			if err != nil {
+				return nil, err
+			}
+
+			ret[api.PodRoleSidecar] = api.PodInfo{Resource: sidecar, Replicas: replicas}
+		}
+
+		return ret, nil
 	}
 }

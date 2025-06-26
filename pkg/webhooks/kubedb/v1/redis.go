@@ -183,7 +183,6 @@ func validateRedisUpdate(obj, oldObj *dbapi.Redis) error {
 	preconditions := meta_util.PreConditionSet{
 		Set: sets.New[string](
 			"spec.storageType",
-			"spec.podTemplate.spec.nodeSelector",
 		),
 	}
 	// Once the database has been initialized, don't let update the "spec.init" section

@@ -58,6 +58,9 @@ const (
 	// Enables FoundationDB operator.
 	// FoundationDB featuregate.Feature = "FoundationDB"
 
+	// Enables Hazelcast operator.
+	Hazelcast featuregate.Feature = "Hazelcast"
+
 	// Enables Ignite operator.
 	Ignite featuregate.Feature = "Ignite"
 
@@ -82,7 +85,7 @@ const (
 	// NATS featuregate.Feature = "NATS"
 
 	// Enables Oracle operator.
-	// Oracle featuregate.Feature = "Oracle"
+	Oracle featuregate.Feature = "Oracle"
 
 	// Enables PerconaXtraDB operator.
 	PerconaXtraDB featuregate.Feature = "PerconaXtraDB"
@@ -140,15 +143,16 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	Druid:         {Default: false, PreRelease: featuregate.Alpha},
 	Elasticsearch: {Default: true, PreRelease: featuregate.GA},
 	// Etcd:               {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
-	FerretDB:    {Default: false, PreRelease: featuregate.Alpha},
-	Ignite:      {Default: true, PreRelease: featuregate.Alpha},
-	Kafka:       {Default: true, PreRelease: featuregate.Beta},
-	MariaDB:     {Default: true, PreRelease: featuregate.GA},
-	Memcached:   {Default: false, PreRelease: featuregate.Beta},
-	MongoDB:     {Default: true, PreRelease: featuregate.GA},
-	MSSQLServer: {Default: false, PreRelease: featuregate.Alpha},
-	MySQL:       {Default: true, PreRelease: featuregate.GA},
-	// Oracle:             {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
+	FerretDB:      {Default: false, PreRelease: featuregate.Alpha},
+	Hazelcast:     {Default: true, PreRelease: featuregate.Alpha},
+	Ignite:        {Default: true, PreRelease: featuregate.Alpha},
+	Kafka:         {Default: true, PreRelease: featuregate.Beta},
+	MariaDB:       {Default: true, PreRelease: featuregate.GA},
+	Memcached:     {Default: false, PreRelease: featuregate.Beta},
+	MongoDB:       {Default: true, PreRelease: featuregate.GA},
+	MSSQLServer:   {Default: false, PreRelease: featuregate.Alpha},
+	MySQL:         {Default: true, PreRelease: featuregate.GA},
+	Oracle:        {Default: false, PreRelease: featuregate.Alpha},
 	PerconaXtraDB: {Default: false, PreRelease: featuregate.Beta},
 	PgBouncer:     {Default: false, PreRelease: featuregate.Beta},
 	Pgpool:        {Default: false, PreRelease: featuregate.Alpha},

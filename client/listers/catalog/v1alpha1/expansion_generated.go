@@ -42,6 +42,10 @@ type EtcdVersionListerExpansion interface{}
 // FerretDBVersionLister.
 type FerretDBVersionListerExpansion interface{}
 
+// HazelcastVersionListerExpansion allows custom methods to be added to
+// HazelcastVersionLister.
+type HazelcastVersionListerExpansion interface{}
+
 // IgniteVersionListerExpansion allows custom methods to be added to
 // IgniteVersionLister.
 type IgniteVersionListerExpansion interface{}
@@ -73,6 +77,10 @@ type MongoDBVersionListerExpansion interface{}
 // MySQLVersionListerExpansion allows custom methods to be added to
 // MySQLVersionLister.
 type MySQLVersionListerExpansion interface{}
+
+// OracleVersionListerExpansion allows custom methods to be added to
+// OracleVersionLister.
+type OracleVersionListerExpansion interface{}
 
 // PerconaXtraDBVersionListerExpansion allows custom methods to be added to
 // PerconaXtraDBVersionLister.

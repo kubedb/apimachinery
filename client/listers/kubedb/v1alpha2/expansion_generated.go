@@ -66,6 +66,14 @@ type FerretDBListerExpansion interface{}
 // FerretDBNamespaceLister.
 type FerretDBNamespaceListerExpansion interface{}
 
+// HazelcastListerExpansion allows custom methods to be added to
+// HazelcastLister.
+type HazelcastListerExpansion interface{}
+
+// HazelcastNamespaceListerExpansion allows custom methods to be added to
+// HazelcastNamespaceLister.
+type HazelcastNamespaceListerExpansion interface{}
+
 // IgniteListerExpansion allows custom methods to be added to
 // IgniteLister.
 type IgniteListerExpansion interface{}
@@ -121,6 +129,14 @@ type MySQLListerExpansion interface{}
 // MySQLNamespaceListerExpansion allows custom methods to be added to
 // MySQLNamespaceLister.
 type MySQLNamespaceListerExpansion interface{}
+
+// OracleListerExpansion allows custom methods to be added to
+// OracleLister.
+type OracleListerExpansion interface{}
+
+// OracleNamespaceListerExpansion allows custom methods to be added to
+// OracleNamespaceLister.
+type OracleNamespaceListerExpansion interface{}
 
 // PerconaXtraDBListerExpansion allows custom methods to be added to
 // PerconaXtraDBLister.

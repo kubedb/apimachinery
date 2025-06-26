@@ -36,6 +36,8 @@ type Interface interface {
 	Etcds() EtcdInformer
 	// FerretDBs returns a FerretDBInformer.
 	FerretDBs() FerretDBInformer
+	// Hazelcasts returns a HazelcastInformer.
+	Hazelcasts() HazelcastInformer
 	// Ignites returns a IgniteInformer.
 	Ignites() IgniteInformer
 	// Kafkas returns a KafkaInformer.
@@ -50,6 +52,8 @@ type Interface interface {
 	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
 	MySQLs() MySQLInformer
+	// Oracles returns a OracleInformer.
+	Oracles() OracleInformer
 	// PerconaXtraDBs returns a PerconaXtraDBInformer.
 	PerconaXtraDBs() PerconaXtraDBInformer
 	// PgBouncers returns a PgBouncerInformer.
@@ -115,6 +119,11 @@ func (v *version) FerretDBs() FerretDBInformer {
 	return &ferretDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// Hazelcasts returns a HazelcastInformer.
+func (v *version) Hazelcasts() HazelcastInformer {
+	return &hazelcastInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // Ignites returns a IgniteInformer.
 func (v *version) Ignites() IgniteInformer {
 	return &igniteInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -148,6 +157,11 @@ func (v *version) MongoDBs() MongoDBInformer {
 // MySQLs returns a MySQLInformer.
 func (v *version) MySQLs() MySQLInformer {
 	return &mySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Oracles returns a OracleInformer.
+func (v *version) Oracles() OracleInformer {
+	return &oracleInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PerconaXtraDBs returns a PerconaXtraDBInformer.

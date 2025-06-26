@@ -161,21 +161,27 @@ func (w *FerretDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.FerretDB) fi
 		}
 	}
 
+	if db.Spec.Backend == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
+			db.Name,
+			`'spec.backend' is missing`))
+	}
+
 	// Storage related
-	if db.Spec.StorageType == "" {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+	if db.Spec.Backend.StorageType == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend", "storageType"),
 			db.Name,
-			`'spec.storageType' is missing`))
+			`'spec.backend.storageType' is missing`))
 	}
-	if db.Spec.StorageType != olddbapi.StorageTypeDurable && db.Spec.StorageType != olddbapi.StorageTypeEphemeral {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+	if db.Spec.Backend.StorageType != olddbapi.StorageTypeDurable && db.Spec.Backend.StorageType != olddbapi.StorageTypeEphemeral {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend", "storageType"),
 			db.Name,
-			fmt.Sprintf(`'spec.storageType' %s is invalid`, db.Spec.StorageType)))
+			fmt.Sprintf(`'spec.backend.storageType' %s is invalid`, db.Spec.Backend.StorageType)))
 	}
-	if db.Spec.StorageType == olddbapi.StorageTypeEphemeral && db.Spec.Storage != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+	if db.Spec.Backend.StorageType == olddbapi.StorageTypeEphemeral && db.Spec.Backend.Storage != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend", "storageType"),
 			db.Name,
-			`'spec.storageType' is set to Ephemeral, so 'spec.storage' needs to be empty`))
+			`'spec.backend.storageType' is set to Ephemeral, so 'spec.backend.storage' needs to be empty`))
 	}
 
 	// Auth secret related

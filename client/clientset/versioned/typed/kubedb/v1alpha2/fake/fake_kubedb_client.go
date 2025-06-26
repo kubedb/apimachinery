@@ -53,6 +53,10 @@ func (c *FakeKubedbV1alpha2) FerretDBs(namespace string) v1alpha2.FerretDBInterf
 	return &FakeFerretDBs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Hazelcasts(namespace string) v1alpha2.HazelcastInterface {
+	return &FakeHazelcasts{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Ignites(namespace string) v1alpha2.IgniteInterface {
 	return &FakeIgnites{c, namespace}
 }
@@ -79,6 +83,10 @@ func (c *FakeKubedbV1alpha2) MongoDBs(namespace string) v1alpha2.MongoDBInterfac
 
 func (c *FakeKubedbV1alpha2) MySQLs(namespace string) v1alpha2.MySQLInterface {
 	return &FakeMySQLs{c, namespace}
+}
+
+func (c *FakeKubedbV1alpha2) Oracles(namespace string) v1alpha2.OracleInterface {
+	return &FakeOracles{c, namespace}
 }
 
 func (c *FakeKubedbV1alpha2) PerconaXtraDBs(namespace string) v1alpha2.PerconaXtraDBInterface {

@@ -53,6 +53,10 @@ func (c *FakeCatalogV1alpha1) FerretDBVersions() v1alpha1.FerretDBVersionInterfa
 	return &FakeFerretDBVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) HazelcastVersions() v1alpha1.HazelcastVersionInterface {
+	return &FakeHazelcastVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) IgniteVersions() v1alpha1.IgniteVersionInterface {
 	return &FakeIgniteVersions{c}
 }
@@ -83,6 +87,10 @@ func (c *FakeCatalogV1alpha1) MongoDBVersions() v1alpha1.MongoDBVersionInterface
 
 func (c *FakeCatalogV1alpha1) MySQLVersions() v1alpha1.MySQLVersionInterface {
 	return &FakeMySQLVersions{c}
+}
+
+func (c *FakeCatalogV1alpha1) OracleVersions() v1alpha1.OracleVersionInterface {
+	return &FakeOracleVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) PerconaXtraDBVersions() v1alpha1.PerconaXtraDBVersionInterface {

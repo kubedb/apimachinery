@@ -36,6 +36,8 @@ type Interface interface {
 	EtcdVersions() EtcdVersionInformer
 	// FerretDBVersions returns a FerretDBVersionInformer.
 	FerretDBVersions() FerretDBVersionInformer
+	// HazelcastVersions returns a HazelcastVersionInformer.
+	HazelcastVersions() HazelcastVersionInformer
 	// IgniteVersions returns a IgniteVersionInformer.
 	IgniteVersions() IgniteVersionInformer
 	// KafkaConnectorVersions returns a KafkaConnectorVersionInformer.
@@ -52,6 +54,8 @@ type Interface interface {
 	MongoDBVersions() MongoDBVersionInformer
 	// MySQLVersions returns a MySQLVersionInformer.
 	MySQLVersions() MySQLVersionInformer
+	// OracleVersions returns a OracleVersionInformer.
+	OracleVersions() OracleVersionInformer
 	// PerconaXtraDBVersions returns a PerconaXtraDBVersionInformer.
 	PerconaXtraDBVersions() PerconaXtraDBVersionInformer
 	// PgBouncerVersions returns a PgBouncerVersionInformer.
@@ -117,6 +121,11 @@ func (v *version) FerretDBVersions() FerretDBVersionInformer {
 	return &ferretDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
+// HazelcastVersions returns a HazelcastVersionInformer.
+func (v *version) HazelcastVersions() HazelcastVersionInformer {
+	return &hazelcastVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
 // IgniteVersions returns a IgniteVersionInformer.
 func (v *version) IgniteVersions() IgniteVersionInformer {
 	return &igniteVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
@@ -155,6 +164,11 @@ func (v *version) MongoDBVersions() MongoDBVersionInformer {
 // MySQLVersions returns a MySQLVersionInformer.
 func (v *version) MySQLVersions() MySQLVersionInformer {
 	return &mySQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// OracleVersions returns a OracleVersionInformer.
+func (v *version) OracleVersions() OracleVersionInformer {
+	return &oracleVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // PerconaXtraDBVersions returns a PerconaXtraDBVersionInformer.

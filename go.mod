@@ -10,6 +10,8 @@ require (
 	github.com/coreos/go-semver v0.3.1
 	github.com/evanphx/json-patch v5.9.11+incompatible
 	github.com/fatih/structs v1.1.0
+	github.com/go-logr/logr v1.4.2
+	github.com/go-logr/zapr v1.3.0
 	github.com/google/go-cmp v0.7.0
 	github.com/google/gofuzz v1.2.0
 	github.com/google/uuid v1.6.0
@@ -19,8 +21,9 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.81.0
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.81.0
-	go.bytebuilders.dev/audit v0.0.42
+	go.bytebuilders.dev/audit v0.0.43
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.9
+	go.uber.org/zap v1.27.0
 	go.virtual-secrets.dev/apimachinery v0.0.1
 	gomodules.xyz/encoding v0.0.8
 	gomodules.xyz/pointer v0.1.0
@@ -38,20 +41,20 @@ require (
 	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff
 	k8s.io/metrics v0.32.3
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
-	kmodules.xyz/client-go v0.32.1
+	kmodules.xyz/client-go v0.32.6
 	kmodules.xyz/crd-schema-fuzz v0.32.0
 	kmodules.xyz/custom-resources v0.32.0
 	kmodules.xyz/monitoring-agent-api v0.32.0
 	kmodules.xyz/objectstore-api v0.32.0
 	kmodules.xyz/offshoot-api v0.32.0
-	kmodules.xyz/resource-metadata v0.26.1
+	kmodules.xyz/resource-metadata v0.30.1
 	kmodules.xyz/webhook-runtime v0.32.0
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/operator-shard-manager v0.0.3
 	kubeops.dev/petset v0.0.10
 	kubeops.dev/sidekick v0.0.11
 	kubestash.dev/apimachinery v0.18.0
-	sigs.k8s.io/controller-runtime v0.20.3
+	sigs.k8s.io/controller-runtime v0.20.4
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.39.0
 )
@@ -96,7 +99,6 @@ require (
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
-	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
@@ -134,7 +136,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
-	github.com/nats-io/nats.go v1.41.2 // indirect
+	github.com/nats-io/nats.go v1.42.0 // indirect
 	github.com/nats-io/nkeys v0.4.11 // indirect
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/onsi/gomega v1.36.2 // indirect
@@ -176,7 +178,6 @@ require (
 	go.opentelemetry.io/otel/trace v1.33.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.4.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
 	golang.org/x/net v0.38.0 // indirect
@@ -205,7 +206,7 @@ require (
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.14 // indirect
 	kmodules.xyz/prober v0.32.0 // indirect
-	kmodules.xyz/resource-metrics v0.30.5 // indirect
+	kmodules.xyz/resource-metrics v0.30.7 // indirect
 	moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 // indirect
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.31.1 // indirect
 	sigs.k8s.io/cli-utils v0.37.2 // indirect
