@@ -29770,13 +29770,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_IgniteSpec(ref common.ReferenceCal
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
-					"enableSSL": {
-						SchemaProps: spec.SchemaProps{
-							Description: "To enable ssl for http layer",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",

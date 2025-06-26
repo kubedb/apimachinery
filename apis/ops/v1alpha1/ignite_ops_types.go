@@ -88,27 +88,23 @@ type IgniteUpdateVersionSpec struct {
 	TargetVersion string `json:"targetVersion,omitempty"`
 }
 
-// IgniteReplicaReadinessCriteria is the criteria for checking readiness of a Ignite pod
-// after updating, horizontal scaling etc.
-type IgniteReplicaReadinessCriteria struct{}
-
 // IgniteHorizontalScalingSpec contains the horizontal scaling information of a Ignite cluster
 type IgniteHorizontalScalingSpec struct {
 	// Number of node
-	Node *int32 `json:"node,omitempty"`
+	Ignite *int32 `json:"node,omitempty"`
 }
 
 // IgniteVerticalScalingSpec contains the vertical scaling information of a Ignite cluster
 type IgniteVerticalScalingSpec struct {
 	// Resource spec for nodes
-	Node *PodResources `json:"node,omitempty"`
+	Ignite *PodResources `json:"node,omitempty"`
 }
 
 // IgniteVolumeExpansionSpec is the spec for Ignite volume expansion
 type IgniteVolumeExpansionSpec struct {
 	Mode VolumeExpansionMode `json:"mode"`
 	// volume specification for nodes
-	Node *resource.Quantity `json:"node,omitempty"`
+	Ignite *resource.Quantity `json:"node,omitempty"`
 }
 
 // IgniteCustomConfigurationSpec is the spec for Reconfiguring the ignite Settings
@@ -122,7 +118,7 @@ type IgniteCustomConfigurationSpec struct {
 	// following naming convention: {db-name}-user-config .
 	// Expected input format:
 	//	applyConfig:
-	//		ignite.conf: |
+	//		node-configuration.xml: |
 	//			key=value
 	// +optional
 	ApplyConfig map[string]string `json:"applyConfig,omitempty"`

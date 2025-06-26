@@ -571,7 +571,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_IgniteOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_IgniteOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_IgniteOpsRequestSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteReplicaReadinessCriteria":                   schema_apimachinery_apis_ops_v1alpha1_IgniteReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteUpdateVersionSpec":                          schema_apimachinery_apis_ops_v1alpha1_IgniteUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteVerticalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_IgniteVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteVolumeExpansionSpec":                        schema_apimachinery_apis_ops_v1alpha1_IgniteVolumeExpansionSpec(ref),
@@ -28695,7 +28694,7 @@ func schema_apimachinery_apis_ops_v1alpha1_IgniteCustomConfigurationSpec(ref com
 					},
 					"applyConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ApplyConfig is an optional field to provide ignite configuration. Provided configuration will be applied to config files stored in ConfigSecret. If the ConfigSecret is missing, the operator will create a new k8s secret by the following naming convention: {db-name}-user-config . Expected input format:\n\tapplyConfig:\n\t\tignite.conf: |\n\t\t\tkey=value",
+							Description: "ApplyConfig is an optional field to provide ignite configuration. Provided configuration will be applied to config files stored in ConfigSecret. If the ConfigSecret is missing, the operator will create a new k8s secret by the following naming convention: {db-name}-user-config . Expected input format:\n\tapplyConfig:\n\t\tnode-configuration.xml: |\n\t\t\tkey=value",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -28928,17 +28927,6 @@ func schema_apimachinery_apis_ops_v1alpha1_IgniteOpsRequestSpec(ref common.Refer
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
-	}
-}
-
-func schema_apimachinery_apis_ops_v1alpha1_IgniteReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "IgniteReplicaReadinessCriteria is the criteria for checking readiness of a Ignite pod after updating, horizontal scaling etc.",
-				Type:        []string{"object"},
-			},
-		},
 	}
 }
 

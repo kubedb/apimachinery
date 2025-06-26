@@ -85,8 +85,6 @@ spec:
                 type: string
               disableSecurity:
                 type: boolean
-              enableSSL:
-                type: boolean
               halted:
                 type: boolean
               healthChecker:

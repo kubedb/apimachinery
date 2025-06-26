@@ -106,9 +106,6 @@ type IgniteSpec struct {
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 
-	// To enable ssl for http layer
-	EnableSSL bool `json:"enableSSL,omitempty"`
-
 	// TLS contains tls configurations for client and server.
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`

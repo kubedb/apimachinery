@@ -341,7 +341,7 @@ func (i Ignite) IgniteCertificateName(alias IgniteCertificateAlias) string {
 
 func (i Ignite) GetIgniteConnectionScheme() string {
 	scheme := "http"
-	if i.Spec.EnableSSL {
+	if i.Spec.TLS != nil {
 		scheme = "https"
 	}
 	return scheme
