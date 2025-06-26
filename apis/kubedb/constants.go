@@ -872,7 +872,7 @@ const (
 	KafkaDataDir                              = "/var/log/kafka"
 	KafkaMetaDataDir                          = "/var/log/kafka/metadata"
 	KafkaCertDir                              = "/var/private/ssl"
-	KafkaUserScriptsDir                       = "/opt/kafka/user-scripts"
+	KafkaInitScriptsDir                       = "/opt/kafka/init-scripts"
 	KafkaConfigDir                            = "/opt/kafka/config/kafkaconfig"
 	KafkaTempConfigDir                        = "/opt/kafka/config/temp-config"
 	KafkaCustomConfigDir                      = "/opt/kafka/config/custom-config"
@@ -974,7 +974,7 @@ const (
 	KafkaVolumeConfig       = "kafkaconfig"
 	KafkaVolumeTempConfig   = "temp-config"
 	KafkaVolumeCustomConfig = "custom-config"
-	KafkaVolumeUserScripts  = "user-scripts"
+	KafkaVolumeInitScripts  = "init-scripts"
 
 	EnvKafkaUser      = "KAFKA_USER"
 	EnvKafkaPassword  = "KAFKA_PASSWORD"
