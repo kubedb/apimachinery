@@ -291,6 +291,11 @@ func (in *CassandraSpec) DeepCopyInto(out *CassandraSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.KeystoreCredSecret != nil {
+		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
+		*out = new(SecretReference)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.TLS != nil {
 		in, out := &in.TLS, &out.TLS
 		*out = new(apiv1.TLSConfig)

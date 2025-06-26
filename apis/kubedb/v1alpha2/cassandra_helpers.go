@@ -172,8 +172,8 @@ func (r *Cassandra) DefaultUserCredSecretName(username string) string {
 	return meta_util.NameWithSuffix(r.Name, strings.ReplaceAll(fmt.Sprintf("%s-cred", username), "_", "-"))
 }
 
-func (d *Cassandra) CassandraKeystoreCredSecretName(suffix string) string {
-	return strings.Join([]string{d.Name, suffix}, "-")
+func (r *Cassandra) CassandraKeystoreCredSecretName() string {
+	return meta_util.NameWithSuffix(r.OffshootName(), kubedb.CassandraKeystoreSecretKey)
 }
 
 func (r *Cassandra) PVCName(alias string) string {
@@ -295,6 +295,16 @@ func (r *Cassandra) SetTLSDefaults() {
 func (r *Cassandra) SetDefaults(kc client.Client) {
 	if r.Spec.DeletionPolicy == "" {
 		r.Spec.DeletionPolicy = DeletionPolicyDelete
+	}
+
+	if r.Spec.EnableSSL {
+		if r.Spec.KeystoreCredSecret == nil {
+			r.Spec.KeystoreCredSecret = &SecretReference{
+				LocalObjectReference: core.LocalObjectReference{
+					Name: r.CassandraKeystoreCredSecretName(),
+				},
+			}
+		}
 	}
 
 	var casVersion catalog.CassandraVersion

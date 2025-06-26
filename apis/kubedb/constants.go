@@ -1686,7 +1686,7 @@ const (
 	EnvNameCassandraUser             = "CASSANDRA_USER"
 	EnvNameCassandraPassword         = "CASSANDRA_PASSWORD"
 	EnvNameCassandraSslCertFile      = "SSL_CERTFILE"
-	EnvValCassandraSslCertFile       = "/opt/cassandra/ssl/ca.crt"
+	EnvValCassandraSslCertFile       = CassandraCertDir + "/ca.crt"
 
 	EnvNameMgmtApiListenTcpPort = "MGMT_API_LISTEN_TCP_PORT"
 	EnvValMgmtApiListenTcpPort  = "8081"
