@@ -215,7 +215,7 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteVerticalScalingOpsRequest
 	if err != nil {
 		return err
 	}
-	if verticalScalingSpec.Node == nil {
+	if verticalScalingSpec.Ignite == nil {
 		return errors.New("spec.verticalScaling.Node can't be empty")
 	}
 
@@ -231,7 +231,7 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteVolumeExpansionOpsRequest
 	if err != nil {
 		return err
 	}
-	if volumeExpansionSpec.Node == nil {
+	if volumeExpansionSpec.Ignite == nil {
 		return errors.New("spec.volumeExpansion.Node can't be empty")
 	}
 
@@ -273,11 +273,11 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteHorizontalScalingOpsReque
 		return err
 	}
 
-	if horizontalScalingSpec.Node == nil {
+	if horizontalScalingSpec.Ignite == nil {
 		return errors.New("spec.horizontalScaling.node can not be empty")
 	}
 
-	if *horizontalScalingSpec.Node <= 0 {
+	if *horizontalScalingSpec.Ignite <= 0 {
 		return errors.New("spec.horizontalScaling.node must be positive")
 	}
 
