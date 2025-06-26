@@ -254,7 +254,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReques
 
 	if req.Spec.VolumeExpansion.MaxScale != nil {
 		if !db.IsMariaDBReplication() {
-			return errors.New("Topology should be mariadb replication")
+			return errors.New("Topology is not mariadb replication")
 		}
 		cur, ok := db.Spec.Topology.MaxScale.Storage.Resources.Requests[core.ResourceStorage]
 		if !ok {
