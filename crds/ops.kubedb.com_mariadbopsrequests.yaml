@@ -83,7 +83,7 @@ spec:
                 x-kubernetes-map-type: atomic
               horizontalScaling:
                 properties:
-                  enableMaxScaleScaling:
+                  maxscale:
                     type: boolean
                   member:
                     format: int32

@@ -92,7 +92,7 @@ type MariaDBUpdateVersionSpec struct {
 
 type MariaDBHorizontalScalingSpec struct {
 	// If true horizontal scaling performs on maxscale pod
-	EnableMaxScaleScaling bool `json:"enableMaxScaleScaling,omitempty"`
+	MaxScale bool `json:"maxscale,omitempty"`
 	// Number of nodes/members of the group
 	Member *int32 `json:"member,omitempty"`
 	// specifies the weight of the current member/PodResources
