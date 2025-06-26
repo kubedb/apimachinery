@@ -284,6 +284,14 @@ func (r *Cassandra) ResourceSingular() string {
 	return ResourceSingularCassandra
 }
 
+func (r *Cassandra) SetTLSDefaults() {
+	if r.Spec.TLS == nil || r.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(CassandraServerCert), r.CertificateName(CassandraServerCert))
+	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(CassandraClientCert), r.CertificateName(CassandraClientCert))
+}
+
 func (r *Cassandra) SetDefaults(kc client.Client) {
 	if r.Spec.DeletionPolicy == "" {
 		r.Spec.DeletionPolicy = DeletionPolicyDelete
@@ -359,7 +367,7 @@ func (r *Cassandra) SetDefaults(kc client.Client) {
 		}
 		r.SetHealthCheckerDefaults()
 	}
-
+	r.SetTLSDefaults()
 	r.Spec.Monitor.SetDefaults()
 
 	if r.Spec.Monitor != nil && r.Spec.Monitor.Prometheus != nil {
