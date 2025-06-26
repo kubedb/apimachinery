@@ -37,7 +37,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=hazelcastopsrequests,singular=hazelcastopsrequest,shortName=slops,categories={ops,kubedb,appscode}
+// +kubebuilder:resource:path=hazelcastopsrequests,singular=hazelcastopsrequest,shortName=hzops,categories={ops,kubedb,appscode}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
@@ -83,14 +83,14 @@ type HazelcastOpsRequestSpec struct {
 }
 
 type HazelcastVerticalScalingSpec struct {
-	// Resource spec for combined nodes
-	Node *PodResources `json:"node,omitempty"`
+	// Resource spec for hazelcast nodes
+	Hazelcast *PodResources `json:"hazelcast,omitempty"`
 }
 
 type HazelcastVolumeExpansionSpec struct {
 	Mode VolumeExpansionMode `json:"mode"`
-	// volume specification for combined nodes
-	Node *resource.Quantity `json:"node,omitempty"`
+	// volume specification for hazelcast nodes
+	Hazelcast *resource.Quantity `json:"hazelcast,omitempty"`
 }
 
 type HazelcastUpdateVersionSpec struct {
@@ -99,8 +99,8 @@ type HazelcastUpdateVersionSpec struct {
 }
 
 type HazelcastHorizontalScalingSpec struct {
-	// Number of combined (i.e. overseer, data, coordinator) node
-	Node *int32 `json:"node,omitempty"`
+	// Number of hazelcast node
+	Hazelcast *int32 `json:"hazelcast,omitempty"`
 }
 
 // HazelcastCustomConfigurationSpec is the spec for Reconfiguring the hazelcast Settings

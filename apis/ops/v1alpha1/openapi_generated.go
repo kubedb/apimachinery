@@ -28270,9 +28270,9 @@ func schema_apimachinery_apis_ops_v1alpha1_HazelcastHorizontalScalingSpec(ref co
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"node": {
+					"hazelcast": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of combined (i.e. overseer, data, coordinator) node",
+							Description: "Number of hazelcast node",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -28495,9 +28495,9 @@ func schema_apimachinery_apis_ops_v1alpha1_HazelcastVerticalScalingSpec(ref comm
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"node": {
+					"hazelcast": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resource spec for combined nodes",
+							Description: "Resource spec for hazelcast nodes",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
 						},
 					},
@@ -28522,9 +28522,9 @@ func schema_apimachinery_apis_ops_v1alpha1_HazelcastVolumeExpansionSpec(ref comm
 							Format:  "",
 						},
 					},
-					"node": {
+					"hazelcast": {
 						SchemaProps: spec.SchemaProps{
-							Description: "volume specification for combined nodes",
+							Description: "volume specification for hazelcast nodes",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
