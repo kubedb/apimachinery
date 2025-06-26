@@ -91,7 +91,8 @@ type MariaDBUpdateVersionSpec struct {
 }
 
 type MariaDBHorizontalScalingSpec struct {
-	// If true horizontal scaling performs on maxscale pod
+	// Specifies whether horizontal scaling is applied to the MaxScale Server.
+	// When set to true, it enables horizontal scaling for the MaxScale Server.
 	MaxScale bool `json:"maxscale,omitempty"`
 	// Number of nodes/members of the group
 	Member *int32 `json:"member,omitempty"`

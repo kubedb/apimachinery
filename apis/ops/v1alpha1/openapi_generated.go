@@ -29139,7 +29139,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBHorizontalScalingSpec(ref comm
 				Properties: map[string]spec.Schema{
 					"maxscale": {
 						SchemaProps: spec.SchemaProps{
-							Description: "If true horizontal scaling performs on maxscale pod",
+							Description: "Specifies whether horizontal scaling is applied to the MaxScale Server. When set to true, it enables horizontal scaling for the MaxScale Server.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
