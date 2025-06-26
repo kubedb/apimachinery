@@ -9881,6 +9881,11 @@ spec:
                   type: object
                 type: array
               sslVerificationMode:
+                enum:
+                - none
+                - relaxed
+                - strict
+                - once
                 type: string
               storage:
                 properties:

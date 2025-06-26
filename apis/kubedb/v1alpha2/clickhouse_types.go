@@ -93,7 +93,7 @@ type ClickHouseSpec struct {
 
 	// Indicates that how strictly the server and client verifies each other certificate during a TLS/SSL handshake
 	// +optional
-	SSLVerificationMode string `json:"sslVerificationMode,omitempty"`
+	SSLVerificationMode *SSLVerificationMode `json:"sslVerificationMode,omitempty"`
 
 	// TLS contains tls configurations for client and server.
 	// +optional
