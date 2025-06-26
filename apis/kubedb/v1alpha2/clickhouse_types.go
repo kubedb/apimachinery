@@ -91,7 +91,7 @@ type ClickHouseSpec struct {
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
-	// Indicates that how strictly the server and client verifies each other certificate during a TLS/SSL handshake
+	// Indicates how SSL/TLS certificate verification will be handled for both the server and client sides.
 	// +optional
 	SSLVerificationMode SSLVerificationMode `json:"sslVerificationMode,omitempty"`
 
