@@ -218,6 +218,11 @@ func (in *CassandraOpsRequestSpec) DeepCopyInto(out *CassandraOpsRequestSpec) {
 		*out = new(metav1.Duration)
 		**out = **in
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(TLSSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

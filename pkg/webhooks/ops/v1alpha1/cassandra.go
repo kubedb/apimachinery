@@ -120,6 +120,12 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.C
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.CassandraOpsRequestTypeReconfigureTLS:
+		if err := rv.validateCassandraReconfigurationTLSOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
+				req.Name,
+				err.Error()))
+		}
 	default:
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Cassandra are %s", req.Spec.Type, strings.Join(opsapi.CassandraOpsRequestTypeNames(), ", "))))
@@ -226,6 +232,35 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCassandraReconfigurationOpsR
 	}
 	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
 		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
+	}
+	return nil
+}
+
+func (rv *CassandraOpsRequestCustomWebhook) validateCassandraReconfigurationTLSOpsRequest(req *opsapi.CassandraOpsRequest) error {
+	TLSSpec := req.Spec.TLS
+	if TLSSpec == nil {
+		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
+	}
+	if err := rv.hasDatabaseRef(req); err != nil {
+		return err
+	}
+	configCount := 0
+	if req.Spec.TLS.Remove {
+		configCount++
+	}
+	if req.Spec.TLS.RotateCertificates {
+		configCount++
+	}
+	if req.Spec.TLS.TLSConfig.IssuerRef != nil || req.Spec.TLS.TLSConfig.Certificates != nil {
+		configCount++
+	}
+
+	if configCount == 0 {
+		return errors.New("No reconfiguration is provided in TLS Spec.")
+	}
+
+	if configCount > 1 {
+		return errors.New("more than 1 field have assigned to spec.reconfigureTLS but at a time one is allowed to run one operation")
 	}
 	return nil
 }

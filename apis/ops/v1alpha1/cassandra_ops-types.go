@@ -69,13 +69,17 @@ type CassandraOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
+
+	// Specifies information necessary for configuring TLS
+	TLS *TLSSpec `json:"tls,omitempty"`
+
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;Restart;VolumeExpansion;HorizontalScaling;Reconfigure
-// ENUM(UpdateVersion, VerticalScaling, Restart, VolumeExpansion, HorizontalScaling, Reconfigure)
+// +kubebuilder:validation:Enum=UpdateVersion;VerticalScaling;Restart;VolumeExpansion;HorizontalScaling;Reconfigure;ReconfigureTLS
+// ENUM(UpdateVersion, VerticalScaling, Restart, VolumeExpansion, HorizontalScaling, Reconfigure,ReconfigureTLS)
 type CassandraOpsRequestType string
 
 // CassandraHorizontalScalingSpec contains the horizontal scaling information of a Cassandra cluster
