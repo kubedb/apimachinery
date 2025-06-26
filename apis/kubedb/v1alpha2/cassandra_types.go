@@ -83,10 +83,6 @@ type CassandraSpec struct {
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
-	// Keystore encryption secret
-	// +optional
-	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
-
 	// To enable ssl for http layer
 	EnableSSL bool `json:"enableSSL,omitempty"`
 

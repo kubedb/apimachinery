@@ -26410,12 +26410,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_CassandraSpec(ref common.Reference
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"keystoreCredSecret": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Keystore encryption secret",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
-						},
-					},
 					"enableSSL": {
 						SchemaProps: spec.SchemaProps{
 							Description: "To enable ssl for http layer",

@@ -108,24 +108,6 @@ spec:
                     format: int32
                     type: integer
                 type: object
-              keystoreCredSecret:
-                properties:
-                  activeFrom:
-                    format: date-time
-                    type: string
-                  apiGroup:
-                    type: string
-                  externallyManaged:
-                    type: boolean
-                  name:
-                    default: ""
-                    type: string
-                  rotateAfter:
-                    type: string
-                  secretStoreName:
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               monitor:
                 properties:
                   agent:
