@@ -204,9 +204,10 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBScalingOpsRequest(req *o
 		}
 		return nil
 	}
-
-	if req.Spec.VerticalScaling == nil {
-		return errors.New("`spec.Scale.Vertical` field is empty")
+	if req.Spec.Type == opsapi.MariaDBOpsRequestTypeVerticalScaling {
+		if req.Spec.VerticalScaling == nil {
+			return errors.New("`spec.Scale.Vertical` field is empty")
+		}
 	}
 
 	return nil
