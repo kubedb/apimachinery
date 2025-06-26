@@ -26778,6 +26778,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseSpec(ref common.Referenc
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
+					"sslVerificationMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that how strictly the server and client verifies each other certificate during a TLS/SSL handshake",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations for client and server.",

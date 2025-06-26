@@ -91,13 +91,9 @@ type ClickHouseSpec struct {
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
-	// Indicates that how strictly the server verifies client certificate during a TLS/SSL handshake
+	// Indicates that how strictly the server and client verifies each other certificate during a TLS/SSL handshake
 	// +optional
-	ServerVerificationModeTLS bool `json:"serverVerificationModeTLS,omitempty"`
-
-	// Indicates that how strictly the client verifies server certificate during a TLS/SSL handshake
-	// +optional
-	ClientVerificationModeTLS bool `json:"clientVerificationModeTLS,omitempty"`
+	SSLVerificationMode string `json:"sslVerificationMode,omitempty"`
 
 	// TLS contains tls configurations for client and server.
 	// +optional
@@ -219,3 +215,13 @@ type ClickHouseTLSConfig struct {
 	// +optional
 	ClientCACertificateRefs []core.SecretKeySelector `json:"clientCaCertificateRefs,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=none;relaxed;strict;once
+type SSLVerificationMode string
+
+const (
+	SSLVerificationModeNone    SSLVerificationMode = "none"
+	SSLVerificationModeRelaxed SSLVerificationMode = "relaxed"
+	SSLVerificationModeStrict  SSLVerificationMode = "strict"
+	SSLVerificationModeOnce    SSLVerificationMode = "once"
+)
