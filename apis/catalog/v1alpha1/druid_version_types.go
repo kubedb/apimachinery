@@ -55,11 +55,6 @@ type DruidVersionSpec struct {
 	InitContainer DruidInitContainer `json:"initContainer"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
-
-	// Coordinator Image
-	// +optional
-	Coordinator DruidVersionCoordinator `json:"coordinator,omitempty"`
-
 	Deprecated bool `json:"deprecated,omitempty"`
 	// SecurityContext is for the additional security information for the Druid container
 	// +optional
@@ -73,11 +68,6 @@ type DruidVersionSpec struct {
 
 // DruidVersionDatabase is the Druid Database image
 type DruidVersionDatabase struct {
-	Image string `json:"image"`
-}
-
-// MySQLVersionCoordinator is the image for coordinator
-type DruidVersionCoordinator struct {
 	Image string `json:"image"`
 }
 
