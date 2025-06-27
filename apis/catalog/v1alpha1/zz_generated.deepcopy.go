@@ -254,6 +254,7 @@ func (in *CassandraVersionSpec) DeepCopyInto(out *CassandraVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	return
 }
 
@@ -411,6 +412,7 @@ func (in *ClickHouseVersionSpec) DeepCopyInto(out *ClickHouseVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	return
 }
 
@@ -593,6 +595,7 @@ func (in *DruidVersionSpec) DeepCopyInto(out *DruidVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	return
 }
 
@@ -1339,6 +1342,7 @@ func (in *IgniteVersionSpec) DeepCopyInto(out *IgniteVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	return
 }
 
@@ -3697,6 +3701,7 @@ func (in *RabbitMQVersionSpec) DeepCopyInto(out *RabbitMQVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	return
 }
 

@@ -52,6 +52,10 @@ type Cassandra struct {
 
 // CassandraSpec defines the desired state of Cassandra
 type CassandraSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of Cassandra to be deployed.
 	Version string `json:"version"`
 

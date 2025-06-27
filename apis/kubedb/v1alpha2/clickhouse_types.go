@@ -52,6 +52,10 @@ type ClickHouse struct {
 
 // ClickHouseSpec defines the desired state of ClickHouse
 type ClickHouseSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of ClickHouse to be deployed.
 	Version string `json:"version"`
 
