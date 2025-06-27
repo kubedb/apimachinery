@@ -4838,22 +4838,32 @@ spec:
                     type: object
                   distributedAG:
                     properties:
-                      myURL:
-                        type: string
-                      remoteAGName:
-                        type: string
-                      remoteURL:
-                        type: string
-                      role:
-                        enum:
-                        - Primary
-                        - Secondary
-                        type: string
+                      remote:
+                        properties:
+                          name:
+                            type: string
+                          url:
+                            type: string
+                        required:
+                        - name
+                        - url
+                        type: object
+                      self:
+                        properties:
+                          role:
+                            enum:
+                            - Primary
+                            - Secondary
+                            type: string
+                          url:
+                            type: string
+                        required:
+                        - role
+                        - url
+                        type: object
                     required:
-                    - myURL
-                    - remoteAGName
-                    - remoteURL
-                    - role
+                    - remote
+                    - self
                     type: object
                   mode:
                     enum:
