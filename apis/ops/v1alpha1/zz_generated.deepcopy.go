@@ -2599,6 +2599,11 @@ func (in *MariaDBVerticalScalingSpec) DeepCopyInto(out *MariaDBVerticalScalingSp
 		*out = new(PodResources)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.MaxScale != nil {
+		in, out := &in.MaxScale, &out.MaxScale
+		*out = new(PodResources)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Exporter != nil {
 		in, out := &in.Exporter, &out.Exporter
 		*out = new(ContainerResources)
@@ -2627,6 +2632,11 @@ func (in *MariaDBVolumeExpansionSpec) DeepCopyInto(out *MariaDBVolumeExpansionSp
 	*out = *in
 	if in.MariaDB != nil {
 		in, out := &in.MariaDB, &out.MariaDB
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.MaxScale != nil {
+		in, out := &in.MaxScale, &out.MaxScale
 		x := (*in).DeepCopy()
 		*out = &x
 	}

@@ -204,9 +204,10 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBScalingOpsRequest(req *o
 		}
 		return nil
 	}
-
-	if req.Spec.VerticalScaling == nil {
-		return errors.New("`spec.Scale.Vertical` field is empty")
+	if req.Spec.Type == opsapi.MariaDBOpsRequestTypeVerticalScaling {
+		if req.Spec.VerticalScaling == nil {
+			return errors.New("`spec.Scale.Vertical` field is empty")
+		}
 	}
 
 	return nil
@@ -226,22 +227,42 @@ func (w *MariaDBOpsRequestCustomWebhook) ensureMariaDBGroupReplication(req *opsa
 }
 
 func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsRequest(req *opsapi.MariaDBOpsRequest) error {
-	if req.Spec.VolumeExpansion == nil || req.Spec.VolumeExpansion.MariaDB == nil {
+	if req.Spec.VolumeExpansion == nil || (req.Spec.VolumeExpansion.MariaDB == nil && req.Spec.VolumeExpansion.MaxScale == nil) {
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
 	}
+
+	if req.Spec.VolumeExpansion.MariaDB != nil && req.Spec.VolumeExpansion.MaxScale != nil {
+		return errors.New("Volume expansion for both server at a time is not allowed")
+	}
+
 	db := &dbapi.MariaDB{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
-	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-	if !ok {
-		return errors.Wrap(err, "failed to parse current storage size")
+	if req.Spec.VolumeExpansion.MariaDB != nil {
+		cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
+		if !ok {
+			return errors.Wrap(err, "failed to parse mariadb storage size")
+		}
+
+		if cur.Cmp(*req.Spec.VolumeExpansion.MariaDB) >= 0 {
+			return fmt.Errorf("Desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		}
 	}
 
-	if cur.Cmp(*req.Spec.VolumeExpansion.MariaDB) >= 0 {
-		return fmt.Errorf("Desired storage size must be greater than current storage. Current storage: %v", cur.String())
+	if req.Spec.VolumeExpansion.MaxScale != nil {
+		if !db.IsMariaDBReplication() {
+			return errors.New("Topology is not mariadb replication")
+		}
+		cur, ok := db.Spec.Topology.MaxScale.Storage.Resources.Requests[core.ResourceStorage]
+		if !ok {
+			return errors.Wrap(err, "failed to parse maxscale storage size")
+		}
+		if cur.Cmp(*req.Spec.VolumeExpansion.MaxScale) >= 0 {
+			return fmt.Errorf("Desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		}
 	}
 
 	return nil

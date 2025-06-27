@@ -29218,6 +29218,13 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBHorizontalScalingSpec(ref comm
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"maxscale": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies whether horizontal scaling is applied to the MaxScale Server. When set to true, it enables horizontal scaling for the MaxScale Server.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"member": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Number of nodes/members of the group",
@@ -29521,6 +29528,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBVerticalScalingSpec(ref common
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
 						},
 					},
+					"maxscale": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
 					"exporter": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"),
@@ -29547,6 +29559,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBVolumeExpansionSpec(ref common
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"mariadb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"maxscale": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
