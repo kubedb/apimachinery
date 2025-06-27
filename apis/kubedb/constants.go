@@ -1685,6 +1685,8 @@ const (
 	EnvNameCassandraPodName          = "CASSANDRA_POD_NAME"
 	EnvNameCassandraUser             = "CASSANDRA_USER"
 	EnvNameCassandraPassword         = "CASSANDRA_PASSWORD"
+	EnvNameCassandraSslCertFile      = "SSL_CERTFILE"
+	EnvValCassandraSslCertFile       = CassandraCertDir + "/ca.crt"
 
 	EnvNameMgmtApiListenTcpPort = "MGMT_API_LISTEN_TCP_PORT"
 	EnvValMgmtApiListenTcpPort  = "8081"
@@ -1694,6 +1696,33 @@ const (
 	EnvValMedusaDebugSleep      = "0s"
 	CassandraNodetoolDir        = "/opt/cassandra/temp/bin"
 	CassandraBackupBinary       = "nodetool"
+
+	CassandraKeystoreSecretKey     = "keystore-cred"
+	CassandraCertDir               = "/opt/cassandra/ssl"
+	CassandraKeystoreFile          = CassandraCertDir + "/keystore.jks"
+	CassandraTruststoreFile        = CassandraCertDir + "/truststore.jks"
+	CassandraKeystorePasswordKey   = "keystore_password"
+	CassandraTrustStorePasswordKey = "truststore_password"
+
+	CassandraServerEncryptionOptions = "server_encryption_options"
+	CassandraClientEnctyptionOptions = "client_encryption_options"
+	CassandraTLSStoreTypeJKS         = "JKS"
+
+	CassandraAuthenticatorKey = "authenticator"
+
+	CassandraTLSEncryptionEnabledKey       = "enabled"
+	CassandraTLSInternodeEncryptionModeKey = "internode_encryption"
+	CassandraTLSKeystorePathKey            = "keystore"
+	CassandraTLSTruststorePathKey          = "truststore"
+	CassandraTLSRequireClientAuthKey       = "require_client_auth"
+	CassandraTLSProtocolKey                = "protocol"
+	CassandraTLSAlgorithmKey               = "algorithm"
+	CassandraTLSStoreTypeKey               = "store_type"
+	CassandraClientEncryptionOptionalKey   = "optional"
+	CassandraTLSEncryptionAllValue         = "all"
+	CassandraTLSProtocolTLSValue           = "TLS"
+	CassandraTLSDefaultAlgorithmValue      = "SunX509"
+	CassandraTLSStoreTypeJKSValue          = "JKS"
 )
 
 // =========================== Virtual Secrets Constants ============================

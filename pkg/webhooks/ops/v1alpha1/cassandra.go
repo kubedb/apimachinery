@@ -88,15 +88,41 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.C
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.CassandraOpsRequestTypeHorizontalScaling:
+		if err := rv.validateCassandraHorizontalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.CassandraOpsRequestTypeVerticalScaling:
 		if err := rv.validateCassandraVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
+
+	case opsapi.CassandraOpsRequestTypeVolumeExpansion:
+		if err := rv.validateCassandraVolumeExpansionOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
+
 	case opsapi.CassandraOpsRequestTypeUpdateVersion:
 		if err := rv.validateCassandraUpdateVersionOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.CassandraOpsRequestTypeReconfigure:
+		if err := rv.validateCassandraReconfigurationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.CassandraOpsRequestTypeReconfigureTLS:
+		if err := rv.validateCassandraReconfigurationTLSOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
 				req.Name,
 				err.Error()))
 		}
@@ -137,6 +163,43 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCassandraVerticalScalingOpsR
 	return nil
 }
 
+func (rv *CassandraOpsRequestCustomWebhook) validateCassandraHorizontalScalingOpsRequest(req *opsapi.CassandraOpsRequest) error {
+	horizontalScalingSpec := req.Spec.HorizontalScaling
+	if horizontalScalingSpec == nil {
+		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
+	}
+	err := rv.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
+
+	if horizontalScalingSpec.Node == nil {
+		return errors.New("spec.horizontalScaling.node can not be empty")
+	}
+
+	if *horizontalScalingSpec.Node <= 0 {
+		return errors.New("spec.horizontalScaling.node must be positive")
+	}
+
+	return nil
+}
+
+func (rv *CassandraOpsRequestCustomWebhook) validateCassandraVolumeExpansionOpsRequest(req *opsapi.CassandraOpsRequest) error {
+	volumeExpansionSpec := req.Spec.VolumeExpansion
+	if volumeExpansionSpec == nil {
+		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
+	}
+	err := rv.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
+	if volumeExpansionSpec.Node == nil {
+		return errors.New("spec.volumeExpansion.Node can't be empty")
+	}
+
+	return nil
+}
+
 func (rv *CassandraOpsRequestCustomWebhook) validateCassandraUpdateVersionOpsRequest(req *opsapi.CassandraOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
@@ -156,5 +219,48 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCassandraUpdateVersionOpsReq
 		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is not found", req.Spec.UpdateVersion.TargetVersion)
 	}
 
+	return nil
+}
+
+func (rv *CassandraOpsRequestCustomWebhook) validateCassandraReconfigurationOpsRequest(req *opsapi.CassandraOpsRequest) error {
+	configurationSpec := req.Spec.Configuration
+	if configurationSpec == nil {
+		return errors.New("spec.configuration nil not supported in Reconfigure type")
+	}
+	if err := rv.hasDatabaseRef(req); err != nil {
+		return err
+	}
+	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
+		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
+	}
+	return nil
+}
+
+func (rv *CassandraOpsRequestCustomWebhook) validateCassandraReconfigurationTLSOpsRequest(req *opsapi.CassandraOpsRequest) error {
+	TLSSpec := req.Spec.TLS
+	if TLSSpec == nil {
+		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
+	}
+	if err := rv.hasDatabaseRef(req); err != nil {
+		return err
+	}
+	configCount := 0
+	if req.Spec.TLS.Remove {
+		configCount++
+	}
+	if req.Spec.TLS.RotateCertificates {
+		configCount++
+	}
+	if req.Spec.TLS.TLSConfig.IssuerRef != nil || req.Spec.TLS.TLSConfig.Certificates != nil {
+		configCount++
+	}
+
+	if configCount == 0 {
+		return errors.New("No reconfiguration is provided in TLS Spec.")
+	}
+
+	if configCount > 1 {
+		return errors.New("more than 1 field have assigned to spec.reconfigureTLS but at a time one is allowed to run one operation")
+	}
 	return nil
 }
