@@ -51,6 +51,10 @@ type Etcd struct {
 }
 
 type EtcdSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of Etcd to be deployed.
 	Version string `json:"version"`
 

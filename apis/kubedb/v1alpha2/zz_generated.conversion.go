@@ -2378,6 +2378,7 @@ func Convert_v1_MemcachedList_To_v1alpha2_MemcachedList(in *v1.MemcachedList, ou
 }
 
 func autoConvert_v1alpha2_MemcachedSpec_To_v1_MemcachedSpec(in *MemcachedSpec, out *v1.MemcachedSpec, s conversion.Scope) error {
+	// WARNING: in.AutoOps requires manual conversion: does not exist in peer-type
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))

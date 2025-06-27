@@ -82,6 +82,10 @@ type MSSQLServer struct {
 
 // MSSQLServerSpec defines the desired state of MSSQLServer
 type MSSQLServerSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of MSSQLServer to be deployed.
 	Version string `json:"version"`
 

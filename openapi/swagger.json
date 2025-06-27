@@ -21584,6 +21584,11 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
+        "updateConstraints": {
+          "description": "update constraints",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpdateConstraints"
+        },
         "version": {
           "description": "Version",
           "type": "string",
@@ -23902,6 +23907,11 @@
           "description": "Database authentication secret",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
         "deletionPolicy": {
           "description": "DeletionPolicy controls the delete operation for database",
           "type": "string"
@@ -24344,6 +24354,11 @@
         "version"
       ],
       "properties": {
+        "autoOps": {
+          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
+        },
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"

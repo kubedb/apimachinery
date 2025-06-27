@@ -63,7 +63,7 @@ type DruidVersionSpec struct {
 	UI []ChartInfo `json:"ui,omitempty"`
 
 	// update constraints
-	UpdateConstraints DruidUpdateConstraints `json:"updateConstraints,omitempty"`
+	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 }
 
 // DruidVersionDatabase is the Druid Database image
@@ -83,11 +83,4 @@ type DruidVersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []DruidVersion `json:"items,omitempty"`
-}
-
-type DruidUpdateConstraints struct {
-	// List of all accepted versions for upgrade request
-	Allowlist []string `json:"allowlist,omitempty"`
-	// List of all rejected versions for upgrade request
-	Denylist []string `json:"denylist,omitempty"`
 }

@@ -54,6 +54,10 @@ type Ignite struct {
 
 // IgniteSpec defines the desired state of Ignite.
 type IgniteSpec struct {
+	// AutoOps contains configuration of automatic ops-request-recommendation generation
+	// +optional
+	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
+
 	// Version of Ignite to be deployed.
 	Version string `json:"version"`
 
