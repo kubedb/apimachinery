@@ -1564,6 +1564,12 @@ const (
 	ClickHouseTempConfigDir            = "/config-tmp"
 	ClickHouseTempTLSCertMountPath     = "/tls-certs-tmp"
 	ClickHouseTempTLSCertVolumeName    = "tls-certs"
+	ClickHouseCACertKey                = "ca.crt"
+	ClickHouseCACertPath               = "ca.crt"
+	ClickHouseServerCertKey            = "tls.crt"
+	ClickHouseServerCertPath           = "server.crt"
+	ClickHouseServerKey                = "tls.key"
+	ClickHouseServerKeyPath            = "server.key"
 
 	// keeper
 	ClickHouseKeeperDataPath     = "/var/lib/clickhouse_keeper"

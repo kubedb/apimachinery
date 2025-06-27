@@ -26780,7 +26780,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseSpec(ref common.Referenc
 					},
 					"sslVerificationMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that how strictly the server and client verifies each other certificate during a TLS/SSL handshake",
+							Description: "Indicates how SSL/TLS certificate verification will be handled for both the server and client sides.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
