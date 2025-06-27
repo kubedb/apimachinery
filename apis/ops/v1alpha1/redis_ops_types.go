@@ -18,8 +18,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
-
 	core "k8s.io/api/core/v1"
 	resource "k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -76,7 +74,7 @@ type RedisOpsRequestSpec struct {
 	// Announce is used to announce the redis cluster endpoints.
 	// It is used to set
 	// cluster-announce-ip, cluster-announce-port, cluster-announce-bus-port, cluster-announce-tls-port
-	Announce *dbapi.Announce `json:"announce,omitempty"`
+	Announce *Announce `json:"announce,omitempty"`
 	// Specifies information necessary for replacing sentinel instances
 	Sentinel *RedisSentinelSpec `json:"sentinel,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -149,6 +147,29 @@ type RedisCustomConfigurationSpec struct {
 	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty"`
 	ApplyConfig        map[string]string          `json:"applyConfig,omitempty"`
 	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=ip;hostname
+type PreferredEndpointType string
+
+const (
+	PreferredEndpointTypeIP       PreferredEndpointType = "ip"
+	PreferredEndpointTypeHostname PreferredEndpointType = "hostname"
+)
+
+type Announce struct {
+	// +kubebuilder:default=hostname
+	Type PreferredEndpointType `json:"type,omitempty"`
+	// This field is used to set cluster-announce information for redis cluster of each shard.
+	Shards []Shards `json:"shards,omitempty"`
+}
+
+type Shards struct {
+	// Endpoints contains the cluster-announce information for all the replicas in a shard.
+	// This will be used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port
+	// and cluster-announce-bus-port
+	// format cluster-announce (host:port@busport)
+	Endpoints []string `json:"endpoints,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

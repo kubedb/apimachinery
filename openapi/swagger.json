@@ -23182,35 +23182,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1.Announce": {
-      "type": "object",
-      "properties": {
-        "shards": {
-          "description": "This field is used to set cluster-announce information for redis cluster of each shard.",
-          "type": "array",
-          "items": {
-            "default": {},
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1.Shards"
-          }
-        },
-        "type": {
-          "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1.Shards": {
-      "type": "object",
-      "properties": {
-        "endpoints": {
-          "description": "Endpoints contains the cluster-announce information for all the replicas in a shard. This will be used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port and cluster-announce-bus-port format cluster-announce (host:port@busport)",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age": {
       "type": "object",
       "properties": {
@@ -26488,6 +26459,22 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.Announce": {
+      "type": "object",
+      "properties": {
+        "shards": {
+          "description": "This field is used to set cluster-announce information for redis cluster of each shard.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.Shards"
+          }
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ArchiverOptions": {
       "type": "object",
       "required": [
@@ -28701,7 +28688,7 @@
       "properties": {
         "announce": {
           "description": "Announce is used to announce the redis cluster endpoints. It is used to set cluster-announce-ip, cluster-announce-port, cluster-announce-bus-port, cluster-announce-tls-port",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1.Announce"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.Announce"
         },
         "apply": {
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
@@ -28868,6 +28855,19 @@
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec": {
       "type": "object"
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.Shards": {
+      "type": "object",
+      "properties": {
+        "endpoints": {
+          "description": "Endpoints contains the cluster-announce information for all the replicas in a shard. This will be used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port and cluster-announce-bus-port format cluster-announce (host:port@busport)",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.TLSSpec": {
       "type": "object",
