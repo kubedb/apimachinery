@@ -21584,11 +21584,6 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
-        "updateConstraints": {
-          "description": "update constraints",
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.UpdateConstraints"
-        },
         "version": {
           "description": "Version",
           "type": "string",
@@ -23906,11 +23901,6 @@
         "authSecret": {
           "description": "Database authentication secret",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
-        },
-        "autoOps": {
-          "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.AutoOpsSpec"
         },
         "deletionPolicy": {
           "description": "DeletionPolicy controls the delete operation for database",

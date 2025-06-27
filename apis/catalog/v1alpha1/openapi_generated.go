@@ -27513,19 +27513,12 @@ func schema_apimachinery_apis_catalog_v1alpha1_EtcdVersionSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
 				},
 				Required: []string{"version", "db", "exporter"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.EtcdVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
 	}
 }
 

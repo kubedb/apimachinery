@@ -919,7 +919,6 @@ func (in *EtcdVersionSpec) DeepCopyInto(out *EtcdVersionSpec) {
 	in.Stash.DeepCopyInto(&out.Stash)
 	out.GitSyncer = in.GitSyncer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
-	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	return
 }
 
