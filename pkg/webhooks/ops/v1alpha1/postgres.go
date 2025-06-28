@@ -188,6 +188,9 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRe
 	if err != nil {
 		return err
 	}
+	if horizontalScalingSpec.Replicas == nil {
+		return errors.New("`spec.horizontalScaling.Replicas has to be mentioned")
+	}
 	if *horizontalScalingSpec.Replicas <= 0 {
 		return errors.New("`spec.horizontalScaling.Replicas` can't be less than or equal 0")
 	}
