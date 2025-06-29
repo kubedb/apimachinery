@@ -32994,21 +32994,6 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresHorizontalScalingSpec(ref com
 							Format:      "",
 						},
 					},
-					"removeSlots": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RemoveSlots defines the slots need to be removed in order to support transition from HA setup to Standalone setup",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
 				},
 			},
 		},

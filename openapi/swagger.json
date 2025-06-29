@@ -28105,14 +28105,6 @@
       "description": "HorizontalScaling is the spec for Postgres horizontal scaling",
       "type": "object",
       "properties": {
-        "removeSlots": {
-          "description": "RemoveSlots defines the slots need to be removed in order to support transition from HA setup to Standalone setup",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
         "replicas": {
           "type": "integer",
           "format": "int32"
