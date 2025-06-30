@@ -140,6 +140,7 @@ func (c *ClickHouse) OffshootSelectors(extraSelectors ...map[string]string) map[
 
 func (c *ClickHouse) OffshootKeeperSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
+		meta_util.ComponentLabelKey: kubedb.ComponentCoOrdinator,
 		meta_util.NameLabelKey:      c.ResourceFQN(),
 		meta_util.InstanceLabelKey:  c.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
@@ -231,9 +232,17 @@ func (c *ClickHouse) PetSetName() string {
 func (c *ClickHouse) PodLabels(extraLabels ...map[string]string) map[string]string {
 	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootSelectors(), extraLabels...), c.Spec.PodTemplate.Labels)
 }
-
+func (c *ClickHouse) OffshootDBSelectors(extraSelectors ...map[string]string) map[string]string {
+	selector := map[string]string{
+		meta_util.ComponentLabelKey: kubedb.ComponentDatabase,
+		meta_util.NameLabelKey:      c.ResourceFQN(),
+		meta_util.InstanceLabelKey:  c.Name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
+	}
+	return meta_util.OverwriteKeys(selector, extraSelectors...)
+}
 func (c *ClickHouse) KeeperPodLabels(extraLabels ...map[string]string) map[string]string {
-	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootKeeperSelectors(), extraLabels...), c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate.Labels)
+	return c.offshootKeeperLabels(meta_util.OverwriteKeys(c.OffshootKeeperSelectors(), extraLabels...), c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate.Labels)
 }
 
 func (c *ClickHouse) ClusterPodLabels(petSetName string, labels map[string]string, extraLabels ...map[string]string) map[string]string {
