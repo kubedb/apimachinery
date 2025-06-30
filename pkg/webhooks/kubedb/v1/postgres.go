@@ -150,13 +150,6 @@ func (wh *PostgresCustomWebhook) validateVolumeMountsForAllContainers(postgres *
 	return err
 }
 
-func (wh *PostgresCustomWebhook) validateReplica(obj, oldObj *dbapi.Postgres) error {
-	if !(obj.Spec.Halted || oldObj.Spec.Halted) && (*oldObj.Spec.Replicas == 1 || ptr.Deref(obj.Spec.Replicas, 0) == 1) && *oldObj.Spec.Replicas != *obj.Spec.Replicas {
-		return fmt.Errorf("can not update from %d replica to %d replica", ptr.Deref(oldObj.Spec.Replicas, 0), ptr.Deref(obj.Spec.Replicas, 0))
-	}
-	return nil
-}
-
 func (wh *PostgresCustomWebhook) validateUpdate(obj, oldObj *dbapi.Postgres) error {
 	preconditions := meta_util.PreConditionSet{
 		Set: sets.New[string](
@@ -175,7 +168,7 @@ func (wh *PostgresCustomWebhook) validateUpdate(obj, oldObj *dbapi.Postgres) err
 		}
 		return err
 	}
-	return wh.validateReplica(obj, oldObj)
+	return nil
 }
 
 func (wh *PostgresCustomWebhook) validateSpecForDB(postgres *dbapi.Postgres, pgVersion *catalogapi.PostgresVersion) error {
