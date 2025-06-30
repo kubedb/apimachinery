@@ -34,6 +34,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	"k8s.io/utils/ptr"
 	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -131,6 +132,12 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 	case opsapi.RedisOpsRequestTypeRotateAuth:
 		if err := w.validateRedisRotateAuthenticationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.RedisOpsRequestTypeAnnounce:
+		if err := w.validateRedisAnnounceOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("announce"),
 				req.Name,
 				err.Error()))
 		}
@@ -256,6 +263,37 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisRotateAuthenticationOpsReque
 				return fmt.Errorf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name)
 			}
 			return err
+		}
+	}
+
+	return nil
+}
+
+func (w *RedisOpsRequestCustomWebhook) validateRedisAnnounceOpsRequest(req *opsapi.RedisOpsRequest) error {
+	redis := v1.Redis{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
+	if err != nil {
+		return err
+	}
+
+	if redis.Spec.Mode != v1.RedisModeCluster {
+		return fmt.Errorf("announce is only applicable for redis cluster mode")
+	}
+
+	if req.Spec.Announce == nil {
+		return fmt.Errorf("spec.announce is required for announce ops request")
+	}
+	if int32(len(req.Spec.Announce.Shards)) != ptr.Deref(redis.Spec.Cluster.Shards, 0) {
+		return fmt.Errorf("number of shards in announce (%d) does not match with redis cluster shards (%d)", len(req.Spec.Announce.Shards), ptr.Deref(redis.Spec.Cluster.Shards, 0))
+	}
+	for i, shard := range req.Spec.Announce.Shards {
+		if int32(len(shard.Endpoints)) != ptr.Deref(redis.Spec.Cluster.Replicas, 0) {
+			return fmt.Errorf("number of replicas in announce shard %d (%d) does not match with redis cluster replicas (%d)", i, len(shard.Endpoints), ptr.Deref(redis.Spec.Cluster.Replicas, 0))
+		}
+		for j, endpoint := range shard.Endpoints {
+			if endpoint == "" {
+				return fmt.Errorf("endpoint %d in announce shard %d is empty", j, i)
+			}
 		}
 	}
 
