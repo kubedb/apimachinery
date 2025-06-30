@@ -105,6 +105,10 @@ func (c *ClickHouse) OffshootLabels() map[string]string {
 	return c.offshootLabels(c.OffshootSelectors(), nil)
 }
 
+func (c *ClickHouse) OffshootDBLabels() map[string]string {
+	return c.offshootLabels(c.OffshootDBSelectors(), nil)
+}
+
 func (c *ClickHouse) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(c.Spec.ServiceTemplates, alias)
 	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
