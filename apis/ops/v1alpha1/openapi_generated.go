@@ -501,6 +501,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                       schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.Volume":                                                    schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Announce":                                         schema_apimachinery_apis_ops_v1alpha1_Announce(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ArchiverOptions":                                  schema_apimachinery_apis_ops_v1alpha1_ArchiverOptions(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec":                                         schema_apimachinery_apis_ops_v1alpha1_AuthSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraCustomConfigurationSpec":                 schema_apimachinery_apis_ops_v1alpha1_CassandraCustomConfigurationSpec(ref),
@@ -723,6 +724,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisVolumeExpansionSpec":                         schema_apimachinery_apis_ops_v1alpha1_RedisVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Reprovision":                                      schema_apimachinery_apis_ops_v1alpha1_Reprovision(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec":                                      schema_apimachinery_apis_ops_v1alpha1_RestartSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Shards":                                           schema_apimachinery_apis_ops_v1alpha1_Shards(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration":                   schema_apimachinery_apis_ops_v1alpha1_SinglestoreCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfigurationSpec":               schema_apimachinery_apis_ops_v1alpha1_SinglestoreCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreHorizontalScalingSpec":                 schema_apimachinery_apis_ops_v1alpha1_SinglestoreHorizontalScalingSpec(ref),
@@ -26046,6 +26048,40 @@ func schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_Announce(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"shards": {
+						SchemaProps: spec.SchemaProps{
+							Description: "This field is used to set cluster-announce information for redis cluster of each shard.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Shards"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.Shards"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_ArchiverOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34297,6 +34333,12 @@ func schema_apimachinery_apis_ops_v1alpha1_RedisOpsRequestSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
+					"announce": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Announce is used to announce the redis cluster endpoints. It is used to set cluster-announce-ip, cluster-announce-port, cluster-announce-bus-port, cluster-announce-tls-port",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Announce"),
+						},
+					},
 					"sentinel": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for replacing sentinel instances",
@@ -34321,7 +34363,7 @@ func schema_apimachinery_apis_ops_v1alpha1_RedisOpsRequestSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Announce", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisSentinelSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -34872,6 +34914,33 @@ func schema_apimachinery_apis_ops_v1alpha1_RestartSpec(ref common.ReferenceCallb
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_Shards(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"endpoints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Endpoints contains the cluster-announce information for all the replicas in a shard. This will be used to set cluster-announce-ip/hostname, cluster-announce-port/cluster-announce-tls-port and cluster-announce-bus-port format cluster-announce (host:port@busport)",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	}
