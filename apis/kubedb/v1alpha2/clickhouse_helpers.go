@@ -237,7 +237,7 @@ func (c *ClickHouse) KeeperPodLabels(extraLabels ...map[string]string) map[strin
 	return c.offshootKeeperLabels(meta_util.OverwriteKeys(c.OffshootKeeperSelectors(), extraLabels...), c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate.Labels)
 }
 
-func (c *ClickHouse) ClusterPodLabels(petSetName string, labels map[string]string, extraLabels ...map[string]string) map[string]string {
+func (c *ClickHouse) DBPodLabels(labels map[string]string, extraLabels ...map[string]string) map[string]string {
 	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootDBSelectors(), extraLabels...), labels)
 }
 
