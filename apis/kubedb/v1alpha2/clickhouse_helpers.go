@@ -105,6 +105,10 @@ func (c *ClickHouse) OffshootLabels() map[string]string {
 	return c.offshootLabels(c.OffshootSelectors(), nil)
 }
 
+func (c *ClickHouse) OffshootDBLabels() map[string]string {
+	return c.offshootLabels(c.OffshootDBSelectors(), nil)
+}
+
 func (c *ClickHouse) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(c.Spec.ServiceTemplates, alias)
 	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
@@ -112,10 +116,6 @@ func (c *ClickHouse) ServiceLabels(alias ServiceAlias, extraLabels ...map[string
 
 func (c *ClickHouse) OffshootKeeperLabels() map[string]string {
 	return c.offshootKeeperLabels(c.OffshootKeeperSelectors(), nil)
-}
-
-func (c *ClickHouse) OffshootClusterLabels(petSetName string) map[string]string {
-	return c.offshootLabels(c.OffshootClusterSelectors(petSetName), nil)
 }
 
 func (c *ClickHouse) offshootLabels(selector, override map[string]string) map[string]string {
@@ -140,6 +140,7 @@ func (c *ClickHouse) OffshootSelectors(extraSelectors ...map[string]string) map[
 
 func (c *ClickHouse) OffshootKeeperSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
+		meta_util.ComponentLabelKey: kubedb.ComponentCoOrdinator,
 		meta_util.NameLabelKey:      c.ResourceFQN(),
 		meta_util.InstanceLabelKey:  c.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
@@ -147,12 +148,12 @@ func (c *ClickHouse) OffshootKeeperSelectors(extraSelectors ...map[string]string
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (c *ClickHouse) OffshootClusterSelectors(petSetName string, extraSelectors ...map[string]string) map[string]string {
+func (c *ClickHouse) OffshootDBSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
+		meta_util.ComponentLabelKey: kubedb.ComponentDatabase,
 		meta_util.NameLabelKey:      c.ResourceFQN(),
 		meta_util.InstanceLabelKey:  c.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
-		meta_util.PartOfLabelKey:    petSetName,
 	}
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
@@ -233,11 +234,11 @@ func (c *ClickHouse) PodLabels(extraLabels ...map[string]string) map[string]stri
 }
 
 func (c *ClickHouse) KeeperPodLabels(extraLabels ...map[string]string) map[string]string {
-	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootKeeperSelectors(), extraLabels...), c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate.Labels)
+	return c.offshootKeeperLabels(meta_util.OverwriteKeys(c.OffshootKeeperSelectors(), extraLabels...), c.Spec.ClusterTopology.ClickHouseKeeper.Spec.PodTemplate.Labels)
 }
 
-func (c *ClickHouse) ClusterPodLabels(petSetName string, labels map[string]string, extraLabels ...map[string]string) map[string]string {
-	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootClusterSelectors(petSetName), extraLabels...), labels)
+func (c *ClickHouse) DBPodLabels(labels map[string]string, extraLabels ...map[string]string) map[string]string {
+	return c.offshootLabels(meta_util.OverwriteKeys(c.OffshootDBSelectors(), extraLabels...), labels)
 }
 
 func (c *ClickHouse) GetConnectionScheme() string {
@@ -331,15 +332,19 @@ func (c *ClickHouse) SetDefaults(kc client.Client) {
 		klog.Errorf("can't get the clickhouse version object %s for %s \n", err.Error(), c.Spec.Version)
 		return
 	}
-
-	if c.Spec.TLS != nil && c.Spec.TLS.ClientCACertificateRefs != nil {
-		for i, secret := range c.Spec.TLS.ClientCACertificateRefs {
-			if secret.Key == "" {
-				c.Spec.TLS.ClientCACertificateRefs[i].Key = kubedb.CACert
+	if c.Spec.TLS != nil {
+		if c.Spec.TLS.ClientCACertificateRefs != nil {
+			for i, secret := range c.Spec.TLS.ClientCACertificateRefs {
+				if secret.Key == "" {
+					c.Spec.TLS.ClientCACertificateRefs[i].Key = kubedb.CACert
+				}
+				if secret.Optional == nil {
+					c.Spec.TLS.ClientCACertificateRefs[i].Optional = ptr.To(false)
+				}
 			}
-			if secret.Optional == nil {
-				c.Spec.TLS.ClientCACertificateRefs[i].Optional = ptr.To(false)
-			}
+		}
+		if c.Spec.SSLVerificationMode == "" {
+			c.Spec.SSLVerificationMode = SSLVerificationModeRelaxed
 		}
 	}
 

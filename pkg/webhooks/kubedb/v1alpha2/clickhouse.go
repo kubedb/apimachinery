@@ -136,7 +136,10 @@ func (w *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 			}
 		}
 		if db.Spec.SSLVerificationMode == "" {
-			db.Spec.SSLVerificationMode = olddbapi.SSLVerificationModeRelaxed
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("sslVerificationMode"),
+				db.Name,
+				"sslVerificationMode is missing"))
+			return apierrors.NewInvalid(schema.GroupKind{Group: "ClickHouse.kubedb.com", Kind: "ClickHouse"}, db.Name, allErr)
 		}
 	}
 
