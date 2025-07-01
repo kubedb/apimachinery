@@ -118,10 +118,6 @@ func (c *ClickHouse) OffshootKeeperLabels() map[string]string {
 	return c.offshootKeeperLabels(c.OffshootKeeperSelectors(), nil)
 }
 
-func (c *ClickHouse) OffshootClusterLabels() map[string]string {
-	return c.offshootLabels(c.OffshootDBSelectors(), nil)
-}
-
 func (c *ClickHouse) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[meta_util.ComponentLabelKey] = kubedb.ComponentDatabase
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, c.Labels, override))
@@ -336,15 +332,19 @@ func (c *ClickHouse) SetDefaults(kc client.Client) {
 		klog.Errorf("can't get the clickhouse version object %s for %s \n", err.Error(), c.Spec.Version)
 		return
 	}
-
-	if c.Spec.TLS != nil && c.Spec.TLS.ClientCACertificateRefs != nil {
-		for i, secret := range c.Spec.TLS.ClientCACertificateRefs {
-			if secret.Key == "" {
-				c.Spec.TLS.ClientCACertificateRefs[i].Key = kubedb.CACert
+	if c.Spec.TLS != nil {
+		if c.Spec.TLS.ClientCACertificateRefs != nil {
+			for i, secret := range c.Spec.TLS.ClientCACertificateRefs {
+				if secret.Key == "" {
+					c.Spec.TLS.ClientCACertificateRefs[i].Key = kubedb.CACert
+				}
+				if secret.Optional == nil {
+					c.Spec.TLS.ClientCACertificateRefs[i].Optional = ptr.To(false)
+				}
 			}
-			if secret.Optional == nil {
-				c.Spec.TLS.ClientCACertificateRefs[i].Optional = ptr.To(false)
-			}
+		}
+		if c.Spec.SSLVerificationMode == "" {
+			c.Spec.SSLVerificationMode = SSLVerificationModeRelaxed
 		}
 	}
 
