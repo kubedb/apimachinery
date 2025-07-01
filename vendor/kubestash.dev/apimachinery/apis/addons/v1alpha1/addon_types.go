@@ -69,7 +69,7 @@ type Task struct {
 	// Valid values are:
 	// - "Restic": The underlying tool is [restic](https://restic.net/).
 	// - "WalG": The underlying tool is [wal-g](https://github.com/wal-g/wal-g).
-	// +kubebuilder:validation:Enum=Restic;WalG;VolumeSnapshotter;
+	// +kubebuilder:validation:Enum=Restic;WalG;Medusa;VolumeSnapshotter;
 	Driver apis.Driver `json:"driver,omitempty"`
 
 	// Executor specifies the type of entity that will execute the task. For example, it can be a Job,
