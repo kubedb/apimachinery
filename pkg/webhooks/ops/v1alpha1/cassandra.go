@@ -26,6 +26,7 @@ import (
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -123,6 +124,12 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.C
 	case opsapi.CassandraOpsRequestTypeReconfigureTLS:
 		if err := rv.validateCassandraReconfigurationTLSOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.CassandraOpsRequestTypeRotateAuth:
+		if err := rv.validateCassandraRotateAuthenticationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
 		}
@@ -261,6 +268,37 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCassandraReconfigurationTLSO
 
 	if configCount > 1 {
 		return errors.New("more than 1 field have assigned to spec.reconfigureTLS but at a time one is allowed to run one operation")
+	}
+	return nil
+}
+
+func (w *CassandraOpsRequestCustomWebhook) validateCassandraRotateAuthenticationOpsRequest(req *opsapi.CassandraOpsRequest) error {
+	cassandra := &olddbapi.Cassandra{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: req.Namespace,
+		Name:      req.GetDBRefName(),
+	}, cassandra)
+	if err != nil {
+		return err
+	}
+	if cassandra.Spec.DisableSecurity {
+		return fmt.Errorf("DisableSecurity is on, RotateAuth is not applicable")
+	}
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return errors.New("spec.authentication.secretRef.name can not be empty")
+		}
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &core.Secret{})
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
+			}
+			return err
+		}
 	}
 	return nil
 }

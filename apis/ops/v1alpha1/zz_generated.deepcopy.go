@@ -251,6 +251,11 @@ func (in *CassandraOpsRequestSpec) DeepCopyInto(out *CassandraOpsRequestSpec) {
 		*out = new(v1alpha2.SecretReference)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Authentication != nil {
+		in, out := &in.Authentication, &out.Authentication
+		*out = new(AuthSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
