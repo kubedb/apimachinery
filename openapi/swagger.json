@@ -28601,6 +28601,10 @@
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisHorizontalScalingSpec": {
       "type": "object",
       "properties": {
+        "announce": {
+          "description": "Announce is used to announce the redis cluster endpoints. It is used to set cluster-announce-ip, cluster-announce-port, cluster-announce-bus-port, cluster-announce-tls-port",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.Announce"
+        },
         "replicas": {
           "description": "specifies the number of replica of the shards",
           "type": "integer",
