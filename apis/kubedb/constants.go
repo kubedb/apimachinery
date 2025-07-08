@@ -998,6 +998,7 @@ const (
 	SolrInitContainerName = "init-solr"
 	SolrAdmin             = "admin"
 	SecurityJSON          = "security.json"
+	GcsCredJSON           = "cred.json"
 	SolrZkDigest          = "zk-digest"
 	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
@@ -1006,6 +1007,7 @@ const (
 	SolrVolumeAuthConfig    = "auth-config"
 	SolrVolumeData          = "data"
 	SolrVolumeConfig        = "slconfig"
+	SolrVolumeGcsCred       = "gcs-cred"
 
 	DistLibs              = "/opt/solr/dist"
 	ContribLibs           = "/opt/solr/contrib/%s/lib"
@@ -1064,6 +1066,7 @@ const (
 	SolrServerKeystorePath         = "/var/solr/etc/keystore.p12"
 	SolrServerTruststorePath       = "/var/solr/etc/truststore.p12"
 	SolrTLSMountPath               = "/var/solr/etc"
+	SolrGcsCredMountPath           = "/var/solr/backup"
 
 	ProxyDeploymentName = "s3proxy"
 	ProxyServiceName    = "proxy-svc"
