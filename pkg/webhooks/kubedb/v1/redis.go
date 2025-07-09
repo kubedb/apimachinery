@@ -274,11 +274,11 @@ func (w RedisCustomWebhook) ValidateRedis(redis *dbapi.Redis) error {
 		if redis.Spec.Mode != dbapi.RedisModeCluster {
 			return fmt.Errorf("spec.cluster.announce is only valid for redis cluster mode, but got %s", redis.Spec.Mode)
 		}
-		if int32(len(redis.Spec.Cluster.Announce.Shards)) != ptr.Deref(redis.Spec.Cluster.Shards, 0) {
+		if int32(len(redis.Spec.Cluster.Announce.Shards)) < ptr.Deref(redis.Spec.Cluster.Shards, 0) {
 			return fmt.Errorf("spec.cluster.announce.shards length %d is not equal to spec.cluster.shards %d", len(redis.Spec.Cluster.Announce.Shards), ptr.Deref(redis.Spec.Cluster.Shards, 0))
 		}
 		for i, shard := range redis.Spec.Cluster.Announce.Shards {
-			if int32(len(shard.Endpoints)) != ptr.Deref(redis.Spec.Cluster.Replicas, 0) {
+			if int32(len(shard.Endpoints)) < ptr.Deref(redis.Spec.Cluster.Replicas, 0) {
 				return fmt.Errorf("spec.cluster.announce.shards[%d].endpoints length %d is not equal to spec.cluster.replicas %d", i, len(shard.Endpoints), ptr.Deref(redis.Spec.Cluster.Replicas, 0))
 			}
 			for j, endpoint := range shard.Endpoints {
