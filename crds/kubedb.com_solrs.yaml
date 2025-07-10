@@ -3433,6 +3433,13 @@ spec:
               replicas:
                 format: int32
                 type: integer
+              s3CredSecret:
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               serviceTemplates:
                 items:
                   properties:

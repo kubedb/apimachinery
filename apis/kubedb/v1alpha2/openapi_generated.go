@@ -36994,6 +36994,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"s3CredSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "S3 cred for solr backup",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
