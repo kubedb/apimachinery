@@ -1,6 +1,6 @@
 module kubedb.dev/apimachinery
 
-go 1.23.6
+go 1.23.0
 
 toolchain go1.24.0
 
@@ -51,10 +51,10 @@ require (
 	kmodules.xyz/webhook-runtime v0.32.0
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/operator-shard-manager v0.0.3
-	kubeops.dev/petset v0.0.11-0.20250715063016-50e9b1a53a1a
+	kubeops.dev/petset v0.0.10
 	kubeops.dev/sidekick v0.0.11
 	kubestash.dev/apimachinery v0.19.0
-	open-cluster-management.io/api v1.0.0
+	open-cluster-management.io/api v0.15.0
 	sigs.k8s.io/controller-runtime v0.20.4
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.39.0
