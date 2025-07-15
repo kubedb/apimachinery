@@ -336,13 +336,17 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 	}
 
 	if *mariadb.Spec.Replicas == 1 && mariadb.Spec.Topology != nil {
-		return fmt.Errorf(`'spec.replicas' "%d" invalid. Value must be greater than or equal to %d for topology mode or topology should be nil for standalone mode`,
-			ptr.Deref(mariadb.Spec.Replicas, 0), kubedb.MariaDBDefaultClusterSize)
+		if mariadb.Spec.Init == nil || mariadb.Spec.Init.Archiver == nil || mariadb.Spec.Init.Initialized {
+			return fmt.Errorf(`'spec.replicas' "%d" invalid. Value must be greater than or equal to %d for topology mode or topology should be nil for standalone mode`,
+				ptr.Deref(mariadb.Spec.Replicas, 0), kubedb.MariaDBDefaultClusterSize)
+		}
 	}
 
 	if mariadb.Spec.Topology != nil && *mariadb.Spec.Replicas < kubedb.MariaDBDefaultClusterSize {
-		return fmt.Errorf(`'spec.replicas' "%d" invalid. Value must be %d for mariadb cluster`,
-			ptr.Deref(mariadb.Spec.Replicas, 0), kubedb.MariaDBDefaultClusterSize)
+		if mariadb.Spec.Init == nil || mariadb.Spec.Init.Archiver == nil || mariadb.Spec.Init.Initialized {
+			return fmt.Errorf(`'spec.replicas' "%d" invalid. Value must be %d for mariadb cluster`,
+				ptr.Deref(mariadb.Spec.Replicas, 0), kubedb.MariaDBDefaultClusterSize)
+		}
 	}
 
 	if err = w.validateCluster(mariadb); err != nil {
