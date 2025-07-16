@@ -141,6 +141,10 @@ type MariaDBSpec struct {
 	// Archiver controls database backup using Archiver CR
 	// +optional
 	Archiver *Archiver `json:"archiver,omitempty"`
+
+	// specify if the database deployment distributed or not
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;archiver;metrics-exporter

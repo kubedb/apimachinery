@@ -54,6 +54,7 @@ require (
 	kubeops.dev/petset v0.0.10
 	kubeops.dev/sidekick v0.0.11
 	kubestash.dev/apimachinery v0.19.0
+	open-cluster-management.io/api v0.15.0
 	sigs.k8s.io/controller-runtime v0.20.4
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.39.0

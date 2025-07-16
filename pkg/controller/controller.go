@@ -39,6 +39,9 @@ import (
 	petsetcs "kubeops.dev/petset/client/clientset/versioned"
 	psinformer "kubeops.dev/petset/client/informers/externalversions"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
+	manifestclient "open-cluster-management.io/api/client/work/clientset/versioned"
+	manifestinformers "open-cluster-management.io/api/client/work/informers/externalversions"
+	manifestlisters "open-cluster-management.io/api/client/work/listers/work/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	scs "stash.appscode.dev/apimachinery/client/clientset/versioned"
 	stashinformer "stash.appscode.dev/apimachinery/client/informers/externalversions"
@@ -55,6 +58,8 @@ type Controller struct {
 	DBClient cs.Interface
 	// PetSet client
 	PSClient petsetcs.Interface
+	// ManifestWork client
+	MWClient manifestclient.Interface
 	// Dynamic client
 	DynamicClient dynamic.Interface
 	// AppCatalog client
@@ -74,6 +79,7 @@ type Config struct {
 	AppCatInformerFactory      appcat_in.SharedInformerFactory
 	CertManagerInformerFactory cmInformers.SharedInformerFactory
 	PetSetInformerFactory      psinformer.SharedInformerFactory
+	ManifestInformerFactory    manifestinformers.SharedInformerFactory
 
 	// External tool to initialize the database
 	Initializers Initializers
@@ -86,6 +92,10 @@ type Config struct {
 	PSQueue    *queue.Worker[any]
 	PSInformer cache.SharedIndexInformer
 	PSLister   pslister.PetSetLister
+
+	MWInformer cache.SharedIndexInformer
+	// manifestWorkerLister is able to list/get manifestWork from a shared informer's store
+	MWLister manifestlisters.ManifestWorkLister
 
 	// Only watch or reconcile objects in this namespace (usually for license reasons)
 	RestrictToNamespace    string
