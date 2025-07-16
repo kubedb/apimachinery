@@ -171,6 +171,8 @@ spec:
                 - WipeOut
                 - DoNotTerminate
                 type: string
+              distributed:
+                type: boolean
               halted:
                 type: boolean
               healthChecker:
