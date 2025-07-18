@@ -32,63 +32,125 @@ spec:
             type: object
           spec:
             properties:
-              nodeTopology:
+              compute:
+                properties:
+                  nodeTopology:
+                    properties:
+                      name:
+                        type: string
+                      scaleDownDiffPercentage:
+                        default: 25
+                        format: int32
+                        type: integer
+                      scaleUpDiffPercentage:
+                        default: 15
+                        format: int32
+                        type: integer
+                    type: object
+                  rabbitmq:
+                    properties:
+                      containerControlledValues:
+                        enum:
+                        - RequestsAndLimits
+                        - RequestsOnly
+                        type: string
+                      controlledResources:
+                        items:
+                          type: string
+                        type: array
+                      inMemoryStorage:
+                        properties:
+                          scalingFactorPercentage:
+                            format: int32
+                            type: integer
+                          usageThresholdPercentage:
+                            format: int32
+                            type: integer
+                        type: object
+                      maxAllowed:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        type: object
+                      minAllowed:
+                        additionalProperties:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        type: object
+                      podLifeTimeThreshold:
+                        type: string
+                      resourceDiffPercentage:
+                        format: int32
+                        type: integer
+                      trigger:
+                        type: string
+                    type: object
+                type: object
+              databaseRef:
                 properties:
                   name:
+                    default: ""
                     type: string
-                  scaleDownDiffPercentage:
-                    default: 25
-                    format: int32
-                    type: integer
-                  scaleUpDiffPercentage:
-                    default: 15
-                    format: int32
-                    type: integer
                 type: object
-              rabbitmq:
+                x-kubernetes-map-type: atomic
+              opsRequestOptions:
                 properties:
-                  containerControlledValues:
+                  apply:
+                    default: IfReady
                     enum:
-                    - RequestsAndLimits
-                    - RequestsOnly
+                    - IfReady
+                    - Always
                     type: string
-                  controlledResources:
-                    items:
-                      type: string
-                    type: array
-                  inMemoryStorage:
-                    properties:
-                      scalingFactorPercentage:
-                        format: int32
-                        type: integer
-                      usageThresholdPercentage:
-                        format: int32
-                        type: integer
-                    type: object
-                  maxAllowed:
-                    additionalProperties:
-                      anyOf:
-                      - type: integer
-                      - type: string
-                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                      x-kubernetes-int-or-string: true
-                    type: object
-                  minAllowed:
-                    additionalProperties:
-                      anyOf:
-                      - type: integer
-                      - type: string
-                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                      x-kubernetes-int-or-string: true
-                    type: object
-                  podLifeTimeThreshold:
-                    type: string
-                  resourceDiffPercentage:
-                    format: int32
-                    type: integer
-                  trigger:
+                  timeout:
                     type: string
                 type: object
+              storage:
+                properties:
+                  rabbitmq:
+                    properties:
+                      expansionMode:
+                        enum:
+                        - Offline
+                        - Online
+                        type: string
+                      scalingRules:
+                        items:
+                          properties:
+                            appliesUpto:
+                              type: string
+                            threshold:
+                              type: string
+                          required:
+                          - appliesUpto
+                          - threshold
+                          type: object
+                        type: array
+                      scalingThreshold:
+                        format: int32
+                        type: integer
+                      trigger:
+                        type: string
+                      upperBound:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                      usageThreshold:
+                        format: int32
+                        type: integer
+                    required:
+                    - expansionMode
+                    type: object
+                type: object
+            required:
+            - databaseRef
             type: object
           status:
             properties:

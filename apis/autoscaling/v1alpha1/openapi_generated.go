@@ -27789,7 +27789,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastAutoscaler(ref commo
 						SchemaProps: spec.SchemaProps{
 							Description: "Specification of the behavior of the autoscaler. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status.",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastComputeAutoscalerSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastAutoscalerSpec"),
 						},
 					},
 					"status": {
@@ -27804,7 +27804,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastAutoscaler(ref commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastComputeAutoscalerSpec"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.AutoscalerStatus", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastAutoscalerSpec"},
 	}
 }
 
