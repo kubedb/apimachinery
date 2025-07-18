@@ -36,6 +36,8 @@ type Interface interface {
 	EtcdAutoscalers() EtcdAutoscalerInformer
 	// FerretDBAutoscalers returns a FerretDBAutoscalerInformer.
 	FerretDBAutoscalers() FerretDBAutoscalerInformer
+	// HazelcastAutoscalers returns a HazelcastAutoscalerInformer.
+	HazelcastAutoscalers() HazelcastAutoscalerInformer
 	// KafkaAutoscalers returns a KafkaAutoscalerInformer.
 	KafkaAutoscalers() KafkaAutoscalerInformer
 	// MSSQLServerAutoscalers returns a MSSQLServerAutoscalerInformer.
@@ -111,6 +113,11 @@ func (v *version) EtcdAutoscalers() EtcdAutoscalerInformer {
 // FerretDBAutoscalers returns a FerretDBAutoscalerInformer.
 func (v *version) FerretDBAutoscalers() FerretDBAutoscalerInformer {
 	return &ferretDBAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// HazelcastAutoscalers returns a HazelcastAutoscalerInformer.
+func (v *version) HazelcastAutoscalers() HazelcastAutoscalerInformer {
+	return &hazelcastAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // KafkaAutoscalers returns a KafkaAutoscalerInformer.

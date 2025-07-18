@@ -53,6 +53,10 @@ func (c *FakeAutoscalingV1alpha1) FerretDBAutoscalers(namespace string) v1alpha1
 	return &FakeFerretDBAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) HazelcastAutoscalers(namespace string) v1alpha1.HazelcastAutoscalerInterface {
+	return &FakeHazelcastAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) KafkaAutoscalers(namespace string) v1alpha1.KafkaAutoscalerInterface {
 	return &FakeKafkaAutoscalers{c, namespace}
 }

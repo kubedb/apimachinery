@@ -37,7 +37,6 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=hazelcastautoscalers,singular=hazelcastautoscaler,shortName=hzscaler,categories={autoscaler,kubedb,appscode}
 // +kubebuilder:subresource:status
-
 type HazelcastAutoscaler struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata
@@ -84,7 +83,6 @@ type HazelcastOpsrequestOptions struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 type HazelcastAutoscalerList struct {
 	metav1.TypeMeta `json:",inline"`
 	// +optional
