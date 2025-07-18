@@ -45,7 +45,7 @@ type HazelcastAutoscaler struct {
 
 	// Specification of the behavior of the autoscaler.
 	// More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status.
-	Spec HazelcastComputeAutoscalerSpec `json:"spec"`
+	Spec HazelcastAutoscalerSpec `json:"spec"`
 
 	// Current information about the autoscaler.
 	// +optional
