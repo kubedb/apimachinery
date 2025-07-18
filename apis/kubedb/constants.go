@@ -1557,6 +1557,7 @@ const (
 
 	ComponentCoOrdinator = "coordinator"
 
+	ClickHouseDataSyncCheckFile           = "/scripts/check.txt"
 	ClickHousePromethusEndpoint           = "/metrics"
 	ClickHouseDataDir                     = "/var/lib/clickhouse"
 	ClickHouseKeeperDataDir               = "/var/lib/clickhouse_keeper"
