@@ -546,6 +546,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.FerretDBStorageAutoscalerSpec":            schema_apimachinery_apis_autoscaling_v1alpha1_FerretDBStorageAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastAutoscaler":                      schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastAutoscalerList":                  schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastAutoscalerList(ref),
+		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastAutoscalerSpec":                  schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastComputeAutoscalerSpec":           schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastComputeAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastOpsrequestOptions":               schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastOpsrequestOptions(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastStorageAutoscalerSpec":           schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastStorageAutoscalerSpec(ref),
@@ -27852,6 +27853,42 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastAutoscalerList(ref c
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastAutoscaler"},
+	}
+}
+
+func schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"opsRequestOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OpsRequestOptions will be used to control the behaviour of ops-manager",
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastOpsrequestOptions"),
+						},
+					},
+					"compute": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastComputeAutoscalerSpec"),
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastStorageAutoscalerSpec"),
+						},
+					},
+				},
+				Required: []string{"databaseRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastOpsrequestOptions", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HazelcastStorageAutoscalerSpec"},
 	}
 }
 

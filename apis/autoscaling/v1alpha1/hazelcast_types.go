@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -52,6 +53,16 @@ type HazelcastAutoscaler struct {
 	Status AutoscalerStatus `json:"status,omitempty"`
 }
 
+type HazelcastAutoscalerSpec struct {
+	DatabaseRef *core.LocalObjectReference `json:"databaseRef"`
+
+	// OpsRequestOptions will be used to control the behaviour of ops-manager
+	OpsRequestOptions *HazelcastOpsrequestOptions `json:"opsRequestOptions,omitempty"`
+
+	Compute *HazelcastComputeAutoscalerSpec `json:"compute,omitempty"`
+	Storage *HazelcastStorageAutoscalerSpec `json:"storage,omitempty"`
+}
+
 type HazelcastComputeAutoscalerSpec struct {
 	// +optional
 	NodeTopology *NodeTopology `json:"nodeTopology,omitempty"`
@@ -76,6 +87,7 @@ type HazelcastOpsrequestOptions struct {
 
 type HazelcastAutoscalerList struct {
 	metav1.TypeMeta `json:",inline"`
+	// +optional
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []HazelcastAutoscaler `json:"items"`
 }
