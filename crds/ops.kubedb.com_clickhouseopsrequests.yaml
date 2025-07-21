@@ -58,6 +58,22 @@ spec:
                     type: object
                     x-kubernetes-map-type: atomic
                 type: object
+              configuration:
+                properties:
+                  applyConfig:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  configSecret:
+                    properties:
+                      name:
+                        default: ""
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  removeCustomConfig:
+                    type: boolean
+                type: object
               databaseRef:
                 properties:
                   name:
@@ -72,7 +88,7 @@ spec:
                       properties:
                         clusterName:
                           type: string
-                        node:
+                        replicas:
                           format: int32
                           type: integer
                       type: object
@@ -82,12 +98,127 @@ spec:
                 type: object
               timeout:
                 type: string
+              tls:
+                properties:
+                  certificates:
+                    items:
+                      properties:
+                        alias:
+                          type: string
+                        dnsNames:
+                          items:
+                            type: string
+                          type: array
+                        duration:
+                          type: string
+                        emailAddresses:
+                          items:
+                            type: string
+                          type: array
+                        ipAddresses:
+                          items:
+                            type: string
+                          type: array
+                        issuerRef:
+                          properties:
+                            apiGroup:
+                              type: string
+                            kind:
+                              type: string
+                            name:
+                              type: string
+                          required:
+                          - kind
+                          - name
+                          type: object
+                          x-kubernetes-map-type: atomic
+                        privateKey:
+                          properties:
+                            encoding:
+                              enum:
+                              - PKCS1
+                              - PKCS8
+                              type: string
+                          type: object
+                        renewBefore:
+                          type: string
+                        secretName:
+                          type: string
+                        subject:
+                          properties:
+                            countries:
+                              items:
+                                type: string
+                              type: array
+                            localities:
+                              items:
+                                type: string
+                              type: array
+                            organizationalUnits:
+                              items:
+                                type: string
+                              type: array
+                            organizations:
+                              items:
+                                type: string
+                              type: array
+                            postalCodes:
+                              items:
+                                type: string
+                              type: array
+                            provinces:
+                              items:
+                                type: string
+                              type: array
+                            serialNumber:
+                              type: string
+                            streetAddresses:
+                              items:
+                                type: string
+                              type: array
+                          type: object
+                        uris:
+                          items:
+                            type: string
+                          type: array
+                      required:
+                      - alias
+                      type: object
+                    type: array
+                  issuerRef:
+                    properties:
+                      apiGroup:
+                        type: string
+                      kind:
+                        type: string
+                      name:
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  remove:
+                    type: boolean
+                  rotateCertificates:
+                    type: boolean
+                type: object
               type:
                 enum:
                 - Restart
                 - VerticalScaling
                 - HorizontalScaling
+                - UpdateVersion
+                - VolumeExpansion
+                - Reconfigure
+                - ReconfigureTLS
+                - RotateAuth
                 type: string
+              updateVersion:
+                properties:
+                  targetVersion:
+                    type: string
+                type: object
               verticalScaling:
                 properties:
                   cluster:
@@ -193,6 +324,22 @@ spec:
                         - value
                         type: object
                     type: object
+                type: object
+              volumeExpansion:
+                properties:
+                  mode:
+                    enum:
+                    - Offline
+                    - Online
+                    type: string
+                  node:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                    x-kubernetes-int-or-string: true
+                required:
+                - mode
                 type: object
             required:
             - databaseRef
