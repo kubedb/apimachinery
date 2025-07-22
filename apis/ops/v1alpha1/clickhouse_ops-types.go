@@ -106,8 +106,8 @@ type ClickHouseCustomConfigurationSpec struct {
 	// following naming convention: {db-name}-user-config .
 	// Expected input format:
 	//	applyConfig:
-	//		clickhouse.conf: |
-	//			key=value
+	//		file-name.yml: |
+	//			key: value
 	// +optional
 	ApplyConfig map[string]string `json:"applyConfig,omitempty"`
 	// If set to "true", the user provided configuration will be removed.
