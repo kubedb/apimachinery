@@ -26524,7 +26524,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseCustomConfigurationSpec(ref
 					},
 					"applyConfig": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ApplyConfig is an optional field to provide clickhouse configuration. Provided configuration will be applied to config files stored in ConfigSecret. If the ConfigSecret is missing, the operator will create a new k8s secret by the following naming convention: {db-name}-user-config . Expected input format:\n\tapplyConfig:\n\t\tclickhouse.conf: |\n\t\t\tkey=value",
+							Description: "ApplyConfig is an optional field to provide clickhouse configuration. Provided configuration will be applied to config files stored in ConfigSecret. If the ConfigSecret is missing, the operator will create a new k8s secret by the following naming convention: {db-name}-user-config . Expected input format:\n\tapplyConfig:\n\t\tfile-name.yml: |\n\t\t\tkey: value",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
