@@ -17,6 +17,7 @@ limitations under the License.
 package controller
 
 import (
+	"sync"
 	"time"
 
 	configapi "kubedb.dev/apimachinery/apis/config/v1alpha1"
@@ -42,6 +43,7 @@ import (
 	manifestclient "open-cluster-management.io/api/client/work/clientset/versioned"
 	manifestinformers "open-cluster-management.io/api/client/work/informers/externalversions"
 	manifestlisters "open-cluster-management.io/api/client/work/listers/work/v1"
+	apiworkv1 "open-cluster-management.io/api/work/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	scs "stash.appscode.dev/apimachinery/client/clientset/versioned"
 	stashinformer "stash.appscode.dev/apimachinery/client/informers/externalversions"
@@ -97,6 +99,8 @@ type Config struct {
 	// manifestWorkerLister is able to list/get manifestWork from a shared informer's store
 	MWLister manifestlisters.ManifestWorkLister
 
+	Store *Store
+
 	// Only watch or reconcile objects in this namespace (usually for license reasons)
 	RestrictToNamespace    string
 	LicenseRestrictions    configapi.LicenseRestrictions
@@ -124,4 +128,32 @@ type StashInitializer struct {
 	RBQueue    *queue.Worker[any]
 	RBInformer cache.SharedIndexInformer
 	RBLister   lister.RestoreBatchLister
+}
+
+type Store struct {
+	m  map[string]func(*apiworkv1.ManifestWork)
+	mu sync.RWMutex
+}
+
+func (s *Store) Init() {
+	s.m = make(map[string]func(*apiworkv1.ManifestWork))
+}
+
+func (s *Store) Add(name string, f func(*apiworkv1.ManifestWork)) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.m[name] = f
+}
+
+func (s *Store) Get(name string) (func(*apiworkv1.ManifestWork), bool) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	v, ok := s.m[name]
+	return v, ok
+}
+
+func (s *Store) Delete(name string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.m, name)
 }
