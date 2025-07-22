@@ -23,9 +23,10 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -142,7 +143,12 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 				req.Name,
 				err.Error()))
 		}
-
+	case opsapi.MemcachedOpsRequestTypeRotateAuth:
+		if err := c.validateMemcachedRotateAuthenticationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
+				req.Name,
+				err.Error()))
+		}
 	default:
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Memcached are %s", req.Spec.Type, strings.Join(opsapi.MemcachedOpsRequestTypeNames(), ", "))))
@@ -203,6 +209,37 @@ func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedUpdateVersionOpsRequ
 	}, memcachedTargetVersion)
 	if err != nil {
 		return err
+	}
+	return nil
+}
+
+func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedRotateAuthenticationOpsRequest(req *opsapi.MemcachedOpsRequest) error {
+	db := &olddbapi.Memcached{}
+	err := c.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: req.Namespace,
+		Name:      req.GetDBRefName(),
+	}, db)
+	if err != nil {
+		return err
+	}
+	if db.Spec.DisableAuth {
+		return fmt.Errorf("DisableSecurity is on, RotateAuth is not applicable")
+	}
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return errors.New("spec.authentication.secretRef.name can not be empty")
+		}
+		err := c.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &core.Secret{})
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
+			}
+			return err
+		}
 	}
 	return nil
 }
