@@ -43,7 +43,7 @@ func NewManifestWorkWatcher(
 }
 
 func (c *ManifestWorkWatcher) InitStore() *ManifestWorkWatcher {
-	c.Config.Store.Init()
+	c.Config.Store = amc.NewStore()
 	return c
 }
 

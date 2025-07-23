@@ -135,8 +135,15 @@ type Store struct {
 	mu sync.RWMutex
 }
 
-func (s *Store) Init() {
+func NewStore() *Store {
+	s := &Store{}
+	s.Init()
+	return s
+}
+
+func (s *Store) Init() *Store {
 	s.m = make(map[string]func(*apiworkv1.ManifestWork))
+	return s
 }
 
 func (s *Store) Add(name string, f func(*apiworkv1.ManifestWork)) {
