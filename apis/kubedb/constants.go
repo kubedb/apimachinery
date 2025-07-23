@@ -32,6 +32,8 @@ const (
 
 	KubeDBOrganization = "kubedb"
 
+	NamespaceLabelKey = "app.kubernetes.io/namespace"
+
 	LabelRole   = GroupName + "/role"
 	LabelPetSet = GroupName + "/petset"
 

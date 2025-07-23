@@ -98,6 +98,16 @@ spec:
                           type: object
                         type: array
                     type: object
+                  ttlSecondsAfterFinished:
+                    description: |-
+                      TTLSecondsAfterFinished limits the lifetime of a ManifestWork that has been marked Complete
+                      by one or more conditionRules set for its manifests. If this field is set, and
+                      the manifestwork has completed, then it is elligible to be automatically deleted.
+                      If this field is unset, the manifestwork won't be automatically deleted even afer completion.
+                      If this field is set to zero, the manfiestwork becomes elligible to be deleted immediately
+                      after completion.
+                    format: int64
+                    type: integer
                 type: object
               executor:
                 description: |-
@@ -152,6 +162,59 @@ spec:
                   description: ManifestConfigOption represents the configurations
                     of a manifest defined in workload field.
                   properties:
+                    conditionRules:
+                      description: ConditionRules defines how to set manifestwork
+                        conditions for a specific manifest.
+                      items:
+                        properties:
+                          celExpressions:
+                            description: |-
+                              CelExpressions defines the CEL expressions to be evaluated for the condition.
+                              Final result is the logical AND of all expressions.
+                            items:
+                              type: string
+                            type: array
+                          condition:
+                            description: |-
+                              Condition is the type of condition that is set based on this rule.
+                              Any condition is supported, but certain special conditions can be used to
+                              to control higher level behaviors of the manifestwork.
+                              If the condition is Complete, the manifest will no longer be updated once completed.
+                            type: string
+                          message:
+                            description: Message is set on the condition created for
+                              this rule
+                            type: string
+                          messageExpression:
+                            description: |-
+                              MessageExpression uses a CEL expression to generate a message for the condition
+                              Will override message if both are set and messageExpression returns a non-empty string.
+                              Variables:
+                              - object: The current instance of the manifest
+                              - result: Boolean result of the CEL expressions
+                            type: string
+                          type:
+                            description: |-
+                              Type defines how a manifest should be evaluated for a condition.
+                              It can be CEL, or WellKnownConditions.
+                              If the type is CEL, user should specify the celExpressions field
+                              If the type is WellKnownConditions, certain common types in k8s.io/api will be considered
+                              completed as defined by hardcoded rules.
+                            enum:
+                            - WellKnownConditions
+                            - CEL
+                            type: string
+                        required:
+                        - condition
+                        - type
+                        type: object
+                        x-kubernetes-validations:
+                        - message: Condition is required for CEL rules
+                          rule: self.type != 'CEL' || self.condition != ""
+                      type: array
+                      x-kubernetes-list-map-keys:
+                      - condition
+                      x-kubernetes-list-type: map
                     feedbackRules:
                       description: |-
                         FeedbackRules defines what resource status field should be returned. If it is not set or empty,
@@ -187,6 +250,9 @@ spec:
                               - path
                               type: object
                             type: array
+                            x-kubernetes-list-map-keys:
+                            - name
+                            x-kubernetes-list-type: map
                           type:
                             description: |-
                               Type defines the option of how status can be returned.
@@ -236,8 +302,8 @@ spec:
                       properties:
                         serverSideApply:
                           description: |-
-                            serverSideApply defines the configuration for server side apply. It is honored only when
-                            type of updateStrategy is ServerSideApply
+                            serverSideApply defines the configuration for server side apply. It is honored only when the
+                            type of the updateStrategy is ServerSideApply
                           properties:
                             fieldManager:
                               default: work-agent
@@ -249,6 +315,36 @@ spec:
                             force:
                               description: Force represents to force apply the manifest.
                               type: boolean
+                            ignoreFields:
+                              description: IgnoreFields defines a list of json paths
+                                in the resource that will not be updated on the spoke.
+                              items:
+                                properties:
+                                  condition:
+                                    default: OnSpokePresent
+                                    description: |-
+                                      Condition defines the condition that the fields should be ignored when apply the resource.
+                                      Fields in JSONPaths are all ignored when condition is met, otherwise no fields is ignored
+                                      in the apply operation.
+                                    enum:
+                                    - OnSpokePresent
+                                    - OnSpokeChange
+                                    type: string
+                                  jsonPaths:
+                                    description: JSONPaths defines the list of json
+                                      path in the resource to be ignored
+                                    items:
+                                      type: string
+                                    minItems: 1
+                                    type: array
+                                required:
+                                - condition
+                                - jsonPaths
+                                type: object
+                              type: array
+                              x-kubernetes-list-map-keys:
+                              - condition
+                              x-kubernetes-list-type: map
                           type: object
                         type:
                           default: Update
@@ -303,16 +399,8 @@ spec:
                   4. Degraded represents the current state of workload does not match the desired
                   state for a certain period.
                 items:
-                  description: "Condition contains details for one aspect of the current
-                    state of this API Resource.\n---\nThis struct is intended for
-                    direct use as an array at the field path .status.conditions.  For
-                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
-                    observations of a foo's current state.\n\t    // Known .status.conditions.type
-                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
-                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
-                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
-                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
-                    \   // other fields\n\t}"
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
                   properties:
                     lastTransitionTime:
                       description: |-
@@ -353,12 +441,7 @@ spec:
                       - Unknown
                       type: string
                     type:
-                      description: |-
-                        type of condition in CamelCase or in foo.example.com/CamelCase.
-                        ---
-                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
-                        useful (see .node.status.conditions), the ability to deconflict is important.
-                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
                       maxLength: 316
                       pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string
@@ -393,18 +476,8 @@ spec:
                           description: Conditions represents the conditions of this
                             resource on a managed cluster.
                           items:
-                            description: "Condition contains details for one aspect
-                              of the current state of this API Resource.\n---\nThis
-                              struct is intended for direct use as an array at the
-                              field path .status.conditions.  For example,\n\n\n\ttype
-                              FooStatus struct{\n\t    // Represents the observations
-                              of a foo's current state.\n\t    // Known .status.conditions.type
-                              are: \"Available\", \"Progressing\", and \"Degraded\"\n\t
-                              \   // +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t
-                              \   // +listType=map\n\t    // +listMapKey=type\n\t
-                              \   Conditions []metav1.Condition `json:\"conditions,omitempty\"
-                              patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
-                              \   // other fields\n\t}"
+                            description: Condition contains details for one aspect
+                              of the current state of this API Resource.
                             properties:
                               lastTransitionTime:
                                 description: |-
@@ -446,12 +519,8 @@ spec:
                                 - Unknown
                                 type: string
                               type:
-                                description: |-
-                                  type of condition in CamelCase or in foo.example.com/CamelCase.
-                                  ---
-                                  Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
-                                  useful (see .node.status.conditions), the ability to deconflict is important.
-                                  The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                                description: type of condition in CamelCase or in
+                                  foo.example.com/CamelCase.
                                 maxLength: 316
                                 pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                                 type: string
@@ -494,6 +563,8 @@ spec:
                               description: Version is the version of the Kubernetes
                                 resource.
                               type: string
+                          required:
+                          - ordinal
                           type: object
                         statusFeedback:
                           description: StatusFeedback represents the values of the
@@ -553,6 +624,9 @@ spec:
                               - name
                               x-kubernetes-list-type: map
                           type: object
+                      required:
+                      - conditions
+                      - resourceMeta
                       type: object
                     type: array
                 type: object
