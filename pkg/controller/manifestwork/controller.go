@@ -27,29 +27,27 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/meta"
-	manifestclient "open-cluster-management.io/api/client/work/clientset/versioned"
 	apiworkv1 "open-cluster-management.io/api/work/v1"
 )
 
-type Controller struct {
+type ManifestWorkWatcher struct {
 	*amc.Config
-	MWClient manifestclient.Interface
 }
 
-func NewController(
+func NewManifestWorkWatcher(
 	config *amc.Config,
-) *Controller {
-	return &Controller{
+) *ManifestWorkWatcher {
+	return &ManifestWorkWatcher{
 		Config: config,
 	}
 }
 
-func (c *Controller) InitStore() *Controller {
+func (c *ManifestWorkWatcher) InitStore() *ManifestWorkWatcher {
 	c.Config.Store.Init()
 	return c
 }
 
-func (c *Controller) InitManifestWorkWatcher() {
+func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 	klog.Infoln("Initializing ManifestWork watcher.....")
 	// Initialize ManifestWork Watcher
 	c.MWInformer = c.ManifestInformerFactory.Work().V1().ManifestWorks().Informer()
@@ -103,7 +101,7 @@ func (c *Controller) InitManifestWorkWatcher() {
 }
 
 // addManifest adds the ManifestWork for the manifestwork to the sync queue
-func (c *Controller) addManifestWork(mw *apiworkv1.ManifestWork) {
+func (c *ManifestWorkWatcher) addManifestWork(mw *apiworkv1.ManifestWork) {
 	klog.Infoln("adding manifest work in the queue", mw.Name)
 	if mw.DeletionTimestamp != nil {
 		klog.Infoln("need to delete manifestwork", mw.Name)
@@ -116,14 +114,14 @@ func (c *Controller) addManifestWork(mw *apiworkv1.ManifestWork) {
 	name := mw.Labels[meta.NameLabelKey]
 	fn, exists := c.Store.Get(name)
 	if !exists {
-		klog.Errorf("no controller function found for manifestWork %s/%s", mw.Namespace, mw.Name)
+		klog.Errorf("no eventHandler found for manifestWork %s/%s with %v: %v", mw.Namespace, mw.Name, meta.NameLabelKey, mw.Labels[meta.NameLabelKey])
 		return
 	}
 	fn(mw)
 }
 
 // updateManifestWork adds the ManifestWork for the current and ManifestWork pods to the sync queue.
-func (c *Controller) updateManifestWork(curMW *apiworkv1.ManifestWork) {
+func (c *ManifestWorkWatcher) updateManifestWork(curMW *apiworkv1.ManifestWork) {
 	klog.Infoln("updating manifest work in the queue", curMW.Name)
 
 	name := curMW.Labels[meta.NameLabelKey]
@@ -136,7 +134,7 @@ func (c *Controller) updateManifestWork(curMW *apiworkv1.ManifestWork) {
 }
 
 // deleteManifestWork enqueues the ManifestWork for the ManifestWork accounting for deletion tombstones.
-func (c *Controller) deleteManifestWork(mw *apiworkv1.ManifestWork) {
+func (c *ManifestWorkWatcher) deleteManifestWork(mw *apiworkv1.ManifestWork) {
 	klog.Infof("deleting manifest work in the queue: %s/%s", mw.Namespace, mw.Name)
 	name := mw.Labels[meta.NameLabelKey]
 	fn, exists := c.Store.Get(name)
