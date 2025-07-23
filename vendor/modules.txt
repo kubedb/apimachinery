@@ -1839,8 +1839,8 @@ kubeops.dev/csi-driver-cacerts/crds
 # kubeops.dev/operator-shard-manager v0.0.3
 ## explicit; go 1.23.0
 kubeops.dev/operator-shard-manager/api/v1alpha1
-# kubeops.dev/petset v0.0.10
-## explicit; go 1.23.0
+# kubeops.dev/petset v0.0.11-0.20250715063016-50e9b1a53a1a
+## explicit; go 1.23.6
 kubeops.dev/petset/apis/apps/v1
 kubeops.dev/petset/client/clientset/versioned
 kubeops.dev/petset/client/clientset/versioned/scheme
@@ -1866,8 +1866,8 @@ kubestash.dev/apimachinery/crds
 # moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7
 ## explicit; go 1.13
 moul.io/http2curl/v2
-# open-cluster-management.io/api v0.15.0
-## explicit; go 1.22.0
+# open-cluster-management.io/api v1.0.0
+## explicit; go 1.23.6
 open-cluster-management.io/api/client/work/clientset/versioned
 open-cluster-management.io/api/client/work/clientset/versioned/scheme
 open-cluster-management.io/api/client/work/clientset/versioned/typed/work/v1
