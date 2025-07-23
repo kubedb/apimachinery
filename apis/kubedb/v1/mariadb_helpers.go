@@ -246,7 +246,7 @@ func (m MariaDB) StatsServiceLabels() map[string]string {
 }
 
 func (m MariaDB) PrimaryServiceDNS() string {
-	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
+	return fmt.Sprintf("%s.%s.svc.cluster.local", m.ServiceName(), m.Namespace)
 }
 
 func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {

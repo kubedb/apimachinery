@@ -62,9 +62,22 @@ func (AppliedManifestWorkStatus) SwaggerDoc() map[string]string {
 	return map_AppliedManifestWorkStatus
 }
 
+var map_ConditionRule = map[string]string{
+	"condition":         "Condition is the type of condition that is set based on this rule. Any condition is supported, but certain special conditions can be used to to control higher level behaviors of the manifestwork. If the condition is Complete, the manifest will no longer be updated once completed.",
+	"type":              "Type defines how a manifest should be evaluated for a condition. It can be CEL, or WellKnownConditions. If the type is CEL, user should specify the celExpressions field If the type is WellKnownConditions, certain common types in k8s.io/api will be considered completed as defined by hardcoded rules.",
+	"celExpressions":    "CelExpressions defines the CEL expressions to be evaluated for the condition. Final result is the logical AND of all expressions.",
+	"message":           "Message is set on the condition created for this rule",
+	"messageExpression": "MessageExpression uses a CEL expression to generate a message for the condition Will override message if both are set and messageExpression returns a non-empty string. Variables: - object: The current instance of the manifest - result: Boolean result of the CEL expressions",
+}
+
+func (ConditionRule) SwaggerDoc() map[string]string {
+	return map_ConditionRule
+}
+
 var map_DeleteOption = map[string]string{
-	"propagationPolicy":  "propagationPolicy can be Foreground, Orphan or SelectivelyOrphan SelectivelyOrphan should be rarely used.  It is provided for cases where particular resources is transfering ownership from one ManifestWork to another or another management unit. Setting this value will allow a flow like 1. create manifestwork/2 to manage foo 2. update manifestwork/1 to selectively orphan foo 3. remove foo from manifestwork/1 without impacting continuity because manifestwork/2 adopts it.",
-	"selectivelyOrphans": "selectivelyOrphan represents a list of resources following orphan deletion stratecy",
+	"propagationPolicy":       "propagationPolicy can be Foreground, Orphan or SelectivelyOrphan SelectivelyOrphan should be rarely used.  It is provided for cases where particular resources is transfering ownership from one ManifestWork to another or another management unit. Setting this value will allow a flow like 1. create manifestwork/2 to manage foo 2. update manifestwork/1 to selectively orphan foo 3. remove foo from manifestwork/1 without impacting continuity because manifestwork/2 adopts it.",
+	"selectivelyOrphans":      "selectivelyOrphan represents a list of resources following orphan deletion stratecy",
+	"ttlSecondsAfterFinished": "TTLSecondsAfterFinished limits the lifetime of a ManifestWork that has been marked Complete by one or more conditionRules set for its manifests. If this field is set, and the manifestwork has completed, then it is elligible to be automatically deleted. If this field is unset, the manifestwork won't be automatically deleted even afer completion. If this field is set to zero, the manfiestwork becomes elligible to be deleted immediately after completion.",
 }
 
 func (DeleteOption) SwaggerDoc() map[string]string {
@@ -102,6 +115,15 @@ func (FieldValue) SwaggerDoc() map[string]string {
 	return map_FieldValue
 }
 
+var map_IgnoreField = map[string]string{
+	"condition": "Condition defines the condition that the fields should be ignored when apply the resource. Fields in JSONPaths are all ignored when condition is met, otherwise no fields is ignored in the apply operation.",
+	"jsonPaths": "JSONPaths defines the list of json path in the resource to be ignored",
+}
+
+func (IgnoreField) SwaggerDoc() map[string]string {
+	return map_IgnoreField
+}
+
 var map_JsonPath = map[string]string{
 	"name":    "Name represents the alias name for this field",
 	"version": "Version is the version of the Kubernetes resource. If it is not specified, the resource with the semantically latest version is used to resolve the path.",
@@ -136,6 +158,7 @@ var map_ManifestConfigOption = map[string]string{
 	"resourceIdentifier": "ResourceIdentifier represents the group, resource, name and namespace of a resoure. iff this refers to a resource not created by this manifest work, the related rules will not be executed.",
 	"feedbackRules":      "FeedbackRules defines what resource status field should be returned. If it is not set or empty, no feedback rules will be honored.",
 	"updateStrategy":     "UpdateStrategy defines the strategy to update this manifest. UpdateStrategy is Update if it is not set.",
+	"conditionRules":     "ConditionRules defines how to set manifestwork conditions for a specific manifest.",
 }
 
 func (ManifestConfigOption) SwaggerDoc() map[string]string {
@@ -270,6 +293,7 @@ func (SelectivelyOrphan) SwaggerDoc() map[string]string {
 var map_ServerSideApplyConfig = map[string]string{
 	"force":        "Force represents to force apply the manifest.",
 	"fieldManager": "FieldManager is the manager to apply the resource. It is work-agent by default, but can be other name with work-agent as the prefix.",
+	"ignoreFields": "IgnoreFields defines a list of json paths in the resource that will not be updated on the spoke.",
 }
 
 func (ServerSideApplyConfig) SwaggerDoc() map[string]string {
@@ -288,7 +312,7 @@ func (StatusFeedbackResult) SwaggerDoc() map[string]string {
 var map_UpdateStrategy = map[string]string{
 	"":                "UpdateStrategy defines the strategy to update this manifest",
 	"type":            "type defines the strategy to update this manifest, default value is Update. Update type means to update resource by an update call. CreateOnly type means do not update resource based on current manifest. ServerSideApply type means to update resource using server side apply with work-controller as the field manager. If there is conflict, the related Applied condition of manifest will be in the status of False with the reason of ApplyConflict. ReadOnly type means the agent will only check the existence of the resource based on its metadata, statusFeedBackRules can still be used to get feedbackResults.",
-	"serverSideApply": "serverSideApply defines the configuration for server side apply. It is honored only when type of updateStrategy is ServerSideApply",
+	"serverSideApply": "serverSideApply defines the configuration for server side apply. It is honored only when the type of the updateStrategy is ServerSideApply",
 }
 
 func (UpdateStrategy) SwaggerDoc() map[string]string {
