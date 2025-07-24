@@ -99,7 +99,7 @@ func (h *Hazelcast) PodControllerLabels(extraLabels ...map[string]string) map[st
 }
 
 func (h *Hazelcast) PVCName(alias string) string {
-	return meta_util.NameWithSuffix(h.Name, alias)
+	return alias
 }
 
 func (h *Hazelcast) PodLabels(extraLabels ...map[string]string) map[string]string {
