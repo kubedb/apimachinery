@@ -62,6 +62,26 @@ func (m MariaDB) OffshootMaxscaleName() string {
 	return meta_util.NameWithSuffix(m.Name, kubedb.MaxscaleCommonName)
 }
 
+func (m MariaDB) OffshootDistributedConfigSecretName() string {
+	return meta_util.NameWithSuffix(m.Name, kubedb.MariaDBDistributedCustomConfigSecretName)
+}
+
+func (m MariaDB) OffshootDistributedRBACName() string {
+	return meta_util.NameWithSuffix(m.Name, kubedb.MariaDBDistributedRBACName)
+}
+
+func (m MariaDB) OffshootDistributedServiceExportName() string {
+	return meta_util.NameWithSuffix(m.Name, kubedb.MariaDBDistributedServiceExportName)
+}
+
+func (m MariaDB) OffshootDistributedAuthName() string {
+	return meta_util.NameWithSuffix(m.Name, "auth")
+}
+
+func (m MariaDB) OffshootDistributedTLSName() string {
+	return meta_util.NameWithSuffix(m.Name, "tls-secrets")
+}
+
 func (m MariaDB) OffshootSelectors() map[string]string {
 	return map[string]string{
 		meta_util.NameLabelKey:      m.ResourceFQN(),
@@ -246,7 +266,7 @@ func (m MariaDB) StatsServiceLabels() map[string]string {
 }
 
 func (m MariaDB) PrimaryServiceDNS() string {
-	return fmt.Sprintf("%s.%s.svc.cluster.local", m.ServiceName(), m.Namespace)
+	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
 }
 
 func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
