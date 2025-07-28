@@ -83,11 +83,15 @@ func (m MariaDB) OffshootDistributedTLSName() string {
 }
 
 func (m MariaDB) OffshootSelectors() map[string]string {
-	return map[string]string{
+	label := map[string]string{
 		meta_util.NameLabelKey:      m.ResourceFQN(),
 		meta_util.InstanceLabelKey:  m.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
+	if m.Spec.Distributed {
+		label[kubedb.NamespaceLabelKey] = m.Namespace
+	}
+	return label
 }
 
 func (m MariaDB) OffshootMaxscaleSelectors() map[string]string {
