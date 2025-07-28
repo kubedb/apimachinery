@@ -102,7 +102,6 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 
 // addManifest adds the ManifestWork for the manifestwork to the sync queue
 func (c *ManifestWorkWatcher) addManifestWork(mw *apiworkv1.ManifestWork) {
-	klog.Infoln("adding manifest work in the queue", mw.Name)
 	if mw.DeletionTimestamp != nil {
 		klog.Infoln("need to delete manifestwork", mw.Name)
 		// on a restart of the controller manager, it's possible a new pod shows up in a state that
@@ -122,8 +121,6 @@ func (c *ManifestWorkWatcher) addManifestWork(mw *apiworkv1.ManifestWork) {
 
 // updateManifestWork adds the ManifestWork for the current and ManifestWork pods to the sync queue.
 func (c *ManifestWorkWatcher) updateManifestWork(curMW *apiworkv1.ManifestWork) {
-	klog.Infoln("updating manifest work in the queue", curMW.Name)
-
 	name := curMW.Labels[meta.NameLabelKey]
 	fn, exists := c.Store.Get(name)
 	if !exists {
@@ -135,7 +132,6 @@ func (c *ManifestWorkWatcher) updateManifestWork(curMW *apiworkv1.ManifestWork) 
 
 // deleteManifestWork enqueues the ManifestWork for the ManifestWork accounting for deletion tombstones.
 func (c *ManifestWorkWatcher) deleteManifestWork(mw *apiworkv1.ManifestWork) {
-	klog.Infof("deleting manifest work in the queue: %s/%s", mw.Namespace, mw.Name)
 	name := mw.Labels[meta.NameLabelKey]
 	fn, exists := c.Store.Get(name)
 	if !exists {
