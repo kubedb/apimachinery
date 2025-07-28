@@ -237,7 +237,7 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForClusterMode(req *
 		return fmt.Errorf("can't scale down and up at the same time")
 	}
 	if redis.Spec.Cluster.Announce != nil {
-		if req.Spec.HorizontalScaling.Announce == nil {
+		if req.Spec.HorizontalScaling.Announce == nil && (oldRepCnt < newRepCnt || oldShardCnt < newShardCnt) {
 			return fmt.Errorf("spec.horizontalScaling.announce is required for announce ops request")
 		}
 		if oldShardCnt <= newShardCnt {
