@@ -222,6 +222,51 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForClusterMode(req *
 	if req.Spec.HorizontalScaling.Shards == nil && req.Spec.HorizontalScaling.Replicas == nil {
 		return fmt.Errorf("please specify shards or replica for scaling")
 	}
+
+	// verify announce if needed
+	redis := v1.Redis{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
+	if err != nil {
+		return err
+	}
+	oldRepCnt := *redis.Spec.Cluster.Replicas
+	newRepCnt := ptr.Deref(req.Spec.HorizontalScaling.Replicas, *redis.Spec.Cluster.Replicas)
+	oldShardCnt := *redis.Spec.Cluster.Shards
+	newShardCnt := ptr.Deref(req.Spec.HorizontalScaling.Shards, *redis.Spec.Cluster.Shards)
+	if (oldRepCnt < newRepCnt) != (oldShardCnt < newShardCnt) {
+		return fmt.Errorf("can't scale down and up at the same time")
+	}
+	if redis.Spec.Cluster.Announce != nil {
+		if req.Spec.HorizontalScaling.Announce == nil {
+			return fmt.Errorf("spec.horizontalScaling.announce is required for announce ops request")
+		}
+		if oldShardCnt <= newShardCnt {
+			shardIdx := 0
+			for i := range newShardCnt {
+				if i < oldShardCnt {
+					if oldRepCnt < newRepCnt {
+						if len(req.Spec.HorizontalScaling.Announce.Shards) <= shardIdx {
+							return fmt.Errorf("endpoints for shard %d should be specified", i)
+						}
+						endpointsNeeded := newRepCnt - oldRepCnt
+						if len(req.Spec.HorizontalScaling.Announce.Shards[shardIdx].Endpoints) != int(endpointsNeeded) {
+							return fmt.Errorf("number of endpoints for shard %d should be %d", i, endpointsNeeded)
+						}
+						shardIdx++
+					}
+				} else {
+					if len(req.Spec.HorizontalScaling.Announce.Shards) <= shardIdx {
+						return fmt.Errorf("endpoints for shard %d should be specified", i)
+					}
+					if len(req.Spec.HorizontalScaling.Announce.Shards[shardIdx].Endpoints) != int(newRepCnt) {
+						return fmt.Errorf("number of endpoints for shard %d should be %d", i, newRepCnt)
+					}
+					shardIdx++
+				}
+			}
+		}
+	}
+
 	return nil
 }
 
