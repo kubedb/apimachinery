@@ -59,7 +59,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 				return
 			}
 			if !HasRequiredLabels(mw.Labels) {
-				klog.Errorf("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, kubedb.NamespaceLabelKey, mw.Namespace, mw.Name)
+				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, kubedb.NamespaceLabelKey, mw.Namespace, mw.Name)
 				return
 			}
 			c.addManifestWork(mw)
@@ -68,7 +68,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 			if mw, ok := newObj.(*apiworkv1.ManifestWork); ok {
 
 				if !HasRequiredLabels(mw.Labels) {
-					klog.Errorf("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, kubedb.NamespaceLabelKey, mw.Namespace, mw.Name)
+					klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, kubedb.NamespaceLabelKey, mw.Namespace, mw.Name)
 					return
 				}
 				c.updateManifestWork(mw)
@@ -92,7 +92,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 			}
 
 			if !HasRequiredLabels(mw.Labels) {
-				klog.Errorf("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, kubedb.NamespaceLabelKey, mw.Namespace, mw.Name)
+				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, kubedb.NamespaceLabelKey, mw.Namespace, mw.Name)
 				return
 			}
 			c.deleteManifestWork(mw)

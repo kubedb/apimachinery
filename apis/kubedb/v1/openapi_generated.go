@@ -30283,6 +30283,13 @@ func schema_apimachinery_apis_kubedb_v1_PostgresSpec(ref common.ReferenceCallbac
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec"),
 						},
 					},
+					"distributed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distributed if set true, manifestwork objects will be created instead of raw resources",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Version of Postgres to be deployed.",
