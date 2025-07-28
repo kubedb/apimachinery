@@ -243,23 +243,18 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForClusterMode(req *
 		if oldShardCnt <= newShardCnt {
 			shardIdx := 0
 			for i := range newShardCnt {
-				if i < oldShardCnt {
-					if oldRepCnt < newRepCnt {
-						if len(req.Spec.HorizontalScaling.Announce.Shards) <= shardIdx {
-							return fmt.Errorf("endpoints for shard %d should be specified", i)
-						}
-						endpointsNeeded := newRepCnt - oldRepCnt
-						if len(req.Spec.HorizontalScaling.Announce.Shards[shardIdx].Endpoints) != int(endpointsNeeded) {
-							return fmt.Errorf("number of endpoints for shard %d should be %d", i, endpointsNeeded)
-						}
-						shardIdx++
-					}
-				} else {
+				endpointsNeeded := 0
+				if i < oldShardCnt && oldRepCnt < newRepCnt { // if we are looking endpoints for existing shards and need to add endpoints for new replicas
+					endpointsNeeded = int(newRepCnt - oldRepCnt)
+				} else if i >= oldShardCnt { // if need to add new shards
+					endpointsNeeded = int(newRepCnt)
+				}
+				if endpointsNeeded > 0 {
 					if len(req.Spec.HorizontalScaling.Announce.Shards) <= shardIdx {
 						return fmt.Errorf("endpoints for shard %d should be specified", i)
 					}
-					if len(req.Spec.HorizontalScaling.Announce.Shards[shardIdx].Endpoints) != int(newRepCnt) {
-						return fmt.Errorf("number of endpoints for shard %d should be %d", i, newRepCnt)
+					if len(req.Spec.HorizontalScaling.Announce.Shards[shardIdx].Endpoints) != endpointsNeeded {
+						return fmt.Errorf("number of endpoints for shard %d should be %d", i, endpointsNeeded)
 					}
 					shardIdx++
 				}
