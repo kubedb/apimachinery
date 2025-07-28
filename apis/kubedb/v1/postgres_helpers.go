@@ -63,11 +63,15 @@ func (p Postgres) OffshootName() string {
 }
 
 func (p Postgres) OffshootSelectors() map[string]string {
-	return map[string]string{
+	sel := map[string]string{
 		meta_util.NameLabelKey:      p.ResourceFQN(),
 		meta_util.InstanceLabelKey:  p.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
+	if p.Spec.Distributed {
+		sel[kubedb.NamespaceLabelKey] = p.Namespace
+	}
+	return sel
 }
 
 func (p Postgres) OffshootLabels() map[string]string {
