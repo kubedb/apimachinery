@@ -27903,7 +27903,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastComputeAutoscalerSpe
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.NodeTopology"),
 						},
 					},
-					"rabbitmq": {
+					"hazelcast": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
 						},
@@ -27949,7 +27949,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastStorageAutoscalerSpe
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"rabbitmq": {
+					"hazelcast": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"),
 						},

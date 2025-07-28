@@ -34,20 +34,7 @@ spec:
             properties:
               compute:
                 properties:
-                  nodeTopology:
-                    properties:
-                      name:
-                        type: string
-                      scaleDownDiffPercentage:
-                        default: 25
-                        format: int32
-                        type: integer
-                      scaleUpDiffPercentage:
-                        default: 15
-                        format: int32
-                        type: integer
-                    type: object
-                  rabbitmq:
+                  hazelcast:
                     properties:
                       containerControlledValues:
                         enum:
@@ -91,6 +78,19 @@ spec:
                       trigger:
                         type: string
                     type: object
+                  nodeTopology:
+                    properties:
+                      name:
+                        type: string
+                      scaleDownDiffPercentage:
+                        default: 25
+                        format: int32
+                        type: integer
+                      scaleUpDiffPercentage:
+                        default: 15
+                        format: int32
+                        type: integer
+                    type: object
                 type: object
               databaseRef:
                 properties:
@@ -112,7 +112,7 @@ spec:
                 type: object
               storage:
                 properties:
-                  rabbitmq:
+                  hazelcast:
                     properties:
                       expansionMode:
                         enum:
