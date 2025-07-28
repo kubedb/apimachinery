@@ -66,11 +66,11 @@ type HazelcastComputeAutoscalerSpec struct {
 	// +optional
 	NodeTopology *NodeTopology `json:"nodeTopology,omitempty"`
 
-	Hazelcast *ComputeAutoscalerSpec `json:"rabbitmq,omitempty"`
+	Hazelcast *ComputeAutoscalerSpec `json:"hazelcast,omitempty"`
 }
 
 type HazelcastStorageAutoscalerSpec struct {
-	Hazelcast *StorageAutoscalerSpec `json:"rabbitmq,omitempty"`
+	Hazelcast *StorageAutoscalerSpec `json:"hazelcast,omitempty"`
 }
 
 type HazelcastOpsrequestOptions struct {
