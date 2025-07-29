@@ -143,6 +143,18 @@ func (p Postgres) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(p.ServiceName(), "pods")
 }
 
+func (p Postgres) RBACManifestWorkName() string {
+	return meta_util.NameWithSuffix(p.OffshootName(), "rbac")
+}
+
+func (p Postgres) ServiceExportManifestWorkName() string {
+	return meta_util.NameWithSuffix(p.OffshootName(), "serviceexport")
+}
+
+func (p Postgres) AuthSecretManifestWorkName() string {
+	return meta_util.NameWithSuffix(p.OffshootName(), "auth")
+}
+
 type postgresApp struct {
 	*Postgres
 }

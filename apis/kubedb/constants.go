@@ -502,6 +502,8 @@ const (
 	PostgresCoordinatorClientPort     = 2379
 	PostgresCoordinatorClientPortName = "coordinatclient"
 
+	PostgresGrpcServerPort      = 2384
+	PostgresGrpcServerPortName  = "grpcserver"
 	RaftMetricsExporterPort     = 23790
 	RaftMetricsExporterPortName = "raft-metrics"
 
