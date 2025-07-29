@@ -28602,7 +28602,7 @@
       "type": "object",
       "properties": {
         "announce": {
-          "description": "Announce is used to announce the redis cluster endpoints. It is used to set cluster-announce-ip, cluster-announce-port, cluster-announce-bus-port, cluster-announce-tls-port",
+          "description": "Announce is used to announce the redis cluster endpoints. It is used to set cluster-announce-ip, cluster-announce-port, cluster-announce-bus-port, cluster-announce-tls-port While scaling up shard or replica just provide the missing announces.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.Announce"
         },
         "replicas": {
