@@ -260,11 +260,11 @@ func checkInvalidFieldsAndReplicaCounts(db *dbapi.MongoDB) error {
 		if top.Shard.Shards < 1 {
 			return fmt.Errorf(`spec.shardTopology.shard.shards %v invalid. Must be greater than zero when spec.shardTopology is set`, top.Shard.Shards)
 		}
-		if top.Shard.Replicas <= 1 {
-			return fmt.Errorf(`spec.shardTopology.shard.replicas %v invalid. Must be greater than one when spec.shardTopology is set`, top.Shard.Replicas)
+		if top.Shard.Replicas <= 0 {
+			return fmt.Errorf(`spec.shardTopology.shard.replicas %v invalid. Must be greater than zero when spec.shardTopology is set`, top.Shard.Replicas)
 		}
-		if top.ConfigServer.Replicas <= 1 {
-			return fmt.Errorf(`spec.shardTopology.configServer.replicas %v invalid. Must be greater than one when spec.shardTopology is set`, top.ConfigServer.Replicas)
+		if top.ConfigServer.Replicas <= 0 {
+			return fmt.Errorf(`spec.shardTopology.configServer.replicas %v invalid. Must be greater than zero when spec.shardTopology is set`, top.ConfigServer.Replicas)
 		}
 		if top.Mongos.Replicas < 1 {
 			return fmt.Errorf(`spec.shardTopology.mongos.replicas %v invalid. Must be greater than zero when spec.shardTopology is set`, top.Mongos.Replicas)
