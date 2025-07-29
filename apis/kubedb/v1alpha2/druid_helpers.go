@@ -361,6 +361,9 @@ func (d *Druid) GetMetadataStorageType(metadataStorage string) DruidMetadataStor
 		return ""
 	}
 }
+func (d *Druid) PVCName(alias string) string {
+	return alias
+}
 
 func (d *Druid) GetDruidSegmentCacheConfig() string {
 	// Update the storage size according to the druid segment cache configuration
