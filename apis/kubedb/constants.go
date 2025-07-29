@@ -363,19 +363,20 @@ const (
 	DatabasePodSlaveComponent            = "Slave"
 
 	// Maxscale
-	MaxscaleCommonName        = "mx"
-	MaxscaleContainerName     = "maxscale"
-	MaxscaleInitContainerName = "maxscale-init"
-	MaxscaleServerName        = "server"
-	MaxscaleConfigName        = "config"
-	MaxscaleConfigPath        = "/etc/maxscale.cnf.d"
-	MaxscaleDefaultConfigName = "default-config"
-	MaxscaleDefaultConfigPath = "/etc/maxscale"
-	MaxscaleDataVolumeName    = "data"
-	MaxscaleDataVolumePath    = "/var/lib/maxscale"
-	MaxscaleUIPort            = 8989
-	MaxscaleUIPortName        = "ui"
-	MaxscaleCertMountPath     = "/etc/ssl/maxscale"
+	MaxscaleCommonName            = "mx"
+	MaxscaleContainerName         = "maxscale"
+	MaxscaleInitContainerName     = "maxscale-init"
+	MaxscaleServerName            = "server"
+	MaxscaleConfigName            = "config"
+	MaxscaleConfigPath            = "/etc/maxscale.cnf.d"
+	MaxScaleCustomConfigMountPath = "/etc/maxscale/maxscale.custom.d"
+	MaxscaleDefaultConfigName     = "default-config"
+	MaxscaleDefaultConfigPath     = "/etc/maxscale"
+	MaxscaleDataVolumeName        = "data"
+	MaxscaleDataVolumePath        = "/var/lib/maxscale"
+	MaxscaleUIPort                = 8989
+	MaxscaleUIPortName            = "ui"
+	MaxscaleCertMountPath         = "/etc/ssl/maxscale"
 
 	// =========================== SingleStore Constants ============================
 	SinglestoreDatabasePortName       = "db"
