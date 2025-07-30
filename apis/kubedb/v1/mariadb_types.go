@@ -207,4 +207,7 @@ type MaxScaleSpec struct {
 	// enable/disable MaxscaleUI
 	// +optional
 	EnableUI *bool `json:"enableUI,omitempty"`
+	// ConfigSecret is an optional field to provide custom configuration file for maxscale (i.e custom-maxscale.cnf).
+	// If specified, this file will be merged with default configuration file.
+	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 }

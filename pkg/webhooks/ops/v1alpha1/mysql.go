@@ -140,6 +140,12 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.MySQLOpsRequestTypeRotateAuth:
+		if err := w.validateMySQLRotateAuthenticationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
+				req.Name,
+				err.Error()))
+		}
 
 	default:
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
@@ -358,6 +364,47 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformatio
 			req.Spec.ReplicationModeTransformation.TLSConfig.Certificates == nil) {
 			return errors.Wrap(err, "MySQL Replication Mode Transformation requires TLS configuration to be enabled.")
 		}
+	}
+
+	return nil
+}
+
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLRotateAuthenticationOpsRequest(req *opsapi.MySQLOpsRequest) error {
+	db := &dbapi.MySQL{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	}
+
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return errors.New("spec.authentication.secretRef.name can not be empty")
+		}
+		var newAuthSecret, oldAuthSecret core.Secret
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &newAuthSecret)
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return errors.Wrap(err, fmt.Sprintf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name))
+			}
+			return err
+		}
+
+		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      db.GetAuthSecretName(),
+			Namespace: db.GetNamespace(),
+		}, &oldAuthSecret)
+		if err != nil {
+			return err
+		}
+
+		if string(oldAuthSecret.Data[core.BasicAuthUsernameKey]) != string(newAuthSecret.Data[core.BasicAuthUsernameKey]) {
+			return errors.New("database username cannot be changed")
+		}
+
 	}
 
 	return nil
