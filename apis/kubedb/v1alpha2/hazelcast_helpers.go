@@ -97,6 +97,7 @@ func (h *Hazelcast) ResourceFQN() string {
 func (h *Hazelcast) PodControllerLabels(extraLabels ...map[string]string) map[string]string {
 	return h.offshootLabels(meta_util.OverwriteKeys(h.OffshootSelectors(), extraLabels...), h.Spec.PodTemplate.Controller.Labels)
 }
+
 func (d *Hazelcast) PVCName(alias string) string {
 	return alias
 }
