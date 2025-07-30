@@ -368,6 +368,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformatio
 
 	return nil
 }
+
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLRotateAuthenticationOpsRequest(req *opsapi.MySQLOpsRequest) error {
 	db := &dbapi.MySQL{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
@@ -408,6 +409,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLRotateAuthenticationOpsReque
 
 	return nil
 }
+
 func (w *MySQLOpsRequestCustomWebhook) ensureMySQLGroupReplication(req *opsapi.MySQLOpsRequest) error {
 	db := &dbapi.MySQL{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
