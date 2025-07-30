@@ -1310,7 +1310,7 @@ const (
 	DruidHistoricalsSegmentCacheLocations              = "druid.segmentCache.locations"
 	DruidHistoricalsSegmentCacheDropSegmentDelayMillis = "druid.segmentCache.dropSegmentDelayMillis"
 	DruidHistoricalsSegmentCacheDir                    = "/druid/data/segments"
-	DruidVolumeHistoricalsSegmentCache                 = "segment-cache"
+	DruidVolumeHistoricalsSegmentCache                 = "data"
 
 	// Query Cache
 	DruidHistoricalCacheUseCache      = "druid.historical.cache.useCache"
@@ -1329,7 +1329,7 @@ const (
 	DruidWorkerBaseTaskDirSize                             = "druid.worker.baseTaskDirSize"
 	DruidIndexerForkPropertyDruidProcessingBufferSizeBytes = "druid.indexer.fork.property.druid.processing.buffer.sizeBytes"
 	DruidMiddleManagersVolumeBaseTaskDir                   = "base-task-dir"
-	DruidVolumeMiddleManagersBaseTaskDir                   = "base-task-dir"
+	DruidVolumeMiddleManagersBaseTaskDir                   = "data"
 
 	// Values
 	DruidIndexerTaskBaseTaskDirValue = "/druid/data/baseTaskDir"
@@ -1512,9 +1512,9 @@ const (
 	IgniteInitScriptVolName    = "init-scripts"
 	IgniteInitScriptDir        = "/scripts"
 	IgniteConfigVolName        = "ignite-config"
-	IgniteWorkVolName          = "ignite-work"
-	IgniteWorkVolPath          = "/opt/ignite/apache-ignite/work"
 	IgniteConfigFileName       = "node-configuration.xml"
+	IgniteDataVolName          = "data"
+	IgniteDataDir              = "/opt/ignite/apache-ignite/work"
 	IgniteContainerName        = "ignite"
 	IgniteConfigDir            = "/ignite/config"
 	IgniteRestPortName         = "rest"
