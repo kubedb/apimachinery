@@ -184,7 +184,7 @@ func (w *IgniteCustomWebhook) ValidateVersion(db *olddbapi.Ignite) error {
 }
 
 var IgniteReservedVolumes = []string{
-	kubedb.IgniteWorkVolName,
+	kubedb.IgniteDataVolName,
 	kubedb.IgniteConfigVolName,
 }
 
@@ -208,7 +208,7 @@ func (w *IgniteCustomWebhook) validateVolumes(db *olddbapi.Ignite) error {
 
 var IgniteReservedVolumeMountPaths = []string{
 	kubedb.IgniteConfigDir,
-	kubedb.IgniteWorkVolPath,
+	kubedb.IgniteDataDir,
 }
 
 func (w *IgniteCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
