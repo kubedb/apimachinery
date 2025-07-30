@@ -222,6 +222,46 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForClusterMode(req *
 	if req.Spec.HorizontalScaling.Shards == nil && req.Spec.HorizontalScaling.Replicas == nil {
 		return fmt.Errorf("please specify shards or replica for scaling")
 	}
+
+	// verify announce if needed
+	redis := v1.Redis{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
+	if err != nil {
+		return err
+	}
+	oldRepCnt := *redis.Spec.Cluster.Replicas
+	newRepCnt := ptr.Deref(req.Spec.HorizontalScaling.Replicas, *redis.Spec.Cluster.Replicas)
+	oldShardCnt := *redis.Spec.Cluster.Shards
+	newShardCnt := ptr.Deref(req.Spec.HorizontalScaling.Shards, *redis.Spec.Cluster.Shards)
+	if (oldRepCnt < newRepCnt) != (oldShardCnt < newShardCnt) {
+		return fmt.Errorf("can't scale down and up at the same time")
+	}
+	if redis.Spec.Cluster.Announce != nil {
+		if req.Spec.HorizontalScaling.Announce == nil && (oldRepCnt < newRepCnt || oldShardCnt < newShardCnt) {
+			return fmt.Errorf("spec.horizontalScaling.announce is required for announce ops request")
+		}
+		if oldShardCnt <= newShardCnt {
+			shardIdx := 0
+			for i := range newShardCnt {
+				endpointsNeeded := 0
+				if i < oldShardCnt && oldRepCnt < newRepCnt { // if we are looking endpoints for existing shards and need to add endpoints for new replicas
+					endpointsNeeded = int(newRepCnt - oldRepCnt)
+				} else if i >= oldShardCnt { // if need to add new shards
+					endpointsNeeded = int(newRepCnt)
+				}
+				if endpointsNeeded > 0 {
+					if len(req.Spec.HorizontalScaling.Announce.Shards) <= shardIdx {
+						return fmt.Errorf("endpoints for shard %d should be specified", i)
+					}
+					if len(req.Spec.HorizontalScaling.Announce.Shards[shardIdx].Endpoints) != endpointsNeeded {
+						return fmt.Errorf("number of endpoints for shard %d should be %d", i, endpointsNeeded)
+					}
+					shardIdx++
+				}
+			}
+		}
+	}
+
 	return nil
 }
 

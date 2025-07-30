@@ -5948,6 +5948,11 @@ func (in *RedisHorizontalScalingSpec) DeepCopyInto(out *RedisHorizontalScalingSp
 		*out = new(int32)
 		**out = **in
 	}
+	if in.Announce != nil {
+		in, out := &in.Announce, &out.Announce
+		*out = new(Announce)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
