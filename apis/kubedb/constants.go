@@ -1556,6 +1556,7 @@ const (
 
 	ComponentCoOrdinator = "coordinator"
 
+	ClickHouseDataSyncCheckFile           = "/scripts/check.txt"
 	ClickHousePromethusEndpoint           = "/metrics"
 	ClickHouseDataDir                     = "/var/lib/clickhouse"
 	ClickHouseKeeperDataDir               = "/var/lib/clickhouse_keeper"
@@ -1572,9 +1573,12 @@ const (
 	ClickHouseClientCertVolumeName     = "certs"
 	ClickHouseTempClientCertVolumeName = "certs-tmp"
 	ClickHouseTempClientCertMountPath  = "/certs-tmp"
+	ClickHouseScriptsVolumeName        = "scripts"
+	ClickHouseScriptsMountPath         = "/scripts"
 	ClickHouseTempConfigDir            = "/config-tmp"
 	ClickHouseCACertKey                = "ca.crt"
 	ClickHouseCACertPath               = "ca.crt"
+	ClickHouseClientCACertPath         = "client-ca.crt"
 	ClickHouseServerCertKey            = "tls.crt"
 	ClickHouseServerCertPath           = "server.crt"
 	ClickHouseServerKey                = "tls.key"
