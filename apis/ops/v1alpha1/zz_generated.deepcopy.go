@@ -519,11 +519,6 @@ func (in *ClickHouseOpsRequestSpec) DeepCopyInto(out *ClickHouseOpsRequestSpec) 
 		*out = new(ClickHouseCustomConfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.TLS != nil {
-		in, out := &in.TLS, &out.TLS
-		*out = new(TLSSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.Timeout != nil {
 		in, out := &in.Timeout, &out.Timeout
 		*out = new(metav1.Duration)

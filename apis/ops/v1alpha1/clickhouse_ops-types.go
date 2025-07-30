@@ -69,8 +69,6 @@ type ClickHouseOpsRequestSpec struct {
 	VolumeExpansion *ClickHouseVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for custom configuration of clickhouse
 	Configuration *ClickHouseCustomConfigurationSpec `json:"configuration,omitempty"`
-	// Specifies information necessary for configuring TLS
-	TLS *TLSSpec `json:"tls,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -78,8 +76,8 @@ type ClickHouseOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;VerticalScaling;HorizontalScaling;UpdateVersion;VolumeExpansion;Reconfigure;ReconfigureTLS;RotateAuth
-// ENUM(Restart, VerticalScaling, HorizontalScaling, UpdateVersion, VolumeExpansion, Reconfigure, ReconfigureTLS, RotateAuth)
+// +kubebuilder:validation:Enum=Restart;VerticalScaling;HorizontalScaling;UpdateVersion;VolumeExpansion;Reconfigure
+// ENUM(Restart, VerticalScaling, HorizontalScaling, UpdateVersion, VolumeExpansion, Reconfigure)
 type ClickHouseOpsRequestType string
 
 // ClickHouseUpdateVersionSpec contains the update version information of a clickhouse cluster
