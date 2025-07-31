@@ -20,7 +20,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-
 	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -73,6 +72,7 @@ func (w *HazelcastAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Ha
 }
 
 func (w *HazelcastAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.HazelcastAutoscaler) {
+	HazelcastLog.Info("deafualting  opsrequest", "name", scaler.Name)
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.HazelcastOpsrequestOptions{}
 	}
