@@ -72,7 +72,7 @@ func (w *HazelcastAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Ha
 }
 
 func (w *HazelcastAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.HazelcastAutoscaler) {
-	HazelcastLog.Info("deafualting  opsrequest", "name", scaler.Name)
+	HazelcastLog.Info("deafualting Opsrequest", "name", scaler.Name)
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.HazelcastOpsrequestOptions{}
 	}
