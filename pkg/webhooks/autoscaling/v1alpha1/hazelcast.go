@@ -83,8 +83,6 @@ func (w *HazelcastAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosca
 	}
 }
 
-// +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-Hazelcastautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=Hazelcastautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vHazelcastautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
-
 var _ webhook.CustomValidator = &HazelcastAutoscalerCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
