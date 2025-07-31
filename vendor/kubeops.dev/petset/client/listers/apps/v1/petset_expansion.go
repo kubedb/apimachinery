@@ -33,7 +33,7 @@ import (
 // PetSetLister.
 type PetSetListerExpansion interface {
 	GetPodPetSets(pod *v1.Pod) ([]*api.PetSet, error)
-	GetManifestWorksPetSets(mw *apiworkv1.ManifestWork) ([]*api.PetSet, error)
+	GetManifestWorkPetSets(mw *apiworkv1.ManifestWork) ([]*api.PetSet, error)
 }
 
 // PetSetNamespaceListerExpansion allows custom methods to be added to
@@ -82,9 +82,9 @@ func (s *petSetLister) GetPodPetSets(pod *v1.Pod) ([]*api.PetSet, error) {
 	return psList, nil
 }
 
-// GetManifestWorksPetSets returns a list of PetSets that potentially match a manifestwork.
+// GetManifestWorkPetSets returns a list of PetSets that potentially match a manifestwork.
 // It lists PetSets across all namespaces and matches them based on labels.
-func (s *petSetLister) GetManifestWorksPetSets(mw *apiworkv1.ManifestWork) ([]*api.PetSet, error) {
+func (s *petSetLister) GetManifestWorkPetSets(mw *apiworkv1.ManifestWork) ([]*api.PetSet, error) {
 	if len(mw.Labels) == 0 {
 		return nil, fmt.Errorf("no PetSets found for manifestwork %s because it has no labels", mw.Name)
 	}
@@ -109,7 +109,7 @@ func (s *petSetLister) GetManifestWorksPetSets(mw *apiworkv1.ManifestWork) ([]*a
 	}
 
 	if len(psList) == 0 {
-		return nil, fmt.Errorf("could not find any PetSet for manifestwork %s in any namespace with labels: %v", mw.Name, mw.Labels)
+		return nil, fmt.Errorf("could not find any PetSet for manifestwork %v/%s in any namespace with labels: %v", mw.Namespace, mw.Name, mw.Labels)
 	}
 
 	if len(psList) > 1 {

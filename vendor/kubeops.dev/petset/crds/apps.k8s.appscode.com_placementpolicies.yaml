@@ -104,17 +104,19 @@ spec:
                 description: OCM provides spec for distributed pod placements using
                   open cluster management
                 properties:
-                  clusterSpec:
+                  distributionRules:
                     items:
                       properties:
                         clusterName:
                           type: string
                         replicas:
-                          format: int32
-                          type: integer
+                          items:
+                            format: int32
+                            type: integer
+                          type: array
                       type: object
                     type: array
-                  slice:
+                  sliceName:
                     type: string
                 type: object
               zoneSpreadConstraint:

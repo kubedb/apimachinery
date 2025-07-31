@@ -1839,7 +1839,7 @@ kubeops.dev/csi-driver-cacerts/crds
 # kubeops.dev/operator-shard-manager v0.0.3
 ## explicit; go 1.23.0
 kubeops.dev/operator-shard-manager/api/v1alpha1
-# kubeops.dev/petset v0.0.11-0.20250715063016-50e9b1a53a1a
+# kubeops.dev/petset v0.0.11-0.20250731051137-1b6da2a5c895
 ## explicit; go 1.23.6
 kubeops.dev/petset/apis/apps/v1
 kubeops.dev/petset/client/clientset/versioned
