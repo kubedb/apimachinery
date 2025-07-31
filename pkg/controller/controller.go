@@ -39,7 +39,7 @@ import (
 	petsetcs "kubeops.dev/petset/client/clientset/versioned"
 	psinformer "kubeops.dev/petset/client/informers/externalversions"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
-	manifestclient "open-cluster-management.io/api/client/work/clientset/versioned"
+	ocmclient "open-cluster-management.io/api/client/work/clientset/versioned"
 	manifestinformers "open-cluster-management.io/api/client/work/informers/externalversions"
 	manifestlisters "open-cluster-management.io/api/client/work/listers/work/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -59,7 +59,7 @@ type Controller struct {
 	// PetSet client
 	PSClient petsetcs.Interface
 	// ManifestWork client
-	OCMClient manifestclient.Interface
+	OCMClient ocmclient.Interface
 	// Dynamic client
 	DynamicClient dynamic.Interface
 	// AppCatalog client
