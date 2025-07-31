@@ -32,8 +32,9 @@ const (
 
 	KubeDBOrganization = "kubedb"
 
-	LabelRole   = GroupName + "/role"
-	LabelPetSet = GroupName + "/petset"
+	StatefulSetPodNameLabelKey = "statefulset.kubernetes.io/pod-name"
+	LabelRole                  = GroupName + "/role"
+	LabelPetSet                = GroupName + "/petset"
 
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
@@ -364,6 +365,9 @@ const (
 	DatabasePodPrimaryComponent              = "Primary"
 	DatabasePodMasterComponent               = "Master"
 	DatabasePodSlaveComponent                = "Slave"
+	KubeSliceNSMIPKey                        = "kubeslice.io/nsmIP"
+	KubeSlicePodIPVolumeName                 = "podip"
+	KubeSlicePodIPFileName                   = "podip"
 
 	// Maxscale
 	MaxscaleCommonName            = "mx"
