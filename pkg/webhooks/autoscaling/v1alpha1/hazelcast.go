@@ -91,7 +91,7 @@ func (w *HazelcastAutoscalerCustomWebhook) ValidateCreate(ctx context.Context, o
 		return nil, fmt.Errorf("expected an HazelcastAutoscaler object but got %T", obj)
 	}
 
-	HazelcastLog.Info("validate create", "name", scaler.Name)
+	hazelcastLog.Info("validate create", "name", scaler.Name)
 	return nil, w.validate(scaler)
 }
 
