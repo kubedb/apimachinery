@@ -45,7 +45,7 @@ type HazelcastAutoscalerCustomWebhook struct {
 }
 
 // log is for logging in this package.
-var HazelcastLog = logf.Log.WithName("Hazelcast-autoscaler")
+var hazelcastLog = logf.Log.WithName("hazelcast-autoscaler")
 
 var _ webhook.CustomDefaulter = &HazelcastAutoscalerCustomWebhook{}
 
@@ -55,8 +55,7 @@ func (w *HazelcastAutoscalerCustomWebhook) Default(ctx context.Context, obj runt
 	if !ok {
 		return fmt.Errorf("expected an HazelcastAutoscaler object but got %T", obj)
 	}
-
-	HazelcastLog.Info("defaulting", "name", scaler.Name)
+	hazelcastLog.Info("defaulting", "name", scaler.Name)
 	w.setDefaults(scaler)
 	return nil
 }
@@ -73,7 +72,6 @@ func (w *HazelcastAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Ha
 }
 
 func (w *HazelcastAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.HazelcastAutoscaler) {
-	HazelcastLog.Info("deafualting Opsrequest", "name", scaler.Name)
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.HazelcastOpsrequestOptions{}
 	}
@@ -103,7 +101,7 @@ func (w *HazelcastAutoscalerCustomWebhook) ValidateUpdate(ctx context.Context, o
 	if !ok {
 		return nil, fmt.Errorf("expected an HazelcastAutoscaler object but got %T", newObj)
 	}
-
+	hazelcastLog.Info("validate update", "name", scaler.Name)
 	return nil, w.validate(scaler)
 }
 
