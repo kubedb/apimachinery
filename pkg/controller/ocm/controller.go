@@ -18,8 +18,8 @@ package manifestwork
 
 import (
 	"fmt"
+	"sync"
 
-	"kubedb.dev/apimachinery/apis/kubedb"
 	amc "kubedb.dev/apimachinery/pkg/controller"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -27,11 +27,48 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/meta"
+	client_meta "kmodules.xyz/client-go/meta"
 	apiworkv1 "open-cluster-management.io/api/work/v1"
 )
 
+type Store struct {
+	m  map[string]func(*apiworkv1.ManifestWork)
+	mu sync.RWMutex
+}
+
+func NewStore() *Store {
+	s := &Store{}
+	s.Init()
+	return s
+}
+
+func (s *Store) Init() *Store {
+	s.m = make(map[string]func(*apiworkv1.ManifestWork))
+	return s
+}
+
+func (s *Store) Add(name string, f func(*apiworkv1.ManifestWork)) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.m[name] = f
+}
+
+func (s *Store) Get(name string) (func(*apiworkv1.ManifestWork), bool) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	v, ok := s.m[name]
+	return v, ok
+}
+
+func (s *Store) Delete(name string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.m, name)
+}
+
 type ManifestWorkWatcher struct {
 	*amc.Config
+	Store *Store
 }
 
 func NewManifestWorkWatcher(
@@ -39,12 +76,8 @@ func NewManifestWorkWatcher(
 ) *ManifestWorkWatcher {
 	return &ManifestWorkWatcher{
 		Config: config,
+		Store:  NewStore(),
 	}
-}
-
-func (c *ManifestWorkWatcher) InitStore() *ManifestWorkWatcher {
-	c.Config.Store = amc.NewStore()
-	return c
 }
 
 func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
@@ -59,7 +92,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 				return
 			}
 			if !HasRequiredLabels(mw.Labels) {
-				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, kubedb.NamespaceLabelKey, mw.Namespace, mw.Name)
+				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, client_meta.NamespaceLabelKey, mw.Namespace, mw.Name)
 				return
 			}
 			c.addManifestWork(mw)
@@ -68,7 +101,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 			if mw, ok := newObj.(*apiworkv1.ManifestWork); ok {
 
 				if !HasRequiredLabels(mw.Labels) {
-					klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, kubedb.NamespaceLabelKey, mw.Namespace, mw.Name)
+					klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, client_meta.NamespaceLabelKey, mw.Namespace, mw.Name)
 					return
 				}
 				c.updateManifestWork(mw)
@@ -92,7 +125,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 			}
 
 			if !HasRequiredLabels(mw.Labels) {
-				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, kubedb.NamespaceLabelKey, mw.Namespace, mw.Name)
+				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, client_meta.NamespaceLabelKey, mw.Namespace, mw.Name)
 				return
 			}
 			c.deleteManifestWork(mw)
@@ -145,6 +178,6 @@ func HasRequiredLabels(labels map[string]string) bool {
 	_, ok1 := labels[meta.InstanceLabelKey]
 	_, ok2 := labels[meta.NameLabelKey]
 	_, ok3 := labels[meta.ManagedByLabelKey]
-	_, ok4 := labels[kubedb.NamespaceLabelKey]
+	_, ok4 := labels[client_meta.NamespaceLabelKey]
 	return ok1 && ok2 && ok3 && ok4
 }

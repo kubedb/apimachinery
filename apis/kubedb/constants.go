@@ -32,8 +32,6 @@ const (
 
 	KubeDBOrganization = "kubedb"
 
-	NamespaceLabelKey = "app.kubernetes.io/namespace"
-
 	LabelRole   = GroupName + "/role"
 	LabelPetSet = GroupName + "/petset"
 
@@ -502,8 +500,8 @@ const (
 	PostgresCoordinatorClientPort     = 2379
 	PostgresCoordinatorClientPortName = "coordinatclient"
 
-	PostgresGrpcServerPort      = 2384
-	PostgresGrpcServerPortName  = "grpcserver"
+	PostgresGRPCServerPort      = 2384
+	PostgresGRPCServerPortName  = "grpcserver"
 	RaftMetricsExporterPort     = 23790
 	RaftMetricsExporterPortName = "raft-metrics"
 

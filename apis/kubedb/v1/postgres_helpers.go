@@ -69,7 +69,7 @@ func (p Postgres) OffshootSelectors() map[string]string {
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 	if p.Spec.Distributed {
-		sel[kubedb.NamespaceLabelKey] = p.Namespace
+		sel[meta_util.NamespaceLabelKey] = p.Namespace
 	}
 	return sel
 }
@@ -143,15 +143,15 @@ func (p Postgres) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(p.ServiceName(), "pods")
 }
 
-func (p Postgres) RBACManifestWorkName() string {
+func (p Postgres) OffshootDistributedRBACName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), "rbac")
 }
 
-func (p Postgres) ServiceExportManifestWorkName() string {
+func (p Postgres) OffshootDistributedServiceExportName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), "serviceexport")
 }
 
-func (p Postgres) AuthSecretManifestWorkName() string {
+func (p Postgres) OffshootDistributedAuthSecretName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), "auth")
 }
 
