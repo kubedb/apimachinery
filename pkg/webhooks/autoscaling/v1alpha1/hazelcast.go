@@ -47,8 +47,6 @@ type HazelcastAutoscalerCustomWebhook struct {
 // log is for logging in this package.
 var HazelcastLog = logf.Log.WithName("Hazelcast-autoscaler")
 
-// +kubebuilder:webhook:path=/mutate-autoscaling-kubedb-com-v1alpha1-Hazelcastautoscaler,mutating=true,failurePolicy=fail,sideEffects=None,groups=autoscaling.kubedb.com,resources=Hazelcastautoscaler,verbs=create;update,versions=v1alpha1,name=mHazelcastautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
-
 var _ webhook.CustomDefaulter = &HazelcastAutoscalerCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
