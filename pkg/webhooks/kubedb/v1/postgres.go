@@ -38,6 +38,7 @@ import (
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -371,6 +372,21 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 	if postgres.IsRemoteReplica() && postgresVersion.Spec.Version < "13" {
 		return nil, fmt.Errorf("remote replica is not currently supported for version bellow 13")
 	}
+
+	if postgres.Spec.Distributed {
+		if postgres.Spec.PodTemplate.Spec.PodPlacementPolicy == nil {
+			return nil, fmt.Errorf(`'spec.podPlacementPolicy' is required for distributed postgres`)
+		}
+		pp := psapi.PlacementPolicy{}
+		err = wh.DefaultClient.Get(context.Background(), client.ObjectKey{Name: postgres.Spec.PodTemplate.Spec.PodPlacementPolicy.Name}, &pp)
+		if err != nil {
+			return nil, err
+		}
+		if pp.Spec.OCM == nil {
+			return nil, fmt.Errorf(`'spec.ocm' is required in %v/%v for distributed postgres`, pp.Namespace, pp.Name)
+		}
+	}
+
 	return nil, nil
 }
 

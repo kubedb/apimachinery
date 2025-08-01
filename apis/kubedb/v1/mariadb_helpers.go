@@ -62,12 +62,36 @@ func (m MariaDB) OffshootMaxscaleName() string {
 	return meta_util.NameWithSuffix(m.Name, kubedb.MaxscaleCommonName)
 }
 
+func (m MariaDB) OffshootDistributedConfigSecretName() string {
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedCustomConfigSecretNameSuffix)
+}
+
+func (m MariaDB) OffshootDistributedRBACName() string {
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedRBACNameSuffix)
+}
+
+func (m MariaDB) OffshootDistributedServiceExportName() string {
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedServiceExportNameSuffix)
+}
+
+func (m MariaDB) OffshootDistributedAuthSecretName() string {
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedAuthSecretNameSuffix)
+}
+
+func (m MariaDB) OffshootDistributedTLSName() string {
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedTLSSecretNameSuffix)
+}
+
 func (m MariaDB) OffshootSelectors() map[string]string {
-	return map[string]string{
+	label := map[string]string{
 		meta_util.NameLabelKey:      m.ResourceFQN(),
 		meta_util.InstanceLabelKey:  m.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
+	if m.Spec.Distributed {
+		label[meta_util.NamespaceLabelKey] = m.Namespace
+	}
+	return label
 }
 
 func (m MariaDB) OffshootMaxscaleSelectors() map[string]string {

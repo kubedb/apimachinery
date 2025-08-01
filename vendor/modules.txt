@@ -1742,7 +1742,7 @@ k8s.io/utils/trace
 # kmodules.xyz/apiversion v0.2.0
 ## explicit; go 1.14
 kmodules.xyz/apiversion
-# kmodules.xyz/client-go v0.32.6
+# kmodules.xyz/client-go v0.32.7-0.20250730141201-402b812f74fc
 ## explicit; go 1.23.0
 kmodules.xyz/client-go
 kmodules.xyz/client-go/api/v1
@@ -1839,8 +1839,8 @@ kubeops.dev/csi-driver-cacerts/crds
 # kubeops.dev/operator-shard-manager v0.0.3
 ## explicit; go 1.23.0
 kubeops.dev/operator-shard-manager/api/v1alpha1
-# kubeops.dev/petset v0.0.10
-## explicit; go 1.23.0
+# kubeops.dev/petset v0.0.11-0.20250801083020-28b965031cfb
+## explicit; go 1.23.6
 kubeops.dev/petset/apis/apps/v1
 kubeops.dev/petset/client/clientset/versioned
 kubeops.dev/petset/client/clientset/versioned/scheme
@@ -1866,6 +1866,22 @@ kubestash.dev/apimachinery/crds
 # moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7
 ## explicit; go 1.13
 moul.io/http2curl/v2
+# open-cluster-management.io/api v1.0.0
+## explicit; go 1.23.6
+open-cluster-management.io/api/client/work/clientset/versioned
+open-cluster-management.io/api/client/work/clientset/versioned/scheme
+open-cluster-management.io/api/client/work/clientset/versioned/typed/work/v1
+open-cluster-management.io/api/client/work/clientset/versioned/typed/work/v1alpha1
+open-cluster-management.io/api/client/work/informers/externalversions
+open-cluster-management.io/api/client/work/informers/externalversions/internalinterfaces
+open-cluster-management.io/api/client/work/informers/externalversions/work
+open-cluster-management.io/api/client/work/informers/externalversions/work/v1
+open-cluster-management.io/api/client/work/informers/externalversions/work/v1alpha1
+open-cluster-management.io/api/client/work/listers/work/v1
+open-cluster-management.io/api/client/work/listers/work/v1alpha1
+open-cluster-management.io/api/cluster/v1alpha1
+open-cluster-management.io/api/work/v1
+open-cluster-management.io/api/work/v1alpha1
 # sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.31.1
 ## explicit; go 1.21
 sigs.k8s.io/apiserver-network-proxy/konnectivity-client/pkg/client

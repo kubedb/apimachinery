@@ -1,6 +1,6 @@
 module kubedb.dev/apimachinery
 
-go 1.23.0
+go 1.23.6
 
 toolchain go1.24.0
 
@@ -41,7 +41,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff
 	k8s.io/metrics v0.32.3
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
-	kmodules.xyz/client-go v0.32.6
+	kmodules.xyz/client-go v0.32.7-0.20250730141201-402b812f74fc
 	kmodules.xyz/crd-schema-fuzz v0.32.0
 	kmodules.xyz/custom-resources v0.32.0
 	kmodules.xyz/monitoring-agent-api v0.32.0
@@ -51,9 +51,10 @@ require (
 	kmodules.xyz/webhook-runtime v0.32.0
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/operator-shard-manager v0.0.3
-	kubeops.dev/petset v0.0.10
+	kubeops.dev/petset v0.0.11-0.20250801083020-28b965031cfb
 	kubeops.dev/sidekick v0.0.11
 	kubestash.dev/apimachinery v0.19.0
+	open-cluster-management.io/api v1.0.0
 	sigs.k8s.io/controller-runtime v0.20.4
 	sigs.k8s.io/yaml v1.4.0
 	stash.appscode.dev/apimachinery v0.39.0

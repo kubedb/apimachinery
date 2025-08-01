@@ -32,8 +32,19 @@ const (
 
 	KubeDBOrganization = "kubedb"
 
-	LabelRole   = GroupName + "/role"
-	LabelPetSet = GroupName + "/petset"
+	StatefulSetPodNameLabelKey = "statefulset.kubernetes.io/pod-name"
+	LabelRole                  = GroupName + "/role"
+	LabelPetSet                = GroupName + "/petset"
+
+	// distributed const
+	DistributedCustomConfigSecretNameSuffix = "custom-config"
+	DistributedRBACNameSuffix               = "rbac"
+	DistributedServiceExportNameSuffix      = "serviceexports"
+	DistributedTLSSecretNameSuffix          = "tls-secrets"
+	DistributedAuthSecretNameSuffix         = "auth"
+	KubeSliceNSMIPKey                       = "kubeslice.io/nsmIP"
+	KubeSlicePodIPVolumeName                = "podip"
+	KubeSlicePodIPFileName                  = "podip"
 
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
@@ -497,6 +508,8 @@ const (
 	PostgresCoordinatorClientPort     = 2379
 	PostgresCoordinatorClientPortName = "coordinatclient"
 
+	PostgresGRPCServerPort      = 2384
+	PostgresGRPCServerPortName  = "grpcserver"
 	RaftMetricsExporterPort     = 23790
 	RaftMetricsExporterPortName = "raft-metrics"
 

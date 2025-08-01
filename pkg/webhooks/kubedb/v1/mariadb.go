@@ -40,6 +40,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -435,5 +436,20 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 			return err
 		}
 	}
+
+	if mariadb.Spec.Distributed {
+		if mariadb.Spec.PodTemplate.Spec.PodPlacementPolicy == nil {
+			return fmt.Errorf(`'spec.podPlacementPolicy' is required for distributed postgres`)
+		}
+		pp := psapi.PlacementPolicy{}
+		err = w.DefaultClient.Get(context.Background(), client.ObjectKey{Name: mariadb.Spec.PodTemplate.Spec.PodPlacementPolicy.Name}, &pp)
+		if err != nil {
+			return err
+		}
+		if pp.Spec.OCM == nil {
+			return fmt.Errorf(`'spec.ocm' is required in %v for distributed mariadb`, pp.Name)
+		}
+	}
+
 	return nil
 }
