@@ -23,7 +23,6 @@ import (
 
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -91,28 +90,12 @@ func (r FerretDB) roleResourceFn(fn func(rr core.ResourceRequirements) core.Reso
 			return nil, err
 		}
 
-		storage, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "storage")
-		if err != nil || !found {
-			return nil, err
-		}
-		var vol core.PersistentVolumeClaimSpec
-		err = runtime.DefaultUnstructuredConverter.FromUnstructured(storage.(map[string]interface{}), &vol)
-		if err != nil {
-			return nil, err
-		}
-
-		quantity, found := vol.Resources.Requests[core.ResourceStorage]
-		if !found || quantity.IsZero() {
-			return nil, fmt.Errorf("no storage found for %v", obj)
-		}
-		pc[core.ResourceStorage] = quantity
-
 		ret := map[api.PodRole]api.PodInfo{
 			api.PodRolePrimary:  {Resource: pc, Replicas: pr},
 			api.PodRoleExporter: {Resource: exporter, Replicas: pr},
 		}
 
-		_, found, err = unstructured.NestedFieldNoCopy(obj, "spec", "server", "secondary")
+		_, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "server", "secondary")
 		if found && err == nil {
 			sc, sr, err := api.AppNodeResourcesV2(obj, fn, FerretDBContainerName, "spec", "server", "secondary")
 			if err != nil {

@@ -35,6 +35,7 @@ const (
 	PodRoleReplicasPerShard PodRole = "replicas_per_shard"
 	PodRoleConfigServer     PodRole = "config_server"
 	PodRoleMongos           PodRole = "mongos"
+	PodRoleObserver         PodRole = "observer"
 
 	PodRoleAggregator        PodRole = "aggregator"
 	PodRoleLeaf              PodRole = "leaf"
