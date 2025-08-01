@@ -36,6 +36,16 @@ const (
 	LabelRole                  = GroupName + "/role"
 	LabelPetSet                = GroupName + "/petset"
 
+	// distributed const
+	DistributedCustomConfigSecretNameSuffix = "custom-config"
+	DistributedRBACNameSuffix               = "rbac"
+	DistributedServiceExportNameSuffix      = "serviceexports"
+	DistributedTLSSecretNameSuffix          = "tls-secrets"
+	DistributedAuthSecretNameSuffix         = "auth"
+	KubeSliceNSMIPKey                       = "kubeslice.io/nsmIP"
+	KubeSlicePodIPVolumeName                = "podip"
+	KubeSlicePodIPFileName                  = "podip"
+
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
 	DatabasePodStandby                   = "standby"
@@ -365,9 +375,6 @@ const (
 	DatabasePodPrimaryComponent              = "Primary"
 	DatabasePodMasterComponent               = "Master"
 	DatabasePodSlaveComponent                = "Slave"
-	KubeSliceNSMIPKey                        = "kubeslice.io/nsmIP"
-	KubeSlicePodIPVolumeName                 = "podip"
-	KubeSlicePodIPFileName                   = "podip"
 
 	// Maxscale
 	MaxscaleCommonName            = "mx"

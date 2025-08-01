@@ -63,23 +63,23 @@ func (m MariaDB) OffshootMaxscaleName() string {
 }
 
 func (m MariaDB) OffshootDistributedConfigSecretName() string {
-	return client_meta.NameWithSuffix(m.Name, kubedb.MariaDBDistributedCustomConfigSecretName)
+	return client_meta.NameWithSuffix(m.Name, kubedb.DistributedCustomConfigSecretNameSuffix)
 }
 
 func (m MariaDB) OffshootDistributedRBACName() string {
-	return client_meta.NameWithSuffix(m.Name, kubedb.MariaDBDistributedRBACName)
+	return client_meta.NameWithSuffix(m.Name, kubedb.DistributedRBACNameSuffix)
 }
 
 func (m MariaDB) OffshootDistributedServiceExportName() string {
-	return client_meta.NameWithSuffix(m.Name, kubedb.MariaDBDistributedServiceExportName)
+	return client_meta.NameWithSuffix(m.Name, kubedb.DistributedServiceExportNameSuffix)
 }
 
 func (m MariaDB) OffshootDistributedAuthSecretName() string {
-	return client_meta.NameWithSuffix(m.Name, "auth")
+	return client_meta.NameWithSuffix(m.Name, kubedb.DistributedAuthSecretNameSuffix)
 }
 
 func (m MariaDB) OffshootDistributedTLSName() string {
-	return client_meta.NameWithSuffix(m.Name, "tls-secrets")
+	return client_meta.NameWithSuffix(m.Name, kubedb.DistributedTLSSecretNameSuffix)
 }
 
 func (m MariaDB) OffshootSelectors() map[string]string {

@@ -144,15 +144,15 @@ func (p Postgres) GoverningServiceName() string {
 }
 
 func (p Postgres) OffshootDistributedRBACName() string {
-	return meta_util.NameWithSuffix(p.OffshootName(), "rbac")
+	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.DistributedRBACNameSuffix)
 }
 
 func (p Postgres) OffshootDistributedServiceExportName() string {
-	return meta_util.NameWithSuffix(p.OffshootName(), "serviceexport")
+	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.DistributedServiceExportNameSuffix)
 }
 
 func (p Postgres) OffshootDistributedAuthSecretName() string {
-	return meta_util.NameWithSuffix(p.OffshootName(), "auth")
+	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.DistributedAuthSecretNameSuffix)
 }
 
 type postgresApp struct {
