@@ -28,11 +28,11 @@ import (
 	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/meta"
 	client_meta "kmodules.xyz/client-go/meta"
-	apiworkv1 "open-cluster-management.io/api/work/v1"
+	kubesliceapi "open-cluster-management.io/api/work/v1"
 )
 
 type Store struct {
-	m  map[string]func(*apiworkv1.ManifestWork)
+	m  map[string]func(*kubesliceapi.ManifestWork)
 	mu sync.RWMutex
 }
 
@@ -43,17 +43,17 @@ func NewStore() *Store {
 }
 
 func (s *Store) Init() *Store {
-	s.m = make(map[string]func(*apiworkv1.ManifestWork))
+	s.m = make(map[string]func(*kubesliceapi.ManifestWork))
 	return s
 }
 
-func (s *Store) Add(name string, f func(*apiworkv1.ManifestWork)) {
+func (s *Store) Add(name string, f func(*kubesliceapi.ManifestWork)) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.m[name] = f
 }
 
-func (s *Store) Get(name string) (func(*apiworkv1.ManifestWork), bool) {
+func (s *Store) Get(name string) (func(*kubesliceapi.ManifestWork), bool) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	v, ok := s.m[name]
@@ -87,7 +87,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 	c.MWLister = c.ManifestInformerFactory.Work().V1().ManifestWorks().Lister()
 	_, _ = c.MWInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
-			mw, ok := obj.(*apiworkv1.ManifestWork)
+			mw, ok := obj.(*kubesliceapi.ManifestWork)
 			if !ok {
 				return
 			}
@@ -98,7 +98,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 			c.addManifestWork(mw)
 		},
 		UpdateFunc: func(oldObj, newObj interface{}) {
-			if mw, ok := newObj.(*apiworkv1.ManifestWork); ok {
+			if mw, ok := newObj.(*kubesliceapi.ManifestWork); ok {
 
 				if !HasRequiredLabels(mw.Labels) {
 					klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, client_meta.NamespaceLabelKey, mw.Namespace, mw.Name)
@@ -108,15 +108,15 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 			}
 		},
 		DeleteFunc: func(obj interface{}) {
-			var mw *apiworkv1.ManifestWork
+			var mw *kubesliceapi.ManifestWork
 			var ok bool
-			if mw, ok = obj.(*apiworkv1.ManifestWork); !ok {
+			if mw, ok = obj.(*kubesliceapi.ManifestWork); !ok {
 				tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
 				if !ok {
 					klog.V(5).Info("error decoding object, invalid type")
 					return
 				}
-				mw, ok = tombstone.Obj.(*apiworkv1.ManifestWork)
+				mw, ok = tombstone.Obj.(*kubesliceapi.ManifestWork)
 				if !ok {
 					utilruntime.HandleError(fmt.Errorf("error decoding object tombstone, invalid type"))
 					return
@@ -134,7 +134,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 }
 
 // addManifest adds the ManifestWork for the manifestwork to the sync queue
-func (c *ManifestWorkWatcher) addManifestWork(mw *apiworkv1.ManifestWork) {
+func (c *ManifestWorkWatcher) addManifestWork(mw *kubesliceapi.ManifestWork) {
 	if mw.DeletionTimestamp != nil {
 		klog.Infoln("need to delete manifestwork", mw.Name)
 		// on a restart of the controller manager, it's possible a new pod shows up in a state that
@@ -153,7 +153,7 @@ func (c *ManifestWorkWatcher) addManifestWork(mw *apiworkv1.ManifestWork) {
 }
 
 // updateManifestWork adds the ManifestWork for the current and ManifestWork pods to the sync queue.
-func (c *ManifestWorkWatcher) updateManifestWork(curMW *apiworkv1.ManifestWork) {
+func (c *ManifestWorkWatcher) updateManifestWork(curMW *kubesliceapi.ManifestWork) {
 	name := curMW.Labels[meta.NameLabelKey]
 	fn, exists := c.Store.Get(name)
 	if !exists {
@@ -164,7 +164,7 @@ func (c *ManifestWorkWatcher) updateManifestWork(curMW *apiworkv1.ManifestWork) 
 }
 
 // deleteManifestWork enqueues the ManifestWork for the ManifestWork accounting for deletion tombstones.
-func (c *ManifestWorkWatcher) deleteManifestWork(mw *apiworkv1.ManifestWork) {
+func (c *ManifestWorkWatcher) deleteManifestWork(mw *kubesliceapi.ManifestWork) {
 	name := mw.Labels[meta.NameLabelKey]
 	fn, exists := c.Store.Get(name)
 	if !exists {

@@ -447,7 +447,7 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 			return err
 		}
 		if pp.Spec.OCM == nil {
-			return fmt.Errorf(`'spec.ocm' is required in %v/%v for distributed postgres`, pp.Namespace, pp.Name)
+			return fmt.Errorf(`'spec.ocm' is required in %v for distributed mariadb`, pp.Name)
 		}
 	}
 

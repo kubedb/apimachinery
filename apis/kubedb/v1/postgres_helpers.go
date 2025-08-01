@@ -155,6 +155,14 @@ func (p Postgres) OffshootDistributedAuthSecretName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.DistributedAuthSecretNameSuffix)
 }
 
+func (p Postgres) OffshootDistributedTLSName() string {
+	return meta_util.NameWithSuffix(p.Name, kubedb.DistributedTLSSecretNameSuffix)
+}
+
+func (p Postgres) OffshootDistributedConfigSecretName() string {
+	return meta_util.NameWithSuffix(p.Name, kubedb.DistributedCustomConfigSecretNameSuffix)
+}
+
 type postgresApp struct {
 	*Postgres
 }
