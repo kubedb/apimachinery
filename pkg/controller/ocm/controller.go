@@ -27,7 +27,7 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/meta"
-	client_meta "kmodules.xyz/client-go/meta"
+	meta_util "kmodules.xyz/client-go/meta"
 	kubesliceapi "open-cluster-management.io/api/work/v1"
 )
 
@@ -92,7 +92,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 				return
 			}
 			if !HasRequiredLabels(mw.Labels) {
-				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, client_meta.NamespaceLabelKey, mw.Namespace, mw.Name)
+				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, meta_util.NamespaceLabelKey, mw.Namespace, mw.Name)
 				return
 			}
 			c.addManifestWork(mw)
@@ -101,7 +101,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 			if mw, ok := newObj.(*kubesliceapi.ManifestWork); ok {
 
 				if !HasRequiredLabels(mw.Labels) {
-					klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, client_meta.NamespaceLabelKey, mw.Namespace, mw.Name)
+					klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, meta_util.NamespaceLabelKey, mw.Namespace, mw.Name)
 					return
 				}
 				c.updateManifestWork(mw)
@@ -125,7 +125,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 			}
 
 			if !HasRequiredLabels(mw.Labels) {
-				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, client_meta.NamespaceLabelKey, mw.Namespace, mw.Name)
+				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, meta_util.NamespaceLabelKey, mw.Namespace, mw.Name)
 				return
 			}
 			c.deleteManifestWork(mw)
@@ -178,6 +178,6 @@ func HasRequiredLabels(labels map[string]string) bool {
 	_, ok1 := labels[meta.InstanceLabelKey]
 	_, ok2 := labels[meta.NameLabelKey]
 	_, ok3 := labels[meta.ManagedByLabelKey]
-	_, ok4 := labels[client_meta.NamespaceLabelKey]
+	_, ok4 := labels[meta_util.NamespaceLabelKey]
 	return ok1 && ok2 && ok3 && ok4
 }

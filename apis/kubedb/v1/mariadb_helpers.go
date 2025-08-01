@@ -34,7 +34,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	core_util "kmodules.xyz/client-go/core/v1"
-	client_meta "kmodules.xyz/client-go/meta"
+	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
@@ -59,46 +59,46 @@ func (m MariaDB) OffshootName() string {
 }
 
 func (m MariaDB) OffshootMaxscaleName() string {
-	return client_meta.NameWithSuffix(m.Name, kubedb.MaxscaleCommonName)
+	return meta_util.NameWithSuffix(m.Name, kubedb.MaxscaleCommonName)
 }
 
 func (m MariaDB) OffshootDistributedConfigSecretName() string {
-	return client_meta.NameWithSuffix(m.Name, kubedb.DistributedCustomConfigSecretNameSuffix)
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedCustomConfigSecretNameSuffix)
 }
 
 func (m MariaDB) OffshootDistributedRBACName() string {
-	return client_meta.NameWithSuffix(m.Name, kubedb.DistributedRBACNameSuffix)
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedRBACNameSuffix)
 }
 
 func (m MariaDB) OffshootDistributedServiceExportName() string {
-	return client_meta.NameWithSuffix(m.Name, kubedb.DistributedServiceExportNameSuffix)
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedServiceExportNameSuffix)
 }
 
 func (m MariaDB) OffshootDistributedAuthSecretName() string {
-	return client_meta.NameWithSuffix(m.Name, kubedb.DistributedAuthSecretNameSuffix)
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedAuthSecretNameSuffix)
 }
 
 func (m MariaDB) OffshootDistributedTLSName() string {
-	return client_meta.NameWithSuffix(m.Name, kubedb.DistributedTLSSecretNameSuffix)
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedTLSSecretNameSuffix)
 }
 
 func (m MariaDB) OffshootSelectors() map[string]string {
 	label := map[string]string{
-		client_meta.NameLabelKey:      m.ResourceFQN(),
-		client_meta.InstanceLabelKey:  m.Name,
-		client_meta.ManagedByLabelKey: kubedb.GroupName,
+		meta_util.NameLabelKey:      m.ResourceFQN(),
+		meta_util.InstanceLabelKey:  m.Name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 	if m.Spec.Distributed {
-		label[client_meta.NamespaceLabelKey] = m.Namespace
+		label[meta_util.NamespaceLabelKey] = m.Namespace
 	}
 	return label
 }
 
 func (m MariaDB) OffshootMaxscaleSelectors() map[string]string {
 	return map[string]string{
-		client_meta.NameLabelKey:      m.ResourceFQN(),
-		client_meta.InstanceLabelKey:  m.OffshootMaxscaleName(),
-		client_meta.ManagedByLabelKey: kubedb.GroupName,
+		meta_util.NameLabelKey:      m.ResourceFQN(),
+		meta_util.InstanceLabelKey:  m.OffshootMaxscaleName(),
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
 	}
 }
 
@@ -127,21 +127,21 @@ func (m MariaDB) MaxscalePodControllerLabels() map[string]string {
 }
 
 func (m MariaDB) SidekickLabels(skName string) map[string]string {
-	return client_meta.OverwriteKeys(nil, kubedb.CommonSidekickLabels(), map[string]string{
-		client_meta.InstanceLabelKey: skName,
-		kubedb.SidekickOwnerName:     m.Name,
-		kubedb.SidekickOwnerKind:     m.ResourceFQN(),
+	return meta_util.OverwriteKeys(nil, kubedb.CommonSidekickLabels(), map[string]string{
+		meta_util.InstanceLabelKey: skName,
+		kubedb.SidekickOwnerName:   m.Name,
+		kubedb.SidekickOwnerKind:   m.ResourceFQN(),
 	})
 }
 
 func (m MariaDB) offshootLabels(selector, override map[string]string) map[string]string {
-	selector[client_meta.ComponentLabelKey] = kubedb.ComponentDatabase
-	return client_meta.FilterKeys(kubedb.GroupName, selector, client_meta.OverwriteKeys(nil, m.Labels, override))
+	selector[meta_util.ComponentLabelKey] = kubedb.ComponentDatabase
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, m.Labels, override))
 }
 
 func (m MariaDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
-	return m.offshootLabels(client_meta.OverwriteKeys(m.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (m MariaDB) ResourceFQN() string {
@@ -169,7 +169,7 @@ func (m MariaDB) ServiceName() string {
 }
 
 func (m MariaDB) StandbyServiceName() string {
-	return client_meta.NameWithPrefix(m.OffshootName(), "standby")
+	return meta_util.NameWithPrefix(m.OffshootName(), "standby")
 }
 
 func (m MariaDB) IsCluster() bool {
@@ -191,11 +191,11 @@ func (m MariaDB) IsMariaDBReplication() bool {
 }
 
 func (m MariaDB) GoverningServiceName() string {
-	return client_meta.NameWithSuffix(m.ServiceName(), "pods")
+	return meta_util.NameWithSuffix(m.ServiceName(), "pods")
 }
 
 func (m MariaDB) MaxscaleGoverningServiceName() string {
-	return client_meta.NameWithSuffix(m.OffshootMaxscaleName(), "pods")
+	return meta_util.NameWithSuffix(m.OffshootMaxscaleName(), "pods")
 }
 
 func (m MariaDB) PeerName(idx int) string {
@@ -206,7 +206,7 @@ func (m MariaDB) GetAuthSecretName() string {
 	if m.Spec.AuthSecret != nil && m.Spec.AuthSecret.Name != "" {
 		return m.Spec.AuthSecret.Name
 	}
-	return client_meta.NameWithSuffix(m.OffshootName(), "auth")
+	return meta_util.NameWithSuffix(m.OffshootName(), "auth")
 }
 
 func (m MariaDB) ClusterName() string {
@@ -547,7 +547,7 @@ func (m *MariaDBSpec) GetPersistentSecrets() []string {
 
 // CertificateName returns the default certificate name and/or certificate secret name for a certificate alias
 func (m *MariaDB) CertificateName(alias MariaDBCertificateAlias) string {
-	return client_meta.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
+	return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
 // GetCertSecretName returns the secret name for a certificate alias if any,
@@ -569,7 +569,7 @@ func (m *MariaDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, 
 }
 
 func (m *MariaDB) InlineConfigSecretName() string {
-	return client_meta.NameWithSuffix(m.Name, "inline")
+	return meta_util.NameWithSuffix(m.Name, "inline")
 }
 
 func (m *MariaDB) CertMountPath(alias MariaDBCertificateAlias) string {
