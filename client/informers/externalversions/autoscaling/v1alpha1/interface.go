@@ -38,6 +38,8 @@ type Interface interface {
 	FerretDBAutoscalers() FerretDBAutoscalerInformer
 	// HazelcastAutoscalers returns a HazelcastAutoscalerInformer.
 	HazelcastAutoscalers() HazelcastAutoscalerInformer
+	// IgniteAutoscalers returns a IgniteAutoscalerInformer.
+	IgniteAutoscalers() IgniteAutoscalerInformer
 	// KafkaAutoscalers returns a KafkaAutoscalerInformer.
 	KafkaAutoscalers() KafkaAutoscalerInformer
 	// MSSQLServerAutoscalers returns a MSSQLServerAutoscalerInformer.
@@ -118,6 +120,11 @@ func (v *version) FerretDBAutoscalers() FerretDBAutoscalerInformer {
 // HazelcastAutoscalers returns a HazelcastAutoscalerInformer.
 func (v *version) HazelcastAutoscalers() HazelcastAutoscalerInformer {
 	return &hazelcastAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// IgniteAutoscalers returns a IgniteAutoscalerInformer.
+func (v *version) IgniteAutoscalers() IgniteAutoscalerInformer {
+	return &igniteAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // KafkaAutoscalers returns a KafkaAutoscalerInformer.
