@@ -76,8 +76,8 @@ type ClickHouseOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;VerticalScaling;HorizontalScaling;UpdateVersion;VolumeExpansion;Reconfigure
-// ENUM(Restart, VerticalScaling, HorizontalScaling, UpdateVersion, VolumeExpansion, Reconfigure)
+// +kubebuilder:validation:Enum=Restart;VerticalScaling;HorizontalScaling;UpdateVersion;VolumeExpansion;Reconfigure;ReconfigureTLS;RotateAuth
+// ENUM(Restart, VerticalScaling, HorizontalScaling, UpdateVersion, VolumeExpansion, Reconfigure, ReconfigureTLS, RotateAuth)
 type ClickHouseOpsRequestType string
 
 // ClickHouseUpdateVersionSpec contains the update version information of a clickhouse cluster
