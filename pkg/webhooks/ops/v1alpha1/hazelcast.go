@@ -201,7 +201,7 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastHorizontalScalingOps
 		return err
 	}
 	if horizontalScalingSpec.Hazelcast == nil {
-		return errors.New("spec.horizontalScalingSpec.Hazelcast can't be mpty at the same ops request")
+		return errors.New("spec.horizontalScalingSpec.Hazelcast can't be empty at the same ops request")
 	}
 
 	return nil
