@@ -106,6 +106,8 @@ spec:
                 - UpdateVersion
                 - VolumeExpansion
                 - Reconfigure
+                - ReconfigureTLS
+                - RotateAuth
                 type: string
               updateVersion:
                 properties:
