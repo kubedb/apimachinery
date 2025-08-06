@@ -163,6 +163,14 @@ func (p Postgres) OffshootDistributedConfigSecretName() string {
 	return meta_util.NameWithSuffix(p.Name, kubedb.DistributedCustomConfigSecretNameSuffix)
 }
 
+func (p Postgres) GetGRPCSelfSignedIssuerName() string {
+	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.PostgresGRPCSelfSignedIssuerName)
+}
+
+func (p Postgres) GetGRPCIssuerName() string {
+	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.PostgresGRPCIssuerName)
+}
+
 type postgresApp struct {
 	*Postgres
 }

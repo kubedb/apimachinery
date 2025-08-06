@@ -553,6 +553,9 @@ const (
 	SYS_RESOURCE              = "SYS_RESOURCE"
 	DropCapabilityALL         = "ALL"
 
+	PostgresGRPCIssuerName           = "grpc-issuer"
+	PostgresGRPCSelfSignedIssuerName = "grpc-selfsigned"
+
 	// =========================== ProxySQL Constants ============================
 	LabelProxySQLName                  = ProxySQLKey + "/name"
 	LabelProxySQLLoadBalance           = ProxySQLKey + "/load-balance"
