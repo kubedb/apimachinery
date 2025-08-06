@@ -41,6 +41,7 @@ const (
 	DistributedRBACNameSuffix               = "rbac"
 	DistributedServiceExportNameSuffix      = "serviceexports"
 	DistributedTLSSecretNameSuffix          = "tls-secrets"
+	DistributedGRPCSecretNameSuffix         = "grpc-secrets"
 	DistributedAuthSecretNameSuffix         = "auth"
 	KubeSliceNSMIPKey                       = "kubeslice.io/nsmIP"
 	KubeSlicePodIPVolumeName                = "podip"

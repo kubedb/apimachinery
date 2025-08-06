@@ -171,6 +171,10 @@ func (p Postgres) GetGRPCIssuerName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.PostgresGRPCIssuerName)
 }
 
+func (p Postgres) OffshootDistributedGRPCSecretName() string {
+	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.DistributedGRPCSecretNameSuffix)
+}
+
 type postgresApp struct {
 	*Postgres
 }
