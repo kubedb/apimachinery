@@ -184,8 +184,8 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVerticalScalingOpsRe
 	if err != nil {
 		return err
 	}
-	if verticalScalingSpec.Hazelcast != nil {
-		return errors.New("spec.verticalScaling.Hazelcast can't be non-empty at the same ops request")
+	if verticalScalingSpec.Hazelcast == nil {
+		return errors.New("spec.verticalScaling.Hazelcast can't be empty at the same ops request")
 	}
 
 	return nil
@@ -200,8 +200,8 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastHorizontalScalingOps
 	if err != nil {
 		return err
 	}
-	if horizontalScalingSpec.Hazelcast != nil {
-		return errors.New("spec.horizontalScalingSpec.Hazelcast can't be non-empty at the same ops request")
+	if horizontalScalingSpec.Hazelcast == nil {
+		return errors.New("spec.horizontalScalingSpec.Hazelcast can't be empty at the same ops request")
 	}
 
 	return nil
@@ -216,8 +216,8 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVolumeExpansionOpsRe
 	if err != nil {
 		return err
 	}
-	if volumeExpansionSpec.Hazelcast != nil {
-		return errors.New("spec.volumeExpansion.Hazelcast both can't be non-empty at the same ops request")
+	if volumeExpansionSpec.Hazelcast == nil {
+		return errors.New("spec.volumeExpansion.Hazelcast can't be empty at the same ops request")
 	}
 
 	return nil
