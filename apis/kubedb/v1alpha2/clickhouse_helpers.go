@@ -315,6 +315,14 @@ func (c *ClickHouse) StatsServiceLabels() map[string]string {
 	return c.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
+func (r *ClickHouse) SetTLSDefaults() {
+	if r.Spec.TLS == nil || r.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(ClickHouseServerCert), r.CertificateName(ClickHouseServerCert))
+	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(ClickHouseClientCert), r.CertificateName(ClickHouseClientCert))
+}
+
 func (c *ClickHouse) SetDefaults(kc client.Client) {
 	var chVersion catalog.ClickHouseVersion
 	err := kc.Get(context.TODO(), types.NamespacedName{

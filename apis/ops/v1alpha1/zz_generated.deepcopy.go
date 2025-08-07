@@ -529,6 +529,16 @@ func (in *ClickHouseOpsRequestSpec) DeepCopyInto(out *ClickHouseOpsRequestSpec) 
 		*out = new(metav1.Duration)
 		**out = **in
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(TLSSpec)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.KeystoreCredSecret != nil {
+		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
+		*out = new(v1alpha2.SecretReference)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
