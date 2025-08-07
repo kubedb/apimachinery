@@ -17,7 +17,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/iancoleman/orderedmap v0.3.0
 	github.com/json-iterator/go v1.1.12
-	github.com/kubernetes-csi/external-snapshotter/client/v7 v7.0.0
+	github.com/kubernetes-csi/external-snapshotter/client/v8 v8.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.81.0
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.81.0
@@ -53,11 +53,11 @@ require (
 	kubeops.dev/operator-shard-manager v0.0.3
 	kubeops.dev/petset v0.0.11
 	kubeops.dev/sidekick v0.0.11
-	kubestash.dev/apimachinery v0.19.0
+	kubestash.dev/apimachinery v0.20.0
 	open-cluster-management.io/api v1.0.0
 	sigs.k8s.io/controller-runtime v0.20.4
 	sigs.k8s.io/yaml v1.4.0
-	stash.appscode.dev/apimachinery v0.39.0
+	stash.appscode.dev/apimachinery v0.41.0
 )
 
 require (
