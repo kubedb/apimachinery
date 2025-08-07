@@ -200,6 +200,13 @@ spec:
                 type: object
               restart:
                 type: object
+              storageClass:
+                properties:
+                  name:
+                    type: string
+                required:
+                - name
+                type: object
               timeout:
                 type: string
               tls:
@@ -321,6 +328,7 @@ spec:
                 - ReconfigureTLS
                 - RotateAuth
                 - ReplicationModeTransformation
+                - StorageClassMigration
                 type: string
               updateVersion:
                 properties:
