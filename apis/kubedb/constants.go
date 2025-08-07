@@ -41,6 +41,7 @@ const (
 	DistributedRBACNameSuffix               = "rbac"
 	DistributedServiceExportNameSuffix      = "serviceexports"
 	DistributedTLSSecretNameSuffix          = "tls-secrets"
+	DistributedGRPCSecretNameSuffix         = "grpc-secrets"
 	DistributedAuthSecretNameSuffix         = "auth"
 	KubeSliceNSMIPKey                       = "kubeslice.io/nsmIP"
 	KubeSlicePodIPVolumeName                = "podip"
@@ -554,6 +555,9 @@ const (
 	IPS_LOCK                  = "IPC_LOCK"
 	SYS_RESOURCE              = "SYS_RESOURCE"
 	DropCapabilityALL         = "ALL"
+
+	PostgresGRPCIssuerName           = "grpc-issuer"
+	PostgresGRPCSelfSignedIssuerName = "grpc-selfsigned"
 
 	// =========================== ProxySQL Constants ============================
 	LabelProxySQLName                  = ProxySQLKey + "/name"
