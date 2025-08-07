@@ -476,6 +476,8 @@ const (
 	MSSQLVolumeMountPathConfig                 = "/var/opt/mssql/mssql.conf"
 	MSSQLVolumeNameInitScript                  = "init-scripts"
 	MSSQLVolumeMountPathInitScript             = "/scripts"
+	MSSQLVolumeNameInitDatabase                = "init-database"
+	MSSQLVolumeMountPathInitDatabase           = "/init-database"
 	MSSQLVolumeNameEndpointCert                = "endpoint-cert"
 	MSSQLVolumeMountPathEndpointCert           = "/var/opt/mssql/endpoint-cert"
 	MSSQLVolumeNameCerts                       = "certs"
