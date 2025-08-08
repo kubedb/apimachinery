@@ -142,7 +142,12 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 				req.Name,
 				err.Error()))
 		}
-
+	case opsapi.MemcachedOpsRequestTypeRotateAuth:
+	if err := w.validateMemcachedRotateAuthenticationOpsRequest(req); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
+			req.Name,
+			err.Error()))
+	}
 	default:
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Memcached are %s", req.Spec.Type, strings.Join(opsapi.MemcachedOpsRequestTypeNames(), ", "))))
@@ -233,5 +238,41 @@ func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedReconfigureTLSOpsReq
 	if configCount > 1 {
 		return errors.New("more than 1 field have assigned to spec.reconfigureTLS but at a time one is allowed to run one operation")
 	}
+	return nil
+}
+
+func (w *MemcachedOpsRequestCustomWebhook) validateMemcachedRotateAuthenticationOpsRequest(req *opsapi.MemcachedOpsRequest) error {
+	db := &dbapi.Memcached{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get memcached: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	}
+
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return errors.New("spec.authentication.secretRef.name can not be empty")
+		}
+		var newAuthSecret, oldAuthSecret core.Secret
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &newAuthSecret)
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return errors.Wrap(err, fmt.Sprintf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name))
+			}
+			return err
+		}
+
+		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      db.GetAuthSecretName(),
+			Namespace: db.GetNamespace(),
+		}, &oldAuthSecret)
+		if err != nil {
+			return err
+		}
+	}
+	
 	return nil
 }
