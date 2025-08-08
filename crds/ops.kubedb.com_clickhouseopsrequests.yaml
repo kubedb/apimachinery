@@ -203,21 +203,6 @@ spec:
                       - alias
                       type: object
                     type: array
-                  clientCaCertificateRefs:
-                    items:
-                      properties:
-                        key:
-                          type: string
-                        name:
-                          default: ""
-                          type: string
-                        optional:
-                          type: boolean
-                      required:
-                      - key
-                      type: object
-                      x-kubernetes-map-type: atomic
-                    type: array
                   issuerRef:
                     properties:
                       apiGroup:
@@ -231,6 +216,10 @@ spec:
                     - name
                     type: object
                     x-kubernetes-map-type: atomic
+                  remove:
+                    type: boolean
+                  rotateCertificates:
+                    type: boolean
                 type: object
               type:
                 enum:

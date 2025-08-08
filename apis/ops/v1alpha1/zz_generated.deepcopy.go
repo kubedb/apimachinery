@@ -531,7 +531,7 @@ func (in *ClickHouseOpsRequestSpec) DeepCopyInto(out *ClickHouseOpsRequestSpec) 
 	}
 	if in.TLS != nil {
 		in, out := &in.TLS, &out.TLS
-		*out = new(v1alpha2.ClickHouseTLSConfig)
+		*out = new(TLSSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.KeystoreCredSecret != nil {

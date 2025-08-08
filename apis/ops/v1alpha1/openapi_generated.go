@@ -26755,7 +26755,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestSpec(ref common.R
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for configuring TLS",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseTLSConfig"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
 					"keystoreCredSecret": {
@@ -26776,7 +26776,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ClickHouseVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
