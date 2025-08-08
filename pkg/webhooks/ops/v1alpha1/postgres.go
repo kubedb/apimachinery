@@ -18,15 +18,17 @@ package v1alpha1
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	"github.com/pkg/errors"
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -142,6 +144,12 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.PostgresOpsRequestTypeRotateAuth:
+		if err := w.validatePostgresRotateAuthenticationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
+				req.Name,
+				err.Error()))
+		}
 	default:
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Postgres are %s", req.Spec.Type, strings.Join(opsapi.PostgresOpsRequestTypeNames(), ", "))))
@@ -248,6 +256,47 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureTLSOpsReque
 	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresRotateAuthenticationOpsRequest(req *opsapi.PostgresOpsRequest) error {
+	db := &dbapi.Postgres{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get postgres: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	}
+
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return errors.New("spec.authentication.secretRef.name can not be empty")
+		}
+		var newAuthSecret, oldAuthSecret core.Secret
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &newAuthSecret)
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return errors.Wrap(err, fmt.Sprintf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name))
+			}
+			return err
+		}
+
+		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      db.GetAuthSecretName(),
+			Namespace: db.GetNamespace(),
+		}, &oldAuthSecret)
+		if err != nil {
+			return err
+		}
+
+		if string(oldAuthSecret.Data[core.BasicAuthUsernameKey]) != string(newAuthSecret.Data[core.BasicAuthUsernameKey]) {
+			return errors.New("database username cannot be changed")
+		}
+
 	}
 
 	return nil
