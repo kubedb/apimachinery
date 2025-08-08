@@ -304,23 +304,42 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureTLSOp
 }
 
 func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerRotateAuthenticationOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
-	authSpec := req.Spec.Authentication
-	if err := w.hasDatabaseRef(req); err != nil {
-		return err
+	db := &olddbapi.MSSQLServer{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      req.GetDBRefName(),
+		Namespace: req.GetNamespace(),
+	}, db); err != nil {
+		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
+
+	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
 			return fmt.Errorf("spec.authentication.secretRef.name can not be empty")
 		}
+
+		var newAuthSecret, oldAuthSecret core.Secret
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      authSpec.SecretRef.Name,
 			Namespace: req.Namespace,
-		}, &core.Secret{})
+		}, &newAuthSecret)
 		if err != nil {
 			if kerr.IsNotFound(err) {
-				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
+				return fmt.Errorf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name)
 			}
 			return err
+		}
+
+		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      db.GetAuthSecretName(),
+			Namespace: db.GetNamespace(),
+		}, &oldAuthSecret)
+		if err != nil {
+			return err
+		}
+
+		if string(oldAuthSecret.Data[core.BasicAuthUsernameKey]) != string(newAuthSecret.Data[core.BasicAuthUsernameKey]) {
+			return errors.New("database username cannot be changed")
 		}
 	}
 
