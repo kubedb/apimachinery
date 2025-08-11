@@ -73,6 +73,9 @@ type ClickHouseOpsRequestSpec struct {
 	Configuration *ClickHouseCustomConfigurationSpec `json:"configuration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	// Indicates how SSL/TLS certificate verification will be handled for both the server and client sides.
+	// +optional
+	SSLVerificationMode *kubedbApiV1Alpha2.SSLVerificationMode `json:"sslVerificationMode,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *TLSSpec `json:"tls,omitempty"`
 	// Keystore encryption secret

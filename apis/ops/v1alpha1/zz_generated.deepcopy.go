@@ -529,6 +529,11 @@ func (in *ClickHouseOpsRequestSpec) DeepCopyInto(out *ClickHouseOpsRequestSpec) 
 		*out = new(metav1.Duration)
 		**out = **in
 	}
+	if in.SSLVerificationMode != nil {
+		in, out := &in.SSLVerificationMode, &out.SSLVerificationMode
+		*out = new(v1alpha2.SSLVerificationMode)
+		**out = **in
+	}
 	if in.TLS != nil {
 		in, out := &in.TLS, &out.TLS
 		*out = new(TLSSpec)
