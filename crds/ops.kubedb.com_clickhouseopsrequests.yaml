@@ -114,6 +114,13 @@ spec:
                 x-kubernetes-map-type: atomic
               restart:
                 type: object
+              sslVerificationMode:
+                enum:
+                - none
+                - relaxed
+                - strict
+                - once
+                type: string
               timeout:
                 type: string
               tls:

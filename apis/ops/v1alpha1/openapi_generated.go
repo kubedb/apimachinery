@@ -26752,6 +26752,13 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseOpsRequestSpec(ref common.R
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"sslVerificationMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates how SSL/TLS certificate verification will be handled for both the server and client sides.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for configuring TLS",
