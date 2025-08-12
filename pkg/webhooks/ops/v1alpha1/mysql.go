@@ -146,6 +146,12 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.MySQLOpsRequestTypeStorageMigration:
+		if err := w.validateMySQLStorageMigrationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
 
 	default:
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
@@ -407,6 +413,11 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLRotateAuthenticationOpsReque
 
 	}
 
+	return nil
+}
+
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(req *opsapi.MySQLOpsRequest) error {
+	//TODO: need to implement webhook
 	return nil
 }
 
