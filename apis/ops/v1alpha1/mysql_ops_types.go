@@ -105,7 +105,7 @@ type MySQLHorizontalScalingSpec struct {
 }
 
 type MySQLMigrationSpec struct {
-	StorageClassName    string              `json:"storageClassName"`
+	StorageClassName    *string             `json:"storageClassName"`
 	VolumeReclaimPolicy VolumeReclaimPolicy `json:"volumeReclaimPolicy,omitempty"`
 }
 
