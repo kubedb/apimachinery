@@ -87,6 +87,18 @@ spec:
                     format: int32
                     type: integer
                 type: object
+              migration:
+                properties:
+                  storageClassName:
+                    type: string
+                  volumeReclaimPolicy:
+                    enum:
+                    - Delete
+                    - Retain
+                    type: string
+                required:
+                - storageClassName
+                type: object
               replicationModeTransformation:
                 properties:
                   certificates:
@@ -199,13 +211,6 @@ spec:
                 - mode
                 type: object
               restart:
-                type: object
-              storageClass:
-                properties:
-                  name:
-                    type: string
-                required:
-                - name
                 type: object
               timeout:
                 type: string
@@ -328,7 +333,7 @@ spec:
                 - ReconfigureTLS
                 - RotateAuth
                 - ReplicationModeTransformation
-                - StorageClassMigration
+                - StorageMigration
                 type: string
               updateVersion:
                 properties:

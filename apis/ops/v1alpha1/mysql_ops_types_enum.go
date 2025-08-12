@@ -30,8 +30,8 @@ const (
 	MySQLOpsRequestTypeRotateAuth MySQLOpsRequestType = "RotateAuth"
 	// MySQLOpsRequestTypeReplicationModeTransformation is a MySQLOpsRequestType of type ReplicationModeTransformation.
 	MySQLOpsRequestTypeReplicationModeTransformation MySQLOpsRequestType = "ReplicationModeTransformation"
-	// MySQLOpsRequestTypeStorageClassMigration is a MySQLOpsRequestType of type StorageClassMigration.
-	MySQLOpsRequestTypeStorageClassMigration MySQLOpsRequestType = "StorageClassMigration"
+	// MySQLOpsRequestTypeStorageMigration is a MySQLOpsRequestType of type StorageMigration.
+	MySQLOpsRequestTypeStorageMigration MySQLOpsRequestType = "StorageMigration"
 )
 
 var ErrInvalidMySQLOpsRequestType = fmt.Errorf("not a valid MySQLOpsRequestType, try [%s]", strings.Join(_MySQLOpsRequestTypeNames, ", "))
@@ -46,7 +46,7 @@ var _MySQLOpsRequestTypeNames = []string{
 	string(MySQLOpsRequestTypeReconfigureTLS),
 	string(MySQLOpsRequestTypeRotateAuth),
 	string(MySQLOpsRequestTypeReplicationModeTransformation),
-	string(MySQLOpsRequestTypeStorageClassMigration),
+	string(MySQLOpsRequestTypeStorageMigration),
 }
 
 // MySQLOpsRequestTypeNames returns a list of possible string values of MySQLOpsRequestType.
@@ -68,7 +68,7 @@ func MySQLOpsRequestTypeValues() []MySQLOpsRequestType {
 		MySQLOpsRequestTypeReconfigureTLS,
 		MySQLOpsRequestTypeRotateAuth,
 		MySQLOpsRequestTypeReplicationModeTransformation,
-		MySQLOpsRequestTypeStorageClassMigration,
+		MySQLOpsRequestTypeStorageMigration,
 	}
 }
 
@@ -94,7 +94,7 @@ var _MySQLOpsRequestTypeValue = map[string]MySQLOpsRequestType{
 	"ReconfigureTLS":                MySQLOpsRequestTypeReconfigureTLS,
 	"RotateAuth":                    MySQLOpsRequestTypeRotateAuth,
 	"ReplicationModeTransformation": MySQLOpsRequestTypeReplicationModeTransformation,
-	"StorageClassMigration":         MySQLOpsRequestTypeStorageClassMigration,
+	"StorageMigration":              MySQLOpsRequestTypeStorageMigration,
 }
 
 // ParseMySQLOpsRequestType attempts to convert a string to a MySQLOpsRequestType.
