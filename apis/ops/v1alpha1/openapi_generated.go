@@ -634,13 +634,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MongosNode":                                       schema_apimachinery_apis_ops_v1alpha1_MongosNode(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLCustomConfigurationSpec":                     schema_apimachinery_apis_ops_v1alpha1_MySQLCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLHorizontalScalingSpec":                       schema_apimachinery_apis_ops_v1alpha1_MySQLHorizontalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLMigrationSpec":                               schema_apimachinery_apis_ops_v1alpha1_MySQLMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLOpsRequest":                                  schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLOpsRequestList":                              schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLOpsRequestSpec":                              schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLQueryRules":                                  schema_apimachinery_apis_ops_v1alpha1_MySQLQueryRules(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLReplicaReadinessCriteria":                    schema_apimachinery_apis_ops_v1alpha1_MySQLReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLReplicationModeTransformSpec":                schema_apimachinery_apis_ops_v1alpha1_MySQLReplicationModeTransformSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLStorageClassSpec":                            schema_apimachinery_apis_ops_v1alpha1_MySQLStorageClassSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLTLSSpec":                                     schema_apimachinery_apis_ops_v1alpha1_MySQLTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUpdateVersionSpec":                           schema_apimachinery_apis_ops_v1alpha1_MySQLUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUsers":                                       schema_apimachinery_apis_ops_v1alpha1_MySQLUsers(ref),
@@ -31404,6 +31404,32 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLHorizontalScalingSpec(ref common
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MySQLMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storageClassName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"volumeReclaimPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"storageClassName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -31575,10 +31601,10 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
-					"storageClass": {
+					"migration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies information necessary for migrating storageClass",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLStorageClassSpec"),
+							Description: "Specifies information necessary for migrating storageClass or data",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLMigrationSpec"),
 						},
 					},
 					"timeout": {
@@ -31599,7 +31625,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLOpsRequestSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLReplicationModeTransformSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLStorageClassSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLReplicationModeTransformSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -31694,26 +31720,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLReplicationModeTransformSpec(ref
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
-	}
-}
-
-func schema_apimachinery_apis_ops_v1alpha1_MySQLStorageClassSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
 	}
 }
 

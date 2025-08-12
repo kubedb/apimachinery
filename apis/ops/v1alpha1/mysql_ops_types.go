@@ -76,8 +76,8 @@ type MySQLOpsRequestSpec struct {
 	ReplicationModeTransformation *MySQLReplicationModeTransformSpec `json:"replicationModeTransformation,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
-	// Specifies information necessary for migrating storageClass
-	StorageClass *MySQLStorageClassSpec `json:"storageClass,omitempty"`
+	// Specifies information necessary for migrating storageClass or data
+	Migration *MySQLMigrationSpec `json:"migration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -85,8 +85,8 @@ type MySQLOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth;ReplicationModeTransformation;StorageClassMigration
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, ReplicationModeTransformation, StorageClassMigration)
+// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth;ReplicationModeTransformation;StorageMigration
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, ReplicationModeTransformation, StorageMigration)
 type MySQLOpsRequestType string
 
 // MySQLReplicaReadinessCriteria is the criteria for checking readiness of a MySQL pod
@@ -104,8 +104,9 @@ type MySQLHorizontalScalingSpec struct {
 	Member *int32 `json:"member,omitempty"`
 }
 
-type MySQLStorageClassSpec struct {
-	Name string `json:"name"`
+type MySQLMigrationSpec struct {
+	StorageClassName    string              `json:"storageClassName"`
+	VolumeReclaimPolicy VolumeReclaimPolicy `json:"volumeReclaimPolicy,omitempty"`
 }
 
 type MySQLReplicationModeTransformSpec struct {
