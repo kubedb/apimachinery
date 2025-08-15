@@ -18,6 +18,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	kubedbApiV1Alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -71,13 +73,21 @@ type ClickHouseOpsRequestSpec struct {
 	Configuration *ClickHouseCustomConfigurationSpec `json:"configuration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	// Indicates how SSL/TLS certificate verification will be handled for both the server and client sides.
+	// +optional
+	SSLVerificationMode kubedbApiV1Alpha2.SSLVerificationMode `json:"sslVerificationMode,omitempty"`
+	// Specifies information necessary for configuring TLS
+	TLS *TLSSpec `json:"tls,omitempty"`
+	// Keystore encryption secret
+	// +optional
+	KeystoreCredSecret *kubedbApiV1Alpha2.SecretReference `json:"keystoreCredSecret,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;VerticalScaling;HorizontalScaling;UpdateVersion;VolumeExpansion;Reconfigure
-// ENUM(Restart, VerticalScaling, HorizontalScaling, UpdateVersion, VolumeExpansion, Reconfigure)
+// +kubebuilder:validation:Enum=Restart;VerticalScaling;HorizontalScaling;UpdateVersion;VolumeExpansion;Reconfigure;ReconfigureTLS;RotateAuth
+// ENUM(Restart, VerticalScaling, HorizontalScaling, UpdateVersion, VolumeExpansion, Reconfigure, ReconfigureTLS, RotateAuth)
 type ClickHouseOpsRequestType string
 
 // ClickHouseUpdateVersionSpec contains the update version information of a clickhouse cluster
