@@ -27572,6 +27572,21 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLMigrationSpec": {
+      "type": "object",
+      "required": [
+        "storageClassName"
+      ],
+      "properties": {
+        "storageClassName": {
+          "type": "string",
+          "default": ""
+        },
+        "volumeReclaimPolicy": {
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLOpsRequest": {
       "type": "object",
       "properties": {
@@ -27665,6 +27680,10 @@
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLHorizontalScalingSpec"
+        },
+        "migration": {
+          "description": "Specifies information necessary for migrating storageClass or data",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLMigrationSpec"
         },
         "replicationModeTransformation": {
           "description": "Specifies information transform Remote Replica to GroupReplication",
