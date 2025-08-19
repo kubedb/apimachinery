@@ -92,9 +92,6 @@ spec:
                   storageClassName:
                     type: string
                   volumeReclaimPolicy:
-                    enum:
-                    - Delete
-                    - Retain
                     type: string
                 required:
                 - storageClassName

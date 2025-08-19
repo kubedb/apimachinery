@@ -105,8 +105,8 @@ type MySQLHorizontalScalingSpec struct {
 }
 
 type MySQLMigrationSpec struct {
-	StorageClassName    *string             `json:"storageClassName"`
-	VolumeReclaimPolicy VolumeReclaimPolicy `json:"volumeReclaimPolicy,omitempty"`
+	StorageClassName    *string                            `json:"storageClassName"`
+	VolumeReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"volumeReclaimPolicy,omitempty"`
 }
 
 type MySQLReplicationModeTransformSpec struct {

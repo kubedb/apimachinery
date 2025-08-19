@@ -74,14 +74,6 @@ const (
 	VolumeExpansionModeOffline VolumeExpansionMode = "Offline"
 )
 
-// +kubebuilder:validation:Enum=Delete;Retain
-type VolumeReclaimPolicy string
-
-const (
-	VolumeReclaimPolicyRetain VolumeReclaimPolicy = "Retain"
-	VolumeReclaimPolicyDelete VolumeReclaimPolicy = "Delete"
-)
-
 type RestartSpec struct{}
 
 type Reprovision struct{}
