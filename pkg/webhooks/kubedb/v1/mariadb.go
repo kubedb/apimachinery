@@ -446,8 +446,8 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 		if err != nil {
 			return err
 		}
-		if pp.Spec.OCM == nil {
-			return fmt.Errorf(`'spec.ocm' is required in %v for distributed mariadb`, pp.Name)
+		if pp.Spec.ClusterSpreadConstraint == nil {
+			return fmt.Errorf(`'spec.clusterSpreadConstraint' is required in %v for distributed mariadb`, pp.Name)
 		}
 	}
 
