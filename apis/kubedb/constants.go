@@ -1986,11 +1986,11 @@ func DefaultArbiter(computeOnly bool) core.ResourceRequirements {
 }
 
 const (
-	InitFromGit          = "init-from-git"
-	InitFromGitMountPath = "/git"
-	GitSecretVolume      = "git-secret"
-	GitSecretMountPath   = "/etc/git-secret"
-	GitSyncContainerName = "git-sync"
+	InitFromGit                 = "init-from-git"
+	DefaultInitFromGitMountPath = "/git"
+	GitSecretVolume             = "git-secret"
+	GitSecretMountPath          = "/etc/git-secret"
+	GitSyncContainerName        = "git-sync"
 )
 
 const (
