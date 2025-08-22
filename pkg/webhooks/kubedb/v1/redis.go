@@ -169,6 +169,7 @@ var redisReservedVolumes = []string{
 	kubedb.RedisExporterTLSVolumeName,
 	kubedb.RedisConfigVolumeName,
 	kubedb.ValkeyConfigVolumeName,
+	kubedb.GitSecretVolume,
 }
 
 var redisReservedMountPaths = []string{
@@ -177,6 +178,7 @@ var redisReservedMountPaths = []string{
 	kubedb.RedisTLSVolumePath,
 	kubedb.RedisConfigVolumePath,
 	kubedb.ValkeyConfigVolumePath,
+	kubedb.GitSecretMountPath,
 }
 
 func validateRedisUpdate(obj, oldObj *dbapi.Redis) error {
@@ -222,6 +224,14 @@ func validateRedisVolumeMountsForAllContainers(redis *dbapi.Redis) error {
 			} else {
 				err = errors.Wrap(err, errC.Error())
 			}
+		}
+	}
+
+	if errC := amv.ValidateGitInitRoot(redis.Spec.Init, redisReservedMountPaths); errC != nil {
+		if err == nil {
+			err = errC
+		} else {
+			err = errors.Wrap(err, errC.Error())
 		}
 	}
 	return err
