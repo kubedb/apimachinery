@@ -201,3 +201,25 @@ func ValidateMountPaths(volumeMounts []core.VolumeMount, reservedMountPaths []st
 	}
 	return nil
 }
+
+func ValidateGitInitRoot(spec *dbapi.InitSpec, reservedMountPaths []string) error {
+	if spec != nil && spec.Script != nil && spec.Script.Git != nil {
+		gitRoot := ""
+		for _, arg := range spec.Script.Git.Args {
+			idx := strings.IndexRune(arg, '=')
+			if idx < 0 {
+				continue
+			}
+			if arg[:idx] == "--root" {
+				gitRoot = arg[idx+1:]
+				break
+			}
+		}
+		if gitRoot != "" {
+			if err := ValidateMountPaths([]core.VolumeMount{{MountPath: gitRoot}}, reservedMountPaths); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
