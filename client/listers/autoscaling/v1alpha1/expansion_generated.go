@@ -74,6 +74,14 @@ type HazelcastAutoscalerListerExpansion interface{}
 // HazelcastAutoscalerNamespaceLister.
 type HazelcastAutoscalerNamespaceListerExpansion interface{}
 
+// IgniteAutoscalerListerExpansion allows custom methods to be added to
+// IgniteAutoscalerLister.
+type IgniteAutoscalerListerExpansion interface{}
+
+// IgniteAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// IgniteAutoscalerNamespaceLister.
+type IgniteAutoscalerNamespaceListerExpansion interface{}
+
 // KafkaAutoscalerListerExpansion allows custom methods to be added to
 // KafkaAutoscalerLister.
 type KafkaAutoscalerListerExpansion interface{}

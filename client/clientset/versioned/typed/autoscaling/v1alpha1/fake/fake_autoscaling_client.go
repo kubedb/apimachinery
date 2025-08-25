@@ -57,6 +57,10 @@ func (c *FakeAutoscalingV1alpha1) HazelcastAutoscalers(namespace string) v1alpha
 	return &FakeHazelcastAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) IgniteAutoscalers(namespace string) v1alpha1.IgniteAutoscalerInterface {
+	return &FakeIgniteAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) KafkaAutoscalers(namespace string) v1alpha1.KafkaAutoscalerInterface {
 	return &FakeKafkaAutoscalers{c, namespace}
 }
