@@ -27087,15 +27087,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClusterTopology(ref common.Referen
 					"cluster": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Clickhouse Cluster Structure",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterSpec"),
-									},
-								},
-							},
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterSpec"),
 						},
 					},
 					"clickHouseKeeper": {
