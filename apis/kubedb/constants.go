@@ -666,6 +666,8 @@ const (
 	PgBouncerConfigSectionPeers             = "peers"
 	PgBouncerConfigSectionPgbouncer         = "pgbouncer"
 	PgBouncerConfigSectionUsers             = "users"
+	PgBouncerInitVolumePath                 = "/git"
+	PgBouncerInitVolumeName                 = "init-script-volume"
 
 	// =========================== Pgpool Constants ============================
 	EnvPostgresUsername                = "POSTGRES_USERNAME"

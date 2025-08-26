@@ -108,12 +108,14 @@ var pbForbiddenEnvVars = []string{
 
 var pbReservedVolumes = []string{
 	kubedb.PgBouncerAuthSecretVolume,
+	kubedb.GitSecretVolume,
 }
 
 var pbReservedMountPaths = []string{
 	kubedb.PgBouncerConfigMountPath,
 	kubedb.PgBouncerSecretMountPath,
 	kubedb.PgBouncerServingCertMountPath,
+	kubedb.GitSecretMountPath,
 }
 
 func (pw PgBouncerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -353,6 +355,13 @@ func validateVolumeMountsForAllPbContainers(pgbouncer *dbapi.PgBouncer) error {
 					err = errors.Wrap(err, errC.Error())
 				}
 			}
+		}
+	}
+	if errC := amv.ValidateGitInitRoot(pgbouncer.Spec.Init, pbReservedMountPaths); errC != nil {
+		if err == nil {
+			err = errC
+		} else {
+			err = errors.Wrap(err, errC.Error())
 		}
 	}
 	return err
