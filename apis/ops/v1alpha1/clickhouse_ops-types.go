@@ -18,7 +18,7 @@ limitations under the License.
 package v1alpha1
 
 import (
-	kubedbApiV1Alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -74,7 +74,7 @@ type ClickHouseOpsRequestSpec struct {
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// Specifies information necessary for configuring TLS
-	TLS *ClickHouseTLSSpec `json:"tlsSpec,omitempty"`
+	TLS *ClickHouseTLSSpec `json:"tls,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
@@ -121,9 +121,9 @@ type ClickHouseCustomConfigurationSpec struct {
 // ClickHouseTLSSpec contains necessary information for configuring TLS
 type ClickHouseTLSSpec struct {
 	// SSLVerificationMode specifies how server certificates should be verified
-	SSLVerificationMode kubedbApiV1Alpha2.SSLVerificationMode `json:"sslVerificationMode,omitempty"`
+	SSLVerificationMode olddbapi.SSLVerificationMode `json:"sslVerificationMode,omitempty"`
 	// TLSSpec holds the TLS certificate and key configuration.
-	*TLSSpec `json:"tls,omitempty"`
+	TLSSpec `json:",inline,omitempty"`
 }
 
 // ClickHouseVerticalScalingSpec contains the vertical scaling information of a clickhouse cluster
