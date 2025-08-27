@@ -101,6 +101,8 @@ spec:
                             format: int32
                             type: integer
                           type: array
+                        storageClassName:
+                          type: string
                       required:
                       - clusterName
                       - replicaIndices
