@@ -202,7 +202,7 @@ func ValidateMountPaths(volumeMounts []core.VolumeMount, reservedMountPaths []st
 	return nil
 }
 
-func ValidateGitInitRoot(spec *dbapi.InitSpec, reservedMountPaths []string) error {
+func ValidateGitInitRootPath(spec *dbapi.InitSpec, reservedMountPaths []string) error {
 	if spec != nil && spec.Script != nil && spec.Script.Git != nil {
 		gitRoot := ""
 		for _, arg := range spec.Script.Git.Args {

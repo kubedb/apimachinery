@@ -357,7 +357,7 @@ func validateVolumeMountsForAllPbContainers(pgbouncer *dbapi.PgBouncer) error {
 			}
 		}
 	}
-	if errC := amv.ValidateGitInitRoot(pgbouncer.Spec.Init, pbReservedMountPaths); errC != nil {
+	if errC := amv.ValidateGitInitRootPath(pgbouncer.Spec.Init, pbReservedMountPaths); errC != nil {
 		if err == nil {
 			err = errC
 		} else {

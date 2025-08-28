@@ -227,7 +227,7 @@ func validateRedisVolumeMountsForAllContainers(redis *dbapi.Redis) error {
 		}
 	}
 
-	if errC := amv.ValidateGitInitRoot(redis.Spec.Init, redisReservedMountPaths); errC != nil {
+	if errC := amv.ValidateGitInitRootPath(redis.Spec.Init, redisReservedMountPaths); errC != nil {
 		if err == nil {
 			err = errC
 		} else {
