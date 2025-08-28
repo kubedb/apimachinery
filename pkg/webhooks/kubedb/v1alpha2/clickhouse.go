@@ -154,7 +154,7 @@ func (w *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 
 	if db.Spec.ClusterTopology != nil {
 		clusterName := map[string]bool{}
-		clusters := db.Spec.ClusterTopology.Cluster
+		cluster := db.Spec.ClusterTopology.Cluster
 		if db.Spec.ClusterTopology.ClickHouseKeeper != nil {
 			if !db.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged {
 				if db.Spec.ClusterTopology.ClickHouseKeeper.Spec == nil {
@@ -198,38 +198,36 @@ func (w *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 				}
 			}
 		}
-		for _, cluster := range clusters {
-			if cluster.Shards != nil && *cluster.Shards <= 0 {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("shards"),
-					db.Name,
-					"number of shards can not be 0 or less"))
-			}
-			if cluster.Replicas != nil && *cluster.Replicas <= 0 {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("replicas"),
-					db.Name,
-					"number of replicas can't be 0 or less"))
-			}
-			if clusterName[cluster.Name] {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child(cluster.Name),
-					db.Name,
-					"cluster name is already exists, use different cluster name"))
-			}
-			clusterName[cluster.Name] = true
+		if cluster.Shards != nil && *cluster.Shards <= 0 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("shards"),
+				db.Name,
+				"number of shards can not be 0 or less"))
+		}
+		if cluster.Replicas != nil && *cluster.Replicas <= 0 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("replicas"),
+				db.Name,
+				"number of replicas can't be 0 or less"))
+		}
+		if clusterName[cluster.Name] {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child(cluster.Name),
+				db.Name,
+				"cluster name is already exists, use different cluster name"))
+		}
+		clusterName[cluster.Name] = true
 
-			allErr = w.validateClusterStorageType(db, cluster, allErr)
+		allErr = w.validateClusterStorageType(db, cluster, allErr)
 
-			err := w.validateVolumes(cluster.PodTemplate)
-			if err != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("podTemplate").Child("spec").Child("volumes"),
-					db.Name,
-					err.Error()))
-			}
-			err = w.validateVolumesMountPaths(cluster.PodTemplate)
-			if err != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("podTemplate").Child("spec").Child("volumeMounts"),
-					db.Name,
-					err.Error()))
-			}
+		err := w.validateVolumes(cluster.PodTemplate)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("podTemplate").Child("spec").Child("volumes"),
+				db.Name,
+				err.Error()))
+		}
+		err = w.validateVolumesMountPaths(cluster.PodTemplate)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("clusterTopology").Child("podTemplate").Child("spec").Child("volumeMounts"),
+				db.Name,
+				err.Error()))
 		}
 		if db.Spec.PodTemplate != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
