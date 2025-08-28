@@ -1,9 +1,9 @@
+
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   creationTimestamp: null
-  labels:
-    app.kubernetes.io/name: kubedb
   name: mysqlopsrequests.ops.kubedb.com
 spec:
   group: ops.kubedb.com
@@ -89,9 +89,9 @@ spec:
                 type: object
               migration:
                 properties:
-                  storageClassName:
+                  oldPVReclaimPolicy:
                     type: string
-                  volumeReclaimPolicy:
+                  storageClassName:
                     type: string
                 required:
                 - storageClassName
