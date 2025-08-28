@@ -118,22 +118,8 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVerticalScalingOp
 	if verticalScalingSpec == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
-	if verticalScalingSpec.Standalone != nil && verticalScalingSpec.Cluster != nil {
-		return errors.New("spec.standalone and spec.cluster cannot be set at the same time")
-	}
-	err := rv.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
-	if verticalScalingSpec.Cluster != nil {
-		for _, cluster := range verticalScalingSpec.Cluster {
-			if cluster.ClusterName == "" {
-				return errors.New("spec.verticalScaling.Cluster.Name can't be empty")
-			}
-			if cluster.Node == nil {
-				return errors.New("spec.verticalScaling.Cluster.Node can't be empty")
-			}
-		}
+	if verticalScalingSpec.Node == nil {
+		return errors.New("spec.verticalScaling.node nil not supported in VerticalScaling type")
 	}
 
 	return nil

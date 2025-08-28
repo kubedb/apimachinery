@@ -128,30 +128,13 @@ type ClickHouseTLSSpec struct {
 
 // ClickHouseVerticalScalingSpec contains the vertical scaling information of a clickhouse cluster
 type ClickHouseVerticalScalingSpec struct {
-	// Resource spec for Standalone node
-	Standalone *PodResources `json:"standalone,omitempty"`
-	// List of cluster configurations for ClickHouse when running in cluster mode.
-	Cluster []*ClickHouseClusterVerticalScalingSpec `json:"cluster,omitempty"`
+	Node *PodResources `json:"node,omitempty"`
 }
 
 // ClickHouseHorizontalScalingSpec contains the horizontal scaling information of a clickhouse cluster
 type ClickHouseHorizontalScalingSpec struct {
-	// List of cluster configurations for ClickHouse when running in cluster mode.
-	Cluster []*ClickHouseClusterHorizontalScalingSpec `json:"cluster,omitempty"`
-}
-
-type ClickHouseClusterHorizontalScalingSpec struct {
-	// Name of the ClickHouse cluster to which the vertical scaling configuration applies.
-	ClusterName string `json:"clusterName,omitempty"`
 	// Number of node
 	Replicas *int32 `json:"replicas,omitempty"`
-}
-
-type ClickHouseClusterVerticalScalingSpec struct {
-	// Name of the ClickHouse cluster to which the vertical scaling configuration applies.
-	ClusterName string `json:"clusterName,omitempty"`
-	// Resource specifications for the nodes in this ClickHouse cluster.
-	Node *PodResources `json:"node,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
