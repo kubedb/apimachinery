@@ -31403,6 +31403,12 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionSpec(ref common.Refe
 							Format: "",
 						},
 					},
+					"gitSyncer": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
+						},
+					},
 					"exporter": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Exporter Image",
@@ -31442,7 +31448,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPgpool", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPgpool", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

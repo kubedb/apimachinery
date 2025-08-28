@@ -4814,6 +4814,11 @@ func (in *PgpoolSpec) DeepCopyInto(out *PgpoolSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.Init != nil {
+		in, out := &in.Init, &out.Init
+		*out = new(InitSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.PodTemplate != nil {
 		in, out := &in.PodTemplate, &out.PodTemplate
 		*out = new(v2.PodTemplateSpec)

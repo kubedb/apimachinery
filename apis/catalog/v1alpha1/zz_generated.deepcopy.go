@@ -3219,6 +3219,7 @@ func (in *PgpoolVersionPodSecurityPolicy) DeepCopy() *PgpoolVersionPodSecurityPo
 func (in *PgpoolVersionSpec) DeepCopyInto(out *PgpoolVersionSpec) {
 	*out = *in
 	out.Pgpool = in.Pgpool
+	out.GitSyncer = in.GitSyncer
 	out.Exporter = in.Exporter
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)

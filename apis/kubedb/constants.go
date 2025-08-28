@@ -705,6 +705,8 @@ const (
 	PgpoolCustomHBAConfigFile          = "pool_hba.conf"
 	PgpoolCustomPCPFile                = "pcp.conf"
 	PGPOOL_INSTALL_DIR                 = "/opt/pgpool-II"
+	PgpoolInitVolumePath               = "/init-scripts"
+	PgpoolInitVolumeName               = "init-scripts"
 	// ========================================== ZooKeeper Constants =================================================//
 
 	KubeDBZooKeeperRoleName         = "kubedb:zookeeper-version-reader"

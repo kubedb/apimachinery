@@ -19,10 +19,13 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
@@ -34,7 +37,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
-	ofst "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -229,7 +231,7 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 			))
 		}
 
-		err = PgpoolValidateVolumesMountPaths(pp.Spec.PodTemplate)
+		err = PgpoolValidateVolumesMountPaths(pp)
 		if err != nil {
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumeMounts"),
 				pp.Name,
@@ -320,7 +322,8 @@ func PgpoolGetMainContainerEnvs(pp *olddbapi.Pgpool) []core.EnvVar {
 	return []core.EnvVar{}
 }
 
-func PgpoolValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
+func PgpoolValidateVolumesMountPaths(pgpool *olddbapi.Pgpool) error {
+	podTemplate := pgpool.Spec.PodTemplate
 	if podTemplate == nil {
 		return nil
 	}
@@ -354,6 +357,11 @@ func PgpoolValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 				}
 			}
 		}
+	}
+
+	init := (*dbapi.InitSpec)(unsafe.Pointer(pgpool.Spec.Init))
+	if err := amv.ValidateGitInitRootPath(init, PgpoolReservedVolumesMountPaths); err != nil {
+		return err
 	}
 	return nil
 }
