@@ -274,7 +274,7 @@ func (i *Ignite) PVCName(alias string) string {
 }
 
 func (i *Ignite) Address() string {
-	return fmt.Sprintf("%v.%v.svc.cluster.local", i.Name, i.Namespace)
+	return fmt.Sprintf("%v.%v.svc", i.Name, i.Namespace)
 }
 
 type igniteStatsService struct {

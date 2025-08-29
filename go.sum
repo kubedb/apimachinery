@@ -687,8 +687,8 @@ kubeops.dev/csi-driver-cacerts v0.1.0 h1:WDgKNo5QAiMoVy4c/4ARWeCXJbqdcXdcn8VLImV
 kubeops.dev/csi-driver-cacerts v0.1.0/go.mod h1:5a/ZOn5LFw26PPBpTKvsivBjcvVArOrJX24C+k+przk=
 kubeops.dev/operator-shard-manager v0.0.3 h1:Z2YOAfyQIjvHMwT4O56lR0l9z25s2tCVDO22u/XuYnw=
 kubeops.dev/operator-shard-manager v0.0.3/go.mod h1:2oRq5vnCaUxzE+qIiRuzB34PlqahiynE+sYqWu6AMIY=
-kubeops.dev/petset v0.0.12-0.20250820054807-88384ed8aba9 h1:kbCvE+NdrepWW1K8+smkguNCZXB6RztVe7kHbbPPXpQ=
-kubeops.dev/petset v0.0.12-0.20250820054807-88384ed8aba9/go.mod h1:NbWl+Idw0Au1VHI/jMKUvQmOZTQxnq5qNaHBaeXrI7k=
+kubeops.dev/petset v0.0.12-0.20250829060740-de81da92fd06 h1:WrBaFm78+oUwN/8Gzd7R1r5Wh5UrDKDBcWFsPG28J+U=
+kubeops.dev/petset v0.0.12-0.20250829060740-de81da92fd06/go.mod h1:NbWl+Idw0Au1VHI/jMKUvQmOZTQxnq5qNaHBaeXrI7k=
 kubeops.dev/sidekick v0.0.11 h1:OydXdIH6cYSiWxKIWvrywk95WhhHSERkc7RNPOmTekc=
 kubeops.dev/sidekick v0.0.11/go.mod h1:90KMNmJOPoMKHbrdC1cpEsMx+1KjTea/lHDAbGRDzHc=
 kubestash.dev/apimachinery v0.20.0 h1:X4v7u/4N+RT3bP17VlSVXwvCZ69JLZtBUNiyhyV1bfo=
