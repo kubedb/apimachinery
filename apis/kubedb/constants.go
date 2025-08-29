@@ -1774,6 +1774,12 @@ const (
 	CassandraTLSStoreTypeJKSValue          = "JKS"
 )
 
+// =========================== Migration Constant  =================================
+const (
+	StorageMigration          = "StorageMigration"
+	StorageMigrationSucceeded = "StorageMigrationSucceeded"
+)
+
 // =========================== Virtual Secrets Constants ============================
 
 const (

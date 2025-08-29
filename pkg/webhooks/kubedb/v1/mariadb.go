@@ -203,9 +203,6 @@ func (w MariaDBCustomWebhook) validateCluster(db *dbapi.MariaDB) error {
 			return errors.Errorf(`'spec.md.clusterName' "%s" shouldn't have more than %d characters'`,
 				clusterName, kubedb.MariaDBMaxClusterNameLength)
 		}
-		if db.Spec.Init != nil && db.Spec.Init.Script != nil {
-			return fmt.Errorf("`.spec.init.scriptSource` is not supported for cluster. For MariaDB cluster initialization see https://stash.run/docs/latest/addons/mariadb/guides/5.7/clusterd/")
-		}
 	}
 
 	return nil
@@ -261,6 +258,7 @@ var mariaDBreservedVolumes = []string{
 	kubedb.MariaDBInitScriptVolumeName,
 	kubedb.MariaDBRunScriptVolumeName,
 	kubedb.MariaDBInitDBVolumeName,
+	kubedb.GitSecretVolume,
 }
 
 func getTLSReservedVolumes() []string {
@@ -283,6 +281,7 @@ var reservedVolumeMounts = []string{
 	kubedb.MariaDBInitScriptVolumeMountPath,
 	kubedb.MariaDBRunScriptVolumeMountPath,
 	kubedb.MariaDBInitDBMountPath,
+	kubedb.GitSecretMountPath,
 }
 
 func getTLSReservedVolumeMounts(db *dbapi.MariaDB) []string {
@@ -449,6 +448,10 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 		if pp.Spec.ClusterSpreadConstraint == nil {
 			return fmt.Errorf(`'spec.clusterSpreadConstraint' is required in %v for distributed mariadb`, pp.Name)
 		}
+	}
+
+	if err := amv.ValidateGitInitRootPath(mariadb.Spec.Init, reservedVolumeMounts); err != nil {
+		return err
 	}
 
 	return nil

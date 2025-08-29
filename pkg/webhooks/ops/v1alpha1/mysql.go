@@ -25,6 +25,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -143,6 +144,12 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 	case opsapi.MySQLOpsRequestTypeRotateAuth:
 		if err := w.validateMySQLRotateAuthenticationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.MySQLOpsRequestTypeStorageMigration:
+		if err := w.validateMySQLStorageMigrationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
 				req.Name,
 				err.Error()))
 		}
@@ -405,6 +412,44 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLRotateAuthenticationOpsReque
 			return errors.New("database username cannot be changed")
 		}
 
+	}
+
+	return nil
+}
+
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(req *opsapi.MySQLOpsRequest) error {
+	db := &dbapi.MySQL{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	}
+
+	if req.Spec.Migration.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
+	// check new storageClass
+	var newstorage, oldstorage storagev1.StorageClass
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: *req.Spec.Migration.StorageClassName,
+	}, &newstorage)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *req.Spec.Migration.StorageClassName))
+		}
+		return err
+	}
+
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.GetStorageClassName(),
+	}, &oldstorage)
+	if err != nil {
+		return err
+	}
+
+	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+		}
 	}
 
 	return nil
