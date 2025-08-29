@@ -27578,10 +27578,7 @@
         "storageClassName"
       ],
       "properties": {
-        "storageClassName": {
-          "type": "string"
-        },
-        "volumeReclaimPolicy": {
+        "oldPVReclaimPolicy": {
           "description": "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
           "type": "string",
           "enum": [
@@ -27589,6 +27586,9 @@
             "Recycle",
             "Retain"
           ]
+        },
+        "storageClassName": {
+          "type": "string"
         }
       }
     },
@@ -28192,6 +28192,26 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresMigrationSpec": {
+      "type": "object",
+      "required": [
+        "storageClassName"
+      ],
+      "properties": {
+        "oldPVReclaimPolicy": {
+          "description": "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+          "type": "string",
+          "enum": [
+            "Delete",
+            "Recycle",
+            "Retain"
+          ]
+        },
+        "storageClassName": {
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresOpsRequest": {
       "type": "object",
       "properties": {
@@ -28289,6 +28309,10 @@
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec"
+        },
+        "migration": {
+          "description": "Specifies information necessary for migrating storageClass or data",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresMigrationSpec"
         },
         "reconnectStandby": {
           "description": "Try to reconnect standby's with primary",
