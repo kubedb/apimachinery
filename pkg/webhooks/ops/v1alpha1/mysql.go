@@ -424,6 +424,9 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(r
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
+	if req.Spec.Migration.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
 	// check new storageClass
 	var newstorage, oldstorage storagev1.StorageClass
 	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
