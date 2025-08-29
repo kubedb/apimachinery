@@ -265,6 +265,7 @@ spec:
                 - ReconnectStandby
                 - ForceFailOver
                 - SetRaftKeyPair
+                - StorageMigration
                 type: string
               updateVersion:
                 properties:

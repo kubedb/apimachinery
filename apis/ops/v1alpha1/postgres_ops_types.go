@@ -99,8 +99,8 @@ type PostgresOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth;ReconnectStandby;ForceFailOver;SetRaftKeyPair
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, ReconnectStandby, ForceFailOver, SetRaftKeyPair)
+// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth;ReconnectStandby;ForceFailOver;SetRaftKeyPair;StorageMigration
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, ReconnectStandby, ForceFailOver, SetRaftKeyPair, StorageMigration)
 type PostgresOpsRequestType string
 
 type PostgresUpdateVersionSpec struct {
