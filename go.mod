@@ -1,8 +1,8 @@
 module kubedb.dev/apimachinery
 
-go 1.23.6
+go 1.24.0
 
-toolchain go1.24.0
+toolchain go1.24.1
 
 require (
 	github.com/Masterminds/semver/v3 v3.3.1
@@ -51,7 +51,7 @@ require (
 	kmodules.xyz/webhook-runtime v0.32.0
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/operator-shard-manager v0.0.3
-	kubeops.dev/petset v0.0.11
+	kubeops.dev/petset v0.0.12-0.20250820054807-88384ed8aba9
 	kubeops.dev/sidekick v0.0.11
 	kubestash.dev/apimachinery v0.20.0
 	open-cluster-management.io/api v1.0.0
@@ -108,7 +108,7 @@ require (
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
-	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/btree v1.1.3 // indirect
 	github.com/google/cel-go v0.22.1 // indirect
@@ -127,7 +127,7 @@ require (
 	github.com/jonboulle/clockwork v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
-	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
+	github.com/klauspost/cpuid/v2 v2.2.5 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect

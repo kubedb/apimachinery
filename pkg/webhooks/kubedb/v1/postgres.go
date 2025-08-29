@@ -382,8 +382,8 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 		if err != nil {
 			return nil, err
 		}
-		if pp.Spec.OCM == nil {
-			return nil, fmt.Errorf(`'spec.ocm' is required in %v/%v for distributed postgres`, pp.Namespace, pp.Name)
+		if pp.Spec.ClusterSpreadConstraint == nil {
+			return nil, fmt.Errorf(`'spec.clusterSpreadConstraint' is required in %v/%v for distributed postgres`, pp.Namespace, pp.Name)
 		}
 	}
 
