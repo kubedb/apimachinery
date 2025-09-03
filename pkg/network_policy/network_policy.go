@@ -18,6 +18,7 @@ package network_policy
 
 import (
 	"context"
+	"fmt"
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1"
 
@@ -36,16 +37,22 @@ const (
 	NetworkPolicyNameDBBackup    = "kubedb-database-backup"
 )
 
+var kubeDBProvisionerLabels = map[string]string{
+	meta_util.InstanceLabelKey: "kubedb",
+	meta_util.NameLabelKey:     "kubedb-provisioner",
+}
+
 func EnsureNetworkPolicy(kbClient client.Client, dbNs string) error {
 	err := ensureHealthCheckerNetworkPolicy(kbClient, dbNs)
 	if err != nil {
 		return err
 	}
-	err = ensureDBInternalNetworkPolicy(kbClient, dbNs)
-	if err != nil {
-		return err
-	}
-	return ensureBackupNetworkPolicy(kbClient, dbNs)
+	//err = ensureDBInternalNetworkPolicy(kbClient, dbNs)
+	//if err != nil {
+	//	return err
+	//}
+	//return ensureBackupNetworkPolicy(kbClient, dbNs)
+	return nil
 }
 
 func ensureHealthCheckerNetworkPolicy(kbClient client.Client, dbNs string) error {
@@ -56,7 +63,17 @@ func ensureHealthCheckerNetworkPolicy(kbClient client.Client, dbNs string) error
 			Namespace: dbNs,
 		},
 	}
-	_, err := cu.CreateOrPatch(context.TODO(), kbClient, &netPol, func(obj client.Object, createOp bool) client.Object {
+
+	var provisioners corev1.ServiceList
+	err := kbClient.List(context.TODO(), &provisioners)
+	if err != nil {
+		return err
+	}
+	if len(provisioners.Items) == 0 {
+		return fmt.Errorf("no health checker pods(provisioner) found in %s namespace", dbNs)
+	}
+
+	_, err = cu.CreateOrPatch(context.TODO(), kbClient, &netPol, func(obj client.Object, createOp bool) client.Object {
 		in := obj.(*netv1.NetworkPolicy)
 		in.Spec.PodSelector = metav1.LabelSelector{
 			MatchLabels: api.GetSelectorForNetworkPolicy(),
@@ -65,15 +82,8 @@ func ensureHealthCheckerNetworkPolicy(kbClient client.Client, dbNs string) error
 			{
 				From: []netv1.NetworkPolicyPeer{
 					{
-						NamespaceSelector: &metav1.LabelSelector{
-							MatchLabels: map[string]string{
-								corev1.LabelMetadataName: meta_util.PodNamespace(),
-							},
-						},
-						PodSelector: &metav1.LabelSelector{
-							MatchLabels: map[string]string{
-								meta_util.InstanceLabelKey: "kubedb",
-							},
+						IPBlock: &netv1.IPBlock{
+							CIDR: fmt.Sprintf("%v/0", provisioners.Items[0].Spec.ClusterIP),
 						},
 					},
 				},
