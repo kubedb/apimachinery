@@ -51,6 +51,15 @@ func findDomain() (string, error) {
 	}
 	defer file.Close()
 
+	checkIfMultipleOccurrences := func(fields []string, dom string) bool {
+		cnt := 0
+		for _, field := range fields {
+			if strings.Contains(field, dom) {
+				cnt++
+			}
+		}
+		return cnt > 2
+	}
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
@@ -59,9 +68,17 @@ func findDomain() (string, error) {
 		}
 		if strings.HasPrefix(line, "search ") {
 			fields := strings.Fields(line)
-			if len(fields) >= 3 { // Need at least 3 fields (search + 2 domains). Then returning the 2nd last one.
-				return fields[len(fields)-2], nil
+			// search demo.svc.cluster.local svc.cluster.local cluster.local
+			// search demo.svc.cluster.local svc.cluster.local cluster.local lan
+			for _, field := range fields {
+				if strings.HasPrefix(field, "svc.") {
+					dom := strings.TrimPrefix(field, "svc.")
+					if checkIfMultipleOccurrences(fields, dom) { // this is important, to avoid wrong domain calc when namespace name is "svc"
+						return dom, nil
+					}
+				}
 			}
+			return "", fmt.Errorf("failed to find domain: %s", line)
 		}
 	}
 
