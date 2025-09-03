@@ -59,9 +59,15 @@ func findDomain() (string, error) {
 		}
 		if strings.HasPrefix(line, "search ") {
 			fields := strings.Fields(line)
-			if len(fields) >= 3 { // Need at least 3 fields (search + 2 domains). Then returning the 2nd last one.
-				return fields[len(fields)-2], nil
+			// search demo.svc.cluster.local svc.cluster.local cluster.local
+			// search demo.svc.cluster.local svc.cluster.local cluster.local lan
+			for _, field := range fields {
+				if strings.HasPrefix(field, "svc.") &&
+					!strings.HasPrefix(field, "svc.svc.") {
+					return strings.TrimPrefix(field, "svc."), nil
+				}
 			}
+			return "", fmt.Errorf("failed to find domain: %s", line)
 		}
 	}
 
