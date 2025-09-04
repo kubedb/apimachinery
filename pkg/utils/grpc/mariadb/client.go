@@ -25,7 +25,7 @@ import (
 	"time"
 
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
-	pb "kubedb.dev/mariadb-coordinator/grpc/protogen"
+	pb "kubedb.dev/apimachinery/pkg/utils/grpc/mariadb/protogen"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
