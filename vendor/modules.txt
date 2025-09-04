@@ -1831,6 +1831,9 @@ kmodules.xyz/resource-metrics/ops.kubedb.com/v1alpha1
 # kmodules.xyz/webhook-runtime v0.32.0
 ## explicit; go 1.23.0
 kmodules.xyz/webhook-runtime/admission/v1
+# kubedb.dev/mariadb-coordinator v0.37.1-0.20250904110803-6eee7621ee5f
+## explicit; go 1.23.6
+kubedb.dev/mariadb-coordinator/grpc/protogen
 # kubeops.dev/csi-driver-cacerts v0.1.0
 ## explicit; go 1.22.0
 kubeops.dev/csi-driver-cacerts/apis/cacerts
