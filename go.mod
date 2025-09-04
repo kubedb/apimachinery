@@ -31,6 +31,7 @@ require (
 	gomodules.xyz/stow v0.2.4
 	gomodules.xyz/x v0.0.17
 	google.golang.org/grpc v1.69.2
+	google.golang.org/protobuf v1.36.3
 	k8s.io/api v0.32.3
 	k8s.io/apiextensions-apiserver v0.32.3
 	k8s.io/apimachinery v0.32.3
@@ -50,7 +51,6 @@ require (
 	kmodules.xyz/offshoot-api v0.32.0
 	kmodules.xyz/resource-metadata v0.32.1
 	kmodules.xyz/webhook-runtime v0.32.0
-	kubedb.dev/mariadb-coordinator v0.37.1-0.20250904121916-691e318d0a0f
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/operator-shard-manager v0.0.3
 	kubeops.dev/petset v0.0.12
@@ -198,7 +198,6 @@ require (
 	google.golang.org/api v0.198.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20241219192143-6b3ec007d9bb // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241219192143-6b3ec007d9bb // indirect
-	google.golang.org/protobuf v1.36.3 // indirect
 	gopkg.in/evanphx/json-patch.v4 v4.12.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
