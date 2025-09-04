@@ -50,7 +50,7 @@ require (
 	kmodules.xyz/offshoot-api v0.32.0
 	kmodules.xyz/resource-metadata v0.32.1
 	kmodules.xyz/webhook-runtime v0.32.0
-	kubedb.dev/mariadb-coordinator v0.37.1-0.20250904110803-6eee7621ee5f
+	kubedb.dev/mariadb-coordinator v0.37.1-0.20250904121916-691e318d0a0f
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/operator-shard-manager v0.0.3
 	kubeops.dev/petset v0.0.12
