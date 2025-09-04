@@ -683,8 +683,8 @@ kmodules.xyz/resource-metrics v0.30.9 h1:A25GC7+UpYAEJCVx44CxQYLE9vqDxC8R+suSNoW
 kmodules.xyz/resource-metrics v0.30.9/go.mod h1:5K+0A0iU+4JBFPZEuj716/oSgI9xUTnVTANS+cwhHIs=
 kmodules.xyz/webhook-runtime v0.32.0 h1:Y4QuM0jaPUhcwAnFcOaZkm9OYubMp16c8amxgDSujtI=
 kmodules.xyz/webhook-runtime v0.32.0/go.mod h1:aIZuepTB1p1qePNsbp7HLSSika/JhFymDXHRbjRRQjQ=
-kubedb.dev/mariadb-coordinator v0.37.1-0.20250904110803-6eee7621ee5f h1:VX8puZWHMWoLveZXvfKNv8I8uT9y9oPgJJNFBKlOeEI=
-kubedb.dev/mariadb-coordinator v0.37.1-0.20250904110803-6eee7621ee5f/go.mod h1:aXKnZ1OoKRhHGsmBFFrzj1UumrDB03E/W4xZkbY6JOo=
+kubedb.dev/mariadb-coordinator v0.37.1-0.20250904121916-691e318d0a0f h1:pYCMeZ009u6rK38NbTVpa+9+oQCmj+ZufHjbfa8oDO8=
+kubedb.dev/mariadb-coordinator v0.37.1-0.20250904121916-691e318d0a0f/go.mod h1:aXKnZ1OoKRhHGsmBFFrzj1UumrDB03E/W4xZkbY6JOo=
 kubeops.dev/csi-driver-cacerts v0.1.0 h1:WDgKNo5QAiMoVy4c/4ARWeCXJbqdcXdcn8VLImV4VZU=
 kubeops.dev/csi-driver-cacerts v0.1.0/go.mod h1:5a/ZOn5LFw26PPBpTKvsivBjcvVArOrJX24C+k+przk=
 kubeops.dev/operator-shard-manager v0.0.3 h1:Z2YOAfyQIjvHMwT4O56lR0l9z25s2tCVDO22u/XuYnw=
