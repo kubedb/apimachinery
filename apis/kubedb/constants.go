@@ -46,6 +46,7 @@ const (
 	KubeSliceNSMIPKey                       = "kubeslice.io/nsmIP"
 	KubeSlicePodIPVolumeName                = "podip"
 	KubeSlicePodIPFileName                  = "podip"
+	KubeSliceNSMContainerName               = "cmd-nsc"
 
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
