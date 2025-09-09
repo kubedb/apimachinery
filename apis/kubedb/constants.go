@@ -375,6 +375,12 @@ const (
 	DatabasePodMasterComponent           = "Master"
 	DatabasePodSlaveComponent            = "Slave"
 
+	MariaDBDistributedUpgradeCommand           = "mariadb-upgrade"
+	MariaDBDistributedPodMetricGetCommand      = "get-pod-metrics"
+	MariaDBDistributedPodGetCommand            = "get-pod"
+	MariaDBDistributedVolumeUsageGetCommand    = "get-volume-usage"
+	MariaDBDistributedVolumeCapacityGetCommand = "get-volume-capacity"
+
 	// Maxscale
 	MaxscaleCommonName            = "mx"
 	MaxscaleContainerName         = "maxscale"
