@@ -28,6 +28,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -166,7 +167,9 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 	case opsapi.PostgresOpsRequestTypeReconnectStandby:
 	case opsapi.PostgresOpsRequestTypeForceFailOver:
 	case opsapi.PostgresOpsRequestTypeSetRaftKeyPair:
-	default:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.PostgresOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Postgres are %s", req.Spec.Type, strings.Join(opsapi.PostgresOpsRequestTypeNames(), ", "))))
 	}
