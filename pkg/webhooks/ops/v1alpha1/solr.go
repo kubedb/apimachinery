@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"gomodules.xyz/x/arrays"
 	"strings"
 
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -154,7 +155,9 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 				req.Name,
 				err.Error()))
 		}
-	default:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.SolrOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Solr are %s", req.Spec.Type, strings.Join(opsapi.SolrOpsRequestTypeNames(), ", "))))
 	}

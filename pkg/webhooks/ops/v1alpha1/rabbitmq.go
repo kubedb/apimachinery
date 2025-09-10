@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"gomodules.xyz/x/arrays"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -154,7 +155,9 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 				req.Name,
 				err.Error()))
 		}
-	default:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.RabbitMQOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RabbitMQ are %s", req.Spec.Type, strings.Join(opsapi.RabbitMQOpsRequestTypeNames(), ", "))))
 	}

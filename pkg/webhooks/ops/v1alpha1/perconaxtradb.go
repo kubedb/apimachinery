@@ -16,6 +16,7 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	"gomodules.xyz/x/arrays"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -133,8 +134,9 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				req.Name,
 				err.Error()))
 		}
+	}
 
-	default:
+	if validType, _ := arrays.Contains(opsapi.PerconaXtraDBOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for PerconaXtraDB are %s", req.Spec.Type, strings.Join(opsapi.PerconaXtraDBOpsRequestTypeNames(), ", "))))
 	}

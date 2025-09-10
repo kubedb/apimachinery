@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	"gomodules.xyz/x/arrays"
 	"strings"
 
 	apiversion "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -154,8 +155,9 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				req.Name,
 				err.Error()))
 		}
+	}
 
-	default:
+	if validType, _ := arrays.Contains(opsapi.SinglestoreOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Singlestore are %s", req.Spec.Type, strings.Join(opsapi.SinglestoreOpsRequestTypeNames(), ", "))))
 	}

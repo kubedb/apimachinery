@@ -19,6 +19,8 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	"gomodules.xyz/x/arrays"
+	"strings"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -141,6 +143,10 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 				req.Name,
 				err.Error()))
 		}
+	}
+	if validType, _ := arrays.Contains(opsapi.RedisOpsRequestTypeNames(), req.Spec.Type); !validType {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Redis are %s", req.Spec.Type, strings.Join(opsapi.RedisOpsRequestTypeNames(), ", "))))
 	}
 	if len(allErr) == 0 {
 		return nil
