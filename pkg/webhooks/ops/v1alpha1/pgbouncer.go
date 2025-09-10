@@ -26,6 +26,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
+	"gomodules.xyz/x/arrays"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -103,9 +104,13 @@ func (w *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.Pg
 		return nil
 	case opsapi.PgBouncerOpsRequestTypeReconfigureTLS:
 		return w.validatePgBouncerReconfigureTLSOpsRequest(obj)
-	default:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.PgBouncerOpsRequestTypeNames(), obj.Spec.Type); !validType {
 		return fmt.Errorf("defined OpsRequestType %s is not supported, supported types for PgBouncer are %s", obj.Spec.Type, strings.Join(opsapi.PgBouncerOpsRequestTypeNames(), ", "))
 	}
+
+	return nil
 }
 
 func validatePgBouncerOpsRequest(obj, oldObj runtime.Object) error {

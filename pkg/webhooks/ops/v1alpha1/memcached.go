@@ -18,14 +18,16 @@ package v1alpha1
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	"github.com/pkg/errors"
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -144,12 +146,14 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 				err.Error()))
 		}
 	case opsapi.MemcachedOpsRequestTypeRotateAuth:
-		if err := w.validateMemcachedRotateAuthenticationOpsRequest(req); err != nil {
+		if err := c.validateMemcachedRotateAuthenticationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
 		}
-	default:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.MemcachedOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Memcached are %s", req.Spec.Type, strings.Join(opsapi.MemcachedOpsRequestTypeNames(), ", "))))
 	}
@@ -267,7 +271,7 @@ func (w *MemcachedOpsRequestCustomWebhook) validateMemcachedRotateAuthentication
 		}
 
 		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      db.GetAuthSecretName(),
+			Name:      db.Spec.AuthSecret.Name,
 			Namespace: db.GetNamespace(),
 		}, &oldAuthSecret)
 		if err != nil {
