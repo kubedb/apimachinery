@@ -363,7 +363,7 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequ
 	db := &dbapi.Postgres{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+		return errors.Wrap(err, fmt.Sprintf("failed to get postgres: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
 	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
