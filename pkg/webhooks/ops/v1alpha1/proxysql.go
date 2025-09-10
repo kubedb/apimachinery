@@ -24,6 +24,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
+	"gomodules.xyz/x/arrays"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -139,7 +140,9 @@ func (w *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pro
 				req.Name,
 				err.Error()))
 		}
-	default:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.ProxySQLOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ProxySQL are %s", req.Spec.Type, strings.Join(opsapi.ProxySQLOpsRequestTypeNames(), ", "))))
 	}

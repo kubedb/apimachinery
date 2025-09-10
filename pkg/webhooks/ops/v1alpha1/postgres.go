@@ -28,6 +28,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -157,7 +158,18 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 				req.Name,
 				err.Error()))
 		}
-	default:
+	case opsapi.PostgresOpsRequestTypeVolumeExpansion:
+		if err := w.validatePostgresVolumeExpansionOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.PostgresOpsRequestTypeReconnectStandby:
+	case opsapi.PostgresOpsRequestTypeForceFailOver:
+	case opsapi.PostgresOpsRequestTypeSetRaftKeyPair:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.PostgresOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Postgres are %s", req.Spec.Type, strings.Join(opsapi.PostgresOpsRequestTypeNames(), ", "))))
 	}
@@ -342,6 +354,28 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresStorageMigrationOpsReq
 		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
 			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
 		}
+	}
+
+	return nil
+}
+
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequest(req *opsapi.PostgresOpsRequest) error {
+	if req.Spec.VolumeExpansion == nil || req.Spec.VolumeExpansion.Postgres == nil {
+		return errors.New("`.Spec.VolumeExpansion` field is nil")
+	}
+	db := &dbapi.Postgres{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get postgres: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	}
+
+	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
+	if !ok {
+		return errors.Wrap(err, "failed to parse current storage size")
+	}
+
+	if cur.Cmp(*req.Spec.VolumeExpansion.Postgres) >= 0 {
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
 	return nil

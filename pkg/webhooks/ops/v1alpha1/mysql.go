@@ -24,6 +24,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -154,7 +155,9 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				err.Error()))
 		}
 
-	default:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.MySQLOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MySQL are %s", req.Spec.Type, strings.Join(opsapi.MySQLOpsRequestTypeNames(), ", "))))
 	}

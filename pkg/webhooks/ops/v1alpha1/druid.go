@@ -26,6 +26,7 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -166,7 +167,9 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 				req.Name,
 				err.Error()))
 		}
-	default:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.DruidOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Druid are %s", req.Spec.Type, strings.Join(opsapi.DruidOpsRequestTypeNames(), ", "))))
 	}

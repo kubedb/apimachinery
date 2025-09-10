@@ -27,6 +27,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -150,7 +151,9 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 				req.Name,
 				err.Error()))
 		}
-	default:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.MemcachedOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Memcached are %s", req.Spec.Type, strings.Join(opsapi.MemcachedOpsRequestTypeNames(), ", "))))
 	}
