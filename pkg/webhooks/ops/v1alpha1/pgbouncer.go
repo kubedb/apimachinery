@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
-	"gomodules.xyz/x/arrays"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -27,6 +26,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
+	"gomodules.xyz/x/arrays"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
