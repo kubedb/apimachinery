@@ -24,6 +24,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -141,7 +142,9 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 				err.Error()))
 		}
 
-	default:
+	}
+
+	if validType, _ := arrays.Contains(opsapi.MariaDBOpsRequestTypeNames(), req.Spec.Type); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MariaDB are %s", req.Spec.Type, strings.Join(opsapi.MariaDBOpsRequestTypeNames(), ", "))))
 	}
