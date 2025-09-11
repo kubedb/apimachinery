@@ -82,6 +82,10 @@ func (m MariaDB) OffshootDistributedTLSName() string {
 	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedTLSSecretNameSuffix)
 }
 
+func (m MariaDB) OffshootDistributedPromethuesSecretName() string {
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedPromethuesSecretNameSuffix)
+}
+
 func (m MariaDB) OffshootSelectors() map[string]string {
 	label := map[string]string{
 		meta_util.NameLabelKey:      m.ResourceFQN(),
