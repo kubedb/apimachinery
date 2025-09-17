@@ -105,6 +105,11 @@ func validateHazelcastOpsRequest(req *opsapi.HazelcastOpsRequest, oldReq *opsapi
 }
 
 func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.HazelcastOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.HazelcastOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Hazelcast are %s", req.Spec.Type, strings.Join(opsapi.HazelcastOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.HazelcastOpsRequestType) {
 	case opsapi.HazelcastOpsRequestTypeRestart:
@@ -157,10 +162,6 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.HazelcastOpsRequestTypeNames(), req.Spec.Type); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Hazelcast are %s", req.Spec.Type, strings.Join(opsapi.HazelcastOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

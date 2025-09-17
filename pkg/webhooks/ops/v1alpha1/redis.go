@@ -117,6 +117,11 @@ func (w *RedisOpsRequestCustomWebhook) isDatabaseRefValid(req *opsapi.RedisOpsRe
 }
 
 func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.RedisOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Redis are %s", req.Spec.Type, strings.Join(opsapi.RedisOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.RedisOpsRequestType) {
 	case opsapi.RedisOpsRequestTypeHorizontalScaling:
@@ -143,10 +148,6 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 				req.Name,
 				err.Error()))
 		}
-	}
-	if validType, _ := arrays.Contains(opsapi.RedisOpsRequestTypeNames(), req.Spec.Type); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Redis are %s", req.Spec.Type, strings.Join(opsapi.RedisOpsRequestTypeNames(), ", "))))
 	}
 	if len(allErr) == 0 {
 		return nil
