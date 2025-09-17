@@ -157,7 +157,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.SinglestoreOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.SinglestoreOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Singlestore are %s", req.Spec.Type, strings.Join(opsapi.SinglestoreOpsRequestTypeNames(), ", "))))
 	}

@@ -169,7 +169,7 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 	case opsapi.PostgresOpsRequestTypeSetRaftKeyPair:
 	}
 
-	if validType, _ := arrays.Contains(opsapi.PostgresOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.PostgresOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Postgres are %s", req.Spec.Type, strings.Join(opsapi.PostgresOpsRequestTypeNames(), ", "))))
 	}

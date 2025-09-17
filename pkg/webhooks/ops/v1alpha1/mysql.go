@@ -157,7 +157,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 
 	}
 
-	if validType, _ := arrays.Contains(opsapi.MySQLOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.MySQLOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MySQL are %s", req.Spec.Type, strings.Join(opsapi.MySQLOpsRequestTypeNames(), ", "))))
 	}

@@ -169,7 +169,7 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.DruidOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.DruidOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Druid are %s", req.Spec.Type, strings.Join(opsapi.DruidOpsRequestTypeNames(), ", "))))
 	}

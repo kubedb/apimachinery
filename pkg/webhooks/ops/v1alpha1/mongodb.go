@@ -95,7 +95,7 @@ func (w *MongoDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj
 func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MongoDBOpsRequest) error {
 	var allErr field.ErrorList
 	// validate MongoDBOpsRequest specs
-	if !IsOpsTypeSupported(opsapi.MongoDBOpsRequestTypeNames(), string(req.Spec.Type)) {
+	if !IsOpsTypeSupported(opsapi.MongoDBOpsRequestTypeNames(), string(string(req.Spec.Type))) {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MongoDB are %s", req.Spec.Type, strings.Join(opsapi.MongoDBOpsRequestTypeNames(), ", "))))
 	}
@@ -124,7 +124,7 @@ func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mong
 				err.Error()))
 		}
 	}
-	if validType, _ := arrays.Contains(opsapi.MongoDBOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.MongoDBOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MongoDB are %s", req.Spec.Type, strings.Join(opsapi.MongoDBOpsRequestTypeNames(), ", "))))
 	}

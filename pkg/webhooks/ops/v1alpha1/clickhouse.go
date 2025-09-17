@@ -94,7 +94,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	}
-	if validType, _ := arrays.Contains(opsapi.ClickHouseOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.ClickHouseOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ClickHouse are %s", req.Spec.Type, strings.Join(opsapi.ClickHouseOpsRequestTypeNames(), ", "))))
 	}

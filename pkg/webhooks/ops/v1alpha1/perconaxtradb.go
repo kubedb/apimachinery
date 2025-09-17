@@ -136,7 +136,7 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.PerconaXtraDBOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.PerconaXtraDBOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for PerconaXtraDB are %s", req.Spec.Type, strings.Join(opsapi.PerconaXtraDBOpsRequestTypeNames(), ", "))))
 	}

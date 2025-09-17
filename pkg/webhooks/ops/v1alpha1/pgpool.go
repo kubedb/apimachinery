@@ -145,7 +145,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pgpoo
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.PgpoolOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.PgpoolOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Pgpool are %s", req.Spec.Type, strings.Join(opsapi.PgpoolOpsRequestTypeNames(), ", "))))
 	}

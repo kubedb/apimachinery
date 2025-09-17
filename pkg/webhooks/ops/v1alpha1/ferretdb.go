@@ -124,7 +124,7 @@ func (w *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Fer
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.FerretDBOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.FerretDBOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for FerretDB are %s", req.Spec.Type, strings.Join(opsapi.FerretDBOpsRequestTypeNames(), ", "))))
 	}

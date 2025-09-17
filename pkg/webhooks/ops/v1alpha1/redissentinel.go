@@ -124,7 +124,7 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				err.Error()))
 		}
 	}
-	if validType, _ := arrays.Contains(opsapi.RedisSentinelOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.RedisSentinelOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RedisSentinel are %s", req.Spec.Type, strings.Join(opsapi.RedisSentinelOpsRequestTypeNames(), ", "))))
 	}

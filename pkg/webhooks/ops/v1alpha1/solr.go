@@ -157,7 +157,7 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.SolrOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.SolrOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Solr are %s", req.Spec.Type, strings.Join(opsapi.SolrOpsRequestTypeNames(), ", "))))
 	}

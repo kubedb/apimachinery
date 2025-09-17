@@ -144,7 +144,7 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 				err.Error()))
 		}
 	}
-	if validType, _ := arrays.Contains(opsapi.RedisOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.RedisOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Redis are %s", req.Spec.Type, strings.Join(opsapi.RedisOpsRequestTypeNames(), ", "))))
 	}

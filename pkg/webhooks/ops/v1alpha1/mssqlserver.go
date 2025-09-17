@@ -160,7 +160,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 
 	}
 
-	if validType, _ := arrays.Contains(opsapi.MSSQLServerOpsRequestTypeNames(), req.Spec.Type); !validType {
+	if validType, _ := arrays.Contains(opsapi.MSSQLServerOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MSSQLServer are %s", req.Spec.Type, strings.Join(opsapi.MSSQLServerOpsRequestTypeNames(), ", "))))
 	}
