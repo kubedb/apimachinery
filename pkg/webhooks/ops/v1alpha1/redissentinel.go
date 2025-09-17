@@ -115,6 +115,11 @@ func (w *RedisSentinelOpsRequestCustomWebhook) isDatabaseRefValid(obj *opsapi.Re
 }
 
 func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisSentinelOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.RedisSentinelOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RedisSentinel are %s", req.Spec.Type, strings.Join(opsapi.RedisSentinelOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.RedisSentinelOpsRequestType) {
 	case opsapi.RedisSentinelOpsRequestTypeUpdateVersion:
@@ -123,10 +128,6 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				req.Name,
 				err.Error()))
 		}
-	}
-	if validType, _ := arrays.Contains(opsapi.RedisSentinelOpsRequestTypeNames(), req.Spec.Type); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RedisSentinel are %s", req.Spec.Type, strings.Join(opsapi.RedisSentinelOpsRequestTypeNames(), ", "))))
 	}
 
 	if len(allErr) == 0 {

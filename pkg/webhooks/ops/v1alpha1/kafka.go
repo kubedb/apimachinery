@@ -110,6 +110,11 @@ func validateKafkaOpsRequest(req *opsapi.KafkaOpsRequest, oldReq *opsapi.KafkaOp
 }
 
 func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.KafkaOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Kafka are %s", req.Spec.Type, strings.Join(opsapi.KafkaOpsRequestTypeNames(), ", ")))
+	}
+
 	var (
 		err   error
 		kafka *dbapi.Kafka
@@ -164,10 +169,6 @@ func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaO
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.KafkaOpsRequestTypeNames(), req.Spec.Type); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for kafka are %s", req.Spec.Type, strings.Join(opsapi.KafkaOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

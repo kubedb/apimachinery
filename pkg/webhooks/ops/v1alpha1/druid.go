@@ -110,6 +110,10 @@ func validateDruidOpsRequest(req *opsapi.DruidOpsRequest, oldReq *opsapi.DruidOp
 }
 
 func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.DruidOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Druid are %s", req.Spec.Type, strings.Join(opsapi.DruidOpsRequestTypeNames(), ", ")))
+	}
 	druid, err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
@@ -169,10 +173,6 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.DruidOpsRequestTypeNames(), req.Spec.Type); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Druid are %s", req.Spec.Type, strings.Join(opsapi.DruidOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

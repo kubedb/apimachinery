@@ -91,6 +91,11 @@ func (w *MariaDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj
 }
 
 func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MariaDBOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.MariaDBOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MariaDB are %s", req.Spec.Type, strings.Join(opsapi.MariaDBOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.MariaDBOpsRequestType) {
 	case opsapi.MariaDBOpsRequestTypeRestart:
@@ -144,10 +149,6 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 
 	}
 
-	if validType, _ := arrays.Contains(opsapi.MariaDBOpsRequestTypeNames(), req.Spec.Type); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MariaDB are %s", req.Spec.Type, strings.Join(opsapi.MariaDBOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

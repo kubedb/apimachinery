@@ -101,6 +101,11 @@ func validateFerretDBOpsRequest(req *opsapi.FerretDBOpsRequest, oldReq *opsapi.F
 }
 
 func (w *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.FerretDBOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.FerretDBOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for FerretDB are %s", req.Spec.Type, strings.Join(opsapi.FerretDBOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.FerretDBOpsRequestType) {
 	case opsapi.FerretDBOpsRequestTypeRestart:
@@ -124,10 +129,6 @@ func (w *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Fer
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.FerretDBOpsRequestTypeNames(), req.Spec.Type); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for FerretDB are %s", req.Spec.Type, strings.Join(opsapi.FerretDBOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

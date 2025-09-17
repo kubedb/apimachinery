@@ -105,6 +105,11 @@ func validateRabbitMQOpsRequest(req *opsapi.RabbitMQOpsRequest, oldReq *opsapi.R
 }
 
 func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RabbitMQOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.RabbitMQOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RabbitMQ are %s", req.Spec.Type, strings.Join(opsapi.RabbitMQOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.RabbitMQOpsRequestType) {
 	case opsapi.RabbitMQOpsRequestTypeRestart:
@@ -157,10 +162,6 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.RabbitMQOpsRequestTypeNames(), req.Spec.Type); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RabbitMQ are %s", req.Spec.Type, strings.Join(opsapi.RabbitMQOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

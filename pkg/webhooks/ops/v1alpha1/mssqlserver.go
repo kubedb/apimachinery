@@ -107,6 +107,11 @@ func validateMSSQLServerOpsRequest(req *opsapi.MSSQLServerOpsRequest, oldReq *op
 }
 
 func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MSSQLServerOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.MSSQLServerOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MSSQLServer are %s", req.Spec.Type, strings.Join(opsapi.MSSQLServerOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.MSSQLServerOpsRequestType) {
 	case opsapi.MSSQLServerOpsRequestTypeRestart:
@@ -160,10 +165,6 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 
 	}
 
-	if validType, _ := arrays.Contains(opsapi.MSSQLServerOpsRequestTypeNames(), req.Spec.Type); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MSSQLServer are %s", req.Spec.Type, strings.Join(opsapi.MSSQLServerOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}
