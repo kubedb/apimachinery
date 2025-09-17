@@ -130,6 +130,10 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateOpensearchVersionCompatib
 }
 
 func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ElasticsearchOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.ElasticsearchOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Elasticsearch are %s", req.Spec.Type, strings.Join(opsapi.ElasticsearchOpsRequestTypeNames(), ", ")))
+	}
 	var allErr field.ErrorList
 	db := &dbapi.Elasticsearch{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
@@ -155,10 +159,6 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.ElasticsearchOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Elasticsearch are %s", req.Spec.Type, strings.Join(opsapi.ElasticsearchOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

@@ -102,6 +102,11 @@ func (w *ProxySQLOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, ob
 }
 
 func (w *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ProxySQLOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.ProxySQLOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ProxySQL are %s", req.Spec.Type, strings.Join(opsapi.ProxySQLOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.ProxySQLOpsRequestType) {
 	case opsapi.ProxySQLOpsRequestTypeRestart:
@@ -142,10 +147,6 @@ func (w *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pro
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.ProxySQLOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ProxySQL are %s", req.Spec.Type, strings.Join(opsapi.ProxySQLOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

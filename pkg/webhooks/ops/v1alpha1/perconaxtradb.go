@@ -90,6 +90,11 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Contex
 }
 
 func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.PerconaXtraDBOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.PerconaXtraDBOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for PerconaXtraDB are %s", req.Spec.Type, strings.Join(opsapi.PerconaXtraDBOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.PerconaXtraDBOpsRequestType) {
 	case opsapi.PerconaXtraDBOpsRequestTypeRestart:
@@ -136,10 +141,6 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.PerconaXtraDBOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for PerconaXtraDB are %s", req.Spec.Type, strings.Join(opsapi.PerconaXtraDBOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

@@ -106,6 +106,11 @@ func validateMemcachedOpsRequest(req *opsapi.MemcachedOpsRequest, oldReq *opsapi
 }
 
 func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MemcachedOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.MemcachedOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Memcached are %s", req.Spec.Type, strings.Join(opsapi.MemcachedOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.MemcachedOpsRequestType) {
 	case opsapi.MemcachedOpsRequestTypeRestart:
@@ -153,10 +158,6 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.MemcachedOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Memcached are %s", req.Spec.Type, strings.Join(opsapi.MemcachedOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

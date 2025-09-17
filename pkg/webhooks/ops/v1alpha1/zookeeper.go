@@ -106,9 +106,14 @@ func validateZooKeeperOpsRequest(req *opsapi.ZooKeeperOpsRequest, oldReq *opsapi
 }
 
 func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ZooKeeperOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.ZooKeeperOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ZooKeeper are %s", req.Spec.Type, strings.Join(opsapi.ZooKeeperOpsRequestTypeNames(), ", ")))
+	}
 	if err := z.hasDatabaseRef(req); err != nil {
 		return err
 	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.ZooKeeperOpsRequestType) {
 	case opsapi.ZooKeeperOpsRequestTypeUpdateVersion:
@@ -143,10 +148,6 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.ZooKeeperOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ZooKeeper are %s", req.Spec.Type, strings.Join(opsapi.ZooKeeperOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}

@@ -105,6 +105,11 @@ func validateIgniteOpsRequest(req *opsapi.IgniteOpsRequest, oldReq *opsapi.Ignit
 }
 
 func (rv *IgniteOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.IgniteOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.IgniteOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Ignite are %s", req.Spec.Type, strings.Join(opsapi.IgniteOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.IgniteOpsRequestType) {
 	case opsapi.IgniteOpsRequestTypeRestart:
@@ -157,10 +162,6 @@ func (rv *IgniteOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Igni
 		}
 	}
 
-	if validType, _ := arrays.Contains(opsapi.IgniteOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Ignite are %s", req.Spec.Type, strings.Join(opsapi.IgniteOpsRequestTypeNames(), ", "))))
-	}
 	if len(allErr) == 0 {
 		return nil
 	}
