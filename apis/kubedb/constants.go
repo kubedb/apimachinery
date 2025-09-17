@@ -2078,6 +2078,7 @@ const (
 	GitSyncContainerName        = "git-sync"
 )
 
+// ========================= Oracle Constants ====================================
 const (
 	OracleDatabaseServiceName = "ORCL"
 	OracleSqlNetPortName      = "sqlnet"
@@ -2112,6 +2113,7 @@ const (
 	OracleEnvPassword          = "ORACLE_PWD"
 	OracleEnvOracleSID         = "ORACLE_SID"
 	OracleEnvDataDir           = "ORADATA"
+	OracleSharedTlsVolumeName  = "certs"
 )
 
 // =========================== Qdrant Constants ============================
