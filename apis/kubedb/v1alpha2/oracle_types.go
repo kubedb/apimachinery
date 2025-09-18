@@ -172,10 +172,6 @@ type OracleSpec struct {
 	// TLS configuration for secure client connections
 	// +optional
 	TCPSConfig *OracleTCPSConfig `json:"tcpsConfig,omitempty"`
-
-	// TLS contains tls configurations for client and server.
-	// +optional
-	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 }
 
 type OracleTCPSConfig struct {
