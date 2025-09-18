@@ -637,6 +637,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleList":                                    schema_apimachinery_apis_kubedb_v1alpha2_OracleList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_OracleSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_OracleStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleTCPSConfig":                              schema_apimachinery_apis_kubedb_v1alpha2_OracleTCPSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PerconaXtraDB":                                 schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PerconaXtraDBList":                             schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PerconaXtraDBSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_PerconaXtraDBSpec(ref),
@@ -33171,11 +33172,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_OracleSpec(ref common.ReferenceCal
 							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
 						},
 					},
+					"tcpsConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configuration for secure client connections",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleTCPSConfig"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DataGuardSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DataGuardSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleTCPSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -33219,6 +33226,31 @@ func schema_apimachinery_apis_kubedb_v1alpha2_OracleStatus(ref common.ReferenceC
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_OracleTCPSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
+					"listenerTCPS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Listener TCPS configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.TLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec"},
 	}
 }
 
