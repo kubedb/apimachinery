@@ -2031,12 +2031,13 @@ const (
 
 	OracleStandbyServiceSuffix = "standby"
 
-	OracleDatabaseRoleKey      = "oracle.db/role"
-	OracleDatabaseRoleObserver = "observer"
-	OracleDatabaseRoleInstance = "instance"
-	OracleEnvUserName          = "SYS_USER"
-	OracleEnvPassword          = "ORACLE_PWD"
-	OracleEnvOracleSID         = "ORACLE_SID"
-	OracleEnvDataDir           = "ORADATA"
-	OracleSharedTlsVolumeName  = "certs"
+	OracleDatabaseRoleKey          = "oracle.db/role"
+	OracleDatabaseRoleObserver     = "observer"
+	OracleDatabaseRoleInstance     = "instance"
+	OracleEnvUserName              = "SYS_USER"
+	OracleEnvPassword              = "ORACLE_PWD"
+	OracleEnvOracleSID             = "ORACLE_SID"
+	OracleEnvDataDir               = "ORADATA"
+	OracleSharedTlsVolumeName      = "certs"
+	OracleSharedTlsVolumeMountPath = "/tls/certs"
 )
