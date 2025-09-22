@@ -1769,7 +1769,7 @@ kmodules.xyz/client-go/tools/queue
 # kmodules.xyz/crd-schema-fuzz v0.32.0
 ## explicit; go 1.23.0
 kmodules.xyz/crd-schema-fuzz
-# kmodules.xyz/custom-resources v0.32.0
+# kmodules.xyz/custom-resources v0.32.1
 ## explicit; go 1.23.0
 kmodules.xyz/custom-resources/apis/appcatalog
 kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1
