@@ -26375,20 +26375,29 @@
     },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference": {
       "type": "object",
+      "required": [
+        "kind",
+        "name"
+      ],
       "properties": {
         "activeFrom": {
           "description": "ActiveFrom holds the RFC3339 time. The referred authSecret is in-use from this timestamp.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "apiGroup": {
-          "description": "Two possible groups: \"\", virtual-secrets.dev",
+          "description": "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
           "type": "string"
         },
         "externallyManaged": {
           "type": "boolean"
         },
+        "kind": {
+          "description": "Kind is the type of resource being referenced",
+          "type": "string",
+          "default": ""
+        },
         "name": {
-          "description": "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
+          "description": "Name is the name of resource being referenced",
           "type": "string",
           "default": ""
         },
@@ -26497,7 +26506,7 @@
       "properties": {
         "secretRef": {
           "description": "SecretRef holds the new authSecret If it is given, ops-manager will use this. Otherwise, will generate random password",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+          "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.TypedLocalObjectReference"
         }
       }
     },
@@ -32985,6 +32994,30 @@
           }
         }
       }
+    },
+    "xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.TypedLocalObjectReference": {
+      "type": "object",
+      "required": [
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "apiGroup": {
+          "description": "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is the type of resource being referenced",
+          "type": "string",
+          "default": ""
+        },
+        "name": {
+          "description": "Name is the name of resource being referenced",
+          "type": "string",
+          "default": ""
+        }
+      },
+      "x-kubernetes-map-type": "atomic"
     },
     "xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec": {
       "type": "object",
