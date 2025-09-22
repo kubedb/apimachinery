@@ -106,6 +106,13 @@ spec:
                 type: boolean
               enableSSL:
                 type: boolean
+              gcsCredSecret:
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               healthChecker:
                 default:
                   failureThreshold: 3
@@ -3431,6 +3438,13 @@ spec:
               replicas:
                 format: int32
                 type: integer
+              s3CredSecret:
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               serviceTemplates:
                 items:
                   properties:
