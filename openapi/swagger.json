@@ -28318,6 +28318,10 @@
           "description": "Try to reconnect standby's with primary",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresReconnectStandby"
         },
+        "recoverWithDataLoss": {
+          "description": "Recover with data loss",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresRecoveryWithDataLoss"
+        },
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
@@ -28358,6 +28362,24 @@
       "properties": {
         "readyTimeOut": {
           "description": "ReadyTimeOut is the time to wait for standby`s to become ready",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresRecoveryWithDataLoss": {
+      "type": "object",
+      "required": [
+        "acceptDataLoss"
+      ],
+      "properties": {
+        "acceptDataLoss": {
+          "type": "boolean"
+        },
+        "primaryPodName": {
+          "type": "string"
+        },
+        "readyTimeOut": {
+          "description": "ReadyTimeOut is the time to wait for pod's to become ready",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         }
       }

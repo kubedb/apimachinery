@@ -86,6 +86,8 @@ type PostgresOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Try to reconnect standby's with primary
 	ReconnectStandby *PostgresReconnectStandby `json:"reconnectStandby,omitempty"`
+	// Recover with data loss
+	RecoverWithDataLoss *PostgresRecoveryWithDataLoss `json:"recoverWithDataLoss,omitempty"`
 	// Forcefully do a failover to the given candidate
 	ForceFailOver *PostgresForceFailOver `json:"forceFailOver,omitempty"`
 	// Set given key pairs to raft storage
@@ -183,6 +185,14 @@ type PostgresForceFailOver struct {
 
 type PostgresSetRaftKeyPair struct {
 	KeyPair map[string]string `json:"keyPair,omitempty"`
+}
+
+type PostgresRecoveryWithDataLoss struct {
+	// ReadyTimeOut is the time to wait for pod's to become ready
+	// +optional
+	ReadyTimeOut   *metav1.Duration `json:"readyTimeOut,omitempty"`
+	AcceptDataLoss *bool            `json:"acceptDataLoss"`
+	PrimaryPodName *string          `json:"primaryPodName,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

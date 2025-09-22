@@ -684,6 +684,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestList":                           schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestSpec":                           schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresReconnectStandby":                         schema_apimachinery_apis_ops_v1alpha1_PostgresReconnectStandby(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresRecoveryWithDataLoss":                     schema_apimachinery_apis_ops_v1alpha1_PostgresRecoveryWithDataLoss(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresSetRaftKeyPair":                           schema_apimachinery_apis_ops_v1alpha1_PostgresSetRaftKeyPair(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec":                                  schema_apimachinery_apis_ops_v1alpha1_PostgresTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpdateVersionSpec":                        schema_apimachinery_apis_ops_v1alpha1_PostgresUpdateVersionSpec(ref),
@@ -33437,6 +33438,12 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresReconnectStandby"),
 						},
 					},
+					"recoverWithDataLoss": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Recover with data loss",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresRecoveryWithDataLoss"),
+						},
+					},
 					"forceFailOver": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Forcefully do a failover to the given candidate",
@@ -33473,7 +33480,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresForceFailOver", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresReconnectStandby", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresSetRaftKeyPair", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresForceFailOver", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresReconnectStandby", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresRecoveryWithDataLoss", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresSetRaftKeyPair", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -33490,6 +33497,39 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresReconnectStandby(ref common.R
 						},
 					},
 				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_PostgresRecoveryWithDataLoss(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"readyTimeOut": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReadyTimeOut is the time to wait for pod's to become ready",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"acceptDataLoss": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"primaryPodName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"acceptDataLoss"},
 			},
 		},
 		Dependencies: []string{

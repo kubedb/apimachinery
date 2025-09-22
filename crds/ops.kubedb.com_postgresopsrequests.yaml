@@ -120,6 +120,17 @@ spec:
                   readyTimeOut:
                     type: string
                 type: object
+              recoverWithDataLoss:
+                properties:
+                  acceptDataLoss:
+                    type: boolean
+                  primaryPodName:
+                    type: string
+                  readyTimeOut:
+                    type: string
+                required:
+                - acceptDataLoss
+                type: object
               restart:
                 type: object
               setRaftKeyPair:
