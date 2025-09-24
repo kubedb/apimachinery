@@ -119,6 +119,7 @@ const (
 	Restart              = "Restart"
 	RestartNodes         = "RestartNodes"
 	RestartPods          = "RestartPods"
+	RestartKeeperPods    = "RestartKeeperPods"
 	RestartPodsSucceeded = "RestartPodsSucceeded"
 	RestartPodsFailed    = "RestartPodsFailed"
 )
