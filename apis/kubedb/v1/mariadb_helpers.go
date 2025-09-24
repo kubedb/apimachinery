@@ -177,19 +177,17 @@ func (m MariaDB) StandbyServiceName() string {
 }
 
 func (m MariaDB) IsCluster() bool {
-	return pointer.Int32(m.Spec.Replicas) > 1
+	return m.Spec.Topology != nil
 }
 
 func (m MariaDB) IsGaleraCluster() bool {
 	return m.Spec.Topology != nil &&
-		m.IsCluster() &&
 		m.Spec.Topology.Mode != nil &&
 		*m.Spec.Topology.Mode == MariaDBModeGaleraCluster
 }
 
 func (m MariaDB) IsMariaDBReplication() bool {
 	return m.Spec.Topology != nil &&
-		m.IsCluster() &&
 		m.Spec.Topology.Mode != nil &&
 		*m.Spec.Topology.Mode == MariaDBModeReplication
 }
