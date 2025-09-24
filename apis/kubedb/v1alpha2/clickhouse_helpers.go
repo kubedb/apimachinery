@@ -431,6 +431,7 @@ func (c *ClickHouse) SetDefaults(kc client.Client) {
 			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.ClickHouseDefaultResources)
 		}
 	}
+	c.SetTLSDefaults()
 	c.SetHealthCheckerDefaults()
 }
 
