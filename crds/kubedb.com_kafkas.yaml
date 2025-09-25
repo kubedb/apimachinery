@@ -60,13 +60,18 @@ spec:
                     type: string
                   externallyManaged:
                     type: boolean
+                  kind:
+                    default: Secret
+                    type: string
                   name:
-                    default: ""
                     type: string
                   rotateAfter:
                     type: string
                   secretStoreName:
                     type: string
+                required:
+                - kind
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
               autoOps:
@@ -99,13 +104,18 @@ spec:
                         type: string
                       externallyManaged:
                         type: boolean
+                      kind:
+                        default: Secret
+                        type: string
                       name:
-                        default: ""
                         type: string
                       rotateAfter:
                         type: string
                       secretStoreName:
                         type: string
+                    required:
+                    - kind
+                    - name
                     type: object
                     x-kubernetes-map-type: atomic
                   podTemplate:
@@ -3281,13 +3291,18 @@ spec:
                     type: string
                   externallyManaged:
                     type: boolean
+                  kind:
+                    default: Secret
+                    type: string
                   name:
-                    default: ""
                     type: string
                   rotateAfter:
                     type: string
                   secretStoreName:
                     type: string
+                required:
+                - kind
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
               monitor:
@@ -13313,13 +13328,18 @@ spec:
                     type: string
                   externallyManaged:
                     type: boolean
+                  kind:
+                    default: Secret
+                    type: string
                   name:
-                    default: ""
                     type: string
                   rotateAfter:
                     type: string
                   secretStoreName:
                     type: string
+                required:
+                - kind
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
               autoOps:
@@ -13352,13 +13372,18 @@ spec:
                         type: string
                       externallyManaged:
                         type: boolean
+                      kind:
+                        default: Secret
+                        type: string
                       name:
-                        default: ""
                         type: string
                       rotateAfter:
                         type: string
                       secretStoreName:
                         type: string
+                    required:
+                    - kind
+                    - name
                     type: object
                     x-kubernetes-map-type: atomic
                   podTemplate:
@@ -16534,13 +16559,18 @@ spec:
                     type: string
                   externallyManaged:
                     type: boolean
+                  kind:
+                    default: Secret
+                    type: string
                   name:
-                    default: ""
                     type: string
                   rotateAfter:
                     type: string
                   secretStoreName:
                     type: string
+                required:
+                - kind
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
               monitor:
