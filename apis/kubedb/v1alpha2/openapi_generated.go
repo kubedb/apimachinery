@@ -26323,9 +26323,9 @@ func schema_apimachinery_apis_kubedb_v1alpha2_BrokerRack(ref common.ReferenceCal
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"nodeLabelKey": {
+					"topologyKey": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NodeLabelKey is the node label key which is used to identify the rack of a broker",
+							Description: "TopologyKey is the node label key which is used to identify the rack of a broker",
 							Type:        []string{"string"},
 							Format:      "",
 						},

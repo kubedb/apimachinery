@@ -81,7 +81,7 @@ spec:
                 type: object
               brokerRack:
                 properties:
-                  nodeLabelKey:
+                  topologyKey:
                     type: string
                 type: object
               configSecret:
@@ -13354,7 +13354,7 @@ spec:
                 type: object
               brokerRack:
                 properties:
-                  nodeLabelKey:
+                  topologyKey:
                     type: string
                 type: object
               configSecret:
