@@ -297,12 +297,12 @@ func (k *Kafka) ServiceAccountName() string {
 	return k.OffshootName()
 }
 
-func (k *Kafka) DefaultPodRoleName() string {
-	return meta_util.NameWithSuffix(k.OffshootName(), "role")
+func (k *Kafka) ClusterRoleName() string {
+	return meta_util.NameWithSuffix(k.OffshootName(), "clusterrole")
 }
 
-func (k *Kafka) DefaultPodRoleBindingName() string {
-	return meta_util.NameWithSuffix(k.OffshootName(), "rolebinding")
+func (k *Kafka) ClusterRoleBindingName() string {
+	return meta_util.NameWithSuffix(k.OffshootName(), "clusterrolebinding")
 }
 
 func (k *Kafka) PVCName(alias string) string {

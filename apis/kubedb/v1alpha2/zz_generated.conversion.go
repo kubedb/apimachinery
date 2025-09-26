@@ -1208,7 +1208,7 @@ func Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(in *v1.AutoOpsSpec, out *Aut
 }
 
 func autoConvert_v1alpha2_BrokerRack_To_v1_BrokerRack(in *BrokerRack, out *v1.BrokerRack, s conversion.Scope) error {
-	out.NodeLabelKey = in.NodeLabelKey
+	out.TopologyKey = in.TopologyKey
 	return nil
 }
 
@@ -1218,7 +1218,7 @@ func Convert_v1alpha2_BrokerRack_To_v1_BrokerRack(in *BrokerRack, out *v1.Broker
 }
 
 func autoConvert_v1_BrokerRack_To_v1alpha2_BrokerRack(in *v1.BrokerRack, out *BrokerRack, s conversion.Scope) error {
-	out.NodeLabelKey = in.NodeLabelKey
+	out.TopologyKey = in.TopologyKey
 	return nil
 }
 

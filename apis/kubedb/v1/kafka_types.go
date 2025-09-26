@@ -161,8 +161,8 @@ type KafkaNode struct {
 }
 
 type BrokerRack struct {
-	// NodeLabelKey is the node label key which is used to identify the rack of a broker
-	NodeLabelKey string `json:"nodeLabelKey,omitempty"`
+	// TopologyKey is the node label key which is used to identify the rack of a broker
+	TopologyKey string `json:"topologyKey,omitempty"`
 }
 
 // KafkaStatus defines the observed state of Kafka
