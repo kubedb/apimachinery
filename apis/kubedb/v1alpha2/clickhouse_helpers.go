@@ -332,6 +332,16 @@ func (c *ClickHouse) SetDefaults(kc client.Client) {
 		klog.Errorf("can't get the clickhouse version object %s for %s \n", err.Error(), c.Spec.Version)
 		return
 	}
+
+	if !c.Spec.DisableSecurity {
+		if c.Spec.AuthSecret == nil {
+			c.Spec.AuthSecret = &SecretReference{}
+		}
+		if c.Spec.AuthSecret.Kind == "" {
+			c.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
+		}
+	}
+
 	if c.Spec.TLS != nil {
 		if c.Spec.TLS.ClientCACertificateRefs != nil {
 			for i, secret := range c.Spec.TLS.ClientCACertificateRefs {
@@ -421,6 +431,7 @@ func (c *ClickHouse) SetDefaults(kc client.Client) {
 			apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.ClickHouseDefaultResources)
 		}
 	}
+	c.SetTLSDefaults()
 	c.SetHealthCheckerDefaults()
 }
 

@@ -464,6 +464,15 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion) {
 		e.Spec.PodTemplate.Spec.ServiceAccountName = e.OffshootName()
 	}
 
+	if !e.Spec.DisableSecurity {
+		if e.Spec.AuthSecret == nil {
+			e.Spec.AuthSecret = &SecretReference{}
+		}
+		if e.Spec.AuthSecret.Kind == "" {
+			e.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
+		}
+	}
+
 	// set default elasticsearch node name prefix
 	if e.Spec.Topology != nil {
 		// Required nodes, must exist!
