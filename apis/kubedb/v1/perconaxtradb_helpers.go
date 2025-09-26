@@ -346,7 +346,6 @@ func (p *PerconaXtraDB) SetHealthCheckerDefaults() {
 }
 
 func (p *PerconaXtraDB) SetTLSDefaults() {
-
 	if p.Spec.AuthSecret == nil {
 		p.Spec.AuthSecret = &SecretReference{}
 	}
