@@ -309,6 +309,15 @@ func (r *Cassandra) SetDefaults(kc client.Client) {
 		}
 	}
 
+	if !r.Spec.DisableSecurity {
+		if r.Spec.AuthSecret == nil {
+			r.Spec.AuthSecret = &SecretReference{}
+		}
+		if r.Spec.AuthSecret.Kind == "" {
+			r.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
+		}
+	}
+
 	var casVersion catalog.CassandraVersion
 	err := kc.Get(context.TODO(), types.NamespacedName{
 		Name: r.Spec.Version,

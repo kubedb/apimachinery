@@ -435,6 +435,15 @@ func (d *Druid) SetDefaults(kc client.Client) {
 		d.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
 
+	if !d.Spec.DisableSecurity {
+		if d.Spec.AuthSecret == nil {
+			d.Spec.AuthSecret = &SecretReference{}
+		}
+		if d.Spec.AuthSecret.Kind == "" {
+			d.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
+		}
+	}
+
 	if d.Spec.EnableSSL {
 		if d.Spec.KeystoreCredSecret == nil {
 			d.Spec.KeystoreCredSecret = &SecretReference{
