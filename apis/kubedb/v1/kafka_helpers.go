@@ -293,6 +293,18 @@ func (k *Kafka) CertSecretVolumeMountPath(configDir string, cert string) string 
 	return filepath.Join(configDir, cert)
 }
 
+func (k *Kafka) ServiceAccountName() string {
+	return k.OffshootName()
+}
+
+func (k *Kafka) ClusterRoleName() string {
+	return meta_util.NameWithSuffix(k.OffshootName(), "clusterrole")
+}
+
+func (k *Kafka) ClusterRoleBindingName() string {
+	return meta_util.NameWithSuffix(k.OffshootName(), "clusterrolebinding")
+}
+
 func (k *Kafka) PVCName(alias string) string {
 	return meta_util.NameWithSuffix(k.Name, alias)
 }

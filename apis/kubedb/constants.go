@@ -929,6 +929,8 @@ const (
 	KafkaClusterID                         = "cluster.id"
 	KafkaClientID                          = "client.id"
 	KafkaDataDirName                       = "log.dirs"
+	KafkaReplicaSelectorClassKey           = "replica.selector.class"
+	KafkaReplicaSelectorClassName          = "org.apache.kafka.common.replica.RackAwareReplicaSelector"
 	KafkaMetadataDirName                   = "metadata.log.dir"
 	KafkaServerKeystoreKey                 = "server.keystore.jks"
 	KafkaServerTruststoreKey               = "server.truststore.jks"
