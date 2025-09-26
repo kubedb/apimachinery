@@ -233,7 +233,6 @@ func (h *Hazelcast) setDefaultProbes(podTemplate *ofst.PodTemplateSpec) {
 }
 
 func (h *Hazelcast) SetTLSDefaults() {
-
 	if !h.Spec.DisableSecurity {
 		if h.Spec.AuthSecret == nil {
 			h.Spec.AuthSecret = &SecretReference{}
