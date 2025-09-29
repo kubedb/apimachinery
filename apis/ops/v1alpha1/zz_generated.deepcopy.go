@@ -109,7 +109,7 @@ func (in *AuthSpec) DeepCopyInto(out *AuthSpec) {
 	if in.SecretRef != nil {
 		in, out := &in.SecretRef, &out.SecretRef
 		*out = new(appcatalogv1alpha1.TypedLocalObjectReference)
-		(*in).DeepCopyInto(*out)
+		**out = **in
 	}
 	return
 }
