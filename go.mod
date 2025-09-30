@@ -43,7 +43,7 @@ require (
 	k8s.io/utils v0.0.0-20241210054802-24370beab758
 	kmodules.xyz/client-go v0.32.7
 	kmodules.xyz/crd-schema-fuzz v0.32.0
-	kmodules.xyz/custom-resources v0.32.2-0.20250930075058-cb88e9ff8829
+	kmodules.xyz/custom-resources v0.32.2-0.20250930094316-28eea4004cf2
 	kmodules.xyz/monitoring-agent-api v0.32.1
 	kmodules.xyz/objectstore-api v0.32.0
 	kmodules.xyz/offshoot-api v0.32.0
