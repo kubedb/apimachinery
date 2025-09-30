@@ -26459,6 +26459,31 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.AclSpec": {
+      "type": "object",
+      "properties": {
+        "deleteUsers": {
+          "description": "DeleteUsers specifies the list of users that should be deleted from the database. If provided, the system will remove these users from the database to enhance security or manage",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "secretRef": {
+          "description": "SecretRef holds the password against which ACLs will be created if syncACL is given.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "syncACL": {
+          "description": "SyncACL specifies the list of users whose ACLs should be synchronized with the new authentication secret. If provided, the system will update the ACLs for these users to ensure they are in sync with the new authentication settings.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.Announce": {
       "type": "object",
       "properties": {
@@ -28637,6 +28662,9 @@
             "type": "string",
             "default": ""
           }
+        },
+        "auth": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AclSpec"
         },
         "configSecret": {
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
