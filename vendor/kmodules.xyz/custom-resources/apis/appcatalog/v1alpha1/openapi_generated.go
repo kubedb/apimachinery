@@ -19728,6 +19728,7 @@ func schema_custom_resources_apis_appcatalog_v1alpha1_TypedLocalObjectReference(
 					"apiGroup": {
 						SchemaProps: spec.SchemaProps{
 							Description: "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},

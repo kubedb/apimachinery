@@ -340,6 +340,15 @@ func (k *Kafka) SetDefaults(kc client.Client) {
 		k.Spec.StorageType = StorageTypeDurable
 	}
 
+	if !k.Spec.DisableSecurity {
+		if k.Spec.AuthSecret == nil {
+			k.Spec.AuthSecret = &SecretReference{}
+		}
+		if k.Spec.AuthSecret.Kind == "" {
+			k.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
+		}
+	}
+
 	var kfVersion catalog.KafkaVersion
 	err := kc.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, &kfVersion)
 	if err != nil {

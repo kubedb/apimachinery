@@ -1797,6 +1797,7 @@ const (
 const (
 	ResourceKindStatefulSet = "StatefulSet"
 	ResourceKindPetSet      = "PetSet"
+	ResourceKindSecret      = "Secret"
 )
 
 var (

@@ -181,7 +181,8 @@ type TypedLocalObjectReference struct {
 	// If APIGroup is not specified, the specified Kind must be in the core API group.
 	// For any other third-party types, APIGroup is required.
 	// +optional
-	APIGroup *string `json:"apiGroup"`
+	// +kubebuilder:default=""
+	APIGroup string `json:"apiGroup"`
 	// Kind is the type of resource being referenced
 	// +kubebuilder:default="Secret"
 	Kind string `json:"kind"`

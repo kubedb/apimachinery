@@ -102,6 +102,7 @@ spec:
                     format: date-time
                     type: string
                   apiGroup:
+                    default: ""
                     type: string
                   externallyManaged:
                     type: boolean
@@ -4679,6 +4680,7 @@ spec:
                         format: date-time
                         type: string
                       apiGroup:
+                        default: ""
                         type: string
                       externallyManaged:
                         type: boolean
@@ -4702,6 +4704,7 @@ spec:
                         format: date-time
                         type: string
                       apiGroup:
+                        default: ""
                         type: string
                       externallyManaged:
                         type: boolean
