@@ -213,6 +213,12 @@ func (w *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 			`can't halt if deletionPolicy is set to "DoNotTerminate"`))
 	}
 
+	if db.Spec.BrokerRack != nil && db.Spec.BrokerRack.TopologyKey == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("brokerRack").Child("topologyKey"),
+			db.Name,
+			"topologyKey can not be empty"))
+	}
+
 	err = w.validateVolumes(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
