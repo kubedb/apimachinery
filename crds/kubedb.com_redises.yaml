@@ -126,6 +126,10 @@ spec:
                   apiGroup:
                     default: ""
                     type: string
+                  deleteUsers:
+                    items:
+                      type: string
+                    type: array
                   externallyManaged:
                     type: boolean
                   kind:
@@ -137,6 +141,10 @@ spec:
                     type: string
                   secretStoreName:
                     type: string
+                  syncACL:
+                    items:
+                      type: string
+                    type: array
                 required:
                 - kind
                 - name
@@ -4992,6 +5000,10 @@ spec:
                   apiGroup:
                     default: ""
                     type: string
+                  deleteUsers:
+                    items:
+                      type: string
+                    type: array
                   externallyManaged:
                     type: boolean
                   kind:
@@ -5003,6 +5015,10 @@ spec:
                     type: string
                   secretStoreName:
                     type: string
+                  syncACL:
+                    items:
+                      type: string
+                    type: array
                 required:
                 - kind
                 - name

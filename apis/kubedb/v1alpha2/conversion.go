@@ -700,7 +700,7 @@ func Convert_v1alpha2_RedisSpec_To_v1_RedisSpec(in *RedisSpec, out *v1.RedisSpec
 	out.SentinelRef = (*v1.RedisSentinelRef)(unsafe.Pointer(in.SentinelRef))
 	out.StorageType = v1.StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.AuthSecret = (*v1.RedisSecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.DisableAuth = in.DisableAuth
 	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
@@ -770,7 +770,7 @@ func Convert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *RedisSpec
 	out.SentinelRef = (*RedisSentinelRef)(unsafe.Pointer(in.SentinelRef))
 	out.StorageType = StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
-	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.AuthSecret = (*RedisSecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.DisableAuth = in.DisableAuth
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
