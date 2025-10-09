@@ -18,6 +18,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+
 	core "k8s.io/api/core/v1"
 	resource "k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -143,18 +145,12 @@ type RedisVerticalScalingSpec struct {
 	Coordinator *ContainerResources `json:"coordinator,omitempty"`
 }
 
-type AclSpec struct {
+type RedisAclSpec struct {
 	// SecretRef holds the password against which ACLs will be created if syncACL is given.
 	// +optional
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty"`
 
-	// SyncACL specifies the list of users whose ACLs should be synchronized with the new authentication secret.
-	// If provided, the system will update the ACLs for these users to ensure they are in sync with the new authentication settings.
-	SyncACL []string `json:"syncACL,omitempty"`
-
-	// DeleteUsers specifies the list of users that should be deleted from the database.
-	// If provided, the system will remove these users from the database to enhance security or manage
-	DeleteUsers []string `json:"deleteUsers,omitempty"`
+	dbapi.RedisAclSpec `json:",inline,omitempty"`
 }
 
 // RedisVolumeExpansionSpec is the spec for Redis volume expansion
@@ -167,7 +163,7 @@ type RedisCustomConfigurationSpec struct {
 	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty"`
 	ApplyConfig        map[string]string          `json:"applyConfig,omitempty"`
 	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty"`
-	Auth               *AclSpec                   `json:"auth,omitempty"`
+	Auth               *RedisAclSpec              `json:"auth,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=ip;hostname

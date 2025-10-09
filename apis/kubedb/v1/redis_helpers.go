@@ -260,7 +260,7 @@ func (r *Redis) SetDefaults(rdVersion *catalog.RedisVersion) error {
 
 	if !r.Spec.DisableAuth {
 		if r.Spec.AuthSecret == nil {
-			r.Spec.AuthSecret = &SecretReference{}
+			r.Spec.AuthSecret = &RedisSecretReference{}
 		}
 		if r.Spec.AuthSecret.Kind == "" {
 			r.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret

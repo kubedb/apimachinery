@@ -26090,6 +26090,61 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSecretReference": {
+      "type": "object",
+      "required": [
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "activeFrom": {
+          "description": "ActiveFrom holds the RFC3339 time. The referred authSecret is in-use from this timestamp.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "apiGroup": {
+          "description": "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
+          "type": "string",
+          "default": ""
+        },
+        "deleteUsers": {
+          "description": "DeleteUsers specifies the list of users that should be deleted from the database. If provided, the system will remove these users from the database to enhance security or manage",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "externallyManaged": {
+          "type": "boolean"
+        },
+        "kind": {
+          "description": "Kind is the type of resource being referenced",
+          "type": "string",
+          "default": ""
+        },
+        "name": {
+          "description": "Name is the name of resource being referenced",
+          "type": "string",
+          "default": ""
+        },
+        "rotateAfter": {
+          "description": "Recommendation engine will generate RotateAuth opsReq using this field",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "secretStoreName": {
+          "description": "SecretStoreName references the secret manager used for virtual secret",
+          "type": "string"
+        },
+        "syncACL": {
+          "description": "SyncACL specifies the list of users whose ACLs should be synchronized with the new authentication secret. If provided, the system will update the ACLs for these users to ensure they are in sync with the new authentication settings.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSentinelRef": {
       "type": "object",
       "properties": {
@@ -26115,7 +26170,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSecretReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -26466,31 +26521,6 @@
         },
         "operatorSecret": {
           "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.AclSpec": {
-      "type": "object",
-      "properties": {
-        "deleteUsers": {
-          "description": "DeleteUsers specifies the list of users that should be deleted from the database. If provided, the system will remove these users from the database to enhance security or manage",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "secretRef": {
-          "description": "SecretRef holds the password against which ACLs will be created if syncACL is given.",
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
-        },
-        "syncACL": {
-          "description": "SyncACL specifies the list of users whose ACLs should be synchronized with the new authentication secret. If provided, the system will update the ACLs for these users to ensure they are in sync with the new authentication settings.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
         }
       }
     },
@@ -28663,6 +28693,31 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisAclSpec": {
+      "type": "object",
+      "properties": {
+        "deleteUsers": {
+          "description": "DeleteUsers specifies the list of users that should be deleted from the database. If provided, the system will remove these users from the database to enhance security or manage",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "secretRef": {
+          "description": "SecretRef holds the password against which ACLs will be created if syncACL is given.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "syncACL": {
+          "description": "SyncACL specifies the list of users whose ACLs should be synchronized with the new authentication secret. If provided, the system will update the ACLs for these users to ensure they are in sync with the new authentication settings.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisCustomConfigurationSpec": {
       "type": "object",
       "properties": {
@@ -28674,7 +28729,7 @@
           }
         },
         "auth": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.AclSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisAclSpec"
         },
         "configSecret": {
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
