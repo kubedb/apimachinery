@@ -1586,7 +1586,6 @@ const (
 	ClickHouseDataSyncCheckFile           = "/scripts/check.txt"
 	ClickHousePromethusEndpoint           = "/metrics"
 	ClickHouseDataDir                     = "/var/lib/clickhouse"
-	ClickHouseDataPath                    = "/var/lib/clickhouse"
 	ClickHouseKeeperDataDir               = "/var/lib/clickhouse_keeper"
 	ClickHouseConfigDir                   = "/etc/clickhouse-server/config.d"
 	ClickHouseKeeperConfigDir             = "/etc/clickhouse-keeper"
