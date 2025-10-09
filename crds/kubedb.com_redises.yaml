@@ -120,16 +120,16 @@ spec:
                 type: object
               authSecret:
                 properties:
+                  aclRules:
+                    items:
+                      type: string
+                    type: array
                   activeFrom:
                     format: date-time
                     type: string
                   apiGroup:
                     default: ""
                     type: string
-                  deleteUsers:
-                    items:
-                      type: string
-                    type: array
                   externallyManaged:
                     type: boolean
                   kind:
@@ -141,10 +141,6 @@ spec:
                     type: string
                   secretStoreName:
                     type: string
-                  syncACL:
-                    items:
-                      type: string
-                    type: array
                 required:
                 - kind
                 - name
@@ -4994,16 +4990,16 @@ spec:
                 type: object
               authSecret:
                 properties:
+                  aclRules:
+                    items:
+                      type: string
+                    type: array
                   activeFrom:
                     format: date-time
                     type: string
                   apiGroup:
                     default: ""
                     type: string
-                  deleteUsers:
-                    items:
-                      type: string
-                    type: array
                   externallyManaged:
                     type: boolean
                   kind:
@@ -5015,10 +5011,6 @@ spec:
                     type: string
                   secretStoreName:
                     type: string
-                  syncACL:
-                    items:
-                      type: string
-                    type: array
                 required:
                 - kind
                 - name
