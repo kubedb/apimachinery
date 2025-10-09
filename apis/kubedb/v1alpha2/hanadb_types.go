@@ -30,23 +30,12 @@ const (
 	ResourcePluralHanaDB   = "hanadbs"
 )
 
-// +kubebuilder:validation:Enum=Standalone;SystemReplication
-type HanaDBMode string
-
-const (
-	HanaDBModeStandalone        HanaDBMode = "Standalone"
-	HanaDBModeSystemReplication HanaDBMode = "SystemReplication"
-)
-
 // HanaDB is the Schema for the hanadbs API
-
-// +genclient
-// +k8s:openapi-gen=true
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=hanadbs,singular=hanadb,shortName=hdb,categories={datastore,kubedb,appscode,all}
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
@@ -68,15 +57,16 @@ type HanaDB struct {
 
 // HanaDBSpec defines the desired state of HanaDB
 type HanaDBSpec struct {
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
+	// The following markers will use OpenAPI v3 schema to validate the value
+	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
+
 	// Version of HanaDB to be deployed.
 	Version string `json:"version"`
 
-	// Number of instances to deploy for a HanaDB database
+	// Number of instances to deploy for a HanaDB database. In case of MSSQLServer Availability Group
 	Replicas *int32 `json:"replicas,omitempty"`
-
-	// Topology defines the deployment mode (e.g., standalone or system replication).
-	// +optional
-	Topology *HanaDBTopology `json:"topology,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -111,13 +101,6 @@ type HanaDBSpec struct {
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
-// HanaDBTopology defines the deployment mode for HanaDB
-type HanaDBTopology struct {
-	// Mode specifies the deployment mode.
-	// +optional
-	Mode *HanaDBMode `json:"mode,omitempty"`
-}
-
 // HanaDBStatus defines the observed state of HanaDB.
 type HanaDBStatus struct {
 	// Specifies the current phase of the database
@@ -133,6 +116,7 @@ type HanaDBStatus struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
 // HanaDBList contains a list of HanaDB
 type HanaDBList struct {
 	metav1.TypeMeta `json:",inline"`
