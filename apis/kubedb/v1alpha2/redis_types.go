@@ -145,17 +145,10 @@ type RedisSpec struct {
 
 type RedisSecretReference struct {
 	SecretReference `json:",inline"`
-	*RedisAclSpec   `json:",inline,omitempty"`
-}
 
-type RedisAclSpec struct {
-	// SyncACL specifies the list of users whose ACLs should be synchronized with the new authentication secret.
+	// ACLRules specifies the list of users whose ACLs should be synchronized with the new authentication secret.
 	// If provided, the system will update the ACLs for these users to ensure they are in sync with the new authentication settings.
-	SyncACL []string `json:"syncACL,omitempty"`
-
-	// DeleteUsers specifies the list of users that should be deleted from the database.
-	// If provided, the system will remove these users from the database to enhance security or manage
-	DeleteUsers []string `json:"deleteUsers,omitempty"`
+	ACLRules []string `json:"aclRules,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
