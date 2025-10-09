@@ -1615,8 +1615,8 @@ const (
 	ClickHouseClientKey                = "tls.key"
 	ClickHouseClientPath               = "client.key"
 
-	ClickHouseVolumeNameUserInitScript      = "initial-script"
-	ClickHouseVolumeMountPathUserInitScript = "/docker-entrypoint-initdb.d"
+	ClickHouseUserInitScriptVolumeName      = "initial-script"
+	ClickHouseUserInitScriptVolumeMountPath = "/docker-entrypoint-initdb.d"
 
 	// keeper
 	ClickHouseKeeperDataPath     = "/var/lib/clickhouse_keeper"
