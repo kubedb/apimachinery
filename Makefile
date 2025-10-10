@@ -206,7 +206,6 @@ crd_to_patch := kubedb.com_cassandras.yaml \
 								kubedb.com_pgpools.yaml \
 								kubedb.com_postgreses.yaml \
 								kubedb.com_proxysqls.yaml \
-								kubedb.com_hanadbs.yaml\
 								kubedb.com_rabbitmqs.yaml \
 								kubedb.com_redises.yaml \
 								kubedb.com_redissentinels.yaml \

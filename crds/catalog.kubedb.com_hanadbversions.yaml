@@ -54,6 +54,12 @@ spec:
                 type: object
               deprecated:
                 type: boolean
+              securityContext:
+                properties:
+                  runAsUser:
+                    format: int64
+                    type: integer
+                type: object
               ui:
                 items:
                   properties:
