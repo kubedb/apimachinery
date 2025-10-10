@@ -568,6 +568,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackup":                                   schema_apimachinery_apis_catalog_v1alpha1_FullBackup(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackupRestore":                            schema_apimachinery_apis_catalog_v1alpha1_FullBackupRestore(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer":                                    schema_apimachinery_apis_catalog_v1alpha1_GitSyncer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBSecurityContext":                        schema_apimachinery_apis_catalog_v1alpha1_HanaDBSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersion":                                schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionList(ref),
@@ -28720,6 +28721,31 @@ func schema_apimachinery_apis_catalog_v1alpha1_GitSyncer(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_HanaDBSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HanaDBSecurityContext is for the additional config for the DB container",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"runAsUser": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"runAsGroup": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -28832,7 +28858,8 @@ func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionSpec(ref common.Refe
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "HanaDBVersionSpec is the spec for  HanaDB version",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"version": {
 						SchemaProps: spec.SchemaProps{
@@ -28851,9 +28878,16 @@ func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionSpec(ref common.Refe
 					},
 					"deprecated": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Init container InitContainer HanaDBInitContainer `json:\"initContainer,omitempty\"` Deprecated versions usable but considered as obsolete and best avoided typically superseded",
+							Description: "Deprecated versions usable but considered as obsolete and best avoided typically superseded",
 							Type:        []string{"boolean"},
 							Format:      "",
+						},
+					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional config for the DB container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
 					"ui": {
@@ -28881,7 +28915,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

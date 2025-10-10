@@ -22,6 +22,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	kubedb2 "kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -40,7 +41,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// SetupHanaDBWebhookWithManager registers the webhook for HanaDB in the manager.
+// SetupHanaDBWebhookWithManager registers the webhook for Oracle in the manager.
 func SetupHanaDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&api.HanaDB{}).
 		WithValidator(&HanaDBCustomWebhook{mgr.GetClient()}).
@@ -48,7 +49,7 @@ func SetupHanaDBWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-hanadb,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=HanaDBs,verbs=create;update,versions=v1alpha2,name=mHanaDB.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-oracle,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=oracles,verbs=create;update,versions=v1alpha2,name=moracle.kb.io,admissionReviewVersions=v1
 
 // +kubebuilder:object:generate=false
 type HanaDBCustomWebhook struct {
@@ -64,7 +65,7 @@ var hanaLog = logf.Log.WithName("hanadb-resource")
 func (w *HanaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db, ok := obj.(*api.HanaDB)
 	if !ok {
-		return fmt.Errorf("expected a HanaDB object, got a %T", obj)
+		return fmt.Errorf("expected a Oracle object, got a %T", obj)
 	}
 
 	hanaLog.Info("default", "name", db.Name)
@@ -79,7 +80,7 @@ var _ webhook.CustomValidator = &HanaDBCustomWebhook{}
 func (w *HanaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*api.HanaDB)
 	if !ok {
-		return nil, fmt.Errorf("expected a HanaDB object, got a %T", obj)
+		return nil, fmt.Errorf("expected a Oracle object, got a %T", obj)
 	}
 
 	hanaLog.Info("validate create", "name", db.Name)
@@ -95,11 +96,11 @@ func (w *HanaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 func (w *HanaDBCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	db, ok := newObj.(*api.HanaDB)
 	if !ok {
-		return nil, fmt.Errorf("expected a HanaDB object, got a %T", newObj)
+		return nil, fmt.Errorf("expected a Oracle object, got a %T", newObj)
 	}
 	olddb, ok := old.(*api.HanaDB)
 	if !ok {
-		return nil, fmt.Errorf("expected a HanaDB object, got a %T", old)
+		return nil, fmt.Errorf("expected a Oracle object, got a %T", old)
 	}
 	if ptr.Deref(olddb.Spec.Replicas, 0) > 1 && ptr.Deref(db.Spec.Replicas, 0) == 1 {
 		return nil, fmt.Errorf("can't scale down to 1 replica")
@@ -118,18 +119,18 @@ func (w *HanaDBCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 func (w *HanaDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*api.HanaDB)
 	if !ok {
-		return nil, fmt.Errorf("expected a HanaDB object, got a %T", obj)
+		return nil, fmt.Errorf("expected a Oracle object, got a %T", obj)
 	}
 
 	hanaLog.Info("validate delete", "name", db.Name)
 
-	var allErr field.ErrorList
-	if db.Spec.DeletionPolicy == api.DeletionPolicyDoNotTerminate {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
-			db.Name,
-			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: api.ResourceKindHanaDB}, db.Name, allErr)
-	}
+	//var allErr field.ErrorList
+	//if db.Spec.DeletionPolicy == api.DeletionPolicyDoNotTerminate {
+	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
+	//		db.Name,
+	//		"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
+	//	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: api.ResourceKindOracle}, db.Name, allErr)
+	//}
 	return nil, nil
 }
 
@@ -142,56 +143,72 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 			db.Name,
 			err.Error()))
 	}
+	//if db.Spec.Edition != kubedb.OracleEditionEnterprise {
+	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("edition"), db.Name, "only enterprise edition is supported for now"))
+	//}
+	//if db.Spec.Listener != nil && db.Spec.Listener.Service != nil && len(*db.Spec.Listener.Service) > 12 {
+	//	// TODO: research if we can have more than 12 characters following some other way
+	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("listener").Child("service"), db.Name, "maximum 12 characters supported for now"))
+	//}
 
-	if db.Spec.Replicas == nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"), db.Name, "db.spec.replicas has to be defined"))
-	}
+	//if db.Spec.Mode == "" {
+	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("mode"), db.Name, "db.spec.mode has to be defined"))
+	//}
+	//if db.Spec.Replicas == nil {
+	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"), db.Name, "db.spec.replicas has to be defined"))
+	//}
+	//
+	//if db.IsStandalone() {
+	//	if ptr.Deref(db.Spec.Replicas, 0) != 1 {
+	//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+	//			db.Name,
+	//			"number of replicas for standalone must be one "))
+	//	}
+	//} else if db.IsDataGuardEnabled() {
+	//	if ptr.Deref(db.Spec.Replicas, 0) <= 1 {
+	//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+	//			db.Name,
+	//			"number of replicas can not be nil and can not be less than or equal to 2"))
+	//	}
+	//}
 
-	if db.IsStandalone() {
-		if ptr.Deref(db.Spec.Replicas, 0) != 1 {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-				db.Name,
-				"number of replicas for standalone must be one "))
-		}
-	}
-
-	if db.Spec.PodTemplate != nil {
-		if err = w.validateEnvsForAllContainers(db); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
-				db.Name,
-				err.Error()))
-		}
-	}
-
-	err = hanadbValidateVolumes(db.Spec.PodTemplate)
-	if err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-			db.Name,
-			err.Error()))
-	}
-
-	err = hanadbValidateVolumesMountPaths(db.Spec.PodTemplate)
-	if err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
-			db.Name,
-			err.Error()))
-	}
-
-	if db.Spec.StorageType == "" {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-			db.Name,
-			"StorageType can not be empty"))
-	} else {
-		if db.Spec.StorageType != api.StorageTypeDurable && db.Spec.StorageType != api.StorageTypeEphemeral {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-				db.Name,
-				"StorageType should be either durable or ephemeral"))
-		}
-	}
-
-	if err := amv.ValidateStorage(w.DefaultClient, db.Spec.StorageType, db.Spec.Storage); err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"), db.Name, err.Error()))
-	}
+	//if db.Spec.PodTemplate != nil {
+	//	if err = w.validateEnvsForAllContainers(db); err != nil {
+	//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
+	//			db.Name,
+	//			err.Error()))
+	//	}
+	//}
+	//
+	//err = hanadbValidateVolumes(db.Spec.PodTemplate)
+	//if err != nil {
+	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
+	//		db.Name,
+	//		err.Error()))
+	//}
+	//
+	//err = hanadbValidateVolumesMountPaths(db.Spec.PodTemplate)
+	//if err != nil {
+	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
+	//		db.Name,
+	//		err.Error()))
+	//}
+	//
+	//if db.Spec.StorageType == "" {
+	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+	//		db.Name,
+	//		"StorageType can not be empty"))
+	//} else {
+	//	if db.Spec.StorageType != api.StorageTypeDurable && db.Spec.StorageType != olddbapi.StorageTypeEphemeral {
+	//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+	//			db.Name,
+	//			"StorageType should be either durable or ephemeral"))
+	//	}
+	//}
+	//
+	//if err := amv.ValidateStorage(w.DefaultClient, db.Spec.StorageType, db.Spec.Storage); err != nil {
+	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"), db.Name, err.Error()))
+	//}
 
 	if len(allErr) == 0 {
 		return nil
@@ -200,16 +217,15 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 	return allErr
 }
 
-// reserved volume and volumes mounts for HanaDB
+// reserved volume and volumes mounts for oracle
 var hanadbReservedVolumes = []string{
-	kubedb.HanaDBDataVolume,
-	kubedb.HanaDBVolumeScripts,
-	kubedb.HanaDBVolumePasswordSecret,
+	kubedb2.HanaDBDataVolume,
+	kubedb2.HanaDBVolumeScripts,
 }
 
 var hanadbReservedVolumesMountPaths = []string{
-	kubedb.HanaDBDataDir,
-	kubedb.HanaDBVolumeMountScripts,
+	kubedb2.HanaDBDataDir,
+	kubedb2.HanaDBVolumeMountScripts,
 }
 
 func (w *HanaDBCustomWebhook) hanadbValidateVersion(db *api.HanaDB) error {
@@ -248,6 +264,21 @@ func hanadbValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 		// Check container volume mounts
 		for _, rvmp := range hanadbReservedVolumesMountPaths {
 			containerList := podTemplate.Spec.Containers
+			for i := range containerList {
+				mountPathList := containerList[i].VolumeMounts
+				for j := range mountPathList {
+					if mountPathList[j].MountPath == rvmp {
+						return errors.New("Can't use a reserve volume mount path name: " + rvmp)
+					}
+				}
+			}
+		}
+	}
+
+	if podTemplate.Spec.InitContainers != nil {
+		// Check init container volume mounts
+		for _, rvmp := range hanadbReservedVolumesMountPaths {
+			containerList := podTemplate.Spec.InitContainers
 			for i := range containerList {
 				mountPathList := containerList[i].VolumeMounts
 				for j := range mountPathList {
