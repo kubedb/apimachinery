@@ -66,6 +66,14 @@ type FerretDBListerExpansion interface{}
 // FerretDBNamespaceLister.
 type FerretDBNamespaceListerExpansion interface{}
 
+// HanaDBListerExpansion allows custom methods to be added to
+// HanaDBLister.
+type HanaDBListerExpansion interface{}
+
+// HanaDBNamespaceListerExpansion allows custom methods to be added to
+// HanaDBNamespaceLister.
+type HanaDBNamespaceListerExpansion interface{}
+
 // HazelcastListerExpansion allows custom methods to be added to
 // HazelcastLister.
 type HazelcastListerExpansion interface{}

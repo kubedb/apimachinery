@@ -32,6 +32,10 @@ const (
 
 // HanaDB is the Schema for the hanadbs API
 
+// +genclient
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=hanadbs,singular=hanadb,shortName=hdb,categories={datastore,kubedb,appscode,all}
