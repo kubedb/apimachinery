@@ -87,7 +87,7 @@ type RedisSpec struct {
 
 	// Database authentication secret
 	// +optional
-	AuthSecret *RedisSecretReference `json:"authSecret,omitempty"`
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// If disable Auth true then don't create any auth secret
 	// +optional
@@ -141,14 +141,6 @@ type RedisSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 1}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
-}
-
-type RedisSecretReference struct {
-	SecretReference `json:",inline"`
-
-	// ACLRules specifies the list of users whose ACLs should be synchronized with the new authentication secret.
-	// If provided, the system will update the ACLs for these users to ensure they are in sync with the new authentication settings.
-	ACLRules []string `json:"aclRules,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter

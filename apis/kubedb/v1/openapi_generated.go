@@ -588,9 +588,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLStatus":                                      schema_apimachinery_apis_kubedb_v1_ProxySQLStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.RecoveryTarget":                                      schema_apimachinery_apis_kubedb_v1_RecoveryTarget(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Redis":                                               schema_apimachinery_apis_kubedb_v1_Redis(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.RedisAclSpec":                                        schema_apimachinery_apis_kubedb_v1_RedisAclSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.RedisClusterSpec":                                    schema_apimachinery_apis_kubedb_v1_RedisClusterSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.RedisList":                                           schema_apimachinery_apis_kubedb_v1_RedisList(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1.RedisSecretReference":                                schema_apimachinery_apis_kubedb_v1_RedisSecretReference(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.RedisSentinel":                                       schema_apimachinery_apis_kubedb_v1_RedisSentinel(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.RedisSentinelList":                                   schema_apimachinery_apis_kubedb_v1_RedisSentinelList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.RedisSentinelRef":                                    schema_apimachinery_apis_kubedb_v1_RedisSentinelRef(ref),
@@ -30996,6 +30996,41 @@ func schema_apimachinery_apis_kubedb_v1_Redis(ref common.ReferenceCallback) comm
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_RedisAclSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretRef holds the password against which ACLs will be created if Rules is given.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"rules": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Rules specifies the ACL rules to be applied to the user associated with the provided SecretRef. If provided, the system will update the ACLs for this user to ensure they are in sync with the new authentication settings.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_RedisClusterSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -31075,85 +31110,6 @@ func schema_apimachinery_apis_kubedb_v1_RedisList(ref common.ReferenceCallback) 
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1.Redis"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1_RedisSecretReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"secretStoreName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecretSource references the secret manager used for virtual secret",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiGroup": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is the type of resource being referenced",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name is the name of resource being referenced",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"rotateAfter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Recommendation engine will generate RotateAuth opsReq using this field",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"activeFrom": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ActiveFrom holds the RFC3339 time. The referred authSecret is in-use from this timestamp.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"externallyManaged": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"aclRules": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ACLRules specifies the list of users whose ACLs should be synchronized with the new authentication secret. If provided, the system will update the ACLs for these users to ensure they are in sync with the new authentication settings.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"kind", "name"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -31503,7 +31459,13 @@ func schema_apimachinery_apis_kubedb_v1_RedisSpec(ref common.ReferenceCallback) 
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database authentication secret",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.RedisSecretReference"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"),
+						},
+					},
+					"acl": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database ACL data",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.RedisAclSpec"),
 						},
 					},
 					"disableAuth": {
@@ -31590,7 +31552,7 @@ func schema_apimachinery_apis_kubedb_v1_RedisSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisSecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisSentinelRef"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisAclSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.RedisSentinelRef", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 

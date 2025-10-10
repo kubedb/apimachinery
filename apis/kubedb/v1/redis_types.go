@@ -88,7 +88,11 @@ type RedisSpec struct {
 
 	// Database authentication secret
 	// +optional
-	AuthSecret *RedisSecretReference `json:"authSecret,omitempty"`
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
+
+	// Database ACL data
+	// +optional
+	Acl *RedisAclSpec `json:"acl,omitempty"`
 
 	// If disable Auth true then don't create any auth secret
 	// +optional
@@ -140,14 +144,6 @@ type RedisSpec struct {
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
-type RedisSecretReference struct {
-	SecretReference `json:",inline"`
-
-	// ACLRules specifies the list of users whose ACLs should be synchronized with the new authentication secret.
-	// If provided, the system will update the ACLs for these users to ensure they are in sync with the new authentication settings.
-	ACLRules []string `json:"aclRules,omitempty"`
-}
-
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
 type RedisCertificateAlias string
 
@@ -184,6 +180,16 @@ type Announce struct {
 	Type PreferredEndpointType `json:"type,omitempty"`
 	// This field is used to set cluster-announce information for redis cluster of each shard.
 	Shards []Shards `json:"shards,omitempty"`
+}
+
+type RedisAclSpec struct {
+	// SecretRef holds the password against which ACLs will be created if Rules is given.
+	// +optional
+	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty"`
+
+	// Rules specifies the ACL rules to be applied to the user associated with the provided SecretRef.
+	// If provided, the system will update the ACLs for this user to ensure they are in sync with the new authentication settings.
+	Rules []string `json:"rules,omitempty"`
 }
 
 type Shards struct {
