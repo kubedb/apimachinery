@@ -143,7 +143,7 @@ type RedisVerticalScalingSpec struct {
 	Coordinator *ContainerResources `json:"coordinator,omitempty"`
 }
 
-type AclSpec struct {
+type RedisAclSpec struct {
 	// SecretRef holds the password against which ACLs will be created if syncACL is given.
 	// +optional
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty"`
@@ -167,7 +167,7 @@ type RedisCustomConfigurationSpec struct {
 	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty"`
 	ApplyConfig        map[string]string          `json:"applyConfig,omitempty"`
 	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty"`
-	Auth               *AclSpec                   `json:"auth,omitempty"`
+	Auth               *RedisAclSpec              `json:"auth,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=ip;hostname
