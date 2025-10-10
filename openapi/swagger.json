@@ -26090,53 +26090,6 @@
         }
       ]
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSecretReference": {
-      "type": "object",
-      "required": [
-        "kind",
-        "name"
-      ],
-      "properties": {
-        "aclRules": {
-          "description": "ACLRules specifies the list of users whose ACLs should be synchronized with the new authentication secret. If provided, the system will update the ACLs for these users to ensure they are in sync with the new authentication settings.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "activeFrom": {
-          "description": "ActiveFrom holds the RFC3339 time. The referred authSecret is in-use from this timestamp.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
-        },
-        "apiGroup": {
-          "description": "APIGroup is the group for the resource being referenced. If APIGroup is not specified, the specified Kind must be in the core API group. For any other third-party types, APIGroup is required.",
-          "type": "string",
-          "default": ""
-        },
-        "externallyManaged": {
-          "type": "boolean"
-        },
-        "kind": {
-          "description": "Kind is the type of resource being referenced",
-          "type": "string",
-          "default": ""
-        },
-        "name": {
-          "description": "Name is the name of resource being referenced",
-          "type": "string",
-          "default": ""
-        },
-        "rotateAfter": {
-          "description": "Recommendation engine will generate RotateAuth opsReq using this field",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
-        },
-        "secretStoreName": {
-          "description": "SecretStoreName references the secret manager used for virtual secret",
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSentinelRef": {
       "type": "object",
       "properties": {
@@ -26162,7 +26115,7 @@
         },
         "authSecret": {
           "description": "Database authentication secret",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.RedisSecretReference"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.SecretReference"
         },
         "autoOps": {
           "description": "AutoOps contains configuration of automatic ops-request-recommendation generation",
