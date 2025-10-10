@@ -21,10 +21,9 @@ package v1alpha2
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type KubedbV1alpha2Interface interface {
@@ -49,6 +48,7 @@ type KubedbV1alpha2Interface interface {
 	PgpoolsGetter
 	PostgresesGetter
 	ProxySQLsGetter
+	QdrantsGetter
 	RabbitMQsGetter
 	RedisesGetter
 	RedisSentinelsGetter
@@ -140,6 +140,10 @@ func (c *KubedbV1alpha2Client) Postgreses(namespace string) PostgresInterface {
 
 func (c *KubedbV1alpha2Client) ProxySQLs(namespace string) ProxySQLInterface {
 	return newProxySQLs(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Qdrants(namespace string) QdrantInterface {
+	return newQdrants(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) RabbitMQs(namespace string) RabbitMQInterface {
