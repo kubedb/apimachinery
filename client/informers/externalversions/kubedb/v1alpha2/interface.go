@@ -64,6 +64,8 @@ type Interface interface {
 	Postgreses() PostgresInformer
 	// ProxySQLs returns a ProxySQLInformer.
 	ProxySQLs() ProxySQLInformer
+	// Qdrants returns a QdrantInformer.
+	Qdrants() QdrantInformer
 	// RabbitMQs returns a RabbitMQInformer.
 	RabbitMQs() RabbitMQInformer
 	// Redises returns a RedisInformer.
@@ -187,6 +189,11 @@ func (v *version) Postgreses() PostgresInformer {
 // ProxySQLs returns a ProxySQLInformer.
 func (v *version) ProxySQLs() ProxySQLInformer {
 	return &proxySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Qdrants returns a QdrantInformer.
+func (v *version) Qdrants() QdrantInformer {
+	return &qdrantInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // RabbitMQs returns a RabbitMQInformer.

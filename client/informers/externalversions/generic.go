@@ -21,6 +21,8 @@ package externalversions
 import (
 	"fmt"
 
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
+	cache "k8s.io/client-go/tools/cache"
 	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -32,9 +34,6 @@ import (
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
-
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
-	cache "k8s.io/client-go/tools/cache"
 )
 
 // GenericInformer is type of SharedIndexInformer which will locate and delegate to other
@@ -170,6 +169,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().PostgresVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("proxysqlversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ProxySQLVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("qdrantversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().QdrantVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("rabbitmqversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().RabbitMQVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("redisversions"):
@@ -306,6 +307,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Postgreses().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("proxysqls"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ProxySQLs().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("qdrants"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Qdrants().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("rabbitmqs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().RabbitMQs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("redises"):

@@ -2068,3 +2068,16 @@ const (
 	OracleEnvOracleSID         = "ORACLE_SID"
 	OracleEnvDataDir           = "ORADATA"
 )
+
+// =========================== Qdrant Constants ============================
+const (
+	QdrantContainerName     = "qdrant"
+	QdrantInitContainerName = "qdrant-init"
+	QdrantHTTPPortName      = "http"
+	QdrantHTTPPort          = 6333
+	QdrantGRPCPortName      = "grpc"
+	QdrantGRPCPort          = 6334
+	QdrantP2PPortName       = "p2p"
+	QdrantP2PPort           = 6335
+	QdrantConfigKey         = "config.yaml"
+)
