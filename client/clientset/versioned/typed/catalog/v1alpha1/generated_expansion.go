@@ -60,6 +60,8 @@ type PostgresVersionExpansion interface{}
 
 type ProxySQLVersionExpansion interface{}
 
+type QdrantVersionExpansion interface{}
+
 type RabbitMQVersionExpansion interface{}
 
 type RedisVersionExpansion interface{}
