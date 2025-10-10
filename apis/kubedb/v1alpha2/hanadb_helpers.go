@@ -19,18 +19,17 @@ package v1alpha2
 import (
 	"fmt"
 
-	_ "k8s.io/apimachinery/pkg/runtime/schema"
-	_ "k8s.io/klog/v2"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	_ "k8s.io/apimachinery/pkg/runtime/schema"
+	_ "k8s.io/klog/v2"
 	_ "k8s.io/utils/ptr"
 	"kmodules.xyz/client-go/apiextensions"
 	metautil "kmodules.xyz/client-go/meta"
@@ -39,12 +38,12 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	ofstutil "kmodules.xyz/offshoot-api/util"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	_ "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func (_ HanaDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(api.SchemeGroupVersion.WithResource(ResourcePluralHanaDB))
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralHanaDB))
 }
 
 func (o *HanaDB) ResourceKind() string {
@@ -56,7 +55,7 @@ func (o *HanaDB) ResourcePlural() string {
 }
 
 func (o *HanaDB) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", o.ResourcePlural(), api.SchemeGroupVersion.Group)
+	return fmt.Sprintf("%s.%s", o.ResourcePlural(), SchemeGroupVersion.Group)
 }
 
 func (o *HanaDB) ResourceShortCode() string {
@@ -85,11 +84,11 @@ func (o *HanaDB) StandbyServiceName() string {
 
 func (o *HanaDB) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[metautil.ComponentLabelKey] = kubedb.ComponentDatabase
-	return metautil.FilterKeys(api.SchemeGroupVersion.Group, selector, metautil.OverwriteKeys(nil, o.Labels, override))
+	return metautil.FilterKeys(SchemeGroupVersion.Group, selector, metautil.OverwriteKeys(nil, o.Labels, override))
 }
 
-//func (o *HanaDB) ServiceLabels(alias api.ServiceAlias, extraLabels ...map[string]string) map[string]string {
-//	svcTemplate := api.GetServiceTemplate(o.Spec.ServiceTemplates, alias)
+//func (o *HanaDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+//	svcTemplate := GetServiceTemplate(o.Spec.ServiceTemplates, alias)
 //	return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 //}
 
@@ -101,7 +100,7 @@ func (o *HanaDB) OffshootSelectors(extraSelectors ...map[string]string) map[stri
 	selector := map[string]string{
 		metautil.NameLabelKey:      o.ResourceFQN(),
 		metautil.InstanceLabelKey:  o.Name,
-		metautil.ManagedByLabelKey: api.SchemeGroupVersion.Group,
+		metautil.ManagedByLabelKey: SchemeGroupVersion.Group,
 	}
 	return metautil.OverwriteKeys(selector, extraSelectors...)
 }
@@ -110,7 +109,7 @@ func (o *HanaDB) OffshootPodSelectors(extraSelectors ...map[string]string) map[s
 	selector := map[string]string{
 		metautil.NameLabelKey:        o.ResourceFQN(),
 		metautil.InstanceLabelKey:    o.Name,
-		metautil.ManagedByLabelKey:   api.SchemeGroupVersion.Group,
+		metautil.ManagedByLabelKey:   SchemeGroupVersion.Group,
 		kubedb.OracleDatabaseRoleKey: kubedb.OracleDatabaseRoleInstance,
 	}
 	return metautil.OverwriteKeys(selector, extraSelectors...)
@@ -173,6 +172,7 @@ func (o *HanaDB) GetPersistentSecrets() []string {
 	secrets = append(secrets, o.GetAuthSecretName())
 	return secrets
 }
+
 func (m *HanaDB) GetNameSpacedName() string {
 	return m.Namespace + "/" + m.Name
 }
@@ -193,40 +193,40 @@ func (r *HanaDB) ResourceSingular() string {
 	return ResourceSingularHanaDB
 }
 
-type oracleStatsService struct {
+type hanadbStatsService struct {
 	*HanaDB
 }
 
-func (os oracleStatsService) TLSConfig() *promapi.TLSConfig {
+func (os hanadbStatsService) TLSConfig() *promapi.TLSConfig {
 	return nil
 }
 
-func (os oracleStatsService) GetNamespace() string {
+func (os hanadbStatsService) GetNamespace() string {
 	return os.HanaDB.GetNamespace()
 }
 
-func (os oracleStatsService) ServiceName() string {
+func (os hanadbStatsService) ServiceName() string {
 	return os.OffshootName() + "-stats"
 }
 
-func (os oracleStatsService) ServiceMonitorName() string {
+func (os hanadbStatsService) ServiceMonitorName() string {
 	return os.ServiceName()
 }
 
-func (os oracleStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+func (os hanadbStatsService) ServiceMonitorAdditionalLabels() map[string]string {
 	return os.OffshootLabels()
 }
 
-func (os oracleStatsService) Path() string {
+func (os hanadbStatsService) Path() string {
 	return kubedb.DefaultStatsPath
 }
 
-func (os oracleStatsService) Scheme() string {
+func (os hanadbStatsService) Scheme() string {
 	return ""
 }
 
 func (o *HanaDB) StatsService() mona.StatsAccessor {
-	return &oracleStatsService{o}
+	return &hanadbStatsService{o}
 }
 
 type hanadbApp struct {
