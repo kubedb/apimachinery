@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"fmt"
-	"strings"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/catalog"
@@ -27,40 +26,38 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (HanaDBVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (_ HanaDBVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralHanaDBVersion))
 }
 
 var _ apis.ResourceInfo = &HanaDBVersion{}
 
-func (h HanaDBVersion) ResourceFQN() string {
+func (m HanaDBVersion) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", ResourcePluralHanaDBVersion, catalog.GroupName)
 }
 
-func (h HanaDBVersion) ResourceShortCode() string {
-	return ResourceCodeHanaDBVersion
-}
-
-func (h HanaDBVersion) ResourceKind() string {
-	return ResourceKindHanaDBVersion
-}
-
-func (h HanaDBVersion) ResourceSingular() string {
+func (m HanaDBVersion) ResourceShortCode() string {
 	return ResourceSingularHanaDBVersion
 }
 
-func (h HanaDBVersion) ResourcePlural() string {
-	return ResourcePluralHanaDBVersion
+func (hdb HanaDBVersion) ResourceKind() string {
+	return ResourceSingularHanaDBVersion
 }
 
-func (h HanaDBVersion) ValidateSpecs() error {
-	if h.Spec.Version == "" ||
-		h.Spec.DB.Image == "" {
-		fields := []string{
-			"spec.version",
-			"spec.db.image",
-		}
-		return fmt.Errorf("atleast one of the following specs is not set for HanaDBVersion %q: %s", h.Name, strings.Join(fields, ", "))
+func (hdb HanaDBVersion) ResourceSingular() string {
+	return ResourceSingularHanaDBVersion
+}
+
+func (hdb HanaDBVersion) ResourcePlural() string {
+	return ResourceSingularHanaDBVersion
+}
+
+func (q HanaDBVersion) ValidateSpecs() error {
+	if q.Spec.Version == "" ||
+		q.Spec.DB.Image == "" {
+		return fmt.Errorf(`atleast one of the following specs is not set for HanaDBVersion "%v":
+spec.version,
+spec.db.image,`, q.Name)
 	}
 	return nil
 }

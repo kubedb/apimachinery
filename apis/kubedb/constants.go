@@ -2285,3 +2285,37 @@ const (
 	// TenantDatabaseName is the name of the KubeDB managed tenant database
 	KubeDBTenantDatabaseName = "KUBEDB_HEALTH_CHECK"
 )
+
+const (
+	HanaDBServiceName = "hana-pods"
+	HanaDBNamespace   = "test"
+	// AuthActiveFromAnnotation = "auth.kubedb.com/active-from"
+	HanaMasterPasswordKey = "master_password"
+	HanaPasswordFileKey   = "password.json"
+
+	HanaDBSecretName      = "hana-cluster-auth"
+	HanaDBPasswordJsonKey = "pass.json"
+	HanaDBMasterPassword  = "HanaCluster123!"
+	HanaDBClusterIP       = "" // use empty string instead of None
+
+	HanaDBAppLabel           = "hana-cluster"
+	HanaDBStatefulSetName    = "hana-cluster"
+	HanaDBServiceNameForPods = "hana-pods"
+
+	HanaDBVolumeScripts = "hanadb-scripts"
+	HanaDBDataVolume    = "hana-data"
+
+	HanaDBVolumeMountScripts = "/scripts"
+	HanaDBDataDir            = "/hana/mounts"
+
+	HanaDBDnsPolicy         = "ClusterFirst"
+	HanaDBSubdomain         = "hana-pods"
+	HanaDBContainerName     = "hana"
+	HanaDBImage             = "saplabs/hanaexpress:latest"
+	HanaDBVolumeSecretsName = "password-secret"
+
+	HanaDBVolumeMountSecrets = "/etc/hana-secrets"
+	HanaDBStorageClassName   = "standard"
+	HanaDBStorageRequest     = "64Gi"
+	HanaDBStorageAccessModes = "ReadWriteOnce"
+)

@@ -16,7 +16,7 @@ spec:
     listKind: HanaDBVersionList
     plural: hanadbversions
     shortNames:
-    - hdbversion
+    - hanaversion
     singular: hanadbversion
   scope: Cluster
   versions:
@@ -54,17 +54,6 @@ spec:
                 type: object
               deprecated:
                 type: boolean
-              endOfLife:
-                type: boolean
-              securityContext:
-                properties:
-                  runAsGroup:
-                    format: int64
-                    type: integer
-                  runAsUser:
-                    format: int64
-                    type: integer
-                type: object
               ui:
                 items:
                   properties:
