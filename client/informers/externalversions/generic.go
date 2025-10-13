@@ -139,6 +139,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().EtcdVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("ferretdbversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().FerretDBVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("hanadbversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().HanaDBVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("hazelcastversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().HazelcastVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("igniteversions"):

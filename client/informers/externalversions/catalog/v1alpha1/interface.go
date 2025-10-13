@@ -36,6 +36,8 @@ type Interface interface {
 	EtcdVersions() EtcdVersionInformer
 	// FerretDBVersions returns a FerretDBVersionInformer.
 	FerretDBVersions() FerretDBVersionInformer
+	// HanaDBVersions returns a HanaDBVersionInformer.
+	HanaDBVersions() HanaDBVersionInformer
 	// HazelcastVersions returns a HazelcastVersionInformer.
 	HazelcastVersions() HazelcastVersionInformer
 	// IgniteVersions returns a IgniteVersionInformer.
@@ -119,6 +121,11 @@ func (v *version) EtcdVersions() EtcdVersionInformer {
 // FerretDBVersions returns a FerretDBVersionInformer.
 func (v *version) FerretDBVersions() FerretDBVersionInformer {
 	return &ferretDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// HanaDBVersions returns a HanaDBVersionInformer.
+func (v *version) HanaDBVersions() HanaDBVersionInformer {
+	return &hanaDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // HazelcastVersions returns a HazelcastVersionInformer.

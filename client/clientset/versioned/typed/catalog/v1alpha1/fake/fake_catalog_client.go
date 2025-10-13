@@ -52,6 +52,10 @@ func (c *FakeCatalogV1alpha1) FerretDBVersions() v1alpha1.FerretDBVersionInterfa
 	return &FakeFerretDBVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) HanaDBVersions() v1alpha1.HanaDBVersionInterface {
+	return &FakeHanaDBVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) HazelcastVersions() v1alpha1.HazelcastVersionInterface {
 	return &FakeHazelcastVersions{c}
 }
