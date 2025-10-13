@@ -4918,6 +4918,16 @@ func (in *PostgreLeaderElectionConfig) DeepCopyInto(out *PostgreLeaderElectionCo
 		*out = new(v1.Duration)
 		**out = **in
 	}
+	if in.RecoveryTimeObjective != nil {
+		in, out := &in.RecoveryTimeObjective, &out.RecoveryTimeObjective
+		*out = new(v1.Duration)
+		**out = **in
+	}
+	if in.ZeroRPOWithAsyncReplication != nil {
+		in, out := &in.ZeroRPOWithAsyncReplication, &out.ZeroRPOWithAsyncReplication
+		*out = new(bool)
+		**out = **in
+	}
 	return
 }
 

@@ -25556,6 +25556,10 @@
           "description": "Period between Node.Tick invocations",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
+        "recoveryTimeObjective": {
+          "description": "RecoveryTimeObjective is the acceptable amount of time that a database may be unavailable after a failure. It is used to determine how frequently backups should be taken",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
         "renewDeadlineSeconds": {
           "description": "RenewDeadline is the duration in second that the acting master will retry refreshing leadership before giving up. Normally, LeaseDuration * 2 / 3. Default 10 Deprecated",
           "type": "integer",
@@ -25573,6 +25577,10 @@
         "transferLeadershipTimeout": {
           "description": "TransferLeadershipTimeout retry timeout for transfer leadership to the healthiest node",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "zeroRPOWithAsyncReplication": {
+          "description": "ZeroRPOWithAsyncReplication indicates whether to enable zero RPO with asynchronous replication. This option is relevant only when StreamingMode is set to \"Asynchronous\". This option also avoids split brain problem",
+          "type": "boolean"
         }
       }
     },

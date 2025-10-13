@@ -264,6 +264,18 @@ type PostgreLeaderElectionConfig struct {
 	// +kubebuilder:default="60s"
 	// +optional
 	TransferLeadershipTimeout *metav1.Duration `json:"transferLeadershipTimeout,omitempty"`
+
+	// RecoveryTimeObjective is the acceptable amount of time that
+	// a database may be unavailable after a failure.
+	// It is used to determine how frequently backups should be taken
+	// +optional
+	RecoveryTimeObjective *metav1.Duration `json:"recoveryTimeObjective,omitempty"`
+
+	// ZeroRPOWithAsyncReplication indicates whether to enable zero RPO with asynchronous replication.
+	// This option is relevant only when StreamingMode is set to "Asynchronous".
+	// This option also avoids split brain problem
+	// +optional
+	ZeroRPOWithAsyncReplication *bool `json:"zeroRPOWithAsyncReplication,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;archiver;metrics-exporter

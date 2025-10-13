@@ -30178,6 +30178,19 @@ func schema_apimachinery_apis_kubedb_v1_PostgreLeaderElectionConfig(ref common.R
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"recoveryTimeObjective": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RecoveryTimeObjective is the acceptable amount of time that a database may be unavailable after a failure. It is used to determine how frequently backups should be taken",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"zeroRPOWithAsyncReplication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ZeroRPOWithAsyncReplication indicates whether to enable zero RPO with asynchronous replication. This option is relevant only when StreamingMode is set to \"Asynchronous\". This option also avoids split brain problem",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

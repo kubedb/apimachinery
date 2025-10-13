@@ -3582,6 +3582,8 @@ func autoConvert_v1alpha2_PostgreLeaderElectionConfig_To_v1_PostgreLeaderElectio
 	out.HeartbeatTick = in.HeartbeatTick
 	out.TransferLeadershipInterval = (*metav1.Duration)(unsafe.Pointer(in.TransferLeadershipInterval))
 	out.TransferLeadershipTimeout = (*metav1.Duration)(unsafe.Pointer(in.TransferLeadershipTimeout))
+	out.RecoveryTimeObjective = (*metav1.Duration)(unsafe.Pointer(in.RecoveryTimeObjective))
+	out.ZeroRPOWithAsyncReplication = (*bool)(unsafe.Pointer(in.ZeroRPOWithAsyncReplication))
 	return nil
 }
 
@@ -3600,6 +3602,8 @@ func autoConvert_v1_PostgreLeaderElectionConfig_To_v1alpha2_PostgreLeaderElectio
 	out.HeartbeatTick = in.HeartbeatTick
 	out.TransferLeadershipInterval = (*metav1.Duration)(unsafe.Pointer(in.TransferLeadershipInterval))
 	out.TransferLeadershipTimeout = (*metav1.Duration)(unsafe.Pointer(in.TransferLeadershipTimeout))
+	out.RecoveryTimeObjective = (*metav1.Duration)(unsafe.Pointer(in.RecoveryTimeObjective))
+	out.ZeroRPOWithAsyncReplication = (*bool)(unsafe.Pointer(in.ZeroRPOWithAsyncReplication))
 	return nil
 }
 

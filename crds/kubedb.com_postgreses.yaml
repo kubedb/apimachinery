@@ -1334,6 +1334,8 @@ spec:
                   period:
                     default: 100ms
                     type: string
+                  recoveryTimeObjective:
+                    type: string
                   renewDeadlineSeconds:
                     format: int32
                     type: integer
@@ -1346,6 +1348,8 @@ spec:
                   transferLeadershipTimeout:
                     default: 60s
                     type: string
+                  zeroRPOWithAsyncReplication:
+                    type: boolean
                 type: object
               mode:
                 type: string
@@ -6432,6 +6436,8 @@ spec:
                   period:
                     default: 100ms
                     type: string
+                  recoveryTimeObjective:
+                    type: string
                   renewDeadlineSeconds:
                     format: int32
                     type: integer
@@ -6444,6 +6450,8 @@ spec:
                   transferLeadershipTimeout:
                     default: 60s
                     type: string
+                  zeroRPOWithAsyncReplication:
+                    type: boolean
                 type: object
               mode:
                 type: string
