@@ -574,6 +574,11 @@ func (in *ClickHouseSpec) DeepCopyInto(out *ClickHouseSpec) {
 		*out = new(corev1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Init != nil {
+		in, out := &in.Init, &out.Init
+		*out = new(InitSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
