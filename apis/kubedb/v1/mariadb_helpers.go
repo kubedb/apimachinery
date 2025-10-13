@@ -82,6 +82,10 @@ func (m MariaDB) OffshootDistributedTLSName() string {
 	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedTLSSecretNameSuffix)
 }
 
+func (m MariaDB) OffshootDistributedPromethuesSecretName() string {
+	return meta_util.NameWithSuffix(m.Name, kubedb.DistributedPromethuesSecretNameSuffix)
+}
+
 func (m MariaDB) OffshootSelectors() map[string]string {
 	label := map[string]string{
 		meta_util.NameLabelKey:      m.ResourceFQN(),
@@ -173,19 +177,17 @@ func (m MariaDB) StandbyServiceName() string {
 }
 
 func (m MariaDB) IsCluster() bool {
-	return pointer.Int32(m.Spec.Replicas) > 1
+	return m.Spec.Topology != nil
 }
 
 func (m MariaDB) IsGaleraCluster() bool {
 	return m.Spec.Topology != nil &&
-		m.IsCluster() &&
 		m.Spec.Topology.Mode != nil &&
 		*m.Spec.Topology.Mode == MariaDBModeGaleraCluster
 }
 
 func (m MariaDB) IsMariaDBReplication() bool {
 	return m.Spec.Topology != nil &&
-		m.IsCluster() &&
 		m.Spec.Topology.Mode != nil &&
 		*m.Spec.Topology.Mode == MariaDBModeReplication
 }
@@ -304,7 +306,7 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
 	if m.Spec.Init != nil && m.Spec.Init.Archiver != nil && m.Spec.Init.Archiver.ReplicationStrategy == nil {
-		m.Spec.Init.Archiver.ReplicationStrategy = ptr.To(ReplicationStrategyNone)
+		m.Spec.Init.Archiver.ReplicationStrategy = ptr.To(ReplicationStrategySync)
 	}
 	m.setDefaultContainerSecurityContext(mdVersion, &m.Spec.PodTemplate)
 	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)
