@@ -31004,7 +31004,7 @@ func schema_apimachinery_apis_kubedb_v1_RedisAclSpec(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"secretRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecretRef holds the password against which ACLs will be created if Rules is given.",
+							Description: "SecretRef holds the password against which ACLs will be created if Rules are given.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -31464,7 +31464,7 @@ func schema_apimachinery_apis_kubedb_v1_RedisSpec(ref common.ReferenceCallback) 
 					},
 					"acl": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Database ACL data",
+							Description: "Redis ACL Configuration",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.RedisAclSpec"),
 						},
 					},

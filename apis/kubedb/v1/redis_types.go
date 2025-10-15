@@ -90,7 +90,7 @@ type RedisSpec struct {
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
-	// Database ACL data
+	// Redis ACL Configuration
 	// +optional
 	Acl *RedisAclSpec `json:"acl,omitempty"`
 
@@ -183,7 +183,7 @@ type Announce struct {
 }
 
 type RedisAclSpec struct {
-	// SecretRef holds the password against which ACLs will be created if Rules is given.
+	// SecretRef holds the password against which ACLs will be created if Rules are given.
 	// +optional
 	SecretRef *core.LocalObjectReference `json:"secretRef,omitempty"`
 
