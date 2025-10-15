@@ -28750,7 +28750,8 @@ func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersion(ref common.Referenc
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "HanaDBVersion defines a HanaDB database version",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
