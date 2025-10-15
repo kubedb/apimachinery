@@ -433,6 +433,23 @@ func (c *ClickHouse) SetDefaults(kc client.Client) {
 	}
 	c.SetTLSDefaults()
 	c.SetHealthCheckerDefaults()
+	if c.Spec.Monitor != nil {
+		if c.Spec.Monitor.Prometheus == nil {
+			c.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
+		if c.Spec.Monitor.Prometheus != nil && c.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			c.Spec.Monitor.Prometheus.Exporter.Port = kubedb.ClickhousePromethues
+		}
+		c.Spec.Monitor.SetDefaults()
+		if c.Spec.Monitor.Prometheus != nil {
+			if c.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+				c.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = chVersion.Spec.SecurityContext.RunAsUser
+			}
+			if c.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+				c.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = chVersion.Spec.SecurityContext.RunAsUser
+			}
+		}
+	}
 }
 
 func (c *ClickHouse) setDefaultContainerSecurityContext(chVersion *catalog.ClickHouseVersion, podTemplate *ofst.PodTemplateSpec) {
