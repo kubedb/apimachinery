@@ -438,7 +438,7 @@ func (c *ClickHouse) SetDefaults(kc client.Client) {
 			c.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
 		}
 		if c.Spec.Monitor.Prometheus != nil && c.Spec.Monitor.Prometheus.Exporter.Port == 0 {
-			c.Spec.Monitor.Prometheus.Exporter.Port = kubedb.ClickhousePromethues
+			c.Spec.Monitor.Prometheus.Exporter.Port = int32(9116)
 		}
 		c.Spec.Monitor.SetDefaults()
 		if c.Spec.Monitor.Prometheus != nil {
