@@ -367,6 +367,8 @@ const (
 	HorizontalScaleReplicasDown = "HorizontalScaleReplicasDown"
 	HorizontalScaleSentinelUp   = "HorizontalScaleSentinelUp"
 	HorizontalScaleSentinelDown = "HorizontalScaleSentinelDown"
+
+	RedisUpdateAclSecret = "UpdateAclSecret"
 )
 
 // Druid Constants

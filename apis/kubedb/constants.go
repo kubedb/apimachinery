@@ -609,7 +609,7 @@ const (
 
 	// =========================== Redis Constants ============================
 	RedisConfigKey      = "redis.conf"    // RedisConfigKey is going to create for the customize redis configuration
-	RedisAclUserListKey = "acl_user.conf" // RedisAclUserListKey is going to create for the redis acl user list configuration
+	RedisAclUserListKey = "user_acl.conf" // RedisAclUserListKey is going to create for the redis acl user list configuration
 	// DefaultConfigKey is going to create for the default redis configuration
 	RedisContainerName             = "redis"
 	RedisSentinelContainerName     = "redissentinel"

@@ -4347,6 +4347,7 @@ func autoConvert_v1_RedisSpec_To_v1alpha2_RedisSpec(in *v1.RedisSpec, out *Redis
 	out.StorageType = StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
+	// WARNING: in.Acl requires manual conversion: does not exist in peer-type
 	out.DisableAuth = in.DisableAuth
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
