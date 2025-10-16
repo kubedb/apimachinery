@@ -161,7 +161,7 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	Pgpool:        {Default: false, PreRelease: featuregate.Alpha},
 	Postgres:      {Default: true, PreRelease: featuregate.GA},
 	ProxySQL:      {Default: false, PreRelease: featuregate.Beta},
-	Qdrant:        {Default: false, PreRelease: featuregate.Alpha},
+	Qdrant:        {Default: true, PreRelease: featuregate.Alpha},
 	RabbitMQ:      {Default: false, PreRelease: featuregate.Alpha},
 	Redis:         {Default: true, PreRelease: featuregate.GA},
 	Singlestore:   {Default: false, PreRelease: featuregate.Alpha},
