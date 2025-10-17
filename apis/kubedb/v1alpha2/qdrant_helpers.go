@@ -20,6 +20,11 @@ import (
 	"context"
 	"fmt"
 
+	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+	"kubedb.dev/apimachinery/crds"
+
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -30,10 +35,6 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	"kubedb.dev/apimachinery/apis"
-	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
-	"kubedb.dev/apimachinery/crds"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
