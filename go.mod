@@ -55,7 +55,7 @@ require (
 	kubeops.dev/operator-shard-manager v0.0.3
 	kubeops.dev/petset v0.0.12
 	kubeops.dev/sidekick v0.0.11
-	kubestash.dev/apimachinery v0.20.0
+	kubestash.dev/apimachinery v0.21.0
 	open-cluster-management.io/api v1.0.0
 	sigs.k8s.io/controller-runtime v0.20.4
 	sigs.k8s.io/yaml v1.4.0
