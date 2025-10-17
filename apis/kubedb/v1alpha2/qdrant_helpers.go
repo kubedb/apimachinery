@@ -165,18 +165,6 @@ func (q *Qdrant) setDefaultContainerSecurityContext(qdVersion *catalog.QdrantVer
 		container.SecurityContext = &core.SecurityContext{}
 	}
 	q.assignDefaultContainerSecurityContext(qdVersion, container.SecurityContext)
-
-	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.QdrantInitContainerName)
-	if initContainer == nil {
-		initContainer = &core.Container{
-			Name: kubedb.QdrantInitContainerName,
-		}
-		podTemplate.Spec.InitContainers = coreutil.UpsertContainer(podTemplate.Spec.InitContainers, *initContainer)
-	}
-	if initContainer.SecurityContext == nil {
-		initContainer.SecurityContext = &core.SecurityContext{}
-	}
-	q.assignDefaultContainerSecurityContext(qdVersion, initContainer.SecurityContext)
 }
 
 func (q *Qdrant) assignDefaultContainerSecurityContext(qdVersion *catalog.QdrantVersion, rc *core.SecurityContext) {

@@ -53,8 +53,6 @@ type QdrantVersionSpec struct {
 	Version string `json:"version"`
 	// Database Image
 	DB QdrantVersionDatabase `json:"db"`
-	// Database Image
-	InitContainer QdrantInitContainer `json:"initContainer,omitempty"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
@@ -73,11 +71,6 @@ type QdrantSecurityContext struct {
 
 // QdrantVersionDatabase is the Qdrant Database image
 type QdrantVersionDatabase struct {
-	Image string `json:"image"`
-}
-
-// QdrantInitContainer is the Qdrant init Container image
-type QdrantInitContainer struct {
 	Image string `json:"image"`
 }
 
