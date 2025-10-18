@@ -32,12 +32,12 @@ require (
 	gomodules.xyz/x v0.0.17
 	google.golang.org/grpc v1.69.2
 	google.golang.org/protobuf v1.36.3
-	k8s.io/api v0.32.3
-	k8s.io/apiextensions-apiserver v0.32.3
-	k8s.io/apimachinery v0.32.3
-	k8s.io/apiserver v0.32.3
-	k8s.io/client-go v0.32.3
-	k8s.io/component-base v0.32.3
+	k8s.io/api v0.32.8
+	k8s.io/apiextensions-apiserver v0.32.8
+	k8s.io/apimachinery v0.32.8
+	k8s.io/apiserver v0.32.8
+	k8s.io/client-go v0.32.8
+	k8s.io/component-base v0.32.8
 	k8s.io/klog/v2 v2.130.1
 	k8s.io/kube-aggregator v0.32.3
 	k8s.io/kube-openapi v0.0.0-20250318190949-c8a335a9a2ff
@@ -46,14 +46,14 @@ require (
 	kmodules.xyz/client-go v0.32.7
 	kmodules.xyz/crd-schema-fuzz v0.32.0
 	kmodules.xyz/custom-resources v0.32.2
-	kmodules.xyz/monitoring-agent-api v0.32.1
+	kmodules.xyz/monitoring-agent-api v0.32.4
 	kmodules.xyz/objectstore-api v0.32.0
 	kmodules.xyz/offshoot-api v0.32.0
 	kmodules.xyz/resource-metadata v0.32.1
 	kmodules.xyz/webhook-runtime v0.32.0
 	kubeops.dev/csi-driver-cacerts v0.1.0
 	kubeops.dev/operator-shard-manager v0.0.3
-	kubeops.dev/petset v0.0.12
+	kubeops.dev/petset v0.0.14
 	kubeops.dev/sidekick v0.0.11
 	kubestash.dev/apimachinery v0.21.0
 	open-cluster-management.io/api v1.0.0
@@ -203,7 +203,7 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/kms v0.32.3 // indirect
+	k8s.io/kms v0.32.8 // indirect
 	kmodules.xyz/apiversion v0.2.0 // indirect
 	kmodules.xyz/go-containerregistry v0.0.14 // indirect
 	kmodules.xyz/prober v0.32.0 // indirect
