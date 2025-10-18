@@ -812,6 +812,7 @@ const (
 	HazelcastConfigFileName       = "hazelcast.yaml"
 	HazelcastVolumeData           = "data"
 	HazelcastDataDir              = "/data/persistence"
+	HazelcastBackupDir            = "/data/persistence/backup"
 	HazelcastContainerName        = "hazelcast"
 	HazelcastInitContainerName    = "hazelcast-init"
 	HazelcastConfigDir            = "/data/hazelcast"
