@@ -688,11 +688,6 @@ func (in *MySQLArchiverSpec) DeepCopyInto(out *MySQLArchiverSpec) {
 		*out = new(kubedbv1.AllowedConsumers)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.RetentionPolicy != nil {
-		in, out := &in.RetentionPolicy, &out.RetentionPolicy
-		*out = new(v1.ObjectReference)
-		**out = **in
-	}
 	if in.FullBackup != nil {
 		in, out := &in.FullBackup, &out.FullBackup
 		*out = new(FullBackupOptions)

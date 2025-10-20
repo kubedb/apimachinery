@@ -52,7 +52,7 @@ type MariaDBArchiverSpec struct {
 	// Pause defines if the backup process should be paused or not
 	// +optional
 	Pause bool `json:"pause,omitempty"`
-	// RetentionPolicy refers to a RetentionPolicy CR which defines how to cleanup the old Snapshots
+	// RetentionPolicy field is the RetentionPolicy of the backupConfiguration's backend
 	// +optional
 	RetentionPolicy *kmapi.ObjectReference `json:"retentionPolicy"`
 	// FullBackup defines the session configuration for the full backup
