@@ -54,6 +54,8 @@ type FullBackupOptions struct {
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// +optional
 	SessionHistoryLimit int32 `json:"sessionHistoryLimit,omitempty"`
+	// +optional
+	RetentionPolicy *kmapi.ObjectReference `json:"retentionPolicy"`
 }
 
 type ManifestBackupOptions struct {
@@ -78,6 +80,13 @@ type LogBackupOptions struct {
 	// +optional
 	ConfigSecret *GenericSecretReference `json:"configSecret,omitempty"`
 
+	// RetentionPeriod is the retention policy to be used for Logs (i.e. '60d') means how long logs will be retained before being pruned.
+	// The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months.
+	// +kubebuilder:validation:Pattern=^[1-9][0-9]*[dwm]$
+	// +optional
+	RetentionPeriod string `json:"retentionPeriod,omitempty"`
+	// time.RFC3339 We need to parse the time to RFC3339 format
+
 	// SuccessfulLogHistoryLimit defines the number of successful Logs backup status that the incremental snapshot will retain
 	// The default value is 5.
 	// +kubebuilder:default=5
@@ -90,6 +99,20 @@ type LogBackupOptions struct {
 	// +optional
 	FailedLogHistoryLimit int32 `json:"failedLogHistoryLimit,omitempty"`
 }
+
+//func ParsePolicy(policy string) (string, error) {
+//	unitName := map[string]string{
+//		"d": "DAYS",
+//		"w": "WEEKS",
+//		"m": "MONTHS",
+//	}
+//	matches := regexPolicy.FindStringSubmatch(policy)
+//	if len(matches) < 3 {
+//		return "", fmt.Errorf("not a valid policy")
+//	}
+//
+//	return fmt.Sprintf("RECOVERY WINDOW OF %v %v", matches[1], unitName[matches[2]]), nil
+//}
 
 type Task struct {
 	Params *runtime.RawExtension `json:"params"`
