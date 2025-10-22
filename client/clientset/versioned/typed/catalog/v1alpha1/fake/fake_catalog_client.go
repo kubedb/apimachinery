@@ -133,6 +133,10 @@ func (c *FakeCatalogV1alpha1) SolrVersions() v1alpha1.SolrVersionInterface {
 	return &FakeSolrVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) WeaviateVersions() v1alpha1.WeaviateVersionInterface {
+	return &FakeWeaviateVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) ZooKeeperVersions() v1alpha1.ZooKeeperVersionInterface {
 	return &FakeZooKeeperVersions{c}
 }

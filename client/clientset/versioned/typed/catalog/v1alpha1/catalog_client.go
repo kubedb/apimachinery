@@ -55,6 +55,7 @@ type CatalogV1alpha1Interface interface {
 	SchemaRegistryVersionsGetter
 	SinglestoreVersionsGetter
 	SolrVersionsGetter
+	WeaviateVersionsGetter
 	ZooKeeperVersionsGetter
 }
 
@@ -165,6 +166,10 @@ func (c *CatalogV1alpha1Client) SinglestoreVersions() SinglestoreVersionInterfac
 
 func (c *CatalogV1alpha1Client) SolrVersions() SolrVersionInterface {
 	return newSolrVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) WeaviateVersions() WeaviateVersionInterface {
+	return newWeaviateVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) ZooKeeperVersions() ZooKeeperVersionInterface {
