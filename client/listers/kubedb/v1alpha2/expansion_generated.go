@@ -242,6 +242,14 @@ type SolrListerExpansion interface{}
 // SolrNamespaceLister.
 type SolrNamespaceListerExpansion interface{}
 
+// WeaviateListerExpansion allows custom methods to be added to
+// WeaviateLister.
+type WeaviateListerExpansion interface{}
+
+// WeaviateNamespaceListerExpansion allows custom methods to be added to
+// WeaviateNamespaceLister.
+type WeaviateNamespaceListerExpansion interface{}
+
 // ZooKeeperListerExpansion allows custom methods to be added to
 // ZooKeeperLister.
 type ZooKeeperListerExpansion interface{}

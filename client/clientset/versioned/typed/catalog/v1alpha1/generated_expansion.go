@@ -76,4 +76,6 @@ type SinglestoreVersionExpansion interface{}
 
 type SolrVersionExpansion interface{}
 
+type WeaviateVersionExpansion interface{}
+
 type ZooKeeperVersionExpansion interface{}

@@ -80,6 +80,8 @@ type Interface interface {
 	Singlestores() SinglestoreInformer
 	// Solrs returns a SolrInformer.
 	Solrs() SolrInformer
+	// Weaviates returns a WeaviateInformer.
+	Weaviates() WeaviateInformer
 	// ZooKeepers returns a ZooKeeperInformer.
 	ZooKeepers() ZooKeeperInformer
 }
@@ -233,6 +235,11 @@ func (v *version) Singlestores() SinglestoreInformer {
 // Solrs returns a SolrInformer.
 func (v *version) Solrs() SolrInformer {
 	return &solrInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Weaviates returns a WeaviateInformer.
+func (v *version) Weaviates() WeaviateInformer {
+	return &weaviateInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeepers returns a ZooKeeperInformer.

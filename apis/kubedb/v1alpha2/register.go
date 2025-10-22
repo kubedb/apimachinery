@@ -112,6 +112,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MSSQLServerList{},
 		&Hazelcast{},
 		&HazelcastList{},
+		&Weaviate{},
+		&WeaviateList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

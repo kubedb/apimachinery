@@ -57,6 +57,7 @@ type KubedbV1alpha2Interface interface {
 	RedisSentinelsGetter
 	SinglestoresGetter
 	SolrsGetter
+	WeaviatesGetter
 	ZooKeepersGetter
 }
 
@@ -175,6 +176,10 @@ func (c *KubedbV1alpha2Client) Singlestores(namespace string) SinglestoreInterfa
 
 func (c *KubedbV1alpha2Client) Solrs(namespace string) SolrInterface {
 	return newSolrs(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Weaviates(namespace string) WeaviateInterface {
+	return newWeaviates(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) ZooKeepers(namespace string) ZooKeeperInterface {
