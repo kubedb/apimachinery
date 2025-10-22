@@ -50,6 +50,12 @@ func (w *Weaviate) AppBindingMeta() appcat.AppBindingMeta {
 	return &WeaviateApp{w}
 }
 
+func (w *Weaviate) GetPersistentSecrets() []string {
+	var secrets []string
+	secrets = append(secrets, w.GetAuthSecretName())
+	return secrets
+}
+
 func (w *Weaviate) ResourceShortCode() string {
 	return ResourceCodeWeaviate
 }
