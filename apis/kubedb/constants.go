@@ -2041,7 +2041,6 @@ const (
 
 const (
 	// AuthActiveFromAnnotation = "auth.kubedb.com/active-from"
-
 	HanaDBClusterIP = "" // use empty string instead of None
 
 	HanaDBServiceNameForPods = "hana-pods"

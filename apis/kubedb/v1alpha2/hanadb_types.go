@@ -61,16 +61,16 @@ type HanaDB struct {
 
 // HanaDBSpec defines the desired state of HanaDB
 type HanaDBSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
 
 	// Version of HanaDB to be deployed.
 	Version string `json:"version"`
 
 	// Number of instances to deploy for a HanaDB database. In case of MSSQLServer Availability Group
 	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Topology configures the deployment topology (e.g. standalone or system replication).
+	// +optional
+	Topology *HanaDBTopology `json:"topology,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -105,6 +105,15 @@ type HanaDBSpec struct {
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
+// HanaTopology defines the topology for HanaDB cluster (inspired by SAP HANA scale-out: coordinator for system DB/master, workers for data, standbys for HA).
+type HanaDBTopology struct {
+	// Mode specifies the deployment mode.
+	// - "standalone": Single node (default if Topology is nil).
+	// +kubebuilder:validation:Enum=standalone;
+	// +optional
+	Mode string `json:"mode,omitempty"`
+}
+
 // HanaDBStatus defines the observed state of HanaDB.
 type HanaDBStatus struct {
 	// Specifies the current phase of the database
@@ -120,7 +129,6 @@ type HanaDBStatus struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 // HanaDBList contains a list of HanaDB
 type HanaDBList struct {
 	metav1.TypeMeta `json:",inline"`

@@ -31,6 +31,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
+	"k8s.io/utils/ptr"
 	"kmodules.xyz/client-go/apiextensions"
 	metautil "kmodules.xyz/client-go/meta"
 	_ "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -266,6 +267,13 @@ func (o *HanaDB) ConfigSecretName() string {
 	return metautil.NameWithSuffix(o.OffshootName(), "config")
 }
 
+func (o *HanaDB) IsStandalone() bool {
+	if o.Spec.Topology == nil || o.Spec.Topology.Mode == "" {
+		return true
+	}
+	return o.Spec.Topology.Mode == "standalone"
+}
+
 func (o *HanaDB) SetHealthCheckerDefaults() {
 	if o.Spec.HealthChecker.PeriodSeconds == nil {
 		o.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
@@ -300,6 +308,12 @@ func (h *HanaDB) SetDefaults(kc client.Client) {
 	if err != nil {
 		klog.Errorf("can't get the HanaDB version object %s for %s \n", h.Spec.Version, err.Error())
 		return
+	}
+
+	if h.IsStandalone() {
+		if h.Spec.Replicas == nil || ptr.Deref(h.Spec.Replicas, 1) != 1 {
+			h.Spec.Replicas = pointer.Int32P(1)
+		}
 	}
 
 	h.setDefaultPodSecurityContext(&hanadbVersion, h.Spec.PodTemplate)
