@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"context"
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis"
@@ -28,9 +29,8 @@ import (
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	_ "k8s.io/apimachinery/pkg/runtime/schema"
-	_ "k8s.io/klog/v2"
-	_ "k8s.io/utils/ptr"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
 	metautil "kmodules.xyz/client-go/meta"
 	_ "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -103,6 +103,11 @@ func (o *HanaDB) OffshootSelectors(extraSelectors ...map[string]string) map[stri
 		metautil.ManagedByLabelKey: SchemeGroupVersion.Group,
 	}
 	return metautil.OverwriteKeys(selector, extraSelectors...)
+}
+
+func (o *HanaDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(o.Spec.ServiceTemplates, alias)
+	return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (o *HanaDB) OffshootPodSelectors(extraSelectors ...map[string]string) map[string]string {
@@ -241,14 +246,13 @@ func (r hanadbApp) Type() appcat.AppType {
 	return appcat.AppType(fmt.Sprintf("%s/%s", SchemeGroupVersion.Group, ResourceSingularHanaDB))
 }
 
-//
-//func (o HanaDB) AppBindingMeta() appcat.AppBindingMeta {
-//	return &oracleApp{&o}
-//}
+func (o HanaDB) AppBindingMeta() appcat.AppBindingMeta {
+	return &hanadbApp{&o}
+}
 
-//func (o *HanaDB) StatsServiceLabels() map[string]string {
-//	return o.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
-//}
+func (o *HanaDB) StatsServiceLabels() map[string]string {
+	return o.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
+}
 
 func (o *HanaDB) PetSetName() string {
 	return o.OffshootName()
@@ -262,14 +266,6 @@ func (o *HanaDB) ConfigSecretName() string {
 	return metautil.NameWithSuffix(o.OffshootName(), "config")
 }
 
-//func (o *HanaDB) IsStandalone() bool {
-//	return o.Spec.Mode == OracleModeStandalone
-//}
-//
-//func (o *HanaDB) IsDataGuardEnabled() bool {
-//	return o.Spec.Mode == OracleModeDataGuard
-//}
-
 func (o *HanaDB) SetHealthCheckerDefaults() {
 	if o.Spec.HealthChecker.PeriodSeconds == nil {
 		o.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
@@ -282,86 +278,35 @@ func (o *HanaDB) SetHealthCheckerDefaults() {
 	}
 }
 
-func (o *HanaDB) SetDefaults(kc client.Client) {
-	//if o.Spec.Halted {
-	//	if o.Spec.DeletionPolicy == DeletionPolicyDoNotTerminate {
-	//		klog.Errorf(`Can't halt, since deletion policy is 'DoNotTerminate'`)
-	//		return
-	//	}
-	//	o.Spec.DeletionPolicy = DeletionPolicyHalt
-	//}
+func (h *HanaDB) SetDefaults(kc client.Client) {
+	if h == nil {
+		return
+	}
+	if h.Spec.StorageType == "" {
+		h.Spec.StorageType = StorageTypeDurable
+	}
+	if h.Spec.DeletionPolicy == "" {
+		h.Spec.DeletionPolicy = DeletionPolicyDelete
+	}
 
-	//if o.Spec.DeletionPolicy == "" {
-	//	o.Spec.DeletionPolicy = DeletionPolicyDelete
-	//}
-	//
-	//if o.Spec.StorageType == "" {
-	//	o.Spec.StorageType = StorageTypeDurable
-	//}
-	//
-	//o.SetListenerDefaults()
-	//o.initializePodTemplates()
-	//
-	//oraVersion := &catalog.OracleVersion{}
-	//err := kc.Get(context.Background(), types.NamespacedName{Name: o.Spec.Version}, oraVersion)
-	//if err != nil {
-	//	klog.Errorf("can't get the oracle version object %s for %s \n", err.Error(), o.Spec.Version)
-	//	return
-	//}
-	//
-	//if o.Spec.PodTemplate.Spec.ServiceAccountName == "" {
-	//	o.Spec.PodTemplate.Spec.ServiceAccountName = o.OffshootName()
-	//}
-	//
-	//if o.Spec.Mode == OracleModeDataGuard {
-	//	o.SetDataGuardDefaults()
-	//	o.SetObserverInitContainerDefaults(o.Spec.DataGuard.Observer.PodTemplate, oraVersion)
-	//	o.SetHanaDBObserverContainerDefaults(o.Spec.DataGuard.Observer.PodTemplate, oraVersion)
-	//}
-	//
-	//o.SetDefaultPodSecurityContext(o.Spec.PodTemplate, oraVersion)
-	//o.SetHanaDBContainerDefaults(o.Spec.PodTemplate, oraVersion)
-	//o.SetCoordinatorContainerDefaults(o.Spec.PodTemplate, oraVersion)
-	//o.SetInitContainerDefaults(o.Spec.PodTemplate, oraVersion)
-	//o.SetHealthCheckerDefaults()
-	//o.Spec.Monitor.SetDefaults()
-	//if o.Spec.Monitor != nil && o.Spec.Monitor.Prometheus != nil {
-	//	if o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
-	//		o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = oraVersion.Spec.SecurityContext.RunAsUser
-	//	}
-	//	if o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
-	//		o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
-	//	}
-	//}
+	if h.Spec.PodTemplate == nil {
+		h.Spec.PodTemplate = &ofst.PodTemplateSpec{}
+	}
+
+	var hanadbVersion catalog.HanaDBVersion
+	err := kc.Get(context.TODO(), types.NamespacedName{
+		Name: h.Spec.Version,
+	}, &hanadbVersion)
+	if err != nil {
+		klog.Errorf("can't get the HanaDB version object %s for %s \n", h.Spec.Version, err.Error())
+		return
+	}
+
+	h.setDefaultPodSecurityContext(&hanadbVersion, h.Spec.PodTemplate)
+	h.SetHealthCheckerDefaults()
 }
 
-//func (o *HanaDB) SetListenerDefaults() {
-//	if o.Spec.Listener == nil {
-//		o.Spec.Listener = &ListenerSpec{}
-//	}
-//	o.Spec.Listener.Port = ptr.To(int32(kubedb.OracleDatabasePort))
-//	o.Spec.Listener.Protocol = OracleListenerProtocolTCP
-//	o.Spec.Listener.Service = ptr.To(kubedb.OracleDatabaseServiceName)
-//}
-
-//func (o *HanaDB) initializePodTemplates() {
-//	if o.Spec.Mode == OracleModeDataGuard {
-//		if o.Spec.DataGuard == nil {
-//			o.Spec.DataGuard = &DataGuardSpec{}
-//		}
-//		if o.Spec.DataGuard.Observer == nil {
-//			o.Spec.DataGuard.Observer = &ObserverSpec{}
-//		}
-//		if o.Spec.DataGuard.Observer.PodTemplate == nil {
-//			o.Spec.DataGuard.Observer.PodTemplate = new(ofst.PodTemplateSpec)
-//		}
-//	}
-//	if o.Spec.PodTemplate == nil {
-//		o.Spec.PodTemplate = new(ofst.PodTemplateSpec)
-//	}
-//}
-
-func (o *HanaDB) SetDefaultPodSecurityContext(podTemplate *ofst.PodTemplateSpec, oraVersion *catalog.OracleVersion) {
+func (o *HanaDB) setDefaultPodSecurityContext(hanadbVersion *catalog.HanaDBVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -370,67 +315,67 @@ func (o *HanaDB) SetDefaultPodSecurityContext(podTemplate *ofst.PodTemplateSpec,
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = oraVersion.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.FSGroup = hanadbVersion.Spec.SecurityContext.RunAsUser
 	}
 	if podTemplate.Spec.SecurityContext.RunAsUser == nil {
-		podTemplate.Spec.SecurityContext.RunAsUser = oraVersion.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.RunAsUser = hanadbVersion.Spec.SecurityContext.RunAsUser
 	}
 	if podTemplate.Spec.SecurityContext.RunAsGroup == nil {
-		podTemplate.Spec.SecurityContext.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.RunAsGroup = hanadbVersion.Spec.SecurityContext.RunAsUser
 	}
 }
 
-func (o *HanaDB) SetInitContainerDefaults(podTemplate *ofst.PodTemplateSpec, oraVersion *catalog.OracleVersion) {
+func (o *HanaDB) SetInitContainerDefaults(podTemplate *ofst.PodTemplateSpec, hanadbVersion *catalog.HanaDBVersion) {
 	if podTemplate == nil {
 		return
 	}
 	container := ofstutil.EnsureInitContainerExists(podTemplate, kubedb.OracleInitContainerName)
-	o.setContainerDefaultSecurityContext(container, oraVersion)
+	o.setContainerDefaultSecurityContext(container, hanadbVersion)
 	o.setContainerDefaultResources(container, *kubedb.DefaultInitContainerResource.DeepCopy())
 }
 
-func (o *HanaDB) SetObserverInitContainerDefaults(podTemplate *ofst.PodTemplateSpec, oraVersion *catalog.OracleVersion) {
+func (o *HanaDB) SetObserverInitContainerDefaults(podTemplate *ofst.PodTemplateSpec, hanadbVersion *catalog.HanaDBVersion) {
 	if podTemplate == nil {
 		return
 	}
 	container := ofstutil.EnsureInitContainerExists(podTemplate, kubedb.OracleObserverInitContainerName)
-	o.setContainerDefaultSecurityContext(container, oraVersion)
+	o.setContainerDefaultSecurityContext(container, hanadbVersion)
 	o.setContainerDefaultResources(container, *kubedb.DefaultInitContainerResource.DeepCopy())
 }
 
-func (o *HanaDB) SetHanaDBContainerDefaults(podTemplate *ofst.PodTemplateSpec, oraVersion *catalog.OracleVersion) {
+func (o *HanaDB) SetHanaDBContainerDefaults(podTemplate *ofst.PodTemplateSpec, hanadbVersion *catalog.HanaDBVersion) {
 	if podTemplate == nil {
 		return
 	}
 	container := ofstutil.EnsureContainerExists(podTemplate, kubedb.OracleContainerName)
-	o.setContainerDefaultSecurityContext(container, oraVersion)
+	o.setContainerDefaultSecurityContext(container, hanadbVersion)
 	o.setContainerDefaultResources(container, *kubedb.DefaultResourcesCoreAndMemoryIntensiveOracle.DeepCopy())
 }
 
-func (o *HanaDB) SetHanaDBObserverContainerDefaults(podTemplate *ofst.PodTemplateSpec, oraVersion *catalog.OracleVersion) {
+func (o *HanaDB) SetHanaDBObserverContainerDefaults(podTemplate *ofst.PodTemplateSpec, hanadbVersion *catalog.HanaDBVersion) {
 	if podTemplate == nil {
 		return
 	}
 	container := ofstutil.EnsureContainerExists(podTemplate, kubedb.OracleObserverContainerName)
-	o.setContainerDefaultSecurityContext(container, oraVersion)
+	o.setContainerDefaultSecurityContext(container, hanadbVersion)
 	o.setContainerDefaultResources(container, *kubedb.DefaultResourcesCoreAndMemoryIntensiveOracleObserver.DeepCopy())
 }
 
-func (o *HanaDB) SetCoordinatorContainerDefaults(podTemplate *ofst.PodTemplateSpec, oraVersion *catalog.OracleVersion) {
+func (o *HanaDB) SetCoordinatorContainerDefaults(podTemplate *ofst.PodTemplateSpec, hanadbVersion *catalog.HanaDBVersion) {
 	if podTemplate == nil {
 		return
 	}
 	container := ofstutil.EnsureContainerExists(podTemplate, kubedb.OracleCoordinatorContainerName)
-	o.setContainerDefaultSecurityContext(container, oraVersion)
+	o.setContainerDefaultSecurityContext(container, hanadbVersion)
 	o.setContainerDefaultResources(container, *kubedb.CoordinatorDefaultResources.DeepCopy())
 }
 
-func (o *HanaDB) setContainerDefaultSecurityContext(container *core.Container, _ *catalog.OracleVersion) {
+func (o *HanaDB) setContainerDefaultSecurityContext(container *core.Container, _ *catalog.HanaDBVersion) {
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
 	// TODO: Check what part of security context make hanadb fail to run
-	// o.assignDefaultContainerSecurityContext(container.SecurityContext, oraVersion)
+	// o.assignDefaultContainerSecurityContext(container.SecurityContext, hanadbVersion)
 }
 
 func (o *HanaDB) setContainerDefaultResources(container *core.Container, defaultResources core.ResourceRequirements) {
