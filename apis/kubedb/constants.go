@@ -2114,6 +2114,45 @@ const (
 	OracleEnvDataDir           = "ORADATA"
 )
 
+// =========================== DB2 Constants ============================
+
+const (
+	DB2DatabaseServiceName = "DB2"
+	DB2SqlNetPortName      = "db2-port"
+	DB2SqlNetPort          = 50001
+
+	DB2EditionEnterprise = "enterprise"
+
+	DB2PrimaryRole = "primary"
+	DB2StandbyRole = "standby"
+
+	DB2DatabasePort = 1521
+
+	DB2SysDbaUser = "db2inst1"
+
+	DB2ContainerName             = "db2"
+	DB2CoordinatorContainerName  = "db2-coordinator"
+	DB2ObserverContainerName     = "observer"
+	DB2InitContainerName         = "db2-init"
+	DB2ObserverInitContainerName = "observer-init"
+
+	DB2VolumeScripts = "db2-data"
+	DB2DataVolume    = "db2-data"
+
+	DB2VolumeMountScripts = "db2-data"
+	DB2DataDir            = "/database"
+
+	DB2StandbyServiceSuffix = "standby"
+
+	DB2DatabaseRoleKey      = "db2.db/role"
+	DB2DatabaseRoleObserver = "observer"
+	DB2DatabaseRoleInstance = "instance"
+	DB2EnvUserName          = "SYS_USER"
+	DB2EnvPassword          = "DB2_PWD"
+	DB2EnvOracleSID         = "DB2_SID"
+	DB2EnvDataDir           = "DB2DATA"
+)
+
 // =========================== Qdrant Constants ============================
 const (
 	QdrantContainerName = "qdrant"

@@ -31,6 +31,7 @@ type CatalogV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	CassandraVersionsGetter
 	ClickHouseVersionsGetter
+	DB2VersionsGetter
 	DruidVersionsGetter
 	ElasticsearchVersionsGetter
 	EtcdVersionsGetter
@@ -72,6 +73,10 @@ func (c *CatalogV1alpha1Client) CassandraVersions() CassandraVersionInterface {
 
 func (c *CatalogV1alpha1Client) ClickHouseVersions() ClickHouseVersionInterface {
 	return newClickHouseVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) DB2Versions() DB2VersionInterface {
+	return newDB2Versions(c)
 }
 
 func (c *CatalogV1alpha1Client) DruidVersions() DruidVersionInterface {

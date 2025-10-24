@@ -528,6 +528,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion":                        schema_apimachinery_apis_catalog_v1alpha1_ConnectClusterVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin":                              schema_apimachinery_apis_catalog_v1alpha1_ConnectorPlugin(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase":                 schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2SecurityContext":                           schema_apimachinery_apis_catalog_v1alpha1_DB2SecurityContext(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Version":                                   schema_apimachinery_apis_catalog_v1alpha1_DB2Version(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase":                           schema_apimachinery_apis_catalog_v1alpha1_DB2VersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionInitContainer":                      schema_apimachinery_apis_catalog_v1alpha1_DB2VersionInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionList":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionSpec":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer":                           schema_apimachinery_apis_catalog_v1alpha1_DruidInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersion":                                 schema_apimachinery_apis_catalog_v1alpha1_DruidVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase":                         schema_apimachinery_apis_catalog_v1alpha1_DruidVersionDatabase(ref),
@@ -26961,6 +26967,222 @@ func schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref 
 				Required: []string{"image"},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DB2SecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DB2SecurityContext is the additional features for the DB2",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"runAsUser": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RunAsUser is default UID for the DB container. It is by default 999 for debian based image and 70 for alpine based image. oracle UID 999 for debian images https://github.com/docker-library/oracle/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/Dockerfile#L15 oracle UID 70  for alpine images https://github.com/docker-library/oracle/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DB2Version(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DB2VersionDatabase is the DB2 Database image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DB2VersionInitContainer is the Oracle init container image",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DB2VersionList is a list of DB2Versions",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of OracleVersion CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Version"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Version"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DB2VersionSpec is the spec for oracle version",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"db": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase"),
+						},
+					},
+					"deprecated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional config for oracle DB container",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2SecurityContext"),
+						},
+					},
+					"updateConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "update constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
+						},
+					},
+					"ui": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"version", "db"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

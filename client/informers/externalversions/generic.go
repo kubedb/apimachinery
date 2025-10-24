@@ -132,6 +132,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().CassandraVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("clickhouseversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ClickHouseVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("db2versions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().DB2Versions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("druidversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().DruidVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("elasticsearchversions"):
