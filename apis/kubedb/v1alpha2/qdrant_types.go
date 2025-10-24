@@ -30,6 +30,14 @@ const (
 	ResourcePluralQdrant   = "qdrants"
 )
 
+// +kubebuilder:validation:Enum=Standalone;Distributed
+type QdrantClusterMode string
+
+const (
+	QdrantClusterModeStandalone  QdrantClusterMode = "Standalone"
+	QdrantClusterModeDistributed QdrantClusterMode = "Distributed"
+)
+
 // Qdrant is the Schema for the Qdrant API
 
 // +genclient
@@ -59,6 +67,10 @@ type QdrantSpec struct {
 	// Number of instances to deploy for an Qdrant database.
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Qdrant cluster mode
+	// +optional
+	Mode *QdrantClusterMode `json:"mode,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`

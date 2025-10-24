@@ -109,6 +109,11 @@ spec:
                     format: int32
                     type: integer
                 type: object
+              mode:
+                enum:
+                - Standalone
+                - Distributed
+                type: string
               podTemplate:
                 properties:
                   controller:

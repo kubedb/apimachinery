@@ -42,10 +42,6 @@ func (q *Qdrant) CustomResourceDefinition() *apiextensions.CustomResourceDefinit
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralQdrant))
 }
 
-func (q *Qdrant) AsOwner() *meta.OwnerReference {
-	return meta.NewControllerRef(q, SchemeGroupVersion.WithKind(ResourceKindQdrant))
-}
-
 func (q *Qdrant) ResourceKind() string {
 	return ResourceKindQdrant
 }
@@ -58,12 +54,89 @@ func (q *Qdrant) ResourcePlural() string {
 	return ResourcePluralQdrant
 }
 
-func (q *Qdrant) Finalizer() string {
-	return fmt.Sprintf("%s/%s", apis.Finalizer, q.ResourceSingular())
-}
-
 func (q *Qdrant) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", q.ResourcePlural(), kubedb.GroupName)
+}
+
+type QdrantApp struct {
+	*Qdrant
+}
+
+func (q *Qdrant) AppBindingMeta() appcat.AppBindingMeta {
+	return &QdrantApp{q}
+}
+
+func (q *QdrantApp) Name() string {
+	return q.Qdrant.Name
+}
+
+func (q QdrantApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularQdrant))
+}
+
+func (q *Qdrant) GetConnectionScheme() string {
+	scheme := "grpc"
+	return scheme
+}
+
+// Owner returns owner reference to resources
+func (q *Qdrant) Owner() *meta.OwnerReference {
+	return meta.NewControllerRef(q, SchemeGroupVersion.WithKind(q.ResourceKind()))
+}
+
+func (q *Qdrant) OffshootName() string {
+	return q.Name
+}
+
+func (q *Qdrant) ServiceName() string { return q.OffshootName() }
+
+func (q *Qdrant) GoverningServiceName() string {
+	return meta_util.NameWithSuffix(q.ServiceName(), "pods")
+}
+
+func (q *Qdrant) PetSetName() string {
+	return q.OffshootName()
+}
+
+func (q *Qdrant) PVCName(alias string) string {
+	return alias
+}
+
+func (q *Qdrant) PrimaryServiceDNS() string {
+	return fmt.Sprintf("%s.%s.svc", q.ServiceName(), q.Namespace)
+}
+
+func (q *Qdrant) Address() string {
+	return fmt.Sprintf("%v.%v.svc", q.Name, q.Namespace)
+}
+
+func (q *Qdrant) GetAuthSecretName() string {
+	if q.Spec.AuthSecret != nil && q.Spec.AuthSecret.Name != "" {
+		return q.Spec.AuthSecret.Name
+	}
+	return meta_util.NameWithSuffix(q.OffshootName(), "auth")
+}
+
+func (q *Qdrant) ConfigSecretName() string {
+	return meta_util.NameWithSuffix(q.OffshootName(), "config")
+}
+
+func (q *Qdrant) GetPersistentSecrets() []string {
+	var secrets []string
+	if q.Spec.AuthSecret != nil {
+		secrets = append(secrets, q.GetAuthSecretName())
+		secrets = append(secrets, q.ConfigSecretName())
+	}
+	return secrets
+}
+
+func (q *Qdrant) offshootLabels(selector, override map[string]string) map[string]string {
+	selector[meta_util.ComponentLabelKey] = kubedb.ComponentDatabase
+	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, q.Labels, override))
+}
+
+func (q *Qdrant) OffshootLabels() map[string]string {
+	return q.offshootLabels(q.OffshootSelectors(), nil)
 }
 
 func (q *Qdrant) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
@@ -75,28 +148,8 @@ func (q *Qdrant) OffshootSelectors(extraSelectors ...map[string]string) map[stri
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (q *Qdrant) OffshootName() string {
-	return q.Name
-}
-
-func (q *Qdrant) GetAuthSecretName() string {
-	if q.Spec.AuthSecret != nil && q.Spec.AuthSecret.Name != "" {
-		return q.Spec.AuthSecret.Name
-	}
-	return q.DefaultAuthSecretName()
-}
-
-func (q *Qdrant) GetPersistentSecrets() []string {
-	var secrets []string
-	if q.Spec.AuthSecret != nil {
-		secrets = append(secrets, q.GetAuthSecretName())
-	}
-	return secrets
-}
-
-// Owner returns owner reference to resources
-func (q *Qdrant) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(q, SchemeGroupVersion.WithKind(q.ResourceKind()))
+func (q *Qdrant) PodLabels(extraLabels ...map[string]string) map[string]string {
+	return q.offshootLabels(meta_util.OverwriteKeys(q.OffshootSelectors(), extraLabels...), q.Spec.PodTemplate.Labels)
 }
 
 func (q *Qdrant) SetDefaults(kc client.Client) {
@@ -158,13 +211,14 @@ func (q *Qdrant) setDefaultContainerSecurityContext(qdVersion *catalog.QdrantVer
 		container = &core.Container{
 			Name: kubedb.QdrantContainerName,
 		}
-		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 	}
 
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
 	q.assignDefaultContainerSecurityContext(qdVersion, container.SecurityContext)
+
+	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
 func (q *Qdrant) assignDefaultContainerSecurityContext(qdVersion *catalog.QdrantVersion, rc *core.SecurityContext) {
@@ -185,76 +239,4 @@ func (q *Qdrant) assignDefaultContainerSecurityContext(qdVersion *catalog.Qdrant
 	if rc.SeccompProfile == nil {
 		rc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
-}
-
-func (q *Qdrant) PetSetName() string {
-	return q.OffshootName()
-}
-
-func (q *Qdrant) ServiceName() string { return q.OffshootName() }
-
-func (q *Qdrant) offshootLabels(selector, override map[string]string) map[string]string {
-	selector[meta_util.ComponentLabelKey] = kubedb.ComponentDatabase
-	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, q.Labels, override))
-}
-
-func (q *Qdrant) OffshootLabels() map[string]string {
-	return q.offshootLabels(q.OffshootSelectors(), nil)
-}
-
-func (q *Qdrant) GoverningServiceName() string {
-	return meta_util.NameWithSuffix(q.ServiceName(), "pods")
-}
-
-func (q *Qdrant) DefaultAuthSecretName() string {
-	return meta_util.NameWithSuffix(q.OffshootName(), "auth")
-}
-
-func (q *Qdrant) ServiceAccountName() string {
-	return q.OffshootName()
-}
-
-func (q *Qdrant) DefaultPodRoleName() string {
-	return meta_util.NameWithSuffix(q.OffshootName(), "role")
-}
-
-func (q *Qdrant) DefaultPodRoleBindingName() string {
-	return meta_util.NameWithSuffix(q.OffshootName(), "rolebinding")
-}
-
-type QdrantApp struct {
-	*Qdrant
-}
-
-func (q *QdrantApp) Name() string {
-	return q.Qdrant.Name
-}
-
-func (q QdrantApp) Type() appcat.AppType {
-	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularQdrant))
-}
-
-func (q *Qdrant) AppBindingMeta() appcat.AppBindingMeta {
-	return &QdrantApp{q}
-}
-
-func (q *Qdrant) GetConnectionScheme() string {
-	scheme := "http"
-	return scheme
-}
-
-func (q *Qdrant) PodLabels(extraLabels ...map[string]string) map[string]string {
-	return q.offshootLabels(meta_util.OverwriteKeys(q.OffshootSelectors(), extraLabels...), q.Spec.PodTemplate.Labels)
-}
-
-func (q *Qdrant) ConfigSecretName() string {
-	return meta_util.NameWithSuffix(q.OffshootName(), "config")
-}
-
-func (q *Qdrant) PVCName(alias string) string {
-	return alias
-}
-
-func (q *Qdrant) Address() string {
-	return fmt.Sprintf("%v.%v.svc", q.Name, q.Namespace)
 }
