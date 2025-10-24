@@ -1,4 +1,4 @@
-package cluster_client
+package qdrant
 
 import (
 	"context"
