@@ -102,6 +102,10 @@ func (q *Qdrant) PVCName(alias string) string {
 	return alias
 }
 
+func (q *Qdrant) ServiceAccountName() string {
+	return q.OffshootName()
+}
+
 func (q *Qdrant) PrimaryServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", q.ServiceName(), q.Namespace)
 }
