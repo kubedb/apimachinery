@@ -37,6 +37,10 @@ func (c *FakeCatalogV1alpha1) ClickHouseVersions() v1alpha1.ClickHouseVersionInt
 	return &FakeClickHouseVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) DB2Versions() v1alpha1.DB2VersionInterface {
+	return &FakeDB2Versions{c}
+}
+
 func (c *FakeCatalogV1alpha1) DruidVersions() v1alpha1.DruidVersionInterface {
 	return &FakeDruidVersions{c}
 }
