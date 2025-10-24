@@ -3358,6 +3358,13 @@ spec:
                 - Durable
                 - Ephemeral
                 type: string
+              topology:
+                properties:
+                  mode:
+                    enum:
+                    - standalone
+                    type: string
+                type: object
               version:
                 type: string
             required:

@@ -61,7 +61,6 @@ type HanaDB struct {
 
 // HanaDBSpec defines the desired state of HanaDB
 type HanaDBSpec struct {
-
 	// Version of HanaDB to be deployed.
 	Version string `json:"version"`
 

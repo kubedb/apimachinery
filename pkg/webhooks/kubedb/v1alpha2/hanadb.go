@@ -124,13 +124,13 @@ func (w *HanaDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Ob
 
 	hanaLog.Info("validate delete", "name", db.Name)
 
-	//var allErr field.ErrorList
-	//if db.Spec.DeletionPolicy == api.DeletionPolicyDoNotTerminate {
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
-	//		db.Name,
-	//		"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-	//	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: api.ResourceKindOracle}, db.Name, allErr)
-	//}
+	var allErr field.ErrorList
+	if db.Spec.DeletionPolicy == api.DeletionPolicyDoNotTerminate {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
+			db.Name,
+			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: api.ResourceKindOracle}, db.Name, allErr)
+	}
 	return nil, nil
 }
 
@@ -143,72 +143,56 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 			db.Name,
 			err.Error()))
 	}
-	//if db.Spec.Edition != kubedb.OracleEditionEnterprise {
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("edition"), db.Name, "only enterprise edition is supported for now"))
-	//}
-	//if db.Spec.Listener != nil && db.Spec.Listener.Service != nil && len(*db.Spec.Listener.Service) > 12 {
-	//	// TODO: research if we can have more than 12 characters following some other way
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("listener").Child("service"), db.Name, "maximum 12 characters supported for now"))
-	//}
 
-	//if db.Spec.Mode == "" {
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("mode"), db.Name, "db.spec.mode has to be defined"))
-	//}
-	//if db.Spec.Replicas == nil {
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"), db.Name, "db.spec.replicas has to be defined"))
-	//}
-	//
-	//if db.IsStandalone() {
-	//	if ptr.Deref(db.Spec.Replicas, 0) != 1 {
-	//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-	//			db.Name,
-	//			"number of replicas for standalone must be one "))
-	//	}
-	//} else if db.IsDataGuardEnabled() {
-	//	if ptr.Deref(db.Spec.Replicas, 0) <= 1 {
-	//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-	//			db.Name,
-	//			"number of replicas can not be nil and can not be less than or equal to 2"))
-	//	}
-	//}
+	if db.Spec.Replicas == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"), db.Name, "db.spec.replicas has to be defined"))
+	}
 
-	//if db.Spec.PodTemplate != nil {
-	//	if err = w.validateEnvsForAllContainers(db); err != nil {
-	//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
-	//			db.Name,
-	//			err.Error()))
-	//	}
-	//}
-	//
-	//err = hanadbValidateVolumes(db.Spec.PodTemplate)
-	//if err != nil {
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
-	//		db.Name,
-	//		err.Error()))
-	//}
-	//
-	//err = hanadbValidateVolumesMountPaths(db.Spec.PodTemplate)
-	//if err != nil {
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
-	//		db.Name,
-	//		err.Error()))
-	//}
-	//
-	//if db.Spec.StorageType == "" {
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-	//		db.Name,
-	//		"StorageType can not be empty"))
-	//} else {
-	//	if db.Spec.StorageType != api.StorageTypeDurable && db.Spec.StorageType != olddbapi.StorageTypeEphemeral {
-	//		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
-	//			db.Name,
-	//			"StorageType should be either durable or ephemeral"))
-	//	}
-	//}
-	//
-	//if err := amv.ValidateStorage(w.DefaultClient, db.Spec.StorageType, db.Spec.Storage); err != nil {
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"), db.Name, err.Error()))
-	//}
+	if db.IsStandalone() {
+		if ptr.Deref(db.Spec.Replicas, 0) != 1 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+				db.Name,
+				"number of replicas for standalone must be one "))
+		}
+	}
+
+	if db.Spec.PodTemplate != nil {
+		if err = w.validateEnvsForAllContainers(db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
+				db.Name,
+				err.Error()))
+		}
+	}
+
+	err = hanadbValidateVolumes(db.Spec.PodTemplate)
+	if err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
+			db.Name,
+			err.Error()))
+	}
+
+	err = hanadbValidateVolumesMountPaths(db.Spec.PodTemplate)
+	if err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
+			db.Name,
+			err.Error()))
+	}
+
+	if db.Spec.StorageType == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+			db.Name,
+			"StorageType can not be empty"))
+	} else {
+		if db.Spec.StorageType != api.StorageTypeDurable && db.Spec.StorageType != api.StorageTypeEphemeral {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+				db.Name,
+				"StorageType should be either durable or ephemeral"))
+		}
+	}
+
+	if err := amv.ValidateStorage(w.DefaultClient, db.Spec.StorageType, db.Spec.Storage); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"), db.Name, err.Error()))
+	}
 
 	if len(allErr) == 0 {
 		return nil

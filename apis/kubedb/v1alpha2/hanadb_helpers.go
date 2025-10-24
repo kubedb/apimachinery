@@ -88,10 +88,10 @@ func (o *HanaDB) offshootLabels(selector, override map[string]string) map[string
 	return metautil.FilterKeys(SchemeGroupVersion.Group, selector, metautil.OverwriteKeys(nil, o.Labels, override))
 }
 
-//func (o *HanaDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
-//	svcTemplate := GetServiceTemplate(o.Spec.ServiceTemplates, alias)
-//	return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
-//}
+func (o *HanaDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(o.Spec.ServiceTemplates, alias)
+	return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
 
 func (o *HanaDB) OffshootLabels() map[string]string {
 	return o.offshootLabels(o.OffshootSelectors(), nil)
@@ -104,11 +104,6 @@ func (o *HanaDB) OffshootSelectors(extraSelectors ...map[string]string) map[stri
 		metautil.ManagedByLabelKey: SchemeGroupVersion.Group,
 	}
 	return metautil.OverwriteKeys(selector, extraSelectors...)
-}
-
-func (o *HanaDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
-	svcTemplate := GetServiceTemplate(o.Spec.ServiceTemplates, alias)
-	return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (o *HanaDB) OffshootPodSelectors(extraSelectors ...map[string]string) map[string]string {
