@@ -182,7 +182,8 @@ func (w *Weaviate) SetDefaults(kc client.Client) {
 
 	var wvVersion catalog.WeaviateVersion
 	err := kc.Get(context.TODO(), types.NamespacedName{
-		Name: w.Spec.Version,
+		Name:      w.Spec.Version,
+		Namespace: "",
 	}, &wvVersion)
 	if err != nil {
 		klog.Errorf("can't get the weaviate version object %s for %s \n", err.Error(), w.Spec.Version)
