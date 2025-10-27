@@ -27513,8 +27513,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DB2(ref common.ReferenceCallback) 
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DB2 is the Schema for the db2s API.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -27560,8 +27559,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DB2List(ref common.ReferenceCallba
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DB2List contains a list of DB2.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -27614,20 +27612,23 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DB2Spec(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Version of DB2 to be deployed.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "Number of instances to deploy for a DB2 database.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"storageType": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "StorageType can be durable (default) or ephemeral",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"storage": {

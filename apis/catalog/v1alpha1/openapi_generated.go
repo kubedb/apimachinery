@@ -528,10 +528,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion":                        schema_apimachinery_apis_catalog_v1alpha1_ConnectClusterVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin":                              schema_apimachinery_apis_catalog_v1alpha1_ConnectorPlugin(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase":                 schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2SecurityContext":                           schema_apimachinery_apis_catalog_v1alpha1_DB2SecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Version":                                   schema_apimachinery_apis_catalog_v1alpha1_DB2Version(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase":                           schema_apimachinery_apis_catalog_v1alpha1_DB2VersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionInitContainer":                      schema_apimachinery_apis_catalog_v1alpha1_DB2VersionInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionList":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionSpec":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer":                           schema_apimachinery_apis_catalog_v1alpha1_DruidInitContainer(ref),
@@ -26970,26 +26968,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref 
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_DB2SecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DB2SecurityContext is the additional features for the DB2",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It is by default 999 for debian based image and 70 for alpine based image. oracle UID 999 for debian images https://github.com/docker-library/oracle/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/Dockerfile#L15 oracle UID 70  for alpine images https://github.com/docker-library/oracle/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_DB2Version(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27035,27 +27013,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionDatabase(ref common.Ref
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "DB2VersionDatabase is the DB2 Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DB2VersionInitContainer is the Oracle init container image",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"image": {
@@ -27154,7 +27111,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref common.Referen
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional config for oracle DB container",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2SecurityContext"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
 					"updateConstraints": {
@@ -27182,7 +27139,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

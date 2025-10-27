@@ -278,6 +278,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Cassandras().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("clickhouses"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ClickHouses().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("db2s"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().DB2s().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("druids"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Druids().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("elasticsearches"):

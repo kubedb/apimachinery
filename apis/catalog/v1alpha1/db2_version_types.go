@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	ResourceCodeDB2Version     = "db2version"
+	ResourceCodeDB2Version     = "db2v"
 	ResourceKindDB2Version     = "DB2Version"
 	ResourceSingularDB2Version = "db2version"
 	ResourcePluralDB2Version   = "db2versions"
@@ -36,9 +36,8 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:scope=Cluster,shortName=db2v
+// +kubebuilder:resource:path=db2versions,singular=db2version,scope=Cluster,shortName=db2v,categories={catalog,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
-// +kubebuilder:printcolumn:name="Distribution",type="string",JSONPath=".spec.distribution"
 // +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
@@ -60,18 +59,13 @@ type DB2VersionSpec struct {
 
 	// SecurityContext is for the additional config for oracle DB container
 	// +optional
-	SecurityContext DB2SecurityContext `json:"securityContext"`
+	SecurityContext SecurityContext `json:"securityContext"`
 
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
-}
-
-// DB2VersionInitContainer is the Oracle init container image
-type DB2VersionInitContainer struct {
-	Image string `json:"image"`
 }
 
 // DB2VersionDatabase is the DB2 Database image
@@ -87,12 +81,4 @@ type DB2VersionList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 	// Items is a list of OracleVersion CRD objects
 	Items []DB2Version `json:"items,omitempty"`
-}
-
-// DB2SecurityContext is the additional features for the DB2
-type DB2SecurityContext struct {
-	// RunAsUser is default UID for the DB container. It is by default 999 for debian based image and 70 for alpine based image.
-	// oracle UID 999 for debian images https://github.com/docker-library/oracle/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/Dockerfile#L15
-	// oracle UID 70  for alpine images https://github.com/docker-library/oracle/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6
-	RunAsUser *int64 `json:"runAsUser,omitempty"`
 }

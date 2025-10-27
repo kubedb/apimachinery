@@ -8,13 +8,33 @@ metadata:
 spec:
   group: kubedb.com
   names:
+    categories:
+    - datastore
+    - kubedb
+    - appscode
+    - all
     kind: DB2
     listKind: DB2List
     plural: db2s
+    shortNames:
+    - db2
     singular: db2
   scope: Namespaced
   versions:
-  - name: v1alpha2
+  - additionalPrinterColumns:
+    - jsonPath: .apiVersion
+      name: Type
+      type: string
+    - jsonPath: .spec.version
+      name: Version
+      type: string
+    - jsonPath: .status.phase
+      name: Status
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha2
     schema:
       openAPIV3Schema:
         properties:
@@ -32,16 +52,22 @@ spec:
                     format: date-time
                     type: string
                   apiGroup:
+                    default: ""
                     type: string
                   externallyManaged:
                     type: boolean
+                  kind:
+                    default: Secret
+                    type: string
                   name:
-                    default: ""
                     type: string
                   rotateAfter:
                     type: string
                   secretStoreName:
                     type: string
+                required:
+                - kind
+                - name
                 type: object
                 x-kubernetes-map-type: atomic
               deletionPolicy:

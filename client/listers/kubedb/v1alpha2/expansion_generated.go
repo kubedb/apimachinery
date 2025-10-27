@@ -34,6 +34,14 @@ type ClickHouseListerExpansion interface{}
 // ClickHouseNamespaceLister.
 type ClickHouseNamespaceListerExpansion interface{}
 
+// DB2ListerExpansion allows custom methods to be added to
+// DB2Lister.
+type DB2ListerExpansion interface{}
+
+// DB2NamespaceListerExpansion allows custom methods to be added to
+// DB2NamespaceLister.
+type DB2NamespaceListerExpansion interface{}
+
 // DruidListerExpansion allows custom methods to be added to
 // DruidLister.
 type DruidListerExpansion interface{}
