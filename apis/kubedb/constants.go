@@ -1507,6 +1507,58 @@ const (
 	RabbitMQHealthCheckerQueueName = "kubedb-system"
 )
 
+const (
+	WeaviateAMQPPort                = 5672
+	WeaviateAMQPSPort               = 5671
+	WeaviateMQTTPort                = 1883
+	WeaviateMQTTPortWithSSL         = 8883
+	WeaviateSTOMPPort               = 61613
+	WeaviateSTOMPPortWithSSL        = 61614
+	WeaviateWebSTOMPPort            = 15674
+	WeaviateWebSTOMPPortWithSSL     = 15673
+	WeaviateWebMQTTPort             = 15675
+	WeaviateWebMQTTPortWithSSL      = 15676
+	WeaviateExporterPort            = 15692
+	WeaviateExporterPortWithSSL     = 15691
+	WeaviateManagementUIPort        = 15672
+	WeaviateManagementUIPortWithSSL = 15671
+	WeaviateInterNodePort           = 25672
+	WeaviatePeerDiscoveryPort       = 4369
+
+	WeaviateVolumeData         = "data"
+	WeaviateVolumeConfig       = "weaviateconfig"
+	WeaviateVolumeTempConfig   = "temp-config"
+	WeaviateVolumeCustomConfig = "custom-config"
+
+	WeaviateDataDir         = "/var/lib/weviate/mnesia"
+	WeaviateConfigDir       = "/config/"
+	WeaviatePluginsDir      = "/etc/weviate/"
+	WeaviateCertDir         = "/var/private/ssl"
+	WeaviateTempConfigDir   = "/tmp/config/"
+	WeaviateCustomConfigDir = "/tmp/config/custom_config/"
+
+	WeaviateConfigVolName     = "weviate-config"
+	WeaviatePluginsVolName    = "weviate-plugins"
+	WeaviateTempConfigVolName = "temp-config"
+
+	WeaviateContainerName              = "weviate"
+	WeaviateInitContainerName          = "weviate-init"
+	WeaviateManagementPlugin           = "weviate_management"
+	WeaviatePeerdiscoveryPlugin        = "weviate_peer_discovery_k8s"
+	WeaviateFederationPlugin           = "weviate_federation"
+	WeaviateFederationManagementPlugin = "weviate_federation_management"
+	WeaviateShovelPlugin               = "weviate_shovel"
+	WeaviateShovelManagementPlugin     = "weviate_shovel_management"
+	WeaviateWebDispatchPlugin          = "weviate_web_dispatch"
+	WeaviateMQTTPlugin                 = "weviate_mqtt"
+	WeaviateWebMQTTPlugin              = "weviate_stomp"
+	WeaviateSTOMPPlugin                = "weviate_web_mqtt"
+	WeaviateWebSTOMPPlugin             = "weviate_web_stomp"
+	WeaviatePrometheusPlugin           = "weviate_prometheus"
+	WeaviateLoopBackUserKey            = "loopback_users"
+	WeaviateLoopBackUserVal            = "none"
+)
+
 // =========================== FerretDB Constants ============================
 const (
 

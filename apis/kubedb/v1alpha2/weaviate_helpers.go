@@ -17,17 +17,25 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"context"
 	"fmt"
 
+	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
+	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
+	"kmodules.xyz/client-go/apiextensions"
+	coreutil "kmodules.xyz/client-go/core/v1"
+	meta_util "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	ofst "kmodules.xyz/offshoot-api/api/v2"
+	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
-
-	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/utils/pointer"
-	"kmodules.xyz/client-go/apiextensions"
-	meta_util "kmodules.xyz/client-go/meta"
-	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
-	// ofst "kmodules.xyz/offshoot-api/api/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func (r *Weaviate) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
@@ -126,13 +134,13 @@ func (w *Weaviate) PVCName(alias string) string {
 
 func (w *Weaviate) SetHealthCheckerDefaults() {
 	if w.Spec.HealthChecker.PeriodSeconds == nil {
-		w.Spec.HealthChecker.PeriodSeconds = pointer.Int32(10) // Int32P shows an error.
+		w.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10) // Int32P shows an error.
 	}
 	if w.Spec.HealthChecker.TimeoutSeconds == nil {
-		w.Spec.HealthChecker.TimeoutSeconds = pointer.Int32(10)
+		w.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
 	}
 	if w.Spec.HealthChecker.FailureThreshold == nil {
-		w.Spec.HealthChecker.FailureThreshold = pointer.Int32(3)
+		w.Spec.HealthChecker.FailureThreshold = pointer.Int32P(3)
 	}
 }
 
@@ -153,4 +161,96 @@ func (w *Weaviate) GetAuthSecretName() string {
 
 func (m *Weaviate) DefaultUserCredSecretName() string {
 	return meta_util.NameWithSuffix(m.OffshootName(), "auth")
+}
+
+func (w *Weaviate) Finalizer() string {
+	return fmt.Sprintf("%s/%s", apis.Finalizer, w.ResourceSingular())
+}
+
+func (w *Weaviate) SetDefaults(kc client.Client) {
+	if w.Spec.Replicas == nil {
+		w.Spec.Replicas = pointer.Int32P(1)
+	}
+
+	if w.Spec.DeletionPolicy == "" {
+		w.Spec.DeletionPolicy = DeletionPolicyDelete
+	}
+
+	if w.Spec.StorageType == "" {
+		w.Spec.StorageType = StorageTypeDurable
+	}
+
+	var wvVersion catalog.WeaviateVersion
+	err := kc.Get(context.TODO(), types.NamespacedName{
+		Name: w.Spec.Version,
+	}, &wvVersion)
+	if err != nil {
+		klog.Errorf("can't get the weaviate version object %s for %s \n", err.Error(), w.Spec.Version)
+		return
+	}
+
+	w.setDefaultContainerSecurityContext(&wvVersion, &w.Spec.PodTemplate)
+
+	dbContainer := coreutil.GetContainerByName(w.Spec.PodTemplate.Spec.Containers, kubedb.WeaviateContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
+	}
+
+	w.SetHealthCheckerDefaults()
+}
+
+func (w *Weaviate) setDefaultContainerSecurityContext(wvVersion *catalog.WeaviateVersion, podTemplate *ofst.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	if podTemplate.Spec.SecurityContext == nil {
+		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
+	}
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = wvVersion.Spec.SecurityContext.RunAsUser
+	}
+
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.WeaviateContainerName)
+	if container == nil {
+		container = &core.Container{
+			Name: kubedb.WeaviateContainerName,
+		}
+		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
+	}
+	if container.SecurityContext == nil {
+		container.SecurityContext = &core.SecurityContext{}
+	}
+	w.assignDefaultContainerSecurityContext(wvVersion, container.SecurityContext)
+}
+
+func (w *Weaviate) assignDefaultContainerSecurityContext(wvVersion *catalog.WeaviateVersion, rc *core.SecurityContext) {
+	if rc.AllowPrivilegeEscalation == nil {
+		rc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if rc.Capabilities == nil {
+		rc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+	if rc.RunAsNonRoot == nil {
+		rc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if rc.RunAsUser == nil {
+		rc.RunAsUser = wvVersion.Spec.SecurityContext.RunAsUser
+	}
+	if rc.SeccompProfile == nil {
+		rc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (w *Weaviate) ServiceAccountName() string {
+	return w.OffshootName()
+}
+
+func (w *Weaviate) DefaultPodRoleName() string {
+	return meta_util.NameWithSuffix(w.OffshootName(), "role")
+}
+
+func (w *Weaviate) DefaultPodRoleBindingName() string {
+	return meta_util.NameWithSuffix(w.OffshootName(), "rolebinding")
 }
