@@ -23,7 +23,6 @@ import (
 	"kubedb.dev/apimachinery/apis"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
@@ -58,7 +57,7 @@ func (d *DB2) ServiceName() string {
 }
 
 func (d *DB2) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
-	svcTemplate := dbapi.GetServiceTemplate(d.Spec.ServiceTemplates, dbapi.ServiceAlias(alias))
+	svcTemplate := GetServiceTemplate(d.Spec.ServiceTemplates, ServiceAlias(alias))
 	return d.offshootLabels(metautil.OverwriteKeys(d.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 

@@ -22,8 +22,6 @@ limitations under the License.
 package v1alpha2
 
 import (
-	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
-
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -959,7 +957,7 @@ func (in *DB2Spec) DeepCopyInto(out *DB2Spec) {
 	}
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
-		*out = new(kubedbv1.SecretReference)
+		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.PodTemplate != nil {
@@ -969,7 +967,7 @@ func (in *DB2Spec) DeepCopyInto(out *DB2Spec) {
 	}
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates
-		*out = make([]kubedbv1.NamedServiceTemplateSpec, len(*in))
+		*out = make([]NamedServiceTemplateSpec, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}

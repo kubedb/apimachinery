@@ -3200,6 +3200,8 @@ spec:
                       - primary
                       - standby
                       - stats
+                      - dashboard
+                      - secondary
                       type: string
                     metadata:
                       properties:
