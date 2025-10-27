@@ -56,6 +56,9 @@ type WeaviateVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
+	// SecurityContext is for the additional config for the DB container
+	// +optional
+	SecurityContext SecurityContext `json:"securityContext"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
 }
