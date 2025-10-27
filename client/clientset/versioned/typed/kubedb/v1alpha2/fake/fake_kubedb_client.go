@@ -37,6 +37,10 @@ func (c *FakeKubedbV1alpha2) ClickHouses(namespace string) v1alpha2.ClickHouseIn
 	return &FakeClickHouses{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) DB2s(namespace string) v1alpha2.DB2Interface {
+	return &FakeDB2s{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Druids(namespace string) v1alpha2.DruidInterface {
 	return &FakeDruids{c, namespace}
 }

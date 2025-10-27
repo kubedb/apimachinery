@@ -32,12 +32,37 @@ const (
 	ResourcePluralDB2   = "db2s"
 )
 
+// DB2 is the Schema for the db2s API.
+
+// +genclient
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:path=db2s,singular=db2,shortName=db2,categories={datastore,kubedb,appscode,all}
+// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
+// +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
+// +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+type DB2 struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   DB2Spec   `json:"spec,omitempty"`
+	Status DB2Status `json:"status,omitempty"`
+}
+
 // DB2Spec defines the desired state of DB2.
 type DB2Spec struct {
+	// Version of DB2 to be deployed.
 	Version string `json:"version,omitempty"`
 
+	// Number of instances to deploy for a DB2 database.
+	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
+	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
 
 	// Storage to specify how storage shall be used.
@@ -81,18 +106,11 @@ type DB2Status struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// DB2 is the Schema for the db2s API.
-type DB2 struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   DB2Spec   `json:"spec,omitempty"`
-	Status DB2Status `json:"status,omitempty"`
-}
-
 // +kubebuilder:object:root=true
 
 // DB2List contains a list of DB2.
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type DB2List struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

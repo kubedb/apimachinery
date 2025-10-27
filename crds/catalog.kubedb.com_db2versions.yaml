@@ -8,6 +8,10 @@ metadata:
 spec:
   group: catalog.kubedb.com
   names:
+    categories:
+    - catalog
+    - kubedb
+    - appscode
     kind: DB2Version
     listKind: DB2VersionList
     plural: db2versions
@@ -19,9 +23,6 @@ spec:
   - additionalPrinterColumns:
     - jsonPath: .spec.version
       name: Version
-      type: string
-    - jsonPath: .spec.distribution
-      name: Distribution
       type: string
     - jsonPath: .spec.db.image
       name: DB_IMAGE
