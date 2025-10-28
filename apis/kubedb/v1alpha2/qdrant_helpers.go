@@ -201,7 +201,7 @@ func (q *Qdrant) SetHealthCheckerDefaults() {
 
 func (q *Qdrant) setDefaultContainerSecurityContext(qdVersion *catalog.QdrantVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
-		return
+		podTemplate = &ofst.PodTemplateSpec{}
 	}
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
@@ -239,6 +239,9 @@ func (q *Qdrant) assignDefaultContainerSecurityContext(qdVersion *catalog.Qdrant
 	}
 	if rc.RunAsUser == nil {
 		rc.RunAsUser = qdVersion.Spec.SecurityContext.RunAsUser
+	}
+	if rc.RunAsGroup == nil {
+		rc.RunAsGroup = qdVersion.Spec.SecurityContext.RunAsUser
 	}
 	if rc.SeccompProfile == nil {
 		rc.SeccompProfile = secomp.DefaultSeccompProfile()

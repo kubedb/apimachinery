@@ -2081,4 +2081,9 @@ const (
 	QdrantConfigKey      = "config.yaml"
 	QdrantAPIKey         = "api-key"
 	QdrantReadOnlyAPIKey = "read-only-api-key"
+	QdrantDataVolName    = "data"
+	QdrantDataDir        = "/qdrant/storage"
+	QdrantConfigVolName  = "qdrant-config"
+	QdrantConfigFileName = "config.yaml"
+	QdrantConfigDir      = "/qdrant/config"
 )
