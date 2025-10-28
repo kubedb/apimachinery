@@ -35,9 +35,9 @@ type RaftInfo struct {
 	IsVoter           bool   `json:"is_voter,omitempty"`
 }
 
-func GetClusterResponse(ctx context.Context, connectionInfo string, apiKey string) (*ClusterResponse, error) {
+func GetClusterResponse(ctx context.Context, connectionInfo string, port string, apiKey string) (*ClusterResponse, error) {
 
-	req, err := http.NewRequestWithContext(ctx, "GET", "http://"+connectionInfo+"/cluster", nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", "http://"+connectionInfo+":"+port+"/cluster", nil)
 	if err != nil {
 		return nil, err
 	}
