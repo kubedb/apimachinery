@@ -4777,6 +4777,7 @@ func (in *WeaviateVersionList) DeepCopyObject() runtime.Object {
 func (in *WeaviateVersionSpec) DeepCopyInto(out *WeaviateVersionSpec) {
 	*out = *in
 	out.DB = in.DB
+	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	if in.UI != nil {
 		in, out := &in.UI, &out.UI
 		*out = make([]ChartInfo, len(*in))
