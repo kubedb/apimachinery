@@ -121,6 +121,26 @@ func (q *Qdrant) GetAuthSecretName() string {
 	return meta_util.NameWithSuffix(q.OffshootName(), "auth")
 }
 
+func (q *Qdrant) GetAPIKey(ctx context.Context, kc client.Client, ) string {
+	var secretName string
+	if q.Spec.AuthSecret != nil {
+		secretName = q.GetAuthSecretName()
+	}
+
+	var secret core.Secret
+	err := kc.Get(ctx, client.ObjectKey{Namespace: q.Namespace, Name: secretName}, &secret)
+	if err != nil {
+		return ""
+	}
+
+	apiKey, ok := secret.Data[kubedb.QdrantAPIKey]
+	if !ok {
+		return ""
+	}
+
+	return string(apiKey)
+}
+
 func (q *Qdrant) ConfigSecretName() string {
 	return meta_util.NameWithSuffix(q.OffshootName(), "config")
 }
