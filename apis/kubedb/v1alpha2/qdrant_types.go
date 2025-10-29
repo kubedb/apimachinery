@@ -69,7 +69,7 @@ type QdrantSpec struct {
 
 	// Qdrant cluster mode
 	// +optional
-	Mode *QdrantMode `json:"mode,omitempty"`
+	Mode QdrantMode `json:"mode,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
