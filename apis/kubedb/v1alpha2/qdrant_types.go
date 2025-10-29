@@ -31,11 +31,11 @@ const (
 )
 
 // +kubebuilder:validation:Enum=Standalone;Distributed
-type QdrantClusterMode string
+type QdrantMode string
 
 const (
-	QdrantClusterModeStandalone  QdrantClusterMode = "Standalone"
-	QdrantClusterModeDistributed QdrantClusterMode = "Distributed"
+	QdrantStandalone  QdrantMode = "Standalone"
+	QdrantDistributed QdrantMode = "Distributed"
 )
 
 // Qdrant is the Schema for the Qdrant API
@@ -70,7 +70,7 @@ type QdrantSpec struct {
 
 	// Qdrant cluster mode
 	// +optional
-	Mode *QdrantClusterMode `json:"mode,omitempty"`
+	Mode *QdrantMode `json:"mode,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -94,7 +94,7 @@ type QdrantSpec struct {
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
