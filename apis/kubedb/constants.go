@@ -1557,6 +1557,7 @@ const (
 	WeaviatePrometheusPlugin           = "weaviate_prometheus"
 	WeaviateLoopBackUserKey            = "loopback_users"
 	WeaviateLoopBackUserVal            = "none"
+	WeaviateAPIKey                     = "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
 )
 
 // =========================== FerretDB Constants ============================
