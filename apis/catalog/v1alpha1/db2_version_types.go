@@ -53,6 +53,9 @@ type DB2VersionSpec struct {
 	Version string `json:"version"`
 	// Database Image
 	DB DB2VersionDatabase `json:"db"`
+	// Coordinator Image
+	// +optional
+	Coordinator DB2Coordinator `json:"coordinator,omitempty"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
@@ -70,6 +73,9 @@ type DB2VersionSpec struct {
 
 // DB2VersionDatabase is the DB2 Database image
 type DB2VersionDatabase struct {
+	Image string `json:"image"`
+}
+type DB2Coordinator struct {
 	Image string `json:"image"`
 }
 
