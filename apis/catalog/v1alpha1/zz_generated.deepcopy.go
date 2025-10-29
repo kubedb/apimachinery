@@ -3705,6 +3705,7 @@ func (in *QdrantVersionSpec) DeepCopyInto(out *QdrantVersionSpec) {
 	*out = *in
 	out.DB = in.DB
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	if in.UI != nil {
 		in, out := &in.UI, &out.UI
 		*out = make([]ChartInfo, len(*in))

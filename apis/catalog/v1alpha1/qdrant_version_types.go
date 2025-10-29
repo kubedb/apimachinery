@@ -59,6 +59,8 @@ type QdrantVersionSpec struct {
 	// SecurityContext is for the additional config for the DB container
 	// +optional
 	SecurityContext QdrantSecurityContext `json:"securityContext"`
+	// update constraints
+	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
 }

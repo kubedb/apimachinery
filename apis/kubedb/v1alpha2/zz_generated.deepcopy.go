@@ -5468,6 +5468,11 @@ func (in *QdrantSpec) DeepCopyInto(out *QdrantSpec) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.Mode != nil {
+		in, out := &in.Mode, &out.Mode
+		*out = new(QdrantMode)
+		**out = **in
+	}
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
 		*out = new(corev1.PersistentVolumeClaimSpec)
@@ -5483,7 +5488,11 @@ func (in *QdrantSpec) DeepCopyInto(out *QdrantSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
-	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
+	if in.PodTemplate != nil {
+		in, out := &in.PodTemplate, &out.PodTemplate
+		*out = new(v2.PodTemplateSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates
 		*out = make([]NamedServiceTemplateSpec, len(*in))
