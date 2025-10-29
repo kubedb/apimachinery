@@ -2071,19 +2071,23 @@ const (
 
 // =========================== Qdrant Constants ============================
 const (
-	QdrantContainerName  = "qdrant"
-	QdrantHTTPPortName   = "http"
-	QdrantHTTPPort       = 6333
-	QdrantGRPCPortName   = "grpc"
-	QdrantGRPCPort       = 6334
-	QdrantP2PPortName    = "p2p"
-	QdrantP2PPort        = 6335
+	QdrantContainerName = "qdrant"
+
+	QdrantHTTPPortName = "http"
+	QdrantHTTPPort     = 6333
+	QdrantGRPCPortName = "grpc"
+	QdrantGRPCPort     = 6334
+	QdrantP2PPortName  = "p2p"
+	QdrantP2PPort      = 6335
+
+	QdrantDataVolName   = "data"
+	QdrantDataDir       = "/qdrant/storage"
+	QdrantConfigVolName = "qdrant-config"
+	QdrantConfigDir     = "/qdrant/config"
+
 	QdrantConfigKey      = "config.yaml"
+	QdrantConfigFileName = "config.yaml"
+
 	QdrantAPIKey         = "api-key"
 	QdrantReadOnlyAPIKey = "read-only-api-key"
-	QdrantDataVolName    = "data"
-	QdrantDataDir        = "/qdrant/storage"
-	QdrantConfigVolName  = "qdrant-config"
-	QdrantConfigFileName = "config.yaml"
-	QdrantConfigDir      = "/qdrant/config"
 )

@@ -35,9 +35,9 @@ type RaftInfo struct {
 	IsVoter           bool   `json:"is_voter,omitempty"`
 }
 
-func GetClusterResponse(ctx context.Context, connectionInfo string, port string, apiKey string) (*ClusterResponse, error) {
+func GetClusterResponse(ctx context.Context, address string, apiKey string) (*ClusterResponse, error) {
 
-	req, err := http.NewRequestWithContext(ctx, "GET", "http://"+connectionInfo+":"+port+"/cluster", nil)
+	req, err := http.NewRequestWithContext(ctx, "GET", "http://"+address+"/cluster", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ func GetClusterResponse(ctx context.Context, connectionInfo string, port string,
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
-		return nil, fmt.Errorf("bad status %d from %s (try checking API key or headers)", res.StatusCode, connectionInfo)
+		return nil, fmt.Errorf("bad status %d from %s (try checking API key or headers)", res.StatusCode, address)
 	}
 
 	var cr ClusterResponse
@@ -71,16 +71,16 @@ func GetClusterResponse(ctx context.Context, connectionInfo string, port string,
 	return &cr, nil
 }
 
-func GetClusterStatus(ctx context.Context, connectionInfo string, apiKey string) (string, error) {
-	cr, err := GetClusterResponse(ctx, connectionInfo, apiKey)
+func GetClusterStatus(ctx context.Context, address string, apiKey string) (string, error) {
+	cr, err := GetClusterResponse(ctx, address, apiKey)
 	if err != nil {
 		return "", err
 	}
 	return cr.Result.Status, nil
 }
 
-func GetReplicaCount(ctx context.Context, connectionInfo string, apiKey string) (int, error) {
-	cr, err := GetClusterResponse(ctx, connectionInfo, apiKey)
+func GetReplicaCount(ctx context.Context, address string, apiKey string) (int, error) {
+	cr, err := GetClusterResponse(ctx, address, apiKey)
 	if err != nil {
 		return 0, err
 	}
