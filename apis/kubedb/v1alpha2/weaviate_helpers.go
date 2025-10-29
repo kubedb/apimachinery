@@ -256,3 +256,23 @@ func (w *Weaviate) DefaultPodRoleName() string {
 func (w *Weaviate) DefaultPodRoleBindingName() string {
 	return meta_util.NameWithSuffix(w.OffshootName(), "rolebinding")
 }
+
+func (w *Weaviate) GetAPIKey(ctx context.Context, kc client.Client) string {
+	var secretName string
+	if w.Spec.AuthSecret != nil {
+		secretName = w.GetAuthSecretName()
+	}
+
+	var secret core.Secret
+	err := kc.Get(ctx, client.ObjectKey{Namespace: w.Namespace, Name: secretName}, &secret)
+	if err != nil {
+		return ""
+	}
+
+	apiKey, ok := secret.Data[kubedb.WeaviateAPIKey]
+	if !ok {
+		return ""
+	}
+
+	return string(apiKey)
+}
