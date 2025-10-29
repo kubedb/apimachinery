@@ -52,7 +52,6 @@ type RaftInfo struct {
 }
 
 func GetClusterResponse(ctx context.Context, address string, apiKey string) (*ClusterResponse, error) {
-
 	req, err := http.NewRequestWithContext(ctx, "GET", "http://"+address+"/cluster", nil)
 	if err != nil {
 		return nil, err

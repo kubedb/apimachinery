@@ -5468,11 +5468,6 @@ func (in *QdrantSpec) DeepCopyInto(out *QdrantSpec) {
 		*out = new(int32)
 		**out = **in
 	}
-	if in.Mode != nil {
-		in, out := &in.Mode, &out.Mode
-		*out = new(QdrantMode)
-		**out = **in
-	}
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
 		*out = new(corev1.PersistentVolumeClaimSpec)
