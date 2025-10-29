@@ -47,7 +47,6 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=qdrants,singular=qdrant,shortName=qd,categories={datastore,kubedb,appscode,all}
-// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
@@ -64,13 +63,13 @@ type QdrantSpec struct {
 	// Version of Qdrant to be deployed.
 	Version string `json:"version"`
 
-	// Number of instances to deploy for an Qdrant database.
+	// Number of instances to deploy for a Qdrant database.
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// Qdrant cluster mode
 	// +optional
-	Mode *QdrantMode `json:"mode,omitempty"`
+	Mode QdrantMode `json:"mode,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`

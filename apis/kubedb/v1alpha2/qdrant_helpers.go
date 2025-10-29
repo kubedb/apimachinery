@@ -181,8 +181,8 @@ func (q *Qdrant) SetDefaults(kc client.Client) {
 		q.Spec.Replicas = pointer.Int32P(1)
 	}
 
-	if q.Spec.Mode == nil {
-		*q.Spec.Mode = QdrantStandalone
+	if q.Spec.Mode == "" {
+		q.Spec.Mode = QdrantStandalone
 	}
 
 	if q.Spec.DeletionPolicy == "" {
