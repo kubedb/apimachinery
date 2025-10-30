@@ -16,7 +16,7 @@ spec:
     listKind: HanaDBVersionList
     plural: hanadbversions
     shortNames:
-    - hanaversion
+    - hdbversion
     singular: hanadbversion
   scope: Cluster
   versions:
@@ -56,6 +56,9 @@ spec:
                 type: boolean
               securityContext:
                 properties:
+                  runAsGroup:
+                    format: int64
+                    type: integer
                   runAsUser:
                     format: int64
                     type: integer

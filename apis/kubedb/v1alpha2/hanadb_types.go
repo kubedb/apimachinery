@@ -71,7 +71,7 @@ type HanaDBSpec struct {
 	// Version of HanaDB to be deployed.
 	Version string `json:"version"`
 
-	// Number of instances to deploy for a HanaDB database. In case of MSSQLServer Availability Group
+	// Number of instances to deploy for a HanaDB database
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// Topology configures the deployment topology (e.g. standalone or system replication).

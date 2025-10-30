@@ -55,7 +55,7 @@ type HanaDBVersionSpec struct {
 	Deprecated bool `json:"deprecated,omitempty"`
 	// SecurityContext is for the additional config for the DB container
 	// +optional
-	SecurityContext SecurityContext `json:"securityContext"`
+	SecurityContext HanaDBSecurityContext `json:"securityContext"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
 	// update constraints

@@ -30328,7 +30328,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSpec(ref common.ReferenceCal
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a HanaDB database. In case of MSSQLServer Availability Group",
+							Description: "Number of instances to deploy for a HanaDB database",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -30459,7 +30459,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTopology(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Mode specifies the deployment mode. - \"standalone\": Single node (default if Topology is nil).",
+							Description: "Mode specifies the deployment mode.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
