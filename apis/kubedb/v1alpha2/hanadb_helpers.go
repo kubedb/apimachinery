@@ -24,21 +24,24 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
 	"k8s.io/utils/ptr"
 	"kmodules.xyz/client-go/apiextensions"
+	coreutil "kmodules.xyz/client-go/core/v1"
 	metautil "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
 	_ "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	ofstutil "kmodules.xyz/offshoot-api/util"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	_ "sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -47,130 +50,99 @@ func (_ HanaDB) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralHanaDB))
 }
 
-func (o *HanaDB) ResourceKind() string {
+func (h *HanaDB) ResourceKind() string {
 	return ResourceKindHanaDB
 }
 
-func (o *HanaDB) ResourcePlural() string {
+func (h *HanaDB) ResourcePlural() string {
 	return ResourcePluralHanaDB
 }
 
-func (o *HanaDB) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", o.ResourcePlural(), SchemeGroupVersion.Group)
+func (h *HanaDB) ResourceFQN() string {
+	return fmt.Sprintf("%s.%s", h.ResourcePlural(), SchemeGroupVersion.Group)
 }
 
-func (o *HanaDB) ResourceShortCode() string {
+func (h *HanaDB) ResourceShortCode() string {
 	return ResourceCodeHanaDB
 }
 
-func (o *HanaDB) OffshootName() string {
-	return o.Name
+func (h *HanaDB) OffshootName() string {
+	return h.Name
 }
 
-func (o *HanaDB) ServiceName() string {
-	return o.OffshootName()
+func (h *HanaDB) ServiceName() string {
+	return h.OffshootName()
 }
 
-func (o *HanaDB) ObserverServiceName() string {
-	return o.OffshootName() + kubedb.OracleDatabaseRoleObserver
+func (h *HanaDB) GoverningServiceName() string {
+	return metautil.NameWithSuffix(h.ServiceName(), "pods")
 }
 
-func (o *HanaDB) GoverningServiceName() string {
-	return metautil.NameWithSuffix(o.ServiceName(), "pods")
-}
-
-func (o *HanaDB) StandbyServiceName() string {
-	return metautil.NameWithPrefix(o.ServiceName(), kubedb.OracleStandbyServiceSuffix)
-}
-
-func (o *HanaDB) offshootLabels(selector, override map[string]string) map[string]string {
+func (h *HanaDB) offshootLabels(selector, override map[string]string) map[string]string {
 	selector[metautil.ComponentLabelKey] = kubedb.ComponentDatabase
-	return metautil.FilterKeys(SchemeGroupVersion.Group, selector, metautil.OverwriteKeys(nil, o.Labels, override))
+	return metautil.FilterKeys(SchemeGroupVersion.Group, selector, metautil.OverwriteKeys(nil, h.Labels, override))
 }
 
-func (o *HanaDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
-	svcTemplate := GetServiceTemplate(o.Spec.ServiceTemplates, alias)
-	return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+func (h *HanaDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(h.Spec.ServiceTemplates, alias)
+	return h.offshootLabels(metautil.OverwriteKeys(h.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
-func (o *HanaDB) OffshootLabels() map[string]string {
-	return o.offshootLabels(o.OffshootSelectors(), nil)
+func (h *HanaDB) OffshootLabels() map[string]string {
+	return h.offshootLabels(h.OffshootSelectors(), nil)
 }
 
-func (o *HanaDB) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
+func (h *HanaDB) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
-		metautil.NameLabelKey:      o.ResourceFQN(),
-		metautil.InstanceLabelKey:  o.Name,
+		metautil.NameLabelKey:      h.ResourceFQN(),
+		metautil.InstanceLabelKey:  h.Name,
 		metautil.ManagedByLabelKey: SchemeGroupVersion.Group,
 	}
 	return metautil.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (o *HanaDB) OffshootPodSelectors(extraSelectors ...map[string]string) map[string]string {
+func (h *HanaDB) OffshootPodSelectors(extraSelectors ...map[string]string) map[string]string {
 	selector := map[string]string{
-		metautil.NameLabelKey:        o.ResourceFQN(),
-		metautil.InstanceLabelKey:    o.Name,
-		metautil.ManagedByLabelKey:   SchemeGroupVersion.Group,
-		kubedb.OracleDatabaseRoleKey: kubedb.OracleDatabaseRoleInstance,
+		metautil.NameLabelKey:      h.ResourceFQN(),
+		metautil.InstanceLabelKey:  h.Name,
+		metautil.ManagedByLabelKey: SchemeGroupVersion.Group,
 	}
 	return metautil.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (o *HanaDB) ObserverSelectors(extraSelectors ...map[string]string) map[string]string {
-	selector := o.OffshootSelectors()
-	selector[kubedb.OracleDatabaseRoleKey] = kubedb.OracleDatabaseRoleObserver
-	return metautil.OverwriteKeys(selector, extraSelectors...)
-}
-
-func (o *HanaDB) PodControllerLabels(podTemplate *ofst.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
+func (h *HanaDB) PodControllerLabels(podTemplate *ofst.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
 	if podTemplate != nil && podTemplate.Controller.Labels != nil {
-		return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), podTemplate.Controller.Labels)
+		return h.offshootLabels(metautil.OverwriteKeys(h.OffshootSelectors(), extraLabels...), podTemplate.Controller.Labels)
 	}
-	return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), nil)
+	return h.offshootLabels(metautil.OverwriteKeys(h.OffshootSelectors(), extraLabels...), nil)
 }
 
-func (o *HanaDB) ObserverPodControllerLabels(podTemplate *ofst.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
-	if podTemplate != nil && podTemplate.Controller.Labels != nil {
-		return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), podTemplate.Controller.Labels)
-	}
-	labels := o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), nil)
-	labels[kubedb.OracleDatabaseRoleKey] = kubedb.OracleDatabaseRoleObserver
-	return labels
-}
-
-func (o *HanaDB) PodLabels(podTemplate *ofst.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
+func (h *HanaDB) PodLabels(podTemplate *ofst.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
 	if podTemplate != nil && podTemplate.Labels != nil {
-		return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), podTemplate.Labels)
+		return h.offshootLabels(metautil.OverwriteKeys(h.OffshootSelectors(), extraLabels...), podTemplate.Labels)
 	}
-	return o.offshootLabels(metautil.OverwriteKeys(o.OffshootSelectors(), extraLabels...), nil)
+	return h.offshootLabels(metautil.OverwriteKeys(h.OffshootSelectors(), extraLabels...), nil)
 }
 
-func (o *HanaDB) ObserverPodLabels(podTemplate *ofst.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
-	labels := make(map[string]string)
-	labels[kubedb.OracleDatabaseRoleKey] = kubedb.OracleDatabaseRoleObserver
-	extraLabels = append(extraLabels, labels)
-	return o.PodLabels(podTemplate, extraLabels...)
-}
-
-func (o *HanaDB) ServiceAccountName() string {
-	return o.OffshootName()
+func (h *HanaDB) ServiceAccountName() string {
+	return h.OffshootName()
 }
 
 // Owner returns owner reference to resources
-func (o *HanaDB) Owner() *metav1.OwnerReference {
-	return metav1.NewControllerRef(o, SchemeGroupVersion.WithKind(o.ResourceKind()))
+func (h *HanaDB) Owner() *metav1.OwnerReference {
+	return metav1.NewControllerRef(h, SchemeGroupVersion.WithKind(h.ResourceKind()))
 }
 
-func (o *HanaDB) GetAuthSecretName() string {
-	if o.Spec.AuthSecret != nil && o.Spec.AuthSecret.Name != "" {
-		return o.Spec.AuthSecret.Name
+func (h *HanaDB) GetAuthSecretName() string {
+	if h.Spec.AuthSecret != nil && h.Spec.AuthSecret.Name != "" {
+		return h.Spec.AuthSecret.Name
 	}
-	return metautil.NameWithSuffix(o.OffshootName(), "auth")
+	return metautil.NameWithSuffix(h.OffshootName(), "auth")
 }
 
-func (o *HanaDB) GetPersistentSecrets() []string {
+func (h *HanaDB) GetPersistentSecrets() []string {
 	var secrets []string
-	secrets = append(secrets, o.GetAuthSecretName())
+	secrets = append(secrets, h.GetAuthSecretName())
 	return secrets
 }
 
@@ -178,12 +150,12 @@ func (m *HanaDB) GetNameSpacedName() string {
 	return m.Namespace + "/" + m.Name
 }
 
-func (o *HanaDB) DefaultPodRoleName() string {
-	return metautil.NameWithSuffix(o.OffshootName(), "role")
+func (h *HanaDB) DefaultPodRoleName() string {
+	return metautil.NameWithSuffix(h.OffshootName(), "role")
 }
 
-func (o *HanaDB) DefaultPodRoleBindingName() string {
-	return metautil.NameWithSuffix(o.OffshootName(), "rolebinding")
+func (h *HanaDB) DefaultPodRoleBindingName() string {
+	return metautil.NameWithSuffix(h.OffshootName(), "rolebinding")
 }
 
 func (r *HanaDB) Finalizer() string {
@@ -226,8 +198,8 @@ func (os hanadbStatsService) Scheme() string {
 	return ""
 }
 
-func (o *HanaDB) StatsService() mona.StatsAccessor {
-	return &hanadbStatsService{o}
+func (h *HanaDB) StatsService() mona.StatsAccessor {
+	return &hanadbStatsService{h}
 }
 
 type hanadbApp struct {
@@ -242,42 +214,39 @@ func (r hanadbApp) Type() appcat.AppType {
 	return appcat.AppType(fmt.Sprintf("%s/%s", SchemeGroupVersion.Group, ResourceSingularHanaDB))
 }
 
-func (o HanaDB) AppBindingMeta() appcat.AppBindingMeta {
-	return &hanadbApp{&o}
+func (h HanaDB) AppBindingMeta() appcat.AppBindingMeta {
+	return &hanadbApp{&h}
 }
 
-func (o *HanaDB) StatsServiceLabels() map[string]string {
-	return o.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
+func (h *HanaDB) StatsServiceLabels() map[string]string {
+	return h.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
-func (o *HanaDB) PetSetName() string {
-	return o.OffshootName()
+func (h *HanaDB) PetSetName() string {
+	return h.OffshootName()
 }
 
-func (o *HanaDB) ObserverPetSetName() string {
-	return fmt.Sprintf("%s-observer", o.PetSetName())
+func (h *HanaDB) ObserverPetSetName() string {
+	return fmt.Sprintf("%s-observer", h.PetSetName())
 }
 
-func (o *HanaDB) ConfigSecretName() string {
-	return metautil.NameWithSuffix(o.OffshootName(), "config")
+func (h *HanaDB) ConfigSecretName() string {
+	return metautil.NameWithSuffix(h.OffshootName(), "config")
 }
 
-func (o *HanaDB) IsStandalone() bool {
-	if o.Spec.Topology == nil || o.Spec.Topology.Mode == "" {
-		return true
+func (m *HanaDB) IsStandalone() bool {
+	return m.Spec.Topology == nil
+}
+
+func (h *HanaDB) SetHealthCheckerDefaults() {
+	if h.Spec.HealthChecker.PeriodSeconds == nil {
+		h.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
 	}
-	return o.Spec.Topology.Mode == "standalone"
-}
-
-func (o *HanaDB) SetHealthCheckerDefaults() {
-	if o.Spec.HealthChecker.PeriodSeconds == nil {
-		o.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
+	if h.Spec.HealthChecker.TimeoutSeconds == nil {
+		h.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
 	}
-	if o.Spec.HealthChecker.TimeoutSeconds == nil {
-		o.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
-	}
-	if o.Spec.HealthChecker.FailureThreshold == nil {
-		o.Spec.HealthChecker.FailureThreshold = pointer.Int32P(3)
+	if h.Spec.HealthChecker.FailureThreshold == nil {
+		h.Spec.HealthChecker.FailureThreshold = pointer.Int32P(3)
 	}
 }
 
@@ -306,89 +275,82 @@ func (h *HanaDB) SetDefaults(kc client.Client) {
 	}
 
 	if h.IsStandalone() {
-		if h.Spec.Replicas == nil || ptr.Deref(h.Spec.Replicas, 1) != 1 {
+		if h.Spec.Replicas == nil {
 			h.Spec.Replicas = pointer.Int32P(1)
+		} else if ptr.Deref(h.Spec.Replicas, 1) != 1 {
+			klog.Errorf("")
+			return
 		}
 	}
 
-	h.setDefaultPodSecurityContext(&hanadbVersion, h.Spec.PodTemplate)
+	h.setDefaultContainerSecurityContext(&hanadbVersion, h.Spec.PodTemplate)
 	h.SetHealthCheckerDefaults()
 }
 
-func (o *HanaDB) setDefaultPodSecurityContext(hanadbVersion *catalog.HanaDBVersion, podTemplate *ofst.PodTemplateSpec) {
+func (m *HanaDB) setDefaultContainerSecurityContext(hanadbVersion *catalog.HanaDBVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
-
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = hanadbVersion.Spec.SecurityContext.RunAsUser
 	}
-	if podTemplate.Spec.SecurityContext.RunAsUser == nil {
-		podTemplate.Spec.SecurityContext.RunAsUser = hanadbVersion.Spec.SecurityContext.RunAsUser
-	}
-	if podTemplate.Spec.SecurityContext.RunAsGroup == nil {
-		podTemplate.Spec.SecurityContext.RunAsGroup = hanadbVersion.Spec.SecurityContext.RunAsUser
-	}
-}
 
-func (o *HanaDB) SetInitContainerDefaults(podTemplate *ofst.PodTemplateSpec, hanadbVersion *catalog.HanaDBVersion) {
-	if podTemplate == nil {
-		return
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.MSSQLContainerName)
+	if container == nil {
+		container = &core.Container{
+			Name: kubedb.MSSQLContainerName,
+		}
 	}
-	container := ofstutil.EnsureInitContainerExists(podTemplate, kubedb.OracleInitContainerName)
-	o.setContainerDefaultSecurityContext(container, hanadbVersion)
-	o.setContainerDefaultResources(container, *kubedb.DefaultInitContainerResource.DeepCopy())
-}
-
-func (o *HanaDB) SetObserverInitContainerDefaults(podTemplate *ofst.PodTemplateSpec, hanadbVersion *catalog.HanaDBVersion) {
-	if podTemplate == nil {
-		return
-	}
-	container := ofstutil.EnsureInitContainerExists(podTemplate, kubedb.OracleObserverInitContainerName)
-	o.setContainerDefaultSecurityContext(container, hanadbVersion)
-	o.setContainerDefaultResources(container, *kubedb.DefaultInitContainerResource.DeepCopy())
-}
-
-func (o *HanaDB) SetHanaDBContainerDefaults(podTemplate *ofst.PodTemplateSpec, hanadbVersion *catalog.HanaDBVersion) {
-	if podTemplate == nil {
-		return
-	}
-	container := ofstutil.EnsureContainerExists(podTemplate, kubedb.OracleContainerName)
-	o.setContainerDefaultSecurityContext(container, hanadbVersion)
-	o.setContainerDefaultResources(container, *kubedb.DefaultResourcesCoreAndMemoryIntensiveOracle.DeepCopy())
-}
-
-func (o *HanaDB) SetHanaDBObserverContainerDefaults(podTemplate *ofst.PodTemplateSpec, hanadbVersion *catalog.HanaDBVersion) {
-	if podTemplate == nil {
-		return
-	}
-	container := ofstutil.EnsureContainerExists(podTemplate, kubedb.OracleObserverContainerName)
-	o.setContainerDefaultSecurityContext(container, hanadbVersion)
-	o.setContainerDefaultResources(container, *kubedb.DefaultResourcesCoreAndMemoryIntensiveOracleObserver.DeepCopy())
-}
-
-func (o *HanaDB) SetCoordinatorContainerDefaults(podTemplate *ofst.PodTemplateSpec, hanadbVersion *catalog.HanaDBVersion) {
-	if podTemplate == nil {
-		return
-	}
-	container := ofstutil.EnsureContainerExists(podTemplate, kubedb.OracleCoordinatorContainerName)
-	o.setContainerDefaultSecurityContext(container, hanadbVersion)
-	o.setContainerDefaultResources(container, *kubedb.CoordinatorDefaultResources.DeepCopy())
-}
-
-func (o *HanaDB) setContainerDefaultSecurityContext(container *core.Container, _ *catalog.HanaDBVersion) {
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
-	// TODO: Check what part of security context make hanadb fail to run
-	// o.assignDefaultContainerSecurityContext(container.SecurityContext, hanadbVersion)
+
+	m.assignDefaultContainerSecurityContext(hanadbVersion, container.SecurityContext, true)
+
+	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
-func (o *HanaDB) setContainerDefaultResources(container *core.Container, defaultResources core.ResourceRequirements) {
-	if container.Resources.Requests == nil && container.Resources.Limits == nil {
-		apis.SetDefaultResourceLimits(&container.Resources, defaultResources)
+func (m *HanaDB) assignDefaultContainerSecurityContext(hanadbVersion *catalog.HanaDBVersion, sc *core.SecurityContext, isMainContainer bool) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
+	if sc.Capabilities == nil {
+		if isMainContainer {
+			sc.Capabilities = &core.Capabilities{
+				Drop: []core.Capability{"ALL"},
+			}
+		} else {
+			sc.Capabilities = &core.Capabilities{
+				Drop: []core.Capability{"ALL"},
+			}
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = hanadbVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.RunAsGroup == nil {
+		sc.RunAsGroup = hanadbVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (m *HanaDB) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
+	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.MSSQLContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesHanaDB)
+	}
+}
+
+func (m *HanaDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+	// Desire number of petSets
+	expectedItems := 1
+	return checkReplicasOfPetSet(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
 }

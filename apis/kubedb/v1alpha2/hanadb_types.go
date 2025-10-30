@@ -30,6 +30,14 @@ const (
 	ResourcePluralHanaDB   = "hanadbs"
 )
 
+// +kubebuilder:validation:Enum=AvailabilityGroup;DistributedAG
+type HanaDBMode string
+
+const (
+	HanaDBModeAvailabilityGroup HanaDBMode = "AvailabilityGroup"
+	HanaDBModeDistributedAG     HanaDBMode = "DistributedAG"
+)
+
 // HanaDB is the Schema for the hanadbs API
 
 // +genclient
@@ -39,7 +47,6 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=hanadbs,singular=hanadb,shortName=hdb,categories={datastore,kubedb,appscode,all}
-// +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
@@ -107,10 +114,8 @@ type HanaDBSpec struct {
 // HanaTopology defines the topology for HanaDB cluster (inspired by SAP HANA scale-out: coordinator for system DB/master, workers for data, standbys for HA).
 type HanaDBTopology struct {
 	// Mode specifies the deployment mode.
-	// - "standalone": Single node (default if Topology is nil).
-	// +kubebuilder:validation:Enum=standalone;
 	// +optional
-	Mode string `json:"mode,omitempty"`
+	Mode *HanaDBMode `json:"mode,omitempty"`
 }
 
 // HanaDBStatus defines the observed state of HanaDB.

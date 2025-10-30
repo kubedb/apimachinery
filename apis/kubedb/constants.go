@@ -1985,6 +1985,17 @@ var (
 			core.ResourceMemory: resource.MustParse("2.5Gi"),
 		},
 	}
+
+	DefaultResourcesHanaDB = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("2"),
+			core.ResourceMemory: resource.MustParse("16Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("4"),
+			core.ResourceMemory: resource.MustParse("32Gi"),
+		},
+	}
 )
 
 func DefaultArbiter(computeOnly bool) core.ResourceRequirements {
@@ -2040,11 +2051,6 @@ const (
 )
 
 const (
-	// AuthActiveFromAnnotation = "auth.kubedb.com/active-from"
-	HanaDBClusterIP = "" // use empty string instead of None
-
-	HanaDBServiceNameForPods = "hana-pods"
-
 	HanaDBVolumeScripts = "hanadb-scripts"
 	HanaDBDataVolume    = "hana-data"
 
@@ -2053,7 +2059,7 @@ const (
 
 	HanaDBDnsPolicy         = "ClusterFirst"
 	HanaDBSubdomain         = "hana-pods"
-	HanaDBContainerName     = "hana"
+	HanaDBContainerName     = "hanadb"
 	HanaDBVolumeSecretsName = "password-secret"
 
 	HanaDBStorageRequest     = "64Gi"
