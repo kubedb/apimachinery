@@ -2061,7 +2061,4 @@ const (
 	HanaDBSubdomain         = "hana-pods"
 	HanaDBContainerName     = "hanadb"
 	HanaDBVolumeSecretsName = "password-secret"
-
-	HanaDBStorageRequest     = "64Gi"
-	HanaDBStorageAccessModes = "ReadWriteOnce"
 )

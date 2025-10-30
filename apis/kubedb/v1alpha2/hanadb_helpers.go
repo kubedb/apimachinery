@@ -24,7 +24,6 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
-	pslister "kubeops.dev/petset/client/listers/apps/v1"
 
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
@@ -33,7 +32,6 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
-	"k8s.io/utils/ptr"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	metautil "kmodules.xyz/client-go/meta"
@@ -42,6 +40,7 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	_ "sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -146,8 +145,8 @@ func (h *HanaDB) GetPersistentSecrets() []string {
 	return secrets
 }
 
-func (m *HanaDB) GetNameSpacedName() string {
-	return m.Namespace + "/" + m.Name
+func (h *HanaDB) GetNameSpacedName() string {
+	return h.Namespace + "/" + h.Name
 }
 
 func (h *HanaDB) DefaultPodRoleName() string {
@@ -234,8 +233,8 @@ func (h *HanaDB) ConfigSecretName() string {
 	return metautil.NameWithSuffix(h.OffshootName(), "config")
 }
 
-func (m *HanaDB) IsStandalone() bool {
-	return m.Spec.Topology == nil
+func (h *HanaDB) IsStandalone() bool {
+	return h.Spec.Topology == nil
 }
 
 func (h *HanaDB) SetHealthCheckerDefaults() {
@@ -277,17 +276,17 @@ func (h *HanaDB) SetDefaults(kc client.Client) {
 	if h.IsStandalone() {
 		if h.Spec.Replicas == nil {
 			h.Spec.Replicas = pointer.Int32P(1)
-		} else if ptr.Deref(h.Spec.Replicas, 1) != 1 {
-			klog.Errorf("")
-			return
 		}
 	}
 
 	h.setDefaultContainerSecurityContext(&hanadbVersion, h.Spec.PodTemplate)
+
 	h.SetHealthCheckerDefaults()
+
+	h.setDefaultContainerResourceLimits(h.Spec.PodTemplate)
 }
 
-func (m *HanaDB) setDefaultContainerSecurityContext(hanadbVersion *catalog.HanaDBVersion, podTemplate *ofst.PodTemplateSpec) {
+func (h *HanaDB) setDefaultContainerSecurityContext(hanadbVersion *catalog.HanaDBVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -298,34 +297,28 @@ func (m *HanaDB) setDefaultContainerSecurityContext(hanadbVersion *catalog.HanaD
 		podTemplate.Spec.SecurityContext.FSGroup = hanadbVersion.Spec.SecurityContext.RunAsUser
 	}
 
-	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.MSSQLContainerName)
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.HanaDBContainerName)
 	if container == nil {
 		container = &core.Container{
-			Name: kubedb.MSSQLContainerName,
+			Name: kubedb.HanaDBContainerName,
 		}
 	}
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
 
-	m.assignDefaultContainerSecurityContext(hanadbVersion, container.SecurityContext, true)
+	h.assignDefaultContainerSecurityContext(hanadbVersion, container.SecurityContext)
 
 	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
-func (m *HanaDB) assignDefaultContainerSecurityContext(hanadbVersion *catalog.HanaDBVersion, sc *core.SecurityContext, isMainContainer bool) {
+func (h *HanaDB) assignDefaultContainerSecurityContext(hanadbVersion *catalog.HanaDBVersion, sc *core.SecurityContext) {
 	if sc.AllowPrivilegeEscalation == nil {
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
 	if sc.Capabilities == nil {
-		if isMainContainer {
-			sc.Capabilities = &core.Capabilities{
-				Drop: []core.Capability{"ALL"},
-			}
-		} else {
-			sc.Capabilities = &core.Capabilities{
-				Drop: []core.Capability{"ALL"},
-			}
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
 		}
 	}
 	if sc.RunAsNonRoot == nil {
@@ -342,15 +335,15 @@ func (m *HanaDB) assignDefaultContainerSecurityContext(hanadbVersion *catalog.Ha
 	}
 }
 
-func (m *HanaDB) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
-	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.MSSQLContainerName)
+func (h *HanaDB) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
+	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.HanaDBContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesHanaDB)
 	}
 }
 
-func (m *HanaDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+func (h *HanaDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
 	// Desire number of petSets
 	expectedItems := 1
-	return checkReplicasOfPetSet(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
+	return checkReplicasOfPetSet(lister.PetSets(h.Namespace), labels.SelectorFromSet(h.OffshootLabels()), expectedItems)
 }
