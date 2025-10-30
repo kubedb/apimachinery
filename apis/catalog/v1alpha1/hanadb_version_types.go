@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	ResourceCodeHanaDBVersion     = "hanaversion"
+	ResourceCodeHanaDBVersion     = "hdbversion"
 	ResourceKindHanaDBVersion     = "HanaDBVersion"
 	ResourceSingularHanaDBVersion = "hanadbversion"
 	ResourcePluralHanaDBVersion   = "hanadbversions"
@@ -50,7 +50,7 @@ type HanaDBVersionSpec struct {
 	// Version
 	Version string `json:"version"`
 	// Database Image
-	DB HanaDBVersionDatabase `json:"db"`
+	DB HanaDatabase `json:"db"`
 	// Deprecated versions usable but considered as obsolete and best avoided typically superseded
 	Deprecated bool `json:"deprecated,omitempty"`
 	// SecurityContext is for the additional config for the DB container
@@ -69,8 +69,7 @@ type HanaDBSecurityContext struct {
 }
 
 // HanaDBVersionDatabase is the HanaDB Database image
-
-type HanaDBVersionDatabase struct {
+type HanaDatabase struct {
 	Image string `json:"image"`
 }
 
