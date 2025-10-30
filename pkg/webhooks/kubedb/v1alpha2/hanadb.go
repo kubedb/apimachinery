@@ -41,7 +41,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// SetupHanaDBWebhookWithManager registers the webhook for Oracle in the manager.
+// SetupHanaDBWebhookWithManager registers the webhook for HanaDB in the manager.
 func SetupHanaDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&api.HanaDB{}).
 		WithValidator(&HanaDBCustomWebhook{mgr.GetClient()}).
@@ -49,7 +49,7 @@ func SetupHanaDBWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-oracle,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=oracles,verbs=create;update,versions=v1alpha2,name=moracle.kb.io,admissionReviewVersions=v1
+//+kubebuilder:webhook:path=/mutate-kubedb-com-v1alpha2-hanadb,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=HanaDBs,verbs=create;update,versions=v1alpha2,name=mHanaDB.kb.io,admissionReviewVersions=v1
 
 // +kubebuilder:object:generate=false
 type HanaDBCustomWebhook struct {
@@ -65,7 +65,7 @@ var hanaLog = logf.Log.WithName("hanadb-resource")
 func (w *HanaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
 	db, ok := obj.(*api.HanaDB)
 	if !ok {
-		return fmt.Errorf("expected a Oracle object, got a %T", obj)
+		return fmt.Errorf("expected a HanaDB object, got a %T", obj)
 	}
 
 	hanaLog.Info("default", "name", db.Name)
@@ -80,7 +80,7 @@ var _ webhook.CustomValidator = &HanaDBCustomWebhook{}
 func (w *HanaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*api.HanaDB)
 	if !ok {
-		return nil, fmt.Errorf("expected a Oracle object, got a %T", obj)
+		return nil, fmt.Errorf("expected a HanaDB object, got a %T", obj)
 	}
 
 	hanaLog.Info("validate create", "name", db.Name)
@@ -96,11 +96,11 @@ func (w *HanaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 func (w *HanaDBCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
 	db, ok := newObj.(*api.HanaDB)
 	if !ok {
-		return nil, fmt.Errorf("expected a Oracle object, got a %T", newObj)
+		return nil, fmt.Errorf("expected a HanaDB object, got a %T", newObj)
 	}
 	olddb, ok := old.(*api.HanaDB)
 	if !ok {
-		return nil, fmt.Errorf("expected a Oracle object, got a %T", old)
+		return nil, fmt.Errorf("expected a HanaDB object, got a %T", old)
 	}
 	if ptr.Deref(olddb.Spec.Replicas, 0) > 1 && ptr.Deref(db.Spec.Replicas, 0) == 1 {
 		return nil, fmt.Errorf("can't scale down to 1 replica")
@@ -119,7 +119,7 @@ func (w *HanaDBCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 func (w *HanaDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	db, ok := obj.(*api.HanaDB)
 	if !ok {
-		return nil, fmt.Errorf("expected a Oracle object, got a %T", obj)
+		return nil, fmt.Errorf("expected a HanaDB object, got a %T", obj)
 	}
 
 	hanaLog.Info("validate delete", "name", db.Name)
@@ -129,7 +129,7 @@ func (w *HanaDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Ob
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			db.Name,
 			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
-		return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: api.ResourceKindOracle}, db.Name, allErr)
+		return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: api.ResourceKindHanaDB}, db.Name, allErr)
 	}
 	return nil, nil
 }
@@ -201,7 +201,7 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 	return allErr
 }
 
-// reserved volume and volumes mounts for oracle
+// reserved volume and volumes mounts for HanaDB
 var hanadbReservedVolumes = []string{
 	kubedb2.HanaDBDataVolume,
 	kubedb2.HanaDBVolumeScripts,
@@ -248,21 +248,6 @@ func hanadbValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 		// Check container volume mounts
 		for _, rvmp := range hanadbReservedVolumesMountPaths {
 			containerList := podTemplate.Spec.Containers
-			for i := range containerList {
-				mountPathList := containerList[i].VolumeMounts
-				for j := range mountPathList {
-					if mountPathList[j].MountPath == rvmp {
-						return errors.New("Can't use a reserve volume mount path name: " + rvmp)
-					}
-				}
-			}
-		}
-	}
-
-	if podTemplate.Spec.InitContainers != nil {
-		// Check init container volume mounts
-		for _, rvmp := range hanadbReservedVolumesMountPaths {
-			containerList := podTemplate.Spec.InitContainers
 			for i := range containerList {
 				mountPathList := containerList[i].VolumeMounts
 				for j := range mountPathList {
