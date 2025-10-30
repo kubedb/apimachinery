@@ -32,32 +32,32 @@ func (_ HanaDBVersion) CustomResourceDefinition() *apiextensions.CustomResourceD
 
 var _ apis.ResourceInfo = &HanaDBVersion{}
 
-func (m HanaDBVersion) ResourceFQN() string {
+func (h HanaDBVersion) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", ResourcePluralHanaDBVersion, catalog.GroupName)
 }
 
-func (m HanaDBVersion) ResourceShortCode() string {
+func (h HanaDBVersion) ResourceShortCode() string {
+	return ResourceCodeHanaDBVersion
+}
+
+func (h HanaDBVersion) ResourceKind() string {
+	return ResourceKindHanaDBVersion
+}
+
+func (h HanaDBVersion) ResourceSingular() string {
 	return ResourceSingularHanaDBVersion
 }
 
-func (hdb HanaDBVersion) ResourceKind() string {
-	return ResourceSingularHanaDBVersion
+func (h HanaDBVersion) ResourcePlural() string {
+	return ResourcePluralHanaDBVersion
 }
 
-func (hdb HanaDBVersion) ResourceSingular() string {
-	return ResourceSingularHanaDBVersion
-}
-
-func (hdb HanaDBVersion) ResourcePlural() string {
-	return ResourceSingularHanaDBVersion
-}
-
-func (q HanaDBVersion) ValidateSpecs() error {
-	if q.Spec.Version == "" ||
-		q.Spec.DB.Image == "" {
+func (h HanaDBVersion) ValidateSpecs() error {
+	if h.Spec.Version == "" ||
+		h.Spec.DB.Image == "" {
 		return fmt.Errorf(`atleast one of the following specs is not set for HanaDBVersion "%v":
 spec.version,
-spec.db.image,`, q.Name)
+spec.db.image,`, h.Name)
 	}
 	return nil
 }
