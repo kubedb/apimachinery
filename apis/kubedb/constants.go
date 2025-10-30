@@ -2057,8 +2057,8 @@ const (
 	HanaDBVolumeMountScripts = "/scripts"
 	HanaDBDataDir            = "/hana/mounts"
 
-	HanaDBDnsPolicy         = "ClusterFirst"
-	HanaDBSubdomain         = "hana-pods"
-	HanaDBContainerName     = "hanadb"
-	HanaDBVolumeSecretsName = "password-secret"
+	HanaDBDnsPolicy                = "ClusterFirst"
+	HanaDBSubdomain                = "hana-pods"
+	HanaDBContainerName            = "hanadb"
+	HanaDBVolumeNamePasswordSecret = "password-secret"
 )
