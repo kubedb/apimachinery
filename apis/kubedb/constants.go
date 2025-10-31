@@ -2015,6 +2015,17 @@ var (
 			core.ResourceMemory: resource.MustParse("2.5Gi"),
 		},
 	}
+
+	DefaultResourcesHanaDB = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("2"),
+			core.ResourceMemory: resource.MustParse("16Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("4"),
+			core.ResourceMemory: resource.MustParse("32Gi"),
+		},
+	}
 )
 
 func DefaultArbiter(computeOnly bool) core.ResourceRequirements {
@@ -2067,4 +2078,17 @@ const (
 	OracleEnvPassword          = "ORACLE_PWD"
 	OracleEnvOracleSID         = "ORACLE_SID"
 	OracleEnvDataDir           = "ORADATA"
+)
+
+const (
+	HanaDBVolumeScripts = "hanadb-scripts"
+	HanaDBDataVolume    = "hana-data"
+
+	HanaDBVolumeMountScripts = "/scripts"
+	HanaDBDataDir            = "/hana/mounts"
+
+	HanaDBDnsPolicy                = "ClusterFirst"
+	HanaDBSubdomain                = "hana-pods"
+	HanaDBContainerName            = "hanadb"
+	HanaDBVolumeNamePasswordSecret = "password-secret"
 )
