@@ -26,6 +26,10 @@ type CassandraVersionListerExpansion interface{}
 // ClickHouseVersionLister.
 type ClickHouseVersionListerExpansion interface{}
 
+// DB2VersionListerExpansion allows custom methods to be added to
+// DB2VersionLister.
+type DB2VersionListerExpansion interface{}
+
 // DruidVersionListerExpansion allows custom methods to be added to
 // DruidVersionLister.
 type DruidVersionListerExpansion interface{}
