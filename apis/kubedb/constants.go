@@ -2288,7 +2288,7 @@ const (
 
 const (
 	HanaDBVolumeScripts = "hanadb-scripts"
-	HanaDBDataVolume    = "hana-data"
+	HanaDBDataVolume    = "data"
 
 	HanaDBVolumeMountScripts = "/scripts"
 	HanaDBDataDir            = "/hana/mounts"

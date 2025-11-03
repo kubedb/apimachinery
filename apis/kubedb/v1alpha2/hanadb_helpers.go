@@ -322,7 +322,7 @@ func (h *HanaDB) assignDefaultContainerSecurityContext(hanadbVersion *catalog.Ha
 		}
 	}
 	if sc.RunAsNonRoot == nil {
-		sc.RunAsNonRoot = pointer.BoolP(true)
+		sc.RunAsNonRoot = pointer.BoolP(false)
 	}
 	if sc.RunAsUser == nil {
 		sc.RunAsUser = hanadbVersion.Spec.SecurityContext.RunAsUser
