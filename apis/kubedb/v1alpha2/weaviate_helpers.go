@@ -135,7 +135,7 @@ func (w *Weaviate) PVCName(alias string) string {
 
 func (w *Weaviate) SetHealthCheckerDefaults() {
 	if w.Spec.HealthChecker.PeriodSeconds == nil {
-		w.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10) // Int32P shows an error.
+		w.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
 	}
 	if w.Spec.HealthChecker.TimeoutSeconds == nil {
 		w.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
