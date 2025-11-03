@@ -34,6 +34,7 @@ require (
 	gomodules.xyz/x v0.0.17
 	google.golang.org/grpc v1.69.2
 	google.golang.org/protobuf v1.36.3
+	gopkg.in/op/go-logging.v1 v1.0.0-20160211212156-b2cb9fa56473
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.32.8
 	k8s.io/apiextensions-apiserver v0.32.8
@@ -210,7 +211,6 @@ require (
 	gopkg.in/evanphx/json-patch.v4 v4.12.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
-	gopkg.in/op/go-logging.v1 v1.0.0-20160211212156-b2cb9fa56473 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/kms v0.32.8 // indirect
 	kmodules.xyz/apiversion v0.2.0 // indirect
