@@ -1509,22 +1509,16 @@ const (
 )
 
 const (
-	WeaviateAMQPPort                = 5672
-	WeaviateAMQPSPort               = 5671
-	WeaviateMQTTPort                = 1883
-	WeaviateMQTTPortWithSSL         = 8883
-	WeaviateSTOMPPort               = 61613
-	WeaviateSTOMPPortWithSSL        = 61614
-	WeaviateWebSTOMPPort            = 15674
-	WeaviateWebSTOMPPortWithSSL     = 15673
-	WeaviateWebMQTTPort             = 15675
-	WeaviateWebMQTTPortWithSSL      = 15676
-	WeaviateExporterPort            = 15692
-	WeaviateExporterPortWithSSL     = 15691
-	WeaviateManagementUIPort        = 15672
-	WeaviateManagementUIPortWithSSL = 15671
-	WeaviateInterNodePort           = 25672
-	WeaviatePeerDiscoveryPort       = 4369
+	WeaviateHTTPPortName   = "http"
+	WeaviateHTTPPort       = 8080
+	WeaviateGRPCPortName   = "grpc"
+	WeaviateGRPCPort       = 50051
+	WeaviateRAFTPortName   = "raft"
+	WeaviateRAFTPort       = 8300
+	WeaviateGOSSIPPortName = "gossip"
+	WeaviateGOSSIPPort     = 7102
+	WeaviateDATAPortName   = "data"
+	WeaviateDATAPort       = 7103
 
 	WeaviateVolumeData         = "data"
 	WeaviateVolumeConfig       = "weaviateconfig"
