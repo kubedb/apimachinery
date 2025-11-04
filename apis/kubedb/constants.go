@@ -886,6 +886,14 @@ const (
 )
 
 const (
+	MilvusUsernameKey = "username"
+	MilvusPasswordKey = "password"
+
+	MilvusPrimaryServicePortName = "primary"
+	MilvusServicePort            = 19530
+)
+
+const (
 	KafkaPortNameREST                  = "http"
 	KafkaPortNameController            = "controller"
 	KafkaPortNameCruiseControlListener = "cc-listener"
