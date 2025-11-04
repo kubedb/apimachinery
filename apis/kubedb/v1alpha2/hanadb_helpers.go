@@ -321,14 +321,31 @@ func (h *HanaDB) assignDefaultContainerSecurityContext(hanadbVersion *catalog.Ha
 			Drop: []core.Capability{"ALL"},
 		}
 	}
+	// Always ensure required capabilities are present for HANA
+	requiredCaps := []core.Capability{"CHOWN", "SYS_NICE", "SYS_RESOURCE"}
+	if sc.Capabilities.Add == nil {
+		sc.Capabilities.Add = requiredCaps
+	} else {
+		// Merge required caps with existing ones
+		capMap := make(map[core.Capability]bool)
+		for _, cap := range sc.Capabilities.Add {
+			capMap[cap] = true
+		}
+		for _, cap := range requiredCaps {
+			if !capMap[cap] {
+				sc.Capabilities.Add = append(sc.Capabilities.Add, cap)
+			}
+		}
+	}
+
 	if sc.RunAsNonRoot == nil {
-		sc.RunAsNonRoot = pointer.BoolP(false)
+		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
 	if sc.RunAsUser == nil {
 		sc.RunAsUser = hanadbVersion.Spec.SecurityContext.RunAsUser
 	}
 	if sc.RunAsGroup == nil {
-		sc.RunAsGroup = hanadbVersion.Spec.SecurityContext.RunAsUser
+		sc.RunAsGroup = hanadbVersion.Spec.SecurityContext.RunAsGroup
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
