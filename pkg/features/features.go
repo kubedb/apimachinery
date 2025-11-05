@@ -81,6 +81,9 @@ const (
 	// Enables MySQL operator.
 	MySQL featuregate.Feature = "MySQL"
 
+	// Enables MySQL operator.
+	Milvus featuregate.Feature = "Milvus"
+
 	// Enables NATS operator
 	// NATS featuregate.Feature = "NATS"
 
