@@ -9,12 +9,17 @@ import (
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	"kmodules.xyz/client-go/apiextensions"
+	"kubedb.dev/apimachinery/crds"
 )
 
 type MilvusApp struct {
 	*Milvus
 }
 
+func (_ Milvus) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMySQL))
+}
 func (m *Milvus) ResourceKind() string {
 	return ResourceKindMilvus
 }
