@@ -19,6 +19,7 @@ package v1
 import (
 	"context"
 	"fmt"
+	app_api "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	"time"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -181,6 +182,6 @@ func GetActivationTimeFromSecret(secretName *core.Secret) (*metav1.Time, error) 
 	return nil, nil
 }
 
-func IsVirtualAuthSecretReferred(authSecret *SecretReference) bool {
-	return authSecret != nil && authSecret.APIGroup == vsecretapi.GroupName
+func IsVirtualAuthSecretReferred(authSecretRef *app_api.TypedLocalObjectReference) bool {
+	return authSecretRef != nil && authSecretRef.APIGroup == vsecretapi.GroupName
 }
