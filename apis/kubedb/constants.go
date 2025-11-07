@@ -2085,7 +2085,6 @@ const (
 	QdrantConfigVolName = "qdrant-config"
 	QdrantConfigDir     = "/qdrant/config"
 
-	QdrantConfigKey      = "config.yaml"
 	QdrantConfigFileName = "config.yaml"
 
 	QdrantAPIKey         = "api-key"

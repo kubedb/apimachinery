@@ -63,7 +63,7 @@ type QdrantSpec struct {
 	// Version of Qdrant to be deployed.
 	Version string `json:"version"`
 
-	// Number of instances to deploy for an Qdrant database.
+	// Number of instances to deploy for a Qdrant database.
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 

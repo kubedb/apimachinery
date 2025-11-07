@@ -35229,7 +35229,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_QdrantSpec(ref common.ReferenceCal
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for an Qdrant database.",
+							Description: "Number of instances to deploy for a Qdrant database.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

@@ -32277,12 +32277,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_QdrantSecurityContext(ref common.
 							Format: "int64",
 						},
 					},
-					"runAsGroup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
 				},
 			},
 		},

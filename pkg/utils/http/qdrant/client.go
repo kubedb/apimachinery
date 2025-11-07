@@ -1,19 +1,3 @@
-/*
-Copyright AppsCode Inc. and Contributors
-
-Licensed under the AppsCode Free Trial License 1.0.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Free-Trial-1.0.0.md
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package qdrant
 
 import (
@@ -21,7 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
+
+	"kubedb.dev/apimachinery/apis/kubedb"
+	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type ClusterResponse struct {
@@ -86,18 +76,26 @@ func GetClusterResponse(ctx context.Context, address string, apiKey string) (*Cl
 	return &cr, nil
 }
 
-func GetClusterStatus(ctx context.Context, address string, apiKey string) (string, error) {
-	cr, err := GetClusterResponse(ctx, address, apiKey)
-	if err != nil {
-		return "", err
-	}
-	return cr.Result.Status, nil
-}
+func GetClusterStatus(ctx context.Context, db *api.Qdrant, kc client.Client) (string, int, []string, error) {
+	address := db.ServiceDNS() + ":" + strconv.Itoa(kubedb.QdrantHTTPPort)
+	apiKey := db.GetAPIKey(ctx, kc)
 
-func GetReplicaCount(ctx context.Context, address string, apiKey string) (int, error) {
 	cr, err := GetClusterResponse(ctx, address, apiKey)
 	if err != nil {
-		return 0, err
+		return "", 0, nil, err
 	}
-	return len(cr.Result.Peers), nil
+
+	replicaCount := len(cr.Result.Peers)
+	roles := []string{}
+
+	for i := 0; i < replicaCount; i++ {
+		podAddress := db.GetPodAddress(i)
+		cr, err = GetClusterResponse(ctx, podAddress, apiKey)
+		if err != nil {
+			return "", 0, nil, err
+		}
+		roles = append(roles, cr.Result.RaftInfo.Role)
+	}
+
+	return cr.Result.Status, replicaCount, roles, nil
 }

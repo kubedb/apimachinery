@@ -67,8 +67,7 @@ type QdrantVersionSpec struct {
 
 // QdrantSecurityContext is for the additional config for the DB container
 type QdrantSecurityContext struct {
-	RunAsUser  *int64 `json:"runAsUser,omitempty"`
-	RunAsGroup *int64 `json:"runAsGroup,omitempty"`
+	RunAsUser *int64 `json:"runAsUser,omitempty"`
 }
 
 // QdrantVersionDatabase is the Qdrant Database image

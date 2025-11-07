@@ -106,12 +106,18 @@ func (q *Qdrant) ServiceAccountName() string {
 	return q.OffshootName()
 }
 
-func (q *Qdrant) PrimaryServiceDNS() string {
+func (q *Qdrant) ServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", q.ServiceName(), q.Namespace)
 }
 
-func (q *Qdrant) Address() string {
-	return fmt.Sprintf("%v.%v.svc", q.Name, q.Namespace)
+func (q *Qdrant) GetPodAddress(i int) string {
+	return fmt.Sprintf("%s-%d.%s.%s.svc:%d",
+		q.OffshootName(),
+		i,
+		q.GoverningServiceName(),
+		q.Namespace,
+		kubedb.QdrantHTTPPort,
+	)
 }
 
 func (q *Qdrant) GetAuthSecretName() string {
