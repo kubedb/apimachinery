@@ -4,7 +4,9 @@ import (
 	"fmt"
 
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	ptr "k8s.io/utils/pointer"
 	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
@@ -20,20 +22,23 @@ type MilvusApp struct {
 func (_ Milvus) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMySQL))
 }
+
 func (m *Milvus) ResourceKind() string {
 	return ResourceKindMilvus
 }
+
 func (m *Milvus) ResourceSingular() string {
 	return ResourceSingularMilvus
 }
+
 func (m *Milvus) Finalizer() string {
 	return fmt.Sprintf("%s/%s", apis.Finalizer, m.ResourceSingular())
 }
 
-// Owner returns owner reference to resources
 func (m *Milvus) Owner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(m, SchemeGroupVersion.WithKind(m.ResourceKind()))
 }
+
 func (r MilvusApp) Name() string {
 	return r.Milvus.Name
 }
@@ -41,12 +46,13 @@ func (r MilvusApp) Name() string {
 func (m Milvus) Type() appcat.AppType {
 	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularMilvus))
 }
+
 func (m *Milvus) AppBindingMeta() appcat.AppBindingMeta {
 	return &MilvusApp{m}
 }
 
 func (m *Milvus) GetConnectionScheme() string {
-	scheme := "http"
+	scheme := "localhost"
 	return scheme
 }
 
@@ -57,6 +63,7 @@ func (m *Milvus) OffshootName() string {
 func (m *Milvus) ServiceName() string {
 	return m.OffshootName()
 }
+
 func (m *Milvus) DefaultPodRoleName() string {
 	return meta_util.NameWithSuffix(m.OffshootName(), "role")
 }
@@ -141,29 +148,6 @@ func (m *Milvus) PetSetName() string {
 	return m.OffshootName()
 }
 
-func (m *Milvus) EtcdClusterName() string {
-	// The name you want for the etcd StatefulSet
-	return "etcd-cluster"
-}
-
-func (m *Milvus) EtcdHeadlessServiceName() string {
-	return m.EtcdClusterName()
-}
-
-func (m *Milvus) EtcdClientServiceName() string {
-	return m.EtcdClusterName() + "-client"
-}
-
-func (m *Milvus) EtcdImage() string {
-	return fmt.Sprintf("%s:%s", m.DefaultEtcdRegistry(), m.Spec.Etcd.Version)
-}
-func (m *Milvus) DefaultEtcdRegistry() string {
-	if m.Spec.Etcd.ImageRegistry != "" {
-		return m.Spec.Etcd.ImageRegistry
-	}
-	return "gcr.io/etcd-development/etcd"
-}
-
 func (m *Milvus) EtcdEndpoints() []string {
 	if m.Spec.Etcd == nil {
 		return nil
@@ -193,4 +177,31 @@ func (m *Milvus) EtcdEndpoints() []string {
 	}
 
 	return endpoints
+}
+
+func getDefaultSecurityContext() *core.SecurityContext {
+	return &core.SecurityContext{
+		RunAsNonRoot:             ptr.Bool(true),
+		RunAsUser:                ptr.Int64(10001),
+		RunAsGroup:               ptr.Int64(10001),
+		AllowPrivilegeEscalation: ptr.Bool(false),
+		Capabilities: &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		},
+		SeccompProfile: &core.SeccompProfile{
+			Type: core.SeccompProfileTypeRuntimeDefault,
+		},
+	}
+}
+
+func getDefaultReadinessProbe() *core.Probe {
+	return &core.Probe{
+		ProbeHandler: core.ProbeHandler{
+			GRPC: &core.GRPCAction{Port: 19530},
+		},
+		InitialDelaySeconds: 60,
+		PeriodSeconds:       10,
+		TimeoutSeconds:      5,
+		FailureThreshold:    18,
+	}
 }
