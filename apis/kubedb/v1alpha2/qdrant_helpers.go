@@ -20,6 +20,8 @@ import (
 	"context"
 	"fmt"
 
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -297,4 +299,49 @@ func (q *Qdrant) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplate
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
+}
+
+type qdrantStatsService struct {
+	*Qdrant
+}
+
+func (q qdrantStatsService) GetNamespace() string {
+	return q.Qdrant.GetNamespace()
+}
+
+func (q qdrantStatsService) ServiceName() string {
+	return q.OffshootName() + "-stats"
+}
+
+func (q qdrantStatsService) ServiceMonitorName() string {
+	return q.ServiceName()
+}
+
+func (q qdrantStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return q.OffshootLabels()
+}
+
+func (q qdrantStatsService) Path() string {
+	return kubedb.DefaultStatsPath
+}
+
+func (q qdrantStatsService) Scheme() string {
+	return ""
+}
+
+func (m qdrantStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
+}
+
+func (q Qdrant) StatsService() mona.StatsAccessor {
+	return &qdrantStatsService{&q}
+}
+
+func (q Qdrant) StatsServiceLabels() map[string]string {
+	return q.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
+}
+
+func (q *Qdrant) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(q.Spec.ServiceTemplates, alias)
+	return q.offshootLabels(meta_util.OverwriteKeys(q.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
