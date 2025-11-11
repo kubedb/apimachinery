@@ -127,6 +127,9 @@ const (
 	// Enables Solr operator.
 	Solr featuregate.Feature = "Solr"
 
+	// Enable DB2 operator
+	Db2 featuregate.Feature = "Db2"
+
 	// Enables ValKey operator.
 	// ValKey featuregate.Feature = "ValKey"
 

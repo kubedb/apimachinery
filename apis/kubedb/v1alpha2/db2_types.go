@@ -114,3 +114,15 @@ type DB2List struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []DB2 `json:"items"`
 }
+
+// +kubebuilder:validation:Enum=coordinators;overlords;brokers;routers;middleManagers;historicals
+type DB2NodeRoleType string
+
+const (
+	DB2NodeRoleCoordinators   DruidNodeRoleType = "coordinators"
+	DB2NodeRoleOverlords      DruidNodeRoleType = "overlords"
+	DB2NodeRoleBrokers        DruidNodeRoleType = "brokers"
+	DB2NodeRoleRouters        DruidNodeRoleType = "routers"
+	DB2NodeRoleMiddleManagers DruidNodeRoleType = "middleManagers"
+	DB2NodeRoleHistoricals    DruidNodeRoleType = "historicals"
+)
