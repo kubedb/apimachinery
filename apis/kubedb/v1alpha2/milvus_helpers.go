@@ -179,7 +179,7 @@ func (m *Milvus) EtcdEndpoints() []string {
 	return endpoints
 }
 
-func getDefaultSecurityContext() *core.SecurityContext {
+func GetDefaultSecurityContext() *core.SecurityContext {
 	return &core.SecurityContext{
 		RunAsNonRoot:             ptr.Bool(true),
 		RunAsUser:                ptr.Int64(10001),
@@ -194,7 +194,7 @@ func getDefaultSecurityContext() *core.SecurityContext {
 	}
 }
 
-func getDefaultReadinessProbe() *core.Probe {
+func GetDefaultReadinessProbe() *core.Probe {
 	return &core.Probe{
 		ProbeHandler: core.ProbeHandler{
 			GRPC: &core.GRPCAction{Port: 19530},
