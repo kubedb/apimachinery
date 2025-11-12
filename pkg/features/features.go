@@ -37,6 +37,9 @@ const (
 	// Enables ClickHouse operator.
 	ClickHouse featuregate.Feature = "ClickHouse"
 
+	// Enable DB2 operator
+	DB2 featuregate.Feature = "DB2"
+
 	// Enables Druid operator.
 	Druid featuregate.Feature = "Druid"
 
@@ -127,9 +130,6 @@ const (
 	// Enables Solr operator.
 	Solr featuregate.Feature = "Solr"
 
-	// Enable DB2 operator
-	Db2 featuregate.Feature = "Db2"
-
 	// Enables ValKey operator.
 	// ValKey featuregate.Feature = "ValKey"
 
@@ -153,6 +153,7 @@ func init() {
 var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	Cassandra:     {Default: false, PreRelease: featuregate.Alpha},
 	ClickHouse:    {Default: false, PreRelease: featuregate.Alpha},
+	DB2:           {Default: false, PreRelease: featuregate.Alpha},
 	Druid:         {Default: false, PreRelease: featuregate.Alpha},
 	Elasticsearch: {Default: true, PreRelease: featuregate.GA},
 	// Etcd:               {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
