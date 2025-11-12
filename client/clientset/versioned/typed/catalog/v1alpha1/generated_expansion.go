@@ -22,6 +22,8 @@ type CassandraVersionExpansion interface{}
 
 type ClickHouseVersionExpansion interface{}
 
+type DB2VersionExpansion interface{}
+
 type DruidVersionExpansion interface{}
 
 type ElasticsearchVersionExpansion interface{}
