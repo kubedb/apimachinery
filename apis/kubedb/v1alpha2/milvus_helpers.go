@@ -131,6 +131,62 @@ func (m *Milvus) PodLabels(extraLabels ...map[string]string) map[string]string {
 	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), podTemplateLabels)
 }
 
+func (m *Milvus) GetGRPCAddress() string {
+	port := kubedb.MilvusGrpcPort
+	if m.Spec.Standalone.GRPCPort != nil {
+		port = *m.Spec.Standalone.GRPCPort
+	}
+	return fmt.Sprintf("localhost:%d", port)
+}
+
+func (m *Milvus) getAuthSecret(ctx context.Context, kc client.Client) (*core.Secret, error) {
+	if m.Spec.Standalone.DisableSecurity || m.Spec.Standalone.AuthSecret == nil {
+		return nil, nil
+	}
+	if m.Spec.Standalone.AuthSecret.Name == "" {
+		return nil, nil
+	}
+
+	secret := &core.Secret{}
+	err := kc.Get(ctx, types.NamespacedName{
+		Name:      m.Spec.Standalone.AuthSecret.Name,
+		Namespace: m.Namespace,
+	}, secret)
+	return secret, err
+}
+
+func (m *Milvus) GetUsername(ctx context.Context, kc client.Client) (string, error) {
+	secret, err := m.getAuthSecret(ctx, kc)
+	if err != nil {
+		return "", err
+	}
+	if secret == nil {
+		return "", nil // security disabled
+	}
+
+	data, ok := secret.Data[kubedb.MilvusUsernameKey]
+	if !ok || len(data) == 0 {
+		return "", fmt.Errorf("username key %q missing in secret %s", kubedb.MilvusUsernameKey, secret.Name)
+	}
+	return string(data), nil
+}
+
+func (m *Milvus) GetPassword(ctx context.Context, kc client.Client) (string, error) {
+	secret, err := m.getAuthSecret(ctx, kc)
+	if err != nil {
+		return "", err
+	}
+	if secret == nil {
+		return "", nil
+	}
+
+	data, ok := secret.Data[kubedb.MilvusPasswordKey]
+	if !ok || len(data) == 0 {
+		return "", fmt.Errorf("password key %q missing in secret %s", kubedb.MilvusPasswordKey, secret.Name)
+	}
+	return string(data), nil
+}
+
 func (m *Milvus) Finalizer() string {
 	return fmt.Sprintf("%s/%s", apis.Finalizer, m.ResourceSingular())
 }
