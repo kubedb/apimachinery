@@ -234,7 +234,7 @@ func (h *HanaDB) ConfigSecretName() string {
 }
 
 func (h *HanaDB) IsStandalone() bool {
-	return h.Spec.Topology == nil
+	return h.Spec.SystemReplication == nil
 }
 
 func (h *HanaDB) SetHealthCheckerDefaults() {

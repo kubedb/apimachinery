@@ -30,12 +30,30 @@ const (
 	ResourcePluralHanaDB   = "hanadbs"
 )
 
-// +kubebuilder:validation:Enum=AvailabilityGroup;DistributedAG
-type HanaDBMode string
+// +kubebuilder:validation:Enum=sync;syncmem;async
+type ReplicationMode string
 
 const (
-	HanaDBModeAvailabilityGroup HanaDBMode = "AvailabilityGroup"
-	HanaDBModeDistributedAG     HanaDBMode = "DistributedAG"
+	ReplicationModeSync    ReplicationMode = "sync"
+	ReplicationModeSyncMem ReplicationMode = "syncmem"
+	ReplicationModeAsync   ReplicationMode = "async"
+)
+
+// +kubebuilder:validation:Enum=logreplay;delta_datashipping;logreplay_readaccess
+type OperationMode string
+
+const (
+	OperationModeLogReplay           OperationMode = "logreplay"
+	OperationModeDeltaDataShipping   OperationMode = "delta_datashipping"
+	OperationModeLogReplayReadAccess OperationMode = "logreplay_readaccess"
+)
+
+// +kubebuilder:validation:Enum=2;3
+type ReplicationTier int
+
+const (
+	ReplicationTier2 ReplicationTier = 2
+	ReplicationTier3 ReplicationTier = 3
 )
 
 // HanaDB is the Schema for the hanadbs API
@@ -74,9 +92,9 @@ type HanaDBSpec struct {
 	// Number of instances to deploy for a HanaDB database
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// Topology configures the deployment topology (e.g. standalone or system replication).
+	// SystemReplication configures the system replication settings.
 	// +optional
-	Topology *HanaDBTopology `json:"topology,omitempty"`
+	SystemReplication *SystemReplicationSpec `json:"systemReplication,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -111,11 +129,42 @@ type HanaDBSpec struct {
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
-// HanaTopology defines the topology for HanaDB cluster (inspired by SAP HANA scale-out: coordinator for system DB/master, workers for data, standbys for HA).
-type HanaDBTopology struct {
-	// Mode specifies the deployment mode.
+// SystemReplicationSpec defines the system replication configuration for HanaDB
+type SystemReplicationSpec struct {
+	// Primary defines the primary replica configuration
 	// +optional
-	Mode *HanaDBMode `json:"mode,omitempty"`
+	Primary *SystemReplicationPrimary `json:"primary,omitempty"`
+
+	// Secondaries defines the list of secondary replicas
+	// +optional
+	Secondaries []SystemReplicationSecondary `json:"secondaries,omitempty"`
+}
+
+// SystemReplicationPrimary defines the primary replica configuration
+type SystemReplicationPrimary struct {
+	// Name of the primary replica
+	Name string `json:"name"`
+}
+
+// SystemReplicationSecondary defines the secondary replica configuration
+type SystemReplicationSecondary struct {
+	// Name of the secondary replica
+	Name string `json:"name"`
+
+	// Mode specifies the replication mode (sync, syncmem, async)
+	// +optional
+	// +kubebuilder:default=sync
+	Mode ReplicationMode `json:"mode,omitempty"`
+
+	// OperationMode specifies the operation mode (logreplay, delta_datashipping, logreplay_readaccess)
+	// +optional
+	// +kubebuilder:default=logreplay
+	OperationMode OperationMode `json:"operationMode,omitempty"`
+
+	// Tier specifies the replication tier (2 or 3)
+	// +optional
+	// +kubebuilder:default=2
+	Tier ReplicationTier `json:"tier,omitempty"`
 }
 
 // HanaDBStatus defines the observed state of HanaDB.
