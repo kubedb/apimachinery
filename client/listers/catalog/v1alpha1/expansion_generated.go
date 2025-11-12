@@ -42,6 +42,10 @@ type EtcdVersionListerExpansion interface{}
 // FerretDBVersionLister.
 type FerretDBVersionListerExpansion interface{}
 
+// HanaDBVersionListerExpansion allows custom methods to be added to
+// HanaDBVersionLister.
+type HanaDBVersionListerExpansion interface{}
+
 // HazelcastVersionListerExpansion allows custom methods to be added to
 // HazelcastVersionLister.
 type HazelcastVersionListerExpansion interface{}
