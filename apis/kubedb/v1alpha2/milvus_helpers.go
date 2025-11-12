@@ -168,8 +168,10 @@ func (m *Milvus) EtcdEndpoints() []string {
 	for i := 0; i < size; i++ {
 		// Use pod DNS names for the etcd cluster
 		endpoints[i] = fmt.Sprintf(
-			"http://milvus-standalone-etcd-%d.milvus-standalone-etcd.milvus-standalone.svc.cluster.local:2379",
-			i,
+			"http://%s-%d.%s.%s.svc.cluster.local:%d",
+			kubedb.EtcdPodTemplateSuffix, i,
+			kubedb.EtcdServiceSuffix, m.Namespace,
+			kubedb.EtcdPort,
 		)
 	}
 
