@@ -920,6 +920,7 @@ const (
 	EtcdAppLabel          = "milvus-standalone-etcd"
 	EtcdPodTemplateSuffix = "milvus-standalone-etcd"
 	EtcdServiceSuffix     = "milvus-standalone-etcd"
+	EtcdName              = "etcd"
 	EtcdPort              = 2379
 	EtcdVersion           = "v3.5.21"
 	EtcdDefaultSize       = 3
