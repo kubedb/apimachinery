@@ -187,6 +187,7 @@ var milvusReservedVolumesMountPaths = []string{
 	kubedb.MilvusPVCDir,
 	kubedb.MilvusConfigDir,
 	kubedb.MilvusWritableDir,
+	kubedb.MilvusWritableInitDir,
 }
 
 func (m *MilvusCustomWebhook) milvusValidateVersion(db *olddbapi.Milvus) error {

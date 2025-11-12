@@ -8,7 +8,6 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	ptr "k8s.io/utils/pointer"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -230,21 +229,6 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 	m.setDefaultContainerResourceLimits(&m.Spec.Standalone.PodTemplate)
 }
 
-func GetDefaultSecurityContext() *core.SecurityContext {
-	return &core.SecurityContext{
-		RunAsNonRoot:             ptr.Bool(true),
-		RunAsUser:                ptr.Int64(10001),
-		RunAsGroup:               ptr.Int64(10001),
-		AllowPrivilegeEscalation: ptr.Bool(false),
-		Capabilities: &core.Capabilities{
-			Drop: []core.Capability{"ALL"},
-		},
-		SeccompProfile: &core.SeccompProfile{
-			Type: core.SeccompProfileTypeRuntimeDefault,
-		},
-	}
-}
-
 func GetDefaultReadinessProbe() *core.Probe {
 	return &core.Probe{
 		ProbeHandler: core.ProbeHandler{
@@ -278,12 +262,12 @@ func (m *Milvus) setDefaultContainerSecurityContext(qdVersion *catalog.MilvusVer
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
-	m.assignDefaultContainerSecurityContext(qdVersion, container.SecurityContext)
+	m.AssignDefaultContainerSecurityContext(qdVersion, container.SecurityContext)
 
 	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
-func (m *Milvus) assignDefaultContainerSecurityContext(mlvVersion *catalog.MilvusVersion, rc *core.SecurityContext) {
+func (m *Milvus) AssignDefaultContainerSecurityContext(mlvVersion *catalog.MilvusVersion, rc *core.SecurityContext) {
 	if rc.AllowPrivilegeEscalation == nil {
 		rc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
