@@ -23,6 +23,7 @@ import (
 	"strconv"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -109,16 +110,23 @@ func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mong
 			fmt.Sprintf("referenced database %s/%s is not found", req.Namespace, req.Spec.DatabaseRef.Name)))
 	}
 
+	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeUpdateVersion {
+		if err = w.validateMongoDBUpdateVersionOpsRequest(&db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				req.Name,
+				err.Error()))
+		}
+	}
 	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeHorizontalScaling {
 		if err = w.validateMongoDBHorizontalScalingOpsRequest(&db, req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec"),
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	}
 	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeHorizons {
 		if err = w.validateMongoDBHorizons(&db, req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec"),
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizons"),
 				req.Name,
 				err.Error()))
 		}
@@ -128,6 +136,22 @@ func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mong
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "MongoDBopsrequests.kubedb.com", Kind: "MongoDBOpsRequest"}, req.Name, allErr)
+}
+
+func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBUpdateVersionOpsRequest(db *dbapi.MongoDB, req *opsapi.MongoDBOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindMongoDBVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+	return nil
 }
 
 func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBHorizontalScalingOpsRequest(db *dbapi.MongoDB, req *opsapi.MongoDBOpsRequest) error {
