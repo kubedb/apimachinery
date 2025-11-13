@@ -136,32 +136,32 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 			err.Error()))
 	}
 
-	if ptr.Deref(db.Spec.Standalone.Replicas, 0) != 1 {
+	if ptr.Deref(db.Spec.Topology.Standalone.Replicas, 0) != 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 			db.Name,
 			"number of replicas for standalone must be one "))
 	}
 
-	err = milvusValidateVolumes(&db.Spec.Standalone.PodTemplate)
+	err = milvusValidateVolumes(&db.Spec.Topology.Standalone.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
 			db.Name,
 			err.Error()))
 	}
 
-	err = milvusValidateVolumesMountPaths(&db.Spec.Standalone.PodTemplate)
+	err = milvusValidateVolumesMountPaths(&db.Spec.Topology.Standalone.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
 			db.Name,
 			err.Error()))
 	}
 
-	if db.Spec.Standalone.StorageType == "" {
+	if db.Spec.Topology.Standalone.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 			db.Name,
 			"StorageType can not be empty"))
 	} else {
-		if db.Spec.Standalone.StorageType != olddbapi.StorageTypeDurable && db.Spec.Standalone.StorageType != olddbapi.StorageTypeEphemeral {
+		if db.Spec.Topology.Standalone.StorageType != olddbapi.StorageTypeDurable && db.Spec.Topology.Standalone.StorageType != olddbapi.StorageTypeEphemeral {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 				db.Name,
 				"StorageType should be either durable or ephemeral"))
