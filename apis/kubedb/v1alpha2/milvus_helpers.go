@@ -331,10 +331,10 @@ func (m *Milvus) setDefaultContainerSecurityContext(mlvVersion *catalog.MilvusVe
 	if initContainer.SecurityContext == nil {
 		initContainer.SecurityContext = &core.SecurityContext{}
 	}
-	m.assignDefaultInitContainerSecurityContext(mlvVersion, initContainer.SecurityContext)
+	m.AssignDefaultInitContainerSecurityContext(mlvVersion, initContainer.SecurityContext)
 }
 
-func (m *Milvus) assignDefaultInitContainerSecurityContext(mlvVersion *catalog.MilvusVersion, rc *core.SecurityContext) {
+func (m *Milvus) AssignDefaultInitContainerSecurityContext(mlvVersion *catalog.MilvusVersion, rc *core.SecurityContext) {
 	if rc.AllowPrivilegeEscalation == nil {
 		rc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
