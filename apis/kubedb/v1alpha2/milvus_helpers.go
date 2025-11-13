@@ -352,6 +352,9 @@ func (m *Milvus) AssignDefaultInitContainerSecurityContext(mlvVersion *catalog.M
 	if rc.SeccompProfile == nil {
 		rc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
+	rc.RunAsUser = pointer.Int64P(0)
+	rc.RunAsNonRoot = pointer.BoolP(false)
+	rc.RunAsGroup = pointer.Int64P(0)
 }
 
 func (m *Milvus) AssignDefaultContainerSecurityContext(mlvVersion *catalog.MilvusVersion, rc *core.SecurityContext) {
