@@ -237,18 +237,40 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 	if reconfigureSpec == nil {
 		return fmt.Errorf("`spec.configuration` nil not supported in Reconfigure type")
 	}
+
 	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
 
-	if mssqlApplyConfigExists(req.Spec.Configuration.ApplyConfig) {
+	// Validate ConfigSecret exits if provided and has the required config file
+	if reconfigureSpec.ConfigSecret != nil {
+		var secret core.Secret
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      reconfigureSpec.ConfigSecret.Name,
+			Namespace: req.Namespace,
+		}, &secret)
+		if err != nil {
+			if kerr.IsNotFound(err) {
+				return fmt.Errorf("referenced config secret %s/%s not found", req.Namespace, reconfigureSpec.ConfigSecret.Name)
+			}
+			return err
+		}
+
+		if _, ok := secret.Data[kubedb.MSSQLConfigKey]; !ok {
+			return fmt.Errorf("config secret %s/%s does not have file named '%v'", req.Namespace, reconfigureSpec.ConfigSecret.Name, kubedb.MSSQLConfigKey)
+		}
+	}
+
+	// Validate ApplyConfig has the required config file if provided
+	if req.Spec.Configuration.ApplyConfig != nil {
 		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.MSSQLConfigKey]
 		if !ok {
 			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.MSSQLConfigKey)
 		}
 	}
 
+	// Add validation to not allow both RemoveCustomConfig and ConfigSecret together
 	if req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret != nil {
 		return fmt.Errorf("`spec.configuration.removeCustomConfig` and `spec.configuration.configSecret` is not supported together")
 	}
@@ -261,10 +283,12 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerUpdateVersionOps
 	if updateVersionSpec == nil {
 		return fmt.Errorf("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
+
 	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
+
 	mssqlserverTargetVersion := &catalog.MSSQLServerVersion{}
 	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: updateVersionSpec.TargetVersion,
@@ -348,12 +372,4 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerRotateAuthentica
 	}
 
 	return nil
-}
-
-func mssqlApplyConfigExists(applyConfig map[string]string) bool {
-	if applyConfig == nil {
-		return false
-	}
-	_, exists := applyConfig[kubedb.MSSQLConfigKey]
-	return exists
 }
