@@ -276,3 +276,11 @@ func (w *Weaviate) GetAPIKey(ctx context.Context, kc client.Client) string {
 
 	return string(apiKey)
 }
+
+func (w *Weaviate) GetConnectionScheme() string {
+	scheme := "http"
+	//if w.Spec.EnableSSL {
+	//	scheme = "https"
+	//}
+	return scheme
+}
