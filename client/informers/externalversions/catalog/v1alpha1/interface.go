@@ -76,6 +76,8 @@ type Interface interface {
 	SinglestoreVersions() SinglestoreVersionInformer
 	// SolrVersions returns a SolrVersionInformer.
 	SolrVersions() SolrVersionInformer
+	// WeaviateVersions returns a WeaviateVersionInformer.
+	WeaviateVersions() WeaviateVersionInformer
 	// ZooKeeperVersions returns a ZooKeeperVersionInformer.
 	ZooKeeperVersions() ZooKeeperVersionInformer
 }
@@ -219,6 +221,11 @@ func (v *version) SinglestoreVersions() SinglestoreVersionInformer {
 // SolrVersions returns a SolrVersionInformer.
 func (v *version) SolrVersions() SolrVersionInformer {
 	return &solrVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// WeaviateVersions returns a WeaviateVersionInformer.
+func (v *version) WeaviateVersions() WeaviateVersionInformer {
+	return &weaviateVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeeperVersions returns a ZooKeeperVersionInformer.
