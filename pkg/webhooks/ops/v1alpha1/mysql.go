@@ -16,10 +16,10 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
-	"kubedb.dev/apimachinery/apis/kubedb"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
