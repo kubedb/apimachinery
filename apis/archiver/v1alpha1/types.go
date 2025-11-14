@@ -98,6 +98,12 @@ type LogBackupOptions struct {
 	// +kubebuilder:default=5
 	// +optional
 	FailedLogHistoryLimit int32 `json:"failedLogHistoryLimit,omitempty"`
+
+	// LogRetentionHistoryLimit defines the number of retention status the incremental snapshot will retain for debugging purposes.
+	// The default value is 5.
+	// +kubebuilder:default=5
+	// +optional
+	LogRetentionHistoryLimit int32 `json:"logRetentionHistoryLimit,omitempty"`
 }
 
 //func ParsePolicy(policy string) (string, error) {
