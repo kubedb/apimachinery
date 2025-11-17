@@ -8,6 +8,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -264,7 +265,7 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 		Name: m.Spec.Version,
 	}, &mlvVersion)
 	if err != nil {
-		return
+		klog.Warningf("Failed to fetch MilvusVersion %s: %v. Using fallback defaults.", m.Spec.Version, err)
 	}
 
 	m.setDefaultContainerSecurityContext(&mlvVersion, m.Spec.PodTemplate)
@@ -333,10 +334,18 @@ func (m *Milvus) AssignDefaultContainerSecurityContext(mlvVersion *catalog.Milvu
 		rc.RunAsNonRoot = pointer.BoolP(true)
 	}
 	if rc.RunAsUser == nil {
-		rc.RunAsUser = mlvVersion.Spec.SecurityContext.RunAsUser
+		if mlvVersion != nil && mlvVersion.Spec.SecurityContext != nil && mlvVersion.Spec.SecurityContext.RunAsUser != nil {
+			rc.RunAsUser = mlvVersion.Spec.SecurityContext.RunAsUser
+		} else {
+			rc.RunAsUser = pointer.Int64P(10001)
+		}
 	}
 	if rc.RunAsGroup == nil {
-		rc.RunAsGroup = mlvVersion.Spec.SecurityContext.RunAsUser
+		if mlvVersion != nil && mlvVersion.Spec.SecurityContext != nil && mlvVersion.Spec.SecurityContext.RunAsUser != nil {
+			rc.RunAsGroup = mlvVersion.Spec.SecurityContext.RunAsUser
+		} else {
+			rc.RunAsGroup = pointer.Int64P(10001)
+		}
 	}
 	if rc.SeccompProfile == nil {
 		rc.SeccompProfile = secomp.DefaultSeccompProfile()
