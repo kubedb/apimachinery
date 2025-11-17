@@ -136,32 +136,32 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 			err.Error()))
 	}
 
-	if ptr.Deref(db.Spec.Topology.Standalone.Replicas, 0) != 1 {
+	if ptr.Deref(db.Spec.Replicas, 0) != 1 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 			db.Name,
 			"number of replicas for standalone must be one "))
 	}
 
-	err = milvusValidateVolumes(&db.Spec.Topology.Standalone.PodTemplate)
+	err = milvusValidateVolumes(db.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
 			db.Name,
 			err.Error()))
 	}
 
-	err = milvusValidateVolumesMountPaths(&db.Spec.Topology.Standalone.PodTemplate)
+	err = milvusValidateVolumesMountPaths(db.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
 			db.Name,
 			err.Error()))
 	}
 
-	if db.Spec.Topology.Standalone.StorageType == "" {
+	if db.Spec.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 			db.Name,
 			"StorageType can not be empty"))
 	} else {
-		if db.Spec.Topology.Standalone.StorageType != olddbapi.StorageTypeDurable && db.Spec.Topology.Standalone.StorageType != olddbapi.StorageTypeEphemeral {
+		if db.Spec.StorageType != olddbapi.StorageTypeDurable && db.Spec.StorageType != olddbapi.StorageTypeEphemeral {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 				db.Name,
 				"StorageType should be either durable or ephemeral"))
@@ -177,17 +177,13 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 
 // reserved volume and volumes mounts for milvus
 var milvusReservedVolumes = []string{
-	kubedb.MilvusPVCName,
+	kubedb.MilvusDataName,
 	kubedb.MilvusConfigVolName,
-	kubedb.MilvusInitContainerName,
-	kubedb.MilvusStorageName,
 }
 
 var milvusReservedVolumesMountPaths = []string{
-	kubedb.MilvusPVCDir,
+	kubedb.MilvusDataDir,
 	kubedb.MilvusConfigDir,
-	kubedb.MilvusInitContainerDir,
-	kubedb.MilvusFixedDir,
 }
 
 func (m *MilvusCustomWebhook) milvusValidateVersion(db *olddbapi.Milvus) error {
@@ -226,21 +222,6 @@ func milvusValidateVolumesMountPaths(podTemplate *ofstv2.PodTemplateSpec) error 
 		// Check container volume mounts
 		for _, rvmp := range milvusReservedVolumesMountPaths {
 			containerList := podTemplate.Spec.Containers
-			for i := range containerList {
-				mountPathList := containerList[i].VolumeMounts
-				for j := range mountPathList {
-					if mountPathList[j].MountPath == rvmp {
-						return errors.New("Can't use a reserve volume mount path name: " + rvmp)
-					}
-				}
-			}
-		}
-	}
-
-	if podTemplate.Spec.InitContainers != nil {
-		// Check init container volume mounts
-		for _, rvmp := range milvusReservedVolumesMountPaths {
-			containerList := podTemplate.Spec.InitContainers
 			for i := range containerList {
 				mountPathList := containerList[i].VolumeMounts
 				for j := range mountPathList {
