@@ -299,7 +299,11 @@ func (m *Milvus) setDefaultContainerSecurityContext(mlvVersion *catalog.MilvusVe
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = mlvVersion.Spec.SecurityContext.RunAsUser
+		if mlvVersion.Spec.SecurityContext != nil && mlvVersion.Spec.SecurityContext.RunAsUser != nil {
+			podTemplate.Spec.SecurityContext.FSGroup = mlvVersion.Spec.SecurityContext.RunAsUser
+		} else {
+			podTemplate.Spec.SecurityContext.FSGroup = pointer.Int64P(10001)
+		}
 	}
 
 	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.MilvusContainerName)
