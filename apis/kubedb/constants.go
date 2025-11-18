@@ -2093,6 +2093,7 @@ const (
 	OracleSysDbaUser = "sys"
 
 	OracleContainerName             = "oracle"
+	OracleObserverContainer         = "observer"
 	OracleCoordinatorContainerName  = "oracle-coordinator"
 	OracleObserverContainerName     = "observer"
 	OracleInitContainerName         = "oracle-init"
