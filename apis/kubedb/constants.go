@@ -1525,7 +1525,7 @@ const (
 	WeaviateVolumeTempConfig   = "temp-config"
 	WeaviateVolumeCustomConfig = "custom-config"
 
-	WeaviateDataDir         = "/var/lib/weaviate/mnesia"
+	WeaviateDataDir         = "/weaviate/storage"
 	WeaviateConfigDir       = "/config/"
 	WeaviatePluginsDir      = "/etc/weaviate/"
 	WeaviateCertDir         = "/var/private/ssl"
