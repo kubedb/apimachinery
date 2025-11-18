@@ -284,3 +284,10 @@ func (w *Weaviate) GetConnectionScheme() string {
 	//}
 	return scheme
 }
+
+func (w *Weaviate) ConfigSecretName() string {
+	if w.Spec.ConfigSecret != nil {
+		return w.Spec.ConfigSecret.Name
+	}
+	return fmt.Sprintf("%s-config", w.Name)
+}
