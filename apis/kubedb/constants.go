@@ -1552,6 +1552,8 @@ const (
 	WeaviateLoopBackUserKey            = "loopback_users"
 	WeaviateLoopBackUserVal            = "none"
 	WeaviateAPIKey                     = "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
+
+	WeaviateConfigFileName = "config.yaml"
 )
 
 // =========================== FerretDB Constants ============================
