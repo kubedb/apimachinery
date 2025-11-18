@@ -58,16 +58,11 @@ type QdrantVersionSpec struct {
 	Deprecated bool `json:"deprecated,omitempty"`
 	// SecurityContext is for the additional config for the DB container
 	// +optional
-	SecurityContext QdrantSecurityContext `json:"securityContext"`
+	SecurityContext SecurityContext `json:"securityContext"`
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
-}
-
-// QdrantSecurityContext is for the additional config for the DB container
-type QdrantSecurityContext struct {
-	RunAsUser *int64 `json:"runAsUser,omitempty"`
 }
 
 // QdrantVersionDatabase is the Qdrant Database image

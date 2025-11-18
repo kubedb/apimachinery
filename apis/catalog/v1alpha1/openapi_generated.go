@@ -669,7 +669,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionPodSecurityPolicy":             schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionProxysql":                      schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionProxysql(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantSecurityContext":                        schema_apimachinery_apis_catalog_v1alpha1_QdrantSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersion":                                schema_apimachinery_apis_catalog_v1alpha1_QdrantVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionList(ref),
@@ -32264,25 +32263,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref common.Re
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_QdrantSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "QdrantSecurityContext is for the additional config for the DB container",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_QdrantVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -32427,7 +32407,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionSpec(ref common.Refe
 						SchemaProps: spec.SchemaProps{
 							Description: "SecurityContext is for the additional config for the DB container",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantSecurityContext"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
 					"updateConstraints": {
@@ -32455,7 +32435,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
