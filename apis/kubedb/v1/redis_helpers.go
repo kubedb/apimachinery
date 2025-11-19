@@ -322,8 +322,10 @@ func (r *RedisSpec) GetPersistentSecrets() []string {
 	}
 
 	var secrets []string
-	if r.AuthSecret != nil {
-		secrets = append(secrets, r.AuthSecret.Name)
+	if !IsVirtualAuthSecretReferred(r.AuthSecret) {
+		if r.AuthSecret != nil {
+			secrets = append(secrets, r.AuthSecret.Name)
+		}
 	}
 	return secrets
 }
