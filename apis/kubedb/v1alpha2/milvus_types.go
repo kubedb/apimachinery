@@ -58,16 +58,11 @@ type MilvusSpec struct {
 	// Version of Milvus to be deployed
 	Version string `json:"version"`
 
-	// Replicas represents the number of Milvus standalone replicas
-	// +kubebuilder:default=1
-	// +optional
-	Replicas *int32 `json:"replicas,omitempty"`
+	// Metadata contains configuration for etcd metadata storage
+	MetadataStorage *MilvusMetadataStorage `json:"milvusmetadataStorage,omitempty"`
 
-	// Etcd contains configuration for etcd metadata storage
-	Etcd *MilvusEtcdSpec `json:"etcd"`
-
-	// MinIO contains configuration for MinIO object storage
-	MinIO *MinIOSpec `json:"minio"`
+	// ObjectStorage contains specification for druid to connect to the object storage
+	ObjectStorage *ObjectStorageSpec `json:"objectStorage"`
 
 	// Milvus cluster topology
 	// +optional
@@ -124,8 +119,8 @@ type MilvusTopology struct {
 }
 
 // +k8s:deepcopy-gen=true
-// EtcdSpec defines the configuration for etcd metadata storage
-type MilvusEtcdSpec struct {
+// Metadata Storage defines the configuration for etcd metadata storage
+type MilvusMetadataStorage struct {
 	// ExternallyManaged indicates whether etcd is managed outside this operator.
 	// If true, only endpoints are used. If false, an EtcdCluster CR is created.
 	// +optional
@@ -137,7 +132,7 @@ type MilvusEtcdSpec struct {
 	// +optional
 	Endpoints []string `json:"endpoints,omitempty"`
 
-	// Size is the expected size of the etcd cluster.
+	// Size is the expected size of the cluster.
 	// Required when ExternallyManaged=false. Ignored otherwise.
 	// +kubebuilder:validation:Minimum=1
 	// +optional
@@ -153,8 +148,8 @@ type MilvusEtcdSpec struct {
 }
 
 // +k8s:deepcopy-gen=true
-// MinIOSpec defines the configuration for MinIO object storage
-type MinIOSpec struct {
+// ObjectStorageStorageSpec defines the configuration for MinIO or S3 object storage
+type ObjectStorageSpec struct {
 	// ConfigSecret should contain the necessary data to connect to external MinIO
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`

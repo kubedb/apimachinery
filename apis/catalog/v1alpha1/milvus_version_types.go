@@ -30,6 +30,7 @@ const (
 // Package v1alpha2 contains API Schema definitions for the  v1alpha2 API group.
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
+// +genclient:nonNamespaced
 // +kubebuilder:resource:path=milvusversions,singular=milvusversion,scope=Cluster,shortName=mvversion,categories={catalog,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
@@ -47,7 +48,7 @@ type MilvusVersionSpec struct {
 	Version string `json:"version"`
 
 	// Database Image
-	DB MilvusVersionDatabase `json:"db"`
+	DB MilvusDatabase `json:"db"`
 
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
@@ -55,7 +56,7 @@ type MilvusVersionSpec struct {
 
 	// SecurityContext is for the additional config for the DB container
 	// +optional
-	SecurityContext *SecurityContext `json:"securityContext"`
+	SecurityContext SecurityContext `json:"securityContext"`
 
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
@@ -64,7 +65,7 @@ type MilvusVersionSpec struct {
 }
 
 // +k8s:deepcopy-gen=true
-type MilvusVersionDatabase struct {
+type MilvusDatabase struct {
 	Image string `json:"image"`
 }
 

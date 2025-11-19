@@ -83,7 +83,30 @@ spec:
                 type: string
               disableSecurity:
                 type: boolean
-              etcd:
+              halted:
+                type: boolean
+              healthChecker:
+                default:
+                  failureThreshold: 3
+                  periodSeconds: 10
+                  timeoutSeconds: 10
+                properties:
+                  disableWriteCheck:
+                    type: boolean
+                  failureThreshold:
+                    default: 1
+                    format: int32
+                    type: integer
+                  periodSeconds:
+                    default: 10
+                    format: int32
+                    type: integer
+                  timeoutSeconds:
+                    default: 10
+                    format: int32
+                    type: integer
+                type: object
+              milvusmetadataStorage:
                 properties:
                   endpoints:
                     items:
@@ -189,30 +212,7 @@ spec:
                     - Ephemeral
                     type: string
                 type: object
-              halted:
-                type: boolean
-              healthChecker:
-                default:
-                  failureThreshold: 3
-                  periodSeconds: 10
-                  timeoutSeconds: 10
-                properties:
-                  disableWriteCheck:
-                    type: boolean
-                  failureThreshold:
-                    default: 1
-                    format: int32
-                    type: integer
-                  periodSeconds:
-                    default: 10
-                    format: int32
-                    type: integer
-                  timeoutSeconds:
-                    default: 10
-                    format: int32
-                    type: integer
-                type: object
-              minio:
+              objectStorage:
                 properties:
                   configSecret:
                     properties:
@@ -3313,10 +3313,6 @@ spec:
                         type: array
                     type: object
                 type: object
-              replicas:
-                default: 1
-                format: int32
-                type: integer
               serviceTemplates:
                 items:
                   properties:
@@ -3493,8 +3489,7 @@ spec:
               version:
                 type: string
             required:
-            - etcd
-            - minio
+            - objectStorage
             - version
             type: object
           status:

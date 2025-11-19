@@ -30,7 +30,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
-	"k8s.io/utils/ptr"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -134,12 +133,6 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 			db.Name,
 			err.Error()))
-	}
-
-	if ptr.Deref(db.Spec.Replicas, 0) != 1 {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
-			db.Name,
-			"number of replicas for standalone must be one "))
 	}
 
 	err = milvusValidateVolumes(db.Spec.PodTemplate)
