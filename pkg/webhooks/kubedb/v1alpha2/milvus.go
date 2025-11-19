@@ -21,6 +21,8 @@ import (
 	"errors"
 	"fmt"
 
+	"gomodules.xyz/x/arrays"
+	core "k8s.io/api/core/v1"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -135,6 +137,26 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 			err.Error()))
 	}
 
+	var forbiddenMilvusEnvVars = []string{
+		kubedb.EnvMilvusUsername,
+		kubedb.EnvMilvusPassword,
+		kubedb.MinioAddressName,
+		kubedb.MinioAddressKey,
+		kubedb.MinioAccessKeyName,
+		kubedb.MinioAccessKey,
+		kubedb.MinioSecretKeyName,
+		kubedb.MinioSecretKey,
+		kubedb.EtcdEndpointsName,
+	}
+
+	if db.Spec.PodTemplate != nil {
+		if err = ValidateMilvusEnvVar(getMilvusContainerEnvs(db), forbiddenMilvusEnvVars, db.ResourceKind()); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
+				db.Name,
+				err.Error()))
+		}
+	}
+
 	err = milvusValidateVolumes(db.Spec.PodTemplate)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
@@ -170,7 +192,7 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 
 // reserved volume and volumes mounts for milvus
 var milvusReservedVolumes = []string{
-	kubedb.MilvusDataName,
+	kubedb.MilvusVolumeNameData,
 	kubedb.MilvusConfigVolName,
 }
 
@@ -226,5 +248,24 @@ func milvusValidateVolumesMountPaths(podTemplate *ofstv2.PodTemplateSpec) error 
 		}
 	}
 
+	return nil
+}
+
+func getMilvusContainerEnvs(db *olddbapi.Milvus) []core.EnvVar {
+	for _, container := range db.Spec.PodTemplate.Spec.Containers {
+		if container.Name == kubedb.MilvusContainerName {
+			return container.Env
+		}
+	}
+	return []core.EnvVar{}
+}
+
+func ValidateMilvusEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resourceType string) error {
+	for _, env := range envs {
+		present, _ := arrays.Contains(forbiddenEnvs, env.Name)
+		if present {
+			return fmt.Errorf("environment variable %s is forbidden to use in %s spec", env.Name, resourceType)
+		}
+	}
 	return nil
 }
