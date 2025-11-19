@@ -28320,6 +28320,10 @@
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec"
         },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
+        },
         "migration": {
           "description": "Specifies information necessary for migrating storageClass or data",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresMigrationSpec"
