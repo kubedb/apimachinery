@@ -46,9 +46,6 @@ func SetupWeaviateWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-weaviate-kubedb-com-v1alpha1-weaviate,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=weaviates,verbs=create;update,versions=v1alpha1,name=mweaviate.kb.io,admissionReviewVersions={v1,v1beta1}
-
-// +kubebuilder:object:generate=false
 type WeaviateCustomWebhook struct {
 	DefaultClient client.Client
 }
@@ -69,8 +66,6 @@ func (w *WeaviateCustomWebhook) Default(ctx context.Context, obj runtime.Object)
 	db.SetDefaults(w.DefaultClient)
 	return nil
 }
-
-//+kubebuilder:webhook:path=/validate-weaviate-kubedb-com-v1alpha1-weaviate,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=weaviates,verbs=create;update,versions=v1alpha1,name=vweaviate.kb.io,admissionReviewVersions={v1,v1beta1}
 
 var _ webhook.CustomValidator = &WeaviateCustomWebhook{}
 
@@ -107,7 +102,7 @@ func (w *WeaviateCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.
 	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			db.GetName(),
-			"Can not delete as terminationPolicy is set to \"DoNotTerminate\""))
+			"Can not delete as deletionPolicy is set to \"DoNotTerminate\""))
 		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "weaviate.kubedb.com", Kind: "Weaviate"}, db.GetName(), allErr)
 	}
 	return nil, nil
@@ -161,11 +156,11 @@ func (w *WeaviateCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Weaviate) er
 		}
 	}
 
-	//if db.Spec.ConfigSecret != nil && db.Spec.ConfigSecret.Name == "" {
-	//	allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configSecret").Child("name"),
-	//		db.GetName(),
-	//		"ConfigSecret Name can not be empty"))
-	//}
+	if db.Spec.ConfigSecret != nil && db.Spec.ConfigSecret.Name == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configSecret").Child("name"),
+			db.GetName(),
+			"ConfigSecret Name can not be empty"))
+	}
 
 	if len(allErr) == 0 {
 		return nil
