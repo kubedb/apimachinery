@@ -3364,8 +3364,8 @@ spec:
                 properties:
                   mode:
                     enum:
-                    - AvailabilityGroup
-                    - DistributedAG
+                    - Standalone
+                    - SystemReplication
                     type: string
                 type: object
               version:

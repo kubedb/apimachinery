@@ -29409,7 +29409,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSpec(ref common.ReferenceCal
 					},
 					"topology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Topology configures the deployment topology (e.g. standalone or system replication).",
+							Description: "Topology defines the deployment mode (e.g., standalone or system replication).",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBTopology"),
 						},
 					},
@@ -29528,7 +29528,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTopology(ref common.Referenc
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "HanaTopology defines the topology for HanaDB cluster (inspired by SAP HANA scale-out: coordinator for system DB/master, workers for data, standbys for HA).",
+				Description: "HanaDBTopology defines the deployment mode for HanaDB",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"mode": {
