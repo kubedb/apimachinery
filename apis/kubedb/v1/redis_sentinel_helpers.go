@@ -271,8 +271,10 @@ func (rs *RedisSentinel) GetPersistentSecrets() []string {
 	}
 
 	var secrets []string
-	if rs.Spec.AuthSecret != nil {
-		secrets = append(secrets, rs.Spec.AuthSecret.Name)
+	if !IsVirtualAuthSecretReferred(rs.Spec.AuthSecret) {
+		if rs.Spec.AuthSecret != nil {
+			secrets = append(secrets, rs.Spec.AuthSecret.Name)
+		}
 	}
 	return secrets
 }
