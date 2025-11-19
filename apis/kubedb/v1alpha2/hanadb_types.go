@@ -48,12 +48,12 @@ const (
 	OperationModeLogReplayReadAccess OperationMode = "logreplay_readaccess"
 )
 
-// +kubebuilder:validation:Enum=2;3
-type ReplicationTier int
+// +kubebuilder:validation:Enum=Standalone;SystemReplication
+type HanaDBMode string
 
 const (
-	ReplicationTier2 ReplicationTier = 2
-	ReplicationTier3 ReplicationTier = 3
+	HanaDBModeStandalone        HanaDBMode = "Standalone"
+	HanaDBModeSystemReplication HanaDBMode = "SystemReplication"
 )
 
 // HanaDB is the Schema for the hanadbs API
@@ -92,9 +92,9 @@ type HanaDBSpec struct {
 	// Number of instances to deploy for a HanaDB database
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// SystemReplication configures the system replication settings.
+	// Topology defines the deployment mode (e.g., standalone or system replication).
 	// +optional
-	SystemReplication *SystemReplicationSpec `json:"systemReplication,omitempty"`
+	Topology *HanaDBTopology `json:"topology,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -129,42 +129,11 @@ type HanaDBSpec struct {
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
-// SystemReplicationSpec defines the system replication configuration for HanaDB
-type SystemReplicationSpec struct {
-	// Primary defines the primary replica configuration
+// HanaDBTopology defines the deployment mode for HanaDB
+type HanaDBTopology struct {
+	// Mode specifies the deployment mode.
 	// +optional
-	Primary *SystemReplicationPrimary `json:"primary,omitempty"`
-
-	// Secondaries defines the list of secondary replicas
-	// +optional
-	Secondaries []SystemReplicationSecondary `json:"secondaries,omitempty"`
-}
-
-// SystemReplicationPrimary defines the primary replica configuration
-type SystemReplicationPrimary struct {
-	// Name of the primary replica
-	Name string `json:"name"`
-}
-
-// SystemReplicationSecondary defines the secondary replica configuration
-type SystemReplicationSecondary struct {
-	// Name of the secondary replica
-	Name string `json:"name"`
-
-	// Mode specifies the replication mode (sync, syncmem, async)
-	// +optional
-	// +kubebuilder:default=sync
-	Mode ReplicationMode `json:"mode,omitempty"`
-
-	// OperationMode specifies the operation mode (logreplay, delta_datashipping, logreplay_readaccess)
-	// +optional
-	// +kubebuilder:default=logreplay
-	OperationMode OperationMode `json:"operationMode,omitempty"`
-
-	// Tier specifies the replication tier (2 or 3)
-	// +optional
-	// +kubebuilder:default=2
-	Tier ReplicationTier `json:"tier,omitempty"`
+	Mode *HanaDBMode `json:"mode,omitempty"`
 }
 
 // HanaDBStatus defines the observed state of HanaDB.

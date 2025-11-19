@@ -2288,13 +2288,52 @@ const (
 
 const (
 	HanaDBVolumeScripts = "hanadb-scripts"
-	HanaDBDataVolume    = "data"
 
 	HanaDBVolumeMountScripts = "/scripts"
-	HanaDBDataDir            = "/hana/mounts"
 
-	HanaDBDnsPolicy                = "ClusterFirst"
-	HanaDBSubdomain                = "hana-pods"
+	// Container names
 	HanaDBContainerName            = "hanadb"
-	HanaDBVolumeNamePasswordSecret = "password-secret"
+	HanaDBCoordinatorContainerName = "hanadb-coordinator"
+
+	// Mount paths
+	HanaDBDataDir         = "/hana/mounts"
+	HanaDBSecretMountPath = "/etc/hana-secrets"
+
+	// Volume names
+	HanaDBDataVolume           = "data"
+	HanaDBVolumePasswordSecret = "password-secret"
+
+	// User and Group IDs
+	HanaDBUserID  = 12000 // hxeadm UID
+	HanaDBGroupID = 79    // hxeadm GID
+
+	// Health check schema and table
+	HanaDBHealthCheckSchemaName = "KUBEDB_SYSTEM"
+	HanaDBHealthCheckTableName  = "KUBEDB_WRITE_CHECK"
+
+	// Auth secret
+	HanaDBPasswordFileKey   = "password.json"
+	HanaDBMasterPasswordKey = "master_password"
+
+	// Main SYSTEMDB SQL connection port, Used by health checks and administrative operations
+	HanaDBSystemDBSQLPortName = "systemdb-sql"
+	HanaDBSystemDBSQLPort     = 39017
+
+	// Nameserver port for internal communication and system replication
+	HanaDBNameServerPortName = "nameserver"
+	HanaDBNameServerPort     = 39001
+
+	// SYSTEMDB SQL mapping port - used internally for routing
+	HanaDBSystemDBMappingPortName = "systemdb-map"
+	HanaDBSystemDBMappingPort     = 39013
+
+	HanaDBPrimaryServicePortName = "primary"
+
+	HanaDBCoordinatorPort           = 2380
+	HanaDBCoordinatorClientPort     = 2379
+	HanaDBCoordinatorPortName       = "coordinator"
+	HanaDBCoordinatorClientPortName = "coordinatclient"
+
+	// TenantDatabaseName is the name of the KubeDB managed tenant database
+	KubeDBTenantDatabaseName = "KUBEDB"
 )
