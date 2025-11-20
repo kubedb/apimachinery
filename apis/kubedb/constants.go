@@ -909,9 +909,6 @@ const (
 	MinioAccessKey     = "accessKeyId"
 	MinioSecretKeyName = "MINIO_SECRET_KEY"
 	MinioSecretKey     = "secretAccessKey"
-
-	EnvMilvusUsername = "MILVUS_USERNAME"
-	EnvMilvusPassword = "MILVUS_PASSWORD"
 )
 
 const (
