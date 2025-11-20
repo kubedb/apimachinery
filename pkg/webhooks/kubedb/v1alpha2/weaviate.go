@@ -179,8 +179,6 @@ func (w *WeaviateCustomWebhook) ValidateVersion(db *olddbapi.Weaviate) error {
 
 var weaviateReservedVolumes = []string{
 	kubedb.WeaviateVolumeData,
-	kubedb.WeaviateVolumeConfig,
-	kubedb.WeaviateVolumeTempConfig,
 }
 
 func (w *WeaviateCustomWebhook) validateVolumes(db *olddbapi.Weaviate) error {
@@ -202,7 +200,6 @@ func (w *WeaviateCustomWebhook) validateVolumes(db *olddbapi.Weaviate) error {
 }
 
 var weaviateReservedVolumeMountPaths = []string{
-	kubedb.WeaviateConfigDir,
 	kubedb.WeaviateDataDir,
 }
 
