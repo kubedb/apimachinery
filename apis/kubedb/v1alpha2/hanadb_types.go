@@ -30,24 +30,6 @@ const (
 	ResourcePluralHanaDB   = "hanadbs"
 )
 
-// +kubebuilder:validation:Enum=sync;syncmem;async
-type ReplicationMode string
-
-const (
-	ReplicationModeSync    ReplicationMode = "sync"
-	ReplicationModeSyncMem ReplicationMode = "syncmem"
-	ReplicationModeAsync   ReplicationMode = "async"
-)
-
-// +kubebuilder:validation:Enum=logreplay;delta_datashipping;logreplay_readaccess
-type OperationMode string
-
-const (
-	OperationModeLogReplay           OperationMode = "logreplay"
-	OperationModeDeltaDataShipping   OperationMode = "delta_datashipping"
-	OperationModeLogReplayReadAccess OperationMode = "logreplay_readaccess"
-)
-
 // +kubebuilder:validation:Enum=Standalone;SystemReplication
 type HanaDBMode string
 
