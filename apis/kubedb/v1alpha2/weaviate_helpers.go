@@ -265,7 +265,3 @@ func (w *Weaviate) ConfigSecretName() string {
 	}
 	return fmt.Sprintf("%s-config", w.Name)
 }
-
-func (w *Weaviate) ServiceAccountName() string {
-	return w.OffshootName()
-}
