@@ -25,6 +25,7 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -104,6 +105,11 @@ func validateHazelcastOpsRequest(req *opsapi.HazelcastOpsRequest, oldReq *opsapi
 }
 
 func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.HazelcastOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.HazelcastOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Hazelcast are %s", req.Spec.Type, strings.Join(opsapi.HazelcastOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.HazelcastOpsRequestType) {
 	case opsapi.HazelcastOpsRequestTypeRestart:
@@ -154,10 +160,8 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 				req.Name,
 				err.Error()))
 		}
-	default:
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Hazelcast are %s", req.Spec.Type, strings.Join(opsapi.HazelcastOpsRequestTypeNames(), ", "))))
 	}
+
 	if len(allErr) == 0 {
 		return nil
 	}

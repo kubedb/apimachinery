@@ -92,13 +92,13 @@ func (w *MongoDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj
 }
 
 func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MongoDBOpsRequest) error {
-	var allErr field.ErrorList
 	// validate MongoDBOpsRequest specs
-	if !IsOpsTypeSupported(opsapi.MongoDBOpsRequestTypeNames(), string(req.Spec.Type)) {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MongoDB are %s", req.Spec.Type, strings.Join(opsapi.MongoDBOpsRequestTypeNames(), ", "))))
+	if !IsOpsTypeSupported(opsapi.MongoDBOpsRequestTypeNames(), string(string(req.Spec.Type))) {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MongoDB are %s", req.Spec.Type, strings.Join(opsapi.MongoDBOpsRequestTypeNames(), ", ")))
 	}
 
+	var allErr field.ErrorList
 	var db dbapi.MongoDB
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
@@ -123,6 +123,7 @@ func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mong
 				err.Error()))
 		}
 	}
+
 	if len(allErr) == 0 {
 		return nil
 	}

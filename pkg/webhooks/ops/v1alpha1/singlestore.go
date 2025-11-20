@@ -26,6 +26,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
+	"gomodules.xyz/x/arrays"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -104,13 +105,18 @@ func validateSinglestoreOpsRequest(req *opsapi.SinglestoreOpsRequest, oldReq *op
 }
 
 func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SinglestoreOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.SinglestoreOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Singlestore are %s", req.Spec.Type, strings.Join(opsapi.SinglestoreOpsRequestTypeNames(), ", ")))
+	}
+
+	var allErr field.ErrorList
 	pp := &dbapi.Singlestore{ObjectMeta: metav1.ObjectMeta{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}}
 	err := s.DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(pp), pp)
 	if err != nil && apierrors.IsNotFound(err) {
 		return fmt.Errorf("referenced database %s/%s is not found", req.Namespace, req.Spec.DatabaseRef.Name)
 	}
 
-	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.SinglestoreOpsRequestType) {
 	case opsapi.SinglestoreOpsRequestTypeRestart:
 		if _, err := s.hasDatabaseRef(req); err != nil {
@@ -154,11 +160,8 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				req.Name,
 				err.Error()))
 		}
-
-	default:
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Singlestore are %s", req.Spec.Type, strings.Join(opsapi.SinglestoreOpsRequestTypeNames(), ", "))))
 	}
+
 	if len(allErr) == 0 {
 		return nil
 	}

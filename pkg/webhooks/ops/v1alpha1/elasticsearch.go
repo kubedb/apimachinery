@@ -20,12 +20,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -128,6 +130,10 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateOpensearchVersionCompatib
 }
 
 func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ElasticsearchOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.ElasticsearchOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Elasticsearch are %s", req.Spec.Type, strings.Join(opsapi.ElasticsearchOpsRequestTypeNames(), ", ")))
+	}
 	var allErr field.ErrorList
 	db := &dbapi.Elasticsearch{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
@@ -152,6 +158,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				err.Error()))
 		}
 	}
+
 	if len(allErr) == 0 {
 		return nil
 	}

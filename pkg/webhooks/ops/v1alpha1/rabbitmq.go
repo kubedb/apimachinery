@@ -26,6 +26,7 @@ import (
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -104,6 +105,11 @@ func validateRabbitMQOpsRequest(req *opsapi.RabbitMQOpsRequest, oldReq *opsapi.R
 }
 
 func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RabbitMQOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.RabbitMQOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RabbitMQ are %s", req.Spec.Type, strings.Join(opsapi.RabbitMQOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.RabbitMQOpsRequestType) {
 	case opsapi.RabbitMQOpsRequestTypeRestart:
@@ -154,10 +160,8 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 				req.Name,
 				err.Error()))
 		}
-	default:
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RabbitMQ are %s", req.Spec.Type, strings.Join(opsapi.RabbitMQOpsRequestTypeNames(), ", "))))
 	}
+
 	if len(allErr) == 0 {
 		return nil
 	}

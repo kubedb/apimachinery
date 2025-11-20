@@ -27,6 +27,7 @@ import (
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -106,6 +107,11 @@ func validateMSSQLServerOpsRequest(req *opsapi.MSSQLServerOpsRequest, oldReq *op
 }
 
 func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MSSQLServerOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.MSSQLServerOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MSSQLServer are %s", req.Spec.Type, strings.Join(opsapi.MSSQLServerOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.MSSQLServerOpsRequestType) {
 	case opsapi.MSSQLServerOpsRequestTypeRestart:
@@ -157,10 +163,8 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 
-	default:
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MSSQLServer are %s", req.Spec.Type, strings.Join(opsapi.MSSQLServerOpsRequestTypeNames(), ", "))))
 	}
+
 	if len(allErr) == 0 {
 		return nil
 	}

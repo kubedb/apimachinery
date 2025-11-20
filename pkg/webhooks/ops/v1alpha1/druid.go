@@ -26,6 +26,7 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
@@ -109,6 +110,10 @@ func validateDruidOpsRequest(req *opsapi.DruidOpsRequest, oldReq *opsapi.DruidOp
 }
 
 func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.DruidOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Druid are %s", req.Spec.Type, strings.Join(opsapi.DruidOpsRequestTypeNames(), ", ")))
+	}
 	druid, err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
@@ -166,10 +171,8 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 				req.Name,
 				err.Error()))
 		}
-	default:
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
-			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Druid are %s", req.Spec.Type, strings.Join(opsapi.DruidOpsRequestTypeNames(), ", "))))
 	}
+
 	if len(allErr) == 0 {
 		return nil
 	}

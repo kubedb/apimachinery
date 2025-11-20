@@ -19,12 +19,14 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
+	"gomodules.xyz/x/arrays"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -113,6 +115,11 @@ func (w *RedisSentinelOpsRequestCustomWebhook) isDatabaseRefValid(obj *opsapi.Re
 }
 
 func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisSentinelOpsRequest) error {
+	if validType, _ := arrays.Contains(opsapi.RedisSentinelOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RedisSentinel are %s", req.Spec.Type, strings.Join(opsapi.RedisSentinelOpsRequestTypeNames(), ", ")))
+	}
+
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.RedisSentinelOpsRequestType) {
 	case opsapi.RedisSentinelOpsRequestTypeUpdateVersion:
@@ -122,6 +129,7 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				err.Error()))
 		}
 	}
+
 	if len(allErr) == 0 {
 		return nil
 	}
