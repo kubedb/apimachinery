@@ -2096,8 +2096,8 @@ const (
 	HanaDBCoordinatorPort           = 2380
 	HanaDBCoordinatorClientPort     = 2379
 	HanaDBCoordinatorPortName       = "coordinator"
-	HanaDBCoordinatorClientPortName = "coordinatclient"
+	HanaDBCoordinatorClientPortName = "coordinator-client"
 
 	// TenantDatabaseName is the name of the KubeDB managed tenant database
-	KubeDBTenantDatabaseName = "KUBEDB"
+	KubeDBTenantDatabaseName = "KUBEDB_HEALTH_CHECK"
 )
