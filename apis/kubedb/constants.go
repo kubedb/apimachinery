@@ -1519,6 +1519,8 @@ const (
 	WeaviateDATAPortName   = "data"
 	WeaviateDATAPort       = 7103
 
+	WeaviateClassNameKubeDBSystem = "KubeDBSystem"
+
 	WeaviateVolumeData    = "data"
 	WeaviateDataDir       = "/weaviate/storage"
 	WeaviateContainerName = "weaviate"
