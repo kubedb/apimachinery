@@ -34069,7 +34069,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionSpec(ref common.Re
 					},
 					"deprecated": {
 						SchemaProps: spec.SchemaProps{
-							Description: "InitContainer WeaviateVersionDatabase `json:\"initContainer\"` Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
