@@ -240,8 +240,6 @@ func milvusValidateVolumesMountPaths(podTemplate *ofstv2.PodTemplateSpec) error 
 }
 
 var forbiddenMilvusEnvVars = []string{
-	kubedb.EnvMilvusUsername,
-	kubedb.EnvMilvusPassword,
 	kubedb.MinioAddressName,
 	kubedb.MinioAddressKey,
 	kubedb.MinioAccessKeyName,
