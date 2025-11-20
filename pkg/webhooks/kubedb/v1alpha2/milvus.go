@@ -21,12 +21,12 @@ import (
 	"errors"
 	"fmt"
 
-	"gomodules.xyz/x/arrays"
-	core "k8s.io/api/core/v1"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
+	"gomodules.xyz/x/arrays"
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -137,18 +137,6 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 			err.Error()))
 	}
 
-	var forbiddenMilvusEnvVars = []string{
-		kubedb.EnvMilvusUsername,
-		kubedb.EnvMilvusPassword,
-		kubedb.MinioAddressName,
-		kubedb.MinioAddressKey,
-		kubedb.MinioAccessKeyName,
-		kubedb.MinioAccessKey,
-		kubedb.MinioSecretKeyName,
-		kubedb.MinioSecretKey,
-		kubedb.EtcdEndpointsName,
-	}
-
 	if db.Spec.PodTemplate != nil {
 		if err = ValidateMilvusEnvVar(getMilvusContainerEnvs(db), forbiddenMilvusEnvVars, db.ResourceKind()); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
@@ -249,6 +237,18 @@ func milvusValidateVolumesMountPaths(podTemplate *ofstv2.PodTemplateSpec) error 
 	}
 
 	return nil
+}
+
+var forbiddenMilvusEnvVars = []string{
+	kubedb.EnvMilvusUsername,
+	kubedb.EnvMilvusPassword,
+	kubedb.MinioAddressName,
+	kubedb.MinioAddressKey,
+	kubedb.MinioAccessKeyName,
+	kubedb.MinioAccessKey,
+	kubedb.MinioSecretKeyName,
+	kubedb.MinioSecretKey,
+	kubedb.EtcdEndpointsName,
 }
 
 func getMilvusContainerEnvs(db *olddbapi.Milvus) []core.EnvVar {
