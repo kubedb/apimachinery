@@ -803,6 +803,7 @@ const (
 	HazelcastSecretKey            = "hazelcast.yaml"
 	HazelcastClientSecretKey      = "hazelcast-client.yaml"
 	HazelcastRestPort             = 5701
+	HazelcastUIPort               = 8443
 	HazelcastPortName             = "hazelcast"
 	HazelcastConfigVolume         = "hzconfig"
 	HazelcastDefaultConfigVolume  = "default-config"
