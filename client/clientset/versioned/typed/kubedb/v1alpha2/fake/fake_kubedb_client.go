@@ -53,6 +53,10 @@ func (c *FakeKubedbV1alpha2) FerretDBs(namespace string) v1alpha2.FerretDBInterf
 	return &FakeFerretDBs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) HanaDBs(namespace string) v1alpha2.HanaDBInterface {
+	return &FakeHanaDBs{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Hazelcasts(namespace string) v1alpha2.HazelcastInterface {
 	return &FakeHazelcasts{c, namespace}
 }
