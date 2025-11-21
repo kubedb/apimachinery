@@ -2019,11 +2019,11 @@ var (
 	DefaultResourcesHanaDB = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse("2"),
-			core.ResourceMemory: resource.MustParse("16Gi"),
+			core.ResourceMemory: resource.MustParse("8Gi"),
 		},
 		Limits: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse("4"),
-			core.ResourceMemory: resource.MustParse("32Gi"),
+			core.ResourceMemory: resource.MustParse("16Gi"),
 		},
 	}
 )

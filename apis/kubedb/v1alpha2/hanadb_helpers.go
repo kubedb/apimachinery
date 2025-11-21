@@ -20,12 +20,12 @@ import (
 	"context"
 	"fmt"
 
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
-	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -153,20 +153,12 @@ func (h *HanaDB) GetNameSpacedName() string {
 	return h.Namespace + "/" + h.Name
 }
 
-func (r *HanaDB) Finalizer() string {
-	return fmt.Sprintf("%s/%s", apis.Finalizer, r.ResourceSingular())
-}
-
 func (r *HanaDB) ResourceSingular() string {
 	return ResourceSingularHanaDB
 }
 
 type hanadbStatsService struct {
 	*HanaDB
-}
-
-func (os hanadbStatsService) TLSConfig() *promapi.TLSConfig {
-	return nil
 }
 
 func (os hanadbStatsService) GetNamespace() string {
@@ -209,6 +201,10 @@ func (r hanadbApp) Type() appcat.AppType {
 	return appcat.AppType(fmt.Sprintf("%s/%s", SchemeGroupVersion.Group, ResourceSingularHanaDB))
 }
 
+func (os hanadbStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
+}
+
 func (h HanaDB) AppBindingMeta() appcat.AppBindingMeta {
 	return &hanadbApp{&h}
 }
@@ -239,10 +235,10 @@ func (h *HanaDB) IsCluster() bool {
 
 func (h *HanaDB) SetHealthCheckerDefaults() {
 	if h.Spec.HealthChecker.PeriodSeconds == nil {
-		h.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
+		h.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(120)
 	}
 	if h.Spec.HealthChecker.TimeoutSeconds == nil {
-		h.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(20)
+		h.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(120)
 	}
 	if h.Spec.HealthChecker.FailureThreshold == nil {
 		h.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
