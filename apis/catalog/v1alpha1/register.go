@@ -106,6 +106,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&SinglestoreVersionList{},
 		&SolrVersion{},
 		&SolrVersionList{},
+		&WeaviateVersion{},
+		&WeaviateVersionList{},
 		&ZooKeeperVersion{},
 		&ZooKeeperVersionList{},
 	)
