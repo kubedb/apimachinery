@@ -178,6 +178,14 @@ type ProxySQLListerExpansion interface{}
 // ProxySQLNamespaceLister.
 type ProxySQLNamespaceListerExpansion interface{}
 
+// QdrantListerExpansion allows custom methods to be added to
+// QdrantLister.
+type QdrantListerExpansion interface{}
+
+// QdrantNamespaceListerExpansion allows custom methods to be added to
+// QdrantNamespaceLister.
+type QdrantNamespaceListerExpansion interface{}
+
 // RabbitMQListerExpansion allows custom methods to be added to
 // RabbitMQLister.
 type RabbitMQListerExpansion interface{}
