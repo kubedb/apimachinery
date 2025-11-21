@@ -2106,6 +2106,7 @@ const (
 	HanaDBHealthCheckTableName  = "KUBEDB_WRITE_CHECK"
 
 	// Auth secret
+	HanaDBSystemUser        = "SYSTEM"
 	HanaDBPasswordFileKey   = "password.json"
 	HanaDBMasterPasswordKey = "master_password"
 
