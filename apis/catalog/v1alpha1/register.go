@@ -98,6 +98,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PostgresVersionList{},
 		&ProxySQLVersion{},
 		&ProxySQLVersionList{},
+		&QdrantVersion{},
+		&QdrantVersionList{},
 		&RabbitMQVersion{},
 		&RabbitMQVersionList{},
 		&RedisVersion{},

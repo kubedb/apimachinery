@@ -117,6 +117,10 @@ func (c *FakeCatalogV1alpha1) ProxySQLVersions() v1alpha1.ProxySQLVersionInterfa
 	return &FakeProxySQLVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) QdrantVersions() v1alpha1.QdrantVersionInterface {
+	return &FakeQdrantVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) RabbitMQVersions() v1alpha1.RabbitMQVersionInterface {
 	return &FakeRabbitMQVersions{c}
 }
