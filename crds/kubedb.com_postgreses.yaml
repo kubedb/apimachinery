@@ -4675,7 +4675,7 @@ spec:
                   failoverDelay:
                     default: 0s
                     type: string
-                  maxLSNLagBeforePromotion:
+                  maxLSNLagBeforePromotionInBytes:
                     default: 0
                     format: int64
                     type: integer

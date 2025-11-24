@@ -202,7 +202,7 @@ type PostgresReplication struct {
 	// enforcing a configurable limit on potential data loss.
 	// +kubebuilder:default=0
 	// +optional
-	MaxLSNLagBeforePromotionInBytes *int64 `json:"maxLSNLagBeforePromotion,omitempty"`
+	MaxLSNLagBeforePromotionInBytes *int64 `json:"maxLSNLagBeforePromotionInBytes,omitempty"`
 }
 
 type ArbiterSpec struct {

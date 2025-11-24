@@ -30507,7 +30507,7 @@ func schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref common.Reference
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
-					"maxLSNLagBeforePromotion": {
+					"maxLSNLagBeforePromotionInBytes": {
 						SchemaProps: spec.SchemaProps{
 							Description: "MaxLSNLagBeforePromotion is the maximum allowed LSN (Log Sequence Number) difference (in bytes) between the primary's last known LSN and a candidate replica's LSN. If a replica is lagging by more than this byte threshold, it is considered ineligible for promotion to primary, effectively enforcing a configurable limit on potential data loss.",
 							Type:        []string{"integer"},
