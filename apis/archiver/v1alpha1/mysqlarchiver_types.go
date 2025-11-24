@@ -52,9 +52,6 @@ type MySQLArchiverSpec struct {
 	// Pause defines if the backup process should be paused or not
 	// +optional
 	Pause bool `json:"pause,omitempty"`
-	// RetentionPolicy field is the RetentionPolicy of the backupConfiguration's backend
-	// +optional
-	RetentionPolicy *kmapi.ObjectReference `json:"retentionPolicy"`
 	// FullBackup defines the sessionConfig of the fullBackup
 	// This options will eventually go to the full-backup job's yaml
 	// +optional
