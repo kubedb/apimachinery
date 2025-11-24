@@ -178,6 +178,7 @@ const (
 )
 
 type PostgresReplication struct {
+	// WALimitPolicy defines which WAL retention policy to use.
 	WALLimitPolicy WALLimitPolicy `json:"walLimitPolicy"`
 
 	// +optional
@@ -186,6 +187,22 @@ type PostgresReplication struct {
 	WalKeepSegment *int32 `json:"walKeepSegment,omitempty"`
 	// +optional
 	MaxSlotWALKeepSizeInMegaBytes *int32 `json:"maxSlotWALKeepSize,omitempty"`
+
+	// FailoverDelay is the duration the newly elected Raft leader should wait after the previous
+	// primary has been detected as down before attempting to promote a replica to be the new primary.
+	// This helps prevent unnecessary promotions due to transient network issues, allowing the old
+	// primary time to recover and step down gracefully if possible.
+	// +kubebuilder:default="0s"
+	// +optional
+	FailoverDelay *metav1.Duration `json:"failoverDelay,omitempty"`
+
+	// MaxLSNLagBeforePromotion is the maximum allowed LSN (Log Sequence Number) difference (in bytes)
+	// between the primary's last known LSN and a candidate replica's LSN. If a replica is lagging by more than
+	// this byte threshold, it is considered ineligible for promotion to primary, effectively
+	// enforcing a configurable limit on potential data loss.
+	// +kubebuilder:default=0
+	// +optional
+	MaxLSNLagBeforePromotionInBytes *int64 `json:"maxLSNLagBeforePromotion,omitempty"`
 }
 
 type ArbiterSpec struct {

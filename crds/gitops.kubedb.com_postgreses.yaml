@@ -4650,6 +4650,13 @@ spec:
                 type: integer
               replication:
                 properties:
+                  failoverDelay:
+                    default: 0s
+                    type: string
+                  maxLSNLagBeforePromotion:
+                    default: 0
+                    format: int64
+                    type: integer
                   maxSlotWALKeepSize:
                     format: int32
                     type: integer
