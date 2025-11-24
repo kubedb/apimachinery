@@ -19,6 +19,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -318,7 +319,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(re
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
-	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && !applyConfigExists(req.Spec.Configuration.ApplyConfig) && req.Spec.Configuration.ConfigSecret == nil) {
+	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && !w.applyConfigExists(req.Spec.Configuration.ApplyConfig) && req.Spec.Configuration.ConfigSecret == nil) {
 		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
 	}
 
@@ -326,7 +327,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(re
 	if req.Spec.Configuration.RemoveCustomConfig {
 		assign++
 	}
-	if applyConfigExists(req.Spec.Configuration.ApplyConfig) {
+	if w.applyConfigExists(req.Spec.Configuration.ApplyConfig) {
 		assign++
 	}
 	if req.Spec.Configuration.ConfigSecret != nil {
@@ -340,6 +341,14 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(re
 	}
 
 	return nil
+}
+
+func (w *MySQLOpsRequestCustomWebhook) applyConfigExists(applyConfig map[string]string) bool {
+	if applyConfig == nil {
+		return false
+	}
+	_, exists := applyConfig[kubedb.MySQLCustomConfigFile]
+	return exists
 }
 
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest(req *opsapi.MySQLOpsRequest) error {
