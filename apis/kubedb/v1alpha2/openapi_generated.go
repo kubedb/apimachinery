@@ -572,6 +572,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.GitRepo":                                       schema_apimachinery_apis_kubedb_v1alpha2_GitRepo(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Hazelcast":                                     schema_apimachinery_apis_kubedb_v1alpha2_Hazelcast(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HazelcastApp":                                  schema_apimachinery_apis_kubedb_v1alpha2_HazelcastApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HazelcastBind":                                 schema_apimachinery_apis_kubedb_v1alpha2_HazelcastBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HazelcastList":                                 schema_apimachinery_apis_kubedb_v1alpha2_HazelcastList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HazelcastSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_HazelcastSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HazelcastStatus":                               schema_apimachinery_apis_kubedb_v1alpha2_HazelcastStatus(ref),
@@ -29561,6 +29562,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Hazelcast(ref common.ReferenceCall
 }
 
 func schema_apimachinery_apis_kubedb_v1alpha2_HazelcastApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Hazelcast": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Hazelcast"),
+						},
+					},
+				},
+				Required: []string{"Hazelcast"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Hazelcast"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_HazelcastBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
