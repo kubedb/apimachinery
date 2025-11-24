@@ -30477,9 +30477,10 @@ func schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"walLimitPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "WALimitPolicy defines which WAL retention policy to use.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"walKeepSize": {
@@ -30500,10 +30501,25 @@ func schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref common.Reference
 							Format: "int32",
 						},
 					},
+					"failoverDelay": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FailoverDelay is the duration the newly elected Raft leader should wait after the previous primary has been detected as down before attempting to promote a replica to be the new primary. This helps prevent unnecessary promotions due to transient network issues, allowing the old primary time to recover and step down gracefully if possible.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"maxLSNLagBeforePromotion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxLSNLagBeforePromotion is the maximum allowed LSN (Log Sequence Number) difference (in bytes) between the primary's last known LSN and a candidate replica's LSN. If a replica is lagging by more than this byte threshold, it is considered ineligible for promotion to primary, effectively enforcing a configurable limit on potential data loss.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 				},
 				Required: []string{"walLimitPolicy"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 

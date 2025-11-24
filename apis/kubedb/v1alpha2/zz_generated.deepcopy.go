@@ -5036,6 +5036,16 @@ func (in *PostgresReplication) DeepCopyInto(out *PostgresReplication) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.FailoverDelay != nil {
+		in, out := &in.FailoverDelay, &out.FailoverDelay
+		*out = new(v1.Duration)
+		**out = **in
+	}
+	if in.MaxLSNLagBeforePromotionInBytes != nil {
+		in, out := &in.MaxLSNLagBeforePromotionInBytes, &out.MaxLSNLagBeforePromotionInBytes
+		*out = new(int64)
+		**out = **in
+	}
 	return
 }
 
