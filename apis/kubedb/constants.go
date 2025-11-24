@@ -1527,7 +1527,7 @@ const (
 	WeaviateAPIKey         = "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
 	WeaviateAPIKeyEnabled  = "AUTHENTICATION_APIKEY_ENABLED"
 	WeaviateAPIKeyUsers    = "AUTHENTICATION_APIKEY_USERS"
-	WeaviateConfigFileName = "/weaviate-config/conf.yaml"
+	WeaviateConfigFileName = "conf.yaml"
 )
 
 // =========================== FerretDB Constants ============================
