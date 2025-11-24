@@ -108,6 +108,9 @@ const (
 	// Enables Pulsar operator.
 	// Pulsar featuregate.Feature = "Pulsar"
 
+	// Enables Qdrant operator.
+	Qdrant featuregate.Feature = "Qdrant"
+
 	// Enables RabbitMQ operator.
 	RabbitMQ featuregate.Feature = "RabbitMQ"
 
@@ -162,6 +165,7 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	Pgpool:        {Default: false, PreRelease: featuregate.Alpha},
 	Postgres:      {Default: true, PreRelease: featuregate.GA},
 	ProxySQL:      {Default: false, PreRelease: featuregate.Beta},
+	Qdrant:        {Default: false, PreRelease: featuregate.Alpha},
 	RabbitMQ:      {Default: false, PreRelease: featuregate.Alpha},
 	Redis:         {Default: true, PreRelease: featuregate.GA},
 	Singlestore:   {Default: false, PreRelease: featuregate.Alpha},
