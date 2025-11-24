@@ -29819,6 +29819,14 @@ func schema_apimachinery_apis_catalog_v1alpha1_MilvusVersionSpec(ref common.Refe
 							Format:      "",
 						},
 					},
+					"etcdVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Etcd Version",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"db": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database Image",
@@ -29861,7 +29869,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MilvusVersionSpec(ref common.Refe
 						},
 					},
 				},
-				Required: []string{"version", "db"},
+				Required: []string{"version", "etcdVersion", "db"},
 			},
 		},
 		Dependencies: []string{

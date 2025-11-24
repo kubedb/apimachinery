@@ -887,9 +887,11 @@ const (
 )
 
 const (
-	MilvusPrimaryServicePortName = "primary"
-	MilvusGrpcPortName           = "grpc"
-	MilvusGrpcPort               = int32(19530)
+	MilvusUsername = "root"
+	
+	MilvusServicePortName = "primary"
+	MilvusGrpcPortName    = "grpc"
+	MilvusGrpcPort        = int32(19530)
 
 	MilvusVolumeNameData = "data"
 	MilvusDataDir        = "/var/lib/milvus"

@@ -47,6 +47,9 @@ type MilvusVersionSpec struct {
 	// Version
 	Version string `json:"version"`
 
+	// Etcd Version
+	EtcdVersion string `json:"etcdVersion"`
+
 	// Database Image
 	DB MilvusDatabase `json:"db"`
 

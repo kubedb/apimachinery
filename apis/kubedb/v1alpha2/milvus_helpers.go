@@ -76,10 +76,6 @@ func (m *Milvus) ServiceName() string {
 	return m.OffshootName()
 }
 
-func (m *Milvus) GoverningServiceName() string {
-	return meta_util.NameWithSuffix(m.ServiceName(), "pods")
-}
-
 func (m *Milvus) PetSetName() string {
 	return m.OffshootName()
 }
@@ -126,43 +122,15 @@ func (m *Milvus) OffshootSelectors(extraSelectors ...map[string]string) map[stri
 	return meta_util.OverwriteKeys(selector, extraSelectors...)
 }
 
-func (m *Milvus) PodLabels(extraLabels ...map[string]string) map[string]string {
-	var podTemplateLabels map[string]string
-	if m.Spec.PodTemplate.Labels != nil {
-		podTemplateLabels = m.Spec.PodTemplate.Labels
+func (m *Milvus) PodLabel(podTemplate *ofstv2.PodTemplateSpec) map[string]string {
+	if podTemplate != nil && podTemplate.Labels != nil {
+		return m.offshootLabels(m.OffshootSelectors(), m.Spec.PodTemplate.Labels)
 	}
-	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), podTemplateLabels)
+	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
 func (m *Milvus) ServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc.cluster.local:%d", m.ServiceName(), m.Namespace, kubedb.MilvusGrpcPort)
-}
-
-func (m *Milvus) getAuthSecret(ctx context.Context, kc client.Client) (*core.Secret, error) {
-	secret := &core.Secret{}
-	err := kc.Get(ctx, types.NamespacedName{
-		Name:      m.Spec.AuthSecret.Name,
-		Namespace: m.Namespace,
-	}, secret)
-	return secret, err
-}
-
-func (m *Milvus) GetUsername(ctx context.Context, kc client.Client) (string, error) {
-	secret, _ := m.getAuthSecret(ctx, kc)
-	data, ok := secret.Data[core.BasicAuthUsernameKey]
-	if !ok || len(data) == 0 {
-		return "", fmt.Errorf("username key %q missing in secret %s", core.BasicAuthUsernameKey, secret.Name)
-	}
-	return string(data), nil
-}
-
-func (m *Milvus) GetPassword(ctx context.Context, kc client.Client) (string, error) {
-	secret, _ := m.getAuthSecret(ctx, kc)
-	data, ok := secret.Data[core.BasicAuthPasswordKey]
-	if !ok || len(data) == 0 {
-		return "", fmt.Errorf("password key %q missing in secret %s", core.BasicAuthPasswordKey, secret.Name)
-	}
-	return string(data), nil
 }
 
 func (m *Milvus) SetHealthCheckerDefaults() {

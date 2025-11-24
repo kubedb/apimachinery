@@ -54,6 +54,8 @@ spec:
                 type: object
               deprecated:
                 type: boolean
+              etcdVersion:
+                type: string
               securityContext:
                 properties:
                   runAsUser:
@@ -90,6 +92,7 @@ spec:
                 type: string
             required:
             - db
+            - etcdVersion
             - version
             type: object
         type: object
