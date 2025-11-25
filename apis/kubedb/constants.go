@@ -36,16 +36,32 @@ const (
 	LabelRole                  = GroupName + "/role"
 	LabelPetSet                = GroupName + "/petset"
 
+	PrometheusAddressFile     = "/var/prometheus-data/address"
+	PrometheusCaFile          = "/var/prometheus-data/ca.crt"
+	PrometheusTokenFile       = "/var/prometheus-data/token.txt"
+	MonitoringAgentAnnotation = GroupName + "/monitoring-agent"
+
 	// distributed const
-	DistributedCustomConfigSecretNameSuffix = "custom-config"
-	DistributedRBACNameSuffix               = "rbac"
-	DistributedServiceExportNameSuffix      = "serviceexports"
-	DistributedTLSSecretNameSuffix          = "tls-secrets"
-	DistributedGRPCSecretNameSuffix         = "grpc-secrets"
-	DistributedAuthSecretNameSuffix         = "auth"
-	KubeSliceNSMIPKey                       = "kubeslice.io/nsmIP"
-	KubeSlicePodIPVolumeName                = "podip"
-	KubeSlicePodIPFileName                  = "podip"
+	DistributedDatabaseLabel                   = GroupName + "/distributed"
+	DistributedCustomConfigSecretNameSuffix    = "custom-config"
+	DistributedRBACNameSuffix                  = "rbac"
+	DistributedServiceExportNameSuffix         = "serviceexports"
+	DistributedTLSSecretNameSuffix             = "tls-secrets"
+	DistributedGRPCSecretNameSuffix            = "grpc-secrets"
+	DistributedAuthSecretNameSuffix            = "auth"
+	DistributedPromethuesSecretNameSuffix      = "prometheus-data"
+	DistributedPromethuesSecretVolumeName      = "prometheus-data"
+	DistributedPromethuesSecretVolumeMountPath = "/var/prometheus-data"
+	DistributedMonitoringAgentENV              = "MONITORING_AGENT"
+	DistributedMonitoringAgentPrometheus       = "prometheus"
+	DistributedDBReplicaENV                    = "DB_REPLICAS"
+	DistributedMaxVolumeUsed                   = "max_used"
+	DistributedVolumeCapacity                  = "capacity"
+
+	KubeSliceNSMIPKey         = "kubeslice.io/nsmIP"
+	KubeSlicePodIPVolumeName  = "podip"
+	KubeSlicePodIPFileName    = "podip"
+	KubeSliceNSMContainerName = "cmd-nsc"
 
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
@@ -370,9 +386,16 @@ const (
 	MariaDBMetricsExporterTLSVolumeName  = "metrics-exporter-config"
 	MariaDBMetricsExporterConfigPath     = "/etc/mysql/config/exporter"
 	MariaDBDataVolumeName                = "data"
-	DatabasePodPrimaryComponent          = "Primary"
-	DatabasePodMasterComponent           = "Master"
-	DatabasePodSlaveComponent            = "Slave"
+
+	DatabasePodPrimaryComponent = "Primary"
+	DatabasePodMasterComponent  = "Master"
+	DatabasePodSlaveComponent   = "Slave"
+
+	MariaDBDistributedUpgradeCommand           = "mariadb-upgrade"
+	MariaDBDistributedPodMetricGetCommand      = "get-pod-metrics"
+	MariaDBDistributedPodGetCommand            = "get-pod"
+	MariaDBDistributedVolumeUsageGetCommand    = "get-volume-usage"
+	MariaDBDistributedVolumeCapacityGetCommand = "get-volume-capacity"
 
 	// Maxscale
 	MaxscaleCommonName            = "mx"
@@ -585,7 +608,8 @@ const (
 	ProxySQLConfigSecretKey = "proxysql.cnf"
 
 	// =========================== Redis Constants ============================
-	RedisConfigKey = "redis.conf" // RedisConfigKey is going to create for the customize redis configuration
+	RedisConfigKey      = "redis.conf"    // RedisConfigKey is going to create for the customize redis configuration
+	RedisAclUserListKey = "user_acl.conf" // RedisAclUserListKey is going to create for the redis acl user list configuration
 	// DefaultConfigKey is going to create for the default redis configuration
 	RedisContainerName             = "redis"
 	RedisSentinelContainerName     = "redissentinel"
@@ -779,6 +803,7 @@ const (
 	HazelcastSecretKey            = "hazelcast.yaml"
 	HazelcastClientSecretKey      = "hazelcast-client.yaml"
 	HazelcastRestPort             = 5701
+	HazelcastUIPort               = 8443
 	HazelcastPortName             = "hazelcast"
 	HazelcastConfigVolume         = "hzconfig"
 	HazelcastDefaultConfigVolume  = "default-config"
@@ -929,6 +954,8 @@ const (
 	KafkaClusterID                         = "cluster.id"
 	KafkaClientID                          = "client.id"
 	KafkaDataDirName                       = "log.dirs"
+	KafkaReplicaSelectorClassKey           = "replica.selector.class"
+	KafkaReplicaSelectorClassName          = "org.apache.kafka.common.replica.RackAwareReplicaSelector"
 	KafkaMetadataDirName                   = "metadata.log.dir"
 	KafkaServerKeystoreKey                 = "server.keystore.jks"
 	KafkaServerTruststoreKey               = "server.truststore.jks"
@@ -1612,10 +1639,13 @@ const (
 	ClickHouseClientKey                = "tls.key"
 	ClickHouseClientPath               = "client.key"
 
+	ClickHouseUserInitScriptVolumeName      = "initial-script"
+	ClickHouseUserInitScriptVolumeMountPath = "/docker-entrypoint-initdb.d"
+
 	// keeper
-	ClickHouseKeeperDataPath     = "/var/lib/clickhouse_keeper"
-	ClickHouseKeeperLogPath      = "/var/lib/clickhouse_keeper/coordination/logs"
-	ClickHouseKeeperSnapshotPath = "/var/lib/clickhouse_keeper/coordination/snapshots"
+	ClickHouseKeeperDataPath     = "/var/lib/clickhouse"
+	ClickHouseKeeperLogPath      = "/var/lib/clickhouse/coordination/logs"
+	ClickHouseKeeperSnapshotPath = "/var/lib/clickhouse/coordination/snapshots"
 
 	ClickHouseInternalKeeperDataPath     = "/var/lib/clickhouse/coordination/log"
 	ClickHouseInternalKeeperSnapshotPath = "/var/lib/clickhouse/coordination/snapshots"
@@ -1796,6 +1826,7 @@ const (
 const (
 	ResourceKindStatefulSet = "StatefulSet"
 	ResourceKindPetSet      = "PetSet"
+	ResourceKindSecret      = "Secret"
 )
 
 var (
@@ -1989,11 +2020,11 @@ var (
 	DefaultResourcesHanaDB = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse("2"),
-			core.ResourceMemory: resource.MustParse("16Gi"),
+			core.ResourceMemory: resource.MustParse("8Gi"),
 		},
 		Limits: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse("4"),
-			core.ResourceMemory: resource.MustParse("32Gi"),
+			core.ResourceMemory: resource.MustParse("10Gi"),
 		},
 	}
 )
@@ -2050,6 +2081,29 @@ const (
 	OracleEnvDataDir           = "ORADATA"
 )
 
+// =========================== Qdrant Constants ============================
+const (
+	QdrantContainerName = "qdrant"
+
+	QdrantHTTPPortName = "http"
+	QdrantHTTPPort     = 6333
+	QdrantGRPCPortName = "grpc"
+	QdrantGRPCPort     = 6334
+	QdrantP2PPortName  = "p2p"
+	QdrantP2PPort      = 6335
+
+	QdrantDataVolName   = "data"
+	QdrantDataDir       = "/qdrant/storage"
+	QdrantConfigVolName = "qdrant-config"
+	QdrantConfigDir     = "/qdrant/config"
+
+	QdrantConfigFileName = "config.yaml"
+
+	QdrantAPIKey         = "api-key"
+	QdrantReadOnlyAPIKey = "read-only-api-key"
+)
+
+// =========================== HanaDB Constants ============================
 const (
 	HanaDBVolumeScripts = "hanadb-scripts"
 
@@ -2076,6 +2130,7 @@ const (
 	HanaDBHealthCheckTableName  = "KUBEDB_WRITE_CHECK"
 
 	// Auth secret
+	HanaDBSystemUser        = "SYSTEM"
 	HanaDBPasswordFileKey   = "password.json"
 	HanaDBMasterPasswordKey = "master_password"
 
