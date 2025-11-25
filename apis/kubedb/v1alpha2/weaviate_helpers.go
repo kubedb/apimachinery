@@ -260,8 +260,8 @@ func (w *Weaviate) GetConnectionScheme() string {
 }
 
 func (w *Weaviate) ConfigSecretName() string {
-	if w.Spec.ConfigSecret != nil && w.Spec.ConfigSecret.Name != "" {
-		return w.Spec.ConfigSecret.Name
-	}
+	//if w.Spec.ConfigSecret != nil && w.Spec.ConfigSecret.Name != "" {
+	//	return w.Spec.ConfigSecret.Name
+	//}
 	return fmt.Sprintf("%s-config", w.Name)
 }
