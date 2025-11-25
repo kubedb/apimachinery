@@ -803,6 +803,7 @@ const (
 	HazelcastSecretKey            = "hazelcast.yaml"
 	HazelcastClientSecretKey      = "hazelcast-client.yaml"
 	HazelcastRestPort             = 5701
+	HazelcastUIPort               = 8443
 	HazelcastPortName             = "hazelcast"
 	HazelcastConfigVolume         = "hzconfig"
 	HazelcastDefaultConfigVolume  = "default-config"
@@ -2067,4 +2068,26 @@ const (
 	OracleEnvPassword          = "ORACLE_PWD"
 	OracleEnvOracleSID         = "ORACLE_SID"
 	OracleEnvDataDir           = "ORADATA"
+)
+
+// =========================== Qdrant Constants ============================
+const (
+	QdrantContainerName = "qdrant"
+
+	QdrantHTTPPortName = "http"
+	QdrantHTTPPort     = 6333
+	QdrantGRPCPortName = "grpc"
+	QdrantGRPCPort     = 6334
+	QdrantP2PPortName  = "p2p"
+	QdrantP2PPort      = 6335
+
+	QdrantDataVolName   = "data"
+	QdrantDataDir       = "/qdrant/storage"
+	QdrantConfigVolName = "qdrant-config"
+	QdrantConfigDir     = "/qdrant/config"
+
+	QdrantConfigFileName = "config.yaml"
+
+	QdrantAPIKey         = "api-key"
+	QdrantReadOnlyAPIKey = "read-only-api-key"
 )
