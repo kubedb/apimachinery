@@ -205,7 +205,7 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 var hanadbReservedVolumes = []string{
 	kubedb2.HanaDBDataVolume,
 	kubedb2.HanaDBVolumeScripts,
-	kubedb2.HanaDBSecretMountPath,
+	kubedb2.HanaDBVolumePasswordSecret,
 }
 
 var hanadbReservedVolumesMountPaths = []string{

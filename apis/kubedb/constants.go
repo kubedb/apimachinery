@@ -2106,11 +2106,11 @@ var (
 	DefaultResourcesHanaDB = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse("2"),
-			core.ResourceMemory: resource.MustParse("16Gi"),
+			core.ResourceMemory: resource.MustParse("8Gi"),
 		},
 		Limits: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse("4"),
-			core.ResourceMemory: resource.MustParse("32Gi"),
+			core.ResourceMemory: resource.MustParse("10Gi"),
 		},
 	}
 )
@@ -2286,6 +2286,29 @@ const (
 	KubeDBTenantDatabaseName = "KUBEDB_HEALTH_CHECK"
 )
 
+// =========================== Qdrant Constants ============================
+const (
+	QdrantContainerName = "qdrant"
+
+	QdrantHTTPPortName = "http"
+	QdrantHTTPPort     = 6333
+	QdrantGRPCPortName = "grpc"
+	QdrantGRPCPort     = 6334
+	QdrantP2PPortName  = "p2p"
+	QdrantP2PPort      = 6335
+
+	QdrantDataVolName   = "data"
+	QdrantDataDir       = "/qdrant/storage"
+	QdrantConfigVolName = "qdrant-config"
+	QdrantConfigDir     = "/qdrant/config"
+
+	QdrantConfigFileName = "config.yaml"
+
+	QdrantAPIKey         = "api-key"
+	QdrantReadOnlyAPIKey = "read-only-api-key"
+)
+
+// =========================== HanaDB Constants ============================
 const (
 	HanaDBVolumeScripts = "hanadb-scripts"
 
@@ -2312,6 +2335,7 @@ const (
 	HanaDBHealthCheckTableName  = "KUBEDB_WRITE_CHECK"
 
 	// Auth secret
+	HanaDBSystemUser        = "SYSTEM"
 	HanaDBPasswordFileKey   = "password.json"
 	HanaDBMasterPasswordKey = "master_password"
 
