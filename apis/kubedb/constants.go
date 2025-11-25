@@ -1521,13 +1521,16 @@ const (
 
 	WeaviateClassNameKubeDBSystem = "KubeDBSystem"
 
-	WeaviateVolumeData     = "data"
-	WeaviateDataDir        = "/weaviate/storage"
-	WeaviateContainerName  = "weaviate"
-	WeaviateAPIKey         = "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
-	WeaviateAPIKeyEnabled  = "AUTHENTICATION_APIKEY_ENABLED"
-	WeaviateAPIKeyUsers    = "AUTHENTICATION_APIKEY_USERS"
-	WeaviateConfigFileName = "conf.yaml"
+	WeaviateVolumeData    = "data"
+	WeaviateDataDir       = "/weaviate/storage"
+	WeaviateContainerName = "weaviate"
+	WeaviateAPIKey        = "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
+	WeaviateAPIKeyEnabled = "AUTHENTICATION_APIKEY_ENABLED"
+	WeaviateAPIKeyUsers   = "AUTHENTICATION_APIKEY_USERS"
+
+	WeaviateConfigFileName  = "conf.yaml"
+	WeaviateCustomConfigDir = "/weaviate-config/conf.yaml"
+	WeaviateConfigVolName   = "config"
 )
 
 // =========================== FerretDB Constants ============================
