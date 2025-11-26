@@ -4672,13 +4672,9 @@ spec:
                 type: integer
               replication:
                 properties:
-                  failoverDelay:
-                    default: 0s
+                  forceFailOverAcceptingDataLossAfter:
+                    default: 2m0s
                     type: string
-                  maxLSNLagBeforePromotionInBytes:
-                    default: 0
-                    format: int64
-                    type: integer
                   maxSlotWALKeepSize:
                     format: int32
                     type: integer
@@ -9340,13 +9336,9 @@ spec:
                 type: integer
               replication:
                 properties:
-                  failoverDelay:
-                    default: 0s
+                  forceFailOverAcceptingDataLossAfter:
+                    default: 2m0s
                     type: string
-                  maxLSNLagBeforePromotion:
-                    default: 0
-                    format: int64
-                    type: integer
                   maxSlotWALKeepSize:
                     format: int32
                     type: integer

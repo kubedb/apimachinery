@@ -188,21 +188,13 @@ type PostgresReplication struct {
 	// +optional
 	MaxSlotWALKeepSizeInMegaBytes *int32 `json:"maxSlotWALKeepSize,omitempty"`
 
-	// FailoverDelay is the duration the newly elected Raft leader should wait after the previous
-	// primary has been detected as down before attempting to promote a replica to be the new primary.
-	// This helps prevent unnecessary promotions due to transient network issues, allowing the old
-	// primary time to recover and step down gracefully if possible.
-	// +kubebuilder:default="0s"
+	// ForceFailOverAcceptingDataLossAfter is the maximum time to wait before running a force failover process
+	// This is helpful for a scenario where the old primary is not available and it has the most updated wal lsn
+	// Doing force failover may or may not end up loosing data depending on any wrtie transaction
+	// in the range lagged lsn between the new primary and the old primary
+	// +kubebuilder:default="2m0s"
 	// +optional
-	FailoverDelay *metav1.Duration `json:"failoverDelay,omitempty"`
-
-	// MaxLSNLagBeforePromotion is the maximum allowed LSN (Log Sequence Number) difference (in bytes)
-	// between the primary's last known LSN and a candidate replica's LSN. If a replica is lagging by more than
-	// this byte threshold, it is considered ineligible for promotion to primary, effectively
-	// enforcing a configurable limit on potential data loss.
-	// +kubebuilder:default=0
-	// +optional
-	MaxLSNLagBeforePromotionInBytes *int64 `json:"maxLSNLagBeforePromotionInBytes,omitempty"`
+	ForceFailOverAcceptingDataLossAfter *metav1.Duration `json:"forceFailOverAcceptingDataLossAfter,omitempty"`
 }
 
 type ArbiterSpec struct {
