@@ -4673,7 +4673,6 @@ spec:
               replication:
                 properties:
                   forceFailOverAcceptingDataLossAfter:
-                    default: 2m0s
                     type: string
                   maxSlotWALKeepSize:
                     format: int32

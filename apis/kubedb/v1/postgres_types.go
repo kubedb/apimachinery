@@ -192,7 +192,6 @@ type PostgresReplication struct {
 	// This is helpful for a scenario where the old primary is not available and it has the most updated wal lsn
 	// Doing force failover may or may not end up loosing data depending on any wrtie transaction
 	// in the range lagged lsn between the new primary and the old primary
-	// +kubebuilder:default="2m0s"
 	// +optional
 	ForceFailOverAcceptingDataLossAfter *metav1.Duration `json:"forceFailOverAcceptingDataLossAfter,omitempty"`
 }
