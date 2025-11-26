@@ -11,6 +11,7 @@ import (
 
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
@@ -208,11 +209,38 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 		return
 	}
 
+	m.setMetaStorageDefaults()
+
 	m.setDefaultContainerSecurityContext(&mvVersion, m.Spec.PodTemplate)
 
 	m.SetHealthCheckerDefaults()
 
 	m.setDefaultContainerResourceLimits(m.Spec.PodTemplate)
+}
+
+func (m *Milvus) setMetaStorageDefaults() {
+	if m.Spec.MetaStorage == nil {
+		m.Spec.MetaStorage = &MetaStorageSpec{
+			StorageType: StorageTypeDurable,
+		}
+	}
+
+	if !m.Spec.MetaStorage.ExternallyManaged && m.Spec.MetaStorage.Storage == nil {
+		m.Spec.MetaStorage.Size = 3
+
+		m.Spec.MetaStorage.Storage = &core.PersistentVolumeClaimSpec{
+			StorageClassName: pointer.StringP("standard"),
+			AccessModes: []core.PersistentVolumeAccessMode{
+				core.ReadWriteOnce,
+			},
+
+			Resources: core.VolumeResourceRequirements{
+				Requests: core.ResourceList{
+					core.ResourceStorage: resource.MustParse("20Gi"),
+				},
+			},
+		}
+	}
 }
 
 func (m *Milvus) setDefaultContainerSecurityContext(mvVersion *catalog.MilvusVersion, podTemplate *ofstv2.PodTemplateSpec) {
