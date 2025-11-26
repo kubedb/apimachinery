@@ -110,6 +110,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&SolrVersionList{},
 		&ZooKeeperVersion{},
 		&ZooKeeperVersionList{},
+		&MilvusVersion{},
+		&MilvusVersionList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,
