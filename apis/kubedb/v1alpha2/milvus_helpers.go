@@ -227,11 +227,11 @@ func (m *Milvus) setMetaStorageDefaults() {
 		m.Spec.MetaStorage.StorageType = StorageTypeDurable
 	}
 
-	if !m.Spec.MetaStorage.ExternallyManaged && m.Spec.MetaStorage.Size == 0 {
-		m.Spec.MetaStorage.Size = 3
-	}
-
 	if !m.Spec.MetaStorage.ExternallyManaged {
+		if m.Spec.MetaStorage.Size == 0 {
+			m.Spec.MetaStorage.Size = 3
+		}
+
 		if m.Spec.MetaStorage.Storage == nil {
 			m.Spec.MetaStorage.Storage = &core.PersistentVolumeClaimSpec{}
 		}
