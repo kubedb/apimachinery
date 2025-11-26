@@ -1696,6 +1696,39 @@ const (
 // =========================== Cassandra Constants ============================
 
 const (
+	Neo4jBoltPort       = 7687 // Bolt protocol (binary driver, neo4j:// and bolt://)
+	Neo4jHTTPPort       = 7474 // Neo4j Browser and Cypher HTTP API
+	Neo4jHTTPSPort      = 7473 // Neo4j Browser and Cypher HTTPS API
+	Neo4jBackupPort     = 6362 // Online backup service (internal)
+	Neo4jGraphitePort   = 2003 // Graphite metrics (optional)
+	Neo4jPrometheusPort = 2004 // Prometheus metrics (optional)
+	Neo4jJMXPort        = 3637 // Java Management Extensions (o // ptional)
+	Neo4jRoutingPort    = 7688 // Routing protocol for Causal Clustering
+	Neo4jRaftPort       = 7000 // Raft protocol for Causal Clustering
+	Neo4jClusterTxPort  = 6000 // Cluster transaction protocol for Causal Clustering
+
+	Neo4jConfigVolName      = "neo4j-conf"
+	Neo4jVolumeCustomConfig = "custom-config"
+	Neo4jVolumeData         = "data"
+	Neo4jVolumeAuthName     = "neo4j-auth"
+
+	Neo4jDataDir         = "/data"
+	Neo4jConfDir         = "/config/neo4j.conf"
+	Neo4jCustomConfigDir = "/custom-config/neo4j.conf"
+	Neo4jBackupDir       = "/backups"
+	Neo4jImportDir       = "/import"
+	Neo4jLicenseDir      = "/licenses"
+	Neo4jLogDir          = "/logs"
+	Neo4jAuthDir         = "/config/neo4j-auth"
+	Neo4jMetricsDir      = "/metrics"
+
+	Neo4jContainerName     = "neo4j"
+	Neo4jInitContainerName = "neo4j-init"
+)
+
+// =========================== Cassandra Constants ============================
+
+const (
 	CassandraNativeTcpPort    = 9042
 	CassandraInterNodePort    = 7000
 	CassandraInterNodeSslPort = 7001
