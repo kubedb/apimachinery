@@ -30477,9 +30477,10 @@ func schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"walLimitPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "WALimitPolicy defines which WAL retention policy to use.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"walKeepSize": {
@@ -30500,10 +30501,18 @@ func schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref common.Reference
 							Format: "int32",
 						},
 					},
+					"forceFailOverAcceptingDataLossAfter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ForceFailOverAcceptingDataLossAfter is the maximum time to wait before running a force failover process This is helpful for a scenario where the old primary is not available and it has the most updated wal lsn Doing force failover may or may not end up loosing data depending on any wrtie transaction in the range lagged lsn between the new primary and the old primary",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
 				},
 				Required: []string{"walLimitPolicy"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 

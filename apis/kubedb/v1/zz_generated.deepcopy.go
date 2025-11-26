@@ -2620,6 +2620,11 @@ func (in *PostgresReplication) DeepCopyInto(out *PostgresReplication) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.ForceFailOverAcceptingDataLossAfter != nil {
+		in, out := &in.ForceFailOverAcceptingDataLossAfter, &out.ForceFailOverAcceptingDataLossAfter
+		*out = new(metav1.Duration)
+		**out = **in
+	}
 	return
 }
 

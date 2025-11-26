@@ -4672,6 +4672,8 @@ spec:
                 type: integer
               replication:
                 properties:
+                  forceFailOverAcceptingDataLossAfter:
+                    type: string
                   maxSlotWALKeepSize:
                     format: int32
                     type: integer
@@ -9333,6 +9335,9 @@ spec:
                 type: integer
               replication:
                 properties:
+                  forceFailOverAcceptingDataLossAfter:
+                    default: 2m0s
+                    type: string
                   maxSlotWALKeepSize:
                     format: int32
                     type: integer
