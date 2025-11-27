@@ -20,7 +20,6 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -66,9 +65,6 @@ type Neo4jSpec struct {
 	// PVC template used when StorageType is "Durable". Ignored when StorageType is "Ephemeral".
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
-	// To enable ssl for http layer
-	EnableSSL bool `json:"enableSSL,omitempty"`
-
 	// DisableSecurity disables authentication when set to true. Defaults to false. Not recommended for production.
 	// +optional
 	DisableSecurity bool `json:"disableSecurity,omitempty"`
@@ -82,10 +78,6 @@ type Neo4jSpec struct {
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
-	// TLS contains tls configurations
-	// +optional
-	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
-
 	// PodTemplate customizes the pods running Neo4j (resources, environment variables, probes, affinity, etc.).
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
@@ -93,10 +85,6 @@ type Neo4jSpec struct {
 	// ServiceTemplates customizes the Services that expose Neo4j endpoints (for example, primary, replicas, admin).
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
-
-	// Monitor is used monitor database instance
-	// +optional
-	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 
 	// DeletionPolicy controls behavior when this resource is deleted (for example, Delete, WipeOut, DoNotTerminate).
 	// +optional
@@ -129,21 +117,21 @@ type Neo4jStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=bolt;neo4j;http;https;backup;graphite;prometheus;jmx
+// +kubebuilder:validation:Enum=tcp-bolt;neo4j;http;https;tcp-backup;graphite;prometheus;jmx;tcp-boltrouting;tcp-raft;tcp-tx
 type Neo4jProtocol string
 
 const (
-	Neo4jProtocolBolt       Neo4jProtocol = "tcp-bolt"
-	Neo4jProtocolNeo4j      Neo4jProtocol = "neo4j" // alias for bolt
-	Neo4jProtocolHTTP       Neo4jProtocol = "http"
-	Neo4jProtocolHTTPS      Neo4jProtocol = "https"
-	Neo4jProtocolBackup     Neo4jProtocol = "tcp-backup"
-	Neo4jProtocolGraphite   Neo4jProtocol = "graphite"
-	Neo4jProtocolPrometheus Neo4jProtocol = "prometheus"
-	Neo4jProtocolJMX        Neo4jProtocol = "jmx"
-	Neo4jProtocolrouting    Neo4jProtocol = "tcp-boltrouting"
-	Neo4jProtocolRaft       Neo4jProtocol = "tcp-raft"
-	Neo4jProtocoltClusterTx Neo4jProtocol = "tcp-tx"
+	Neo4jProtocolTCPBolt        Neo4jProtocol = "tcp-bolt"
+	Neo4jProtocolNeo4j          Neo4jProtocol = "neo4j" // alias for bolt
+	Neo4jProtocolHTTP           Neo4jProtocol = "http"
+	Neo4jProtocolHTTPS          Neo4jProtocol = "https"
+	Neo4jProtocolTCPBackup      Neo4jProtocol = "tcp-backup"
+	Neo4jProtocolGraphite       Neo4jProtocol = "graphite"
+	Neo4jProtocolPrometheus     Neo4jProtocol = "prometheus"
+	Neo4jProtocolJMX            Neo4jProtocol = "jmx"
+	Neo4jProtocolTCPBoltRouting Neo4jProtocol = "tcp-boltrouting"
+	Neo4jProtocolTCPRaft        Neo4jProtocol = "tcp-raft"
+	Neo4jProtocolTCPTx          Neo4jProtocol = "tcp-tx"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

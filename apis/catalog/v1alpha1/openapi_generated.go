@@ -621,7 +621,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouter":                           schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionRouter(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouterInitContainer":              schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionRouterInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionSpec":                             schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jInitContainer":                           schema_apimachinery_apis_catalog_v1alpha1_Neo4jInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersion":                                 schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionDatabase":                         schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionList":                             schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionList(ref),
@@ -30505,27 +30504,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_Neo4jInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Neo4jInitContainer is the Neo4j init Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -30658,13 +30636,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionDatabase"),
 						},
 					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jInitContainer"),
-						},
-					},
 					"deprecated": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -30700,11 +30671,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "initContainer"},
+				Required: []string{"version", "db"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

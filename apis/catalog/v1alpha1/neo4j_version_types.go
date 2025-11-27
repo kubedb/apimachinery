@@ -23,8 +23,8 @@ import (
 const (
 	ResourceCodeNeo4jVersion     = "neoversion"
 	ResourceKindNeo4jVersion     = "Neo4jVersion"
-	ResourceSingularNeo4jVersion = "Neo4jversion"
-	ResourcePluralNeo4jVersion   = "Neo4jversions"
+	ResourceSingularNeo4jVersion = "neo4jversion"
+	ResourcePluralNeo4jVersion   = "neo4jversions"
 )
 
 // Neo4jVersion defines a Neo4j database version.
@@ -36,7 +36,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=Neo4jversions,singular=Neo4jversion,scope=Cluster,shortName=neoversion,categories={catalog,kubedb,appscode}
+// +kubebuilder:resource:path=neo4jversions,singular=neo4jversion,scope=Cluster,shortName=neoversion,categories={catalog,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
@@ -53,8 +53,6 @@ type Neo4jVersionSpec struct {
 	Version string `json:"version"`
 	// Database Image
 	DB Neo4jVersionDatabase `json:"db"`
-	// Database Image
-	InitContainer Neo4jInitContainer `json:"initContainer"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
@@ -69,11 +67,6 @@ type Neo4jVersionSpec struct {
 
 // Neo4jVersionDatabase is the Neo4j Database image
 type Neo4jVersionDatabase struct {
-	Image string `json:"image"`
-}
-
-// Neo4jInitContainer is the Neo4j init Container image
-type Neo4jInitContainer struct {
 	Image string `json:"image"`
 }
 

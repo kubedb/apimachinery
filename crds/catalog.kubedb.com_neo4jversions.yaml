@@ -54,13 +54,6 @@ spec:
                 type: object
               deprecated:
                 type: boolean
-              initContainer:
-                properties:
-                  image:
-                    type: string
-                required:
-                - image
-                type: object
               securityContext:
                 properties:
                   runAsUser:
@@ -97,7 +90,6 @@ spec:
                 type: string
             required:
             - db
-            - initContainer
             - version
             type: object
         type: object

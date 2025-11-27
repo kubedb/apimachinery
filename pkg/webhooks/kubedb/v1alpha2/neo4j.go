@@ -115,19 +115,6 @@ func (w *Neo4jCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Obj
 
 func (w *Neo4jCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Neo4j) error {
 	var allErr field.ErrorList
-	if db.Spec.EnableSSL {
-		if db.Spec.TLS == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-				db.GetName(),
-				".spec.tls can't be nil, if .spec.enableSSL is true"))
-		}
-	} else {
-		if db.Spec.TLS != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableSSL"),
-				db.GetName(),
-				".spec.tls must be nil, if .spec.enableSSL is disabled"))
-		}
-	}
 
 	// number of replicas can not be 0 or less
 	if db.Spec.Replicas != nil && *db.Spec.Replicas <= 0 {
@@ -198,8 +185,6 @@ func (w *Neo4jCustomWebhook) ValidateVersion(db *olddbapi.Neo4j) error {
 
 var Neo4jReservedVolumes = []string{
 	kubedb.Neo4jVolumeData,
-	kubedb.Neo4jVolumeConfig,
-	kubedb.Neo4jVolumeTempConfig,
 }
 
 func (w *Neo4jCustomWebhook) validateVolumes(db *olddbapi.Neo4j) error {
@@ -208,11 +193,6 @@ func (w *Neo4jCustomWebhook) validateVolumes(db *olddbapi.Neo4j) error {
 	}
 	rsv := make([]string, len(Neo4jReservedVolumes))
 	copy(rsv, Neo4jReservedVolumes)
-	if db.Spec.TLS != nil && db.Spec.TLS.Certificates != nil {
-		for _, c := range db.Spec.TLS.Certificates {
-			rsv = append(rsv, db.CertSecretVolumeName(olddbapi.Neo4jCertificateAlias(c.Alias)))
-		}
-	}
 	volumes := db.Spec.PodTemplate.Spec.Volumes
 	for _, rv := range rsv {
 		for _, ugv := range volumes {
@@ -225,11 +205,7 @@ func (w *Neo4jCustomWebhook) validateVolumes(db *olddbapi.Neo4j) error {
 }
 
 var Neo4jReservedVolumeMountPaths = []string{
-	kubedb.Neo4jConfigDir,
-	kubedb.Neo4jTempConfigDir,
 	kubedb.Neo4jDataDir,
-	kubedb.Neo4jPluginsDir,
-	kubedb.Neo4jCertDir,
 }
 
 func (w *Neo4jCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {

@@ -4383,11 +4383,6 @@ func (in *Neo4jSpec) DeepCopyInto(out *Neo4jSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
-	if in.TLS != nil {
-		in, out := &in.TLS, &out.TLS
-		*out = new(apiv1.TLSConfig)
-		(*in).DeepCopyInto(*out)
-	}
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates
@@ -4395,11 +4390,6 @@ func (in *Neo4jSpec) DeepCopyInto(out *Neo4jSpec) {
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
-	}
-	if in.Monitor != nil {
-		in, out := &in.Monitor, &out.Monitor
-		*out = new(monitoringagentapiapiv1.AgentSpec)
-		(*in).DeepCopyInto(*out)
 	}
 	if in.DisabledProtocols != nil {
 		in, out := &in.DisabledProtocols, &out.DisabledProtocols

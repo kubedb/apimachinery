@@ -1,11 +1,14 @@
 package v1alpha2
 
 import (
+	"context"
 	"fmt"
 	"slices"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	"kubedb.dev/apimachinery/vendor/k8s.io/apimachinery/pkg/types"
+	"kubedb.dev/apimachinery/vendor/k8s.io/klog/v2"
 
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -97,17 +100,16 @@ func (r *Neo4j) SetDefaults(kc client.Client) {
 		}
 	}
 
-	//var n4Version catalog.Neo4jVersion
-	//err := kc.Get(context.TODO(), types.NamespacedName{
-	//	Name: r.Spec.Version,
-	//}, &n4Version)
-	//if err != nil {
-	//	klog.Errorf("can't get the Neo4j version object %s for %s \n", err.Error(), r.Spec.Version)
-	//	return
-	//}
+	var n4Version catalog.Neo4jVersion
+	err := kc.Get(context.TODO(), types.NamespacedName{
+		Name: r.Spec.Version,
+	}, &n4Version)
+	if err != nil {
+		klog.Errorf("can't get the Neo4j version object %s for %s \n", err.Error(), r.Spec.Version)
+		return
+	}
 
-	// r.setDefaultContainerSecurityContext(&n4Version, &r.Spec.PodTemplate)
-
+	r.setDefaultContainerSecurityContext(&n4Version, &r.Spec.PodTemplate)
 }
 
 func (r *Neo4j) setDefaultContainerSecurityContext(n4Version *catalog.Neo4jVersion, podTemplate *ofst.PodTemplateSpec) {
