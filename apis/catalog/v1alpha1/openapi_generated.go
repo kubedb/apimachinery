@@ -30509,7 +30509,8 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jInitContainer(ref common.Ref
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "Neo4jInitContainer is the Neo4j init Container image",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"image": {
 						SchemaProps: spec.SchemaProps{
@@ -30529,8 +30530,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersion(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Neo4jVersion is the Schema for the neo4jversions API.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -30570,7 +30570,8 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionDatabase(ref common.R
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "Neo4jVersionDatabase is the Neo4j Database image",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"image": {
 						SchemaProps: spec.SchemaProps{
@@ -30590,7 +30591,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionList(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Neo4jVersionList contains a list of Neo4jVersion.",
+				Description: "Neo4jVersionList is a list of Neo4jVersions",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -30615,7 +30616,8 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionList(ref common.Refer
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "Items is a list of Neo4jVersion CRD objects",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -30627,7 +30629,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionList(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"items"},
 			},
 		},
 		Dependencies: []string{
@@ -30639,7 +30640,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionSpec(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Neo4jVersionSpec defines the desired state of Neo4jVersion.",
+				Description: "Neo4jVersionSpec is the spec for Neo4j version",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"version": {
@@ -30659,7 +30660,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionSpec(ref common.Refer
 					},
 					"initContainer": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Init Container",
+							Description: "Database Image",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jInitContainer"),
 						},

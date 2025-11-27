@@ -19,10 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
-
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 )
 
 type FakeCatalogV1alpha1 struct {
@@ -87,6 +86,10 @@ func (c *FakeCatalogV1alpha1) MongoDBVersions() v1alpha1.MongoDBVersionInterface
 
 func (c *FakeCatalogV1alpha1) MySQLVersions() v1alpha1.MySQLVersionInterface {
 	return &FakeMySQLVersions{c}
+}
+
+func (c *FakeCatalogV1alpha1) Neo4jVersions() v1alpha1.Neo4jVersionInterface {
+	return &FakeNeo4jVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) OracleVersions() v1alpha1.OracleVersionInterface {

@@ -21,10 +21,9 @@ package v1alpha1
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type CatalogV1alpha1Interface interface {
@@ -44,6 +43,7 @@ type CatalogV1alpha1Interface interface {
 	MemcachedVersionsGetter
 	MongoDBVersionsGetter
 	MySQLVersionsGetter
+	Neo4jVersionsGetter
 	OracleVersionsGetter
 	PerconaXtraDBVersionsGetter
 	PgBouncerVersionsGetter
@@ -122,6 +122,10 @@ func (c *CatalogV1alpha1Client) MongoDBVersions() MongoDBVersionInterface {
 
 func (c *CatalogV1alpha1Client) MySQLVersions() MySQLVersionInterface {
 	return newMySQLVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) Neo4jVersions() Neo4jVersionInterface {
+	return newNeo4jVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) OracleVersions() OracleVersionInterface {

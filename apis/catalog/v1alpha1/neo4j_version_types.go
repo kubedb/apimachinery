@@ -1,5 +1,5 @@
 /*
-Copyright 2025.
+Copyright 2023.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -21,11 +21,13 @@ import (
 )
 
 const (
-	ResourceCodeNeo4jVersion     = "neo4jversion"
+	ResourceCodeNeo4jVersion     = "neoversion"
 	ResourceKindNeo4jVersion     = "Neo4jVersion"
-	ResourceSingularNeo4jVersion = "neo4jversion"
-	ResourcePluralNeo4jVersion   = "neo4jversions"
+	ResourceSingularNeo4jVersion = "Neo4jversion"
+	ResourcePluralNeo4jVersion   = "Neo4jversions"
 )
+
+// Neo4jVersion defines a Neo4j database version.
 
 // +genclient
 // +genclient:nonNamespaced
@@ -33,65 +35,54 @@ const (
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// +kubebuilder:resource:path=neo4jversions,singular=neo4jversion,scope=Cluster,shortName=n4version,categories={catalog,kubedb,appscode}
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=Neo4jversions,singular=Neo4jversion,scope=Cluster,shortName=neoversion,categories={catalog,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+type Neo4jVersion struct {
+	metav1.TypeMeta   `json:",inline,omitempty"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              Neo4jVersionSpec `json:"spec,omitempty"`
+}
 
-// Neo4jVersionSpec defines the desired state of Neo4jVersion.
+// Neo4jVersionSpec is the spec for Neo4j version
 type Neo4jVersionSpec struct {
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// Version
 	Version string `json:"version"`
-
 	// Database Image
 	DB Neo4jVersionDatabase `json:"db"`
-
-	// Init Container
+	// Database Image
 	InitContainer Neo4jInitContainer `json:"initContainer"`
-
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
-
 	// SecurityContext is for the additional config for the DB container
 	// +optional
 	SecurityContext SecurityContext `json:"securityContext"`
-
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
-
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 }
 
+// Neo4jVersionDatabase is the Neo4j Database image
 type Neo4jVersionDatabase struct {
 	Image string `json:"image"`
 }
 
+// Neo4jInitContainer is the Neo4j init Container image
 type Neo4jInitContainer struct {
 	Image string `json:"image"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
-
-// Neo4jVersion is the Schema for the neo4jversions API.
-type Neo4jVersion struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              Neo4jVersionSpec `json:"spec,omitempty"`
-}
-
-// +kubebuilder:object:root=true
-
-// Neo4jVersionList contains a list of Neo4jVersion.
+// Neo4jVersionList is a list of Neo4jVersions
 type Neo4jVersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Neo4jVersion `json:"items"`
+	// Items is a list of Neo4jVersion CRD objects
+	Items []Neo4jVersion `json:"items,omitempty"`
 }

@@ -8,13 +8,32 @@ metadata:
 spec:
   group: catalog.kubedb.com
   names:
+    categories:
+    - catalog
+    - kubedb
+    - appscode
     kind: Neo4jVersion
     listKind: Neo4jVersionList
     plural: neo4jversions
+    shortNames:
+    - neoversion
     singular: neo4jversion
-  scope: Namespaced
+  scope: Cluster
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.version
+      name: Version
+      type: string
+    - jsonPath: .spec.db.image
+      name: DB_IMAGE
+      type: string
+    - jsonPath: .spec.deprecated
+      name: Deprecated
+      type: boolean
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
     schema:
       openAPIV3Schema:
         properties:
@@ -84,5 +103,4 @@ spec:
         type: object
     served: true
     storage: true
-    subresources:
-      status: {}
+    subresources: {}
