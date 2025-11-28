@@ -2034,11 +2034,12 @@ const (
 	GitSyncContainerName        = "git-sync"
 )
 
+// ========================= Oracle Constants ====================================
 const (
 	OracleDatabaseServiceName = "ORCL"
 	OracleSqlNetPortName      = "sqlnet"
-
-	OracleEditionEnterprise = "enterprise"
+	OracleSqlNetTLSPortName   = "tcps"
+	OracleEditionEnterprise   = "enterprise"
 
 	OraclePrimaryRole = "primary"
 	OracleStandbyRole = "standby"
@@ -2048,6 +2049,7 @@ const (
 	OracleSysDbaUser = "sys"
 
 	OracleContainerName             = "oracle"
+	OracleObserverContainer         = "observer"
 	OracleCoordinatorContainerName  = "oracle-coordinator"
 	OracleObserverContainerName     = "observer"
 	OracleInitContainerName         = "oracle-init"
@@ -2061,13 +2063,15 @@ const (
 
 	OracleStandbyServiceSuffix = "standby"
 
-	OracleDatabaseRoleKey      = "oracle.db/role"
-	OracleDatabaseRoleObserver = "observer"
-	OracleDatabaseRoleInstance = "instance"
-	OracleEnvUserName          = "SYS_USER"
-	OracleEnvPassword          = "ORACLE_PWD"
-	OracleEnvOracleSID         = "ORACLE_SID"
-	OracleEnvDataDir           = "ORADATA"
+	OracleDatabaseRoleKey          = "oracle.db/role"
+	OracleDatabaseRoleObserver     = "observer"
+	OracleDatabaseRoleInstance     = "instance"
+	OracleEnvUserName              = "SYS_USER"
+	OracleEnvPassword              = "ORACLE_PWD"
+	OracleEnvOracleSID             = "ORACLE_SID"
+	OracleEnvDataDir               = "ORADATA"
+	OracleSharedTlsVolumeName      = "certs"
+	OracleSharedTlsVolumeMountPath = "/tls/certs"
 )
 
 // =========================== Qdrant Constants ============================
