@@ -2082,8 +2082,8 @@ const (
 const (
 	OracleDatabaseServiceName = "ORCL"
 	OracleSqlNetPortName      = "sqlnet"
-
-	OracleEditionEnterprise = "enterprise"
+	OracleSqlNetTLSPortName   = "tcps"
+	OracleEditionEnterprise   = "enterprise"
 
 	OraclePrimaryRole = "primary"
 	OracleStandbyRole = "standby"
