@@ -396,6 +396,7 @@ const (
 	MariaDBDistributedPodGetCommand            = "get-pod"
 	MariaDBDistributedVolumeUsageGetCommand    = "get-volume-usage"
 	MariaDBDistributedVolumeCapacityGetCommand = "get-volume-capacity"
+	MariaDBDistributedBackupCommand            = "take-backup"
 
 	// Maxscale
 	MaxscaleCommonName            = "mx"
