@@ -18,6 +18,7 @@ package v1alpha2
 
 import (
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
@@ -167,6 +168,9 @@ type PostgresSpec struct {
 
 	// +optional
 	Replication *PostgresReplication `json:"replication,omitempty"`
+
+	// +optional
+	Tuning *PostgresTuningConfig `json:"tuning,omitempty"`
 }
 
 type WALLimitPolicy string
@@ -191,7 +195,6 @@ type PostgresReplication struct {
 	// This is helpful for a scenario where the old primary is not available and it has the most updated wal lsn
 	// Doing force failover may or may not end up loosing data depending on any wrtie transaction
 	// in the range lagged lsn between the new primary and the old primary
-	// +kubebuilder:default="2m0s"
 	// +optional
 	ForceFailOverAcceptingDataLossAfter *metav1.Duration `json:"forceFailOverAcceptingDataLossAfter,omitempty"`
 }
@@ -372,4 +375,75 @@ const (
 	// When server is config with this auth method. Client can't connect with postgreSQL server with password. They need
 	// to Send the client cert and client key certificate for authentication.
 	ClientAuthModeCert PostgresClientAuthMode = "cert"
+)
+
+// PostgresTuningConfig defines configuration for PostgreSQL performance tuning
+type PostgresTuningConfig struct {
+	// TuningProfile defines a predefined tuning profile for different workload types.
+	// If specified, other tuning parameters will be calculated based on this profile.
+	// +kubebuilder:validation:Enum=web;oltp;dw;mixed;desktop
+	// +optional
+	TuningProfile *PostgresTuningProfile `json:"tuningProfile,omitempty"`
+
+	// MaxConnections defines the maximum number of concurrent connections.
+	// If not specified, it will be calculated based on available memory and tuning profile.
+	// +optional
+	MaxConnections *int32 `json:"maxConnections,omitempty"`
+
+	// ResourcesOverride allows overriding resource calculations.
+	// If specified, these values will be used instead of pod resource limits/requests.
+	// +optional
+	ResourcesOverride *TuningResourcesOverride `json:"resourcesOverride,omitempty"`
+
+	// StorageType defines the type of storage for tuning purposes.
+	// If not specified, it will be inferred from StorageClass or default to HDD.
+	// +kubebuilder:validation:Enum=ssd;hdd;san
+	// +optional
+	StorageType *PostgresStorageType `json:"storageType,omitempty"`
+
+	// DisableAutoTune disables automatic tuning entirely.
+	// If set to true, no tuning will be applied.
+	// +optional
+	DisableAutoTune bool `json:"disableAutoTune,omitempty"`
+}
+
+// TuningResourcesOverride allows overriding resource calculations for tuning
+type TuningResourcesOverride struct {
+	// TotalMemory overrides the total memory used for tuning calculations.
+	// Format: "1Gi", "512Mi", etc.
+	// +optional
+	TotalMemory *resource.Quantity `json:"totalMemory,omitempty"`
+
+	// CPUNum overrides the CPU count used for tuning calculations.
+	// +optional
+	CPUNum *int32 `json:"cpuNum,omitempty"`
+}
+
+// PostgresTuningProfile defines predefined tuning profiles
+type PostgresTuningProfile string
+
+const (
+	// PostgresTuningProfileWeb optimizes for web applications with many simple queries
+	PostgresTuningProfileWeb PostgresTuningProfile = "web"
+
+	// PostgresTuningProfileOLTP optimizes for OLTP workloads with many short transactions
+	PostgresTuningProfileOLTP PostgresTuningProfile = "oltp"
+
+	// PostgresTuningProfileDW optimizes for data warehousing with complex analytical queries
+	PostgresTuningProfileDW PostgresTuningProfile = "dw"
+
+	// PostgresTuningProfileMixed optimizes for mixed workloads
+	PostgresTuningProfileMixed PostgresTuningProfile = "mixed"
+
+	// PostgresTuningProfileDesktop optimizes for desktop or development environments
+	PostgresTuningProfileDesktop PostgresTuningProfile = "desktop"
+)
+
+// PostgresStorageType defines storage types for tuning purposes
+type PostgresStorageType string
+
+const (
+	PostgresStorageTypeSSD PostgresStorageType = "ssd"
+	PostgresStorageTypeHDD PostgresStorageType = "hdd"
+	PostgresStorageTypeSAN PostgresStorageType = "san"
 )

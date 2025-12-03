@@ -4971,6 +4971,40 @@ spec:
                     type: object
                     x-kubernetes-map-type: atomic
                 type: object
+              tuning:
+                properties:
+                  disableAutoTune:
+                    type: boolean
+                  maxConnections:
+                    format: int32
+                    type: integer
+                  resourcesOverride:
+                    properties:
+                      cpuNum:
+                        format: int32
+                        type: integer
+                      totalMemory:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                    type: object
+                  storageType:
+                    enum:
+                    - ssd
+                    - hdd
+                    - san
+                    type: string
+                  tuningProfile:
+                    enum:
+                    - web
+                    - oltp
+                    - dw
+                    - mixed
+                    - desktop
+                    type: string
+                type: object
               version:
                 type: string
             required:
@@ -9336,7 +9370,6 @@ spec:
               replication:
                 properties:
                   forceFailOverAcceptingDataLossAfter:
-                    default: 2m0s
                     type: string
                   maxSlotWALKeepSize:
                     format: int32
@@ -9643,6 +9676,40 @@ spec:
                     - name
                     type: object
                     x-kubernetes-map-type: atomic
+                type: object
+              tuning:
+                properties:
+                  disableAutoTune:
+                    type: boolean
+                  maxConnections:
+                    format: int32
+                    type: integer
+                  resourcesOverride:
+                    properties:
+                      cpuNum:
+                        format: int32
+                        type: integer
+                      totalMemory:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                        x-kubernetes-int-or-string: true
+                    type: object
+                  storageType:
+                    enum:
+                    - ssd
+                    - hdd
+                    - san
+                    type: string
+                  tuningProfile:
+                    enum:
+                    - web
+                    - oltp
+                    - dw
+                    - mixed
+                    - desktop
+                    type: string
                 type: object
               version:
                 type: string
