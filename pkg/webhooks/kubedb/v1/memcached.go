@@ -100,10 +100,9 @@ func (mv *MemcachedCustomWebhook) Default(_ context.Context, obj runtime.Object)
 		db.Spec.Replicas = pointer.Int32P(1)
 	}
 	var memcachedVersion catalogapi.MemcachedVersion
-	err := mv.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := mv.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
-	}, &memcachedVersion)
-	if err != nil {
+	}, &memcachedVersion); err != nil {
 		return errors.Wrapf(err, "failed to get MemcachedVersion: %s", db.Spec.Version)
 	}
 
@@ -181,11 +180,12 @@ func (mv MemcachedCustomWebhook) validate(ctx context.Context, obj runtime.Objec
 	if memcached.Spec.Version == "" {
 		return nil, errors.New("spec.version is missing")
 	}
+
+	var err error
 	var memcachedVersion catalogapi.MemcachedVersion
-	err := mv.DefaultClient.Get(context.TODO(), client.ObjectKey{
+	if err = mv.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: memcached.Spec.Version,
-	}, &memcachedVersion)
-	if err != nil {
+	}, &memcachedVersion); err != nil {
 		return nil, err
 	}
 
@@ -198,39 +198,37 @@ func (mv MemcachedCustomWebhook) validate(ctx context.Context, obj runtime.Objec
 	if memcached.Spec.ConfigSecret != nil {
 		var configSecret core.Secret
 		// Get the configSecret
-		err := mv.DefaultClient.Get(ctx, types.NamespacedName{
+		if err = mv.DefaultClient.Get(ctx, types.NamespacedName{
 			Name:      memcached.Spec.ConfigSecret.Name,
 			Namespace: memcached.Namespace,
-		}, &configSecret)
-		if err != nil {
-			if !kerr.IsNotFound(err) {
-				return nil, fmt.Errorf(`no configSecret is found named %v, in namespace %v`, memcached.Spec.ConfigSecret.Name, memcached.Namespace)
+		}, &configSecret); err != nil {
+			if kerr.IsNotFound(err) {
+				return nil, fmt.Errorf("no configSecret is found named %v in namespace %v", memcached.Spec.ConfigSecret.Name, memcached.Namespace)
 			}
 			return nil, err
 		}
-	}
-	if memcached.Spec.AuthSecret != nil {
-		var authSecret core.Secret
-		// Get the authSecret
-		err := mv.DefaultClient.Get(ctx, types.NamespacedName{
-			Name:      memcached.GetMemcachedAuthSecretName(),
-			Namespace: memcached.Namespace,
-		}, &authSecret)
-		if err != nil {
-			if !kerr.IsNotFound(err) {
-				return nil, fmt.Errorf(`no authSecret is found named %v, in namespace %v`, memcached.GetMemcachedAuthSecretName(), memcached.Namespace)
-			}
-			return nil, err
-		}
-	}
-	// if secret managed externally verify auth secret name is not empty
-	if memcached.Spec.AuthSecret != nil &&
-		memcached.Spec.AuthSecret.ExternallyManaged &&
-		memcached.Spec.AuthSecret.Name == "" {
-		return nil, fmt.Errorf(`for externallyManaged auth secret, user must configure "spec.authSecret.name"`)
 	}
 
-	if err := mv.validateEnvsForAllContainers(memcached); err != nil {
+	// if secret managed externally verify auth secret name is not empty
+	if memcached.Spec.AuthSecret != nil && memcached.Spec.AuthSecret.ExternallyManaged {
+		if memcached.Spec.AuthSecret.Name == "" {
+			return nil, fmt.Errorf(`for externallyManaged auth secret, user must configure "spec.authSecret.name"`)
+		}
+
+		var authSecret core.Secret
+		// Get the authSecret
+		if err = mv.DefaultClient.Get(ctx, types.NamespacedName{
+			Name:      memcached.GetMemcachedAuthSecretName(),
+			Namespace: memcached.Namespace,
+		}, &authSecret); err != nil {
+			if kerr.IsNotFound(err) {
+				return nil, fmt.Errorf("no authSecret is found named %v in namespace %v", memcached.GetMemcachedAuthSecretName(), memcached.Namespace)
+			}
+			return nil, err
+		}
+	}
+
+	if err = mv.validateEnvsForAllContainers(memcached); err != nil {
 		return nil, err
 	}
 
@@ -270,7 +268,7 @@ func (mv MemcachedCustomWebhook) validate(ctx context.Context, obj runtime.Objec
 
 	monitorSpec := memcached.Spec.Monitor
 	if monitorSpec != nil {
-		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
+		if err = amv.ValidateMonitorSpec(monitorSpec); err != nil {
 			return nil, err
 		}
 	}
@@ -291,19 +289,18 @@ func (mv MemcachedCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 func (mv MemcachedCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	oldMemcached, ok := oldObj.(*dbapi.Memcached)
 	if !ok {
-		return nil, fmt.Errorf("expected a Memcached but got a %T", oldMemcached)
+		return nil, fmt.Errorf("expected a Memcached but got a %T", oldObj)
 	}
 
-	memcached := newObj.(*dbapi.Memcached)
+	memcached, ok := newObj.(*dbapi.Memcached)
 	if !ok {
-		return nil, fmt.Errorf("expected a Memcached but got a %T", memcached)
+		return nil, fmt.Errorf("expected a Memcached but got a %T", newObj)
 	}
 
 	var memcachedVersion catalogapi.MemcachedVersion
-	err := mv.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := mv.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: oldMemcached.Spec.Version,
-	}, &memcachedVersion)
-	if err != nil {
+	}, &memcachedVersion); err != nil {
 		return nil, errors.Wrapf(err, "failed to get MemcachedVersion: %s", oldMemcached.Spec.Version)
 	}
 
@@ -326,14 +323,14 @@ func (mv MemcachedCustomWebhook) ValidateDelete(ctx context.Context, obj runtime
 	}
 
 	var mc dbapi.Memcached
-	err := mv.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := mv.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      memcached.Name,
 		Namespace: memcached.Namespace,
-	}, &mc)
-	if err != nil && !kerr.IsNotFound(err) {
+	}, &mc); err != nil && !kerr.IsNotFound(err) {
 		return nil, errors.Wrapf(err, "failed to get memcached %s", memcached.Name)
 	} else if err == nil && mc.Spec.DeletionPolicy == dbapi.DeletionPolicyDoNotTerminate {
-		return nil, fmt.Errorf("memcached %v/%v is can't terminated. To delete, change spec.deletionPolicy", mc.Namespace, mc.Name)
+		return nil, fmt.Errorf("memcached %v/%v can't be terminated. To delete, change spec.deletionPolicy", mc.Namespace, mc.Name)
 	}
+
 	return nil, nil
 }
