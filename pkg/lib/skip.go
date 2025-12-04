@@ -53,14 +53,21 @@ The idea behind skipping opsRequests :
 1) If there are multiple opsReqs of same `Type` (like 3 'VerticalScaling') in Pending state,
    We don't want to reconcile them one-by-one. Because only reconciling the last one is enough, & that is user's desired spec.
    we are setting opsReq Phase `Skipped` in this situation, for all, except the last one.
-2) If there are multiple opsReqs of different `Type` (like 3 'VerticalScaling', 2 `UpdateVersion`, 2 `Reconfigure`) in Pending state,
+2) If there are multiple opsReqs of different `Type` (like 3 'VerticalScaling', 2 `UpdateVersion`) in Pending state,
    After skipping in the previous step, there will be exactly one opsReq of each type in Pending
    And now, as they are different types, We want to reconcile the oldest one first.
+3) Reconfigure ops requests are excluded from this skipper logic and are handled by ReconfigureMerger instead.
 */
 
 func (s *skipper) SkipOpsReq() (bool, error) {
 	// if it is `Progressing`, let it go on
 	if s.currentOps.(opsapi.Accessor).GetStatus().Phase == opsapi.OpsRequestPhaseProgressing {
+		return false, nil
+	}
+
+	// Skip the skipper logic for Reconfigure ops requests - they are handled by ReconfigureMerger
+	currentOpsType := fmt.Sprintf("%v", s.currentOps.(opsapi.Accessor).GetRequestType())
+	if isInExcludeList(currentOpsType) {
 		return false, nil
 	}
 
@@ -80,8 +87,11 @@ func (s *skipper) SkipOpsReq() (bool, error) {
 		}
 		// r.Status.Phase can be "", if it has not been reconciled yet.
 		if r.GetStatus().Phase == opsapi.OpsRequestPhasePending || r.GetStatus().Phase == "" {
-			// populate the map
 			opsType := fmt.Sprintf("%v", r.GetRequestType()) // r.GetRequestType().(string) causes panic
+			if isInExcludeList(opsType) {
+				continue
+			}
+			// populate the map
 			opsMap[opsType] = append(opsMap[opsType], o)
 		}
 	}
@@ -92,6 +102,17 @@ func (s *skipper) SkipOpsReq() (bool, error) {
 	}
 
 	return oldestOps.Name != s.currentOps.GetName(), nil
+}
+
+var ExcludedFromSkipperLogic = []string{"Reconfigure"} // Skip Reconfigure ops requests - they are handled by ReconfigureMerger
+
+func isInExcludeList(s string) bool {
+	for _, ex := range ExcludedFromSkipperLogic {
+		if s == ex {
+			return true
+		}
+	}
+	return false
 }
 
 func (s *skipper) getOldestOpsAfterSkipping(opsMap map[string][]client.Object) (metav1.ObjectMeta, error) {
