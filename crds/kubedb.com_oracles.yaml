@@ -6813,7 +6813,7 @@ spec:
                 type: string
               tcpsConfig:
                 properties:
-                  listenerTCPS:
+                  tcpsListener:
                     properties:
                       name:
                         type: string

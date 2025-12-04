@@ -4780,8 +4780,8 @@ func (in *OracleTCPSConfig) DeepCopyInto(out *OracleTCPSConfig) {
 		*out = new(apiv1.TLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ListenerTLS != nil {
-		in, out := &in.ListenerTLS, &out.ListenerTLS
+	if in.TCPSListener != nil {
+		in, out := &in.TCPSListener, &out.TCPSListener
 		*out = new(ListenerSpec)
 		(*in).DeepCopyInto(*out)
 	}

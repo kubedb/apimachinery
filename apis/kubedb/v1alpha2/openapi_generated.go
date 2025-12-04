@@ -34043,7 +34043,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_OracleTCPSConfig(ref common.Refere
 							Ref: ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
-					"listenerTCPS": {
+					"tcpsListener": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Listener TCPS configuration",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec"),

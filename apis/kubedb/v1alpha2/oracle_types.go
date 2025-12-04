@@ -42,7 +42,7 @@ const (
 	// OracleModeSharding   OracleMode = "Sharding"
 )
 
-// +kubebuilder:validation:Enum=server;metrics-exporter
+// +kubebuilder:validation:Enum=server;metrics-exporter;client
 type OracleCertificateAlias string
 
 const (
@@ -178,7 +178,7 @@ type OracleTCPSConfig struct {
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 	// Listener TCPS configuration
 	// +optional
-	ListenerTLS *ListenerSpec `json:"listenerTCPS,omitempty"`
+	TCPSListener *ListenerSpec `json:"tcpsListener,omitempty"`
 }
 
 // ListenerSpec defines a TNS listener (TCP or TCPS)
