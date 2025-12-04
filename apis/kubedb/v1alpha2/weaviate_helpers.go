@@ -253,15 +253,9 @@ func (w *Weaviate) GetAPIKey(ctx context.Context, kc client.Client) string {
 
 func (w *Weaviate) GetConnectionScheme() string {
 	scheme := "http"
-	//if w.Spec.EnableSSL {
-	//	scheme = "https"
-	//}
 	return scheme
 }
 
 func (w *Weaviate) ConfigSecretName() string {
-	if w.Spec.ConfigSecret != nil && w.Spec.ConfigSecret.Name != "" {
-		return w.Spec.ConfigSecret.Name
-	}
 	return fmt.Sprintf("%s-config", w.Name)
 }
