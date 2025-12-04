@@ -295,7 +295,7 @@ func (p *PgBouncer) GetPersistentSecrets() []string {
 		return nil
 	}
 	var secrets []string
-	if !IsVirtualAuthSecretReferred(p.Spec.AuthSecret) {
+	if !IsVirtualAuthSecretReferred(p.Spec.AuthSecret) && p.Spec.AuthSecret != nil && p.Spec.AuthSecret.Name != "" {
 		secrets = append(secrets, p.GetAuthSecretName())
 	}
 	secrets = append(secrets, p.GetBackendSecretName())

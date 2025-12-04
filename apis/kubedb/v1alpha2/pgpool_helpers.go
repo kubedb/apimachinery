@@ -410,7 +410,7 @@ func (p *Pgpool) SetDefaults(client client.Client) {
 
 func (p *Pgpool) GetPersistentSecrets() []string {
 	var secrets []string
-	if !IsVirtualAuthSecretReferred(p.Spec.AuthSecret) {
+	if !IsVirtualAuthSecretReferred(p.Spec.AuthSecret) && p.Spec.AuthSecret != nil && p.Spec.AuthSecret.Name != "" {
 		secrets = append(secrets, p.GetAuthSecretName())
 	}
 	secrets = append(secrets, p.ConfigSecretName())
