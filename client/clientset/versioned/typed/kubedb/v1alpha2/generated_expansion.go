@@ -48,6 +48,8 @@ type MongoDBExpansion interface{}
 
 type MySQLExpansion interface{}
 
+type Neo4jExpansion interface{}
+
 type OracleExpansion interface{}
 
 type PerconaXtraDBExpansion interface{}

@@ -54,6 +54,8 @@ type Interface interface {
 	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
 	MySQLs() MySQLInformer
+	// Neo4js returns a Neo4jInformer.
+	Neo4js() Neo4jInformer
 	// Oracles returns a OracleInformer.
 	Oracles() OracleInformer
 	// PerconaXtraDBs returns a PerconaXtraDBInformer.
@@ -166,6 +168,11 @@ func (v *version) MongoDBs() MongoDBInformer {
 // MySQLs returns a MySQLInformer.
 func (v *version) MySQLs() MySQLInformer {
 	return &mySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Neo4js returns a Neo4jInformer.
+func (v *version) Neo4js() Neo4jInformer {
+	return &neo4jInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Oracles returns a OracleInformer.

@@ -85,6 +85,9 @@ const (
 	// Enables MySQL operator.
 	MySQL featuregate.Feature = "MySQL"
 
+	// Enables Neo4j operator.
+	Neo4j featuregate.Feature = "Neo4j"
+
 	// Enables NATS operator
 	// NATS featuregate.Feature = "NATS"
 
@@ -160,6 +163,7 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	MongoDB:       {Default: true, PreRelease: featuregate.GA},
 	MSSQLServer:   {Default: false, PreRelease: featuregate.Alpha},
 	MySQL:         {Default: true, PreRelease: featuregate.GA},
+	Neo4j:         {Default: false, PreRelease: featuregate.Alpha},
 	Oracle:        {Default: false, PreRelease: featuregate.Alpha},
 	PerconaXtraDB: {Default: false, PreRelease: featuregate.Beta},
 	PgBouncer:     {Default: false, PreRelease: featuregate.Beta},

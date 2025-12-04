@@ -50,6 +50,8 @@ type MongoDBVersionExpansion interface{}
 
 type MySQLVersionExpansion interface{}
 
+type Neo4jVersionExpansion interface{}
+
 type OracleVersionExpansion interface{}
 
 type PerconaXtraDBVersionExpansion interface{}
