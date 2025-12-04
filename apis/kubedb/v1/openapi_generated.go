@@ -32214,15 +32214,15 @@ func schema_apimachinery_apis_kubedb_v1_TuningResourcesOverride(ref common.Refer
 				Description: "TuningResourcesOverride allows overriding resource calculations for tuning",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"totalMemory": {
+					"memory": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TotalMemory overrides the total memory used for tuning calculations. Format: \"1Gi\", \"512Mi\", etc.",
+							Description: "Memory overrides the total memory used for tuning calculations. Format: \"1Gi\", \"512Mi\", etc.",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},
-					"cpuNum": {
+					"cpu": {
 						SchemaProps: spec.SchemaProps{
-							Description: "CPUNum overrides the CPU count used for tuning calculations.",
+							Description: "CPU overrides the CPU count used for tuning calculations.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},

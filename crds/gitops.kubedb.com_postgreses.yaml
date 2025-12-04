@@ -4958,10 +4958,10 @@ spec:
                     type: integer
                   resourcesOverride:
                     properties:
-                      cpuNum:
+                      cpu:
                         format: int32
                         type: integer
-                      totalMemory:
+                      memory:
                         anyOf:
                         - type: integer
                         - type: string

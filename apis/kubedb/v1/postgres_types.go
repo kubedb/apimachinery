@@ -428,14 +428,14 @@ type PostgresTuningConfig struct {
 
 // TuningResourcesOverride allows overriding resource calculations for tuning
 type TuningResourcesOverride struct {
-	// TotalMemory overrides the total memory used for tuning calculations.
+	// Memory overrides the total memory used for tuning calculations.
 	// Format: "1Gi", "512Mi", etc.
 	// +optional
-	TotalMemory *resource.Quantity `json:"totalMemory,omitempty"`
+	Memory *resource.Quantity `json:"memory,omitempty"`
 
-	// CPUNum overrides the CPU count used for tuning calculations.
+	// CPU overrides the CPU count used for tuning calculations.
 	// +optional
-	CPUNum *int32 `json:"cpuNum,omitempty"`
+	CPU *int32 `json:"cpu,omitempty"`
 }
 
 // PostgresTuningProfile defines predefined tuning profiles
