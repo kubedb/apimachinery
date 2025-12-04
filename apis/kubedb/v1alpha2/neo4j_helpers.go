@@ -29,7 +29,7 @@ import (
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -102,7 +102,7 @@ func (r *Neo4j) ResourceKind() string {
 
 func (r *Neo4j) SetDefaults(kc client.Client) {
 	if r.Spec.Replicas == nil {
-		r.Spec.Replicas = pointer.Int32(1)
+		r.Spec.Replicas = ptr.To(int32(1))
 	}
 	if r.Spec.DeletionPolicy == "" {
 		r.Spec.DeletionPolicy = DeletionPolicyDelete
@@ -158,7 +158,7 @@ func (r *Neo4j) setDefaultContainerSecurityContext(neoVersion *catalog.Neo4jVers
 
 func (r *Neo4j) assignDefaultContainerSecurityContext(n4Version *catalog.Neo4jVersion, rc *core.SecurityContext) {
 	if rc.AllowPrivilegeEscalation == nil {
-		rc.AllowPrivilegeEscalation = pointer.Bool(false)
+		rc.AllowPrivilegeEscalation = ptr.To(false)
 	}
 	if rc.Capabilities == nil {
 		rc.Capabilities = &core.Capabilities{
@@ -166,7 +166,7 @@ func (r *Neo4j) assignDefaultContainerSecurityContext(n4Version *catalog.Neo4jVe
 		}
 	}
 	if rc.RunAsNonRoot == nil {
-		rc.RunAsNonRoot = pointer.Bool(true)
+		rc.RunAsNonRoot = ptr.To(true)
 	}
 	if rc.RunAsUser == nil {
 		rc.RunAsUser = n4Version.Spec.SecurityContext.RunAsUser
@@ -240,12 +240,12 @@ func (r *Neo4j) GetConnectionScheme() string {
 
 func (r *Neo4j) SetHealthCheckerDefaults() {
 	if r.Spec.HealthChecker.PeriodSeconds == nil {
-		r.Spec.HealthChecker.PeriodSeconds = pointer.Int32(10)
+		r.Spec.HealthChecker.PeriodSeconds = ptr.To(int32(10))
 	}
 	if r.Spec.HealthChecker.TimeoutSeconds == nil {
-		r.Spec.HealthChecker.TimeoutSeconds = pointer.Int32(10)
+		r.Spec.HealthChecker.TimeoutSeconds = ptr.To(int32(10))
 	}
 	if r.Spec.HealthChecker.FailureThreshold == nil {
-		r.Spec.HealthChecker.FailureThreshold = pointer.Int32(3)
+		r.Spec.HealthChecker.FailureThreshold = ptr.To(int32(3))
 	}
 }
