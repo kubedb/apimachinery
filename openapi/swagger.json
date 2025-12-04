@@ -25789,9 +25789,6 @@
           "description": "TLS contains tls configurations for client and server.",
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.TLSConfig"
         },
-        "tuning": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresTuningConfig"
-        },
         "version": {
           "description": "Version of Postgres to be deployed.",
           "type": "string",
@@ -25820,33 +25817,6 @@
         },
         "phase": {
           "description": "Specifies the current phase of the database",
-          "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresTuningConfig": {
-      "description": "PostgresTuningConfig defines configuration for PostgreSQL performance tuning",
-      "type": "object",
-      "properties": {
-        "disableAutoTune": {
-          "description": "DisableAutoTune disables automatic tuning entirely. If set to true, no tuning will be applied.",
-          "type": "boolean"
-        },
-        "maxConnections": {
-          "description": "MaxConnections defines the maximum number of concurrent connections. If not specified, it will be calculated based on available memory and tuning profile.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "resourcesOverride": {
-          "description": "ResourcesOverride allows overriding resource calculations. If specified, these values will be used instead of pod resource limits/requests.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.TuningResourcesOverride"
-        },
-        "storageType": {
-          "description": "StorageType defines the type of storage for tuning purposes. If not specified, it will be inferred from StorageClass or default to HDD.",
-          "type": "string"
-        },
-        "tuningProfile": {
-          "description": "TuningProfile defines a predefined tuning profile for different workload types. If specified, other tuning parameters will be calculated based on this profile.",
           "type": "string"
         }
       }
@@ -26500,21 +26470,6 @@
         },
         "operatorSecret": {
           "type": "string"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.TuningResourcesOverride": {
-      "description": "TuningResourcesOverride allows overriding resource calculations for tuning",
-      "type": "object",
-      "properties": {
-        "cpuNum": {
-          "description": "CPUNum overrides the CPU count used for tuning calculations.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "totalMemory": {
-          "description": "TotalMemory overrides the total memory used for tuning calculations. Format: \"1Gi\", \"512Mi\", etc.",
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
         }
       }
     },
