@@ -138,6 +138,14 @@ type MySQLListerExpansion interface{}
 // MySQLNamespaceLister.
 type MySQLNamespaceListerExpansion interface{}
 
+// Neo4jListerExpansion allows custom methods to be added to
+// Neo4jLister.
+type Neo4jListerExpansion interface{}
+
+// Neo4jNamespaceListerExpansion allows custom methods to be added to
+// Neo4jNamespaceLister.
+type Neo4jNamespaceListerExpansion interface{}
+
 // OracleListerExpansion allows custom methods to be added to
 // OracleLister.
 type OracleListerExpansion interface{}

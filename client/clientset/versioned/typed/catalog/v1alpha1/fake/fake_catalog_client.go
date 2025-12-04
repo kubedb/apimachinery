@@ -93,6 +93,10 @@ func (c *FakeCatalogV1alpha1) MySQLVersions() v1alpha1.MySQLVersionInterface {
 	return &FakeMySQLVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) Neo4jVersions() v1alpha1.Neo4jVersionInterface {
+	return &FakeNeo4jVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) OracleVersions() v1alpha1.OracleVersionInterface {
 	return &FakeOracleVersions{c}
 }

@@ -56,6 +56,8 @@ type Interface interface {
 	MongoDBVersions() MongoDBVersionInformer
 	// MySQLVersions returns a MySQLVersionInformer.
 	MySQLVersions() MySQLVersionInformer
+	// Neo4jVersions returns a Neo4jVersionInformer.
+	Neo4jVersions() Neo4jVersionInformer
 	// OracleVersions returns a OracleVersionInformer.
 	OracleVersions() OracleVersionInformer
 	// PerconaXtraDBVersions returns a PerconaXtraDBVersionInformer.
@@ -173,6 +175,11 @@ func (v *version) MongoDBVersions() MongoDBVersionInformer {
 // MySQLVersions returns a MySQLVersionInformer.
 func (v *version) MySQLVersions() MySQLVersionInformer {
 	return &mySQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// Neo4jVersions returns a Neo4jVersionInformer.
+func (v *version) Neo4jVersions() Neo4jVersionInformer {
+	return &neo4jVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // OracleVersions returns a OracleVersionInformer.

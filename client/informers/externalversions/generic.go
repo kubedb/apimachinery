@@ -160,6 +160,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MongoDBVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("mysqlversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MySQLVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("neo4jversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().Neo4jVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("oracleversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().OracleVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("perconaxtradbversions"):
@@ -300,6 +302,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MongoDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("mysqls"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MySQLs().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("neo4js"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Neo4js().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("oracles"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Oracles().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("perconaxtradbs"):
