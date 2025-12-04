@@ -2043,6 +2043,17 @@ var (
 			core.ResourceMemory: resource.MustParse("2.5Gi"),
 		},
 	}
+
+	DefaultResourcesHanaDB = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("2"),
+			core.ResourceMemory: resource.MustParse("8Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("4"),
+			core.ResourceMemory: resource.MustParse("10Gi"),
+		},
+	}
 )
 
 func DefaultArbiter(computeOnly bool) core.ResourceRequirements {
@@ -2117,4 +2128,58 @@ const (
 
 	QdrantAPIKey         = "api-key"
 	QdrantReadOnlyAPIKey = "read-only-api-key"
+)
+
+// =========================== HanaDB Constants ============================
+const (
+	HanaDBVolumeScripts = "hanadb-scripts"
+
+	HanaDBVolumeMountScripts = "/scripts"
+
+	// Container names
+	HanaDBContainerName            = "hanadb"
+	HanaDBCoordinatorContainerName = "hanadb-coordinator"
+
+	// Mount paths
+	HanaDBDataDir         = "/hana/mounts"
+	HanaDBSecretMountPath = "/etc/hana-secrets"
+
+	// Volume names
+	HanaDBDataVolume           = "data"
+	HanaDBVolumePasswordSecret = "password-secret"
+
+	// User and Group IDs
+	HanaDBUserID  = 12000 // hxeadm UID
+	HanaDBGroupID = 79    // hxeadm GID
+
+	// Health check schema and table
+	HanaDBHealthCheckSchemaName = "KUBEDB_SYSTEM"
+	HanaDBHealthCheckTableName  = "KUBEDB_WRITE_CHECK"
+
+	// Auth secret
+	HanaDBSystemUser        = "SYSTEM"
+	HanaDBPasswordFileKey   = "password.json"
+	HanaDBMasterPasswordKey = "master_password"
+
+	// Main SYSTEMDB SQL connection port, Used by health checks and administrative operations
+	HanaDBSystemDBSQLPortName = "systemdb-sql"
+	HanaDBSystemDBSQLPort     = 39017
+
+	// Nameserver port for internal communication and system replication
+	HanaDBNameServerPortName = "nameserver"
+	HanaDBNameServerPort     = 39001
+
+	// SYSTEMDB SQL mapping port - used internally for routing
+	HanaDBSystemDBMappingPortName = "systemdb-map"
+	HanaDBSystemDBMappingPort     = 39013
+
+	HanaDBPrimaryServicePortName = "primary"
+
+	HanaDBCoordinatorPort           = 2380
+	HanaDBCoordinatorClientPort     = 2379
+	HanaDBCoordinatorPortName       = "coordinator"
+	HanaDBCoordinatorClientPortName = "coordinator-client"
+
+	// TenantDatabaseName is the name of the KubeDB managed tenant database
+	KubeDBTenantDatabaseName = "KUBEDB_HEALTH_CHECK"
 )

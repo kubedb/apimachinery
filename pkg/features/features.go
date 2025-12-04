@@ -61,6 +61,9 @@ const (
 	// Enables Hazelcast operator.
 	Hazelcast featuregate.Feature = "Hazelcast"
 
+	// Enables HanaDB operator.
+	HanaDB featuregate.Feature = "HanaDB"
+
 	// Enables Ignite operator.
 	Ignite featuregate.Feature = "Ignite"
 
@@ -78,6 +81,7 @@ const (
 
 	// Enables MSSQLServer operator.
 	MSSQLServer featuregate.Feature = "MSSQLServer"
+
 	// Enables MySQL operator.
 	MySQL featuregate.Feature = "MySQL"
 
@@ -151,6 +155,7 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	// Etcd:               {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
 	FerretDB:      {Default: false, PreRelease: featuregate.Alpha},
 	Hazelcast:     {Default: true, PreRelease: featuregate.Alpha},
+	HanaDB:        {Default: false, PreRelease: featuregate.Alpha},
 	Ignite:        {Default: true, PreRelease: featuregate.Alpha},
 	Kafka:         {Default: true, PreRelease: featuregate.Beta},
 	MariaDB:       {Default: true, PreRelease: featuregate.GA},

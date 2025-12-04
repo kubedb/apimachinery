@@ -30,6 +30,8 @@ type EtcdExpansion interface{}
 
 type FerretDBExpansion interface{}
 
+type HanaDBExpansion interface{}
+
 type HazelcastExpansion interface{}
 
 type IgniteExpansion interface{}
