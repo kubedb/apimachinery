@@ -85,6 +85,6 @@ type DB2Coordinator struct {
 type DB2VersionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	// Items is a list of OracleVersion CRD objects
+	// Items is a list of DB2Version CRD objects
 	Items []DB2Version `json:"items,omitempty"`
 }

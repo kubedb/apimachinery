@@ -26,7 +26,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (d DB2Version) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (_ DB2Version) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralDB2Version))
 }
 
@@ -56,8 +56,7 @@ func (d DB2Version) ValidateSpecs() error {
 	if d.Spec.Version == "" || d.Spec.DB.Image == "" || d.Spec.Coordinator.Image == "" {
 		return fmt.Errorf(`at least one of the following specs is not set for DB2 "%v":
 spec.version,
-spec.coordinator.image,
-spec.initContainer.image`, d.Name)
+spec.coordinator.image`, d.Name)
 	}
 	// TODO: add m.spec.exporter.image check FOR monitoring
 	return nil

@@ -528,6 +528,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion":                        schema_apimachinery_apis_catalog_v1alpha1_ConnectClusterVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin":                              schema_apimachinery_apis_catalog_v1alpha1_ConnectorPlugin(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase":                 schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Coordinator":                               schema_apimachinery_apis_catalog_v1alpha1_DB2Coordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Version":                                   schema_apimachinery_apis_catalog_v1alpha1_DB2Version(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase":                           schema_apimachinery_apis_catalog_v1alpha1_DB2VersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionList":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionList(ref),
@@ -26968,6 +26969,26 @@ func schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref 
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_DB2Coordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_DB2Version(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27058,7 +27079,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionList(ref common.Referen
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of OracleVersion CRD objects",
+							Description: "Items is a list of DB2Version CRD objects",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -27100,6 +27121,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref common.Referen
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase"),
 						},
 					},
+					"coordinator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Coordinator Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Coordinator"),
+						},
+					},
 					"deprecated": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -27139,7 +27167,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Coordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

@@ -101,28 +101,11 @@ type DB2Status struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
-
-// +kubebuilder:object:root=true
-
-// DB2List contains a list of DB2.
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// DB2List contains a list of DB2
 type DB2List struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []DB2 `json:"items"`
 }
-
-// +kubebuilder:validation:Enum=coordinators;overlords;brokers;routers;middleManagers;historicals
-type DB2NodeRoleType string
-
-const (
-	DB2NodeRoleCoordinators   DruidNodeRoleType = "coordinators"
-	DB2NodeRoleOverlords      DruidNodeRoleType = "overlords"
-	DB2NodeRoleBrokers        DruidNodeRoleType = "brokers"
-	DB2NodeRoleRouters        DruidNodeRoleType = "routers"
-	DB2NodeRoleMiddleManagers DruidNodeRoleType = "middleManagers"
-	DB2NodeRoleHistoricals    DruidNodeRoleType = "historicals"
-)

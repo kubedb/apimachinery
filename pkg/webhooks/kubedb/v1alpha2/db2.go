@@ -46,9 +46,6 @@ func SetupDb2WebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-//+kubebuilder:webhook:path=/mutate-druid-kubedb-com-v1alpha1-druid,mutating=true,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=druids,verbs=create;update,versions=v1alpha1,name=mdruid.kb.io,admissionReviewVersions={v1,v1beta1}
-
-// +kubebuilder:object:generate=false
 type DB2CustomWebhook struct {
 	DefaultClient client.Client
 }
@@ -70,8 +67,6 @@ func (w *DB2CustomWebhook) Default(ctx context.Context, obj runtime.Object) erro
 	db.SetDefaults(w.DefaultClient)
 	return nil
 }
-
-//+kubebuilder:webhook:path=/validate-kubedb-com-v1alpha2-druid,mutating=false,failurePolicy=fail,sideEffects=None,groups=kubedb.com,resources=druids,verbs=create;update,versions=v1alpha2,name=vdruid.kb.io,admissionReviewVersions=v1
 
 var _ webhook.CustomValidator = &DB2CustomWebhook{}
 
@@ -118,7 +113,6 @@ func (w *DB2CustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Objec
 
 func (w *DB2CustomWebhook) validateCreateOrUpdate(db *olddbapi.DB2) field.ErrorList {
 	var allErr field.ErrorList
-
 	// Check Version
 	if db.Spec.Version == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
@@ -131,12 +125,6 @@ func (w *DB2CustomWebhook) validateCreateOrUpdate(db *olddbapi.DB2) field.ErrorL
 				db.Spec.Version,
 				err.Error()))
 		}
-	}
-
-	// Check StorageType and Storage consistency
-	if db.Spec.StorageType == "" {
-		// Set default if missing
-		db.Spec.StorageType = olddbapi.StorageTypeDurable
 	}
 
 	if db.Spec.StorageType == olddbapi.StorageTypeDurable {
@@ -196,7 +184,7 @@ func (w *DB2CustomWebhook) validateCreateOrUpdate(db *olddbapi.DB2) field.ErrorL
 				db.Name,
 				"serviceTemplate.alias cannot be empty"))
 		}
-		if svc.Spec.Ports == nil || len(svc.Spec.Ports) == 0 {
+		if svc.Spec.Ports == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("serviceTemplates").Index(i).Child("spec").Child("ports"),
 				db.Name,
 				"serviceTemplate.spec.ports cannot be empty"))

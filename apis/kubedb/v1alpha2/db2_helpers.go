@@ -61,10 +61,6 @@ func (d *DB2) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string
 	return d.offshootLabels(metautil.OverwriteKeys(d.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
-func (d *DB2) ObserverPetSetName() string {
-	return fmt.Sprintf("%s-observer", d.PetSetName())
-}
-
 func (d *DB2) PetSetName() string {
 	return d.OffshootName()
 }
@@ -114,10 +110,6 @@ func (d *DB2) PodControllerLabels(podTemplate *ofst.PodTemplateSpec, extraLabels
 	return d.offshootLabels(metautil.OverwriteKeys(d.OffshootSelectors(), extraLabels...), nil)
 }
 
-func (d *DB2) ServiceAccountName() string {
-	return d.OffshootName()
-}
-
 func (d *DB2) GetAuthSecretName() string {
 	if d.Spec.AuthSecret != nil && d.Spec.AuthSecret.Name != "" {
 		return d.Spec.AuthSecret.Name
@@ -129,14 +121,6 @@ func (d *DB2) GetPersistentSecrets() []string {
 	var secrets []string
 	secrets = append(secrets, d.GetAuthSecretName())
 	return secrets
-}
-
-func (d *DB2) DefaultPodRoleName() string {
-	return metautil.NameWithSuffix(d.OffshootName(), "role")
-}
-
-func (d *DB2) DefaultPodRoleBindingName() string {
-	return metautil.NameWithSuffix(d.OffshootName(), "rolebinding")
 }
 
 func (d *DB2) Finalizer() string {
