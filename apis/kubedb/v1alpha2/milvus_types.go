@@ -20,6 +20,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -116,6 +117,33 @@ type MilvusTopology struct {
 	// "Standalone", Standalone is required, and Milvus will start a Standalone Mode
 	// "Distributed", DistributedSpec is required, and Milvus will start a Distributed Mode
 	Mode *MilvusMode `json:"mode,omitempty"`
+}
+
+type Distributed struct {
+	DataNode *MilvusNode `json:"dataNode,omitempty"`
+
+	MixCoord *MilvusNode `json:"mixCoord,omitempty"`
+
+	QueryNode *MilvusNode `json:"middleManagers,omitempty"`
+
+	StreamingNode *MilvusNode `json:"historicals,omitempty"`
+
+	Proxy *MilvusNode `json:"brokers,omitempty"`
+}
+
+type MilvusNode struct {
+	// Replicas represents number of replicas for the specific type of node
+	// +kubebuilder:default=1
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// PodTemplate is an optional configuration for pods used to expose database
+	// +optional
+	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// ServiceTemplates is an optional configuration for services used to expose database
+	// +optional
+	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
