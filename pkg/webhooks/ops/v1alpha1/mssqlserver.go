@@ -243,7 +243,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 		return err
 	}
 
-	// Validate ConfigSecret exits if provided and has the required config file
+	// Validate ConfigSecret exists if provided and has the required config file
 	if reconfigureSpec.ConfigSecret != nil {
 		var secret core.Secret
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{

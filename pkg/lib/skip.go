@@ -67,7 +67,7 @@ func (s *skipper) SkipOpsReq() (bool, error) {
 
 	// Skip the skipper logic for Reconfigure ops requests - they are handled by ReconfigureMerger
 	currentOpsType := fmt.Sprintf("%v", s.currentOps.(opsapi.Accessor).GetRequestType())
-	if currentOpsType == "Reconfigure" {
+	if isInExcludeList(currentOpsType) {
 		return false, nil
 	}
 
@@ -87,9 +87,8 @@ func (s *skipper) SkipOpsReq() (bool, error) {
 		}
 		// r.Status.Phase can be "", if it has not been reconciled yet.
 		if r.GetStatus().Phase == opsapi.OpsRequestPhasePending || r.GetStatus().Phase == "" {
-			// Skip Reconfigure ops requests - they are handled by ReconfigureMerger
 			opsType := fmt.Sprintf("%v", r.GetRequestType()) // r.GetRequestType().(string) causes panic
-			if opsType == "Reconfigure" {
+			if isInExcludeList(opsType) {
 				continue
 			}
 			// populate the map
@@ -103,6 +102,17 @@ func (s *skipper) SkipOpsReq() (bool, error) {
 	}
 
 	return oldestOps.Name != s.currentOps.GetName(), nil
+}
+
+var ExcludedFromSkipperLogic = []string{"Reconfigure"} // Skip Reconfigure ops requests - they are handled by ReconfigureMerger
+
+func isInExcludeList(s string) bool {
+	for _, ex := range ExcludedFromSkipperLogic {
+		if s == ex {
+			return true
+		}
+	}
+	return false
 }
 
 func (s *skipper) getOldestOpsAfterSkipping(opsMap map[string][]client.Object) (metav1.ObjectMeta, error) {
