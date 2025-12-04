@@ -362,11 +362,11 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresStorageMigrationOpsReq
 
 func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequest(req *opsapi.PostgresOpsRequest) error {
 	if req.Spec.VolumeExpansion == nil {
-		return errors.New("`.Spec.VolumeExpansion` field is nil")
+		return errors.New("`spec.volumeExpansion` field is required, can not be nil.")
 	}
 
 	if req.Spec.VolumeExpansion.Postgres == nil && req.Spec.VolumeExpansion.Arbiter == nil {
-		return errors.New("`spec.volumeExpansion.Postgres`, `spec.volumeExpansion.Arbiter` at least any of them should be present in volume expansion ops request")
+		return errors.New("at least one of `spec.volumeExpansion.postgres` or `spec.volumeExpansion.arbiter` must be specified in volume expansion ops request")
 	}
 
 	db := &dbapi.Postgres{}
@@ -377,7 +377,7 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequ
 
 	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
 	if !ok {
-		return errors.Wrap(err, "failed to parse current storage size")
+		return errors.New("failed to parse current storage size")
 	}
 
 	if req.Spec.VolumeExpansion.Postgres != nil {
@@ -389,7 +389,7 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequ
 		if db.Spec.Arbiter != nil && db.Spec.Arbiter.Resources.Requests.Storage() != nil {
 			curArbiter, ok := db.Spec.Arbiter.Resources.Requests[core.ResourceStorage]
 			if !ok {
-				return errors.Wrap(err, "failed to parse current arbiter storage size")
+				return errors.New("failed to parse current arbiter storage size")
 			}
 			if curArbiter.Cmp(*req.Spec.VolumeExpansion.Arbiter) >= 0 {
 				return fmt.Errorf("desired arbiter storage size must be greater than current arbiter storage. Current arbiter storage: %v", curArbiter.String())
