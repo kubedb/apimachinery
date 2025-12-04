@@ -50,9 +50,6 @@ type Neo4j struct {
 
 // Neo4jSpec defines the desired state of Neo4j.
 type Neo4jSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// Version of Neo4j to deploy. Must correspond to a supported Neo4jVersion in the catalog.
 	Version string `json:"version"`
 

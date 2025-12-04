@@ -1,3 +1,19 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package v1alpha2
 
 import (
@@ -23,7 +39,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func (_ Neo4j) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (_ *Neo4j) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralNeo4j))
 }
 
@@ -35,10 +51,6 @@ func (r *Neo4j) GetAuthSecretName() string {
 	if r.Spec.AuthSecret != nil && r.Spec.AuthSecret.Name != "" {
 		return r.Spec.AuthSecret.Name
 	}
-	return r.DefaultUserCredSecretName()
-}
-
-func (r *Neo4j) DefaultUserCredSecretName() string {
 	return meta_util.NameWithSuffix(r.OffshootName(), "auth")
 }
 
@@ -73,7 +85,9 @@ func (r *Neo4j) ResourcePlural() string {
 
 func (r *Neo4j) GetPersistentSecrets() []string {
 	var secrets []string
-	secrets = append(secrets, r.GetAuthSecretName())
+	if !r.Spec.DisableSecurity {
+		secrets = append(secrets, r.GetAuthSecretName())
+	}
 	return secrets
 }
 
@@ -106,19 +120,19 @@ func (r *Neo4j) SetDefaults(kc client.Client) {
 		}
 	}
 
-	var n4Version catalog.Neo4jVersion
+	var neoVersion catalog.Neo4jVersion
 	err := kc.Get(context.TODO(), types.NamespacedName{
 		Name: r.Spec.Version,
-	}, &n4Version)
+	}, &neoVersion)
 	if err != nil {
 		klog.Errorf("can't get the Neo4j version object %s for %s \n", err.Error(), r.Spec.Version)
 		return
 	}
 
-	r.setDefaultContainerSecurityContext(&n4Version, &r.Spec.PodTemplate)
+	r.setDefaultContainerSecurityContext(&neoVersion, &r.Spec.PodTemplate)
 }
 
-func (r *Neo4j) setDefaultContainerSecurityContext(n4Version *catalog.Neo4jVersion, podTemplate *ofst.PodTemplateSpec) {
+func (r *Neo4j) setDefaultContainerSecurityContext(neoVersion *catalog.Neo4jVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
 	}
@@ -126,7 +140,7 @@ func (r *Neo4j) setDefaultContainerSecurityContext(n4Version *catalog.Neo4jVersi
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
-		podTemplate.Spec.SecurityContext.FSGroup = n4Version.Spec.SecurityContext.RunAsUser
+		podTemplate.Spec.SecurityContext.FSGroup = neoVersion.Spec.SecurityContext.RunAsUser
 	}
 	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.Neo4jContainerName)
 	if container == nil {
@@ -139,7 +153,7 @@ func (r *Neo4j) setDefaultContainerSecurityContext(n4Version *catalog.Neo4jVersi
 		container.SecurityContext = &core.SecurityContext{}
 	}
 
-	r.assignDefaultContainerSecurityContext(n4Version, container.SecurityContext)
+	r.assignDefaultContainerSecurityContext(neoVersion, container.SecurityContext)
 }
 
 func (r *Neo4j) assignDefaultContainerSecurityContext(n4Version *catalog.Neo4jVersion, rc *core.SecurityContext) {
@@ -199,10 +213,6 @@ func (r *Neo4j) DefaultPodRoleBindingName() string {
 	return meta_util.NameWithSuffix(r.OffshootName(), "rolebinding")
 }
 
-func (r *Neo4j) PVCName(alias string) string {
-	return alias
-}
-
 func (r *Neo4j) PodLabels(extraLabels ...map[string]string) map[string]string {
 	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), extraLabels...), r.Spec.PodTemplate.Labels)
 }
@@ -211,11 +221,11 @@ type Neo4jApp struct {
 	*Neo4j
 }
 
-func (r Neo4jApp) Name() string {
+func (r *Neo4jApp) Name() string {
 	return r.Neo4j.Name
 }
 
-func (r Neo4jApp) Type() appcat.AppType {
+func (r *Neo4jApp) Type() appcat.AppType {
 	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceKindNeo4j))
 }
 
@@ -224,10 +234,7 @@ func (r *Neo4j) AppBindingMeta() appcat.AppBindingMeta {
 }
 
 func (r *Neo4j) GetConnectionScheme() string {
-	scheme := "http"
-	//if r.Spec.EnableSSL {
-	//	scheme = "https"
-	//}
+	scheme := "http" // TODO:()
 	return scheme
 }
 
