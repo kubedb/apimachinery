@@ -111,6 +111,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pgpoo
 	}
 
 	var allErr field.ErrorList
+	var db olddbapi.Pgpool
 	switch req.GetRequestType().(opsapi.PgpoolOpsRequestType) {
 	case opsapi.PgpoolOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
@@ -137,7 +138,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pgpoo
 				err.Error()))
 		}
 	case opsapi.PgpoolOpsRequestTypeUpdateVersion:
-		if err := w.validatePgpoolUpdateVersionOpsRequest(req); err != nil {
+		if err := w.validatePgpoolUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -225,12 +226,21 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(req 
 	return nil
 }
 
-func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolUpdateVersionOpsRequest(req *opsapi.PgpoolOpsRequest) error {
+func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolUpdateVersionOpsRequest(db *olddbapi.Pgpool, req *opsapi.PgpoolOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
-	err := w.hasDatabaseRef(req)
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindPgpoolVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+
+	err = w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}

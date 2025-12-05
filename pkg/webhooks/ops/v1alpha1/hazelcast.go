@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -111,6 +112,7 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 	}
 
 	var allErr field.ErrorList
+	var db dbapi.Hazelcast
 	switch req.GetRequestType().(opsapi.HazelcastOpsRequestType) {
 	case opsapi.HazelcastOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
@@ -131,7 +133,7 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 				err.Error()))
 		}
 	case opsapi.HazelcastOpsRequestTypeUpdateVersion:
-		if err := w.hasDatabaseRef(req); err != nil {
+		if err := w.validateHazelcastUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -222,6 +224,23 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVolumeExpansionOpsRe
 	}
 	if volumeExpansionSpec.Hazelcast == nil {
 		return errors.New("spec.volumeExpansion.Hazelcast can't be empty at the same ops request")
+	}
+
+	return nil
+}
+
+func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastUpdateVersionOpsRequest(db *dbapi.Hazelcast, req *opsapi.HazelcastOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindHazelcastVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
 	return nil

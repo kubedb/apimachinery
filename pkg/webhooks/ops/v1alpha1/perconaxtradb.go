@@ -96,6 +96,7 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	}
 
 	var allErr field.ErrorList
+	var db dbapi.PerconaXtraDB
 	switch req.GetRequestType().(opsapi.PerconaXtraDBOpsRequestType) {
 	case opsapi.PerconaXtraDBOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
@@ -122,7 +123,7 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				err.Error()))
 		}
 	case opsapi.PerconaXtraDBOpsRequestTypeUpdateVersion:
-		if err := w.validatePerconaXtraDBUpgradeOpsRequest(req); err != nil {
+		if err := w.validatePerconaXtraDBUpgradeOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -170,14 +171,20 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBOpsRequest(o
 	return nil
 }
 
-func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBUpgradeOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBUpgradeOpsRequest(db *dbapi.PerconaXtraDB, req *opsapi.PerconaXtraDBOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.Upgrade & spec.UpdateVersion both nil not supported")
 	}
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindPerconaXtraDBVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
 
-	db := &dbapi.PerconaXtraDB{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get percona-xtradbdb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}

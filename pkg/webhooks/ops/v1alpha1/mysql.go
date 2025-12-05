@@ -21,6 +21,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
@@ -99,6 +100,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 	}
 
 	var allErr field.ErrorList
+	var db olddbapi.MySQL
 	switch req.GetRequestType().(opsapi.MySQLOpsRequestType) {
 	case opsapi.MySQLOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
@@ -125,7 +127,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeUpdateVersion:
-		if err := w.validateMySQLUpgradeOpsRequest(req); err != nil {
+		if err := w.validateMySQLUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -180,90 +182,20 @@ func (w *MySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MySQLOpsReques
 	return nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpgradeOpsRequest(req *opsapi.MySQLOpsRequest) error {
-	// right now, kubeDB support the following mysql version: 5.7.25, 5.7.29, 5.7.31, 8.0.3, 8.0.14, 8.0.18, 8.0.20 and 8.0.21
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *olddbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
-		return errors.New("spec.Upgrade & spec.UpdateVersion both nil not supported")
-	}
-	db := &dbapi.MySQL{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
-	myCurVersion := &catalog.MySQLVersion{}
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, myCurVersion)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysqlVersion: %s", updateVersionSpec.TargetVersion))
-	}
-	myNextVersion := &catalog.MySQLVersion{}
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: updateVersionSpec.TargetVersion}, myNextVersion)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysqlVersion: %s", updateVersionSpec.TargetVersion))
-	}
-	// check if myNextVersion is deprecated.if deprecated, return error
-	if myNextVersion.Spec.Deprecated {
-		return fmt.Errorf("mysql target version %s/%s is deprecated. Skipped processing", db.Namespace, myNextVersion.Name)
+		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	// check whitelist to determine which version will be supported for upgrading modification
-	if len(myCurVersion.Spec.UpdateConstraints.Allowlist.Standalone) > 0 || len(myCurVersion.Spec.UpdateConstraints.Allowlist.GroupReplication) > 0 {
-		v, err := semver.NewVersion(myNextVersion.Spec.Version)
-		if err != nil {
-			return errors.Wrap(err, "unbale to parse the given myNext version")
-		}
-		// check group replication/standalone constraint
-		if db.Spec.Topology != nil && db.Spec.Topology.Mode != nil {
-			for _, constraints := range myCurVersion.Spec.UpdateConstraints.Allowlist.GroupReplication {
-				con, err := semver.NewConstraint(constraints)
-				if err != nil {
-					return errors.Wrap(err, "unable to parse constraints from the given constraint string")
-				}
-				if !con.Check(v) {
-					return fmt.Errorf("update version from %v to %v is not supported", myCurVersion, myNextVersion)
-				}
-			}
-		} else {
-			for _, constraints := range myCurVersion.Spec.UpdateConstraints.Allowlist.Standalone {
-				con, err := semver.NewConstraint(constraints)
-				if err != nil {
-					return errors.Wrap(err, "unable to parse constraints from the given constraint string")
-				}
-				if !con.Check(v) {
-					return fmt.Errorf("update version from %v to %v is not supported", myCurVersion, myNextVersion)
-				}
-			}
-		}
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindMySQLVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
 	}
-	// check blacklist to determine which version will be rejected for upgrading modification
-	if len(myCurVersion.Spec.UpdateConstraints.Denylist.Standalone) > 0 || len(myCurVersion.Spec.UpdateConstraints.Denylist.GroupReplication) > 0 {
-		v, err := semver.NewVersion(myNextVersion.Spec.Version)
-		if err != nil {
-			return errors.Wrap(err, "unable to parse the given version")
-		}
-		// check group replication/standalone constraint
-		if db.Spec.Topology != nil && db.Spec.Topology.Mode != nil {
-			for _, constraints := range myCurVersion.Spec.UpdateConstraints.Denylist.GroupReplication {
-				con, err := semver.NewConstraint(constraints)
-				if err != nil {
-					return errors.Wrap(err, "unable to parse constraints from the given constraint string")
-				}
-				if con.Check(v) {
-					return fmt.Errorf("update version from %v to %v is not supported", myCurVersion, myNextVersion)
-				}
-			}
-		} else {
-			for _, constraints := range myCurVersion.Spec.UpdateConstraints.Denylist.Standalone {
-				con, err := semver.NewConstraint(constraints)
-				if err != nil {
-					return errors.Wrap(err, "unable to parse constraints from the given constraint string")
-				}
-				if con.Check(v) {
-					return fmt.Errorf("update version from %v to %v is not supported", myCurVersion, myNextVersion)
-				}
-			}
-		}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
+
 	return nil
 }
 

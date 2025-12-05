@@ -18,10 +18,12 @@ package v1alpha1
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -121,9 +123,10 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	}
 
 	var allErr field.ErrorList
+	var db v1.RedisSentinel
 	switch req.GetRequestType().(opsapi.RedisSentinelOpsRequestType) {
 	case opsapi.RedisSentinelOpsRequestTypeUpdateVersion:
-		if err := w.validateRedisSentinelUpdateVersionOpsRequest(req); err != nil {
+		if err := w.validateRedisSentinelUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -136,14 +139,26 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	return apierrors.NewInvalid(schema.GroupKind{Group: "redissentinelopsrequest.kubedb.com", Kind: "RedisSentinelOpsRequest"}, req.Name, allErr)
 }
 
-func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelUpdateVersionOpsRequest(req *opsapi.RedisSentinelOpsRequest) error {
-	updatedVersionName := req.Spec.UpdateVersion.TargetVersion
-	redisSentinel := v1.RedisSentinel{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.Namespace}, &redisSentinel)
+func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelUpdateVersionOpsRequest(db *v1.RedisSentinel, req *opsapi.RedisSentinelOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindRedisVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
 	if err != nil {
 		return err
 	}
-	currentVersionName := redisSentinel.Spec.Version
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+
+	updatedVersionName := req.Spec.UpdateVersion.TargetVersion
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.Namespace}, db)
+	if err != nil {
+		return err
+	}
+	currentVersionName := db.Spec.Version
 
 	updatedVersion := &v1alpha1.RedisVersion{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: updatedVersionName}, updatedVersion); err != nil {

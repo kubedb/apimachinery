@@ -108,6 +108,7 @@ func (w *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pro
 	}
 
 	var allErr field.ErrorList
+	var db dbapi.ProxySQL
 	switch req.GetRequestType().(opsapi.ProxySQLOpsRequestType) {
 	case opsapi.ProxySQLOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
@@ -134,7 +135,7 @@ func (w *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pro
 				err.Error()))
 		}
 	case opsapi.ProxySQLOpsRequestTypeUpdateVersion:
-		if err := w.validateProxySQLUpgradeOpsRequest(req); err != nil {
+		if err := w.validateProxySQLUpgradeOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -164,12 +165,23 @@ func (w *ProxySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ProxySQLOps
 	return nil
 }
 
-func (w *ProxySQLOpsRequestCustomWebhook) validateProxySQLUpgradeOpsRequest(req *opsapi.ProxySQLOpsRequest) error {
+func (w *ProxySQLOpsRequestCustomWebhook) validateProxySQLUpgradeOpsRequest(db *dbapi.ProxySQL, req *opsapi.ProxySQLOpsRequest) error {
 	if req.Spec.UpdateVersion == nil {
 		return errors.New("spec.Upgrade is nil")
 	}
-	db := &dbapi.ProxySQL{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindProxySQLVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get proxysql: %s/%s", req.Namespace, req.Spec.ProxyRef.Name))
 	}

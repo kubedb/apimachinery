@@ -112,6 +112,7 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 	}
 
 	var allErr field.ErrorList
+	var db olddbapi.Memcached
 	switch req.GetRequestType().(opsapi.MemcachedOpsRequestType) {
 	case opsapi.MemcachedOpsRequestTypeRestart:
 		if err := c.hasDatabaseRef(req); err != nil {
@@ -138,7 +139,7 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 				err.Error()))
 		}
 	case opsapi.MemcachedOpsRequestTypeUpdateVersion:
-		if err := c.validateMemcachedUpdateVersionOpsRequest(req); err != nil {
+		if err := c.validateMemcachedUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -199,22 +200,20 @@ func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedHorizontalScalingOps
 	return nil
 }
 
-func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedUpdateVersionOpsRequest(req *opsapi.MemcachedOpsRequest) error {
+func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedUpdateVersionOpsRequest(db *olddbapi.Memcached, req *opsapi.MemcachedOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
-	err := c.hasDatabaseRef(req)
+
+	yes, err := IsUpgradable(c.DefaultClient, catalog.ResourceKindMemcachedVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
 	if err != nil {
 		return err
 	}
-	memcachedTargetVersion := &catalog.MemcachedVersion{}
-	err = c.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: updateVersionSpec.TargetVersion,
-	}, memcachedTargetVersion)
-	if err != nil {
-		return err
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
+
 	return nil
 }
 

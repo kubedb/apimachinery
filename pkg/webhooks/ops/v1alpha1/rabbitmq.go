@@ -111,6 +111,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 	}
 
 	var allErr field.ErrorList
+	var db olddbapi.RabbitMQ
 	switch req.GetRequestType().(opsapi.RabbitMQOpsRequestType) {
 	case opsapi.RabbitMQOpsRequestTypeRestart:
 		if err := rv.hasDatabaseRef(req); err != nil {
@@ -149,7 +150,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 				err.Error()))
 		}
 	case opsapi.RabbitMQOpsRequestTypeUpdateVersion:
-		if err := rv.validateRabbitMQUpdateVersionOpsRequest(req); err != nil {
+		if err := rv.validateRabbitMQUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -242,18 +243,25 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVolumeExpansionOpsReq
 	return nil
 }
 
-func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQUpdateVersionOpsRequest(req *opsapi.RabbitMQOpsRequest) error {
+func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQUpdateVersionOpsRequest(db *olddbapi.RabbitMQ, req *opsapi.RabbitMQOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
-		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
+		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
 
-	if err := rv.hasDatabaseRef(req); err != nil {
+	yes, err := IsUpgradable(rv.DefaultClient, catalog.ResourceKindRabbitMQVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+	if err = rv.hasDatabaseRef(req); err != nil {
 		return err
 	}
 
 	nextRabbitMQVersion := catalog.RabbitMQVersion{}
-	err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err = rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.Spec.UpdateVersion.TargetVersion,
 		Namespace: req.GetNamespace(),
 	}, &nextRabbitMQVersion)

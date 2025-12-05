@@ -22,16 +22,20 @@ import (
 	"strings"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	v1 "k8s.io/api/core/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/apimachinery/pkg/util/validation/field"
 	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -94,13 +98,18 @@ func (w *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.Pg
 		return fmt.Errorf("target database pgbouncer %s is not valid", obj.GetDBRefName())
 	}
 
+	var allErr field.ErrorList
 	switch obj.Spec.Type {
 	case opsapi.PgBouncerOpsRequestTypeHorizontalScaling:
 		return validatePgBouncerHorizontalScalingOpsRequest(obj)
 	case opsapi.PgBouncerOpsRequestTypeVerticalScaling:
 		return validatePgBouncerVerticalScalingOpsRequest(obj)
 	case opsapi.PgBouncerOpsRequestTypeUpdateVersion:
-		return validatePgBouncerUpdateVersionOpsRequest(obj, w.DefaultClient)
+		if err := validatePgBouncerUpdateVersionOpsRequest(obj, w.DefaultClient); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				obj.Name,
+				err.Error()))
+		}
 	case opsapi.PgBouncerOpsRequestTypeReconfigure:
 		return validatePgBouncerReconfigurationOpsRequest(obj, w.DefaultClient)
 	case opsapi.PgBouncerOpsRequestTypeRestart:
@@ -109,7 +118,10 @@ func (w *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.Pg
 		return w.validatePgBouncerReconfigureTLSOpsRequest(obj)
 	}
 
-	return nil
+	if len(allErr) == 0 {
+		return nil
+	}
+	return apierrors.NewInvalid(schema.GroupKind{Group: "ops.kubedb.com", Kind: "MongoDBOpsRequest"}, obj.Name, allErr)
 }
 
 func validatePgBouncerOpsRequest(obj, oldObj runtime.Object) error {
@@ -166,8 +178,18 @@ func validatePgBouncerVerticalScalingOpsRequest(req *opsapi.PgBouncerOpsRequest)
 }
 
 func validatePgBouncerUpdateVersionOpsRequest(req *opsapi.PgBouncerOpsRequest, client client.Client) error {
-	if req.Spec.UpdateVersion == nil {
+	updateVersionSpec := req.Spec.UpdateVersion
+	var db dbapi.PgBouncer
+	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(client, catalog.ResourceKindPgBouncerVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
 	version, err := getPgBouncerTargetVersion(client, req)
