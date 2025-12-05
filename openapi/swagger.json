@@ -25646,6 +25646,10 @@
         "walLimitPolicy"
       ],
       "properties": {
+        "forceFailOverAcceptingDataLossAfter": {
+          "description": "ForceFailOverAcceptingDataLossAfter is the maximum time to wait before running a force failover process This is helpful for a scenario where the old primary is not available and it has the most updated wal lsn Doing force failover may or may not end up loosing data depending on any wrtie transaction in the range lagged lsn between the new primary and the old primary",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
         "maxSlotWALKeepSize": {
           "type": "integer",
           "format": "int32"
@@ -26724,6 +26728,10 @@
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingSpec"
         },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
+        },
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
@@ -26965,6 +26973,10 @@
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.EtcdHorizontalScalingSpec"
         },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
+        },
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
@@ -27172,6 +27184,10 @@
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedHorizontalScalingSpec"
+        },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
         },
         "restart": {
           "description": "Specifies information necessary for restarting database",
@@ -27406,6 +27422,10 @@
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBHorizontalScalingSpec"
+        },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
         },
         "readinessCriteria": {
           "description": "Specifies the Readiness Criteria",
@@ -27695,6 +27715,10 @@
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLHorizontalScalingSpec"
+        },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
         },
         "migration": {
           "description": "Specifies information necessary for migrating storageClass or data",
@@ -28037,6 +28061,10 @@
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBHorizontalScalingSpec"
         },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
+        },
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
@@ -28320,6 +28348,10 @@
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec"
         },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
+        },
         "migration": {
           "description": "Specifies information necessary for migrating storageClass or data",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresMigrationSpec"
@@ -28581,6 +28613,10 @@
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLHorizontalScalingSpec"
         },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
+        },
         "proxyRef": {
           "description": "Specifies the ProxySQL reference",
           "default": {},
@@ -28800,6 +28836,10 @@
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisHorizontalScalingSpec"
+        },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
         },
         "restart": {
           "description": "Specifies information necessary for restarting database",

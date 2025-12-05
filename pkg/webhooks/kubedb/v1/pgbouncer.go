@@ -143,14 +143,8 @@ func (pw PgBouncerCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 		return nil, fmt.Errorf("expected a PgBouncer but got a %T", oldPgBouncer)
 	}
 
-	var finalConfigSecret v1.Secret
-	err := pw.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: pgBouncer.Namespace, Name: pgBouncer.PgBouncerFinalConfigSecretName()}, &finalConfigSecret)
-	if err != nil {
-		return nil, err
-	}
-
 	var pgBouncerVersion catalogapi.PgBouncerVersion
-	err = pw.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := pw.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      oldPgBouncer.Spec.Version,
 		Namespace: oldPgBouncer.Namespace,
 	}, &pgBouncerVersion)

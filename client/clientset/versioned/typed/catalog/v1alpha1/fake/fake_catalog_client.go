@@ -37,6 +37,10 @@ func (c *FakeCatalogV1alpha1) ClickHouseVersions() v1alpha1.ClickHouseVersionInt
 	return &FakeClickHouseVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) DB2Versions() v1alpha1.DB2VersionInterface {
+	return &FakeDB2Versions{c}
+}
+
 func (c *FakeCatalogV1alpha1) DruidVersions() v1alpha1.DruidVersionInterface {
 	return &FakeDruidVersions{c}
 }
@@ -93,6 +97,10 @@ func (c *FakeCatalogV1alpha1) MySQLVersions() v1alpha1.MySQLVersionInterface {
 	return &FakeMySQLVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) Neo4jVersions() v1alpha1.Neo4jVersionInterface {
+	return &FakeNeo4jVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) OracleVersions() v1alpha1.OracleVersionInterface {
 	return &FakeOracleVersions{c}
 }
@@ -139,6 +147,10 @@ func (c *FakeCatalogV1alpha1) SinglestoreVersions() v1alpha1.SinglestoreVersionI
 
 func (c *FakeCatalogV1alpha1) SolrVersions() v1alpha1.SolrVersionInterface {
 	return &FakeSolrVersions{c}
+}
+
+func (c *FakeCatalogV1alpha1) WeaviateVersions() v1alpha1.WeaviateVersionInterface {
+	return &FakeWeaviateVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) ZooKeeperVersions() v1alpha1.ZooKeeperVersionInterface {

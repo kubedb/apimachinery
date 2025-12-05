@@ -37,6 +37,10 @@ func (c *FakeKubedbV1alpha2) ClickHouses(namespace string) v1alpha2.ClickHouseIn
 	return &FakeClickHouses{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) DB2s(namespace string) v1alpha2.DB2Interface {
+	return &FakeDB2s{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Druids(namespace string) v1alpha2.DruidInterface {
 	return &FakeDruids{c, namespace}
 }
@@ -93,6 +97,10 @@ func (c *FakeKubedbV1alpha2) MySQLs(namespace string) v1alpha2.MySQLInterface {
 	return &FakeMySQLs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Neo4js(namespace string) v1alpha2.Neo4jInterface {
+	return &FakeNeo4js{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Oracles(namespace string) v1alpha2.OracleInterface {
 	return &FakeOracles{c, namespace}
 }
@@ -139,6 +147,10 @@ func (c *FakeKubedbV1alpha2) Singlestores(namespace string) v1alpha2.Singlestore
 
 func (c *FakeKubedbV1alpha2) Solrs(namespace string) v1alpha2.SolrInterface {
 	return &FakeSolrs{c, namespace}
+}
+
+func (c *FakeKubedbV1alpha2) Weaviates(namespace string) v1alpha2.WeaviateInterface {
+	return &FakeWeaviates{c, namespace}
 }
 
 func (c *FakeKubedbV1alpha2) ZooKeepers(namespace string) v1alpha2.ZooKeeperInterface {
