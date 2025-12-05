@@ -114,6 +114,7 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 	}
 
 	var allErr field.ErrorList
+	var db dbapi.Postgres
 	switch req.GetRequestType().(opsapi.PostgresOpsRequestType) {
 	case opsapi.PostgresOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
@@ -140,7 +141,7 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 				err.Error()))
 		}
 	case opsapi.PostgresOpsRequestTypeUpdateVersion:
-		if err := w.validatePostgresUpdateVersionOpsRequest(req); err != nil {
+		if err := w.validatePostgresUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -249,12 +250,19 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureOpsRequest(
 	return nil
 }
 
-func (w *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsRequest(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsRequest(db *dbapi.Postgres, req *opsapi.PostgresOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
-	err := w.hasDatabaseRef(req)
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindPostgresVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+	err = w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}

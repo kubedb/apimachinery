@@ -20,10 +20,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strings"
-
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	"strings"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -169,11 +169,23 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 }
 
 func (w *SolrOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.SolrOpsRequest) error {
-	solr := dbapi.Solr{}
+	db := dbapi.Solr{}
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindSolrVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &solr); err != nil {
+	}, &db); err != nil {
 		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
 	return nil

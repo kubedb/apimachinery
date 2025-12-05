@@ -24,6 +24,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -115,9 +116,10 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 	}
 
 	var allErr field.ErrorList
+	var db dbapi.ZooKeeper
 	switch req.GetRequestType().(opsapi.ZooKeeperOpsRequestType) {
 	case opsapi.ZooKeeperOpsRequestTypeUpdateVersion:
-		if err := z.validateZooKeeperUpdateVersionOpsRequest(req); err != nil {
+		if err := z.validateZooKeeperUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -177,13 +179,22 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVerticalScalingOpsRe
 	return nil
 }
 
-func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperUpdateVersionOpsRequest(req *opsapi.ZooKeeperOpsRequest) error {
+func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperUpdateVersionOpsRequest(db *dbapi.ZooKeeper, req *opsapi.ZooKeeperOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
+
+	yes, err := IsUpgradable(z.DefaultClient, catalog.ResourceKindZooKeeperVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+
 	zookeeperTargetVersion := &catalog.ZooKeeperVersion{}
-	err := z.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err = z.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: updateVersionSpec.TargetVersion,
 	}, zookeeperTargetVersion)
 	if err != nil {

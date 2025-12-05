@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	apiversion "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -111,6 +112,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	}
 
 	var allErr field.ErrorList
+	var db dbapi.Singlestore
 	pp := &dbapi.Singlestore{ObjectMeta: metav1.ObjectMeta{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}}
 	err := s.DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(pp), pp)
 	if err != nil && apierrors.IsNotFound(err) {
@@ -155,7 +157,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.SinglestoreOpsRequestTypeUpdateVersion:
-		if err := s.validateSinglestoreUpdateVersionOpsRequest(req); err != nil {
+		if err := s.validateSinglestoreUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -310,11 +312,19 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreHorizontalScalin
 	return nil
 }
 
-func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreUpdateVersionOpsRequest(req *opsapi.SinglestoreOpsRequest) error {
+func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreUpdateVersionOpsRequest(db *dbapi.Singlestore, req *opsapi.SinglestoreOpsRequest) error {
 	// right now, kubeDB support the following singlestore version: 8.1.32, 8.5.7
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
-		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
+		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(s.DefaultClient, catalog.ResourceKindSinlestoreVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
 	if _, err := s.hasDatabaseRef(req); err != nil {
@@ -322,7 +332,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreUpdateVersionOps
 	}
 
 	nextSinglestoreVersion := apiversion.SinglestoreVersion{}
-	err := s.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err = s.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.Spec.UpdateVersion.TargetVersion,
 		Namespace: req.GetNamespace(),
 	}, &nextSinglestoreVersion)
