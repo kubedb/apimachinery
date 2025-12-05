@@ -31,6 +31,7 @@ type KubedbV1alpha2Interface interface {
 	RESTClient() rest.Interface
 	CassandrasGetter
 	ClickHousesGetter
+	DB2sGetter
 	DruidsGetter
 	ElasticsearchesGetter
 	EtcdsGetter
@@ -71,6 +72,10 @@ func (c *KubedbV1alpha2Client) Cassandras(namespace string) CassandraInterface {
 
 func (c *KubedbV1alpha2Client) ClickHouses(namespace string) ClickHouseInterface {
 	return newClickHouses(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) DB2s(namespace string) DB2Interface {
+	return newDB2s(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Druids(namespace string) DruidInterface {

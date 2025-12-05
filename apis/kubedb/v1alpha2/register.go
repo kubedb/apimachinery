@@ -58,6 +58,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&CassandraList{},
 		&ClickHouse{},
 		&ClickHouseList{},
+		&DB2{},
+		&DB2List{},
 		&Druid{},
 		&DruidList{},
 		&Elasticsearch{},

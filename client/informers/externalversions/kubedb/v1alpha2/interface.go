@@ -28,6 +28,8 @@ type Interface interface {
 	Cassandras() CassandraInformer
 	// ClickHouses returns a ClickHouseInformer.
 	ClickHouses() ClickHouseInformer
+	// DB2s returns a DB2Informer.
+	DB2s() DB2Informer
 	// Druids returns a DruidInformer.
 	Druids() DruidInformer
 	// Elasticsearches returns a ElasticsearchInformer.
@@ -103,6 +105,11 @@ func (v *version) Cassandras() CassandraInformer {
 // ClickHouses returns a ClickHouseInformer.
 func (v *version) ClickHouses() ClickHouseInformer {
 	return &clickHouseInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DB2s returns a DB2Informer.
+func (v *version) DB2s() DB2Informer {
+	return &dB2Informer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Druids returns a DruidInformer.

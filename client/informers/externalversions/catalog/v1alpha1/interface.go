@@ -28,6 +28,8 @@ type Interface interface {
 	CassandraVersions() CassandraVersionInformer
 	// ClickHouseVersions returns a ClickHouseVersionInformer.
 	ClickHouseVersions() ClickHouseVersionInformer
+	// DB2Versions returns a DB2VersionInformer.
+	DB2Versions() DB2VersionInformer
 	// DruidVersions returns a DruidVersionInformer.
 	DruidVersions() DruidVersionInformer
 	// ElasticsearchVersions returns a ElasticsearchVersionInformer.
@@ -105,6 +107,11 @@ func (v *version) CassandraVersions() CassandraVersionInformer {
 // ClickHouseVersions returns a ClickHouseVersionInformer.
 func (v *version) ClickHouseVersions() ClickHouseVersionInformer {
 	return &clickHouseVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// DB2Versions returns a DB2VersionInformer.
+func (v *version) DB2Versions() DB2VersionInformer {
+	return &dB2VersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // DruidVersions returns a DruidVersionInformer.

@@ -22,6 +22,8 @@ type CassandraExpansion interface{}
 
 type ClickHouseExpansion interface{}
 
+type DB2Expansion interface{}
+
 type DruidExpansion interface{}
 
 type ElasticsearchExpansion interface{}
