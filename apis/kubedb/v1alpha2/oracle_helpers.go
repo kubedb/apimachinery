@@ -327,12 +327,24 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 	o.SetInitContainerDefaults(o.Spec.PodTemplate, oraVersion)
 	o.SetHealthCheckerDefaults()
 	o.Spec.Monitor.SetDefaults()
+	o.SetTcpsDefaults()
 	if o.Spec.Monitor != nil && o.Spec.Monitor.Prometheus != nil {
 		if o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
 			o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = oraVersion.Spec.SecurityContext.RunAsUser
 		}
 		if o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
 			o.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
+		}
+	}
+}
+
+func (o *Oracle) SetTcpsDefaults() {
+	if o.Spec.TCPSConfig != nil {
+		if o.Spec.TCPSConfig.TCPSListener == nil {
+			o.Spec.TCPSConfig.TCPSListener = &ListenerSpec{}
+		}
+		if o.Spec.TCPSConfig.TCPSListener.Port == nil {
+			o.Spec.TCPSConfig.TCPSListener.Port = ptr.To(int32(2484))
 		}
 	}
 }
