@@ -1508,6 +1508,32 @@ const (
 	RabbitMQHealthCheckerQueueName = "kubedb-system"
 )
 
+const (
+	WeaviateHTTPPortName   = "http"
+	WeaviateHTTPPort       = 8080
+	WeaviateGRPCPortName   = "grpc"
+	WeaviateGRPCPort       = 50051
+	WeaviateRAFTPortName   = "raft"
+	WeaviateRAFTPort       = 8300
+	WeaviateGOSSIPPortName = "gossip"
+	WeaviateGOSSIPPort     = 7102
+	WeaviateDATAPortName   = "data"
+	WeaviateDATAPort       = 7103
+
+	WeaviateClassNameKubeDBSystem = "KubeDBSystem"
+
+	WeaviateVolumeData    = "data"
+	WeaviateDataDir       = "/weaviate/storage"
+	WeaviateContainerName = "weaviate"
+	WeaviateAPIKey        = "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
+	WeaviateAPIKeyEnabled = "AUTHENTICATION_APIKEY_ENABLED"
+	WeaviateAPIKeyUsers   = "AUTHENTICATION_APIKEY_USERS"
+
+	WeaviateConfigFileName  = "conf.yaml"
+	WeaviateCustomConfigDir = "/weaviate-config/conf.yaml"
+	WeaviateConfigVolName   = "config"
+)
+
 // =========================== FerretDB Constants ============================
 const (
 

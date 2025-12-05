@@ -76,4 +76,6 @@ type SinglestoreExpansion interface{}
 
 type SolrExpansion interface{}
 
+type WeaviateExpansion interface{}
+
 type ZooKeeperExpansion interface{}

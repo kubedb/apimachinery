@@ -138,6 +138,10 @@ type SinglestoreVersionListerExpansion interface{}
 // SolrVersionLister.
 type SolrVersionListerExpansion interface{}
 
+// WeaviateVersionListerExpansion allows custom methods to be added to
+// WeaviateVersionLister.
+type WeaviateVersionListerExpansion interface{}
+
 // ZooKeeperVersionListerExpansion allows custom methods to be added to
 // ZooKeeperVersionLister.
 type ZooKeeperVersionListerExpansion interface{}

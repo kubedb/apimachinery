@@ -145,6 +145,10 @@ func (c *FakeKubedbV1alpha2) Solrs(namespace string) v1alpha2.SolrInterface {
 	return &FakeSolrs{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Weaviates(namespace string) v1alpha2.WeaviateInterface {
+	return &FakeWeaviates{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) ZooKeepers(namespace string) v1alpha2.ZooKeeperInterface {
 	return &FakeZooKeepers{c, namespace}
 }
