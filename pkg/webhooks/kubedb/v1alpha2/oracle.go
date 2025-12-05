@@ -171,6 +171,12 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 		}
 	}
 
+	if db.Spec.TCPSConfig != nil && db.Spec.TCPSConfig.TLS == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tcpsConfig").Child("tls"),
+			db.Name,
+			"spec.tcpsConfig.tls is missing"))
+	}
+
 	if db.Spec.PodTemplate != nil {
 		if err = w.validateEnvsForAllContainers(db); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
