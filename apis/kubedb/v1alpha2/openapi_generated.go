@@ -624,7 +624,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MemcachedList":                                 schema_apimachinery_apis_kubedb_v1alpha2_MemcachedList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MemcachedSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_MemcachedSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MemcachedStatus":                               schema_apimachinery_apis_kubedb_v1alpha2_MemcachedStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_MetaStorageSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetadataStorage":                               schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus":                                        schema_apimachinery_apis_kubedb_v1alpha2_Milvus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusApp":                                     schema_apimachinery_apis_kubedb_v1alpha2_MilvusApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusList":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_MilvusStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology":                                schema_apimachinery_apis_kubedb_v1alpha2_MilvusTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode":                              schema_apimachinery_apis_kubedb_v1alpha2_MongoArbiterNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDB":                                       schema_apimachinery_apis_kubedb_v1alpha2_MongoDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBConfigNode":                             schema_apimachinery_apis_kubedb_v1alpha2_MongoDBConfigNode(ref),
@@ -652,6 +659,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jList":                                     schema_apimachinery_apis_kubedb_v1alpha2_Neo4jList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jSpec":                                     schema_apimachinery_apis_kubedb_v1alpha2_Neo4jSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jStatus":                                   schema_apimachinery_apis_kubedb_v1alpha2_Neo4jStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_ObjectStorageSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObserverSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_ObserverSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Oracle":                                        schema_apimachinery_apis_kubedb_v1alpha2_Oracle(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleList":                                    schema_apimachinery_apis_kubedb_v1alpha2_OracleList(ref),
@@ -32409,6 +32417,63 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MemcachedStatus(ref common.Referen
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_MetaStorageSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Meta Storage defines the configuration for etcd meta storage",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"externallyManaged": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExternallyManaged indicates whether etcd is managed outside this operator. If true, only endpoints are used. If false, an EtcdCluster CR is created.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"endpoints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Endpoints are the client endpoints of etcd (e.g., [\"http://etcd-svc:2379\"]). Required when ExternallyManaged=true.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"size": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Size is the expected size of the cluster. Required when ExternallyManaged=false. Ignored otherwise.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType can be durable (default) or ephemeral",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -32444,6 +32509,298 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref common.Referen
 					"version": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Version of the MySQL/PG used",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_Milvus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Milvus": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus"),
+						},
+					},
+				},
+				Required: []string{"Milvus"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusList contains a list of Milvus",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusSpec defines the desired state of Milvus",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version of Milvus to be deployed",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metaStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Meta contains configuration for etcd meta storage",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec"),
+						},
+					},
+					"objectStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ObjectStorage contains specification for druid to connect to the object storage",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec"),
+						},
+					},
+					"topology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Milvus cluster topology",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology"),
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType can be durable (default) or ephemeral",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"disableSecurity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "disable security. It disables authentication security of user. If unset, default is false",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"authSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database authentication secret",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret is an optional field to provide custom configuration file for database (i.e config.properties). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"serviceTemplates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplates is an optional configuration for services used to expose database",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy controls the delete operation for database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"halted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"healthChecker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HealthChecker defines attributes of the health checker",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
+						},
+					},
+				},
+				Required: []string{"version", "objectStorage"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusStatus defines the observed state of Milvus",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ObservedGeneration is the most recent generation observed for this resource",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the database, such as approval or denial.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If set to - \"Standalone\", Standalone is required, and Milvus will start a Standalone Mode \"Distributed\", DistributedSpec is required, and Milvus will start a Distributed Mode",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -33951,6 +34308,27 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Neo4jStatus(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_ObjectStorageSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ObjectStorageStorageSpec defines the configuration for MinIO or S3 object storage",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret should contain the necessary data to connect to external MinIO",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 

@@ -80,6 +80,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MariaDBList{},
 		&Memcached{},
 		&MemcachedList{},
+		&Milvus{},
+		&MilvusList{},
 		&MongoDB{},
 		&MongoDBList{},
 		&MySQL{},

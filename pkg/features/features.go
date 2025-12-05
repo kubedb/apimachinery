@@ -79,6 +79,9 @@ const (
 	// Enables Memcached operator.
 	Memcached featuregate.Feature = "Memcached"
 
+	// Enables Milvus operator.
+	Milvus featuregate.Feature = "Milvus"
+
 	// Enables MongoDB operator.
 	MongoDB featuregate.Feature = "MongoDB"
 
@@ -167,6 +170,7 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	Kafka:         {Default: true, PreRelease: featuregate.Beta},
 	MariaDB:       {Default: true, PreRelease: featuregate.GA},
 	Memcached:     {Default: false, PreRelease: featuregate.Beta},
+	Milvus:        {Default: false, PreRelease: featuregate.Alpha},
 	MongoDB:       {Default: true, PreRelease: featuregate.GA},
 	MSSQLServer:   {Default: false, PreRelease: featuregate.Alpha},
 	MySQL:         {Default: true, PreRelease: featuregate.GA},
