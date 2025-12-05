@@ -240,7 +240,8 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForClusterMode(req *
 	newRepCnt := ptr.Deref(req.Spec.HorizontalScaling.Replicas, *redis.Spec.Cluster.Replicas)
 	oldShardCnt := *redis.Spec.Cluster.Shards
 	newShardCnt := ptr.Deref(req.Spec.HorizontalScaling.Shards, *redis.Spec.Cluster.Shards)
-	if (oldRepCnt < newRepCnt) != (oldShardCnt < newShardCnt) {
+
+	if (oldRepCnt <= newRepCnt) != (oldShardCnt <= newShardCnt) && (oldRepCnt >= newRepCnt) != (oldShardCnt >= newShardCnt) {
 		return fmt.Errorf("can't scale down and up at the same time")
 	}
 	if redis.Spec.Cluster.Announce != nil {

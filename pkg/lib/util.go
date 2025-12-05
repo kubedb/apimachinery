@@ -19,6 +19,7 @@ package lib
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -26,6 +27,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 
 	"github.com/go-logr/logr"
+	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -322,12 +324,33 @@ func GetSecret(kbClient client.Client, namespacedName types.NamespacedName) (*co
 }
 
 func ValidateAuthSecret(secret *core.Secret) error {
-	// verify if the desired key ["password", "username"] exist or not (when secret is managed by the user)
-	if _, ok := secret.Data[core.BasicAuthUsernameKey]; !ok {
-		return fmt.Errorf("key \"%s\" doesn't exists inside spec data for secret %s/%s", core.BasicAuthUsernameKey, secret.Namespace, secret.Name)
+	// verify if the desired key ["password", "username"] exist or not when secret is managed by the user
+	err := validateAuthSecretData(secret.Data)
+	if err != nil {
+		err = errors.Join(err, fmt.Errorf(" for secret %s/%s", secret.Namespace, secret.Name))
 	}
-	if _, ok := secret.Data[core.BasicAuthPasswordKey]; !ok {
-		return fmt.Errorf("key \"%s\" doesn't exists inside spec data for secret %s/%s", core.BasicAuthPasswordKey, secret.Namespace, secret.Name)
+	return err
+}
+
+func ValidateVirtualAuthSecret(secret *vsecretapi.Secret) error {
+	// verify if the desired key ["password", "username"] exist or not when secret is managed by the user
+	err := validateAuthSecretData(secret.Data)
+	if err != nil {
+		err = errors.Join(err, fmt.Errorf(" for virtual secret %s/%s", secret.Namespace, secret.Name))
+	}
+	return err
+}
+
+func validateAuthSecretData(authData map[string][]byte) error {
+	// verify if the desired key ["password", "username"] exist or not when secret is managed by the user
+	if authData == nil {
+		return fmt.Errorf("key \"%s\" & \"%s\" doesn't exists inside spec data", core.BasicAuthUsernameKey, core.BasicAuthPasswordKey)
+	}
+	if userName, ok := authData[core.BasicAuthUsernameKey]; !ok || string(userName) == "" {
+		return fmt.Errorf("key \"%s\" doesn't exists inside spec data", core.BasicAuthUsernameKey)
+	}
+	if pass, ok := authData[core.BasicAuthPasswordKey]; !ok || string(pass) == "" {
+		return fmt.Errorf("key \"%s\" doesn't exists inside spec data", core.BasicAuthPasswordKey)
 	}
 	return nil
 }
