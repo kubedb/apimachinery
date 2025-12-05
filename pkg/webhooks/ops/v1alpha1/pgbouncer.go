@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"strings"
 
-	"k8s.io/apimachinery/pkg/util/validation/field"
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -30,10 +29,13 @@ import (
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	v1 "k8s.io/api/core/v1"
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/apimachinery/pkg/util/validation/field"
 	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -116,7 +118,10 @@ func (w *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.Pg
 		return w.validatePgBouncerReconfigureTLSOpsRequest(obj)
 	}
 
-	return nil
+	if len(allErr) == 0 {
+		return nil
+	}
+	return apierrors.NewInvalid(schema.GroupKind{Group: "ops.kubedb.com", Kind: "MongoDBOpsRequest"}, obj.Name, allErr)
 }
 
 func validatePgBouncerOpsRequest(obj, oldObj runtime.Object) error {

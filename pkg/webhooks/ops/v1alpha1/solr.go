@@ -20,10 +20,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
+
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
-	"strings"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
