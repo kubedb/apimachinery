@@ -113,6 +113,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	}
 
 	var allErr field.ErrorList
+	var db olddbapi.MSSQLServer
 	switch req.GetRequestType().(opsapi.MSSQLServerOpsRequestType) {
 	case opsapi.MSSQLServerOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
@@ -145,7 +146,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.MSSQLServerOpsRequestTypeUpdateVersion:
-		if err := w.validateMSSQLServerUpdateVersionOpsRequest(req); err != nil {
+		if err := w.validateMSSQLServerUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -278,24 +279,20 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 	return nil
 }
 
-func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerUpdateVersionOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
+func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerUpdateVersionOpsRequest(db *olddbapi.MSSQLServer, req *opsapi.MSSQLServerOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return fmt.Errorf("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
 
-	err := w.hasDatabaseRef(req)
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindMSSQLServerVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
 	if err != nil {
 		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
-	mssqlserverTargetVersion := &catalog.MSSQLServerVersion{}
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: updateVersionSpec.TargetVersion,
-	}, mssqlserverTargetVersion)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 

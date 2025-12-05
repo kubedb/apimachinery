@@ -111,6 +111,7 @@ func (rv *IgniteOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Igni
 	}
 
 	var allErr field.ErrorList
+	var db olddbapi.Ignite
 	switch req.GetRequestType().(opsapi.IgniteOpsRequestType) {
 	case opsapi.IgniteOpsRequestTypeRestart:
 		if err := rv.hasDatabaseRef(req); err != nil {
@@ -149,7 +150,7 @@ func (rv *IgniteOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Igni
 				err.Error()))
 		}
 	case opsapi.IgniteOpsRequestTypeUpdateVersion:
-		if err := rv.validateIgniteUpdateVersionOpsRequest(req); err != nil {
+		if err := rv.validateIgniteUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -242,28 +243,20 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteVolumeExpansionOpsRequest
 	return nil
 }
 
-func (rv *IgniteOpsRequestCustomWebhook) validateIgniteUpdateVersionOpsRequest(req *opsapi.IgniteOpsRequest) error {
+func (rv *IgniteOpsRequestCustomWebhook) validateIgniteUpdateVersionOpsRequest(db *olddbapi.Ignite, req *opsapi.IgniteOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	if err := rv.hasDatabaseRef(req); err != nil {
+	yes, err := IsUpgradable(rv.DefaultClient, catalog.ResourceKindIgniteVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
 		return err
 	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
 
-	nextIgniteVersion := catalog.IgniteVersion{}
-	err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name:      req.Spec.UpdateVersion.TargetVersion,
-		Namespace: req.GetNamespace(),
-	}, &nextIgniteVersion)
-	if err != nil {
-		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is not supported", req.Spec.UpdateVersion.TargetVersion)
-	}
-	// check if nextIgniteVersion is deprecated.if deprecated, return error
-	if nextIgniteVersion.Spec.Deprecated {
-		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is depricated", req.Spec.UpdateVersion.TargetVersion)
-	}
 	return nil
 }
 

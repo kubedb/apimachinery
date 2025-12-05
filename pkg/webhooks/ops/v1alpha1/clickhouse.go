@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -84,6 +85,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ClickHouse are %s", req.Spec.Type, strings.Join(opsapi.ClickHouseOpsRequestTypeNames(), ", ")))
 	}
 	var allErr field.ErrorList
+	var db dbapi.ClickHouse
 	switch req.GetRequestType().(opsapi.ClickHouseOpsRequestType) {
 	case opsapi.ClickHouseOpsRequestTypeRestart:
 		if err := rv.hasDatabaseRef(req); err != nil {
@@ -94,6 +96,12 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	case opsapi.ClickHouseOpsRequestTypeVerticalScaling:
 		if err := rv.validateClickHouseVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.ClickHouseOpsRequestTypeUpdateVersion:
+		if err := rv.validateClickHouseUpdateVersionOpsRequest(&db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
@@ -123,6 +131,23 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVerticalScalingOp
 	}
 	if verticalScalingSpec.Node == nil {
 		return errors.New("spec.verticalScaling.node nil not supported in VerticalScaling type")
+	}
+
+	return nil
+}
+
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseUpdateVersionOpsRequest(db *dbapi.ClickHouse, req *opsapi.ClickHouseOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(rv.DefaultClient, catalog.ResourceKindClickHouseVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
 	return nil

@@ -20,6 +20,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
@@ -97,6 +98,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 	}
 
 	var allErr field.ErrorList
+	var db olddbapi.MariaDB
 	switch req.GetRequestType().(opsapi.MariaDBOpsRequestType) {
 	case opsapi.MariaDBOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
@@ -123,7 +125,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 				err.Error()))
 		}
 	case opsapi.MariaDBOpsRequestTypeUpdateVersion:
-		if err := w.validateMariaDBUpgradeOpsRequest(req); err != nil {
+		if err := w.validateMariaDBUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -178,25 +180,20 @@ func validateMariaDBOpsRequest(obj, oldObj runtime.Object) error {
 	return nil
 }
 
-func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBUpgradeOpsRequest(req *opsapi.MariaDBOpsRequest) error {
-	// right now, kubeDB support the following mariadb version: 10.4.17 and 10.5.8
-	if req.Spec.UpdateVersion == nil {
-		return errors.New("spec.Upgrade is nil")
+func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBUpdateVersionOpsRequest(db *olddbapi.MariaDB, req *opsapi.MariaDBOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
-	db := &dbapi.MariaDB{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindMariaDBVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
 	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mariadb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+		return err
 	}
-	mdNextVersion := &catalog.MariaDBVersion{}
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.UpdateVersion.TargetVersion}, mdNextVersion)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mariadbVersion: %s", req.Spec.UpdateVersion.TargetVersion))
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
-	// check if mdNextVersion is deprecated.if deprecated, return error
-	if mdNextVersion.Spec.Deprecated {
-		return fmt.Errorf("mariadb target version %s/%s is deprecated. Skipped processing", db.Namespace, mdNextVersion.Name)
-	}
+
 	return nil
 }
 

@@ -120,6 +120,7 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 	}
 
 	var allErr field.ErrorList
+	var db dbapi.Druid
 	opsType := req.GetRequestType().(opsapi.DruidOpsRequestType)
 
 	switch opsType {
@@ -130,7 +131,7 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 				err.Error()))
 		}
 	case opsapi.DruidOpsRequestTypeUpdateVersion:
-		if err := w.validateDruidUpdateVersionOpsRequest(req); err != nil {
+		if err := w.validateDruidUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -190,25 +191,20 @@ func (w *DruidOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.DruidOpsReques
 	return &druid, nil
 }
 
-func (w *DruidOpsRequestCustomWebhook) validateDruidUpdateVersionOpsRequest(req *opsapi.DruidOpsRequest) error {
-	// right now, kubeDB support the following Druid version: 25.0.0, 28.0.1, 30.0.0, 30.0.1
+func (w *DruidOpsRequestCustomWebhook) validateDruidUpdateVersionOpsRequest(db *dbapi.Druid, req *opsapi.DruidOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	nextDruidVersion := catalog.DruidVersion{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name:      req.Spec.UpdateVersion.TargetVersion,
-		Namespace: req.GetNamespace(),
-	}, &nextDruidVersion)
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindDruidVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
 	if err != nil {
-		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is not supported", req.Spec.UpdateVersion.TargetVersion)
+		return err
 	}
-	// check if nextDruidVersion is deprecated.if deprecated, return error
-	if nextDruidVersion.Spec.Deprecated {
-		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is depricated", req.Spec.UpdateVersion.TargetVersion)
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
+
 	return nil
 }
 

@@ -22,6 +22,8 @@ import (
 	"fmt"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
@@ -107,6 +109,7 @@ func (w *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Fer
 	}
 
 	var allErr field.ErrorList
+	var db dbapi.FerretDB
 	switch req.GetRequestType().(opsapi.FerretDBOpsRequestType) {
 	case opsapi.FerretDBOpsRequestTypeRestart:
 	case opsapi.FerretDBOpsRequestTypeVerticalScaling:
@@ -118,6 +121,12 @@ func (w *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Fer
 	case opsapi.FerretDBOpsRequestTypeHorizontalScaling:
 		if err := w.validateFerretDBHorizontalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.FerretDBOpsRequestTypeUpdateVersion:
+		if err := w.validateFerretDBUpdateVersionOpsRequest(&db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
@@ -161,6 +170,23 @@ func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBHorizontalScalingOpsRe
 	if horizontalScalingSpec.Secondary != nil && *horizontalScalingSpec.Secondary.Replicas <= 0 {
 		return errors.New("`spec.horizontalScaling.secondary.replicas` can't be less than or equal 0")
 	}
+	return nil
+}
+
+func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBUpdateVersionOpsRequest(db *dbapi.FerretDB, req *opsapi.FerretDBOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindFerretDBVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+
 	return nil
 }
 

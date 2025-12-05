@@ -88,6 +88,7 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.C
 	}
 
 	var allErr field.ErrorList
+	var db olddbapi.Cassandra
 	switch req.GetRequestType().(opsapi.CassandraOpsRequestType) {
 	case opsapi.CassandraOpsRequestTypeRestart:
 		if err := rv.hasDatabaseRef(req); err != nil {
@@ -116,7 +117,7 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.C
 		}
 
 	case opsapi.CassandraOpsRequestTypeUpdateVersion:
-		if err := rv.validateCassandraUpdateVersionOpsRequest(req); err != nil {
+		if err := rv.validateCassandraUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -211,23 +212,18 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCassandraVolumeExpansionOpsR
 	return nil
 }
 
-func (rv *CassandraOpsRequestCustomWebhook) validateCassandraUpdateVersionOpsRequest(req *opsapi.CassandraOpsRequest) error {
+func (rv *CassandraOpsRequestCustomWebhook) validateCassandraUpdateVersionOpsRequest(db *olddbapi.Cassandra, req *opsapi.CassandraOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	if err := rv.hasDatabaseRef(req); err != nil {
+	yes, err := IsUpgradable(rv.DefaultClient, catalog.ResourceKindCassandraVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
 		return err
 	}
-
-	nextCassandraVersion := catalog.CassandraVersion{}
-	err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name:      req.Spec.UpdateVersion.TargetVersion,
-		Namespace: req.GetNamespace(),
-	}, &nextCassandraVersion)
-	if err != nil {
-		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is not found", req.Spec.UpdateVersion.TargetVersion)
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
 	return nil

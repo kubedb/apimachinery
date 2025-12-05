@@ -126,7 +126,7 @@ func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaO
 	var allErr field.ErrorList
 	switch req.GetRequestType().(opsapi.KafkaOpsRequestType) {
 	case opsapi.KafkaOpsRequestTypeUpdateVersion:
-		if err := w.validateKafkaUpdateVersionOpsRequest(req); err != nil {
+		if err := w.validateKafkaUpdateVersionOpsRequest(kafka, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -186,24 +186,20 @@ func (w *KafkaOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.KafkaOpsReques
 	return &kafka, nil
 }
 
-func (w *KafkaOpsRequestCustomWebhook) validateKafkaUpdateVersionOpsRequest(req *opsapi.KafkaOpsRequest) error {
+func (w *KafkaOpsRequestCustomWebhook) validateKafkaUpdateVersionOpsRequest(db *dbapi.Kafka, req *opsapi.KafkaOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	nextKafkaVersion := catalogapi.KafkaVersion{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name:      req.Spec.UpdateVersion.TargetVersion,
-		Namespace: req.GetNamespace(),
-	}, &nextKafkaVersion)
+	yes, err := IsUpgradable(w.DefaultClient, catalogapi.ResourceKindKafkaVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
 	if err != nil {
-		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is not supported", req.Spec.UpdateVersion.TargetVersion)
+		return err
 	}
-	// check if nextKafkaVersion is deprecated.if deprecated, return error
-	if nextKafkaVersion.Spec.Deprecated {
-		return fmt.Errorf("spec.updateVersion.targetVersion - %s, is depricated!", req.Spec.UpdateVersion.TargetVersion)
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
+
 	return nil
 }
 
