@@ -117,6 +117,11 @@ type MilvusTopology struct {
 	// "Standalone", Standalone is required, and Milvus will start a Standalone Mode
 	// "Distributed", DistributedSpec is required, and Milvus will start a Distributed Mode
 	Mode *MilvusMode `json:"mode,omitempty"`
+
+	// Distributed contains information of the Distributed configuration.
+	// Used when Mode is "Distributed".
+	// +optional
+	Distributed *Distributed `json:"distributed,omitempty"`
 }
 
 type Distributed struct {
