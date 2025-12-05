@@ -34,6 +34,14 @@ type ClickHouseListerExpansion interface{}
 // ClickHouseNamespaceLister.
 type ClickHouseNamespaceListerExpansion interface{}
 
+// DB2ListerExpansion allows custom methods to be added to
+// DB2Lister.
+type DB2ListerExpansion interface{}
+
+// DB2NamespaceListerExpansion allows custom methods to be added to
+// DB2NamespaceLister.
+type DB2NamespaceListerExpansion interface{}
+
 // DruidListerExpansion allows custom methods to be added to
 // DruidLister.
 type DruidListerExpansion interface{}
@@ -65,6 +73,14 @@ type FerretDBListerExpansion interface{}
 // FerretDBNamespaceListerExpansion allows custom methods to be added to
 // FerretDBNamespaceLister.
 type FerretDBNamespaceListerExpansion interface{}
+
+// HanaDBListerExpansion allows custom methods to be added to
+// HanaDBLister.
+type HanaDBListerExpansion interface{}
+
+// HanaDBNamespaceListerExpansion allows custom methods to be added to
+// HanaDBNamespaceLister.
+type HanaDBNamespaceListerExpansion interface{}
 
 // HazelcastListerExpansion allows custom methods to be added to
 // HazelcastLister.
@@ -129,6 +145,14 @@ type MySQLListerExpansion interface{}
 // MySQLNamespaceListerExpansion allows custom methods to be added to
 // MySQLNamespaceLister.
 type MySQLNamespaceListerExpansion interface{}
+
+// Neo4jListerExpansion allows custom methods to be added to
+// Neo4jLister.
+type Neo4jListerExpansion interface{}
+
+// Neo4jNamespaceListerExpansion allows custom methods to be added to
+// Neo4jNamespaceLister.
+type Neo4jNamespaceListerExpansion interface{}
 
 // OracleListerExpansion allows custom methods to be added to
 // OracleLister.
@@ -225,6 +249,14 @@ type SolrListerExpansion interface{}
 // SolrNamespaceListerExpansion allows custom methods to be added to
 // SolrNamespaceLister.
 type SolrNamespaceListerExpansion interface{}
+
+// WeaviateListerExpansion allows custom methods to be added to
+// WeaviateLister.
+type WeaviateListerExpansion interface{}
+
+// WeaviateNamespaceListerExpansion allows custom methods to be added to
+// WeaviateNamespaceLister.
+type WeaviateNamespaceListerExpansion interface{}
 
 // ZooKeeperListerExpansion allows custom methods to be added to
 // ZooKeeperLister.

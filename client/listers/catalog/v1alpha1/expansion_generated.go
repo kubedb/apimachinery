@@ -26,6 +26,10 @@ type CassandraVersionListerExpansion interface{}
 // ClickHouseVersionLister.
 type ClickHouseVersionListerExpansion interface{}
 
+// DB2VersionListerExpansion allows custom methods to be added to
+// DB2VersionLister.
+type DB2VersionListerExpansion interface{}
+
 // DruidVersionListerExpansion allows custom methods to be added to
 // DruidVersionLister.
 type DruidVersionListerExpansion interface{}
@@ -41,6 +45,10 @@ type EtcdVersionListerExpansion interface{}
 // FerretDBVersionListerExpansion allows custom methods to be added to
 // FerretDBVersionLister.
 type FerretDBVersionListerExpansion interface{}
+
+// HanaDBVersionListerExpansion allows custom methods to be added to
+// HanaDBVersionLister.
+type HanaDBVersionListerExpansion interface{}
 
 // HazelcastVersionListerExpansion allows custom methods to be added to
 // HazelcastVersionLister.
@@ -77,6 +85,10 @@ type MongoDBVersionListerExpansion interface{}
 // MySQLVersionListerExpansion allows custom methods to be added to
 // MySQLVersionLister.
 type MySQLVersionListerExpansion interface{}
+
+// Neo4jVersionListerExpansion allows custom methods to be added to
+// Neo4jVersionLister.
+type Neo4jVersionListerExpansion interface{}
 
 // OracleVersionListerExpansion allows custom methods to be added to
 // OracleVersionLister.
@@ -125,6 +137,10 @@ type SinglestoreVersionListerExpansion interface{}
 // SolrVersionListerExpansion allows custom methods to be added to
 // SolrVersionLister.
 type SolrVersionListerExpansion interface{}
+
+// WeaviateVersionListerExpansion allows custom methods to be added to
+// WeaviateVersionLister.
+type WeaviateVersionListerExpansion interface{}
 
 // ZooKeeperVersionListerExpansion allows custom methods to be added to
 // ZooKeeperVersionLister.

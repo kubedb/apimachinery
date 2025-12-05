@@ -28,6 +28,8 @@ type Interface interface {
 	Cassandras() CassandraInformer
 	// ClickHouses returns a ClickHouseInformer.
 	ClickHouses() ClickHouseInformer
+	// DB2s returns a DB2Informer.
+	DB2s() DB2Informer
 	// Druids returns a DruidInformer.
 	Druids() DruidInformer
 	// Elasticsearches returns a ElasticsearchInformer.
@@ -36,6 +38,8 @@ type Interface interface {
 	Etcds() EtcdInformer
 	// FerretDBs returns a FerretDBInformer.
 	FerretDBs() FerretDBInformer
+	// HanaDBs returns a HanaDBInformer.
+	HanaDBs() HanaDBInformer
 	// Hazelcasts returns a HazelcastInformer.
 	Hazelcasts() HazelcastInformer
 	// Ignites returns a IgniteInformer.
@@ -52,6 +56,8 @@ type Interface interface {
 	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
 	MySQLs() MySQLInformer
+	// Neo4js returns a Neo4jInformer.
+	Neo4js() Neo4jInformer
 	// Oracles returns a OracleInformer.
 	Oracles() OracleInformer
 	// PerconaXtraDBs returns a PerconaXtraDBInformer.
@@ -76,6 +82,8 @@ type Interface interface {
 	Singlestores() SinglestoreInformer
 	// Solrs returns a SolrInformer.
 	Solrs() SolrInformer
+	// Weaviates returns a WeaviateInformer.
+	Weaviates() WeaviateInformer
 	// ZooKeepers returns a ZooKeeperInformer.
 	ZooKeepers() ZooKeeperInformer
 }
@@ -101,6 +109,11 @@ func (v *version) ClickHouses() ClickHouseInformer {
 	return &clickHouseInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// DB2s returns a DB2Informer.
+func (v *version) DB2s() DB2Informer {
+	return &dB2Informer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // Druids returns a DruidInformer.
 func (v *version) Druids() DruidInformer {
 	return &druidInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -119,6 +132,11 @@ func (v *version) Etcds() EtcdInformer {
 // FerretDBs returns a FerretDBInformer.
 func (v *version) FerretDBs() FerretDBInformer {
 	return &ferretDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// HanaDBs returns a HanaDBInformer.
+func (v *version) HanaDBs() HanaDBInformer {
+	return &hanaDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Hazelcasts returns a HazelcastInformer.
@@ -159,6 +177,11 @@ func (v *version) MongoDBs() MongoDBInformer {
 // MySQLs returns a MySQLInformer.
 func (v *version) MySQLs() MySQLInformer {
 	return &mySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Neo4js returns a Neo4jInformer.
+func (v *version) Neo4js() Neo4jInformer {
+	return &neo4jInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Oracles returns a OracleInformer.
@@ -219,6 +242,11 @@ func (v *version) Singlestores() SinglestoreInformer {
 // Solrs returns a SolrInformer.
 func (v *version) Solrs() SolrInformer {
 	return &solrInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Weaviates returns a WeaviateInformer.
+func (v *version) Weaviates() WeaviateInformer {
+	return &weaviateInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeepers returns a ZooKeeperInformer.

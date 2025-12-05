@@ -31,10 +31,12 @@ type KubedbV1alpha2Interface interface {
 	RESTClient() rest.Interface
 	CassandrasGetter
 	ClickHousesGetter
+	DB2sGetter
 	DruidsGetter
 	ElasticsearchesGetter
 	EtcdsGetter
 	FerretDBsGetter
+	HanaDBsGetter
 	HazelcastsGetter
 	IgnitesGetter
 	KafkasGetter
@@ -43,6 +45,7 @@ type KubedbV1alpha2Interface interface {
 	MemcachedsGetter
 	MongoDBsGetter
 	MySQLsGetter
+	Neo4jsGetter
 	OraclesGetter
 	PerconaXtraDBsGetter
 	PgBouncersGetter
@@ -55,6 +58,7 @@ type KubedbV1alpha2Interface interface {
 	RedisSentinelsGetter
 	SinglestoresGetter
 	SolrsGetter
+	WeaviatesGetter
 	ZooKeepersGetter
 }
 
@@ -71,6 +75,10 @@ func (c *KubedbV1alpha2Client) ClickHouses(namespace string) ClickHouseInterface
 	return newClickHouses(c, namespace)
 }
 
+func (c *KubedbV1alpha2Client) DB2s(namespace string) DB2Interface {
+	return newDB2s(c, namespace)
+}
+
 func (c *KubedbV1alpha2Client) Druids(namespace string) DruidInterface {
 	return newDruids(c, namespace)
 }
@@ -85,6 +93,10 @@ func (c *KubedbV1alpha2Client) Etcds(namespace string) EtcdInterface {
 
 func (c *KubedbV1alpha2Client) FerretDBs(namespace string) FerretDBInterface {
 	return newFerretDBs(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) HanaDBs(namespace string) HanaDBInterface {
+	return newHanaDBs(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Hazelcasts(namespace string) HazelcastInterface {
@@ -117,6 +129,10 @@ func (c *KubedbV1alpha2Client) MongoDBs(namespace string) MongoDBInterface {
 
 func (c *KubedbV1alpha2Client) MySQLs(namespace string) MySQLInterface {
 	return newMySQLs(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Neo4js(namespace string) Neo4jInterface {
+	return newNeo4js(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Oracles(namespace string) OracleInterface {
@@ -165,6 +181,10 @@ func (c *KubedbV1alpha2Client) Singlestores(namespace string) SinglestoreInterfa
 
 func (c *KubedbV1alpha2Client) Solrs(namespace string) SolrInterface {
 	return newSolrs(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Weaviates(namespace string) WeaviateInterface {
+	return newWeaviates(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) ZooKeepers(namespace string) ZooKeeperInterface {

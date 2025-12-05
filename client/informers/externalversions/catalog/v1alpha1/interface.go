@@ -28,6 +28,8 @@ type Interface interface {
 	CassandraVersions() CassandraVersionInformer
 	// ClickHouseVersions returns a ClickHouseVersionInformer.
 	ClickHouseVersions() ClickHouseVersionInformer
+	// DB2Versions returns a DB2VersionInformer.
+	DB2Versions() DB2VersionInformer
 	// DruidVersions returns a DruidVersionInformer.
 	DruidVersions() DruidVersionInformer
 	// ElasticsearchVersions returns a ElasticsearchVersionInformer.
@@ -36,6 +38,8 @@ type Interface interface {
 	EtcdVersions() EtcdVersionInformer
 	// FerretDBVersions returns a FerretDBVersionInformer.
 	FerretDBVersions() FerretDBVersionInformer
+	// HanaDBVersions returns a HanaDBVersionInformer.
+	HanaDBVersions() HanaDBVersionInformer
 	// HazelcastVersions returns a HazelcastVersionInformer.
 	HazelcastVersions() HazelcastVersionInformer
 	// IgniteVersions returns a IgniteVersionInformer.
@@ -54,6 +58,8 @@ type Interface interface {
 	MongoDBVersions() MongoDBVersionInformer
 	// MySQLVersions returns a MySQLVersionInformer.
 	MySQLVersions() MySQLVersionInformer
+	// Neo4jVersions returns a Neo4jVersionInformer.
+	Neo4jVersions() Neo4jVersionInformer
 	// OracleVersions returns a OracleVersionInformer.
 	OracleVersions() OracleVersionInformer
 	// PerconaXtraDBVersions returns a PerconaXtraDBVersionInformer.
@@ -78,6 +84,8 @@ type Interface interface {
 	SinglestoreVersions() SinglestoreVersionInformer
 	// SolrVersions returns a SolrVersionInformer.
 	SolrVersions() SolrVersionInformer
+	// WeaviateVersions returns a WeaviateVersionInformer.
+	WeaviateVersions() WeaviateVersionInformer
 	// ZooKeeperVersions returns a ZooKeeperVersionInformer.
 	ZooKeeperVersions() ZooKeeperVersionInformer
 }
@@ -103,6 +111,11 @@ func (v *version) ClickHouseVersions() ClickHouseVersionInformer {
 	return &clickHouseVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
+// DB2Versions returns a DB2VersionInformer.
+func (v *version) DB2Versions() DB2VersionInformer {
+	return &dB2VersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
 // DruidVersions returns a DruidVersionInformer.
 func (v *version) DruidVersions() DruidVersionInformer {
 	return &druidVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
@@ -121,6 +134,11 @@ func (v *version) EtcdVersions() EtcdVersionInformer {
 // FerretDBVersions returns a FerretDBVersionInformer.
 func (v *version) FerretDBVersions() FerretDBVersionInformer {
 	return &ferretDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// HanaDBVersions returns a HanaDBVersionInformer.
+func (v *version) HanaDBVersions() HanaDBVersionInformer {
+	return &hanaDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // HazelcastVersions returns a HazelcastVersionInformer.
@@ -166,6 +184,11 @@ func (v *version) MongoDBVersions() MongoDBVersionInformer {
 // MySQLVersions returns a MySQLVersionInformer.
 func (v *version) MySQLVersions() MySQLVersionInformer {
 	return &mySQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// Neo4jVersions returns a Neo4jVersionInformer.
+func (v *version) Neo4jVersions() Neo4jVersionInformer {
+	return &neo4jVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // OracleVersions returns a OracleVersionInformer.
@@ -226,6 +249,11 @@ func (v *version) SinglestoreVersions() SinglestoreVersionInformer {
 // SolrVersions returns a SolrVersionInformer.
 func (v *version) SolrVersions() SolrVersionInformer {
 	return &solrVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// WeaviateVersions returns a WeaviateVersionInformer.
+func (v *version) WeaviateVersions() WeaviateVersionInformer {
+	return &weaviateVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeeperVersions returns a ZooKeeperVersionInformer.

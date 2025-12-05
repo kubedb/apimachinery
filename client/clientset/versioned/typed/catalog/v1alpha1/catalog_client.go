@@ -31,10 +31,12 @@ type CatalogV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	CassandraVersionsGetter
 	ClickHouseVersionsGetter
+	DB2VersionsGetter
 	DruidVersionsGetter
 	ElasticsearchVersionsGetter
 	EtcdVersionsGetter
 	FerretDBVersionsGetter
+	HanaDBVersionsGetter
 	HazelcastVersionsGetter
 	IgniteVersionsGetter
 	KafkaConnectorVersionsGetter
@@ -44,6 +46,7 @@ type CatalogV1alpha1Interface interface {
 	MemcachedVersionsGetter
 	MongoDBVersionsGetter
 	MySQLVersionsGetter
+	Neo4jVersionsGetter
 	OracleVersionsGetter
 	PerconaXtraDBVersionsGetter
 	PgBouncerVersionsGetter
@@ -56,6 +59,7 @@ type CatalogV1alpha1Interface interface {
 	SchemaRegistryVersionsGetter
 	SinglestoreVersionsGetter
 	SolrVersionsGetter
+	WeaviateVersionsGetter
 	ZooKeeperVersionsGetter
 }
 
@@ -72,6 +76,10 @@ func (c *CatalogV1alpha1Client) ClickHouseVersions() ClickHouseVersionInterface 
 	return newClickHouseVersions(c)
 }
 
+func (c *CatalogV1alpha1Client) DB2Versions() DB2VersionInterface {
+	return newDB2Versions(c)
+}
+
 func (c *CatalogV1alpha1Client) DruidVersions() DruidVersionInterface {
 	return newDruidVersions(c)
 }
@@ -86,6 +94,10 @@ func (c *CatalogV1alpha1Client) EtcdVersions() EtcdVersionInterface {
 
 func (c *CatalogV1alpha1Client) FerretDBVersions() FerretDBVersionInterface {
 	return newFerretDBVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) HanaDBVersions() HanaDBVersionInterface {
+	return newHanaDBVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) HazelcastVersions() HazelcastVersionInterface {
@@ -122,6 +134,10 @@ func (c *CatalogV1alpha1Client) MongoDBVersions() MongoDBVersionInterface {
 
 func (c *CatalogV1alpha1Client) MySQLVersions() MySQLVersionInterface {
 	return newMySQLVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) Neo4jVersions() Neo4jVersionInterface {
+	return newNeo4jVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) OracleVersions() OracleVersionInterface {
@@ -170,6 +186,10 @@ func (c *CatalogV1alpha1Client) SinglestoreVersions() SinglestoreVersionInterfac
 
 func (c *CatalogV1alpha1Client) SolrVersions() SolrVersionInterface {
 	return newSolrVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) WeaviateVersions() WeaviateVersionInterface {
+	return newWeaviateVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) ZooKeeperVersions() ZooKeeperVersionInterface {

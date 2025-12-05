@@ -22,6 +22,8 @@ type CassandraVersionExpansion interface{}
 
 type ClickHouseVersionExpansion interface{}
 
+type DB2VersionExpansion interface{}
+
 type DruidVersionExpansion interface{}
 
 type ElasticsearchVersionExpansion interface{}
@@ -29,6 +31,8 @@ type ElasticsearchVersionExpansion interface{}
 type EtcdVersionExpansion interface{}
 
 type FerretDBVersionExpansion interface{}
+
+type HanaDBVersionExpansion interface{}
 
 type HazelcastVersionExpansion interface{}
 
@@ -47,6 +51,8 @@ type MemcachedVersionExpansion interface{}
 type MongoDBVersionExpansion interface{}
 
 type MySQLVersionExpansion interface{}
+
+type Neo4jVersionExpansion interface{}
 
 type OracleVersionExpansion interface{}
 
@@ -71,5 +77,7 @@ type SchemaRegistryVersionExpansion interface{}
 type SinglestoreVersionExpansion interface{}
 
 type SolrVersionExpansion interface{}
+
+type WeaviateVersionExpansion interface{}
 
 type ZooKeeperVersionExpansion interface{}
