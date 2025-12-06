@@ -160,7 +160,7 @@ func DBsForIssuer(dc dynamic.Interface, gvr schema.GroupVersionResource, issuer 
 			return nil, err
 		}
 
-		if tlsObject, ok := f.(map[string]interface{}); ok {
+		if tlsObject, ok := f.(map[string]any); ok {
 			var tls kmapi.TLSConfig
 			err := runtime.DefaultUnstructuredConverter.FromUnstructured(tlsObject, &tls)
 			if err != nil {
@@ -195,7 +195,7 @@ func DBsForClusterIssuer(dc dynamic.Interface, gvr schema.GroupVersionResource, 
 		if err != nil {
 			return nil, err
 		}
-		if tlsObject, ok := f.(map[string]interface{}); ok {
+		if tlsObject, ok := f.(map[string]any); ok {
 			var tls kmapi.TLSConfig
 			err := runtime.DefaultUnstructuredConverter.FromUnstructured(tlsObject, &tls)
 			if err != nil {

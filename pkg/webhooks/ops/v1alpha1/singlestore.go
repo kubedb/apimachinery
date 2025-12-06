@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"strings"
 
-	apiversion "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -277,12 +276,12 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreReconfigurationT
 	if req.Spec.TLS.RotateCertificates {
 		configCount++
 	}
-	if req.Spec.TLS.TLSConfig.IssuerRef != nil || req.Spec.TLS.TLSConfig.Certificates != nil {
+	if req.Spec.TLS.IssuerRef != nil || req.Spec.TLS.Certificates != nil {
 		configCount++
 	}
 
 	if configCount == 0 {
-		return errors.New("No reconfiguration is provided in TLS Spec.")
+		return errors.New("no reconfiguration is provided in TLS spec")
 	}
 
 	if configCount > 1 {
@@ -331,7 +330,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreUpdateVersionOps
 		return err
 	}
 
-	nextSinglestoreVersion := apiversion.SinglestoreVersion{}
+	nextSinglestoreVersion := catalog.SinglestoreVersion{}
 	err = s.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.Spec.UpdateVersion.TargetVersion,
 		Namespace: req.GetNamespace(),

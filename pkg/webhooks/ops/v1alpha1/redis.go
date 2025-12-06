@@ -22,9 +22,8 @@ import (
 	"fmt"
 	"strings"
 
-	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
@@ -114,7 +113,7 @@ func validateRedisOpsRequest(obj, oldObj runtime.Object) error {
 }
 
 func (w *RedisOpsRequestCustomWebhook) isDatabaseRefValid(req *opsapi.RedisOpsRequest) error {
-	redis := &v1.Redis{ObjectMeta: metav1.ObjectMeta{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}}
+	redis := &dbapi.Redis{ObjectMeta: metav1.ObjectMeta{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}}
 	return w.DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(redis), redis)
 }
 
@@ -125,7 +124,7 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 	}
 
 	var allErr field.ErrorList
-	var db v1.Redis
+	var db dbapi.Redis
 	switch req.GetRequestType().(opsapi.RedisOpsRequestType) {
 	case opsapi.RedisOpsRequestTypeHorizontalScaling:
 		if err := w.validateRedisHorizontalScalingOpsRequest(&db, req); err != nil {
@@ -158,7 +157,7 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Redisopsrequests.kubedb.com", Kind: "RedisOpsRequest"}, req.Name, allErr)
 }
 
-func (w *RedisOpsRequestCustomWebhook) validateRedisUpdateVersionOpsRequest(db *v1.Redis, req *opsapi.RedisOpsRequest) error {
+func (w *RedisOpsRequestCustomWebhook) validateRedisUpdateVersionOpsRequest(db *dbapi.Redis, req *opsapi.RedisOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
@@ -173,25 +172,25 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisUpdateVersionOpsRequest(db *
 	}
 
 	updatedVersionName := req.Spec.UpdateVersion.TargetVersion
-	redis := v1.Redis{}
+	redis := dbapi.Redis{}
 	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
 	if err != nil {
 		return err
 	}
 	currentVersionName := redis.Spec.Version
 
-	updatedVersion := &v1alpha1.RedisVersion{}
+	updatedVersion := &catalog.RedisVersion{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: updatedVersionName}, updatedVersion); err != nil {
 		return err
 	}
 
-	currentVersion := &v1alpha1.RedisVersion{}
+	currentVersion := &catalog.RedisVersion{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: currentVersionName}, currentVersion); err != nil {
 		return err
 	}
 
-	if redis.Spec.Mode == v1.RedisModeSentinel {
-		currentSentinel := &v1.RedisSentinel{}
+	if redis.Spec.Mode == dbapi.RedisModeSentinel {
+		currentSentinel := &dbapi.RedisSentinel{}
 		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: redis.Spec.SentinelRef.Name, Namespace: redis.Spec.SentinelRef.Namespace}, currentSentinel); err != nil {
 			return err
 		}
@@ -216,16 +215,17 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisUpdateVersionOpsRequest(db *
 	return nil
 }
 
-func (w *RedisOpsRequestCustomWebhook) validateRedisHorizontalScalingOpsRequest(db *v1.Redis, req *opsapi.RedisOpsRequest) error {
+func (w *RedisOpsRequestCustomWebhook) validateRedisHorizontalScalingOpsRequest(db *dbapi.Redis, req *opsapi.RedisOpsRequest) error {
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, db)
 	if err != nil {
 		return err
 	}
-	if db.Spec.Mode == v1.RedisModeStandalone {
+	switch db.Spec.Mode {
+	case dbapi.RedisModeStandalone:
 		return fmt.Errorf("horizontal scaling is not allowed for standalone redis")
-	} else if db.Spec.Mode == v1.RedisModeCluster {
+	case dbapi.RedisModeCluster:
 		return w.checkHorizontalOpsReqForClusterMode(req)
-	} else {
+	default:
 		return w.checkHorizontalOpsReqForSentinelMode(req)
 	}
 }
@@ -246,7 +246,7 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForClusterMode(req *
 	}
 
 	// verify announce if needed
-	redis := v1.Redis{}
+	redis := dbapi.Redis{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
 	if err != nil {
 		return err
@@ -303,7 +303,7 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForSentinelMode(req 
 }
 
 func (w *RedisOpsRequestCustomWebhook) validateRedisRotateAuthenticationOpsRequest(req *opsapi.RedisOpsRequest) error {
-	redis := v1.Redis{}
+	redis := dbapi.Redis{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
 	if err != nil {
 		return err
@@ -333,13 +333,13 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisRotateAuthenticationOpsReque
 }
 
 func (w *RedisOpsRequestCustomWebhook) validateRedisAnnounceOpsRequest(req *opsapi.RedisOpsRequest) error {
-	redis := v1.Redis{}
+	redis := dbapi.Redis{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
 	if err != nil {
 		return err
 	}
 
-	if redis.Spec.Mode != v1.RedisModeCluster {
+	if redis.Spec.Mode != dbapi.RedisModeCluster {
 		return fmt.Errorf("announce is only applicable for redis cluster mode")
 	}
 

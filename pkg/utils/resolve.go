@@ -49,7 +49,7 @@ func findDomain() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to open %s: %v", filePath, err)
 	}
-	defer file.Close()
+	defer file.Close() // nolint:errcheck
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {

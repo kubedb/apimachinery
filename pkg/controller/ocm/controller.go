@@ -26,7 +26,6 @@ import (
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/klog/v2"
-	"kmodules.xyz/client-go/meta"
 	meta_util "kmodules.xyz/client-go/meta"
 	kubesliceapi "open-cluster-management.io/api/work/v1"
 )
@@ -86,28 +85,28 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 	c.MWInformer = c.ManifestInformerFactory.Work().V1().ManifestWorks().Informer()
 	c.MWLister = c.ManifestInformerFactory.Work().V1().ManifestWorks().Lister()
 	_, _ = c.MWInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
+		AddFunc: func(obj any) {
 			mw, ok := obj.(*kubesliceapi.ManifestWork)
 			if !ok {
 				return
 			}
 			if !HasRequiredLabels(mw.Labels) {
-				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, meta_util.NamespaceLabelKey, mw.Namespace, mw.Name)
+				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta_util.InstanceLabelKey, meta_util.NameLabelKey, meta_util.ManagedByLabelKey, meta_util.NamespaceLabelKey, mw.Namespace, mw.Name)
 				return
 			}
 			c.addManifestWork(mw)
 		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
+		UpdateFunc: func(oldObj, newObj any) {
 			if mw, ok := newObj.(*kubesliceapi.ManifestWork); ok {
 
 				if !HasRequiredLabels(mw.Labels) {
-					klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, meta_util.NamespaceLabelKey, mw.Namespace, mw.Name)
+					klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta_util.InstanceLabelKey, meta_util.NameLabelKey, meta_util.ManagedByLabelKey, meta_util.NamespaceLabelKey, mw.Namespace, mw.Name)
 					return
 				}
 				c.updateManifestWork(mw)
 			}
 		},
-		DeleteFunc: func(obj interface{}) {
+		DeleteFunc: func(obj any) {
 			var mw *kubesliceapi.ManifestWork
 			var ok bool
 			if mw, ok = obj.(*kubesliceapi.ManifestWork); !ok {
@@ -125,7 +124,7 @@ func (c *ManifestWorkWatcher) InitManifestWorkWatcher() {
 			}
 
 			if !HasRequiredLabels(mw.Labels) {
-				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta.InstanceLabelKey, meta.NameLabelKey, meta.ManagedByLabelKey, meta_util.NamespaceLabelKey, mw.Namespace, mw.Name)
+				klog.V(4).Infof("%v, %v, %v, %v labels are required for manifestWork %v/%v", meta_util.InstanceLabelKey, meta_util.NameLabelKey, meta_util.ManagedByLabelKey, meta_util.NamespaceLabelKey, mw.Namespace, mw.Name)
 				return
 			}
 			c.deleteManifestWork(mw)
@@ -143,10 +142,10 @@ func (c *ManifestWorkWatcher) addManifestWork(mw *kubesliceapi.ManifestWork) {
 		return
 	}
 
-	name := mw.Labels[meta.NameLabelKey]
+	name := mw.Labels[meta_util.NameLabelKey]
 	fn, exists := c.Store.Get(name)
 	if !exists {
-		klog.Errorf("no eventHandler found for manifestWork %s/%s with %v: %v", mw.Namespace, mw.Name, meta.NameLabelKey, mw.Labels[meta.NameLabelKey])
+		klog.Errorf("no eventHandler found for manifestWork %s/%s with %v: %v", mw.Namespace, mw.Name, meta_util.NameLabelKey, mw.Labels[meta_util.NameLabelKey])
 		return
 	}
 	fn(mw)
@@ -154,7 +153,7 @@ func (c *ManifestWorkWatcher) addManifestWork(mw *kubesliceapi.ManifestWork) {
 
 // updateManifestWork adds the ManifestWork for the current and ManifestWork pods to the sync queue.
 func (c *ManifestWorkWatcher) updateManifestWork(curMW *kubesliceapi.ManifestWork) {
-	name := curMW.Labels[meta.NameLabelKey]
+	name := curMW.Labels[meta_util.NameLabelKey]
 	fn, exists := c.Store.Get(name)
 	if !exists {
 		klog.Errorf("no controller function found for manifestWork %s/%s", curMW.Namespace, curMW.Name)
@@ -165,7 +164,7 @@ func (c *ManifestWorkWatcher) updateManifestWork(curMW *kubesliceapi.ManifestWor
 
 // deleteManifestWork enqueues the ManifestWork for the ManifestWork accounting for deletion tombstones.
 func (c *ManifestWorkWatcher) deleteManifestWork(mw *kubesliceapi.ManifestWork) {
-	name := mw.Labels[meta.NameLabelKey]
+	name := mw.Labels[meta_util.NameLabelKey]
 	fn, exists := c.Store.Get(name)
 	if !exists {
 		klog.Errorf("no controller function found for manifestWork %s/%s", mw.Namespace, mw.Name)
@@ -175,9 +174,9 @@ func (c *ManifestWorkWatcher) deleteManifestWork(mw *kubesliceapi.ManifestWork) 
 }
 
 func HasRequiredLabels(labels map[string]string) bool {
-	_, ok1 := labels[meta.InstanceLabelKey]
-	_, ok2 := labels[meta.NameLabelKey]
-	_, ok3 := labels[meta.ManagedByLabelKey]
+	_, ok1 := labels[meta_util.InstanceLabelKey]
+	_, ok2 := labels[meta_util.NameLabelKey]
+	_, ok3 := labels[meta_util.ManagedByLabelKey]
 	_, ok4 := labels[meta_util.NamespaceLabelKey]
 	return ok1 && ok2 && ok3 && ok4
 }

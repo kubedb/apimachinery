@@ -29,7 +29,6 @@ import (
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	kerr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -298,12 +297,12 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaReconfigurationTLSOpsRequest
 	if req.Spec.TLS.RotateCertificates {
 		configCount++
 	}
-	if req.Spec.TLS.TLSConfig.IssuerRef != nil || req.Spec.TLS.TLSConfig.Certificates != nil {
+	if req.Spec.TLS.IssuerRef != nil || req.Spec.TLS.Certificates != nil {
 		configCount++
 	}
 
 	if configCount == 0 {
-		return errors.New("No reconfiguration is provided in TLS Spec.")
+		return errors.New("no reconfiguration is provided in TLS spec")
 	}
 
 	if configCount > 1 {
@@ -323,7 +322,7 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaRotateAuthenticationOpsReque
 			Namespace: req.Namespace,
 		}, &core.Secret{})
 		if err != nil {
-			if kerr.IsNotFound(err) {
+			if apierrors.IsNotFound(err) {
 				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
 			}
 			return err

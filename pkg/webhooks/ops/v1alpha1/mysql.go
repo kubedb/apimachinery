@@ -209,7 +209,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLScalingOpsRequest(req *opsap
 			return err
 		}
 
-		if !(int32(2) < *req.Spec.HorizontalScaling.Member && int32(9) > *req.Spec.HorizontalScaling.Member) {
+		if int32(2) >= *req.Spec.HorizontalScaling.Member || int32(9) <= *req.Spec.HorizontalScaling.Member {
 			return errors.New("Group size can not be less than 3 or greater than 9, range: [3,9]")
 		}
 		return nil
@@ -238,7 +238,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLVolumeExpansionOpsRequest(re
 	}
 
 	if cur.Cmp(*req.Spec.VolumeExpansion.MySQL) >= 0 {
-		return fmt.Errorf("Desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
 	return nil
@@ -312,8 +312,8 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformatio
 	}
 
 	if req.Spec.ReplicationModeTransformation != nil {
-		if req.Spec.ReplicationModeTransformation.RequireSSL != nil && (req.Spec.ReplicationModeTransformation.TLSConfig.IssuerRef == nil &&
-			req.Spec.ReplicationModeTransformation.TLSConfig.Certificates == nil) {
+		if req.Spec.ReplicationModeTransformation.RequireSSL != nil && (req.Spec.ReplicationModeTransformation.IssuerRef == nil &&
+			req.Spec.ReplicationModeTransformation.Certificates == nil) {
 			return errors.Wrap(err, "MySQL Replication Mode Transformation requires TLS configuration to be enabled.")
 		}
 	}

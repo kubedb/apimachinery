@@ -30,7 +30,6 @@ import (
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	kerr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -140,7 +139,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, db)
-	if err != nil && !kerr.IsNotFound(err) {
+	if err != nil && !apierrors.IsNotFound(err) {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name,
 			fmt.Sprintf("referenced database %s/%s is not found", req.Namespace, req.Spec.DatabaseRef.Name)))
 	}
@@ -206,7 +205,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchRotateAuthen
 			Namespace: req.Namespace,
 		}, &core.Secret{})
 		if err != nil {
-			if kerr.IsNotFound(err) {
+			if apierrors.IsNotFound(err) {
 				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
 			}
 			return err
@@ -226,7 +225,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchReconfigureO
 	}
 	configuration := req.Spec.Configuration
 	if configuration == nil {
-		return fmt.Errorf("Configuration can not be empty for %s/%s\n", req.Namespace, req.Name)
+		return fmt.Errorf("configuration can not be empty for %s/%s", req.Namespace, req.Name)
 	}
 
 	return nil

@@ -50,7 +50,7 @@ import (
 	"stash.appscode.dev/apimachinery/pkg/invoker"
 )
 
-func (c *Controller) extractRestoreInfo(inv interface{}) (*restoreInfo, error) {
+func (c *Controller) extractRestoreInfo(inv any) (*restoreInfo, error) {
 	ri := &restoreInfo{
 		do: dmcond.DynamicOptions{
 			Client: c.DynamicClient,

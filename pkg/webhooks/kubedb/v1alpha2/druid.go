@@ -309,9 +309,10 @@ func druidValidateVolumes(podTemplate *ofst.PodTemplateSpec, nodeType olddbapi.D
 		return nil
 	}
 
-	if nodeType == olddbapi.DruidNodeRoleHistoricals {
+	switch nodeType {
+	case olddbapi.DruidNodeRoleHistoricals:
 		druidReservedVolumes = append(druidReservedVolumes, kubedb.DruidVolumeHistoricalsSegmentCache)
-	} else if nodeType == olddbapi.DruidNodeRoleMiddleManagers {
+	case olddbapi.DruidNodeRoleMiddleManagers:
 		druidReservedVolumes = append(druidReservedVolumes, kubedb.DruidVolumeMiddleManagersBaseTaskDir)
 	}
 

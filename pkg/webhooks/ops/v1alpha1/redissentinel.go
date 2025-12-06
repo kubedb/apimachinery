@@ -22,9 +22,8 @@ import (
 	"fmt"
 	"strings"
 
-	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
@@ -112,7 +111,7 @@ func validateRedisSentinelOpsRequest(obj, oldObj runtime.Object) error {
 }
 
 func (w *RedisSentinelOpsRequestCustomWebhook) isDatabaseRefValid(obj *opsapi.RedisSentinelOpsRequest) error {
-	rs := &v1.RedisSentinel{ObjectMeta: metav1.ObjectMeta{Name: obj.Spec.DatabaseRef.Name, Namespace: obj.Namespace}}
+	rs := &dbapi.RedisSentinel{ObjectMeta: metav1.ObjectMeta{Name: obj.Spec.DatabaseRef.Name, Namespace: obj.Namespace}}
 	return w.DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(rs), rs)
 }
 
@@ -123,7 +122,7 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	}
 
 	var allErr field.ErrorList
-	var db v1.RedisSentinel
+	var db dbapi.RedisSentinel
 	switch req.GetRequestType().(opsapi.RedisSentinelOpsRequestType) {
 	case opsapi.RedisSentinelOpsRequestTypeUpdateVersion:
 		if err := w.validateRedisSentinelUpdateVersionOpsRequest(&db, req); err != nil {
@@ -139,7 +138,7 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	return apierrors.NewInvalid(schema.GroupKind{Group: "redissentinelopsrequest.kubedb.com", Kind: "RedisSentinelOpsRequest"}, req.Name, allErr)
 }
 
-func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelUpdateVersionOpsRequest(db *v1.RedisSentinel, req *opsapi.RedisSentinelOpsRequest) error {
+func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelUpdateVersionOpsRequest(db *dbapi.RedisSentinel, req *opsapi.RedisSentinelOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
@@ -160,12 +159,12 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelUpdateVersio
 	}
 	currentVersionName := db.Spec.Version
 
-	updatedVersion := &v1alpha1.RedisVersion{}
+	updatedVersion := &catalog.RedisVersion{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: updatedVersionName}, updatedVersion); err != nil {
 		return err
 	}
 
-	currentVersion := &v1alpha1.RedisVersion{}
+	currentVersion := &catalog.RedisVersion{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: currentVersionName}, currentVersion); err != nil {
 		return err
 	}

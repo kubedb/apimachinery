@@ -27,6 +27,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -130,27 +131,28 @@ func (w *RedisAutoscalerCustomWebhook) validate(scaler *autoscalingapi.RedisAuto
 		Namespace: scaler.Namespace,
 	}, &rd)
 	if err != nil {
-		_ = fmt.Errorf("can't get Redis %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get Redis %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return err
 	}
 
 	if scaler.Spec.Compute != nil {
 		cm := scaler.Spec.Compute
-		if rd.Spec.Mode == dbapi.RedisModeCluster {
+		switch rd.Spec.Mode {
+		case dbapi.RedisModeCluster:
 			if cm.Standalone != nil {
 				return errors.New("Spec.Compute.Standalone is invalid for clustered redis")
 			}
 			if cm.Sentinel != nil {
 				return errors.New("Spec.Compute.Sentinel is invalid for clustered redis")
 			}
-		} else if rd.Spec.Mode == dbapi.RedisModeSentinel {
+		case dbapi.RedisModeSentinel:
 			if cm.Standalone != nil {
 				return errors.New("Spec.Compute.Standalone is invalid for redis sentinel")
 			}
 			if cm.Cluster != nil {
 				return errors.New("Spec.Compute.Cluster is invalid for redis sentinel")
 			}
-		} else if rd.Spec.Mode == dbapi.RedisModeStandalone {
+		case dbapi.RedisModeStandalone:
 			if cm.Cluster != nil {
 				return errors.New("Spec.Compute.Cluster is invalid for standalone redis")
 			}
@@ -163,21 +165,22 @@ func (w *RedisAutoscalerCustomWebhook) validate(scaler *autoscalingapi.RedisAuto
 
 	if scaler.Spec.Storage != nil {
 		st := scaler.Spec.Storage
-		if rd.Spec.Mode == dbapi.RedisModeCluster {
+		switch rd.Spec.Mode {
+		case dbapi.RedisModeCluster:
 			if st.Standalone != nil {
 				return errors.New("Spec.Storage.Standalone is invalid for clustered redis")
 			}
 			if st.Sentinel != nil {
 				return errors.New("Spec.Storage.Sentinel is invalid for clustered redis")
 			}
-		} else if rd.Spec.Mode == dbapi.RedisModeSentinel {
+		case dbapi.RedisModeSentinel:
 			if st.Standalone != nil {
 				return errors.New("Spec.Storage.Standalone is invalid for redis sentinel")
 			}
 			if st.Cluster != nil {
 				return errors.New("Spec.Storage.Cluster is invalid for redis sentinel")
 			}
-		} else if rd.Spec.Mode == dbapi.RedisModeStandalone {
+		case dbapi.RedisModeStandalone:
 			if st.Cluster != nil {
 				return errors.New("Spec.Storage.Cluster is invalid for standalone redis")
 			}

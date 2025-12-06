@@ -393,7 +393,7 @@ func calcFromPodMemReq(memReq int64) float64 {
 }
 
 func getInMemoryStorage(client client.Client, dbNamespace string, name string, memReq int64) (float64, error) {
-	convertFloat := func(v interface{}) float64 {
+	convertFloat := func(v any) float64 {
 		switch val := v.(type) {
 		case int32:
 			return float64(val)
@@ -413,7 +413,7 @@ func getInMemoryStorage(client client.Client, dbNamespace string, name string, m
 		return -1, err
 	}
 
-	conf := make(map[string]interface{})
+	conf := make(map[string]any)
 	mongod, ok := sec.Data[kubedb.MongoDBCustomConfigFile]
 	if !ok {
 		return calcFromPodMemReq(memReq), nil
@@ -426,15 +426,15 @@ func getInMemoryStorage(client client.Client, dbNamespace string, name string, m
 	if !ok {
 		return calcFromPodMemReq(memReq), nil
 	}
-	inMem, ok := storage.(map[interface{}]interface{})["inMemory"]
+	inMem, ok := storage.(map[any]any)["inMemory"]
 	if !ok {
 		return calcFromPodMemReq(memReq), nil
 	}
-	engine, ok := inMem.(map[interface{}]interface{})["engineConfig"]
+	engine, ok := inMem.(map[any]any)["engineConfig"]
 	if !ok {
 		return calcFromPodMemReq(memReq), nil
 	}
-	size, ok := engine.(map[interface{}]interface{})["inMemorySizeGB"]
+	size, ok := engine.(map[any]any)["inMemorySizeGB"]
 	if !ok {
 		return calcFromPodMemReq(memReq), nil
 	}
