@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"strings"
 
-	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -203,14 +202,14 @@ func validatePgBouncerUpdateVersionOpsRequest(req *opsapi.PgBouncerOpsRequest, c
 	return nil
 }
 
-func getPgBouncerTargetVersion(client client.Client, opsReq *opsapi.PgBouncerOpsRequest) (*v1alpha1.PgBouncerVersion, error) {
+func getPgBouncerTargetVersion(client client.Client, opsReq *opsapi.PgBouncerOpsRequest) (*catalog.PgBouncerVersion, error) {
 	if opsReq.Spec.Type != opsapi.PgBouncerOpsRequestTypeUpdateVersion {
 		return nil, fmt.Errorf("pgbouncer version will not be updated with this ops-request")
 	}
 	if opsReq.Spec.UpdateVersion.TargetVersion == "" {
 		return nil, fmt.Errorf("targeted pgbouncer version name is invalid")
 	}
-	version := v1alpha1.PgBouncerVersion{}
+	version := catalog.PgBouncerVersion{}
 	err := client.Get(context.TODO(), types.NamespacedName{Namespace: opsReq.Namespace, Name: opsReq.Spec.UpdateVersion.TargetVersion}, &version)
 	if err != nil {
 		return nil, err

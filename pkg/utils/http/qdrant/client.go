@@ -78,7 +78,7 @@ func GetClusterResponse(ctx context.Context, address string, apiKey string) (*Cl
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
 
-	defer res.Body.Close()
+	defer res.Body.Close() // nolint:errcheck
 
 	if res.StatusCode != 200 {
 		return nil, fmt.Errorf("bad status %d from %s (try checking API key or headers)", res.StatusCode, address)

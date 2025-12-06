@@ -131,6 +131,7 @@ func (w *SubscriberCustomWebhook) validateCreateOrUpdate(req *replapi.Subscriber
 		}
 	}
 
+	// nolint:staticcheck
 	if (req.Spec.Parameters.Connect != nil) && !(*req.Spec.Parameters.Connect &&
 		(req.Spec.Parameters.CreateSlot == nil || *req.Spec.Parameters.CreateSlot) &&
 		(req.Spec.Parameters.Enabled == nil || *req.Spec.Parameters.Enabled) &&
@@ -161,25 +162,25 @@ func (w *SubscriberCustomWebhook) validateAlterParams(sub *replapi.Subscriber, o
 	if (oldSub.Spec.Parameters.CopyData != nil) &&
 		(sub.Spec.Parameters.CopyData != nil) &&
 		(*oldSub.Spec.Parameters.CopyData != *sub.Spec.Parameters.CopyData) {
-		return fmt.Errorf("Can't change  spec.parameters.%s in %s/%s", "copyData", sub.Name, sub.Namespace)
+		return fmt.Errorf("can't change  spec.parameters.%s in %s/%s", "copyData", sub.Name, sub.Namespace)
 	}
 
 	if (oldSub.Spec.Parameters.CreateSlot != nil) &&
 		(sub.Spec.Parameters.CreateSlot != nil) &&
 		(*oldSub.Spec.Parameters.CreateSlot != *sub.Spec.Parameters.CreateSlot) {
-		return fmt.Errorf("Can't change  spec.parameters.%s in %s/%s", "createSlot", sub.Name, sub.Namespace)
+		return fmt.Errorf("can't change  spec.parameters.%s in %s/%s", "createSlot", sub.Name, sub.Namespace)
 	}
 
 	if (oldSub.Spec.Parameters.Enabled != nil) &&
 		(sub.Spec.Parameters.Enabled != nil) &&
 		(*oldSub.Spec.Parameters.Enabled != *sub.Spec.Parameters.Enabled) {
-		return fmt.Errorf("Can't change  spec.parameters.%s in %s/%s", "enabled", sub.Name, sub.Namespace)
+		return fmt.Errorf("can't change  spec.parameters.%s in %s/%s", "enabled", sub.Name, sub.Namespace)
 	}
 
 	if (oldSub.Spec.Parameters.Connect != nil) &&
 		(sub.Spec.Parameters.Connect != nil) &&
 		(*oldSub.Spec.Parameters.Connect != *sub.Spec.Parameters.Connect) {
-		return fmt.Errorf("Can't change  spec.parameters.%s in %s/%s", "connect", sub.Name, sub.Namespace)
+		return fmt.Errorf("can't change  spec.parameters.%s in %s/%s", "connect", sub.Name, sub.Namespace)
 	}
 	return nil
 }

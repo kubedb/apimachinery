@@ -28,7 +28,6 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	kerr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -105,7 +104,7 @@ func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mong
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, &db)
-	if err != nil && !kerr.IsNotFound(err) {
+	if err != nil && !apierrors.IsNotFound(err) {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name,
 			fmt.Sprintf("referenced database %s/%s is not found", req.Namespace, req.Spec.DatabaseRef.Name)))
 	}

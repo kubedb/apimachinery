@@ -159,7 +159,7 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 			"use either `spec.configSecret` or `spec.initConfig`"))
 	}
 
-	if pp.ObjectMeta.DeletionTimestamp == nil {
+	if pp.DeletionTimestamp == nil {
 		apb := appcat.AppBinding{}
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      pp.Spec.PostgresRef.Name,

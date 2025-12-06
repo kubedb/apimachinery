@@ -232,12 +232,12 @@ func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedReconfigureTLSOpsReq
 	if req.Spec.TLS.RotateCertificates {
 		configCount++
 	}
-	if req.Spec.TLS.TLSConfig.IssuerRef != nil || req.Spec.TLS.TLSConfig.Certificates != nil {
+	if req.Spec.TLS.IssuerRef != nil || req.Spec.TLS.Certificates != nil {
 		configCount++
 	}
 
 	if configCount == 0 {
-		return errors.New("No reconfiguration is provided in TLS Spec.")
+		return errors.New("no reconfiguration is provided in TLS spec")
 	}
 
 	if configCount > 1 {

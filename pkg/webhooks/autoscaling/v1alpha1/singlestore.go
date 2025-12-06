@@ -27,6 +27,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -71,7 +72,7 @@ func (w *SinglestoreAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.
 		Namespace: scaler.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get Singlestore %v/%v \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get Singlestore %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return
 	}
 
@@ -143,7 +144,7 @@ func (w *SinglestoreAutoscalerCustomWebhook) validate(scaler *autoscalingapi.Sin
 		Namespace: scaler.Namespace,
 	}, &sdb)
 	if err != nil {
-		_ = fmt.Errorf("can't get Singlestore %v/%v \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get Singlestore %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return err
 	}
 

@@ -190,7 +190,7 @@ func (w *IgniteOpsRequestCustomWebhook) validateIgniteRotateAuthenticationOpsReq
 		return err
 	}
 	if ignite.Spec.DisableSecurity {
-		return fmt.Errorf("DisableSecurity is on, RotateAuth is not applicable")
+		return fmt.Errorf("disableSecurity is on, RotateAuth is not applicable")
 	}
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
@@ -310,12 +310,12 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteReconfigurationTLSOpsRequ
 	if req.Spec.TLS.RotateCertificates {
 		configCount++
 	}
-	if req.Spec.TLS.TLSConfig.IssuerRef != nil || req.Spec.TLS.TLSConfig.Certificates != nil {
+	if req.Spec.TLS.IssuerRef != nil || req.Spec.TLS.Certificates != nil {
 		configCount++
 	}
 
 	if configCount == 0 {
-		return errors.New("No reconfiguration is provided in TLS Spec.")
+		return errors.New("no reconfiguration is provided in TLS spec")
 	}
 
 	if configCount > 1 {

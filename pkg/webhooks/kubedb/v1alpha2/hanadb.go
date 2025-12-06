@@ -22,7 +22,6 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
-	kubedb2 "kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -203,14 +202,14 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 
 // reserved volume and volumes mounts for HanaDB
 var hanadbReservedVolumes = []string{
-	kubedb2.HanaDBDataVolume,
-	kubedb2.HanaDBVolumeScripts,
-	kubedb2.HanaDBVolumePasswordSecret,
+	kubedb.HanaDBDataVolume,
+	kubedb.HanaDBVolumeScripts,
+	kubedb.HanaDBVolumePasswordSecret,
 }
 
 var hanadbReservedVolumesMountPaths = []string{
-	kubedb2.HanaDBDataDir,
-	kubedb2.HanaDBVolumeMountScripts,
+	kubedb.HanaDBDataDir,
+	kubedb.HanaDBVolumeMountScripts,
 }
 
 func (w *HanaDBCustomWebhook) hanadbValidateVersion(db *api.HanaDB) error {

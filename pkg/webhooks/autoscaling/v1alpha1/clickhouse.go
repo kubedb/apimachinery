@@ -27,6 +27,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -69,7 +70,7 @@ func (w *ClickHouseAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.C
 		Namespace: scaler.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get ClickHouse %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get ClickHouse %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return
 	}
 
@@ -131,7 +132,7 @@ func (w *ClickHouseAutoscalerCustomWebhook) validate(scaler *autoscalingapi.Clic
 		Namespace: scaler.Namespace,
 	}, &kf)
 	if err != nil {
-		_ = fmt.Errorf("can't get ClickHouse %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get ClickHouse %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return err
 	}
 

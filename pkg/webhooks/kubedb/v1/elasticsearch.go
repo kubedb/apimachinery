@@ -482,12 +482,13 @@ func (w *ElasticsearchCustomWebhook) validateNodeSpecs(kc client.Client, db *dba
 }
 
 func (w *ElasticsearchCustomWebhook) validateNodeRoles(topology *dbapi.ElasticsearchClusterTopology, esVersion *catalogapi.ElasticsearchVersion) error {
-	if esVersion.Spec.Distribution == catalogapi.ElasticsearchDistroOpenDistro {
+	switch esVersion.Spec.Distribution {
+	case catalogapi.ElasticsearchDistroOpenDistro:
 		if topology.ML != nil || topology.DataContent != nil || topology.DataCold != nil || topology.DataFrozen != nil ||
 			topology.Coordinating != nil || topology.Transform != nil {
 			return errors.Errorf("node role: ml, data_cold, data_frozen, data_content, transform, coordinating are not supported for ElasticsearchVersion %s", esVersion.Name)
 		}
-	} else if esVersion.Spec.Distribution == catalogapi.ElasticsearchDistroSearchGuard {
+	case catalogapi.ElasticsearchDistroSearchGuard:
 		if topology.Data == nil {
 			return errors.New("topology.data cannot be empty")
 		}

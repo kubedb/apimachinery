@@ -81,7 +81,7 @@ func (c *Controller) InitPetSetWatcher() {
 	c.PSQueue = queue.New[any](kubedb.ResourceKindPetSet, c.MaxNumRequeues, c.NumThreads, c.processPetSet)
 	c.PSLister = c.PetSetInformerFactory.Apps().V1().PetSets().Lister()
 	_, _ = c.PSInformer.AddEventHandler(cache.ResourceEventHandlerFuncs{
-		AddFunc: func(obj interface{}) {
+		AddFunc: func(obj any) {
 			if ps, ok := obj.(*petsetapps.PetSet); ok {
 				if c.RestrictToNamespace != core.NamespaceAll {
 					if ps.GetNamespace() != c.RestrictToNamespace {
@@ -93,7 +93,7 @@ func (c *Controller) InitPetSetWatcher() {
 				c.enqueueConditionally(ps)
 			}
 		},
-		UpdateFunc: func(oldObj, newObj interface{}) {
+		UpdateFunc: func(oldObj, newObj any) {
 			if ps, ok := newObj.(*petsetapps.PetSet); ok {
 				if c.RestrictToNamespace != core.NamespaceAll {
 					if ps.GetNamespace() != c.RestrictToNamespace {
@@ -105,7 +105,7 @@ func (c *Controller) InitPetSetWatcher() {
 				c.enqueueConditionally(ps)
 			}
 		},
-		DeleteFunc: func(obj interface{}) {
+		DeleteFunc: func(obj any) {
 			var ps *petsetapps.PetSet
 			var ok bool
 			if ps, ok = obj.(*petsetapps.PetSet); !ok {

@@ -27,6 +27,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -72,7 +73,7 @@ func (w *FerretDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Fer
 		Namespace: scaler.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get FerretDB %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get FerretDB %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return
 	}
 
@@ -138,7 +139,7 @@ func (w *FerretDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.Ferret
 		Namespace: scaler.Namespace,
 	}, &kf)
 	if err != nil {
-		_ = fmt.Errorf("can't get FerretDB %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get FerretDB %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return err
 	}
 

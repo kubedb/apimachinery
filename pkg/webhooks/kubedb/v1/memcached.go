@@ -142,7 +142,7 @@ func (mv MemcachedCustomWebhook) validateVolumeMountsForAllContainers(memcached 
 }
 
 func (mv MemcachedCustomWebhook) validateReplica(obj, oldObj *dbapi.Memcached) error {
-	if !(obj.Spec.Halted || oldObj.Spec.Halted) && (*oldObj.Spec.Replicas == 1 || ptr.Deref(obj.Spec.Replicas, 0) == 1) && *oldObj.Spec.Replicas != *obj.Spec.Replicas {
+	if (!obj.Spec.Halted && !oldObj.Spec.Halted) && (*oldObj.Spec.Replicas == 1 || ptr.Deref(obj.Spec.Replicas, 0) == 1) && *oldObj.Spec.Replicas != *obj.Spec.Replicas {
 		return fmt.Errorf("can not update from %d replica to %d replica", ptr.Deref(oldObj.Spec.Replicas, 0), ptr.Deref(obj.Spec.Replicas, 0))
 	}
 	return nil

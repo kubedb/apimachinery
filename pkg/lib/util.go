@@ -113,8 +113,8 @@ func ExtractPodFromManifestWork(kbClient client.Client, pp, podName string) (*co
 	}
 	pod := &core.Pod{}
 	manifest := mw.Spec.Workload.Manifests[0]
-	unstructuredObj := make(map[string]interface{})
-	err = json.Unmarshal(manifest.RawExtension.Raw, &unstructuredObj)
+	unstructuredObj := make(map[string]any)
+	err = json.Unmarshal(manifest.Raw, &unstructuredObj)
 	if err != nil {
 		return nil, err
 	}
@@ -139,8 +139,8 @@ func ExtractPVCFromManifestWork(kbClient client.Client, pp, podName string) (*co
 	}
 	pvc := &core.PersistentVolumeClaim{}
 	manifest := mw.Spec.Workload.Manifests[0]
-	unstructuredObj := make(map[string]interface{})
-	err = json.Unmarshal(manifest.RawExtension.Raw, &unstructuredObj)
+	unstructuredObj := make(map[string]any)
+	err = json.Unmarshal(manifest.Raw, &unstructuredObj)
 	if err != nil {
 		return nil, err
 	}
@@ -183,8 +183,8 @@ func UpdatePVCManifestWork(kbClient client.Client, reqResource core.VolumeResour
 	}
 	pvc := &core.PersistentVolumeClaim{}
 	manifest := mw.Spec.Workload.Manifests[0]
-	unstructuredObj := make(map[string]interface{})
-	err = json.Unmarshal(manifest.RawExtension.Raw, &unstructuredObj)
+	unstructuredObj := make(map[string]any)
+	err = json.Unmarshal(manifest.Raw, &unstructuredObj)
 	if err != nil {
 		return err
 	}

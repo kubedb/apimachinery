@@ -144,7 +144,7 @@ func ValidateInternalUsers(users map[string]olddbapi.ElasticsearchUserSpec, allo
 	for user := range users {
 		present, _ := arrays.Contains(allowedInternalUsers, user)
 		if !present {
-			return fmt.Errorf("Internal user %s is forbidden to use in %s spec", user, resourceType)
+			return fmt.Errorf("internal user %s is forbidden to use in %s spec", user, resourceType)
 		}
 	}
 	return nil
@@ -154,7 +154,7 @@ func ValidateInternalUsersV1(users map[string]dbapi.ElasticsearchUserSpec, allow
 	for user := range users {
 		present, _ := arrays.Contains(allowedInternalUsers, user)
 		if !present {
-			return fmt.Errorf("Internal user %s is forbidden to use in %s spec", user, resourceType)
+			return fmt.Errorf("internal user %s is forbidden to use in %s spec", user, resourceType)
 		}
 	}
 	return nil

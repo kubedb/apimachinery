@@ -74,11 +74,12 @@ func TestNamespaceValidator_Admit(t *testing.T) {
 			validator.dc = fake_dynamic.NewSimpleDynamicClient(clientsetscheme.Scheme, storeObjects...)
 
 			response := validator.Admit(req)
-			if c.result == true {
+			switch c.result {
+			case true:
 				if response.Allowed != true {
 					t.Errorf("expected: 'Allowed=true'. but got response: %v", response)
 				}
-			} else if c.result == false {
+			case false:
 				if response.Allowed == true || response.Result.Code == http.StatusInternalServerError {
 					t.Errorf("expected: 'Allowed=false', but got response: %v", response)
 				}

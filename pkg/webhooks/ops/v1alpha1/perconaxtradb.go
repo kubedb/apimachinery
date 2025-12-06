@@ -237,7 +237,7 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpans
 	}
 
 	if cur.Cmp(*req.Spec.VolumeExpansion.PerconaXtraDB) >= 0 {
-		return fmt.Errorf("Desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 	return nil
 }
@@ -275,12 +275,12 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBReconfigurat
 	if req.Spec.TLS.RotateCertificates {
 		configCount++
 	}
-	if req.Spec.TLS.TLSConfig.IssuerRef != nil || req.Spec.TLS.TLSConfig.Certificates != nil || req.Spec.TLS.RequireSSL != nil {
+	if req.Spec.TLS.IssuerRef != nil || req.Spec.TLS.Certificates != nil || req.Spec.TLS.RequireSSL != nil {
 		configCount++
 	}
 
 	if configCount == 0 {
-		return errors.New("No of incomplete reconfiguration is provided in TLS Spec.")
+		return errors.New("no of incomplete reconfiguration is provided in TLS spec")
 	}
 
 	if configCount > 1 {

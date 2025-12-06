@@ -208,7 +208,7 @@ func (wh *PostgresCustomWebhook) validateSpecForDB(postgres *dbapi.Postgres, pgV
 	if postgres.Spec.Replication != nil {
 		version, _ := semver.NewVersion(pgVersion.Spec.Version)
 		majorVersion := version.Major()
-		if !(postgres.Spec.Replication.WALLimitPolicy == dbapi.WALKeepSegment || postgres.Spec.Replication.WALLimitPolicy == dbapi.WALKeepSize || postgres.Spec.Replication.WALLimitPolicy == dbapi.ReplicationSlot) {
+		if postgres.Spec.Replication.WALLimitPolicy != dbapi.WALKeepSegment && postgres.Spec.Replication.WALLimitPolicy != dbapi.WALKeepSize && postgres.Spec.Replication.WALLimitPolicy != dbapi.ReplicationSlot {
 			return fmt.Errorf("can't have %v set to postgres.Spec.Replication.WALLimitPolicy, supported values are %s, %s, %s",
 				postgres.Spec.Replication.WALLimitPolicy, dbapi.WALKeepSegment, dbapi.WALKeepSize, dbapi.ReplicationSlot)
 		}

@@ -27,6 +27,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -72,7 +73,7 @@ func (w *MongoDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Mong
 		Namespace: scaler.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get MongoDB %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get MongoDB %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return
 	}
 
@@ -155,7 +156,7 @@ func (w *MongoDBAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MongoDB
 		Namespace: scaler.Namespace,
 	}, &mg)
 	if err != nil {
-		_ = fmt.Errorf("can't get MongoDB %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get MongoDB %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return err
 	}
 

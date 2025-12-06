@@ -27,6 +27,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/klog/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -72,7 +73,7 @@ func (w *DruidAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.DruidA
 		Namespace: scaler.Namespace,
 	}, &db)
 	if err != nil {
-		_ = fmt.Errorf("can't get Druid %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get Druid %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return
 	}
 
@@ -162,7 +163,7 @@ func (w *DruidAutoscalerCustomWebhook) validate(scaler *autoscalingapi.DruidAuto
 		Namespace: scaler.Namespace,
 	}, &dr)
 	if err != nil {
-		_ = fmt.Errorf("can't get Druid %s/%s \n", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
+		klog.Errorf("can't get Druid %s/%s", scaler.Namespace, scaler.Spec.DatabaseRef.Name)
 		return err
 	}
 

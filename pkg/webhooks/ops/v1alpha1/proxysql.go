@@ -257,7 +257,7 @@ func (w *ProxySQLOpsRequestCustomWebhook) validateProxySQLReconfigurationTLSOpsR
 	if req.Spec.TLS.RotateCertificates {
 		configCount++
 	}
-	if req.Spec.TLS.TLSConfig.IssuerRef != nil || req.Spec.TLS.TLSConfig.Certificates != nil {
+	if req.Spec.TLS.IssuerRef != nil || req.Spec.TLS.Certificates != nil {
 		configCount++
 	}
 
@@ -271,15 +271,15 @@ func (w *ProxySQLOpsRequestCustomWebhook) validateProxySQLReconfigurationTLSOpsR
 	return nil
 }
 
-func GetMySQLQueryRulesMapConfig(rules []*runtime.RawExtension) ([]map[string]interface{}, error) {
-	var ruleArray []map[string]interface{}
+func GetMySQLQueryRulesMapConfig(rules []*runtime.RawExtension) ([]map[string]any, error) {
+	var ruleArray []map[string]any
 	for i := range rules {
 		cur := rules[i]
 		data, err := json.Marshal(cur)
 		if err != nil {
 			return nil, err
 		}
-		rule := make(map[string]interface{})
+		rule := make(map[string]any)
 		err = json.Unmarshal(data, &rule)
 		if err != nil {
 			return nil, err
