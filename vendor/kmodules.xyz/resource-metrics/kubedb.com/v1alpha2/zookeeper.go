@@ -32,6 +32,11 @@ func init() {
 		Version: "v1alpha2",
 		Kind:    "ZooKeeper",
 	}, ZooKeeper{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "ZooKeeper",
+	}, ZooKeeper{}.ResourceCalculator())
 }
 
 type ZooKeeper struct{}

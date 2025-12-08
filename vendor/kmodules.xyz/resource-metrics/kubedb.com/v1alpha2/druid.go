@@ -33,6 +33,11 @@ func init() {
 		Version: "v1alpha2",
 		Kind:    "Druid",
 	}, Druid{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "Druid",
+	}, Druid{}.ResourceCalculator())
 }
 
 type Druid struct{}

@@ -32,6 +32,11 @@ func init() {
 		Version: "v1",
 		Kind:    "PgBouncer",
 	}, PgBouncer{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "PgBouncer",
+	}, PgBouncer{}.ResourceCalculator())
 }
 
 type PgBouncer struct{}

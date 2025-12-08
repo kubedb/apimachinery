@@ -32,6 +32,11 @@ func init() {
 		Version: "v1",
 		Kind:    "Postgres",
 	}, Postgres{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "Postgres",
+	}, Postgres{}.ResourceCalculator())
 }
 
 type Postgres struct{}

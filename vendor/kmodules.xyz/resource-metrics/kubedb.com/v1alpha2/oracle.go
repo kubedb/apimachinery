@@ -32,6 +32,11 @@ func init() {
 		Version: "v1alpha2",
 		Kind:    "Oracle",
 	}, Oracle{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "Oracle",
+	}, Oracle{}.ResourceCalculator())
 }
 
 type Oracle struct{}

@@ -85,9 +85,9 @@ func (p *BillingEventCreator) CreateEvent(obj client.Object) (*api.Event, error)
 	}
 
 	if p.ClientBilling {
-		if r, ok := obj.(Resource); ok {
+		if sel, ok := getOffshootSelectorsIfAny(obj); ok {
 			var podList core.PodList
-			err = p.PodLister.List(context.TODO(), &podList, client.InNamespace(obj.GetNamespace()), client.MatchingLabels(r.OffshootSelectors()))
+			err = p.PodLister.List(context.TODO(), &podList, client.InNamespace(obj.GetNamespace()), client.MatchingLabels(sel))
 			if err != nil {
 				return nil, err
 			}
@@ -119,7 +119,7 @@ func (p *BillingEventCreator) CreateEvent(obj client.Object) (*api.Event, error)
 			res.Spec.Pods = podresources
 
 			var pvcList core.PersistentVolumeClaimList
-			err = p.PVCLister.List(context.TODO(), &pvcList, client.InNamespace(obj.GetNamespace()), client.MatchingLabels(r.OffshootSelectors()))
+			err = p.PVCLister.List(context.TODO(), &pvcList, client.InNamespace(obj.GetNamespace()), client.MatchingLabels(sel))
 			if err != nil {
 				return nil, err
 			}
@@ -144,6 +144,20 @@ func (p *BillingEventCreator) CreateEvent(obj client.Object) (*api.Event, error)
 	}, nil
 }
 
+func getOffshootSelectorsIfAny(obj client.Object) (map[string]string, bool) {
+	if r, ok := obj.(Resource); ok {
+		return r.OffshootSelectors(), true
+	}
+	if r, ok := obj.(ResourceExtra); ok {
+		return r.OffshootSelectors(), true
+	}
+	return nil, false
+}
+
 type Resource interface {
 	OffshootSelectors() map[string]string
+}
+
+type ResourceExtra interface {
+	OffshootSelectors(extraSelectors ...map[string]string) map[string]string
 }

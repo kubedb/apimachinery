@@ -32,6 +32,11 @@ func init() {
 		Version: "v1alpha2",
 		Kind:    "Ignite",
 	}, Ignite{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "Ignite",
+	}, Ignite{}.ResourceCalculator())
 }
 
 type Ignite struct{}

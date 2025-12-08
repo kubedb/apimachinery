@@ -32,6 +32,11 @@ func init() {
 		Version: "v1",
 		Kind:    "MongoDB",
 	}, MongoDB{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "MongoDB",
+	}, MongoDB{}.ResourceCalculator())
 }
 
 type MongoDB struct{}

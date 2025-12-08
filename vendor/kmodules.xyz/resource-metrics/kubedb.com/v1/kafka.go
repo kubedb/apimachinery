@@ -33,6 +33,11 @@ func init() {
 		Version: "v1",
 		Kind:    "Kafka",
 	}, Kafka{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "Kafka",
+	}, Kafka{}.ResourceCalculator())
 }
 
 type Kafka struct{}

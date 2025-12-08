@@ -32,6 +32,11 @@ func init() {
 		Version: "v1",
 		Kind:    "Redis",
 	}, Redis{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "Redis",
+	}, Redis{}.ResourceCalculator())
 }
 
 type Redis struct{}

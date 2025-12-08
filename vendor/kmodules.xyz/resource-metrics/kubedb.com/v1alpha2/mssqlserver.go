@@ -32,6 +32,11 @@ func init() {
 		Version: "v1alpha2",
 		Kind:    "MSSQLServer",
 	}, MSSQLServer{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "MSSQLServer",
+	}, MSSQLServer{}.ResourceCalculator())
 }
 
 type MSSQLServer struct{}

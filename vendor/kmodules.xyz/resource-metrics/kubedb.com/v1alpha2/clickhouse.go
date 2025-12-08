@@ -33,6 +33,11 @@ func init() {
 		Version: "v1alpha2",
 		Kind:    "ClickHouse",
 	}, ClickHouse{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "ClickHouse",
+	}, ClickHouse{}.ResourceCalculator())
 }
 
 type ClickHouse struct{}
@@ -56,27 +61,22 @@ func (r ClickHouse) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList,
 		return nil, err
 	}
 	if found && clusterTopology != nil {
-		// dedicated topology mode
-		var replicas int64 = 0
-
-		clusters, _, err := unstructured.NestedSlice(clusterTopology, "cluster")
+		cluster, _, err := unstructured.NestedFieldNoCopy(clusterTopology, "cluster")
 		if err != nil {
 			return nil, err
 		}
 
-		for _, cluster := range clusters {
-			shardCount, _, err := unstructured.NestedInt64(cluster.(map[string]interface{}), "shards")
-			if err != nil {
-				return nil, err
-			}
-
-			shardReplicas, _, err := unstructured.NestedInt64(cluster.(map[string]interface{}), "replicas")
-			if err != nil {
-				return nil, err
-			}
-			replicas += shardReplicas * shardCount
+		shardCount, _, err := unstructured.NestedInt64(cluster.(map[string]interface{}), "shards")
+		if err != nil {
+			return nil, err
 		}
-		result[api.PodRoleTotalShard] = replicas
+
+		shardReplicas, _, err := unstructured.NestedInt64(cluster.(map[string]interface{}), "replicas")
+		if err != nil {
+			return nil, err
+		}
+
+		result[api.PodRoleTotalShard] = shardReplicas * shardCount
 
 	} else {
 		// standalone
@@ -111,36 +111,21 @@ func (r ClickHouse) roleResourceFn(fn func(rr core.ResourceRequirements) core.Re
 			return nil, err
 		}
 		if found && clusterTopology != nil {
-			clusters, _, err := unstructured.NestedSlice(clusterTopology, "cluster")
+			cluster, _, err := unstructured.NestedFieldNoCopy(clusterTopology, "cluster")
 			if err != nil {
 				return nil, err
 			}
-			var totalReplicas int64 = 0
-			var totalRes core.ResourceList
-			for i, c := range clusters {
-				cluster := c.(map[string]interface{})
-				cRes, cReplicas, err := api.AppNodeResourcesV2(cluster, fn, ClickHouseContainerName)
-				if err != nil {
-					return nil, err
-				}
-				shards, _, err := unstructured.NestedInt64(cluster, "shards")
-				if err != nil {
-					return nil, err
-				}
-
-				totalReplicas += cReplicas * shards
-				/*
-					TODO: Need to change. As this style will not work if different cluster have different resources. Possible Algorithm =>
-						For each shards :
-							summedUpRes = api.AddResourceList(summedUpRes, api.MulResourceList(cRes, cReplicas*shards))
-						totalRes = summedUpRes / totalReplicas
-				*/
-				if i == 0 {
-					totalRes = cRes
-				}
+			cRes, cReplicas, err := api.AppNodeResourcesV2(cluster.(map[string]interface{}), fn, ClickHouseContainerName)
+			if err != nil {
+				return nil, err
 			}
+			shards, _, err := unstructured.NestedInt64(cluster.(map[string]interface{}), "shards")
+			if err != nil {
+				return nil, err
+			}
+
 			return map[api.PodRole]api.PodInfo{
-				api.PodRoleTotalShard: {Resource: totalRes, Replicas: totalReplicas},
+				api.PodRoleTotalShard: {Resource: cRes, Replicas: cReplicas * shards},
 			}, nil
 		} else {
 			container, replicas, err := api.AppNodeResourcesV2(obj, fn, ClickHouseContainerName, "spec")

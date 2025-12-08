@@ -262,13 +262,13 @@ func VerifyLicensePeriodically(config *rest.Config, licenseFile string, stopCh <
 	if err != nil {
 		return le.handleLicenseVerificationFailure(err)
 	}
-	if err := verifyLicensePeriodically(le, licenseFile, stopCh); err != nil {
+	if err := verifyLicensePeriodically(le, stopCh); err != nil {
 		return le.handleLicenseVerificationFailure(err)
 	}
 	return nil
 }
 
-func verifyLicensePeriodically(le *LicenseEnforcer, licenseFile string, stopCh <-chan struct{}) error {
+func verifyLicensePeriodically(le *LicenseEnforcer, stopCh <-chan struct{}) error {
 	// Create Kubernetes client
 	err := le.createClients()
 	if err != nil {
@@ -378,7 +378,7 @@ func CheckLicenseEndpoint(config *rest.Config, apiServiceName string, features [
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() // nolint:errcheck
 
 	data, err := io.ReadAll(resp.Body)
 	if err != nil {

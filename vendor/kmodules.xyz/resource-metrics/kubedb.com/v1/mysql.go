@@ -32,6 +32,11 @@ func init() {
 		Version: "v1",
 		Kind:    "MySQL",
 	}, MySQL{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "MySQL",
+	}, MySQL{}.ResourceCalculator())
 }
 
 type MySQL struct{}

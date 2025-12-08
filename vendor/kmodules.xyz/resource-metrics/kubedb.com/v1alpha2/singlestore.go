@@ -33,6 +33,11 @@ func init() {
 		Version: "v1alpha2",
 		Kind:    "Singlestore",
 	}, Singlestore{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "Singlestore",
+	}, Singlestore{}.ResourceCalculator())
 }
 
 type Singlestore struct{}

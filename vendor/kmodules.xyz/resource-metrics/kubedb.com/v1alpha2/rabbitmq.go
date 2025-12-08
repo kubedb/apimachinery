@@ -32,6 +32,11 @@ func init() {
 		Version: "v1alpha2",
 		Kind:    "RabbitMQ",
 	}, RabbitMQ{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "RabbitMQ",
+	}, RabbitMQ{}.ResourceCalculator())
 }
 
 type RabbitMQ struct{}

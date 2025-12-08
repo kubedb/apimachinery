@@ -33,6 +33,11 @@ func init() {
 		Version: "v1",
 		Kind:    "Elasticsearch",
 	}, Elasticsearch{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "Elasticsearch",
+	}, Elasticsearch{}.ResourceCalculator())
 }
 
 type Elasticsearch struct{}

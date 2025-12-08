@@ -33,6 +33,11 @@ func init() {
 		Version: "v1alpha2",
 		Kind:    "Cassandra",
 	}, Cassandra{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "Cassandra",
+	}, Cassandra{}.ResourceCalculator())
 }
 
 type Cassandra struct{}

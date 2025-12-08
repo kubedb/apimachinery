@@ -33,6 +33,11 @@ func init() {
 		Version: "v1alpha2",
 		Kind:    "Solr",
 	}, Solr{}.ResourceCalculator())
+	api.Register(schema.GroupVersionKind{
+		Group:   "gitops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    "Solr",
+	}, Solr{}.ResourceCalculator())
 }
 
 type Solr struct{}
