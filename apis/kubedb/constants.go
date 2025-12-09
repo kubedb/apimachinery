@@ -911,11 +911,6 @@ const (
 	MinioAccessKey     = "accessKeyId"
 	MinioSecretKeyName = "MINIO_SECRET_KEY"
 	MinioSecretKey     = "secretAccessKey"
-
-	MilvusEnvUsername = "MILVUS_USERNAME"
-	MilvusEnvPassword = "MILVUS_PASSWORD"
-
-	MilvusPodName = "milvus-standalone-0"
 )
 
 const (
@@ -1540,32 +1535,6 @@ const (
 	RabbitMQHealthCheckerQueueName = "kubedb-system"
 )
 
-const (
-	WeaviateHTTPPortName   = "http"
-	WeaviateHTTPPort       = 8080
-	WeaviateGRPCPortName   = "grpc"
-	WeaviateGRPCPort       = 50051
-	WeaviateRAFTPortName   = "raft"
-	WeaviateRAFTPort       = 8300
-	WeaviateGOSSIPPortName = "gossip"
-	WeaviateGOSSIPPort     = 7102
-	WeaviateDATAPortName   = "data"
-	WeaviateDATAPort       = 7103
-
-	WeaviateClassNameKubeDBSystem = "KubeDBSystem"
-
-	WeaviateVolumeData    = "data"
-	WeaviateDataDir       = "/weaviate/storage"
-	WeaviateContainerName = "weaviate"
-	WeaviateAPIKey        = "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
-	WeaviateAPIKeyEnabled = "AUTHENTICATION_APIKEY_ENABLED"
-	WeaviateAPIKeyUsers   = "AUTHENTICATION_APIKEY_USERS"
-
-	WeaviateConfigFileName  = "conf.yaml"
-	WeaviateCustomConfigDir = "/weaviate-config/conf.yaml"
-	WeaviateConfigVolName   = "config"
-)
-
 // =========================== FerretDB Constants ============================
 const (
 
@@ -1749,39 +1718,6 @@ const (
 	ClickHouseInternalServerListFile     = "server_list.yaml"
 	ClickHouseKeeperServerIdNo           = "serverid"
 	ClickHouseKeeperServerID             = "KEEPERID"
-)
-
-// =========================== Cassandra Constants ============================
-
-const (
-	Neo4jBoltPort       = 7687 // Bolt protocol (binary driver, neo4j:// and bolt://)
-	Neo4jHTTPPort       = 7474 // Neo4j Browser and Cypher HTTP API
-	Neo4jHTTPSPort      = 7473 // Neo4j Browser and Cypher HTTPS API
-	Neo4jBackupPort     = 6362 // Online backup service (internal)
-	Neo4jGraphitePort   = 2003 // Graphite metrics (optional)
-	Neo4jPrometheusPort = 2004 // Prometheus metrics (optional)
-	Neo4jJMXPort        = 3637 // Java Management Extensions (o // ptional)
-	Neo4jRoutingPort    = 7688 // Routing protocol for Causal Clustering
-	Neo4jRaftPort       = 7000 // Raft protocol for Causal Clustering
-	Neo4jClusterTxPort  = 6000 // Cluster transaction protocol for Causal Clustering
-
-	Neo4jConfigVolName      = "neo4j-conf"
-	Neo4jVolumeCustomConfig = "custom-config"
-	Neo4jVolumeData         = "data"
-	Neo4jVolumeAuthName     = "neo4j-auth"
-
-	Neo4jDataDir         = "/data"
-	Neo4jConfDir         = "/config/neo4j.conf"
-	Neo4jCustomConfigDir = "/custom-config/neo4j.conf"
-	Neo4jBackupDir       = "/backups"
-	Neo4jImportDir       = "/import"
-	Neo4jLicenseDir      = "/licenses"
-	Neo4jLogDir          = "/logs"
-	Neo4jAuthDir         = "/config/neo4j-auth"
-	Neo4jMetricsDir      = "/metrics"
-
-	Neo4jContainerName     = "neo4j"
-	Neo4jInitContainerName = "neo4j-init"
 )
 
 // =========================== Cassandra Constants ============================
@@ -2107,17 +2043,6 @@ var (
 			core.ResourceMemory: resource.MustParse("2.5Gi"),
 		},
 	}
-
-	DefaultResourcesHanaDB = core.ResourceRequirements{
-		Requests: core.ResourceList{
-			core.ResourceCPU:    resource.MustParse("2"),
-			core.ResourceMemory: resource.MustParse("8Gi"),
-		},
-		Limits: core.ResourceList{
-			core.ResourceCPU:    resource.MustParse("4"),
-			core.ResourceMemory: resource.MustParse("10Gi"),
-		},
-	}
 )
 
 func DefaultArbiter(computeOnly bool) core.ResourceRequirements {
@@ -2136,12 +2061,11 @@ const (
 	GitSyncContainerName        = "git-sync"
 )
 
-// ========================= Oracle Constants ====================================
 const (
 	OracleDatabaseServiceName = "ORCL"
 	OracleSqlNetPortName      = "sqlnet"
-	OracleSqlNetTCPSPortName  = "tcps"
-	OracleEditionEnterprise   = "enterprise"
+
+	OracleEditionEnterprise = "enterprise"
 
 	OraclePrimaryRole = "primary"
 	OracleStandbyRole = "standby"
@@ -2151,7 +2075,6 @@ const (
 	OracleSysDbaUser = "sys"
 
 	OracleContainerName             = "oracle"
-	OracleObserverContainer         = "observer"
 	OracleCoordinatorContainerName  = "oracle-coordinator"
 	OracleObserverContainerName     = "observer"
 	OracleInitContainerName         = "oracle-init"
@@ -2165,54 +2088,13 @@ const (
 
 	OracleStandbyServiceSuffix = "standby"
 
-	OracleDatabaseRoleKey          = "oracle.db/role"
-	OracleDatabaseRoleObserver     = "observer"
-	OracleDatabaseRoleInstance     = "instance"
-	OracleEnvUserName              = "SYS_USER"
-	OracleEnvPassword              = "ORACLE_PWD"
-	OracleEnvOracleSID             = "ORACLE_SID"
-	OracleEnvDataDir               = "ORADATA"
-	OracleSharedTlsVolumeName      = "certs"
-	OracleSharedTlsVolumeMountPath = "/tls/certs"
-)
-
-// =========================== DB2 Constants ============================
-
-const (
-	DB2DatabaseServiceName = "DB2"
-	DB2SqlNetPortName      = "db2-port"
-	DB2SqlNetPort          = 50001
-
-	DB2EditionEnterprise = "enterprise"
-
-	DB2PrimaryRole = "primary"
-	DB2StandbyRole = "standby"
-
-	DB2DatabasePort = 1521
-
-	DB2SysDbaUser = "db2inst1"
-
-	DB2ContainerName             = "db2"
-	DB2CoordinatorContainerName  = "db2-coordinator"
-	DB2ObserverContainerName     = "observer"
-	DB2InitContainerName         = "db2-init"
-	DB2ObserverInitContainerName = "observer-init"
-
-	DB2VolumeScripts = "db2-data"
-	DB2DataVolume    = "db2-data"
-
-	DB2VolumeMountScripts = "db2-data"
-	DB2DataDir            = "/database"
-
-	DB2StandbyServiceSuffix = "standby"
-
-	DB2DatabaseRoleKey      = "db2.db/role"
-	DB2DatabaseRoleObserver = "observer"
-	DB2DatabaseRoleInstance = "instance"
-	DB2EnvUserName          = "SYS_USER"
-	DB2EnvPassword          = "DB2_PWD"
-	DB2EnvOracleSID         = "DB2_SID"
-	DB2EnvDataDir           = "DB2DATA"
+	OracleDatabaseRoleKey      = "oracle.db/role"
+	OracleDatabaseRoleObserver = "observer"
+	OracleDatabaseRoleInstance = "instance"
+	OracleEnvUserName          = "SYS_USER"
+	OracleEnvPassword          = "ORACLE_PWD"
+	OracleEnvOracleSID         = "ORACLE_SID"
+	OracleEnvDataDir           = "ORADATA"
 )
 
 // =========================== Qdrant Constants ============================
@@ -2235,58 +2117,4 @@ const (
 
 	QdrantAPIKey         = "api-key"
 	QdrantReadOnlyAPIKey = "read-only-api-key"
-)
-
-// =========================== HanaDB Constants ============================
-const (
-	HanaDBVolumeScripts = "hanadb-scripts"
-
-	HanaDBVolumeMountScripts = "/scripts"
-
-	// Container names
-	HanaDBContainerName            = "hanadb"
-	HanaDBCoordinatorContainerName = "hanadb-coordinator"
-
-	// Mount paths
-	HanaDBDataDir         = "/hana/mounts"
-	HanaDBSecretMountPath = "/etc/hana-secrets"
-
-	// Volume names
-	HanaDBDataVolume           = "data"
-	HanaDBVolumePasswordSecret = "password-secret"
-
-	// User and Group IDs
-	HanaDBUserID  = 12000 // hxeadm UID
-	HanaDBGroupID = 79    // hxeadm GID
-
-	// Health check schema and table
-	HanaDBHealthCheckSchemaName = "KUBEDB_SYSTEM"
-	HanaDBHealthCheckTableName  = "KUBEDB_WRITE_CHECK"
-
-	// Auth secret
-	HanaDBSystemUser        = "SYSTEM"
-	HanaDBPasswordFileKey   = "password.json"
-	HanaDBMasterPasswordKey = "master_password"
-
-	// Main SYSTEMDB SQL connection port, Used by health checks and administrative operations
-	HanaDBSystemDBSQLPortName = "systemdb-sql"
-	HanaDBSystemDBSQLPort     = 39017
-
-	// Nameserver port for internal communication and system replication
-	HanaDBNameServerPortName = "nameserver"
-	HanaDBNameServerPort     = 39001
-
-	// SYSTEMDB SQL mapping port - used internally for routing
-	HanaDBSystemDBMappingPortName = "systemdb-map"
-	HanaDBSystemDBMappingPort     = 39013
-
-	HanaDBPrimaryServicePortName = "primary"
-
-	HanaDBCoordinatorPort           = 2380
-	HanaDBCoordinatorClientPort     = 2379
-	HanaDBCoordinatorPortName       = "coordinator"
-	HanaDBCoordinatorClientPortName = "coordinator-client"
-
-	// TenantDatabaseName is the name of the KubeDB managed tenant database
-	KubeDBTenantDatabaseName = "KUBEDB_HEALTH_CHECK"
 )

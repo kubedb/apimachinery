@@ -37,9 +37,6 @@ const (
 	// Enables ClickHouse operator.
 	ClickHouse featuregate.Feature = "ClickHouse"
 
-	// Enable DB2 operator
-	DB2 featuregate.Feature = "DB2"
-
 	// Enables Druid operator.
 	Druid featuregate.Feature = "Druid"
 
@@ -64,9 +61,6 @@ const (
 	// Enables Hazelcast operator.
 	Hazelcast featuregate.Feature = "Hazelcast"
 
-	// Enables HanaDB operator.
-	HanaDB featuregate.Feature = "HanaDB"
-
 	// Enables Ignite operator.
 	Ignite featuregate.Feature = "Ignite"
 
@@ -79,20 +73,16 @@ const (
 	// Enables Memcached operator.
 	Memcached featuregate.Feature = "Memcached"
 
-	// Enables Milvus operator.
-	Milvus featuregate.Feature = "Milvus"
-
 	// Enables MongoDB operator.
 	MongoDB featuregate.Feature = "MongoDB"
 
 	// Enables MSSQLServer operator.
 	MSSQLServer featuregate.Feature = "MSSQLServer"
-
 	// Enables MySQL operator.
 	MySQL featuregate.Feature = "MySQL"
 
-	// Enables Neo4j operator.
-	Neo4j featuregate.Feature = "Neo4j"
+	// Enables Milvus operator.
+	Milvus featuregate.Feature = "Milvus"
 
 	// Enables NATS operator
 	// NATS featuregate.Feature = "NATS"
@@ -142,9 +132,6 @@ const (
 	// Enables YugabyteDB operator.
 	// YugabyteDB featuregate.Feature = "YugabyteDB"
 
-	// Enables Weaviate operator.
-	Weaviate featuregate.Feature = "Weaviate"
-
 	// Enables ZooKeeper operator.
 	ZooKeeper featuregate.Feature = "ZooKeeper"
 )
@@ -159,22 +146,19 @@ func init() {
 var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	Cassandra:     {Default: false, PreRelease: featuregate.Alpha},
 	ClickHouse:    {Default: false, PreRelease: featuregate.Alpha},
-	DB2:           {Default: false, PreRelease: featuregate.Alpha},
 	Druid:         {Default: false, PreRelease: featuregate.Alpha},
 	Elasticsearch: {Default: true, PreRelease: featuregate.GA},
 	// Etcd:               {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
 	FerretDB:      {Default: false, PreRelease: featuregate.Alpha},
 	Hazelcast:     {Default: true, PreRelease: featuregate.Alpha},
-	HanaDB:        {Default: false, PreRelease: featuregate.Alpha},
 	Ignite:        {Default: true, PreRelease: featuregate.Alpha},
 	Kafka:         {Default: true, PreRelease: featuregate.Beta},
 	MariaDB:       {Default: true, PreRelease: featuregate.GA},
 	Memcached:     {Default: false, PreRelease: featuregate.Beta},
-	Milvus:        {Default: false, PreRelease: featuregate.Alpha},
 	MongoDB:       {Default: true, PreRelease: featuregate.GA},
 	MSSQLServer:   {Default: false, PreRelease: featuregate.Alpha},
 	MySQL:         {Default: true, PreRelease: featuregate.GA},
-	Neo4j:         {Default: false, PreRelease: featuregate.Alpha},
+	Milvus:        {Default: false, PreRelease: featuregate.Alpha},
 	Oracle:        {Default: false, PreRelease: featuregate.Alpha},
 	PerconaXtraDB: {Default: false, PreRelease: featuregate.Beta},
 	PgBouncer:     {Default: false, PreRelease: featuregate.Beta},
@@ -186,6 +170,5 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	Redis:         {Default: true, PreRelease: featuregate.GA},
 	Singlestore:   {Default: false, PreRelease: featuregate.Alpha},
 	Solr:          {Default: false, PreRelease: featuregate.Alpha},
-	Weaviate:      {Default: false, PreRelease: featuregate.Alpha},
 	ZooKeeper:     {Default: false, PreRelease: featuregate.Alpha},
 }
