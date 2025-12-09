@@ -21,6 +21,12 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
+const (
+	ResourceKindShardConfiguration = "ShardConfiguration"
+	ResourceShardConfiguration     = "shardconfiguration"
+	ResourceShardConfigurations    = "shardconfigurations"
+)
+
 // ShardConfigurationSpec defines the desired state of ShardConfiguration.
 type ShardConfigurationSpec struct {
 	// +kubebuilder:validation:MinItems=1
