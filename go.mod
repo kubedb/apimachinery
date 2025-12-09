@@ -20,7 +20,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.81.0
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.81.0
-	go.bytebuilders.dev/audit v0.0.45
+	go.bytebuilders.dev/audit v0.0.46
 	go.bytebuilders.dev/license-verifier/kubernetes v0.14.10
 	go.uber.org/zap v1.27.0
 	go.virtual-secrets.dev/apimachinery v0.0.1

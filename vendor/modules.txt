@@ -606,7 +606,7 @@ github.com/yudai/golcs
 # github.com/zeebo/xxh3 v1.0.2
 ## explicit; go 1.17
 github.com/zeebo/xxh3
-# go.bytebuilders.dev/audit v0.0.45
+# go.bytebuilders.dev/audit v0.0.46
 ## explicit; go 1.24.0
 go.bytebuilders.dev/audit/api/v1
 go.bytebuilders.dev/audit/lib

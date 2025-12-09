@@ -133,6 +133,18 @@ func (c *NatsClient) GetLicenseID() (string, error) {
 	return c.l.ID, nil
 }
 
+func (c *NatsClient) Connect() (*nats.Conn, error) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if c.nc == nil {
+		if err := c.connect(); err != nil {
+			return nil, err
+		}
+	}
+	return c.nc, nil
+}
+
 func (c *NatsClient) connect() error {
 	le, err := kubernetes.NewLicenseEnforcer(c.cfg, c.LicenseFile)
 	if err != nil {
