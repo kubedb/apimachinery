@@ -95,8 +95,8 @@ github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSV
 github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f/go.mod h1:E3G3o1h8I7cfcXa63jLwjI0eiQQMgzzUDFVpN/nH/eA=
 github.com/cpuguy83/go-md2man/v2 v2.0.0/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/cpuguy83/go-md2man/v2 v2.0.6/go.mod h1:oOW0eioCTA6cOiMLiUPZOpcVxMig6NIQQ7OS05n1F4g=
-github.com/cyphar/filepath-securejoin v0.6.0 h1:BtGB77njd6SVO6VztOHfPxKitJvd/VPT+OFBFMOi1Is=
-github.com/cyphar/filepath-securejoin v0.6.0/go.mod h1:A8hd4EnAeyujCJRrICiOWqjS1AX0a9kM5XL+NwKoYSc=
+github.com/cyphar/filepath-securejoin v0.6.1 h1:5CeZ1jPXEiYt3+Z6zqprSAgSWiggmpVyciv8syjIpVE=
+github.com/cyphar/filepath-securejoin v0.6.1/go.mod h1:A8hd4EnAeyujCJRrICiOWqjS1AX0a9kM5XL+NwKoYSc=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=
@@ -738,8 +738,8 @@ k8s.io/utils v0.0.0-20241210054802-24370beab758 h1:sdbE21q2nlQtFh65saZY+rRM6x6aJ
 k8s.io/utils v0.0.0-20241210054802-24370beab758/go.mod h1:OLgZIPagt7ERELqWJFomSt595RzquPNLL48iOWgYOg0=
 kmodules.xyz/apiversion v0.2.0 h1:vAQYqZFm4xu4pbB1cAdHbFEPES6EQkcR4wc06xdTOWk=
 kmodules.xyz/apiversion v0.2.0/go.mod h1:oPX8g8LvlPdPX3Yc5YvCzJHQnw3YF/X4/jdW0b1am80=
-kmodules.xyz/client-go v0.32.10 h1:O/UKeU6Xc4scQG80DYw1HI8DYskyp1KsCEShIx3+T54=
-kmodules.xyz/client-go v0.32.10/go.mod h1:4k+da95l/Idg7k0+qc5qZCJJoAF6IQK5x0Fa+hBVD+Q=
+kmodules.xyz/client-go v0.32.11 h1:AbvsutYyCfCGgreMOx5ghdZto0ltKfhS/6n98TkXTGc=
+kmodules.xyz/client-go v0.32.11/go.mod h1:4k+da95l/Idg7k0+qc5qZCJJoAF6IQK5x0Fa+hBVD+Q=
 kmodules.xyz/crd-schema-fuzz v0.32.0 h1:VATOsnCwmm7SrgnsBWqzcVx+C14l6rNREWrs1leBWaI=
 kmodules.xyz/crd-schema-fuzz v0.32.0/go.mod h1:Fh2q+q60ZoQ6NQX0CWtZuXmu+Lnu8o1HofTaBBX7wYk=
 kmodules.xyz/custom-resources v0.32.2 h1:NkRqL/4AWHiXdT5WKFcJlBcvRuoNdeYIrBGvQIRJRn4=
