@@ -112,7 +112,6 @@ type MilvusSpec struct {
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
-
 type MilvusTopology struct {
 	// If set to -
 	// "Standalone", Standalone is required, and Milvus will start a Standalone Mode
@@ -211,3 +210,12 @@ type MilvusList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []Milvus `json:"items"`
 }
+type MilvusNodeRoleType string
+
+const (
+	MilvusNodeRoleDataNode      MilvusNodeRoleType = "datanode"
+	MilvusNodeRoleMixCoord      MilvusNodeRoleType = "mixcoord"
+	MilvusNodeRoleQueryNode     MilvusNodeRoleType = "querynode"
+	MilvusNodeRoleStreamingNode MilvusNodeRoleType = "streamingnode"
+	MilvusNodeRoleProxy         MilvusNodeRoleType = "proxy"
+)
