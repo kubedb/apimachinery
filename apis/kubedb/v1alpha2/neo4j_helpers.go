@@ -133,6 +133,24 @@ func (r *Neo4j) SetDefaults(kc client.Client) {
 	}
 
 	r.setDefaultContainerSecurityContext(&neoVersion, &r.Spec.PodTemplate)
+	r.SetHealthCheckerDefaults()
+
+	if r.Spec.Monitor != nil {
+		if r.Spec.Monitor.Prometheus == nil {
+			r.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
+		if r.Spec.Monitor.Prometheus != nil && r.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			r.Spec.Monitor.Prometheus.Exporter.Port = kubedb.Neo4jPrometheusPort
+		}
+		if r.Spec.Monitor.Prometheus != nil {
+			if r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+				r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = neoVersion.Spec.SecurityContext.RunAsUser
+			}
+			if r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+				r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = neoVersion.Spec.SecurityContext.RunAsUser
+			}
+		}
+	}
 }
 
 func (r *Neo4j) setDefaultContainerSecurityContext(neoVersion *catalog.Neo4jVersion, podTemplate *ofst.PodTemplateSpec) {
@@ -294,6 +312,6 @@ func (r *Neo4j) StatsService() mona.StatsAccessor {
 	return &neo4jStatsService{r}
 }
 
-func (r *Neo4j) StatServiceLabels() map[string]string {
+func (r *Neo4j) StatsServiceLabels() map[string]string {
 	return r.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
