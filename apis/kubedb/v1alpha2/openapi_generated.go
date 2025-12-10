@@ -39036,6 +39036,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_WeaviateSpec(ref common.ReferenceC
 							},
 						},
 					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used monitor database instance",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+						},
+					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DeletionPolicy controls the delete operation for database",
@@ -39055,7 +39061,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_WeaviateSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 

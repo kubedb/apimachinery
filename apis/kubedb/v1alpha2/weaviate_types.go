@@ -20,6 +20,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -87,6 +88,10 @@ type WeaviateSpec struct {
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+
+	// Monitor is used monitor database instance
+	// +optional
+	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
