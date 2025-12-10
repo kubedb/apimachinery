@@ -34,16 +34,18 @@ const (
 type MilvusMode string
 
 // Package v1alpha2 contains API Schema definitions for the  v1alpha2 API group.
+
 // +genclient
 // +k8s:openapi-gen=true
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:path=milvuses,singular=milvus,shortName=mv,categories={datastore,kubedb,appscode,all}
+
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type Milvus struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -110,12 +112,43 @@ type MilvusSpec struct {
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
 }
 
-// +k8s:deepcopy-gen=true
+
 type MilvusTopology struct {
 	// If set to -
 	// "Standalone", Standalone is required, and Milvus will start a Standalone Mode
 	// "Distributed", DistributedSpec is required, and Milvus will start a Distributed Mode
 	Mode *MilvusMode `json:"mode,omitempty"`
+
+	// Distributed contains information of the Distributed configuration.
+	// Used when Mode is "Distributed".
+	// +optional
+	Distributed *MilvusDistributedSpec `json:"distributed,omitempty"`
+}
+
+type MilvusDistributedSpec struct {
+	DataNode *MilvusNode `json:"datanode,omitempty"`
+
+	MixCoord *MilvusNode `json:"mixcoord,omitempty"`
+
+	QueryNode *MilvusNode `json:"querynode,omitempty"`
+
+	StreamingNode *MilvusNode `json:"streamingnode,omitempty"`
+
+	Proxy *MilvusNode `json:"proxy,omitempty"`
+}
+
+type MilvusNode struct {
+	// Replicas represents number of replicas for the specific type of node
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// PodTemplate is an optional configuration for pods used to expose database
+	// +optional
+	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// ServiceTemplates is an optional configuration for services used to expose database
+	// +optional
+	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

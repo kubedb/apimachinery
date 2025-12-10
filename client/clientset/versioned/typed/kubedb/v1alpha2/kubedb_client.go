@@ -21,10 +21,9 @@ package v1alpha2
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type KubedbV1alpha2Interface interface {
@@ -43,7 +42,6 @@ type KubedbV1alpha2Interface interface {
 	MSSQLServersGetter
 	MariaDBsGetter
 	MemcachedsGetter
-	MilvusesGetter
 	MongoDBsGetter
 	MySQLsGetter
 	Neo4jsGetter
@@ -122,10 +120,6 @@ func (c *KubedbV1alpha2Client) MariaDBs(namespace string) MariaDBInterface {
 
 func (c *KubedbV1alpha2Client) Memcacheds(namespace string) MemcachedInterface {
 	return newMemcacheds(c, namespace)
-}
-
-func (c *KubedbV1alpha2Client) Milvuses(namespace string) MilvusInterface {
-	return newMilvuses(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) MongoDBs(namespace string) MongoDBInterface {
