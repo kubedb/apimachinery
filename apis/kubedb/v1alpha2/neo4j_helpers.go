@@ -25,6 +25,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -35,6 +36,7 @@ import (
 	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -102,8 +104,8 @@ func (r *Neo4j) ResourceKind() string {
 }
 
 func (r *Neo4j) SetDefaults(kc client.Client) {
+	r.Spec.Replicas = ptr.To(int32(1))
 	if r.Spec.Replicas == nil {
-		r.Spec.Replicas = ptr.To(int32(1))
 	}
 	if r.Spec.DeletionPolicy == "" {
 		r.Spec.DeletionPolicy = DeletionPolicyDelete
@@ -249,4 +251,49 @@ func (r *Neo4j) SetHealthCheckerDefaults() {
 	if r.Spec.HealthChecker.FailureThreshold == nil {
 		r.Spec.HealthChecker.FailureThreshold = ptr.To(int32(3))
 	}
+}
+
+func (r *Neo4j) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(r.Spec.ServiceTemplates, alias)
+	return r.offshootLabels(meta_util.OverwriteKeys(r.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
+
+type neo4jStatsService struct {
+	*Neo4j
+}
+
+func (r neo4jStatsService) GetNamespace() string {
+	return r.Neo4j.GetNamespace()
+}
+
+func (r neo4jStatsService) ServiceName() string {
+	return r.OffshootName() + "-stats"
+}
+
+func (r neo4jStatsService) ServiceMonitorName() string {
+	return r.ServiceName()
+}
+
+func (r neo4jStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return r.OffshootLabels()
+}
+
+func (r neo4jStatsService) Path() string {
+	return kubedb.DefaultStatsPath
+}
+
+func (r neo4jStatsService) Scheme() string {
+	return ""
+}
+
+func (r neo4jStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
+}
+
+func (r *Neo4j) StatsService() mona.StatsAccessor {
+	return &neo4jStatsService{r}
+}
+
+func (r *Neo4j) StatServiceLabels() map[string]string {
+	return r.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
