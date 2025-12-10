@@ -104,8 +104,8 @@ func (r *Neo4j) ResourceKind() string {
 }
 
 func (r *Neo4j) SetDefaults(kc client.Client) {
-	r.Spec.Replicas = ptr.To(int32(1))
 	if r.Spec.Replicas == nil {
+		r.Spec.Replicas = ptr.To(int32(1))
 	}
 	if r.Spec.DeletionPolicy == "" {
 		r.Spec.DeletionPolicy = DeletionPolicyDelete
