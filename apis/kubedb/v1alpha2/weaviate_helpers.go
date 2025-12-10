@@ -19,6 +19,8 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -258,4 +260,44 @@ func (w *Weaviate) GetConnectionScheme() string {
 
 func (w *Weaviate) ConfigSecretName() string {
 	return fmt.Sprintf("%s-config", w.Name)
+}
+
+type weaviateStatsService struct {
+	*Weaviate
+}
+
+func (w weaviateStatsService) GetNamespace() string {
+	return w.Weaviate.GetNamespace()
+}
+
+func (w weaviateStatsService) ServiceName() string {
+	return w.OffshootName() + "-stats"
+}
+
+func (w weaviateStatsService) ServiceMonitorName() string {
+	return w.ServiceName()
+}
+
+func (w weaviateStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return w.OffshootLabels()
+}
+
+func (w weaviateStatsService) Path() string {
+	return kubedb.DefaultStatsPath
+}
+
+func (w weaviateStatsService) Scheme() string {
+	return ""
+}
+
+func (w weaviateStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
+}
+
+func (w Weaviate) StatsService() mona.StatsAccessor {
+	return &weaviateStatsService{&w}
+}
+
+func (w Weaviate) StatsServiceLabels() map[string]string {
+	return w.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
