@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"slices"
 
+	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
@@ -135,21 +136,19 @@ func (r *Neo4j) SetDefaults(kc client.Client) {
 	r.setDefaultContainerSecurityContext(&neoVersion, &r.Spec.PodTemplate)
 	r.SetHealthCheckerDefaults()
 
-	if r.Spec.Monitor != nil {
-		if r.Spec.Monitor.Prometheus == nil {
-			r.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+	r.Spec.Monitor.SetDefaults()
+	if r.Spec.Monitor != nil && r.Spec.Monitor.Prometheus != nil {
+		if r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+			r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = neoVersion.Spec.SecurityContext.RunAsUser
 		}
-		if r.Spec.Monitor.Prometheus != nil && r.Spec.Monitor.Prometheus.Exporter.Port == 0 {
-			r.Spec.Monitor.Prometheus.Exporter.Port = kubedb.Neo4jPrometheusPort
+		if r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+			r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = neoVersion.Spec.SecurityContext.RunAsUser
 		}
-		if r.Spec.Monitor.Prometheus != nil {
-			if r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
-				r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = neoVersion.Spec.SecurityContext.RunAsUser
-			}
-			if r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
-				r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = neoVersion.Spec.SecurityContext.RunAsUser
-			}
-		}
+	}
+
+	dbContainer := coreutil.GetContainerByName(r.Spec.PodTemplate.Spec.Containers, kubedb.Neo4jContainerName)
+	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesNeo4j)
 	}
 }
 
@@ -163,6 +162,7 @@ func (r *Neo4j) setDefaultContainerSecurityContext(neoVersion *catalog.Neo4jVers
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = neoVersion.Spec.SecurityContext.RunAsUser
 	}
+
 	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.Neo4jContainerName)
 	if container == nil {
 		container = &core.Container{
@@ -170,6 +170,7 @@ func (r *Neo4j) setDefaultContainerSecurityContext(neoVersion *catalog.Neo4jVers
 		}
 		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 	}
+
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
