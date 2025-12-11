@@ -136,8 +136,14 @@ func (r *Neo4j) SetDefaults(kc client.Client) {
 	r.setDefaultContainerSecurityContext(&neoVersion, &r.Spec.PodTemplate)
 	r.SetHealthCheckerDefaults()
 
-	r.Spec.Monitor.SetDefaults()
-	if r.Spec.Monitor != nil && r.Spec.Monitor.Prometheus != nil {
+	if r.Spec.Monitor != nil {
+		if r.Spec.Monitor.Prometheus == nil {
+			r.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
+		if r.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			r.Spec.Monitor.Prometheus.Exporter.Port = kubedb.Neo4jPrometheusPort
+		}
+		r.Spec.Monitor.SetDefaults()
 		if r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
 			r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = neoVersion.Spec.SecurityContext.RunAsUser
 		}
