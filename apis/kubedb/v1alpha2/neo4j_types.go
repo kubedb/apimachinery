@@ -98,6 +98,10 @@ type Neo4jSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+
+	// TLS contains tls configurations
+	// +optional
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 }
 
 // Neo4jStatus defines the observed state of Neo4j.
