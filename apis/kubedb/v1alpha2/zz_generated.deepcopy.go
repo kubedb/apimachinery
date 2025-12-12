@@ -4900,6 +4900,11 @@ func (in *Neo4jSpec) DeepCopyInto(out *Neo4jSpec) {
 		*out = new(monitoringagentapiapiv1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(apiv1.TLSConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
