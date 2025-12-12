@@ -19,6 +19,7 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -93,12 +94,76 @@ func (m *Milvus) ServiceName() string {
 	return m.OffshootName()
 }
 
-func (m *Milvus) PetSetName() string {
-	return m.OffshootName()
+func (m *Milvus) MilvusNodeRoleString(nodeRole MilvusNodeRoleType) string {
+	return strings.ToLower(string(nodeRole))
+}
+
+func (m *Milvus) PetSetName(nodeRole MilvusNodeRoleType) string {
+	return meta_util.NameWithSuffix(m.OffshootName(), m.MilvusNodeRoleString(nodeRole))
+}
+
+func (m *Milvus) GetNodeSpec(nodeType MilvusNodeRoleType) (*MilvusNode, *MilvusDataNode) {
+	switch nodeType {
+	case MilvusNodeRoleMixCoord:
+		return m.Spec.Topology.Distributed.MixCoord, nil
+	case MilvusNodeRoleDataNode:
+		return m.Spec.Topology.Distributed.DataNode, nil
+	case MilvusNodeRoleProxy:
+		return m.Spec.Topology.Distributed.Proxy, nil
+	case MilvusNodeRoleQueryNode:
+		return m.Spec.Topology.Distributed.QueryNode, nil
+	case MilvusNodeRoleStreamingNode:
+		return nil, m.Spec.Topology.Distributed.StreamingNode
+	default:
+		klog.Errorf("unknown milvus node role %s\n", nodeType)
+		return nil, nil
+	}
+}
+
+func (m *Milvus) PVCName(alias string) string {
+	return alias
+}
+
+func (m *Milvus) PodControllerLabels(nodeType MilvusNodeRoleType, extraLabels ...map[string]string) map[string]string {
+	nodeSpec, dataNodeSpec := m.GetNodeSpec(nodeType)
+	var labels map[string]string
+	if nodeSpec != nil {
+		labels = nodeSpec.PodTemplate.Controller.Labels
+	} else {
+		labels = dataNodeSpec.PodTemplate.Controller.Labels
+	}
+	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), labels)
+}
+
+func (m *Milvus) GoverningServiceName() string {
+	return meta_util.NameWithSuffix(m.ServiceName(), "pods")
 }
 
 func (m *Milvus) ServiceAccountName() string {
 	return m.OffshootName()
+}
+
+func (m *Milvus) MilvusNodeContainerPort(nodeRole MilvusNodeRoleType) int32 {
+	switch nodeRole {
+	case MilvusNodeRoleMixCoord:
+		return kubedb.MilvusPlainTextPortMixCoord
+	case MilvusNodeRoleDataNode:
+		return kubedb.MilvusPlainTextPortDataNode
+	case MilvusNodeRoleProxy:
+		return kubedb.MilvusGrpcPort
+	case MilvusNodeRoleQueryNode:
+		return kubedb.MilvusPlainTextPortQueryNode
+	case MilvusNodeRoleStreamingNode:
+		return kubedb.MilvusPlainTextPortStreamingNode
+	default:
+		klog.Errorf("unknown Milvus node role %s\n", nodeRole)
+		return -1
+	}
+}
+
+func (m *Milvus) MilvusNodeRoleStringSingular(nodeRole MilvusNodeRoleType) string {
+	singularNodeRole := string(nodeRole)[:len(nodeRole)-1]
+	return singularNodeRole
 }
 
 func (m *Milvus) GetAuthSecretName() string {

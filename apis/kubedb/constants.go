@@ -892,12 +892,16 @@ const (
 	MilvusGrpcPortName = "grpc"
 	MilvusGrpcPort     = int32(19530)
 
-	MilvusVolumeNameData = "data"
-	MilvusDataDir        = "/var/lib/milvus"
-	MilvusConfigVolName  = "milvus-config"
-	MilvusConfigDir      = "/milvus/configs/milvus.yaml"
-	MilvusConfigFileName = "milvus.yaml"
-	MilvusContainerName  = "milvus"
+	MilvusVolumeNameData      = "woodpecker"
+	MilvusDataDir             = "/var/lib/milvus"
+	MilvusConfigVolName       = "milvus-config"
+	MilvusConfigDefaultDir    = "/milvus/configs/default.yaml"
+	MilvusConfigUserDir       = "/milvus/configs/user.yaml"
+	MilvusToolsVolName        = "tools"
+	MilvusToolsVolDir         = "/milvus/tools"
+	MilvusConfigFileName      = "milvus.yaml"
+	MilvusContainerName       = "milvus"
+	MilvusVolStreamingNodeDir = "data"
 
 	EtcdEndpointsName = "ETCD_ENDPOINTS"
 	EtcdAPIVersion    = "operator.etcd.io/v1alpha1"
@@ -911,6 +915,11 @@ const (
 	MinioAccessKey     = "accessKeyId"
 	MinioSecretKeyName = "MINIO_SECRET_KEY"
 	MinioSecretKey     = "secretAccessKey"
+
+	MilvusPlainTextPortMixCoord      = 9091
+	MilvusPlainTextPortDataNode      = 9091
+	MilvusPlainTextPortQueryNode     = 9091
+	MilvusPlainTextPortStreamingNode = 9091
 )
 
 const (

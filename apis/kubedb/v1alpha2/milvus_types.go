@@ -131,7 +131,7 @@ type MilvusDistributedSpec struct {
 
 	QueryNode *MilvusNode `json:"querynode,omitempty"`
 
-	StreamingNode *MilvusNode `json:"streamingnode,omitempty"`
+	StreamingNode *MilvusDataNode `json:"streamingnode,omitempty"`
 
 	Proxy *MilvusNode `json:"proxy,omitempty"`
 }
@@ -144,10 +144,20 @@ type MilvusNode struct {
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
+}
+type MilvusDataNode struct {
+	// MilvusDataNode has all the characteristics of MilvusNode
+	MilvusNode `json:",inline"`
 
-	// ServiceTemplates is an optional configuration for services used to expose database
-	// +optional
-	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+	// StorageType specifies if the storage
+	// of this node is durable (default) or ephemeral.
+	StorageType StorageType `json:"storageType,omitempty"`
+
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+
+	// EphemeralStorage spec to specify the configuration of ephemeral storage type.
+	EphemeralStorage *core.EmptyDirVolumeSource `json:"ephemeralStorage,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

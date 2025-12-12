@@ -6578,78 +6578,6 @@ spec:
                           replicas:
                             format: int32
                             type: integer
-                          serviceTemplates:
-                            items:
-                              properties:
-                                alias:
-                                  enum:
-                                  - primary
-                                  - standby
-                                  - stats
-                                  - dashboard
-                                  - secondary
-                                  type: string
-                                metadata:
-                                  properties:
-                                    annotations:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                    labels:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                  type: object
-                                spec:
-                                  properties:
-                                    clusterIP:
-                                      type: string
-                                    externalIPs:
-                                      items:
-                                        type: string
-                                      type: array
-                                    externalTrafficPolicy:
-                                      type: string
-                                    healthCheckNodePort:
-                                      format: int32
-                                      type: integer
-                                    loadBalancerIP:
-                                      type: string
-                                    loadBalancerSourceRanges:
-                                      items:
-                                        type: string
-                                      type: array
-                                    ports:
-                                      items:
-                                        properties:
-                                          name:
-                                            type: string
-                                          nodePort:
-                                            format: int32
-                                            type: integer
-                                          port:
-                                            format: int32
-                                            type: integer
-                                        required:
-                                        - port
-                                        type: object
-                                      type: array
-                                    sessionAffinityConfig:
-                                      properties:
-                                        clientIP:
-                                          properties:
-                                            timeoutSeconds:
-                                              format: int32
-                                              type: integer
-                                          type: object
-                                      type: object
-                                    type:
-                                      type: string
-                                  type: object
-                              required:
-                              - alias
-                              type: object
-                            type: array
                         type: object
                       mixcoord:
                         properties:
@@ -9747,78 +9675,6 @@ spec:
                           replicas:
                             format: int32
                             type: integer
-                          serviceTemplates:
-                            items:
-                              properties:
-                                alias:
-                                  enum:
-                                  - primary
-                                  - standby
-                                  - stats
-                                  - dashboard
-                                  - secondary
-                                  type: string
-                                metadata:
-                                  properties:
-                                    annotations:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                    labels:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                  type: object
-                                spec:
-                                  properties:
-                                    clusterIP:
-                                      type: string
-                                    externalIPs:
-                                      items:
-                                        type: string
-                                      type: array
-                                    externalTrafficPolicy:
-                                      type: string
-                                    healthCheckNodePort:
-                                      format: int32
-                                      type: integer
-                                    loadBalancerIP:
-                                      type: string
-                                    loadBalancerSourceRanges:
-                                      items:
-                                        type: string
-                                      type: array
-                                    ports:
-                                      items:
-                                        properties:
-                                          name:
-                                            type: string
-                                          nodePort:
-                                            format: int32
-                                            type: integer
-                                          port:
-                                            format: int32
-                                            type: integer
-                                        required:
-                                        - port
-                                        type: object
-                                      type: array
-                                    sessionAffinityConfig:
-                                      properties:
-                                        clientIP:
-                                          properties:
-                                            timeoutSeconds:
-                                              format: int32
-                                              type: integer
-                                          type: object
-                                      type: object
-                                    type:
-                                      type: string
-                                  type: object
-                              required:
-                              - alias
-                              type: object
-                            type: array
                         type: object
                       proxy:
                         properties:
@@ -12916,78 +12772,6 @@ spec:
                           replicas:
                             format: int32
                             type: integer
-                          serviceTemplates:
-                            items:
-                              properties:
-                                alias:
-                                  enum:
-                                  - primary
-                                  - standby
-                                  - stats
-                                  - dashboard
-                                  - secondary
-                                  type: string
-                                metadata:
-                                  properties:
-                                    annotations:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                    labels:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                  type: object
-                                spec:
-                                  properties:
-                                    clusterIP:
-                                      type: string
-                                    externalIPs:
-                                      items:
-                                        type: string
-                                      type: array
-                                    externalTrafficPolicy:
-                                      type: string
-                                    healthCheckNodePort:
-                                      format: int32
-                                      type: integer
-                                    loadBalancerIP:
-                                      type: string
-                                    loadBalancerSourceRanges:
-                                      items:
-                                        type: string
-                                      type: array
-                                    ports:
-                                      items:
-                                        properties:
-                                          name:
-                                            type: string
-                                          nodePort:
-                                            format: int32
-                                            type: integer
-                                          port:
-                                            format: int32
-                                            type: integer
-                                        required:
-                                        - port
-                                        type: object
-                                      type: array
-                                    sessionAffinityConfig:
-                                      properties:
-                                        clientIP:
-                                          properties:
-                                            timeoutSeconds:
-                                              format: int32
-                                              type: integer
-                                          type: object
-                                      type: object
-                                    type:
-                                      type: string
-                                  type: object
-                              required:
-                              - alias
-                              type: object
-                            type: array
                         type: object
                       querynode:
                         properties:
@@ -16085,81 +15869,20 @@ spec:
                           replicas:
                             format: int32
                             type: integer
-                          serviceTemplates:
-                            items:
-                              properties:
-                                alias:
-                                  enum:
-                                  - primary
-                                  - standby
-                                  - stats
-                                  - dashboard
-                                  - secondary
-                                  type: string
-                                metadata:
-                                  properties:
-                                    annotations:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                    labels:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                  type: object
-                                spec:
-                                  properties:
-                                    clusterIP:
-                                      type: string
-                                    externalIPs:
-                                      items:
-                                        type: string
-                                      type: array
-                                    externalTrafficPolicy:
-                                      type: string
-                                    healthCheckNodePort:
-                                      format: int32
-                                      type: integer
-                                    loadBalancerIP:
-                                      type: string
-                                    loadBalancerSourceRanges:
-                                      items:
-                                        type: string
-                                      type: array
-                                    ports:
-                                      items:
-                                        properties:
-                                          name:
-                                            type: string
-                                          nodePort:
-                                            format: int32
-                                            type: integer
-                                          port:
-                                            format: int32
-                                            type: integer
-                                        required:
-                                        - port
-                                        type: object
-                                      type: array
-                                    sessionAffinityConfig:
-                                      properties:
-                                        clientIP:
-                                          properties:
-                                            timeoutSeconds:
-                                              format: int32
-                                              type: integer
-                                          type: object
-                                      type: object
-                                    type:
-                                      type: string
-                                  type: object
-                              required:
-                              - alias
-                              type: object
-                            type: array
                         type: object
                       streamingnode:
                         properties:
+                          ephemeralStorage:
+                            properties:
+                              medium:
+                                type: string
+                              sizeLimit:
+                                anyOf:
+                                - type: integer
+                                - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                            type: object
                           podTemplate:
                             properties:
                               controller:
@@ -19254,78 +18977,99 @@ spec:
                           replicas:
                             format: int32
                             type: integer
-                          serviceTemplates:
-                            items:
-                              properties:
-                                alias:
-                                  enum:
-                                  - primary
-                                  - standby
-                                  - stats
-                                  - dashboard
-                                  - secondary
+                          storage:
+                            properties:
+                              accessModes:
+                                items:
                                   type: string
-                                metadata:
-                                  properties:
-                                    annotations:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                    labels:
-                                      additionalProperties:
-                                        type: string
-                                      type: object
-                                  type: object
-                                spec:
-                                  properties:
-                                    clusterIP:
-                                      type: string
-                                    externalIPs:
-                                      items:
-                                        type: string
-                                      type: array
-                                    externalTrafficPolicy:
-                                      type: string
-                                    healthCheckNodePort:
-                                      format: int32
-                                      type: integer
-                                    loadBalancerIP:
-                                      type: string
-                                    loadBalancerSourceRanges:
-                                      items:
-                                        type: string
-                                      type: array
-                                    ports:
-                                      items:
-                                        properties:
-                                          name:
-                                            type: string
-                                          nodePort:
-                                            format: int32
-                                            type: integer
-                                          port:
-                                            format: int32
-                                            type: integer
-                                        required:
-                                        - port
-                                        type: object
-                                      type: array
-                                    sessionAffinityConfig:
+                                type: array
+                                x-kubernetes-list-type: atomic
+                              dataSource:
+                                properties:
+                                  apiGroup:
+                                    type: string
+                                  kind:
+                                    type: string
+                                  name:
+                                    type: string
+                                required:
+                                - kind
+                                - name
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              dataSourceRef:
+                                properties:
+                                  apiGroup:
+                                    type: string
+                                  kind:
+                                    type: string
+                                  name:
+                                    type: string
+                                  namespace:
+                                    type: string
+                                required:
+                                - kind
+                                - name
+                                type: object
+                              resources:
+                                properties:
+                                  limits:
+                                    additionalProperties:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    type: object
+                                  requests:
+                                    additionalProperties:
+                                      anyOf:
+                                      - type: integer
+                                      - type: string
+                                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                      x-kubernetes-int-or-string: true
+                                    type: object
+                                type: object
+                              selector:
+                                properties:
+                                  matchExpressions:
+                                    items:
                                       properties:
-                                        clientIP:
-                                          properties:
-                                            timeoutSeconds:
-                                              format: int32
-                                              type: integer
-                                          type: object
+                                        key:
+                                          type: string
+                                        operator:
+                                          type: string
+                                        values:
+                                          items:
+                                            type: string
+                                          type: array
+                                          x-kubernetes-list-type: atomic
+                                      required:
+                                      - key
+                                      - operator
                                       type: object
-                                    type:
+                                    type: array
+                                    x-kubernetes-list-type: atomic
+                                  matchLabels:
+                                    additionalProperties:
                                       type: string
-                                  type: object
-                              required:
-                              - alias
-                              type: object
-                            type: array
+                                    type: object
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              storageClassName:
+                                type: string
+                              volumeAttributesClassName:
+                                type: string
+                              volumeMode:
+                                type: string
+                              volumeName:
+                                type: string
+                            type: object
+                          storageType:
+                            enum:
+                            - Durable
+                            - Ephemeral
+                            type: string
                         type: object
                     type: object
                   mode:
