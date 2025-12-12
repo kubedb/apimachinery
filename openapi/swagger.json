@@ -21412,6 +21412,11 @@
           "description": "Distribution",
           "type": "string"
         },
+        "endOfLife": {
+          "description": "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+          "type": "boolean",
+          "default": false
+        },
         "exporter": {
           "description": "Exporter Image",
           "default": {},
@@ -21564,6 +21569,11 @@
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
           "type": "boolean"
+        },
+        "endOfLife": {
+          "description": "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+          "type": "boolean",
+          "default": false
         },
         "exporter": {
           "description": "Exporter Image",
@@ -21771,6 +21781,11 @@
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
           "type": "boolean"
         },
+        "endOfLife": {
+          "description": "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+          "type": "boolean",
+          "default": false
+        },
         "exporter": {
           "description": "Exporter Image",
           "default": {},
@@ -21963,6 +21978,11 @@
         "distribution": {
           "description": "Distribution",
           "type": "string"
+        },
+        "endOfLife": {
+          "description": "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+          "type": "boolean",
+          "default": false
         },
         "exporter": {
           "description": "Exporter Image",
@@ -22260,6 +22280,11 @@
           "description": "Distribution",
           "type": "string"
         },
+        "endOfLife": {
+          "description": "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+          "type": "boolean",
+          "default": false
+        },
         "exporter": {
           "description": "Exporter Image",
           "default": {},
@@ -22472,6 +22497,11 @@
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
           "type": "boolean"
+        },
+        "endOfLife": {
+          "description": "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+          "type": "boolean",
+          "default": false
         },
         "exporter": {
           "description": "Exporter Image",
@@ -22698,6 +22728,11 @@
           "description": "Distribution",
           "type": "string"
         },
+        "endOfLife": {
+          "description": "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+          "type": "boolean",
+          "default": false
+        },
         "exporter": {
           "description": "Exporter Image",
           "default": {},
@@ -22872,6 +22907,11 @@
         "deprecated": {
           "description": "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
           "type": "boolean"
+        },
+        "endOfLife": {
+          "description": "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+          "type": "boolean",
+          "default": false
         },
         "exporter": {
           "description": "Exporter Image",
@@ -23064,6 +23104,11 @@
         "distribution": {
           "description": "Distribution determines the type of the database(Valkey or Redis)",
           "type": "string"
+        },
+        "endOfLife": {
+          "description": "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+          "type": "boolean",
+          "default": false
         },
         "exporter": {
           "description": "Exporter Image",
