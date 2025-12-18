@@ -404,6 +404,7 @@ const (
 	MariaDBDistributedVolumeUsageGetCommand    = "get-volume-usage"
 	MariaDBDistributedVolumeCapacityGetCommand = "get-volume-capacity"
 	MariaDBDistributedBackupCommand            = "take-backup"
+	MariaDBDistributedRestoreCommand           = "restore-backup"
 
 	// Maxscale
 	MaxscaleCommonName            = "mx"
