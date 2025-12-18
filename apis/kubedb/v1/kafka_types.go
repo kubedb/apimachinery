@@ -70,10 +70,10 @@ type KafkaSpec struct {
 	// +optional
 	Topology *KafkaClusterTopology `json:"topology,omitempty"`
 
+	TieredStorage *KafkaTieredStorage `json:"tieredStorage,omitempty"`
+
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
-
-	TieredStorage *KafkaTieredStorage `json:"tieredStorage,omitempty"`
 
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
