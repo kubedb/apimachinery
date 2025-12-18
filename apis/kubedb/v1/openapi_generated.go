@@ -30953,7 +30953,7 @@ func schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref common.Reference
 					},
 					"forceFailOverAcceptingDataLossAfter": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ForceFailOverAcceptingDataLossAfter is the maximum time to wait before running a force failover process This is helpful for a scenario where the old primary is not available and it has the most updated wal lsn Doing force failover may or may not end up loosing data depending on any wrtie transaction in the range lagged lsn between the new primary and the old primary",
+							Description: "ForceFailoverAcceptingDataLossAfter is the maximum time to wait before running a force failover process This is helpful for a scenario where the old primary is not available and it has the most updated wal lsn Doing force failover may or may not end up loosing data depending on any wrtie transaction in the range lagged lsn between the new primary and the old primary",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
@@ -31232,7 +31232,7 @@ func schema_apimachinery_apis_kubedb_v1_PostgresTuningConfig(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"tuningProfile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TuningProfile defines a predefined tuning profile for different workload types. If specified, other tuning parameters will be calculated based on this profile.",
+							Description: "Profile defines a predefined tuning profile for different workload types. If specified, other tuning parameters will be calculated based on this profile.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
