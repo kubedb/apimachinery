@@ -24,6 +24,19 @@ import (
 	nodemeta "kmodules.xyz/resource-metadata/apis/node/v1alpha1"
 )
 
+// ReconfigureRestartType defines restart behavior during reconfiguration.
+// +kubebuilder:validation:Enum=auto;true;false
+type ReconfigureRestartType string
+
+const (
+	// ReconfigureRestartAuto indicates the operator will determine if restart is needed
+	ReconfigureRestartAuto ReconfigureRestartType = "auto"
+	// ReconfigureRestartTrue forces a restart during reconfiguration
+	ReconfigureRestartTrue ReconfigureRestartType = "true"
+	// ReconfigureRestartFalse skips restart during reconfiguration
+	ReconfigureRestartFalse ReconfigureRestartType = "false"
+)
+
 type OpsRequestStatus struct {
 	// Specifies the current phase of the ops request
 	// +optional
