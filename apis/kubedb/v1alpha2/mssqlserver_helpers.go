@@ -204,8 +204,11 @@ func (m *MSSQLServer) PodLabel(podTemplate *ofst.PodTemplateSpec) map[string]str
 	return m.offshootLabels(m.OffshootSelectors(), nil)
 }
 
+// ConfigSecretName returns a secret name in the format: {db-cr-name}-{last-6-chars-of-UID}.
+// This secret is used for mounting the config files in the pod.
 func (m *MSSQLServer) ConfigSecretName() string {
-	return meta_util.NameWithSuffix(m.OffshootName(), "config")
+	uid := string(m.UID)
+	return meta_util.NameWithSuffix(m.OffshootName(), uid[len(uid)-6:])
 }
 
 func (m *MSSQLServer) PetSetName() string {

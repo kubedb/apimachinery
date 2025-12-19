@@ -120,7 +120,7 @@ type MSSQLServerSpec struct {
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
 	// +optional
-	Configuration *MSSQLServerConfiguration `json:"configuration,omitempty"`
+	Configuration *Configuration `json:"configuration,omitempty"`
 
 	// Init is used to initialize a database
 	// +optional
@@ -168,20 +168,6 @@ type MSSQLServerTLSConfig struct {
 
 	// +optional
 	ClientTLS *bool `json:"clientTLS"`
-}
-
-type MSSQLServerConfiguration struct {
-	// SecretName is an optional field to provide custom configuration file for the database (i.e. mssql.conf).
-	// If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any).
-	// configurations from this secret will override default configurations.
-	// This secret must be created by user and contain a key named `mssql.conf`.
-	// +optional
-	SecretName string `json:"secretName,omitempty"`
-
-	// ApplyConfig contains key-value pairs of configurations to be applied to the database.
-	// These configurations will override both default configurations and configurations from the config secret (if any).
-	// +optional
-	ApplyConfig map[string]string `json:"applyConfig,omitempty"`
 }
 
 type MSSQLServerTopology struct {

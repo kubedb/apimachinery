@@ -118,9 +118,9 @@ type MSSQLServerVolumeExpansionSpec struct {
 
 // MSSQLServerReconfigurationSpec is the spec for Reconfiguring the MSSQLServer
 type MSSQLServerReconfigurationSpec struct {
-	// ConfigSecret an optional field to provide custom configuration file for the database (i.e. mssql.conf).
+	// ConfigSecret is an optional field to provide custom configuration file for the database (i.e. mssql.conf).
 	// If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any).
-	// configurations from this secret will override default configurations.
+	// Configurations from this secret will override default configurations.
 	// This secret must be created by user and contain a key named `mssql.conf`.
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
@@ -129,6 +129,7 @@ type MSSQLServerReconfigurationSpec struct {
 	// These configurations will override both default configurations and configurations from the config secret (if any).
 	ApplyConfig map[string]string `json:"applyConfig,omitempty"`
 
+	// RemoveCustomConfig when set to true, removes any previous custom configuration (config secret and apply configs) and uses only current configurations (if provided) and the default configurations.
 	// +optional
 	RemoveCustomConfig bool `json:"removeCustomConfig,omitempty"`
 

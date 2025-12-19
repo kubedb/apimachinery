@@ -222,6 +222,20 @@ type SecretReference struct {
 	ExternallyManaged bool         `json:"externallyManaged,omitempty"`
 }
 
+type Configuration struct {
+	// SecretName is an optional field to provide custom configuration file for the database (i.e. mssql.conf).
+	// If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any).
+	// Configurations from this secret will override default configurations.
+	// This secret must be created by user.
+	// +optional
+	SecretName string `json:"secretName,omitempty"`
+
+	// ApplyConfig contains key-value pairs of configurations to be applied to the database.
+	// These configurations will override both default configurations and configurations from the config secret (if any).
+	// +optional
+	ApplyConfig map[string]string `json:"applyConfig,omitempty"`
+}
+
 type Age struct {
 	// Populated by Provisioner when authSecret is created or Ops Manager when authSecret is updated.
 	LastUpdateTimestamp metav1.Time `json:"lastUpdateTimestamp,omitempty"`

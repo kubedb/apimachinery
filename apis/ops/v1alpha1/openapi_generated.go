@@ -30078,7 +30078,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerReconfigurationSpec(ref co
 				Properties: map[string]spec.Schema{
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret an optional field to provide custom configuration file for the database (i.e. mssql.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). configurations from this secret will override default configurations. This secret must be created by user and contain a key named `mssql.conf`.",
+							Description: "ConfigSecret is an optional field to provide custom configuration file for the database (i.e. mssql.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). Configurations from this secret will override default configurations. This secret must be created by user and contain a key named `mssql.conf`.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -30100,8 +30100,9 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerReconfigurationSpec(ref co
 					},
 					"removeCustomConfig": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
+							Description: "RemoveCustomConfig when set to true, removes any previous custom configuration (config secret and apply configs) and uses only current configurations (if provided) and the default configurations.",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 					"restart": {
