@@ -508,6 +508,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseConnection":                                schema_apimachinery_apis_ui_v1alpha1_DatabaseConnection(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseConnectionList":                            schema_apimachinery_apis_ui_v1alpha1_DatabaseConnectionList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseConnectionSpec":                            schema_apimachinery_apis_ui_v1alpha1_DatabaseConnectionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseInfo":                                      schema_apimachinery_apis_ui_v1alpha1_DatabaseInfo(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseInfoRequest":                               schema_apimachinery_apis_ui_v1alpha1_DatabaseInfoRequest(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseInfoResponse":                              schema_apimachinery_apis_ui_v1alpha1_DatabaseInfoResponse(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.ElasticsearchClusterHealth":                        schema_apimachinery_apis_ui_v1alpha1_ElasticsearchClusterHealth(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.ElasticsearchIndexSpec":                            schema_apimachinery_apis_ui_v1alpha1_ElasticsearchIndexSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.ElasticsearchInsight":                              schema_apimachinery_apis_ui_v1alpha1_ElasticsearchInsight(ref),
@@ -639,6 +642,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.RedisSchemaOverviewList":                           schema_apimachinery_apis_ui_v1alpha1_RedisSchemaOverviewList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.RedisSchemaOverviewSpec":                           schema_apimachinery_apis_ui_v1alpha1_RedisSchemaOverviewSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.RuleExecution":                                     schema_apimachinery_apis_ui_v1alpha1_RuleExecution(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.SingleComponentConfiguration":                      schema_apimachinery_apis_ui_v1alpha1_SingleComponentConfiguration(ref),
 	}
 }
 
@@ -26278,6 +26282,122 @@ func schema_apimachinery_apis_ui_v1alpha1_DatabaseConnectionSpec(ref common.Refe
 	}
 }
 
+func schema_apimachinery_apis_ui_v1alpha1_DatabaseInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"request": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Request describes the attributes for the graph request.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseInfoRequest"),
+						},
+					},
+					"response": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Response describes the attributes for the graph response.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseInfoResponse"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseInfoRequest", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseInfoResponse"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DatabaseInfoRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kmodules.xyz/client-go/api/v1.ObjectInfo"),
+						},
+					},
+					"keys": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"source"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectInfo"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DatabaseInfoResponse(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configurations": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.SingleComponentConfiguration"),
+									},
+								},
+							},
+						},
+					},
+					"availableSecrets": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.SingleComponentConfiguration"},
+	}
+}
+
 func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchClusterHealth(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -26502,8 +26622,7 @@ func schema_apimachinery_apis_ui_v1alpha1_ElasticsearchInsightSpec(ref common.Re
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchInsightSpec defines the desired state of ElasticsearchInsight",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"version": {
 						SchemaProps: spec.SchemaProps{
@@ -30266,8 +30385,7 @@ func schema_apimachinery_apis_ui_v1alpha1_PgBouncerInsight(ref common.ReferenceC
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerInsight is the Schema for the pgbouncerinsights API",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -30313,8 +30431,7 @@ func schema_apimachinery_apis_ui_v1alpha1_PgBouncerInsightList(ref common.Refere
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerInsightList contains a list of PgBouncerInsight",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -30651,8 +30768,7 @@ func schema_apimachinery_apis_ui_v1alpha1_PgBouncerPoolOverview(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerPoolOverview is the Schema for the PgBouncerPoolOverviews API",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -30692,8 +30808,7 @@ func schema_apimachinery_apis_ui_v1alpha1_PgBouncerPoolOverviewList(ref common.R
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerPoolOverviewList contains a list of PgBouncerPoolOverviews",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -31021,8 +31136,7 @@ func schema_apimachinery_apis_ui_v1alpha1_PgBouncerSettings(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerSettings is the Schema for the PgBouncerSettingss API",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -31062,8 +31176,7 @@ func schema_apimachinery_apis_ui_v1alpha1_PgBouncerSettingsList(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerSettingsList contains a list of PgBouncerSettings",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -31945,8 +32058,7 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLInsight(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLInsight is the Schema for the proxysqlinsights API",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -31992,8 +32104,7 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLInsightList(ref common.Referen
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLInsightList contains a list of ProxySQLInsight",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -32095,8 +32206,7 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLQueries(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLQueries is the Schema for the proxysqlslowqueries API",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -32136,8 +32246,7 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLQueriesList(ref common.Referen
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLQueriesList contains a list of ProxySQLQueries",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -32250,8 +32359,7 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLSettings(ref common.ReferenceC
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLSettings is the Schema for the ProxySQLSettingss API",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -32291,8 +32399,7 @@ func schema_apimachinery_apis_ui_v1alpha1_ProxySQLSettingsList(ref common.Refere
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLSettingsList contains a list of ProxySQLSettings",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -33067,6 +33174,59 @@ func schema_apimachinery_apis_ui_v1alpha1_RuleExecution(ref common.ReferenceCall
 					},
 				},
 				Required: []string{"ruleId", "hits"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_SingleComponentConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"componentName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"data": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "byte",
+									},
+								},
+							},
+						},
+					},
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"applyConfig": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	}

@@ -35,6 +35,7 @@ import (
 	ops "kubedb.dev/apimachinery/client/informers/externalversions/ops"
 	postgres "kubedb.dev/apimachinery/client/informers/externalversions/postgres"
 	externalversionsschema "kubedb.dev/apimachinery/client/informers/externalversions/schema"
+	ui "kubedb.dev/apimachinery/client/informers/externalversions/ui"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -273,6 +274,7 @@ type SharedInformerFactory interface {
 	Ops() ops.Interface
 	Postgres() postgres.Interface
 	Schema() externalversionsschema.Interface
+	Ui() ui.Interface
 }
 
 func (f *sharedInformerFactory) Archiver() archiver.Interface {
@@ -313,4 +315,8 @@ func (f *sharedInformerFactory) Postgres() postgres.Interface {
 
 func (f *sharedInformerFactory) Schema() externalversionsschema.Interface {
 	return externalversionsschema.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Ui() ui.Interface {
+	return ui.New(f, f.namespace, f.tweakListOptions)
 }
