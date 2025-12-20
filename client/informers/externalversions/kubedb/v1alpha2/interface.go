@@ -52,8 +52,6 @@ type Interface interface {
 	MariaDBs() MariaDBInformer
 	// Memcacheds returns a MemcachedInformer.
 	Memcacheds() MemcachedInformer
-	// Milvuses returns a MilvusInformer.
-	Milvuses() MilvusInformer
 	// MongoDBs returns a MongoDBInformer.
 	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
@@ -169,11 +167,6 @@ func (v *version) MariaDBs() MariaDBInformer {
 // Memcacheds returns a MemcachedInformer.
 func (v *version) Memcacheds() MemcachedInformer {
 	return &memcachedInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// Milvuses returns a MilvusInformer.
-func (v *version) Milvuses() MilvusInformer {
-	return &milvusInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBs returns a MongoDBInformer.
