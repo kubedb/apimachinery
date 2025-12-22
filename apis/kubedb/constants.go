@@ -2225,6 +2225,8 @@ const (
 	QdrantDataDir       = "/qdrant/storage"
 	QdrantConfigVolName = "qdrant-config"
 	QdrantConfigDir     = "/qdrant/config"
+	QdrantTLSVolName    = "tls"
+	QdrantTLSVolDir     = "/tls"
 
 	QdrantConfigFileName = "config.yaml"
 

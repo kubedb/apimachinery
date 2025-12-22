@@ -19,10 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
-
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 )
 
 type FakeOpsV1alpha1 struct {
@@ -103,6 +102,10 @@ func (c *FakeOpsV1alpha1) PostgresOpsRequests(namespace string) v1alpha1.Postgre
 
 func (c *FakeOpsV1alpha1) ProxySQLOpsRequests(namespace string) v1alpha1.ProxySQLOpsRequestInterface {
 	return &FakeProxySQLOpsRequests{c, namespace}
+}
+
+func (c *FakeOpsV1alpha1) QdrantOpsRequests(namespace string) v1alpha1.QdrantOpsRequestInterface {
+	return &FakeQdrantOpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) RabbitMQOpsRequests(namespace string) v1alpha1.RabbitMQOpsRequestInterface {
