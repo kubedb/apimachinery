@@ -1656,6 +1656,7 @@ func autoConvert_v1alpha2_ElasticsearchSpec_To_v1_ElasticsearchSpec(in *Elastics
 	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	// WARNING: in.Configuration requires manual conversion: does not exist in peer-type
 	out.SecureConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.SecureConfigSecret))
 	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
 		return err

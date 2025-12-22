@@ -98,6 +98,9 @@ type ElasticsearchSpec struct {
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
+	// +optional
+	Configuration *ElasticsearchConfiguration `json:"configuration,omitempty"`
+
 	// SecureConfigSecret is an optional field to provide secure settings for database.
 	//	- Ref: https://www.elastic.co/guide/en/elasticsearch/reference/7.14/secure-settings.html
 	// Secure settings are store at "ES_CONFIG_DIR/elasticsearch.keystore" file (contents are encoded with password),
@@ -175,6 +178,20 @@ type ElasticsearchSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 1}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+}
+
+type ElasticsearchConfiguration struct {
+	// SecretName is an optional field to provide custom configuration file for the database (i.e. elasticsearch.yml, data-elasticsearch.yml..).
+	// If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any).
+	// configurations from this secret will override default configurations.
+	// This secret must be created by user and contain key named `elasticsearch.yml, data-elasticsearch.yml` etc.
+	// +optional
+	SecretName string `json:"secretName,omitempty"`
+
+	// ApplyConfig contains key-value pairs of configurations to be applied to the database.
+	// These configurations will override both default configurations and configurations from the config secret (if any).
+	// +optional
+	ApplyConfig map[string]string `json:"applyConfig,omitempty"`
 }
 
 type ElasticsearchClusterTopology struct {
