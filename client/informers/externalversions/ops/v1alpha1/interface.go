@@ -62,6 +62,8 @@ type Interface interface {
 	PostgresOpsRequests() PostgresOpsRequestInformer
 	// ProxySQLOpsRequests returns a ProxySQLOpsRequestInformer.
 	ProxySQLOpsRequests() ProxySQLOpsRequestInformer
+	// QdrantOpsRequests returns a QdrantOpsRequestInformer.
+	QdrantOpsRequests() QdrantOpsRequestInformer
 	// RabbitMQOpsRequests returns a RabbitMQOpsRequestInformer.
 	RabbitMQOpsRequests() RabbitMQOpsRequestInformer
 	// RedisOpsRequests returns a RedisOpsRequestInformer.
@@ -180,6 +182,11 @@ func (v *version) PostgresOpsRequests() PostgresOpsRequestInformer {
 // ProxySQLOpsRequests returns a ProxySQLOpsRequestInformer.
 func (v *version) ProxySQLOpsRequests() ProxySQLOpsRequestInformer {
 	return &proxySQLOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// QdrantOpsRequests returns a QdrantOpsRequestInformer.
+func (v *version) QdrantOpsRequests() QdrantOpsRequestInformer {
+	return &qdrantOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // RabbitMQOpsRequests returns a RabbitMQOpsRequestInformer.

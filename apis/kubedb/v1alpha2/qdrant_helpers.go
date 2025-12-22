@@ -30,6 +30,7 @@ import (
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -228,6 +229,20 @@ func (q Qdrant) StatsService() mona.StatsAccessor {
 
 func (q Qdrant) StatsServiceLabels() map[string]string {
 	return q.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
+}
+
+func (q *Qdrant) CertificateName(alias QdrantCertificateAlias) string {
+	return meta_util.NameWithSuffix(q.Name, fmt.Sprintf("%s-cert", string(alias)))
+}
+
+func (q *Qdrant) GetCertSecretName(alias QdrantCertificateAlias) string {
+	if q.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(q.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return q.CertificateName(alias)
 }
 
 func (q *Qdrant) SetDefaults(kc client.Client) {

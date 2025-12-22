@@ -39,6 +39,14 @@ const (
 	QdrantDistributed QdrantMode = "Distributed"
 )
 
+// +kubebuilder:validation:Enum=server;client
+type QdrantCertificateAlias string
+
+const (
+	QdrantServerCert QdrantCertificateAlias = "server"
+	QdrantClientCert QdrantCertificateAlias = "client"
+)
+
 // Qdrant is the Schema for the Qdrant API
 
 // +genclient
@@ -94,6 +102,9 @@ type QdrantSpec struct {
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
+	// TLS contains tls configurations for client and server.
+	TLS *QdrantTLSConfig `json:"tls,omitempty"`
+
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
@@ -114,6 +125,14 @@ type QdrantSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+}
+
+type QdrantTLSConfig struct {
+	kmapi.TLSConfig `json:",inline"`
+	// +optional
+	P2PTLS *bool `json:"p2pTLS"`
+	// +optional
+	ClientHTTPTLS *bool `json:"clientHTTPTLS"`
 }
 
 // QdrantStatus defines the observed state of Qdrant.
