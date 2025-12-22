@@ -211,8 +211,7 @@ func (e *Elasticsearch) GetUserCredSecretName(username string) (string, error) {
 
 // returns the secret name for the default elasticsearch configuration
 func (e *Elasticsearch) ConfigSecretName() string {
-	uid := string(e.UID)
-	return meta_util.NameWithSuffix(e.OffshootName(), uid[len(uid)-6:])
+	return meta_util.NameWithSuffix(e.Name, "config")
 }
 
 func (e *Elasticsearch) GetConnectionScheme() string {

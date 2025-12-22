@@ -518,6 +518,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Database":                                            schema_apimachinery_apis_kubedb_v1_Database(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Elasticsearch":                                       schema_apimachinery_apis_kubedb_v1_Elasticsearch(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology":                        schema_apimachinery_apis_kubedb_v1_ElasticsearchClusterTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchConfiguration":                          schema_apimachinery_apis_kubedb_v1_ElasticsearchConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchList":                                   schema_apimachinery_apis_kubedb_v1_ElasticsearchList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchNode":                                   schema_apimachinery_apis_kubedb_v1_ElasticsearchNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchRoleMapSpec":                            schema_apimachinery_apis_kubedb_v1_ElasticsearchRoleMapSpec(ref),
@@ -26659,6 +26660,41 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchClusterTopology(ref common.
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_ElasticsearchConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretName is an optional field to provide custom configuration file for the database (i.e. elasticsearch.yml, data-elasticsearch.yml..). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). configurations from this secret will override default configurations. This secret must be created by user and contain key named `elasticsearch.yml, data-elasticsearch.yml` etc.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"applyConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplyConfig contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_ElasticsearchList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -26932,6 +26968,11 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchConfiguration"),
+						},
+					},
 					"secureConfigSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SecureConfigSecret is an optional field to provide secure settings for database.\n\t- Ref: https://www.elastic.co/guide/en/elasticsearch/reference/7.14/secure-settings.html\nSecure settings are store at \"ES_CONFIG_DIR/elasticsearch.keystore\" file (contents are encoded with password), once the keystore created. Expects a k8s secret name with data format:\n\tdata:\n\t\tkey: value\n\t\tpassword: KEYSTORE_PASSWORD\n\t\ts3.client.default.access_key: ACCESS_KEY\n\t\ts3.client.default.secret_key: SECRET_KEY",
@@ -27040,7 +27081,7 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
