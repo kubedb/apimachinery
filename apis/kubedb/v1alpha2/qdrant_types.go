@@ -20,6 +20,7 @@ import (
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -36,6 +37,14 @@ type QdrantMode string
 const (
 	QdrantStandalone  QdrantMode = "Standalone"
 	QdrantDistributed QdrantMode = "Distributed"
+)
+
+// +kubebuilder:validation:Enum=server;client
+type QdrantCertificateAlias string
+
+const (
+	QdrantServerCert QdrantCertificateAlias = "server"
+	QdrantClientCert QdrantCertificateAlias = "client"
 )
 
 // Qdrant is the Schema for the Qdrant API
@@ -95,6 +104,9 @@ type QdrantSpec struct {
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
+	// TLS contains tls configurations for client and server.
+	TLS *QdrantTLSConfig `json:"tls,omitempty"`
+
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
@@ -111,6 +123,18 @@ type QdrantSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+
+	// Monitor is used monitor database instance
+	// +optional
+	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+}
+
+type QdrantTLSConfig struct {
+	kmapi.TLSConfig `json:",inline"`
+	// +optional
+	P2PTLS *bool `json:"p2pTLS"`
+	// +optional
+	ClientHTTPTLS *bool `json:"clientHTTPTLS"`
 }
 
 // QdrantStatus defines the observed state of Qdrant.
