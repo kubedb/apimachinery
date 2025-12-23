@@ -23538,23 +23538,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchConfiguration": {
-      "type": "object",
-      "properties": {
-        "applyConfig": {
-          "description": "ApplyConfig contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "secretName": {
-          "description": "SecretName is an optional field to provide custom configuration file for the database (i.e. elasticsearch.yml, data-elasticsearch.yml..). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). configurations from this secret will override default configurations. This secret must be created by user and contain key named `elasticsearch.yml, data-elasticsearch.yml` etc.",
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchList": {
       "type": "object",
       "properties": {
@@ -23699,9 +23682,6 @@
         "configSecret": {
           "description": "ConfigSecret is an optional field to provide custom configuration file for database. If specified, this file will be used as configuration file otherwise default configuration file will be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
-        },
-        "configuration": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ElasticsearchConfiguration"
         },
         "disableSecurity": {
           "description": "disable security of authPlugin (ie, xpack or searchguard). It disables authentication security of user. If unset, default is false",
