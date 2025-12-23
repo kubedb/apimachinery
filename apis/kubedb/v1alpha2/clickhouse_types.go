@@ -94,6 +94,9 @@ type ClickHouseSpec struct {
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
+	// +optional
+	Configuration *Configuration `json:"configuration,omitempty"`
+
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
