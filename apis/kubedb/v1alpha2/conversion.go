@@ -91,6 +91,24 @@ func Convert_v1alpha2_CoordinatorSpec_To_Slice_v1_Container(in *CoordinatorSpec,
 	return nil
 }
 
+func Convert_v1_ConfigurationSpec_To_v1alpha2_ConfigSecretSpec(in *v1.ConfigurationSpec, out **corev1.LocalObjectReference) {
+	if in == nil {
+		return
+	}
+	*out = &corev1.LocalObjectReference{
+		Name: in.SecretName,
+	}
+}
+
+func Convert_v1alpha2_ConfigSecretSpec_To_v1_ConfigurationSpec(in *corev1.LocalObjectReference, out **v1.ConfigurationSpec) {
+	if in == nil {
+		return
+	}
+	*out = &v1.ConfigurationSpec{
+		SecretName: in.Name,
+	}
+}
+
 func Convert_v1_ElasticsearchNode_To_v1alpha2_ElasticsearchNode(in *v1.ElasticsearchNode, out *ElasticsearchNode, s conversion.Scope) error {
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Suffix = in.Suffix

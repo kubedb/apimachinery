@@ -654,6 +654,7 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 		}
 	}
 
+	m.copyConfigurationField()
 	m.initializePodTemplates()
 
 	if m.Spec.ShardTopology != nil {
@@ -700,6 +701,15 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 			m.Spec.Init.Archiver.ManifestRepository.Namespace = m.GetNamespace()
 		}
 	}
+}
+
+func (m *MongoDB) copyConfigurationField() {
+	if m.Spec.Configuration == nil && m.Spec.ConfigSecret != nil {
+		m.Spec.Configuration = &ConfigurationSpec{
+			SecretName: m.Spec.ConfigSecret.Name,
+		}
+	}
+	m.Spec.ConfigSecret = nil
 }
 
 func (m *MongoDB) initializePodTemplates() {
