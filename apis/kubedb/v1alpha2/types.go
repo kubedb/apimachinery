@@ -222,7 +222,7 @@ type SecretReference struct {
 	ExternallyManaged bool         `json:"externallyManaged,omitempty"`
 }
 
-type Configuration struct {
+type ConfigurationSpec struct {
 	// SecretName is an optional field to provide custom configuration file for the database (i.e. mssql.conf).
 	// If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any).
 	// Configurations from this secret will override default configurations.
