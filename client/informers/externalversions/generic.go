@@ -32,6 +32,7 @@ import (
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
@@ -408,6 +409,62 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Schema().V1alpha1().MySQLDatabases().Informer()}, nil
 	case schemav1alpha1.SchemeGroupVersion.WithResource("postgresdatabases"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Schema().V1alpha1().PostgresDatabases().Informer()}, nil
+
+		// Group=ui.kubedb.com, Version=v1alpha1
+	case uiv1alpha1.SchemeGroupVersion.WithResource("databaseconnections"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DatabaseConnections().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("elasticsearchinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().ElasticsearchInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("elasticsearchnodesstatses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().ElasticsearchNodesStatses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("elasticsearchschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().ElasticsearchSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("mariadbinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MariaDBInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("mariadbquerieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MariaDBQuerieses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("mariadbschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MariaDBSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("mongodbinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MongoDBInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("mongodbquerieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MongoDBQuerieses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("mongodbschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MongoDBSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("mysqlinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MySQLInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("mysqlquerieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MySQLQuerieses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("mysqlschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MySQLSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("pgbouncerinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PgBouncerInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("pgbouncerpooloverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PgBouncerPoolOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("pgbouncerserveroverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PgBouncerServerOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("pgbouncersettingses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PgBouncerSettingses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("postgresinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PostgresInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("postgresquerieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PostgresQuerieses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("postgresschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PostgresSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("postgressettingses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PostgresSettingses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("proxysqlinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().ProxySQLInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("proxysqlquerieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().ProxySQLQuerieses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("proxysqlsettingses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().ProxySQLSettingses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("redisinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().RedisInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("redisquerieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().RedisQuerieses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("redisschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().RedisSchemaOverviews().Informer()}, nil
 
 	}
 
