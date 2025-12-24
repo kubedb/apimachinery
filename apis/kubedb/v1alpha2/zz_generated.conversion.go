@@ -2522,6 +2522,7 @@ func autoConvert_v1alpha2_MongoArbiterNode_To_v1_MongoArbiterNode(in *MongoArbit
 
 func autoConvert_v1_MongoArbiterNode_To_v1alpha2_MongoArbiterNode(in *v1.MongoArbiterNode, out *MongoArbiterNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	// WARNING: in.Configuration requires manual conversion: does not exist in peer-type
 	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
 	return nil
 }
@@ -2664,6 +2665,7 @@ func autoConvert_v1_MongoDBNode_To_v1alpha2_MongoDBNode(in *v1.MongoDBNode, out 
 	out.Replicas = in.Replicas
 	out.Prefix = in.Prefix
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	// WARNING: in.Configuration requires manual conversion: does not exist in peer-type
 	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
 	return nil
 }
@@ -2932,6 +2934,7 @@ func autoConvert_v1alpha2_MongoHiddenNode_To_v1_MongoHiddenNode(in *MongoHiddenN
 
 func autoConvert_v1_MongoHiddenNode_To_v1alpha2_MongoHiddenNode(in *v1.MongoHiddenNode, out *MongoHiddenNode, s conversion.Scope) error {
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	// WARNING: in.Configuration requires manual conversion: does not exist in peer-type
 	// WARNING: in.PodTemplate requires manual conversion: inconvertible types (*kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec vs kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec)
 	out.Replicas = in.Replicas
 	out.Storage = in.Storage
