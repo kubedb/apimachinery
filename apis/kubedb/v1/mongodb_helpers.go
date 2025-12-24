@@ -1082,5 +1082,6 @@ func (m *MongoDB) ConfigSecretName(nodeType string) string {
 	if nodeType != "" {
 		nodeType = "-" + nodeType
 	}
-	return m.Name + nodeType + "-config"
+	uid := string(m.UID)
+	return meta_util.NameWithSuffix(m.OffshootName()+nodeType, uid[len(uid)-6:])
 }

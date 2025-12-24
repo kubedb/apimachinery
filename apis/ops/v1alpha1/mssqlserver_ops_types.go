@@ -66,7 +66,7 @@ type MSSQLServerOpsRequestSpec struct {
 	// Specifies information necessary for volume expansion
 	VolumeExpansion *MSSQLServerVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for custom configuration of MSSQLServer
-	Configuration *MSSQLServerReconfigurationSpec `json:"configuration,omitempty"`
+	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *MSSQLServerTLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for configuring authSecret of the database
@@ -114,32 +114,6 @@ type MSSQLServerVolumeExpansionSpec struct {
 	// volume specification for MSSQLServer
 	MSSQLServer *resource.Quantity  `json:"mssqlserver,omitempty"`
 	Mode        VolumeExpansionMode `json:"mode"`
-}
-
-// MSSQLServerReconfigurationSpec is the spec for Reconfiguring the MSSQLServer
-type MSSQLServerReconfigurationSpec struct {
-	// ConfigSecret is an optional field to provide custom configuration file for the database (i.e. mssql.conf).
-	// If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any).
-	// Configurations from this secret will override default configurations.
-	// This secret must be created by user and contain a key named `mssql.conf`.
-	// +optional
-	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
-
-	// ApplyConfig contains key-value pairs of configurations to be applied to the database.
-	// These configurations will override both default configurations and configurations from the config secret (if any).
-	ApplyConfig map[string]string `json:"applyConfig,omitempty"`
-
-	// RemoveCustomConfig when set to true, removes any previous custom configuration (config secret and apply configs) and uses only current configurations (if provided) and the default configurations.
-	// +optional
-	RemoveCustomConfig bool `json:"removeCustomConfig,omitempty"`
-
-	// Restart controls whether to restart the database during reconfiguration.
-	// - auto (default): Operator determines if restart is needed based on configuration changes.
-	// - true: Restart the database during reconfiguration.
-	// - false: Don't restart the database during reconfiguration.
-	// +optional
-	// +kubebuilder:default=auto
-	Restart ReconfigureRestartType `json:"restart,omitempty"`
 }
 
 type MSSQLServerTLSSpec struct {

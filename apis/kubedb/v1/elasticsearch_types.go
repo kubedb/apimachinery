@@ -100,7 +100,7 @@ type ElasticsearchSpec struct {
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
 	// +optional
-	Configuration *ElasticsearchConfiguration `json:"configuration,omitempty"`
+	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
 	// SecureConfigSecret is an optional field to provide secure settings for database.
 	//	- Ref: https://www.elastic.co/guide/en/elasticsearch/reference/7.14/secure-settings.html

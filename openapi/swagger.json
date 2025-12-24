@@ -27304,50 +27304,6 @@
       "description": "MemcachedVolumeExpansionSpec is the spec for Memcached volume expansion",
       "type": "object"
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration": {
-      "type": "object",
-      "properties": {
-        "applyConfig": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "configSecret": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
-        },
-        "removeCustomConfig": {
-          "type": "boolean"
-        }
-      }
-    },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfigurationSpec": {
-      "type": "object",
-      "properties": {
-        "arbiter": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
-        },
-        "configServer": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
-        },
-        "hidden": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
-        },
-        "mongos": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
-        },
-        "replicaSet": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
-        },
-        "shard": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
-        },
-        "standalone": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfiguration"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for mongodb horizontal scaling",
       "type": "object",
@@ -27457,7 +27413,7 @@
         },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of MongoDB",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBCustomConfigurationSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReconfigurationSpec"
         },
         "databaseRef": {
           "description": "Specifies the MongoDB reference",
@@ -27512,6 +27468,32 @@
         "volumeExpansion": {
           "description": "Specifies information necessary for volume expansion",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBVolumeExpansionSpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBReconfigurationSpec": {
+      "type": "object",
+      "properties": {
+        "arbiter": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReconfigurationSpec"
+        },
+        "configServer": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReconfigurationSpec"
+        },
+        "hidden": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReconfigurationSpec"
+        },
+        "mongos": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReconfigurationSpec"
+        },
+        "replicaSet": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReconfigurationSpec"
+        },
+        "shard": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReconfigurationSpec"
+        },
+        "standalone": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReconfigurationSpec"
         }
       }
     },
@@ -28720,6 +28702,32 @@
       "properties": {
         "proxysql": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ReconfigurationSpec": {
+      "description": "ReconfigurationSpec is the spec for Reconfiguring the Database",
+      "type": "object",
+      "properties": {
+        "applyConfig": {
+          "description": "ApplyConfig contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for the database (i.e. mssql.conf, mongod.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). Configurations from this secret will override default configurations.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "removeCustomConfig": {
+          "description": "RemoveCustomConfig when set to true, removes any previous custom configuration (config secret and apply configs) and uses only current configurations (if provided) and the default configurations.",
+          "type": "boolean"
+        },
+        "restart": {
+          "description": "Restart controls whether to restart the database during reconfiguration. - auto (default): Operator determines if restart is needed based on configuration changes. - true: Restart the database during reconfiguration. - false: Don't restart the database during reconfiguration.",
+          "type": "string"
         }
       }
     },
