@@ -553,7 +553,7 @@ func (m *MSSQLServer) assignDefaultContainerSecurityContext(mssqlVersion *catalo
 func (m *MSSQLServer) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
 	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.MSSQLContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
-		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMemoryIntensiveMSSQLServer)
+		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesMSSQLServer)
 	}
 
 	initContainer := coreutil.GetContainerByName(podTemplate.Spec.InitContainers, kubedb.MSSQLInitContainerName)
