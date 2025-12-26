@@ -133,11 +133,13 @@ func (r Redis) GoverningServiceName() string {
 }
 
 func (r Redis) ConfigSecretName() string {
-	return meta_util.NameWithSuffix(r.OffshootName(), "config")
+	uid := string(r.UID)
+	return meta_util.NameWithSuffix(r.OffshootName(), uid[len(uid)-6:])
 }
 
 func (r Redis) CustomConfigSecretName() string {
-	return meta_util.NameWithSuffix(r.OffshootName(), "custom-config")
+	uid := string(r.UID)
+	return meta_util.NameWithSuffix(meta_util.NameWithSuffix(r.OffshootName(), "custom"), uid[len(uid)-6:])
 }
 
 func (r Redis) BaseNameForShard() string {

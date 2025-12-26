@@ -145,7 +145,8 @@ func (p PgBouncer) GetPgBouncerFinalConfigSecret(kc client.Client) (*core.Secret
 }
 
 func (p PgBouncer) PgBouncerFinalConfigSecretName() string {
-	return meta_util.NameWithSuffix(p.ServiceName(), "final-config")
+	uid := string(p.UID)
+	return meta_util.NameWithSuffix(p.OffshootName(), uid[len(uid)-6:])
 }
 
 type pgbouncerApp struct {
