@@ -19,45 +19,45 @@ package fuzzer
 import (
 	"kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	fuzz "github.com/google/gofuzz"
 	runtimeserializer "k8s.io/apimachinery/pkg/runtime/serializer"
+	"sigs.k8s.io/randfill"
 )
 
 // Funcs returns the fuzzer functions for this api group.
 var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 	return []any{
-		func(s *v1alpha1.ElasticsearchOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.ElasticsearchOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.EtcdOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.EtcdOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MariaDBOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.MariaDBOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MemcachedOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.MemcachedOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MongoDBOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.MongoDBOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MySQLOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.MySQLOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.PerconaXtraDBOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.PerconaXtraDBOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.PostgresOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.PostgresOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.ProxySQLOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.ProxySQLOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.RedisOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.RedisOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.RabbitMQOpsRequest, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.RabbitMQOpsRequest, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
 	}
 }

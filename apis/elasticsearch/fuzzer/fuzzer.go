@@ -19,15 +19,15 @@ package fuzzer
 import (
 	"kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 
-	fuzz "github.com/google/gofuzz"
 	runtimeserializer "k8s.io/apimachinery/pkg/runtime/serializer"
+	"sigs.k8s.io/randfill"
 )
 
 // Funcs returns the fuzzer functions for this api group.
 var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 	return []any{
-		func(s *v1alpha1.ElasticsearchDashboard, c fuzz.Continue) {
-			c.FuzzNoCustom(s) // fuzz self without calling this function again
+		func(s *v1alpha1.ElasticsearchDashboard, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
 		},
 	}
 }
