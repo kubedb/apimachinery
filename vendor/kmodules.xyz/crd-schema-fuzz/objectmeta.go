@@ -3,10 +3,10 @@ package crdfuzz
 import (
 	"reflect"
 
-	fuzz "github.com/google/gofuzz"
 	"k8s.io/apimachinery/pkg/api/apitesting/fuzzer"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/serializer"
+	"sigs.k8s.io/randfill"
 )
 
 // SafeFuzzerFuncs will merge the given funcLists, replacing any fuzzer for metav1.ObjectMeta with
@@ -20,8 +20,8 @@ import (
 //
 // ref: https://github.com/kubernetes-sigs/controller-tools/commit/adfbf775195bf1c2366286684cc77a97b04a8cb9
 func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
-	return func(codecs serializer.CodecFactory) []interface{} {
-		result := []interface{}{}
+	return func(codecs serializer.CodecFactory) []any {
+		result := []any{}
 		for _, fns := range funcs {
 			if fns == nil {
 				continue
@@ -32,8 +32,8 @@ func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
 				}
 			}
 		}
-		result = append(result, func(j *metav1.ObjectMeta, c fuzz.Continue) {
-			c.FuzzNoCustom(j)
+		result = append(result, func(j *metav1.ObjectMeta, c randfill.Continue) {
+			c.Fill(j)
 
 			if len(j.Labels) == 0 {
 				j.Labels = nil
@@ -50,7 +50,7 @@ func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
 			}
 
 			j.GenerateName = ""
-			j.SelfLink = ""
+			j.SelfLink = "" //nolint:staticcheck // SA1019 backwards compatibility
 			j.UID = ""
 			j.ResourceVersion = ""
 			j.Generation = 0
@@ -64,7 +64,7 @@ func SafeFuzzerFuncs(funcs ...fuzzer.FuzzerFuncs) fuzzer.FuzzerFuncs {
 	}
 }
 
-func fuzzerForObjectMeta(f interface{}) bool {
+func fuzzerForObjectMeta(f any) bool {
 	x := reflect.TypeOf(f)
 	if x.Kind() != reflect.Func {
 		return false

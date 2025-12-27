@@ -47,7 +47,7 @@ func SchemaFuzzTestForObject(t *testing.T, scheme *runtime.Scheme, obj runtime.O
 	for i := 0; i < iters; i++ {
 		fuzzed := obj.DeepCopyObject()
 		// fuzz *before* converting to unstructured, so we get typed fuzzing
-		fuzzer.Fuzz(fuzzed)
+		fuzzer.Fill(fuzzed)
 		unstructuredFuzzed, err := runtime.DefaultUnstructuredConverter.ToUnstructured(fuzzed)
 		if err != nil {
 			t.Fatalf("Failed to convert type to `runtime.Unstructured`: %v", err)
@@ -66,7 +66,7 @@ func SchemaFuzzTestForObject(t *testing.T, scheme *runtime.Scheme, obj runtime.O
 		if len(unknownFieldPaths) > 0 {
 			t.Fatalf("unknownFieldPaths: %s", strings.Join(unknownFieldPaths, ","))
 		}
-		if !cmp.Equal(unstructuredFuzzed, pruned, cmp.Transformer("ObjectMeta", func(m map[string]interface{}) map[string]interface{} {
+		if !cmp.Equal(unstructuredFuzzed, pruned, cmp.Transformer("ObjectMeta", func(m map[string]any) map[string]any {
 			if m["creationTimestamp"] == nil {
 				delete(m, "creationTimestamp")
 			}

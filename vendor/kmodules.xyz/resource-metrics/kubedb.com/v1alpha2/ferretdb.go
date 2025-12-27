@@ -53,7 +53,7 @@ func (r FerretDB) ResourceCalculator() api.ResourceCalculator {
 	}
 }
 
-func (r FerretDB) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
+func (r FerretDB) roleReplicasFn(obj map[string]any) (api.ReplicaList, error) {
 	replicas, found, err := unstructured.NestedInt64(obj, "spec", "server", "primary", "replicas")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read spec.replicas %v: %w", obj, err)
@@ -70,7 +70,7 @@ func (r FerretDB) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, e
 	return ret, nil
 }
 
-func (r FerretDB) modeFn(obj map[string]interface{}) (string, error) {
+func (r FerretDB) modeFn(obj map[string]any) (string, error) {
 	_, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "server", "secondary")
 	if !found || err != nil {
 		return DBModePrimaryOnly, nil
@@ -78,13 +78,13 @@ func (r FerretDB) modeFn(obj map[string]interface{}) (string, error) {
 	return DBModeCluster, nil
 }
 
-func (r FerretDB) usesTLSFn(obj map[string]interface{}) (bool, error) {
+func (r FerretDB) usesTLSFn(obj map[string]any) (bool, error) {
 	_, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "tls")
 	return found, err
 }
 
-func (r FerretDB) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
-	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
+func (r FerretDB) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]any) (map[api.PodRole]api.PodInfo, error) {
+	return func(obj map[string]any) (map[api.PodRole]api.PodInfo, error) {
 		pc, pr, err := api.AppNodeResourcesV2(obj, fn, FerretDBContainerName, "spec", "server", "primary")
 		if err != nil {
 			return nil, err
