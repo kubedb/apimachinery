@@ -53,7 +53,7 @@ func (r ClickHouse) ResourceCalculator() api.ResourceCalculator {
 	}
 }
 
-func (r ClickHouse) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
+func (r ClickHouse) roleReplicasFn(obj map[string]any) (api.ReplicaList, error) {
 	result := api.ReplicaList{}
 
 	clusterTopology, found, err := unstructured.NestedMap(obj, "spec", "clusterTopology")
@@ -66,12 +66,12 @@ func (r ClickHouse) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList,
 			return nil, err
 		}
 
-		shardCount, _, err := unstructured.NestedInt64(cluster.(map[string]interface{}), "shards")
+		shardCount, _, err := unstructured.NestedInt64(cluster.(map[string]any), "shards")
 		if err != nil {
 			return nil, err
 		}
 
-		shardReplicas, _, err := unstructured.NestedInt64(cluster.(map[string]interface{}), "replicas")
+		shardReplicas, _, err := unstructured.NestedInt64(cluster.(map[string]any), "replicas")
 		if err != nil {
 			return nil, err
 		}
@@ -93,7 +93,7 @@ func (r ClickHouse) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList,
 	return result, nil
 }
 
-func (r ClickHouse) modeFn(obj map[string]interface{}) (string, error) {
+func (r ClickHouse) modeFn(obj map[string]any) (string, error) {
 	clusterTopology, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "clusterTopology")
 	if err != nil {
 		return "", err
@@ -104,8 +104,8 @@ func (r ClickHouse) modeFn(obj map[string]interface{}) (string, error) {
 	return DBModeStandalone, nil
 }
 
-func (r ClickHouse) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
-	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
+func (r ClickHouse) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]any) (map[api.PodRole]api.PodInfo, error) {
+	return func(obj map[string]any) (map[api.PodRole]api.PodInfo, error) {
 		clusterTopology, found, err := unstructured.NestedMap(obj, "spec", "clusterTopology")
 		if err != nil {
 			return nil, err
@@ -115,11 +115,11 @@ func (r ClickHouse) roleResourceFn(fn func(rr core.ResourceRequirements) core.Re
 			if err != nil {
 				return nil, err
 			}
-			cRes, cReplicas, err := api.AppNodeResourcesV2(cluster.(map[string]interface{}), fn, ClickHouseContainerName)
+			cRes, cReplicas, err := api.AppNodeResourcesV2(cluster.(map[string]any), fn, ClickHouseContainerName)
 			if err != nil {
 				return nil, err
 			}
-			shards, _, err := unstructured.NestedInt64(cluster.(map[string]interface{}), "shards")
+			shards, _, err := unstructured.NestedInt64(cluster.(map[string]any), "shards")
 			if err != nil {
 				return nil, err
 			}
