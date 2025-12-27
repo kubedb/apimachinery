@@ -7465,6 +7465,16 @@ func (in *SolrSpec) DeepCopyInto(out *SolrSpec) {
 		*out = new(monitoringagentapiapiv1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.GcsCredSecret != nil {
+		in, out := &in.GcsCredSecret, &out.GcsCredSecret
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
+	if in.S3CredSecret != nil {
+		in, out := &in.S3CredSecret, &out.S3CredSecret
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 
