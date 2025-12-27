@@ -6204,6 +6204,13 @@ spec:
                     default: 5
                     format: int32
                     type: integer
+                  logRetentionHistoryLimit:
+                    default: 5
+                    format: int32
+                    type: integer
+                  retentionPeriod:
+                    pattern: ^[1-9][0-9]*[dwm]$
+                    type: string
                   runtimeSettings:
                     properties:
                       container:
@@ -13417,15 +13424,6 @@ spec:
                 type: object
               pause:
                 type: boolean
-              retentionPolicy:
-                properties:
-                  name:
-                    type: string
-                  namespace:
-                    type: string
-                required:
-                - name
-                type: object
             required:
             - databases
             type: object
