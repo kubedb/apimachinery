@@ -270,11 +270,6 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 		}
 	}
 
-	// Add validation to not allow both RemoveCustomConfig and ConfigSecret together
-	if req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret != nil {
-		return fmt.Errorf("`spec.configuration.removeCustomConfig` and `spec.configuration.configSecret` is not supported together")
-	}
-
 	return nil
 }
 
