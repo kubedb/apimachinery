@@ -892,16 +892,19 @@ const (
 	MilvusGrpcPortName = "grpc"
 	MilvusGrpcPort     = int32(19530)
 
-	MilvusVolumeNameData      = "woodpecker"
-	MilvusDataDir             = "/var/lib/milvus"
-	MilvusConfigVolName       = "milvus-config"
-	MilvusConfigDefaultDir    = "/milvus/configs/default.yaml"
-	MilvusConfigUserDir       = "/milvus/configs/user.yaml"
-	MilvusToolsVolName        = "tools"
-	MilvusToolsVolDir         = "/milvus/tools"
-	MilvusConfigFileName      = "milvus.yaml"
-	MilvusContainerName       = "milvus"
-	MilvusVolStreamingNodeDir = "data"
+	MilvusVolumeNameDisk        = "disk"
+	MilvusVolumeNameWoodpecker  = "woodpecker"
+	MilvusConfigVolName         = "milvus-config"
+	MilvusConfigDefaultFileName = "default.yaml"
+	MilvusConfigUserFileName    = "user.yaml"
+	MilvusToolsVolName          = "tools"
+	MilvusConfigFileName        = "milvus.yaml"
+
+	MilvusQueryNodeDataSubPath = "/var/lib/milvus/data"
+	MilvusDataDir              = "/var/lib/milvus"
+	MilvusConfigVolDir         = "/milvus/configs/"
+	MilvusToolsVolDir          = "/milvus/tools"
+	MilvusContainerName        = "milvus"
 
 	EtcdEndpointsName = "ETCD_ENDPOINTS"
 	EtcdAPIVersion    = "operator.etcd.io/v1alpha1"
@@ -912,14 +915,14 @@ const (
 	MinioAddressName   = "MINIO_ADDRESS"
 	MinioAddressKey    = "address"
 	MinioAccessKeyName = "MINIO_ACCESS_KEY"
-	MinioAccessKey     = "accessKeyId"
+	MinioAccessKey     = "accesskey"
 	MinioSecretKeyName = "MINIO_SECRET_KEY"
-	MinioSecretKey     = "secretAccessKey"
+	MinioSecretKey     = "secretkey"
 
-	MilvusPlainTextPortMixCoord      = 9091
-	MilvusPlainTextPortDataNode      = 9091
-	MilvusPlainTextPortQueryNode     = 9091
-	MilvusPlainTextPortStreamingNode = 9091
+	MilvusMetricsPort       = 9091
+	MilvusPortDataNode      = 21124
+	MilvusPortQueryNode     = 21123
+	MilvusPortStreamingNode = 22222
 )
 
 const (

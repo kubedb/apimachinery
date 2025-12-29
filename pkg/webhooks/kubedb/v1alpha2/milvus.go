@@ -180,13 +180,20 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 
 // reserved volume and volumes mounts for milvus
 var milvusReservedVolumes = []string{
-	kubedb.MilvusVolumeNameData,
+	kubedb.MilvusVolumeNameDisk,
+	kubedb.MilvusVolumeNameWoodpecker,
 	kubedb.MilvusConfigVolName,
+	kubedb.MilvusConfigDefaultFileName,
+	kubedb.MilvusConfigUserFileName,
+	kubedb.MilvusToolsVolName,
+	kubedb.MilvusConfigFileName,
 }
 
 var milvusReservedVolumesMountPaths = []string{
 	kubedb.MilvusDataDir,
-	kubedb.MilvusConfigDir,
+	kubedb.MilvusConfigVolDir,
+	kubedb.MilvusToolsVolDir,
+	kubedb.MilvusQueryNodeDataSubPath,
 }
 
 func (m *MilvusCustomWebhook) milvusValidateVersion(db *olddbapi.Milvus) error {
