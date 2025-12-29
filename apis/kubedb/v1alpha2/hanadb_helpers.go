@@ -36,16 +36,14 @@ import (
 	coreutil "kmodules.xyz/client-go/core/v1"
 	metautil "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
-	_ "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	_ "sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func (_ HanaDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (HanaDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralHanaDB))
 }
 
@@ -272,6 +270,16 @@ func (h *HanaDB) SetDefaults(kc client.Client) {
 	if h.IsStandalone() {
 		if h.Spec.Replicas == nil {
 			h.Spec.Replicas = pointer.Int32P(1)
+		}
+	}
+	if h.Spec.Topology != nil && h.Spec.Topology.Mode != nil &&
+		*h.Spec.Topology.Mode == HanaDBModeSystemReplication &&
+		h.Spec.Topology.SystemReplication != nil {
+		if h.Spec.Topology.SystemReplication.ReplicationMode == "" {
+			h.Spec.Topology.SystemReplication.ReplicationMode = ReplicationModeSync
+		}
+		if h.Spec.Topology.SystemReplication.OperationMode == "" {
+			h.Spec.Topology.SystemReplication.OperationMode = OperationModeLogReplay
 		}
 	}
 

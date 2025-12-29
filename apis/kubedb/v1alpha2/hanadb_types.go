@@ -134,6 +134,23 @@ type HanaDBTopology struct {
 	// Mode specifies the deployment mode.
 	// +optional
 	Mode *HanaDBMode `json:"mode,omitempty"`
+
+	// SystemReplication defines configuration for SAP HANA system replication.
+	// +optional
+	SystemReplication *HanaDBSystemReplicationSpec `json:"systemReplication,omitempty"`
+}
+
+// HanaDBSystemReplicationSpec defines system replication configuration.
+type HanaDBSystemReplicationSpec struct {
+	// ReplicationMode controls when transactions are committed relative to log shipping.
+	// +optional
+	// +kubebuilder:default=sync
+	ReplicationMode ReplicationMode `json:"replicationMode,omitempty"`
+
+	// OperationMode controls the log shipping/replay strategy on the secondary.
+	// +optional
+	// +kubebuilder:default=logreplay
+	OperationMode OperationMode `json:"operationMode,omitempty"`
 }
 
 // HanaDBStatus defines the observed state of HanaDB.

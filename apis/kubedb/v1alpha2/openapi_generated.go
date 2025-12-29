@@ -585,6 +585,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBList":                                    schema_apimachinery_apis_kubedb_v1alpha2_HanaDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_HanaDBStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBSystemReplicationSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSystemReplicationSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBTopology":                                schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Hazelcast":                                     schema_apimachinery_apis_kubedb_v1alpha2_Hazelcast(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HazelcastApp":                                  schema_apimachinery_apis_kubedb_v1alpha2_HazelcastApp(ref),
@@ -30450,6 +30451,33 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBStatus(ref common.ReferenceC
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSystemReplicationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HanaDBSystemReplicationSpec defines system replication configuration.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicationMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReplicationMode controls when transactions are committed relative to log shipping.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"operationMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OperationMode controls the log shipping/replay strategy on the secondary.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -30464,9 +30492,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTopology(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"systemReplication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SystemReplication defines configuration for SAP HANA system replication.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBSystemReplicationSpec"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBSystemReplicationSpec"},
 	}
 }
 

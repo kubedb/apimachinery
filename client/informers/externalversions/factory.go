@@ -35,6 +35,7 @@ import (
 	ops "kubedb.dev/apimachinery/client/informers/externalversions/ops"
 	postgres "kubedb.dev/apimachinery/client/informers/externalversions/postgres"
 	externalversionsschema "kubedb.dev/apimachinery/client/informers/externalversions/schema"
+	ui "kubedb.dev/apimachinery/client/informers/externalversions/ui"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"

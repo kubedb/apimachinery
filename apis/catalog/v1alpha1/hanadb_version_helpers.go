@@ -26,7 +26,7 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ HanaDBVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (HanaDBVersion) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralHanaDBVersion))
 }
 
