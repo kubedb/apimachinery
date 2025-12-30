@@ -255,23 +255,6 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(re
 		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
 	}
 
-	assign := 0
-	if req.Spec.Configuration.RemoveCustomConfig {
-		assign++
-	}
-	if w.applyConfigExists(req.Spec.Configuration.ApplyConfig) {
-		assign++
-	}
-	if req.Spec.Configuration.ConfigSecret != nil {
-		assign++
-	}
-	if assign > 1 {
-		return errors.New("more than 1 field have assigned to reconfigure your database but at a time you you are allowed to run one operation(`RemoveCustomConfig`, `ApplyConfig` or `ConfigSecret`) to reconfigure")
-	}
-	if db.Spec.ConfigSecret == nil && req.Spec.Configuration.RemoveCustomConfig {
-		return errors.New("database is not custom configured. so no need to run `RemoveCustomConfig` operation.")
-	}
-
 	return nil
 }
 
