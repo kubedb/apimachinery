@@ -27605,24 +27605,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfigurationSpec": {
-      "type": "object",
-      "properties": {
-        "applyConfig": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "configSecret": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
-        },
-        "removeCustomConfig": {
-          "type": "boolean"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLHorizontalScalingSpec": {
       "type": "object",
       "properties": {
@@ -27736,7 +27718,7 @@
         },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of MySQL",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLCustomConfigurationSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReconfigurationSpec"
         },
         "databaseRef": {
           "description": "Specifies the MySQL reference",

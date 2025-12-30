@@ -64,7 +64,7 @@ type MariaDBOpsRequestSpec struct {
 	// Specifies information necessary for volume expansion
 	VolumeExpansion *MariaDBVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for custom configuration of MariaDB
-	Configuration *MariaDBCustomConfigurationSpec `json:"configuration,omitempty"`
+	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *MariaDBTLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for configuring authSecret of the database

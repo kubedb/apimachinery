@@ -3030,7 +3030,7 @@ func (in *MariaDBOpsRequestSpec) DeepCopyInto(out *MariaDBOpsRequestSpec) {
 	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
-		*out = new(MariaDBCustomConfigurationSpec)
+		*out = new(ReconfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.TLS != nil {
@@ -4024,7 +4024,7 @@ func (in *MySQLOpsRequestSpec) DeepCopyInto(out *MySQLOpsRequestSpec) {
 	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
-		*out = new(MySQLCustomConfigurationSpec)
+		*out = new(ReconfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.TLS != nil {

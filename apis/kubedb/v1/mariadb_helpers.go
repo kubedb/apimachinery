@@ -308,6 +308,7 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 	if m.Spec.Init != nil && m.Spec.Init.Archiver != nil && m.Spec.Init.Archiver.ReplicationStrategy == nil {
 		m.Spec.Init.Archiver.ReplicationStrategy = ptr.To(ReplicationStrategySync)
 	}
+	m.updateConfigurationFieldIfNeeded()
 	m.setDefaultContainerSecurityContext(mdVersion, &m.Spec.PodTemplate)
 	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)
 	m.SetTLSDefaults()
@@ -337,6 +338,15 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 			m.Spec.Init.Archiver.ManifestRepository.Namespace = m.GetNamespace()
 		}
 	}
+}
+
+func (m *MariaDB) updateConfigurationFieldIfNeeded() {
+	if m.Spec.Configuration == nil && m.Spec.ConfigSecret != nil {
+		m.Spec.Configuration = &ConfigurationSpec{
+			SecretName: m.Spec.ConfigSecret.Name,
+		}
+	}
+	m.Spec.ConfigSecret = nil
 }
 
 func (m *MariaDB) SetDefaultsMaxscale(mdVersion *v1alpha1.MariaDBVersion, maxscale *MaxScaleSpec) {
@@ -578,7 +588,14 @@ func (m *MariaDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, 
 }
 
 func (m *MariaDB) InlineConfigSecretName() string {
-	return meta_util.NameWithSuffix(m.Name, "inline")
+	uid := string(m.UID)
+	trimmedUID := ""
+	if len(uid) > 6 {
+		trimmedUID = uid[len(uid)-6:]
+	} else {
+		trimmedUID = uid
+	}
+	return meta_util.NameWithSuffix(m.OffshootName(), trimmedUID)
 }
 
 func (m *MariaDB) CertMountPath(alias MariaDBCertificateAlias) string {

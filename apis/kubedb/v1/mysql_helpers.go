@@ -353,7 +353,7 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion) error {
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
-
+	m.updateConfigurationFieldIfNeeded()
 	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)
 	m.SetTLSDefaults()
 	m.SetHealthCheckerDefaults()
@@ -583,4 +583,24 @@ func (m *MySQL) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplat
 			apis.SetDefaultResourceLimits(&coordinatorContainer.Resources, kubedb.CoordinatorDefaultResources)
 		}
 	}
+}
+
+func (m *MySQL) updateConfigurationFieldIfNeeded() {
+	if m.Spec.Configuration == nil && m.Spec.ConfigSecret != nil {
+		m.Spec.Configuration = &ConfigurationSpec{
+			SecretName: m.Spec.ConfigSecret.Name,
+		}
+	}
+	m.Spec.ConfigSecret = nil
+}
+
+func (m *MySQL) ConfigSecretName() string {
+	uid := string(m.UID)
+	trimmedUID := ""
+	if len(uid) > 6 {
+		trimmedUID = uid[len(uid)-6:]
+	} else {
+		trimmedUID = uid
+	}
+	return meta_util.NameWithSuffix(m.OffshootName(), trimmedUID)
 }
