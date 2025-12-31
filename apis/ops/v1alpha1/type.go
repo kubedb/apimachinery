@@ -22,6 +22,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	nodemeta "kmodules.xyz/resource-metadata/apis/node/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // ReconfigureRestartType defines restart behavior during reconfiguration.
@@ -151,6 +152,7 @@ type Accessor interface {
 	GetRequestType() any
 	GetStatus() OpsRequestStatus
 	SetStatus(_ OpsRequestStatus)
+	client.Object
 }
 
 // +kubebuilder:validation:Enum=ConfigureArchiver;DisableArchiver
