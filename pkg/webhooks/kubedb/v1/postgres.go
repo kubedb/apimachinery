@@ -314,6 +314,17 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 			return nil, err
 		}
 	}
+
+	if postgres.Spec.Configuration != nil && len(postgres.Spec.Configuration.ApplyConfig) > 0 {
+		if len(postgres.Spec.Configuration.ApplyConfig) > 1 {
+			return nil, fmt.Errorf(`only one configuration source is allowed in spec.configuration.applyConfig and it should be %q`, kubedb.PostgresCustomConfigFile)
+		}
+		_, exists := postgres.Spec.Configuration.ApplyConfig[kubedb.PostgresCustomConfigFile]
+		if !exists {
+			return nil, fmt.Errorf(`invalid configuration source found in spec.configuration.applyConfig. only %q is allowed`, kubedb.PostgresCustomConfigFile)
+		}
+	}
+
 	err = wh.validateVolumes(postgres)
 	if err != nil {
 		return nil, err
