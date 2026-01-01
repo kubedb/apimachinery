@@ -1022,12 +1022,14 @@ func Convert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(in *v1.KafkaSpec, out *KafkaSpec
 		out.Topology = nil
 	}
 	out.EnableSSL = in.EnableSSL
+	out.BrokerRack = (*BrokerRack)(in.BrokerRack)
 	out.DisableSecurity = in.DisableSecurity
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.StorageType = StorageType(in.StorageType)
 	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	out.CruiseControl = (*KafkaCruiseControl)(unsafe.Pointer(in.CruiseControl))
 	out.PodTemplate = in.PodTemplate
 	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
 	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))

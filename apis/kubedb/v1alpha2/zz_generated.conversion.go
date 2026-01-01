@@ -309,11 +309,6 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*v1.KafkaSpec)(nil), (*KafkaSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(a.(*v1.KafkaSpec), b.(*KafkaSpec), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*KafkaStatus)(nil), (*v1.KafkaStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_KafkaStatus_To_v1_KafkaStatus(a.(*KafkaStatus), b.(*v1.KafkaStatus), scope)
 	}); err != nil {
@@ -871,6 +866,11 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddConversionFunc((*v1.KafkaNode)(nil), (*KafkaNode)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_KafkaNode_To_v1alpha2_KafkaNode(a.(*v1.KafkaNode), b.(*KafkaNode), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.KafkaSpec)(nil), (*KafkaSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(a.(*v1.KafkaSpec), b.(*KafkaSpec), scope)
 	}); err != nil {
 		return err
 	}

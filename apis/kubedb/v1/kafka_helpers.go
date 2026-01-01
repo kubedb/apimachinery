@@ -220,7 +220,7 @@ func (k *Kafka) NodeRoleSpecificLabelKey(role KafkaNodeRoleType) string {
 	return kubedb.GroupName + "/role-" + string(role)
 }
 
-func (k *Kafka) ConfigSecretName(role KafkaNodeRoleType) string {
+func (k *Kafka) ConfigSecretName() string {
 	uid := string(k.UID)
 	return meta_util.NameWithSuffix(k.OffshootName(), uid[len(uid)-6:])
 }
