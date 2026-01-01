@@ -32,6 +32,7 @@ type KubedbV1alpha2Interface interface {
 	CassandrasGetter
 	ClickHousesGetter
 	DB2sGetter
+	DB2HadrsGetter
 	DruidsGetter
 	ElasticsearchesGetter
 	EtcdsGetter
@@ -78,6 +79,10 @@ func (c *KubedbV1alpha2Client) ClickHouses(namespace string) ClickHouseInterface
 
 func (c *KubedbV1alpha2Client) DB2s(namespace string) DB2Interface {
 	return newDB2s(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) DB2Hadrs(namespace string) DB2HadrInterface {
+	return newDB2Hadrs(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Druids(namespace string) DruidInterface {
