@@ -21,6 +21,13 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
+const (
+	ResourceCodeDB2Hadr     = "db2Hadr"
+	ResourceKindDB2Hadr     = "DB2Hadr"
+	ResourceSingularDB2Hadr = "db2Hadr"
+	ResourcePluralDB2Hadr   = "db2adrs"
+)
+
 // DB2Hadr is the Schema for the db2Hadrs API.
 
 // +genclient
@@ -64,7 +71,8 @@ type DB2HadrStatus struct {
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
-	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	Conditions []kmapi.Condition      `json:"conditions,omitempty"`
+	db2Ref     *kmapi.ObjectReference `json:"db2Ref,omitempty"`
 }
 
 // +kubebuilder:object:root=true
