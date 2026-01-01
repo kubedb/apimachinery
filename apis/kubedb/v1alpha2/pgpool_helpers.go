@@ -211,7 +211,8 @@ func (p PgpoolStatsService) Path() string {
 }
 
 func (p PgpoolStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (p PgpoolStatsService) TLSConfig() *promapi.TLSConfig {

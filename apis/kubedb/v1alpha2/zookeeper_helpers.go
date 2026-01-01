@@ -350,7 +350,8 @@ func (z zookeeperStatsService) Path() string {
 }
 
 func (z zookeeperStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (z zookeeperStatsService) TLSConfig() *promapi.TLSConfig {
