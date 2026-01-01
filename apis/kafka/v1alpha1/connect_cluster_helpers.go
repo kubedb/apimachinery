@@ -179,7 +179,8 @@ func (k *ConnectCluster) PetSetName() string {
 }
 
 func (k *ConnectCluster) ConfigSecretName() string {
-	return meta_util.NameWithSuffix(k.OffshootName(), "config")
+	uid := string(k.UID)
+	return meta_util.NameWithSuffix(k.OffshootName(), uid[len(uid)-6:])
 }
 
 func (k *ConnectCluster) GetPersistentSecrets() []string {

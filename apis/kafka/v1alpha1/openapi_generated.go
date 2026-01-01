@@ -26666,6 +26666,11 @@ func schema_apimachinery_apis_kafka_v1alpha1_ConnectClusterSpec(ref common.Refer
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec"),
+						},
+					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
@@ -26712,7 +26717,7 @@ func schema_apimachinery_apis_kafka_v1alpha1_ConnectClusterSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 

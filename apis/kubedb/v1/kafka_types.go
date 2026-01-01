@@ -95,6 +95,9 @@ type KafkaSpec struct {
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
+	// +optional
+	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
+
 	// Keystore encryption secret
 	// +optional
 	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
