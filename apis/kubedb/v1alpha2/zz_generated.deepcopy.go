@@ -1006,6 +1006,11 @@ func (in *DB2HadrStatus) DeepCopyInto(out *DB2HadrStatus) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.db2Ref != nil {
+		in, out := &in.db2Ref, &out.db2Ref
+		*out = new(apiv1.ObjectReference)
+		**out = **in
+	}
 	return
 }
 
