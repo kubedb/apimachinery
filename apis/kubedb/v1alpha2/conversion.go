@@ -1006,6 +1006,37 @@ func Convert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(in *v1.Elasticse
 	return nil
 }
 
+func Convert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(in *v1.KafkaSpec, out *KafkaSpec, s conversion.Scope) error {
+	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
+		return err
+	}
+	out.Version = in.Version
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	if in.Topology != nil {
+		in, out := &in.Topology, &out.Topology
+		*out = new(KafkaClusterTopology)
+		if err := Convert_v1_KafkaClusterTopology_To_v1alpha2_KafkaClusterTopology(*in, *out, s); err != nil {
+			return err
+		}
+	} else {
+		out.Topology = nil
+	}
+	out.EnableSSL = in.EnableSSL
+	out.DisableSecurity = in.DisableSecurity
+	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
+	out.StorageType = StorageType(in.StorageType)
+	out.Storage = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.Storage))
+	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	out.PodTemplate = in.PodTemplate
+	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
+	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
+	out.Halted = in.Halted
+	out.DeletionPolicy = DeletionPolicy(in.DeletionPolicy)
+	out.HealthChecker = in.HealthChecker
+	return nil
+}
+
 func Convert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(in *v1.MemcachedSpec, out *MemcachedSpec, s conversion.Scope) error {
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
