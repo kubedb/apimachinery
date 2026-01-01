@@ -58,6 +58,9 @@ type DB2HadrSpec struct {
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+
+	// +optional
+	db2Ref *kmapi.ObjectReference `json:"db2Ref,omitempty"`
 }
 
 // DB2HadrStatus defines the observed state of DB2Hadr.
@@ -71,8 +74,7 @@ type DB2HadrStatus struct {
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
-	Conditions []kmapi.Condition      `json:"conditions,omitempty"`
-	db2Ref     *kmapi.ObjectReference `json:"db2Ref,omitempty"`
+	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
 // +kubebuilder:object:root=true
