@@ -42,6 +42,14 @@ type DB2ListerExpansion interface{}
 // DB2NamespaceLister.
 type DB2NamespaceListerExpansion interface{}
 
+// DB2HadrListerExpansion allows custom methods to be added to
+// DB2HadrLister.
+type DB2HadrListerExpansion interface{}
+
+// DB2HadrNamespaceListerExpansion allows custom methods to be added to
+// DB2HadrNamespaceLister.
+type DB2HadrNamespaceListerExpansion interface{}
+
 // DruidListerExpansion allows custom methods to be added to
 // DruidLister.
 type DruidListerExpansion interface{}
