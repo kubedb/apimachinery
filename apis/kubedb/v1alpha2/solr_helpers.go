@@ -230,7 +230,8 @@ func (s solrStatsService) Path() string {
 }
 
 func (s solrStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (s solrStatsService) TLSConfig() *promapi.TLSConfig {

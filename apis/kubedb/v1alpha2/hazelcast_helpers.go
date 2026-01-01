@@ -383,7 +383,8 @@ func (h hazelcastStatsService) Path() string {
 }
 
 func (h hazelcastStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (h hazelcastStatsService) TLSConfig() *promapi.TLSConfig {

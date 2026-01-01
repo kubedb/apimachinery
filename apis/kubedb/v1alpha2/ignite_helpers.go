@@ -311,7 +311,8 @@ func (i igniteStatsService) Path() string {
 }
 
 func (i igniteStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (i igniteStatsService) TLSConfig() *promapi.TLSConfig {

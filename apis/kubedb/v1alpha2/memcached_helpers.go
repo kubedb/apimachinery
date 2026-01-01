@@ -163,7 +163,8 @@ func (m memcachedStatsService) Path() string {
 }
 
 func (m memcachedStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (m memcachedStatsService) TLSConfig() *promapi.TLSConfig {
