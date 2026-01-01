@@ -2205,9 +2205,9 @@ const (
 	DB2DatabaseRoleKey      = "db2.db/role"
 	DB2DatabaseRoleObserver = "observer"
 	DB2DatabaseRoleInstance = "instance"
-	DB2EnvUserName          = "SYS_USER"
+	DB2EnvUserName          = "db2inst1"
 	DB2EnvPassword          = "DB2_PWD"
-	DB2EnvOracleSID         = "DB2_SID"
+	DB2EnvSID               = "DB2_SID"
 	DB2EnvDataDir           = "DB2DATA"
 )
 

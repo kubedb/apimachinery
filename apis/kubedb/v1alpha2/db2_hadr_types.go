@@ -68,11 +68,9 @@ type DB2HadrStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
-// +kubebuilder:object:root=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // DB2HadrList contains a list of DB2Hadr.
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type DB2HadrList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
