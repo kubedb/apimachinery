@@ -372,7 +372,7 @@ func (s *Singlestore) SetDefaults(kc client.Client) {
 		s.setDefaultContainerSecurityContext(&sdbVersion, s.Spec.Topology.Aggregator.PodTemplate)
 		s.setDefaultContainerSecurityContext(&sdbVersion, s.Spec.Topology.Leaf.PodTemplate)
 	}
-
+	s.copyConfigurationFields()
 	s.SetTLSDefaults()
 
 	s.SetHealthCheckerDefaults()
@@ -400,6 +400,31 @@ func (s *Singlestore) SetDefaults(kc client.Client) {
 	} else {
 		s.setDefaultContainerResourceLimits(s.Spec.PodTemplate)
 	}
+}
+
+func (s *Singlestore) copyConfigurationFields() {
+	if s.Spec.Topology.Aggregator != nil {
+		s.Spec.Topology.Aggregator.Configuration = copyConfigurationFields(s.Spec.Topology.Aggregator.Configuration, s.Spec.Topology.Aggregator.ConfigSecret)
+		s.Spec.Topology.Aggregator.ConfigSecret = nil
+	}
+
+	if s.Spec.Topology.Leaf != nil {
+		s.Spec.Topology.Leaf.Configuration = copyConfigurationFields(s.Spec.Topology.Leaf.Configuration, s.Spec.Topology.Leaf.ConfigSecret)
+		s.Spec.Topology.Leaf.ConfigSecret = nil
+	}
+
+	s.Spec.Configuration = copyConfigurationFields(s.Spec.Configuration, s.Spec.ConfigSecret)
+	s.Spec.ConfigSecret = nil
+}
+
+func copyConfigurationFields(cnf *ConfigurationSpec, sec *core.LocalObjectReference) *ConfigurationSpec {
+	if cnf == nil && sec != nil {
+		cnf = &ConfigurationSpec{
+			SecretName: sec.Name,
+		}
+	}
+	sec = nil
+	return cnf
 }
 
 func (s *Singlestore) setDefaultContainerSecurityContext(sdbVersion *catalog.SinglestoreVersion, podTemplate *ofst.PodTemplateSpec) {
@@ -533,6 +558,17 @@ func (s *Singlestore) ReplicasAreReady(lister pslister.PetSetLister) (bool, stri
 		expectedItems = 2
 	}
 	return checkReplicasOfPetSet(lister.PetSets(s.Namespace), labels.SelectorFromSet(s.OffshootLabels()), expectedItems)
+}
+
+func (s *Singlestore) InlineConfigSecretName() string {
+	uid := string(s.UID)
+	trimmedUID := ""
+	if len(uid) > 6 {
+		trimmedUID = uid[len(uid)-6:]
+	} else {
+		trimmedUID = uid
+	}
+	return metautil.NameWithSuffix(s.OffshootName(), trimmedUID)
 }
 
 type SinglestoreBind struct {

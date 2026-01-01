@@ -228,12 +228,14 @@ func (p *PerconaXtraDB) SetDefaults(pVersion *v1alpha1.PerconaXtraDBVersion) {
 		p.Spec.PodTemplate.Spec.ServiceAccountName = p.OffshootName()
 	}
 
+	p.copyConfigurationFileds()
 	// Need to set FSGroup equal to  p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup.
 	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
 	// Otherwise, We will get write permission denied.
 	p.setDefaultContainerSecurityContext(pVersion, &p.Spec.PodTemplate)
 	p.setDefaultContainerResourceLimits(&p.Spec.PodTemplate)
 	p.SetTLSDefaults()
+
 	p.Spec.Monitor.SetDefaults()
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
 		if p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
@@ -243,6 +245,15 @@ func (p *PerconaXtraDB) SetDefaults(pVersion *v1alpha1.PerconaXtraDBVersion) {
 			p.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = pVersion.Spec.SecurityContext.RunAsUser
 		}
 	}
+}
+
+func (p *PerconaXtraDB) copyConfigurationFileds() {
+	if p.Spec.Configuration == nil && p.Spec.ConfigSecret != nil {
+		p.Spec.Configuration = &ConfigurationSpec{
+			SecretName: p.Spec.ConfigSecret.Name,
+		}
+	}
+	p.Spec.ConfigSecret = nil
 }
 
 func (p *PerconaXtraDB) setDefaultContainerSecurityContext(pVersion *v1alpha1.PerconaXtraDBVersion, podTemplate *ofstv2.PodTemplateSpec) {
@@ -409,4 +420,15 @@ func (p *PerconaXtraDB) CertMountPath(alias PerconaXtraDBCertificateAlias) strin
 
 func (p *PerconaXtraDB) CertFilePath(certAlias PerconaXtraDBCertificateAlias, certFileName string) string {
 	return filepath.Join(p.CertMountPath(certAlias), certFileName)
+}
+
+func (p *PerconaXtraDB) InlineConfigSecretName() string {
+	uid := string(p.UID)
+	trimmedUID := ""
+	if len(uid) > 6 {
+		trimmedUID = uid[len(uid)-6:]
+	} else {
+		trimmedUID = uid
+	}
+	return meta_util.NameWithSuffix(p.OffshootName(), trimmedUID)
 }

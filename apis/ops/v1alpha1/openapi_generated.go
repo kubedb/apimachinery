@@ -32739,7 +32739,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBOpsRequestSpec(ref commo
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for custom configuration of PerconaXtraDB",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBCustomConfigurationSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
 						},
 					},
 					"tls": {
@@ -32784,7 +32784,7 @@ func schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBOpsRequestSpec(ref commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -35966,26 +35966,26 @@ func schema_apimachinery_apis_ops_v1alpha1_SinglestoreCustomConfigurationSpec(re
 					"node": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Custom Configuration specification for standalone",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
 						},
 					},
 					"aggregator": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Custom Configuration specification for Aggregator",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
 						},
 					},
 					"leaf": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Custom Configuration specification for Leaf",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"},
 	}
 }
 

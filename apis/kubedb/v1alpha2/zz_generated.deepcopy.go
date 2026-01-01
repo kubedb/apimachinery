@@ -7122,6 +7122,11 @@ func (in *SinglestoreNode) DeepCopyInto(out *SinglestoreNode) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
 		*out = new(corev1.PersistentVolumeClaimSpec)
@@ -7163,6 +7168,11 @@ func (in *SinglestoreSpec) DeepCopyInto(out *SinglestoreSpec) {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
+	}
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
