@@ -305,8 +305,6 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MariaDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("memcacheds"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Memcacheds().Informer()}, nil
-	case v1alpha2.SchemeGroupVersion.WithResource("milvuses"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Milvuses().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("mongodbs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MongoDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("mysqls"):
