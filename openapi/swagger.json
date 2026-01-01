@@ -28242,6 +28242,9 @@
         },
         "removeCustomConfig": {
           "type": "boolean"
+        },
+        "restart": {
+          "type": "string"
         }
       }
     },
