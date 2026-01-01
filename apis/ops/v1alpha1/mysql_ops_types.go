@@ -137,12 +137,6 @@ type MySQLVolumeExpansionSpec struct {
 	Mode  VolumeExpansionMode `json:"mode"`
 }
 
-type MySQLCustomConfigurationSpec struct {
-	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty"`
-	ApplyConfig        map[string]string          `json:"applyConfig,omitempty"`
-	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty"`
-}
-
 type MySQLTLSSpec struct {
 	TLSSpec `json:",inline,omitempty"`
 
