@@ -30,8 +30,6 @@ type Interface interface {
 	ClickHouses() ClickHouseInformer
 	// DB2s returns a DB2Informer.
 	DB2s() DB2Informer
-	// DB2Hadrs returns a DB2HadrInformer.
-	DB2Hadrs() DB2HadrInformer
 	// Druids returns a DruidInformer.
 	Druids() DruidInformer
 	// Elasticsearches returns a ElasticsearchInformer.
@@ -116,11 +114,6 @@ func (v *version) ClickHouses() ClickHouseInformer {
 // DB2s returns a DB2Informer.
 func (v *version) DB2s() DB2Informer {
 	return &dB2Informer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// DB2Hadrs returns a DB2HadrInformer.
-func (v *version) DB2Hadrs() DB2HadrInformer {
-	return &dB2HadrInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Druids returns a DruidInformer.

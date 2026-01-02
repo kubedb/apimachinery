@@ -542,10 +542,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConsumerNamespaces":                            schema_apimachinery_apis_kubedb_v1alpha2_ConsumerNamespaces(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_CoordinatorSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2":                                           schema_apimachinery_apis_kubedb_v1alpha2_DB2(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2Hadr":                                       schema_apimachinery_apis_kubedb_v1alpha2_DB2Hadr(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2HadrList":                                   schema_apimachinery_apis_kubedb_v1alpha2_DB2HadrList(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2HadrSpec":                                   schema_apimachinery_apis_kubedb_v1alpha2_DB2HadrSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2HadrStatus":                                 schema_apimachinery_apis_kubedb_v1alpha2_DB2HadrStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2List":                                       schema_apimachinery_apis_kubedb_v1alpha2_DB2List(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2Spec":                                       schema_apimachinery_apis_kubedb_v1alpha2_DB2Spec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2Status":                                     schema_apimachinery_apis_kubedb_v1alpha2_DB2Status(ref),
@@ -727,7 +723,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisSpec":                                     schema_apimachinery_apis_kubedb_v1alpha2_RedisSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RedisStatus":                                   schema_apimachinery_apis_kubedb_v1alpha2_RedisStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RemoteReplicaSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_RemoteReplicaSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ReplicaSpec":                                   schema_apimachinery_apis_kubedb_v1alpha2_ReplicaSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ScriptSourceSpec":                              schema_apimachinery_apis_kubedb_v1alpha2_ScriptSourceSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference":                               schema_apimachinery_apis_kubedb_v1alpha2_SecretReference(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SemiSyncSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_SemiSyncSpec(ref),
@@ -28022,191 +28017,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DB2(ref common.ReferenceCallback) 
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_DB2Hadr(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2HadrSpec"),
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2HadrStatus"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2HadrSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2HadrStatus"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_DB2HadrList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DB2HadrList contains a list of DB2Hadr.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2Hadr"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2Hadr"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_DB2HadrSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DB2HadrSpec defines the desired state of DB2Hadr.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"primary": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ReplicaSpec"),
-						},
-					},
-					"standby": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ReplicaSpec"),
-						},
-					},
-					"configSecret": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
-						},
-					},
-					"serviceTemplates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ServiceTemplates is an optional configuration for services used to expose database",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ReplicaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_DB2HadrStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DB2HadrStatus defines the observed state of DB2Hadr.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"phase": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies the current phase of the database",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"observedGeneration": {
-						SchemaProps: spec.SchemaProps{
-							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"conditions": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Conditions applied to the database, such as approval or denial.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_DB2List(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -28329,11 +28139,25 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DB2Spec(ref common.ReferenceCallba
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
+					"hadrConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HADR configuration for DB2",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -38280,26 +38104,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_RemoteReplicaSpec(ref common.Refer
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.ObjectReference"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_ReplicaSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"id": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Numerical ID",
-							Default:     0,
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-				},
-			},
-		},
 	}
 }
 
