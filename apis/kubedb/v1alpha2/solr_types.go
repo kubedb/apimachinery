@@ -102,6 +102,9 @@ type SolrSpec struct {
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
 	// +optional
+	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
+
+	// +optional
 	KeystoreSecret *core.LocalObjectReference `json:"keystoreSecret,omitempty"`
 
 	// +optional

@@ -7479,6 +7479,11 @@ func (in *SolrSpec) DeepCopyInto(out *SolrSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.KeystoreSecret != nil {
 		in, out := &in.KeystoreSecret, &out.KeystoreSecret
 		*out = new(corev1.LocalObjectReference)
