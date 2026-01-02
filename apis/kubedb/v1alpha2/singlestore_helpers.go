@@ -116,7 +116,8 @@ func (s singlestoreStatsService) Path() string {
 }
 
 func (s singlestoreStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (s singlestoreStatsService) TLSConfig() *promapi.TLSConfig {

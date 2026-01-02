@@ -149,7 +149,8 @@ func (m mssqlserverStatsService) Path() string {
 }
 
 func (m mssqlserverStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (m mssqlserverStatsService) TLSConfig() *promapi.TLSConfig {

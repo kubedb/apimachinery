@@ -590,7 +590,8 @@ func (m mongoDBStatsService) Path() string {
 }
 
 func (m mongoDBStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (m mongoDBStatsService) TLSConfig() *promapi.TLSConfig {

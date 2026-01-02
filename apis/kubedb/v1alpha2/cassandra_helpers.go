@@ -254,7 +254,8 @@ func (ks CassandraStatsService) Path() string {
 }
 
 func (ks CassandraStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (r *Cassandra) StatsService() mona.StatsAccessor {

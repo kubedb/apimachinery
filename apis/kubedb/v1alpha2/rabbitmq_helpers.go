@@ -189,7 +189,8 @@ func (ks RabbitmqStatsService) Path() string {
 }
 
 func (ks RabbitmqStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (r *RabbitMQ) StatsService() mona.StatsAccessor {

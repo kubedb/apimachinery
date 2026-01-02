@@ -256,7 +256,8 @@ func (m mariadbStatsService) Path() string {
 }
 
 func (m mariadbStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (m mariadbStatsService) TLSConfig() *promapi.TLSConfig {

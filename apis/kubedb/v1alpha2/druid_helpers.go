@@ -173,7 +173,8 @@ func (ks DruidStatsService) Path() string {
 }
 
 func (ks DruidStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (d *Druid) StatsService() mona.StatsAccessor {
