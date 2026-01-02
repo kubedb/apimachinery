@@ -85,6 +85,10 @@ type DB2Spec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+
+	// HADR configuration for DB2
+	// +optional
+	HADRConfig []core.LocalObjectReference `json:"hadrConfig,omitempty"`
 }
 
 // DB2Status defines the observed state of DB2.
