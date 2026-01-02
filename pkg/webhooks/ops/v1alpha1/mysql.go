@@ -19,7 +19,6 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -256,14 +255,6 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(re
 	}
 
 	return nil
-}
-
-func (w *MySQLOpsRequestCustomWebhook) applyConfigExists(applyConfig map[string]string) bool {
-	if applyConfig == nil {
-		return false
-	}
-	_, exists := applyConfig[kubedb.MySQLCustomConfigFile]
-	return exists
 }
 
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest(req *opsapi.MySQLOpsRequest) error {
