@@ -243,8 +243,11 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureOpsRequest(
 		}
 	}
 
-	if req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret != nil {
-		return errors.New("can not use `spec.configuration.removeCustomConfig` and `spec.configuration.configSecret` is not supported together")
+	if req.Spec.Configuration.Restart != nil && *req.Spec.Configuration.Restart == opsapi.PostgresReconfigureRestartAuto {
+		return errors.New("`spec.configuration.restart` value auto not supported for postgres")
+	}
+	if req.Spec.Configuration.Restart != nil && *req.Spec.Configuration.Restart == opsapi.PostgresReconfigureRestartFalse && req.Spec.Configuration.RemoveCustomConfig {
+		return errors.New("`spec.configuration.restart: false` is not allowed when `spec.configuration.removeCustomConfig: true` for postgres")
 	}
 
 	return nil

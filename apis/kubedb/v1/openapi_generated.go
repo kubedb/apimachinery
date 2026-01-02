@@ -587,6 +587,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PgBouncerStatus":                                     schema_apimachinery_apis_kubedb_v1_PgBouncerStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgreLeaderElectionConfig":                         schema_apimachinery_apis_kubedb_v1_PostgreLeaderElectionConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Postgres":                                            schema_apimachinery_apis_kubedb_v1_Postgres(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresConfiguration":                               schema_apimachinery_apis_kubedb_v1_PostgresConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresList":                                        schema_apimachinery_apis_kubedb_v1_PostgresList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresReplication":                                 schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresSpec":                                        schema_apimachinery_apis_kubedb_v1_PostgresSpec(ref),
@@ -615,7 +616,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.SemiSyncSpec":                                        schema_apimachinery_apis_kubedb_v1_SemiSyncSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Shards":                                              schema_apimachinery_apis_kubedb_v1_Shards(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.SystemUserSecretsSpec":                               schema_apimachinery_apis_kubedb_v1_SystemUserSecretsSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1.TuningResourcesOverride":                             schema_apimachinery_apis_kubedb_v1_TuningResourcesOverride(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.elasticsearchApp":                                    schema_apimachinery_apis_kubedb_v1_elasticsearchApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.elasticsearchStatsService":                           schema_apimachinery_apis_kubedb_v1_elasticsearchStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.kafkaStatsService":                                   schema_apimachinery_apis_kubedb_v1_kafkaStatsService(ref),
@@ -30871,6 +30871,47 @@ func schema_apimachinery_apis_kubedb_v1_Postgres(ref common.ReferenceCallback) c
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_PostgresConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretName is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"applyConfig": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tuning": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.PostgresTuningConfig"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresTuningConfig"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_PostgresList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -30951,9 +30992,9 @@ func schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref common.Reference
 							Format: "int32",
 						},
 					},
-					"forceFailOverAcceptingDataLossAfter": {
+					"forceFailoverAcceptingDataLossAfter": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ForceFailOverAcceptingDataLossAfter is the maximum time to wait before running a force failover process This is helpful for a scenario where the old primary is not available and it has the most updated wal lsn Doing force failover may or may not end up loosing data depending on any wrtie transaction in the range lagged lsn between the new primary and the old primary",
+							Description: "ForceFailoverAcceptingDataLossAfter is the maximum time to wait before running a force failover process This is helpful for a scenario where the old primary is not available and it has the most updated wal lsn Doing force failover may or may not end up loosing data depending on any wrtie transaction in the range lagged lsn between the new primary and the old primary",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
@@ -31084,6 +31125,11 @@ func schema_apimachinery_apis_kubedb_v1_PostgresSpec(ref common.ReferenceCallbac
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.PostgresConfiguration"),
+						},
+					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
@@ -31162,17 +31208,12 @@ func schema_apimachinery_apis_kubedb_v1_PostgresSpec(ref common.ReferenceCallbac
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.PostgresReplication"),
 						},
 					},
-					"tuning": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.PostgresTuningConfig"),
-						},
-					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.ArbiterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgreLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgresReplication", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgresTuningConfig", "kubedb.dev/apimachinery/apis/kubedb/v1.RemoteReplicaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.ArbiterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgreLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgresConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgresReplication", "kubedb.dev/apimachinery/apis/kubedb/v1.RemoteReplicaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
@@ -31230,9 +31271,9 @@ func schema_apimachinery_apis_kubedb_v1_PostgresTuningConfig(ref common.Referenc
 				Description: "PostgresTuningConfig defines configuration for PostgreSQL performance tuning",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"tuningProfile": {
+					"profile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TuningProfile defines a predefined tuning profile for different workload types. If specified, other tuning parameters will be calculated based on this profile.",
+							Description: "Profile defines a predefined tuning profile for different workload types. If specified, other tuning parameters will be calculated based on this profile.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -31242,12 +31283,6 @@ func schema_apimachinery_apis_kubedb_v1_PostgresTuningConfig(ref common.Referenc
 							Description: "MaxConnections defines the maximum number of concurrent connections. If not specified, it will be calculated based on available memory and tuning profile.",
 							Type:        []string{"integer"},
 							Format:      "int32",
-						},
-					},
-					"resourcesOverride": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ResourcesOverride allows overriding resource calculations. If specified, these values will be used instead of pod resource limits/requests.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.TuningResourcesOverride"),
 						},
 					},
 					"storageType": {
@@ -31267,8 +31302,6 @@ func schema_apimachinery_apis_kubedb_v1_PostgresTuningConfig(ref common.Referenc
 				},
 			},
 		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1.TuningResourcesOverride"},
 	}
 }
 
@@ -32652,34 +32685,6 @@ func schema_apimachinery_apis_kubedb_v1_SystemUserSecretsSpec(ref common.Referen
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1_TuningResourcesOverride(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "TuningResourcesOverride allows overriding resource calculations for tuning",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"memory": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Memory overrides the total memory used for tuning calculations. Format: \"1Gi\", \"512Mi\", etc.",
-							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
-						},
-					},
-					"cpu": {
-						SchemaProps: spec.SchemaProps{
-							Description: "CPU overrides the CPU count used for tuning calculations.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
