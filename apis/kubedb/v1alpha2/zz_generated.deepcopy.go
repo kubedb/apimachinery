@@ -6257,6 +6257,11 @@ func (in *QdrantSpec) DeepCopyInto(out *QdrantSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.PodTemplate != nil {
 		in, out := &in.PodTemplate, &out.PodTemplate
 		*out = new(v2.PodTemplateSpec)

@@ -148,7 +148,8 @@ func (q *Qdrant) GetAPIKey(ctx context.Context, kc client.Client) string {
 }
 
 func (q *Qdrant) ConfigSecretName() string {
-	return meta_util.NameWithSuffix(q.OffshootName(), "config")
+	uid := string(q.UID)
+	return meta_util.NameWithSuffix(q.OffshootName(), uid[len(uid)-6:])
 }
 
 func (q *Qdrant) GetPersistentSecrets() []string {
