@@ -159,7 +159,8 @@ func (ks connectClusterStatsService) Path() string {
 }
 
 func (ks connectClusterStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (k *ConnectCluster) StatsService() mona.StatsAccessor {

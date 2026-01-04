@@ -166,7 +166,8 @@ func (p proxysqlStatsService) Path() string {
 }
 
 func (p proxysqlStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (p proxysqlStatsService) TLSConfig() *promapi.TLSConfig {

@@ -304,7 +304,8 @@ func (cs ClickHouseStatsService) Path() string {
 }
 
 func (cs ClickHouseStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (c *ClickHouse) StatsService() mona.StatsAccessor {

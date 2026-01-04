@@ -180,7 +180,8 @@ func (os hanadbStatsService) Path() string {
 }
 
 func (os hanadbStatsService) Scheme() string {
-	return ""
+	sc := promapi.SchemeHTTP
+	return sc.String()
 }
 
 func (h *HanaDB) StatsService() mona.StatsAccessor {
