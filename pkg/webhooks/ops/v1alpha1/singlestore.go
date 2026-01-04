@@ -242,15 +242,6 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreReconfigurationO
 	if sdb.Spec.Topology == nil && configurationSpec.Node == nil {
 		return errors.New("spec.configuration.node can not be empty as reference database mode is standalone")
 	}
-	if configurationSpec.Aggregator != nil && (configurationSpec.Aggregator.ConfigSecret != nil && len(configurationSpec.Aggregator.ApplyConfig) != 0) {
-		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
-	}
-	if configurationSpec.Leaf != nil && (configurationSpec.Leaf.ConfigSecret != nil && len(configurationSpec.Leaf.ApplyConfig) != 0) {
-		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
-	}
-	if configurationSpec.Node != nil && (configurationSpec.Node.ConfigSecret != nil && len(configurationSpec.Node.ApplyConfig) != 0) {
-		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
-	}
 	return nil
 }
 

@@ -19,7 +19,6 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -251,36 +250,11 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(re
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
-	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && !w.applyConfigExists(req.Spec.Configuration.ApplyConfig) && req.Spec.Configuration.ConfigSecret == nil) {
+	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ApplyConfig == nil && req.Spec.Configuration.ConfigSecret == nil) {
 		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
 	}
 
-	assign := 0
-	if req.Spec.Configuration.RemoveCustomConfig {
-		assign++
-	}
-	if w.applyConfigExists(req.Spec.Configuration.ApplyConfig) {
-		assign++
-	}
-	if req.Spec.Configuration.ConfigSecret != nil {
-		assign++
-	}
-	if assign > 1 {
-		return errors.New("more than 1 field have assigned to reconfigure your database but at a time you you are allowed to run one operation(`RemoveCustomConfig`, `ApplyConfig` or `ConfigSecret`) to reconfigure")
-	}
-	if db.Spec.ConfigSecret == nil && req.Spec.Configuration.RemoveCustomConfig {
-		return errors.New("database is not custom configured. so no need to run `RemoveCustomConfig` operation.")
-	}
-
 	return nil
-}
-
-func (w *MySQLOpsRequestCustomWebhook) applyConfigExists(applyConfig map[string]string) bool {
-	if applyConfig == nil {
-		return false
-	}
-	_, exists := applyConfig[kubedb.MySQLCustomConfigFile]
-	return exists
 }
 
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest(req *opsapi.MySQLOpsRequest) error {

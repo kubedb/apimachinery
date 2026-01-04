@@ -243,22 +243,14 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpans
 }
 
 func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBReconfigurationOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
-	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && len(req.Spec.Configuration.ApplyConfig) == 0 && req.Spec.Configuration.ConfigSecret == nil) {
-		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
+	db := &dbapi.PerconaXtraDB{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get percona-xtradb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
-	assign := 0
-	if req.Spec.Configuration.RemoveCustomConfig {
-		assign++
-	}
-	if req.Spec.Configuration.ApplyConfig != nil {
-		assign++
-	}
-	if req.Spec.Configuration.ConfigSecret != nil {
-		assign++
-	}
-	if assign > 1 {
-		return errors.New("more than 1 field have assigned to reconfigure your database but at a time you you are allowed to run one operation(`RemoveCustomConfig`, `ApplyConfig` or `ConfigSecret`) to reconfigure")
+	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && len(req.Spec.Configuration.ApplyConfig) == 0 && req.Spec.Configuration.ConfigSecret == nil) {
+		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
 	}
 
 	return nil

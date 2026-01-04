@@ -98,6 +98,11 @@ func (s *Solr) SolrSecretName(suffix string) string {
 	return strings.Join([]string{s.Name, suffix}, "-")
 }
 
+func (s *Solr) SolrConfigSecretName() string {
+	uid := string(s.UID)
+	return meta_util.NameWithSuffix(s.OffshootName(), uid[len(uid)-6:])
+}
+
 func (s *Solr) GetAuthSecretName() string {
 	if s.Spec.AuthSecret != nil && s.Spec.AuthSecret.Name != "" {
 		return s.Spec.AuthSecret.Name

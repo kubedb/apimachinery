@@ -76,6 +76,9 @@ type SinglestoreSpec struct {
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
+	// +optional
+	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
+
 	// Init is used to initialize database
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
@@ -136,6 +139,9 @@ type SinglestoreNode struct {
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
+
+	// +optional
+	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
 	// Storage to specify how storage shall be used.
 	// +optional

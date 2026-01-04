@@ -281,20 +281,6 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBReconfigurationOpsReques
 		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
 	}
 
-	assign := 0
-	if req.Spec.Configuration.RemoveCustomConfig {
-		assign++
-	}
-	if req.Spec.Configuration.ApplyConfig != nil {
-		assign++
-	}
-	if req.Spec.Configuration.ConfigSecret != nil {
-		assign++
-	}
-	if assign > 1 {
-		return errors.New("more than 1 field have assigned to reconfigure your database but at a time you you are allowed to run one operation(`RemoveCustomConfig`, `ApplyConfig` or `ConfigSecret`) to reconfigure")
-	}
-
 	return nil
 }
 
