@@ -87,6 +87,28 @@ spec:
                     - auto
                     - "false"
                     type: string
+                  tuning:
+                    properties:
+                      disableAutoTune:
+                        type: boolean
+                      maxConnections:
+                        format: int32
+                        type: integer
+                      profile:
+                        enum:
+                        - web
+                        - oltp
+                        - dw
+                        - mixed
+                        - desktop
+                        type: string
+                      storageType:
+                        enum:
+                        - ssd
+                        - hdd
+                        - san
+                        type: string
+                    type: object
                 type: object
               databaseRef:
                 properties:

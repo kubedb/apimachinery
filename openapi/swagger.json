@@ -28245,6 +28245,9 @@
         },
         "restart": {
           "type": "string"
+        },
+        "tuning": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresTuningConfig"
         }
       }
     },
@@ -28493,6 +28496,29 @@
         },
         "sslMode": {
           "description": "SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresTuningConfig": {
+      "description": "PostgresTuningConfig defines configuration for PostgreSQL performance tuning",
+      "type": "object",
+      "properties": {
+        "disableAutoTune": {
+          "description": "DisableAutoTune disables automatic tuning entirely. If set to true, no tuning will be applied.",
+          "type": "boolean"
+        },
+        "maxConnections": {
+          "description": "MaxConnections defines the maximum number of concurrent connections. If not specified, it will be calculated based on available memory and tuning profile.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "profile": {
+          "description": "Profile defines a predefined tuning profile for different workload types. If specified, other tuning parameters will be calculated based on this profile.",
+          "type": "string"
+        },
+        "storageType": {
+          "description": "StorageType defines the type of storage for tuning purposes. If not specified, it will be inferred from StorageClass or default to HDD.",
           "type": "string"
         }
       }
