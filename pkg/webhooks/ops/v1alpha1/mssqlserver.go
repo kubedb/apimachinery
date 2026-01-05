@@ -113,7 +113,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 
 	var allErr field.ErrorList
 	var db olddbapi.MSSQLServer
-	switch req.GetRequestType().(opsapi.MSSQLServerOpsRequestType) {
+	switch opsapi.MSSQLServerOpsRequestType(req.GetRequestType()) {
 	case opsapi.MSSQLServerOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

@@ -99,7 +99,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 
 	var allErr field.ErrorList
 	var db olddbapi.MariaDB
-	switch req.GetRequestType().(opsapi.MariaDBOpsRequestType) {
+	switch opsapi.MariaDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.MariaDBOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

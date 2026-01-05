@@ -112,7 +112,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 
 	var allErr field.ErrorList
 	var db olddbapi.RabbitMQ
-	switch req.GetRequestType().(opsapi.RabbitMQOpsRequestType) {
+	switch opsapi.RabbitMQOpsRequestType(req.GetRequestType()) {
 	case opsapi.RabbitMQOpsRequestTypeRestart:
 		if err := rv.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

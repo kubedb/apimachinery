@@ -149,7 +149,7 @@ const (
 type Accessor interface {
 	GetObjectMeta() metav1.ObjectMeta
 	GetDBRefName() string
-	GetRequestType() any
+	GetRequestType() string
 	GetStatus() OpsRequestStatus
 	SetStatus(_ OpsRequestStatus)
 	client.Object

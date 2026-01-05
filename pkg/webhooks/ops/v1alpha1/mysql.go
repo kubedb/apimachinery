@@ -100,7 +100,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 
 	var allErr field.ErrorList
 	var db olddbapi.MySQL
-	switch req.GetRequestType().(opsapi.MySQLOpsRequestType) {
+	switch opsapi.MySQLOpsRequestType(req.GetRequestType()) {
 	case opsapi.MySQLOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

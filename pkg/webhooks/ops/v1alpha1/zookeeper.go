@@ -116,7 +116,7 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 
 	var allErr field.ErrorList
 	var db dbapi.ZooKeeper
-	switch req.GetRequestType().(opsapi.ZooKeeperOpsRequestType) {
+	switch opsapi.ZooKeeperOpsRequestType(req.GetRequestType()) {
 	case opsapi.ZooKeeperOpsRequestTypeUpdateVersion:
 		if err := z.validateZooKeeperUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type").Child("updateVersion"),

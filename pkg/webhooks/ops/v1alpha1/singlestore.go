@@ -118,7 +118,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 		return fmt.Errorf("referenced database %s/%s is not found", req.Namespace, req.Spec.DatabaseRef.Name)
 	}
 
-	switch req.GetRequestType().(opsapi.SinglestoreOpsRequestType) {
+	switch opsapi.SinglestoreOpsRequestType(req.GetRequestType()) {
 	case opsapi.SinglestoreOpsRequestTypeRestart:
 		if _, err := s.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
