@@ -82,6 +82,9 @@ type DruidSpec struct {
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
+	// +optional
+	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
+
 	// To enable ssl for http layer
 	EnableSSL bool `json:"enableSSL,omitempty"`
 
