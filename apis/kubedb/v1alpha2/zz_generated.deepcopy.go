@@ -7890,6 +7890,11 @@ func (in *ZooKeeperSpec) DeepCopyInto(out *ZooKeeperSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.KeystoreCredSecret != nil {
 		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
 		*out = new(SecretReference)

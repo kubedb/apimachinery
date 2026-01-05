@@ -87,7 +87,8 @@ func (z *ZooKeeper) ServiceAccountName() string {
 }
 
 func (z *ZooKeeper) ConfigSecretName() string {
-	return meta_util.NameWithSuffix(z.OffshootName(), "config")
+	uid := string(z.UID)
+	return meta_util.NameWithSuffix(z.OffshootName(), uid[len(uid)-6:])
 }
 
 func (z *ZooKeeper) PVCName(alias string) string {
