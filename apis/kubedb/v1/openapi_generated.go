@@ -595,6 +595,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresTuningConfig":                                schema_apimachinery_apis_kubedb_v1_PostgresTuningConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQL":                                            schema_apimachinery_apis_kubedb_v1_ProxySQL(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration":                               schema_apimachinery_apis_kubedb_v1_ProxySQLConfiguration(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfigurationSpec":                           schema_apimachinery_apis_kubedb_v1_ProxySQLConfigurationSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLInitConfiguration":                           schema_apimachinery_apis_kubedb_v1_ProxySQLInitConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLList":                                        schema_apimachinery_apis_kubedb_v1_ProxySQLList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLSpec":                                        schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLStatus":                                      schema_apimachinery_apis_kubedb_v1_ProxySQLStatus(ref),
@@ -31468,6 +31470,53 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLConfiguration(ref common.Referen
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_ProxySQLConfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"init": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Init contains bootstrap-only configuration. This configuration is applied only once during initial deployment. Changes to this field after the database is initialized are ignored.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLInitConfiguration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLInitConfiguration"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1_ProxySQLInitConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"inline": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Inline contains structured bootstrap configuration. These values always take precedence over ConfigSecret.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration"),
+						},
+					},
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "a Secret containing raw bootstrap config files for ProxySQL. Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf. Values are patched verbatim into proxysql.cnf during bootstrap. Inline configuration (init.inline) always takes precedence. These configs are applied only once; invalid formatting may cause startup failure.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_ProxySQLList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -31531,7 +31580,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 					},
 					"syncUsers": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server . Password changes are also synced in proxysql when it is enabled.",
+							Description: "SyncUsers is a boolean type and when enabled, operator fetches all users created in the backend server to the ProxySQL server. Password changes are also synced in proxysql when it is enabled.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -31540,6 +31589,18 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 						SchemaProps: spec.SchemaProps{
 							Description: "InitConfiguration contains information with which the proxysql will bootstrap (only 4 tables are configurable)",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration"),
+						},
+					},
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret is an optional field to provide custom configuration file for proxysql. Users can provide a Secret containing raw bootstrap config files for ProxySQL. Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf. Values are patched verbatim into proxysql.cnf during bootstrap. InitConfiguration (spec.initConfig) takes precedence than this. These configs are applied only once; invalid formatting may cause startup failure.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration is an optional field to provide custom configuration for ProxySQL. If specified, these configurations will be used with default configurations (if any). Configurations from this spec will override default configurations.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfigurationSpec"),
 						},
 					},
 					"version": {
@@ -31552,7 +31613,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for ProxySQL. Currently we support only replicas = 1.",
+							Description: "Number of instances to deploy for ProxySQL. If replicas > 1, ProxySQL servers will be clustered.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -31573,12 +31634,6 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 						SchemaProps: spec.SchemaProps{
 							Description: "Monitor is used monitor proxysql instance",
 							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
-						},
-					},
-					"configSecret": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret is an optional field to provide custom configuration file for proxysql (i.e custom-proxysql.cnf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"podTemplate": {
@@ -31634,7 +31689,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 

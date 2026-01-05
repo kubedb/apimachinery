@@ -4007,12 +4007,13 @@ func autoConvert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, o
 	}
 	out.SyncUsers = in.SyncUsers
 	out.InitConfiguration = (*ProxySQLConfiguration)(unsafe.Pointer(in.InitConfiguration))
+	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	// WARNING: in.Configuration requires manual conversion: does not exist in peer-type
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Backend = (*corev1.LocalObjectReference)(unsafe.Pointer(in.Backend))
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
-	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
 	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
 		return err
 	}
