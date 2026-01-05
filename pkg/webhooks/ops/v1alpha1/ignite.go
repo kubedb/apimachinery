@@ -112,7 +112,7 @@ func (rv *IgniteOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Igni
 
 	var allErr field.ErrorList
 	var db olddbapi.Ignite
-	switch req.GetRequestType().(opsapi.IgniteOpsRequestType) {
+	switch opsapi.IgniteOpsRequestType(req.GetRequestType()) {
 	case opsapi.IgniteOpsRequestTypeRestart:
 		if err := rv.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

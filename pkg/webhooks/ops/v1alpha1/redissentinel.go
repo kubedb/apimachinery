@@ -123,7 +123,7 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 
 	var allErr field.ErrorList
 	var db dbapi.RedisSentinel
-	switch req.GetRequestType().(opsapi.RedisSentinelOpsRequestType) {
+	switch opsapi.RedisSentinelOpsRequestType(req.GetRequestType()) {
 	case opsapi.RedisSentinelOpsRequestTypeUpdateVersion:
 		if err := w.validateRedisSentinelUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),

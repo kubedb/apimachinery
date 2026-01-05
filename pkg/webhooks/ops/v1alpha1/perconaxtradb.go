@@ -97,7 +97,7 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 
 	var allErr field.ErrorList
 	var db dbapi.PerconaXtraDB
-	switch req.GetRequestType().(opsapi.PerconaXtraDBOpsRequestType) {
+	switch opsapi.PerconaXtraDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.PerconaXtraDBOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

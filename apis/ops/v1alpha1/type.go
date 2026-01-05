@@ -22,6 +22,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	nodemeta "kmodules.xyz/resource-metadata/apis/node/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 type OpsRequestStatus struct {
@@ -110,9 +111,10 @@ const (
 type Accessor interface {
 	GetObjectMeta() metav1.ObjectMeta
 	GetDBRefName() string
-	GetRequestType() any
+	GetRequestType() string
 	GetStatus() OpsRequestStatus
 	SetStatus(_ OpsRequestStatus)
+	client.Object
 }
 
 // +kubebuilder:validation:Enum=ConfigureArchiver;DisableArchiver
