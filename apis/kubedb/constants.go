@@ -1079,6 +1079,7 @@ const (
 	SolrZkDigest          = "zk-digest"
 	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
+	SolrApplyConfig         = "apply-config"
 	SolrVolumeDefaultConfig = "default-config"
 	SolrVolumeCustomConfig  = "custom-config"
 	SolrVolumeAuthConfig    = "auth-config"
