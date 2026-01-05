@@ -143,6 +143,10 @@ func (m MariaDB) offshootLabels(selector, override map[string]string) map[string
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, m.Labels, override))
 }
 
+func (m MariaDB) AddKeyPrefix(key string) string {
+	return meta_util.NameWithPrefix("zz", key)
+}
+
 func (m MariaDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
 	return m.offshootLabels(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), svcTemplate.Labels)

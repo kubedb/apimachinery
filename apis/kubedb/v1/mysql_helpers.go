@@ -122,6 +122,10 @@ func (m MySQL) offshootLabels(selector, override map[string]string) map[string]s
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, m.Labels, override))
 }
 
+func (m MySQL) AddKeyPrefix(key string) string {
+	return meta_util.NameWithPrefix("zz", key)
+}
+
 func (m MySQL) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", ResourcePluralMySQL, kubedb.GroupName)
 }

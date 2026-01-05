@@ -87,6 +87,10 @@ func (p PerconaXtraDB) offshootLabels(selector, override map[string]string) map[
 	return meta_util.FilterKeys(kubedb.GroupName, selector, meta_util.OverwriteKeys(nil, p.Labels, override))
 }
 
+func (m PerconaXtraDB) AddKeyPrefix(key string) string {
+	return meta_util.NameWithPrefix("zz", key)
+}
+
 func (p PerconaXtraDB) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", ResourcePluralPerconaXtraDB, kubedb.GroupName)
 }
