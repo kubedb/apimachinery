@@ -694,11 +694,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVerticalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_PostgresVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresVolumeExpansionSpec":                      schema_apimachinery_apis_ops_v1alpha1_PostgresVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLCustomConfiguration":                      schema_apimachinery_apis_ops_v1alpha1_ProxySQLCustomConfiguration(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLCustomConfigurationSpec":                  schema_apimachinery_apis_ops_v1alpha1_ProxySQLCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLHorizontalScalingSpec":                    schema_apimachinery_apis_ops_v1alpha1_ProxySQLHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLOpsRequest":                               schema_apimachinery_apis_ops_v1alpha1_ProxySQLOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLOpsRequestList":                           schema_apimachinery_apis_ops_v1alpha1_ProxySQLOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLOpsRequestSpec":                           schema_apimachinery_apis_ops_v1alpha1_ProxySQLOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLReconfigurationSpec":                      schema_apimachinery_apis_ops_v1alpha1_ProxySQLReconfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLReplicaReadinessCriteria":                 schema_apimachinery_apis_ops_v1alpha1_ProxySQLReplicaReadinessCriteria(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLUpdateVersionSpec":                        schema_apimachinery_apis_ops_v1alpha1_ProxySQLUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVerticalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_ProxySQLVerticalScalingSpec(ref),
@@ -34177,40 +34177,6 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLCustomConfiguration(ref commo
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_ProxySQLCustomConfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"mysqlUsers": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUsers"),
-						},
-					},
-					"mysqlQueryRules": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLQueryRules"),
-						},
-					},
-					"adminVariables": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
-						},
-					},
-					"mysqlVariables": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLQueryRules", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUsers"},
-	}
-}
-
 func schema_apimachinery_apis_ops_v1alpha1_ProxySQLHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34369,7 +34335,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLOpsRequestSpec(ref common.Ref
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for custom configuration of ProxySQL",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLCustomConfigurationSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLReconfigurationSpec"),
 						},
 					},
 					"tls": {
@@ -34414,7 +34380,41 @@ func schema_apimachinery_apis_ops_v1alpha1_ProxySQLOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_ProxySQLReconfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mysqlUsers": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUsers"),
+						},
+					},
+					"mysqlQueryRules": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLQueryRules"),
+						},
+					},
+					"adminVariables": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"mysqlVariables": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/runtime.RawExtension", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLQueryRules", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUsers"},
 	}
 }
 

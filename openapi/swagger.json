@@ -28488,23 +28488,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLCustomConfigurationSpec": {
-      "type": "object",
-      "properties": {
-        "adminVariables": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
-        },
-        "mysqlQueryRules": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLQueryRules"
-        },
-        "mysqlUsers": {
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUsers"
-        },
-        "mysqlVariables": {
-          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for ProxySQL horizontal scaling",
       "type": "object",
@@ -28599,7 +28582,7 @@
         },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of ProxySQL",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLCustomConfigurationSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReconfigurationSpec"
         },
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
@@ -28638,6 +28621,23 @@
         "verticalScaling": {
           "description": "Specifies information necessary for vertical scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLVerticalScalingSpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ProxySQLReconfigurationSpec": {
+      "type": "object",
+      "properties": {
+        "adminVariables": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
+        "mysqlQueryRules": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLQueryRules"
+        },
+        "mysqlUsers": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLUsers"
+        },
+        "mysqlVariables": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         }
       }
     },
