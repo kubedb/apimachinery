@@ -561,7 +561,10 @@ func (s *Singlestore) ReplicasAreReady(lister pslister.PetSetLister) (bool, stri
 	return checkReplicasOfPetSet(lister.PetSets(s.Namespace), labels.SelectorFromSet(s.OffshootLabels()), expectedItems)
 }
 
-func (s *Singlestore) InlineConfigSecretName() string {
+// InlineConfigSecretName returns the name of the inline config secret
+// it expects a suffix to differentiate between aggregator and leaf config secrets
+func (s *Singlestore) InlineConfigSecretName(suf string) string {
+	secretName := metautil.NameWithSuffix(s.OffshootName(), suf)
 	uid := string(s.UID)
 	trimmedUID := ""
 	if len(uid) > 6 {
@@ -569,7 +572,7 @@ func (s *Singlestore) InlineConfigSecretName() string {
 	} else {
 		trimmedUID = uid
 	}
-	return metautil.NameWithSuffix(s.OffshootName(), trimmedUID)
+	return metautil.NameWithSuffix(secretName, trimmedUID)
 }
 
 type SinglestoreBind struct {
