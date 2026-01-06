@@ -65,6 +65,36 @@ func (generator *CustomConfigGenerator) GetMergedConfigString() (string, error) 
 	return fmt.Sprintf("%s\n\n%s\n%s", generator.CurrentConfig, generator.ConfigBlockDivider, ConvertMapInToString(requestedDataMap)), nil
 }
 
+// GetMergedConfigStringWithoutPrevConfig func return new config string where the current config string and requested config strings are merged, and previous inline config is removed
+func (generator *CustomConfigGenerator) GetMergedConfigStringWithoutPrevConfig() (string, error) {
+	if len(generator.ConfigBlockDivider) == 0 || generator.KeyValueSeparators == nil || len(generator.KeyValueSeparators) == 0 {
+		return "", fmt.Errorf("ConfigBlockDivider or KeyValueSeparators is empty or KeyValueSeparators  is null")
+	}
+	if strings.Count(generator.CurrentConfig, generator.ConfigBlockDivider) > 1 {
+		return "", fmt.Errorf("for custom config ConfigBlockDivider string cann't appear multiple time")
+	}
+	requestedDataMap := ConvertStringInToMap(strings.TrimSpace(generator.RequestedConfig), generator.KeyValueSeparators)
+	// there is no valid inline config provided. so just return the current config
+	if len(requestedDataMap.Keys()) == 0 {
+		return generator.CurrentConfig, nil
+	}
+	curInlineConfigMap := ConvertStringInToMap(strings.TrimSpace(generator.CurrentConfig), generator.KeyValueSeparators)
+	mergedConfigString := ConvertMapInToString(MergeAndOverWriteMap(curInlineConfigMap, requestedDataMap))
+	firstLine := ""
+	outputs := strings.Split(generator.CurrentConfig, "\n")
+	for _, output := range outputs {
+		output = strings.TrimSpace(output)
+		// if inline configs any line starts with # is a commented line we are going to ignore this line
+		if len(output) == 0 || output[:1] == "#" {
+			continue
+		}
+		firstLine = output
+		break
+	}
+	// there is no inline config. so we are going to just add the new one with the provided current config
+	return fmt.Sprintf("%s\n%s", firstLine, mergedConfigString), nil
+}
+
 func ConvertStringInToMap(configString string, separators []string) (configData *orderedmap.OrderedMap) {
 	configData = orderedmap.New()
 	outputs := strings.Split(configString, "\n")
