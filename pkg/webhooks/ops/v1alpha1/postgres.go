@@ -243,10 +243,10 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureOpsRequest(
 		}
 	}
 
-	if req.Spec.Configuration.Restart != nil && *req.Spec.Configuration.Restart == opsapi.PostgresReconfigureRestartAuto {
+	if req.Spec.Configuration.Restart != nil && *req.Spec.Configuration.Restart == opsapi.ReconfigureRestartAuto {
 		return errors.New("`spec.configuration.restart` value auto not supported for postgres")
 	}
-	if req.Spec.Configuration.Restart != nil && *req.Spec.Configuration.Restart == opsapi.PostgresReconfigureRestartFalse && req.Spec.Configuration.RemoveCustomConfig {
+	if req.Spec.Configuration.Restart != nil && *req.Spec.Configuration.Restart == opsapi.ReconfigureRestartFalse && req.Spec.Configuration.RemoveCustomConfig {
 		return errors.New("`spec.configuration.restart: false` is not allowed when `spec.configuration.removeCustomConfig: true` for postgres")
 	}
 
