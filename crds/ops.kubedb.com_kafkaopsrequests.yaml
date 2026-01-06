@@ -85,8 +85,8 @@ spec:
                     default: auto
                     enum:
                     - auto
-                    - true
-                    - false
+                    - "true"
+                    - "false"
                     type: string
                 type: object
               databaseRef:

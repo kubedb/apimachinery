@@ -107,8 +107,8 @@ spec:
                         default: auto
                         enum:
                         - auto
-                        - true
-                        - false
+                        - "true"
+                        - "false"
                         type: string
                     type: object
                   configServer:
@@ -130,8 +130,8 @@ spec:
                         default: auto
                         enum:
                         - auto
-                        - true
-                        - false
+                        - "true"
+                        - "false"
                         type: string
                     type: object
                   hidden:
@@ -153,8 +153,8 @@ spec:
                         default: auto
                         enum:
                         - auto
-                        - true
-                        - false
+                        - "true"
+                        - "false"
                         type: string
                     type: object
                   mongos:
@@ -176,8 +176,8 @@ spec:
                         default: auto
                         enum:
                         - auto
-                        - true
-                        - false
+                        - "true"
+                        - "false"
                         type: string
                     type: object
                   replicaSet:
@@ -199,8 +199,8 @@ spec:
                         default: auto
                         enum:
                         - auto
-                        - true
-                        - false
+                        - "true"
+                        - "false"
                         type: string
                     type: object
                   shard:
@@ -222,8 +222,8 @@ spec:
                         default: auto
                         enum:
                         - auto
-                        - true
-                        - false
+                        - "true"
+                        - "false"
                         type: string
                     type: object
                   standalone:
@@ -245,8 +245,8 @@ spec:
                         default: auto
                         enum:
                         - auto
-                        - true
-                        - false
+                        - "true"
+                        - "false"
                         type: string
                     type: object
                 type: object

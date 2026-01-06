@@ -83,8 +83,8 @@ spec:
                     type: boolean
                   restart:
                     enum:
-                    - "true"
                     - auto
+                    - "true"
                     - "false"
                     type: string
                   tuning:

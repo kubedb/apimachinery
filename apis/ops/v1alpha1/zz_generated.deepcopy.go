@@ -4992,7 +4992,7 @@ func (in *PostgresCustomConfigurationSpec) DeepCopyInto(out *PostgresCustomConfi
 	}
 	if in.Restart != nil {
 		in, out := &in.Restart, &out.Restart
-		*out = new(PostgresReconfigureRestartType)
+		*out = new(ReconfigureRestartType)
 		**out = **in
 	}
 	return

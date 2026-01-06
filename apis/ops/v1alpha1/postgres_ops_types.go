@@ -105,19 +105,6 @@ type PostgresOpsRequestSpec struct {
 // ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, ReconnectStandby, ForceFailOver, SetRaftKeyPair, StorageMigration)
 type PostgresOpsRequestType string
 
-// PostgresReconfigureRestartType defines restart behavior during reconfiguration.
-// +kubebuilder:validation:Enum="true";"auto";"false"
-type PostgresReconfigureRestartType string
-
-const (
-
-	// ReconfigureRestartTrue forces a restart during reconfiguration
-	PostgresReconfigureRestartTrue PostgresReconfigureRestartType = "true"
-	// ReconfigureRestartFalse skips restart during reconfiguration
-	PostgresReconfigureRestartFalse PostgresReconfigureRestartType = "false"
-	PostgresReconfigureRestartAuto  PostgresReconfigureRestartType = "auto"
-)
-
 type PostgresUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
@@ -180,7 +167,7 @@ type PostgresCustomConfigurationSpec struct {
 	ApplyConfig        map[string]string          `json:"applyConfig,omitempty"`
 	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty"`
 	// +optional
-	Restart *PostgresReconfigureRestartType `json:"restart,omitempty"`
+	Restart *ReconfigureRestartType `json:"restart,omitempty"`
 }
 
 type PostgresCustomConfiguration struct {

@@ -26,7 +26,7 @@ import (
 )
 
 // ReconfigureRestartType defines restart behavior during reconfiguration.
-// +kubebuilder:validation:Enum=auto;true;false
+// +kubebuilder:validation:Enum="auto";"true";"false"
 type ReconfigureRestartType string
 
 const (

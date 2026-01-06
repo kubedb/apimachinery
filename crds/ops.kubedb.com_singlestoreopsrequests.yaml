@@ -87,8 +87,8 @@ spec:
                         default: auto
                         enum:
                         - auto
-                        - true
-                        - false
+                        - "true"
+                        - "false"
                         type: string
                     type: object
                   leaf:
@@ -110,8 +110,8 @@ spec:
                         default: auto
                         enum:
                         - auto
-                        - true
-                        - false
+                        - "true"
+                        - "false"
                         type: string
                     type: object
                   node:
@@ -133,8 +133,8 @@ spec:
                         default: auto
                         enum:
                         - auto
-                        - true
-                        - false
+                        - "true"
+                        - "false"
                         type: string
                     type: object
                 type: object
