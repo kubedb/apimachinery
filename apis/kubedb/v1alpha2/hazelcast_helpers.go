@@ -441,6 +441,11 @@ type HazelcastBind struct {
 	*Hazelcast
 }
 
+func (h *Hazelcast) ConfigSecretName() string {
+	uid := string(h.UID)
+	return meta_util.NameWithSuffix(h.OffshootName(), uid[len(uid)-6:])
+}
+
 var _ DBBindInterface = &HazelcastBind{}
 
 func (d *HazelcastBind) ServiceNames() (string, string) {
