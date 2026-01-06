@@ -28142,7 +28142,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DB2Spec(ref common.ReferenceCallba
 					"hadrConfig": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HADR configuration for DB2",
-							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
