@@ -123,7 +123,7 @@ func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaO
 	}
 
 	var allErr field.ErrorList
-	switch req.GetRequestType().(opsapi.KafkaOpsRequestType) {
+	switch opsapi.KafkaOpsRequestType(req.GetRequestType()) {
 	case opsapi.KafkaOpsRequestTypeUpdateVersion:
 		if err := w.validateKafkaUpdateVersionOpsRequest(kafka, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),

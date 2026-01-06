@@ -86,7 +86,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	}
 	var allErr field.ErrorList
 	var db dbapi.ClickHouse
-	switch req.GetRequestType().(opsapi.ClickHouseOpsRequestType) {
+	switch opsapi.ClickHouseOpsRequestType(req.GetRequestType()) {
 	case opsapi.ClickHouseOpsRequestTypeRestart:
 		if err := rv.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

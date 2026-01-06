@@ -111,7 +111,7 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 	}
 
 	var allErr field.ErrorList
-	switch req.GetRequestType().(opsapi.SolrOpsRequestType) {
+	switch opsapi.SolrOpsRequestType(req.GetRequestType()) {
 	case opsapi.SolrOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

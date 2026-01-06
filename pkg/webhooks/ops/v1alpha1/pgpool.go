@@ -112,7 +112,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pgpoo
 
 	var allErr field.ErrorList
 	var db olddbapi.Pgpool
-	switch req.GetRequestType().(opsapi.PgpoolOpsRequestType) {
+	switch opsapi.PgpoolOpsRequestType(req.GetRequestType()) {
 	case opsapi.PgpoolOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

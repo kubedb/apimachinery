@@ -120,7 +120,7 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 
 	var allErr field.ErrorList
 	var db dbapi.Druid
-	opsType := req.GetRequestType().(opsapi.DruidOpsRequestType)
+	opsType := opsapi.DruidOpsRequestType(req.GetRequestType())
 
 	switch opsType {
 	case opsapi.DruidOpsRequestTypeRestart:

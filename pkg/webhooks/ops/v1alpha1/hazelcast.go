@@ -112,7 +112,7 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 
 	var allErr field.ErrorList
 	var db dbapi.Hazelcast
-	switch req.GetRequestType().(opsapi.HazelcastOpsRequestType) {
+	switch opsapi.HazelcastOpsRequestType(req.GetRequestType()) {
 	case opsapi.HazelcastOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

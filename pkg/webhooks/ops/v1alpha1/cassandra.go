@@ -89,7 +89,7 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.C
 
 	var allErr field.ErrorList
 	var db olddbapi.Cassandra
-	switch req.GetRequestType().(opsapi.CassandraOpsRequestType) {
+	switch opsapi.CassandraOpsRequestType(req.GetRequestType()) {
 	case opsapi.CassandraOpsRequestTypeRestart:
 		if err := rv.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

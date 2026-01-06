@@ -110,7 +110,7 @@ func (w *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Fer
 
 	var allErr field.ErrorList
 	var db dbapi.FerretDB
-	switch req.GetRequestType().(opsapi.FerretDBOpsRequestType) {
+	switch opsapi.FerretDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.FerretDBOpsRequestTypeRestart:
 	case opsapi.FerretDBOpsRequestTypeVerticalScaling:
 		if err := w.validateFerretDBVerticalScalingOpsRequest(req); err != nil {

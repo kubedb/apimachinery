@@ -113,7 +113,7 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 
 	var allErr field.ErrorList
 	var db olddbapi.Memcached
-	switch req.GetRequestType().(opsapi.MemcachedOpsRequestType) {
+	switch opsapi.MemcachedOpsRequestType(req.GetRequestType()) {
 	case opsapi.MemcachedOpsRequestTypeRestart:
 		if err := c.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),

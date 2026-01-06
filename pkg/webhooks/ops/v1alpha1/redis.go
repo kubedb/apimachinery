@@ -125,7 +125,7 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 
 	var allErr field.ErrorList
 	var db dbapi.Redis
-	switch req.GetRequestType().(opsapi.RedisOpsRequestType) {
+	switch opsapi.RedisOpsRequestType(req.GetRequestType()) {
 	case opsapi.RedisOpsRequestTypeHorizontalScaling:
 		if err := w.validateRedisHorizontalScalingOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),

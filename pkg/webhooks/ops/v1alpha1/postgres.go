@@ -115,7 +115,7 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 
 	var allErr field.ErrorList
 	var db dbapi.Postgres
-	switch req.GetRequestType().(opsapi.PostgresOpsRequestType) {
+	switch opsapi.PostgresOpsRequestType(req.GetRequestType()) {
 	case opsapi.PostgresOpsRequestTypeRestart:
 		if err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
