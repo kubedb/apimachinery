@@ -84,7 +84,7 @@ type HazelcastSpec struct {
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
 	// +optional
-	ConfigurationSpec `json:"configuration,omitempty"`
+	Configuration ConfigurationSpec `json:"configuration,omitempty"`
 
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
