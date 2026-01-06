@@ -66,7 +66,7 @@ func (generator *CustomConfigGenerator) GetMergedConfigString() (string, error) 
 }
 
 // GetMergedConfigStringWithoutPrevConfig func return new config string where the current config string and requested config strings are merged, and previous inline config is removed
-func (generator *CustomConfigGenerator) GetMergedConfigStringWithoutPrevConfig() (string, error) {
+func (generator *CustomConfigGenerator) GetMergedConfigStringWithoutPreviousConfig() (string, error) {
 	if len(generator.ConfigBlockDivider) == 0 || generator.KeyValueSeparators == nil || len(generator.KeyValueSeparators) == 0 {
 		return "", fmt.Errorf("ConfigBlockDivider or KeyValueSeparators is empty or KeyValueSeparators  is null")
 	}
@@ -93,6 +93,29 @@ func (generator *CustomConfigGenerator) GetMergedConfigStringWithoutPrevConfig()
 	}
 	// there is no inline config. so we are going to just add the new one with the provided current config
 	return fmt.Sprintf("%s\n%s", firstLine, mergedConfigString), nil
+}
+
+// GetMergedConfig func return new config map where the current config and requested config  are merged
+func GetMergedConfig(currentConfig, reqConfig map[string]string) (map[string]string, error) {
+	for fileName, fileValue := range reqConfig {
+		if curConfig, exists := currentConfig[fileName]; exists && len(curConfig) != 0 {
+			customConfGen := &CustomConfigGenerator{
+				CurrentConfig:   curConfig,
+				RequestedConfig: fileValue,
+				KeyValueSeparators: []string{
+					"=",
+				},
+			}
+			result, err := customConfGen.GetMergedConfigStringWithoutPreviousConfig()
+			if err != nil {
+				return nil, err
+			}
+			currentConfig[fileName] = result
+		} else {
+			currentConfig[fileName] = fileValue
+		}
+	}
+	return currentConfig, nil
 }
 
 func ConvertStringInToMap(configString string, separators []string) (configData *orderedmap.OrderedMap) {
