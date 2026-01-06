@@ -2015,10 +2015,8 @@ func Convert_v1_KafkaClusterTopology_To_v1alpha2_KafkaClusterTopology(in *v1.Kaf
 }
 
 func autoConvert_v1alpha2_KafkaCruiseControl_To_v1_KafkaCruiseControl(in *KafkaCruiseControl, out *v1.KafkaCruiseControl, s conversion.Scope) error {
-	out.ConfigSecret = (*v1.SecretReference)(unsafe.Pointer(in.ConfigSecret))
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Suffix = in.Suffix
-	out.Resources = in.Resources
 	out.PodTemplate = in.PodTemplate
 	out.BrokerCapacity = (*v1.KafkaBrokerCapacity)(unsafe.Pointer(in.BrokerCapacity))
 	return nil
@@ -2030,10 +2028,8 @@ func Convert_v1alpha2_KafkaCruiseControl_To_v1_KafkaCruiseControl(in *KafkaCruis
 }
 
 func autoConvert_v1_KafkaCruiseControl_To_v1alpha2_KafkaCruiseControl(in *v1.KafkaCruiseControl, out *KafkaCruiseControl, s conversion.Scope) error {
-	out.ConfigSecret = (*SecretReference)(unsafe.Pointer(in.ConfigSecret))
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	out.Suffix = in.Suffix
-	out.Resources = in.Resources
 	out.PodTemplate = in.PodTemplate
 	out.BrokerCapacity = (*KafkaBrokerCapacity)(unsafe.Pointer(in.BrokerCapacity))
 	return nil

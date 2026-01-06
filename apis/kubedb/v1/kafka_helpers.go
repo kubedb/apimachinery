@@ -501,12 +501,15 @@ func (k *Kafka) SetDefaultEnvs() {
 }
 
 func (k *Kafka) copyConfigurationFields() {
-	if k.Spec.Configuration == nil && k.Spec.ConfigSecret != nil {
-		k.Spec.Configuration = &ConfigurationSpec{
-			SecretName: k.Spec.ConfigSecret.Name,
+	if (k.Spec.Configuration == nil) || (k.Spec.Configuration != nil && k.Spec.Configuration.SecretName == "") {
+		if k.Spec.ConfigSecret != nil {
+			if k.Spec.Configuration == nil {
+				k.Spec.Configuration = &ConfigurationSpec{}
+			}
+			k.Spec.Configuration.SecretName = k.Spec.ConfigSecret.Name
 		}
+		k.Spec.ConfigSecret = nil
 	}
-	k.Spec.ConfigSecret = nil
 }
 
 func (k *Kafka) setClusterIDEnv(podTemplate *ofst.PodTemplateSpec, clusterID string) {

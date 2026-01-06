@@ -39,6 +39,16 @@ func (k *Connector) Default() {
 	if k.Spec.DeletionPolicy == "" {
 		k.Spec.DeletionPolicy = dbapi.DeletionPolicyDelete
 	}
+
+	if (k.Spec.Configuration == nil) || (k.Spec.Configuration != nil && k.Spec.Configuration.SecretName == "") {
+		if k.Spec.ConfigSecret != nil {
+			if k.Spec.Configuration == nil {
+				k.Spec.Configuration = &dbapi.ConfigurationSpec{}
+			}
+			k.Spec.Configuration.SecretName = k.Spec.ConfigSecret.Name
+			k.Spec.ConfigSecret = nil
+		}
+	}
 }
 
 func (k *Connector) ResourceShortCode() string {

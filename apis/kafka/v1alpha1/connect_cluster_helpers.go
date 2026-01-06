@@ -308,12 +308,15 @@ func (k *ConnectCluster) SetDefaultEnvs() {
 }
 
 func (k *ConnectCluster) copyConfigurationFields() {
-	if k.Spec.Configuration == nil && k.Spec.ConfigSecret != nil {
-		k.Spec.Configuration = &dbapi.ConfigurationSpec{
-			SecretName: k.Spec.ConfigSecret.Name,
+	if (k.Spec.Configuration == nil) || (k.Spec.Configuration != nil && k.Spec.Configuration.SecretName == "") {
+		if k.Spec.ConfigSecret != nil {
+			if k.Spec.Configuration == nil {
+				k.Spec.Configuration = &dbapi.ConfigurationSpec{}
+			}
+			k.Spec.Configuration.SecretName = k.Spec.ConfigSecret.Name
 		}
+		k.Spec.ConfigSecret = nil
 	}
-	k.Spec.ConfigSecret = nil
 }
 
 func (k *ConnectCluster) setDefaultInitContainerSecurityContext(kc client.Client, podTemplate *ofstv2.PodTemplateSpec) {

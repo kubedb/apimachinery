@@ -175,6 +175,12 @@ func (w *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 				"number of replicas can not be 0 or less"))
 		}
 
+		if db.Spec.Configuration != nil && db.Spec.Configuration.SecretName != "" && db.Spec.ConfigSecret != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
+				db.Name,
+				"cannot use both configuration.secretName and configSecret, use configuration.secretName"))
+		}
+
 		// validate that broker and controller have same cluster id
 		err := w.validateClusterID(db.Spec.Topology)
 		if err != nil {

@@ -279,6 +279,11 @@ func (in *ConnectorSpec) DeepCopyInto(out *ConnectorSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(kubedbv1.ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
