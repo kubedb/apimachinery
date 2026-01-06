@@ -88,7 +88,7 @@ type DB2Spec struct {
 
 	// HADR configuration for DB2
 	// +optional
-	HADRConfig []core.LocalObjectReference `json:"hadrConfig,omitempty"`
+	HADRConfig core.LocalObjectReference `json:"hadrConfig,omitempty"`
 }
 
 // DB2Status defines the observed state of DB2.

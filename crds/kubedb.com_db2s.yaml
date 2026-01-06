@@ -78,14 +78,12 @@ spec:
                 - DoNotTerminate
                 type: string
               hadrConfig:
-                items:
-                  properties:
-                    name:
-                      default: ""
-                      type: string
-                  type: object
-                  x-kubernetes-map-type: atomic
-                type: array
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               healthChecker:
                 default:
                   failureThreshold: 3
