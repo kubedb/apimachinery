@@ -105,6 +105,19 @@ type PostgresOpsRequestSpec struct {
 // ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, ReconnectStandby, ForceFailOver, SetRaftKeyPair, StorageMigration)
 type PostgresOpsRequestType string
 
+// PostgresReconfigureRestartType defines restart behavior during reconfiguration.
+// +kubebuilder:validation:Enum="true";"auto";"false"
+type PostgresReconfigureRestartType string
+
+const (
+
+	// ReconfigureRestartTrue forces a restart during reconfiguration
+	PostgresReconfigureRestartTrue PostgresReconfigureRestartType = "true"
+	// ReconfigureRestartFalse skips restart during reconfiguration
+	PostgresReconfigureRestartFalse PostgresReconfigureRestartType = "false"
+	PostgresReconfigureRestartAuto  PostgresReconfigureRestartType = "auto"
+)
+
 type PostgresUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
@@ -162,9 +175,12 @@ type PostgresVolumeExpansionSpec struct {
 }
 
 type PostgresCustomConfigurationSpec struct {
+	Tuning             *PostgresTuningConfig      `json:"tuning,omitempty"`
 	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty"`
 	ApplyConfig        map[string]string          `json:"applyConfig,omitempty"`
 	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty"`
+	// +optional
+	Restart *PostgresReconfigureRestartType `json:"restart,omitempty"`
 }
 
 type PostgresCustomConfiguration struct {
@@ -186,6 +202,60 @@ type PostgresForceFailOver struct {
 type PostgresSetRaftKeyPair struct {
 	KeyPair map[string]string `json:"keyPair,omitempty"`
 }
+
+// PostgresTuningConfig defines configuration for PostgreSQL performance tuning
+type PostgresTuningConfig struct {
+	// Profile defines a predefined tuning profile for different workload types.
+	// If specified, other tuning parameters will be calculated based on this profile.
+	// +optional
+	Profile *PostgresProfile `json:"profile,omitempty"`
+
+	// MaxConnections defines the maximum number of concurrent connections.
+	// If not specified, it will be calculated based on available memory and tuning profile.
+	// +optional
+	MaxConnections *int32 `json:"maxConnections,omitempty"`
+
+	// StorageType defines the type of storage for tuning purposes.
+	// If not specified, it will be inferred from StorageClass or default to HDD.
+	// +optional
+	StorageType *PostgresStorageType `json:"storageType,omitempty"`
+
+	// DisableAutoTune disables automatic tuning entirely.
+	// If set to true, no tuning will be applied.
+	// +optional
+	DisableAutoTune bool `json:"disableAutoTune,omitempty"`
+}
+
+// PostgresProfile defines predefined tuning profiles
+// +kubebuilder:validation:Enum=web;oltp;dw;mixed;desktop
+type PostgresProfile string
+
+const (
+	// PostgresTuningProfileWeb optimizes for web applications with many simple queries
+	PostgresTuningProfileWeb PostgresProfile = "web"
+
+	// PostgresTuningProfileOLTP optimizes for OLTP workloads with many short transactions
+	PostgresTuningProfileOLTP PostgresProfile = "oltp"
+
+	// PostgresTuningProfileDW optimizes for data warehousing with complex analytical queries
+	PostgresTuningProfileDW PostgresProfile = "dw"
+
+	// PostgresTuningProfileMixed optimizes for mixed workloads
+	PostgresTuningProfileMixed PostgresProfile = "mixed"
+
+	// PostgresTuningProfileDesktop optimizes for desktop or development environments
+	PostgresTuningProfileDesktop PostgresProfile = "desktop"
+)
+
+// PostgresStorageType defines storage types for tuning purposes
+// +kubebuilder:validation:Enum=ssd;hdd;san
+type PostgresStorageType string
+
+const (
+	PostgresStorageTypeSSD PostgresStorageType = "ssd"
+	PostgresStorageTypeHDD PostgresStorageType = "hdd"
+	PostgresStorageTypeSAN PostgresStorageType = "san"
+)
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
