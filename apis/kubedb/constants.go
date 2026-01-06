@@ -1779,6 +1779,7 @@ const (
 
 	Neo4jContainerName     = "neo4j"
 	Neo4jInitContainerName = "neo4j-init"
+	Neo4jConfigFileName    = "neo4j.conf"
 )
 
 // =========================== Cassandra Constants ============================
