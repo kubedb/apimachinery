@@ -179,6 +179,15 @@ func (p Postgres) OffshootDistributedGRPCSecretName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.DistributedGRPCSecretNameSuffix)
 }
 
+func (p Postgres) ConfigSecretName() string {
+	uid := string(p.UID)
+	suffix := uid
+	if len(uid) > 6 {
+		suffix = uid[len(uid)-6:]
+	}
+	return suffix
+}
+
 type postgresApp struct {
 	*Postgres
 }
@@ -326,6 +335,7 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 		}
 	}
 
+	p.updateConfigurationFieldIfNeeded()
 	p.SetDefaultPodSecurityContext(&p.Spec.PodTemplate, postgresVersion)
 	p.SetPostgresContainerDefaults(&p.Spec.PodTemplate, postgresVersion)
 	p.SetCoordinatorContainerDefaults(&p.Spec.PodTemplate, postgresVersion)
@@ -371,6 +381,18 @@ func getMajorPgVersion(postgresVersion *catalog.PostgresVersion) (uint64, error)
 		return 0, errors.Wrap(err, "Failed to get postgres major.")
 	}
 	return ver.Major(), nil
+}
+
+func (p *Postgres) updateConfigurationFieldIfNeeded() {
+	if p.Spec.Configuration == nil && p.Spec.ConfigSecret != nil {
+		p.Spec.Configuration = &PostgresConfiguration{
+			SecretName: p.Spec.ConfigSecret.Name,
+		}
+		p.Spec.ConfigSecret = nil
+	} else if p.Spec.ConfigSecret != nil && p.Spec.Configuration != nil && p.Spec.Configuration.SecretName == "" {
+		p.Spec.Configuration.SecretName = p.Spec.ConfigSecret.Name
+		p.Spec.ConfigSecret = nil
+	}
 }
 
 // SetDefaultReplicationMode set the default replication mode.

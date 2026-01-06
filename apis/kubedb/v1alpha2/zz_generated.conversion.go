@@ -3756,7 +3756,7 @@ func autoConvert_v1alpha2_PostgresReplication_To_v1_PostgresReplication(in *Post
 	out.WalKeepSizeInMegaBytes = (*int32)(unsafe.Pointer(in.WalKeepSizeInMegaBytes))
 	out.WalKeepSegment = (*int32)(unsafe.Pointer(in.WalKeepSegment))
 	out.MaxSlotWALKeepSizeInMegaBytes = (*int32)(unsafe.Pointer(in.MaxSlotWALKeepSizeInMegaBytes))
-	out.ForceFailOverAcceptingDataLossAfter = (*metav1.Duration)(unsafe.Pointer(in.ForceFailOverAcceptingDataLossAfter))
+	out.ForceFailoverAcceptingDataLossAfter = (*metav1.Duration)(unsafe.Pointer(in.ForceFailoverAcceptingDataLossAfter))
 	return nil
 }
 
@@ -3770,7 +3770,7 @@ func autoConvert_v1_PostgresReplication_To_v1alpha2_PostgresReplication(in *v1.P
 	out.WalKeepSizeInMegaBytes = (*int32)(unsafe.Pointer(in.WalKeepSizeInMegaBytes))
 	out.WalKeepSegment = (*int32)(unsafe.Pointer(in.WalKeepSegment))
 	out.MaxSlotWALKeepSizeInMegaBytes = (*int32)(unsafe.Pointer(in.MaxSlotWALKeepSizeInMegaBytes))
-	out.ForceFailOverAcceptingDataLossAfter = (*metav1.Duration)(unsafe.Pointer(in.ForceFailOverAcceptingDataLossAfter))
+	out.ForceFailoverAcceptingDataLossAfter = (*metav1.Duration)(unsafe.Pointer(in.ForceFailoverAcceptingDataLossAfter))
 	return nil
 }
 
@@ -3835,6 +3835,7 @@ func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, o
 	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
+	// WARNING: in.Configuration requires manual conversion: does not exist in peer-type
 	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
 		return err
 	}
@@ -3848,7 +3849,6 @@ func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, o
 	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
 	out.Arbiter = (*ArbiterSpec)(unsafe.Pointer(in.Arbiter))
 	out.Replication = (*PostgresReplication)(unsafe.Pointer(in.Replication))
-	// WARNING: in.Tuning requires manual conversion: does not exist in peer-type
 	return nil
 }
 

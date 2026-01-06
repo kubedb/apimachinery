@@ -5827,8 +5827,8 @@ func (in *PostgresReplication) DeepCopyInto(out *PostgresReplication) {
 		*out = new(int32)
 		**out = **in
 	}
-	if in.ForceFailOverAcceptingDataLossAfter != nil {
-		in, out := &in.ForceFailOverAcceptingDataLossAfter, &out.ForceFailOverAcceptingDataLossAfter
+	if in.ForceFailoverAcceptingDataLossAfter != nil {
+		in, out := &in.ForceFailoverAcceptingDataLossAfter, &out.ForceFailoverAcceptingDataLossAfter
 		*out = new(v1.Duration)
 		**out = **in
 	}
