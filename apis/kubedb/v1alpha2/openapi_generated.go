@@ -30732,8 +30732,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HazelcastSpec(ref common.Reference
 					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
 						},
 					},
 					"authSecret": {

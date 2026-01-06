@@ -2580,7 +2580,11 @@ func (in *HazelcastSpec) DeepCopyInto(out *HazelcastSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
-	in.Configuration.DeepCopyInto(&out.Configuration)
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
