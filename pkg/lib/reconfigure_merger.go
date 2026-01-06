@@ -21,37 +21,53 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"time"
 
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/klog/v2"
 	kutil "kmodules.xyz/client-go"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	cu "kmodules.xyz/client-go/client"
 	cutil "kmodules.xyz/client-go/conditions"
+	meta_util "kmodules.xyz/client-go/meta"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+type MergeFunc func(pendingReconfigureOps []opsapi.Accessor) (any, error)
+
+type ConvertFunc func(u *unstructured.Unstructured) (opsapi.Accessor, error)
+
 type ReconfigureMerger struct {
 	kbClient   client.Client
+	kind       string
 	opsReqList []client.Object
 	currentOps opsapi.Accessor
+	mergeFn    MergeFunc
+	convertFn  ConvertFunc
 	log        interface {
 		Info(msg string, keysAndValues ...any)
 	}
 }
 
-func NewReconfigureMerger(kbClient client.Client, curOps client.Object, opsReqList []client.Object, log interface {
+func NewReconfigureMerger(kbClient client.Client, kind string, curOps client.Object, mergeFn MergeFunc, convertFn ConvertFunc, log interface {
 	Info(msg string, keysAndValues ...any)
 },
-) *ReconfigureMerger {
-	return &ReconfigureMerger{
+) (*ReconfigureMerger, error) {
+	ret := &ReconfigureMerger{
 		kbClient:   kbClient,
-		opsReqList: opsReqList,
+		kind:       kind,
 		currentOps: curOps.(opsapi.Accessor),
+		mergeFn:    mergeFn,
+		convertFn:  convertFn,
 		log:        log,
 	}
+	err := ret.populateList()
+	return ret, err
 }
 
 const (
@@ -67,6 +83,63 @@ const (
 	RequeueNeeded           // 2
 	RequeueNotNeeded        // 3
 )
+
+func (m *ReconfigureMerger) populateList() error {
+	unsList := &unstructured.UnstructuredList{}
+	unsList.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   "ops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    m.kind + "List",
+	})
+
+	err := m.kbClient.List(context.TODO(), unsList,
+		client.InNamespace(m.currentOps.GetNamespace()),
+	)
+	if err != nil {
+		return err
+	}
+
+	var (
+		lst      []client.Object
+		accessor opsapi.Accessor
+	)
+	for _, request := range unsList.Items {
+		accessor, err = m.convertFn(&request)
+		if err != nil {
+			return err
+		}
+		lst = append(lst, accessor)
+	}
+	m.opsReqList = lst
+	return nil
+}
+
+func (m ReconfigureMerger) Run() (int, error) {
+	skip, pendingReconfigureOps := m.FindPendingReconfigureOpsToMerge()
+	klog.Infof("%v ////////////////// skip=%v pending=%v \n", m.currentOps.GetName(), skip, len(pendingReconfigureOps))
+	if skip != MergeNeeded {
+		return skip, nil
+	}
+
+	mergedConfig, err := m.mergeFn(pendingReconfigureOps)
+	if err != nil {
+		return RequeueNeeded, fmt.Errorf("failed to merge configurations from reconfigure ops requests: %w", err)
+	}
+
+	u, err := m.GetMergedOpsRequest(pendingReconfigureOps[0], mergedConfig)
+	if err != nil {
+		return RequeueNeeded, err
+	}
+
+	mergedOps, err := m.convertFn(u)
+	if err != nil {
+		return RequeueNeeded, err
+	}
+
+	klog.Infof("mmm %v %v \n", m.currentOps.GetName(), mergedOps.GetName())
+	err = m.EnsureMergedOpsRequest(mergedOps, pendingReconfigureOps)
+	return ContinueGeneral, err
+}
 
 /*
 FindPendingReconfigureOpsToMerge
@@ -228,7 +301,54 @@ func (m *ReconfigureMerger) markAsSkippedForMergedOps(ops opsapi.Accessor, merge
 	return nil
 }
 
-func (m *ReconfigureMerger) EnsureMergedOps(mergedOpsRequest opsapi.Accessor, pendingReconfigureOps []opsapi.Accessor) error {
+func (m *ReconfigureMerger) GetMergedOpsRequest(firstPendingOps opsapi.Accessor, config any) (*unstructured.Unstructured, error) {
+	toUnstructured := func(obj any) (*unstructured.Unstructured, error) {
+		m, err := runtime.DefaultUnstructuredConverter.ToUnstructured(obj)
+		if err != nil {
+			return nil, err
+		}
+		return &unstructured.Unstructured{Object: m}, nil
+	}
+
+	buildReconfigureOpsRequest := func(
+		firstPendingOps opsapi.Accessor,
+		config any,
+	) (*unstructured.Unstructured, error) {
+		mergedOpsName := meta_util.NameWithSuffix(firstPendingOps.GetDBRefName(), fmt.Sprintf("rcfg-merged-%d", time.Now().UnixMilli()))
+		cfg, err := toUnstructured(config)
+		if err != nil {
+			return nil, err
+		}
+
+		obj := map[string]any{
+			"apiVersion": "ops.kubedb.com/v1alpha1",
+			"kind":       m.kind,
+			"metadata": map[string]any{
+				"name":      mergedOpsName,
+				"namespace": firstPendingOps.GetObjectMeta().Namespace,
+				"labels":    firstPendingOps.GetObjectMeta().Labels,
+			},
+			"spec": map[string]any{
+				"type": opsapi.Reconfigure,
+				"databaseRef": map[string]any{
+					"name": firstPendingOps.GetDBRefName(),
+				},
+				"configuration": cfg.Object,
+			},
+		}
+
+		return &unstructured.Unstructured{Object: obj}, nil
+	}
+
+	request, err := buildReconfigureOpsRequest(firstPendingOps, config)
+	if err != nil {
+		return nil, err
+	}
+
+	return request, nil
+}
+
+func (m *ReconfigureMerger) EnsureMergedOpsRequest(mergedOpsRequest opsapi.Accessor, pendingReconfigureOps []opsapi.Accessor) error {
 	verb, err := cu.CreateOrPatch(context.TODO(), m.kbClient, mergedOpsRequest, func(obj client.Object, _ bool) client.Object {
 		return mergedOpsRequest
 	})
