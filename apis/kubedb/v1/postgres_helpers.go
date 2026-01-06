@@ -179,16 +179,13 @@ func (p Postgres) OffshootDistributedGRPCSecretName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.DistributedGRPCSecretNameSuffix)
 }
 
-func (p Postgres) ConfigSecretName() (string, error) {
+func (p Postgres) ConfigSecretName() string {
 	uid := string(p.UID)
-	if len(uid) < 6 {
-		return "", errors.New("UID too short")
-	}
 	suffix := uid
 	if len(uid) > 6 {
 		suffix = uid[len(uid)-6:]
 	}
-	return fmt.Sprintf("%s-%s", p.Name, suffix), nil
+	return suffix
 }
 
 type postgresApp struct {
@@ -368,6 +365,10 @@ func (p *Postgres) updateConfigurationFieldIfNeeded() {
 		p.Spec.Configuration = &PostgresConfiguration{
 			SecretName: p.Spec.ConfigSecret.Name,
 		}
+		p.Spec.ConfigSecret = nil
+	} else if p.Spec.ConfigSecret != nil && p.Spec.Configuration != nil && p.Spec.Configuration.SecretName == "" {
+		p.Spec.Configuration.SecretName = p.Spec.ConfigSecret.Name
+		p.Spec.ConfigSecret = nil
 	}
 }
 
