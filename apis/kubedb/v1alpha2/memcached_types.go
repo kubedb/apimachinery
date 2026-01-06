@@ -69,6 +69,9 @@ type MemcachedSpec struct {
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
+	// +optional
+	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
+
 	// DataVolume is an optional field to add one volume to each
 	// memcached pod.  The volume will be made available under
 	// /data and owned by the memcached user.
