@@ -330,6 +330,7 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 	}
 	if m.IsCluster() && m.IsMariaDBReplication() {
 		m.SetDefaultsMaxscale(mdVersion, m.Spec.Topology.MaxScale)
+		m.Spec.WsrepSSTMethod = GaleraWsrepSSTMethodMariabackup
 	}
 
 	if m.Spec.Init != nil && m.Spec.Init.Archiver != nil {
