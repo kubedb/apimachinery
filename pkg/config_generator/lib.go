@@ -18,11 +18,12 @@ package configgenerator
 
 import (
 	"fmt"
-	"github.com/mikefarah/yq/v3/pkg/yqlib"
-	"kubedb.dev/apimachinery/pkg/yq3/yqstrings"
 	"strings"
 
+	"kubedb.dev/apimachinery/pkg/yq3/yqstrings"
+
 	"github.com/iancoleman/orderedmap"
+	"github.com/mikefarah/yq/v3/pkg/yqlib"
 )
 
 const CustomConfigBlockDivider = "#________******kubedb.com/inline-config******________#"
@@ -82,7 +83,7 @@ func (generator *CustomConfigGenerator) GetMergedConfigStringWithoutPreviousConf
 	curInlineConfigMap := ConvertStringInToMap(strings.TrimSpace(generator.CurrentConfig), generator.KeyValueSeparators)
 	mergedConfigString := ConvertMapInToString(MergeAndOverWriteMap(curInlineConfigMap, requestedDataMap))
 
-	//Let's get the first non commented line from the current config, which will be used as first line of the merged config like [mysqld]/[mariadb]
+	// Let's get the first non commented line from the current config, which will be used as first line of the merged config like [mysqld]/[mariadb]
 	firstLine := ""
 	outputs := strings.Split(generator.CurrentConfig, "\n")
 

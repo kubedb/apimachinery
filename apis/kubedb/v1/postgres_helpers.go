@@ -185,7 +185,7 @@ func (p Postgres) ConfigSecretName() string {
 	if len(uid) > 6 {
 		suffix = uid[len(uid)-6:]
 	}
-	return suffix
+	return meta_util.NameWithSuffix(p.OffshootName(), suffix)
 }
 
 type postgresApp struct {
