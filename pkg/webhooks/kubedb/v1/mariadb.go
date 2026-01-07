@@ -36,6 +36,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -347,6 +348,12 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 			return fmt.Errorf(`'spec.replicas' "%d" invalid. Value must be %d for mariadb cluster`,
 				ptr.Deref(mariadb.Spec.Replicas, 0), kubedb.MariaDBDefaultClusterSize)
 		}
+	}
+
+	if mariadb.Spec.Configuration != nil && mariadb.Spec.Configuration.SecretName != "" && mariadb.Spec.ConfigSecret != nil {
+		return field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
+			mariadb.Name,
+			"cannot use both configuration.secretName and configSecret, use configuration.secretName")
 	}
 
 	if err = w.validateCluster(mariadb); err != nil {

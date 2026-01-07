@@ -358,7 +358,7 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion) error {
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
-	m.updateConfigurationFieldIfNeeded()
+	m.copyConfigurationFields()
 	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)
 	m.SetTLSDefaults()
 	m.SetHealthCheckerDefaults()
@@ -590,10 +590,13 @@ func (m *MySQL) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplat
 	}
 }
 
-func (m *MySQL) updateConfigurationFieldIfNeeded() {
-	if m.Spec.Configuration == nil && m.Spec.ConfigSecret != nil {
-		m.Spec.Configuration = &ConfigurationSpec{
-			SecretName: m.Spec.ConfigSecret.Name,
+func (m *MySQL) copyConfigurationFields() {
+	if (m.Spec.Configuration == nil) || (m.Spec.Configuration != nil && m.Spec.Configuration.SecretName == "") {
+		if m.Spec.ConfigSecret != nil {
+			if m.Spec.Configuration == nil {
+				m.Spec.Configuration = &ConfigurationSpec{}
+			}
+			m.Spec.Configuration.SecretName = m.Spec.ConfigSecret.Name
 		}
 	}
 	m.Spec.ConfigSecret = nil
