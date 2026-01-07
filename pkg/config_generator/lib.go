@@ -18,6 +18,8 @@ package configgenerator
 
 import (
 	"fmt"
+	"github.com/mikefarah/yq/v3/pkg/yqlib"
+	"kubedb.dev/apimachinery/pkg/yq3/yqstrings"
 	"strings"
 
 	"github.com/iancoleman/orderedmap"
@@ -164,4 +166,18 @@ func MergeAndOverWriteMap(config *orderedmap.OrderedMap, incomingConfig *ordered
 		config.Set(key, value)
 	}
 	return config
+}
+
+// This uses yq-inspired merging to handle YAML/XML configs
+func MergeYQApplyConfigs(existingConfigs map[string]string, newConfigs map[string]string) error {
+	for fileName, newApplyConfig := range newConfigs {
+		previousApplyConfig := existingConfigs[fileName]
+		// Merge the new apply config with the previous applyConfig.
+		mergedApplyConfig, err := yqstrings.Merge(yqlib.OverwriteArrayMergeStrategy, yqlib.OverwriteCommentsMergeStrategy, true, previousApplyConfig, newApplyConfig)
+		if err != nil {
+			return fmt.Errorf("failed to merge apply configs for file %s with error %s", fileName, err.Error())
+		}
+		existingConfigs[fileName] = mergedApplyConfig
+	}
+	return nil
 }
