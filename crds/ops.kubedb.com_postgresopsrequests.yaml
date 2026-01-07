@@ -82,6 +82,7 @@ spec:
                   removeCustomConfig:
                     type: boolean
                   restart:
+                    default: auto
                     enum:
                     - auto
                     - "true"

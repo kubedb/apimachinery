@@ -162,12 +162,8 @@ type PostgresVolumeExpansionSpec struct {
 }
 
 type PostgresCustomConfigurationSpec struct {
-	Tuning             *PostgresTuningConfig      `json:"tuning,omitempty"`
-	ConfigSecret       *core.LocalObjectReference `json:"configSecret,omitempty"`
-	ApplyConfig        map[string]string          `json:"applyConfig,omitempty"`
-	RemoveCustomConfig bool                       `json:"removeCustomConfig,omitempty"`
-	// +optional
-	Restart *ReconfigureRestartType `json:"restart,omitempty"`
+	Tuning              *PostgresTuningConfig `json:"tuning,omitempty"`
+	ReconfigurationSpec `json:",inline,omitempty"`
 }
 
 type PostgresCustomConfiguration struct {

@@ -4978,23 +4978,7 @@ func (in *PostgresCustomConfigurationSpec) DeepCopyInto(out *PostgresCustomConfi
 		*out = new(PostgresTuningConfig)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(v1.LocalObjectReference)
-		**out = **in
-	}
-	if in.ApplyConfig != nil {
-		in, out := &in.ApplyConfig, &out.ApplyConfig
-		*out = make(map[string]string, len(*in))
-		for key, val := range *in {
-			(*out)[key] = val
-		}
-	}
-	if in.Restart != nil {
-		in, out := &in.Restart, &out.Restart
-		*out = new(ReconfigureRestartType)
-		**out = **in
-	}
+	in.ReconfigurationSpec.DeepCopyInto(&out.ReconfigurationSpec)
 	return
 }
 
