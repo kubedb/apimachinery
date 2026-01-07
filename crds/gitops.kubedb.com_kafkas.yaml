@@ -85,6 +85,15 @@ spec:
                       outBoundNetwork:
                         type: string
                     type: object
+                  configuration:
+                    properties:
+                      applyConfig:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      secretName:
+                        type: string
+                    type: object
                   podTemplate:
                     properties:
                       controller:

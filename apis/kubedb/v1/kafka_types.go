@@ -182,6 +182,9 @@ type KafkaStatus struct {
 }
 
 type KafkaCruiseControl struct {
+	// +optional
+	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
+
 	// Replicas represents number of replica for this specific type of node
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`

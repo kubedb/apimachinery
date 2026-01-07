@@ -31304,6 +31304,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref common.Refe
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration for cruise-control",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Replicas represents number of replica for this specific type of node",
@@ -31316,6 +31322,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref common.Refe
 							Description: "Suffix to append with node name",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Compute Resources required by the sidecar container.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
 					"podTemplate": {
@@ -31335,7 +31348,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_KafkaCruiseControl(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.ResourceRequirements", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaBrokerCapacity"},
 	}
 }
 

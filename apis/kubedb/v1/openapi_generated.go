@@ -27986,6 +27986,11 @@ func schema_apimachinery_apis_kubedb_v1_KafkaCruiseControl(ref common.ReferenceC
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec"),
+						},
+					},
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Replicas represents number of replica for this specific type of node",
@@ -28017,7 +28022,7 @@ func schema_apimachinery_apis_kubedb_v1_KafkaCruiseControl(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.KafkaBrokerCapacity"},
+			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.KafkaBrokerCapacity"},
 	}
 }
 

@@ -188,6 +188,10 @@ type KafkaStatus struct {
 }
 
 type KafkaCruiseControl struct {
+	// Configuration for cruise-control
+	// +optional
+	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
+
 	// Replicas represents number of replica for this specific type of node
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
@@ -195,6 +199,10 @@ type KafkaCruiseControl struct {
 	// Suffix to append with node name
 	// +optional
 	Suffix string `json:"suffix,omitempty"`
+
+	// Compute Resources required by the sidecar container.
+	// +optional
+	Resources core.ResourceRequirements `json:"resources,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional

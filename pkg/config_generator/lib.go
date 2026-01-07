@@ -70,8 +70,8 @@ func (generator *CustomConfigGenerator) GetMergedConfigString() (string, error) 
 
 // GetMergedConfigStringWithoutPrevConfig func return new config string where the current config string and requested config strings are merged without keeping previous config sample.
 func (generator *CustomConfigGenerator) GetMergedConfigStringWithoutPreviousConfig() (string, error) {
-	if generator.KeyValueSeparators == nil || len(generator.KeyValueSeparators) == 0 {
-		return "", fmt.Errorf("KeyValueSeparators is empty or KeyValueSeparators  is null")
+	if len(generator.KeyValueSeparators) == 0 {
+		return "", fmt.Errorf("KeyValueSeparators is empty")
 	}
 
 	requestedDataMap := ConvertStringInToMap(strings.TrimSpace(generator.RequestedConfig), generator.KeyValueSeparators)

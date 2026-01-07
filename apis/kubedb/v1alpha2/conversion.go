@@ -1039,6 +1039,41 @@ func Convert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(in *v1.KafkaSpec, out *KafkaSpec
 	return nil
 }
 
+func Convert_v1alpha2_KafkaCruiseControl_To_v1_KafkaCruiseControl(in *KafkaCruiseControl, out *v1.KafkaCruiseControl, s conversion.Scope) error {
+	out.PodTemplate.Spec.Containers = core_util.UpsertContainer(out.PodTemplate.Spec.Containers, corev1.Container{
+		Name:      kubedb.KafkaContainerName,
+		Resources: in.Resources,
+	})
+	if in.ConfigSecret != nil {
+		out.Configuration = &v1.ConfigurationSpec{
+			SecretName: in.ConfigSecret.Name,
+		}
+	}
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Suffix = in.Suffix
+	out.PodTemplate = in.PodTemplate
+	out.BrokerCapacity = (*v1.KafkaBrokerCapacity)(unsafe.Pointer(in.BrokerCapacity))
+
+	return nil
+}
+
+func Convert_v1_KafkaCruiseControl_To_v1alpha2_KafkaCruiseControl(in *v1.KafkaCruiseControl, out *KafkaCruiseControl, s conversion.Scope) error {
+	container := core_util.GetContainerByName(in.PodTemplate.Spec.Containers, kubedb.KafkaContainerName)
+	if container != nil {
+		out.Resources = *(*corev1.ResourceRequirements)(unsafe.Pointer(&container.Resources))
+	}
+	if in.Configuration != nil && in.Configuration.SecretName != "" {
+		out.ConfigSecret = &corev1.LocalObjectReference{
+			Name: in.Configuration.SecretName,
+		}
+	}
+	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
+	out.Suffix = in.Suffix
+	out.PodTemplate = in.PodTemplate
+	out.BrokerCapacity = (*KafkaBrokerCapacity)(unsafe.Pointer(in.BrokerCapacity))
+	return nil
+}
+
 func Convert_v1_MemcachedSpec_To_v1alpha2_MemcachedSpec(in *v1.MemcachedSpec, out *MemcachedSpec, s conversion.Scope) error {
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
