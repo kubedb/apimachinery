@@ -26950,7 +26950,7 @@ func schema_apimachinery_apis_ops_v1alpha1_CassandraOpsRequestSpec(ref common.Re
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for custom configuration of Cassandra",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraCustomConfigurationSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
 						},
 					},
 					"databaseRef": {
@@ -27040,7 +27040,7 @@ func schema_apimachinery_apis_ops_v1alpha1_CassandraOpsRequestSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.CassandraVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 

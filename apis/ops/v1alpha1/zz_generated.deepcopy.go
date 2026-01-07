@@ -208,7 +208,7 @@ func (in *CassandraOpsRequestSpec) DeepCopyInto(out *CassandraOpsRequestSpec) {
 	*out = *in
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
-		*out = new(CassandraCustomConfigurationSpec)
+		*out = new(ReconfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	out.DatabaseRef = in.DatabaseRef
