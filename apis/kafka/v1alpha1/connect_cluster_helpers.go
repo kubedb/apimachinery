@@ -315,8 +315,8 @@ func (k *ConnectCluster) copyConfigurationFields() {
 			}
 			k.Spec.Configuration.SecretName = k.Spec.ConfigSecret.Name
 		}
-		k.Spec.ConfigSecret = nil
 	}
+	k.Spec.ConfigSecret = nil
 }
 
 func (k *ConnectCluster) setDefaultInitContainerSecurityContext(kc client.Client, podTemplate *ofstv2.PodTemplateSpec) {

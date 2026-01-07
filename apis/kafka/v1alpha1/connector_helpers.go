@@ -46,8 +46,10 @@ func (k *Connector) Default() {
 				k.Spec.Configuration = &dbapi.ConfigurationSpec{}
 			}
 			k.Spec.Configuration.SecretName = k.Spec.ConfigSecret.Name
-			k.Spec.ConfigSecret = nil
 		}
+	}
+	if k.Spec.ConfigSecret != nil {
+		k.Spec.ConfigSecret = nil
 	}
 }
 

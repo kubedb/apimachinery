@@ -508,8 +508,8 @@ func (k *Kafka) copyConfigurationFields() {
 			}
 			k.Spec.Configuration.SecretName = k.Spec.ConfigSecret.Name
 		}
-		k.Spec.ConfigSecret = nil
 	}
+	k.Spec.ConfigSecret = nil
 }
 
 func (k *Kafka) setClusterIDEnv(podTemplate *ofst.PodTemplateSpec, clusterID string) {
