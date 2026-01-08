@@ -473,6 +473,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion) {
 			e.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
 		}
 	}
+	e.copyConfigurationFields()
 
 	// set default elasticsearch node name prefix
 	if e.Spec.Topology != nil {
@@ -731,6 +732,18 @@ func (e *Elasticsearch) SetMetricsExporterDefaults(esVersion *catalog.Elasticsea
 			e.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = esVersion.Spec.SecurityContext.RunAsUser
 		}
 	}
+}
+
+func (e *Elasticsearch) copyConfigurationFields() {
+	if (e.Spec.Configuration == nil) || (e.Spec.Configuration != nil && e.Spec.Configuration.SecretName == "") {
+		if e.Spec.ConfigSecret != nil {
+			if e.Spec.Configuration == nil {
+				e.Spec.Configuration = &ConfigurationSpec{}
+			}
+			e.Spec.Configuration.SecretName = e.Spec.ConfigSecret.Name
+		}
+	}
+	e.Spec.ConfigSecret = nil
 }
 
 // Set Default internal users settings

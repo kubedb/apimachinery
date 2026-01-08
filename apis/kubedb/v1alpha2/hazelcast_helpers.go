@@ -171,6 +171,7 @@ func (h *Hazelcast) SetDefaults(kc client.Client) {
 	if h.Spec.PodTemplate.Spec.TerminationGracePeriodSeconds == nil {
 		h.Spec.PodTemplate.Spec.TerminationGracePeriodSeconds = pointer.Int64P(600)
 	}
+	h.copyConfigurationFields()
 	h.setDefaultContainerSecurityContext(&hzVersion, &h.Spec.PodTemplate)
 	h.setDefaultContainerResourceLimits(&h.Spec.PodTemplate)
 	h.setDefaultProbes(&h.Spec.PodTemplate)
@@ -247,6 +248,18 @@ func (h *Hazelcast) SetTLSDefaults() {
 	}
 	h.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(h.Spec.TLS.Certificates, string(HazelcastServerCert), h.CertificateName(HazelcastServerCert))
 	h.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(h.Spec.TLS.Certificates, string(HazelcastClientCert), h.CertificateName(HazelcastClientCert))
+}
+
+func (h *Hazelcast) copyConfigurationFields() {
+	if (h.Spec.Configuration == nil) || (h.Spec.Configuration != nil && h.Spec.Configuration.SecretName == "") {
+		if h.Spec.ConfigSecret != nil {
+			if h.Spec.Configuration == nil {
+				h.Spec.Configuration = &ConfigurationSpec{}
+			}
+			h.Spec.Configuration.SecretName = h.Spec.ConfigSecret.Name
+		}
+	}
+	h.Spec.ConfigSecret = nil
 }
 
 func (h *Hazelcast) setDefaultContainerSecurityContext(hzVersion *catalog.HazelcastVersion, podTemplate *ofst.PodTemplateSpec) {
