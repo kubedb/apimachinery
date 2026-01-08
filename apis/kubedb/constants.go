@@ -1464,9 +1464,9 @@ const (
 	RabbitMQTempConfigDir   = "/tmp/config/"
 	RabbitMQCustomConfigDir = "/tmp/config/custom_config/"
 
-	RabbitMQConfigVolName     = "rabbitmq-config"
-	RabbitMQPluginsVolName    = "rabbitmq-plugins"
-	RabbitMQTempConfigVolName = "temp-config"
+	RabbitMQConfigVolName      = "rabbitmq-config"
+	RabbitMQPluginsVolName     = "rabbitmq-plugins"
+	RabbitMQTempConfigVolName  = "temp-config"
 	RabbitMQApplyConfigVolName = "apply-config.conf"
 
 	RabbitMQContainerName              = "rabbitmq"
