@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 
+	"k8s.io/apimachinery/pkg/util/validation/field"
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -196,6 +197,12 @@ func (w PerconaXtraDBCustomWebhook) ValidatePerconaXtraDB(db *dbapi.PerconaXtraD
 			return fmt.Errorf("perconaXtraDBVersion %s/%s is using invalid perconaXtraDBVersion %v. Skipped processing. reason: %v", pxVersion.Namespace,
 				pxVersion.Name, pxVersion.Name, err)
 		}
+	}
+
+	if db.Spec.Configuration != nil && db.Spec.Configuration.SecretName != "" && db.Spec.ConfigSecret != nil {
+		return field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
+			db.Name,
+			"cannot use both configuration.secretName and configSecret, use configuration.secretName")
 	}
 
 	if db.Spec.DeletionPolicy == "" {

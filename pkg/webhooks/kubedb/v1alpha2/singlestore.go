@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 
+	core "k8s.io/api/core/v1"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -152,6 +153,13 @@ func (w *SinglestoreCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Singlesto
 				err.Error()))
 		}
 
+		err = sdbValidateCustomConfiguration(db.Spec.Configuration, db.Spec.ConfigSecret)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
+				db.Name,
+				err.Error()))
+		}
+
 	} else {
 		if db.Spec.Topology.Aggregator == nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("aggregator"),
@@ -207,6 +215,20 @@ func (w *SinglestoreCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Singlesto
 				err.Error()))
 		}
 		err = sdbValidateVolumesMountPaths(db.Spec.Topology.Leaf.PodTemplate)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("leaf").Child("podTemplate").Child("spec").Child("containers"),
+				db.Name,
+				err.Error()))
+		}
+
+		err = sdbValidateCustomConfiguration(db.Spec.Topology.Aggregator.Configuration, db.Spec.Topology.Aggregator.ConfigSecret)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("aggregator").Child("podTemplate").Child("spec").Child("containers"),
+				db.Name,
+				err.Error()))
+		}
+
+		err = sdbValidateCustomConfiguration(db.Spec.Topology.Leaf.Configuration, db.Spec.Topology.Leaf.ConfigSecret)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("leaf").Child("podTemplate").Child("spec").Child("containers"),
 				db.Name,
@@ -316,5 +338,12 @@ func sdbValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 		}
 	}
 
+	return nil
+}
+
+func sdbValidateCustomConfiguration(configuration *olddbapi.ConfigurationSpec, configSecret *core.LocalObjectReference) error {
+	if configuration != nil && configuration.SecretName != "" && configSecret != nil {
+		return errors.New("cannot use both configuration.secretName and configSecret, use configuration.secretName")
+	}
 	return nil
 }
