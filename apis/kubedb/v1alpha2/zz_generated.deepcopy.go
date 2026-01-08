@@ -7765,6 +7765,11 @@ func (in *WeaviateSpec) DeepCopyInto(out *WeaviateSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates
