@@ -175,7 +175,7 @@ func (w *RabbitMQCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.RabbitMQ) er
 		}
 	}
 
-	if db.Spec.ConfigSecret != nil && db.Spec.ConfigSecret.Name == "" {
+	if db.Spec.Configuration != nil && db.Spec.Configuration.SecretName == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configSecret").Child("name"),
 			db.GetName(),
 			"ConfigSecret Name can not be empty"))
@@ -200,6 +200,7 @@ var rabbitmqReservedVolumes = []string{
 	kubedb.RabbitMQVolumeData,
 	kubedb.RabbitMQVolumeConfig,
 	kubedb.RabbitMQVolumeTempConfig,
+	kubedb.RabbitMQApplyConfigVolName,
 }
 
 func (w *RabbitMQCustomWebhook) validateVolumes(db *olddbapi.RabbitMQ) error {

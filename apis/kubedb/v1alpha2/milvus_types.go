@@ -88,7 +88,7 @@ type MilvusSpec struct {
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// +optional
-	Configuration *MilvusConfigurationSpec `json:"configuration,omitempty"`
+	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
@@ -114,15 +114,6 @@ type MilvusTopology struct {
 	// "Standalone", Standalone is required, and Milvus will start a Standalone Mode
 	// "Distributed", DistributedSpec is required, and Milvus will start a Distributed Mode
 	Mode *MilvusMode `json:"mode,omitempty"`
-}
-
-type MilvusConfigurationSpec struct {
-	// SecretName is an optional field to provide custom configuration file for the database (i.e. mssql.conf).
-	// If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any).
-	// Configurations from this secret will override default configurations.
-	// This secret must be created by user.
-	// +optional
-	SecretName string `json:"secretName,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

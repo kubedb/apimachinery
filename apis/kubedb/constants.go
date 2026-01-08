@@ -1467,6 +1467,7 @@ const (
 	RabbitMQConfigVolName     = "rabbitmq-config"
 	RabbitMQPluginsVolName    = "rabbitmq-plugins"
 	RabbitMQTempConfigVolName = "temp-config"
+	RabbitMQApplyConfigVolName = "apply-config.conf"
 
 	RabbitMQContainerName              = "rabbitmq"
 	RabbitMQInitContainerName          = "rabbitmq-init"

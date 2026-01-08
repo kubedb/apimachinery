@@ -277,6 +277,18 @@ func (r *RabbitMQ) PVCName(alias string) string {
 	return meta_util.NameWithSuffix(r.Name, alias)
 }
 
+func (r *RabbitMQ) copyConfigurationFields() {
+	if (r.Spec.Configuration == nil) || (r.Spec.Configuration != nil && r.Spec.Configuration.SecretName == "") {
+		if r.Spec.ConfigSecret != nil {
+			if r.Spec.Configuration == nil {
+				r.Spec.Configuration = &ConfigurationSpec{}
+			}
+			r.Spec.Configuration.SecretName = r.Spec.ConfigSecret.Name
+		}
+	}
+	r.Spec.ConfigSecret = nil
+}
+
 func (r *RabbitMQ) SetDefaults(kc client.Client) {
 	if r.Spec.Replicas == nil {
 		r.Spec.Replicas = pointer.Int32P(1)
@@ -316,6 +328,8 @@ func (r *RabbitMQ) SetDefaults(kc client.Client) {
 	}
 
 	r.SetTLSDefaults()
+
+	r.copyConfigurationFields()
 
 	r.SetHealthCheckerDefaults()
 	if r.Spec.Monitor != nil {
