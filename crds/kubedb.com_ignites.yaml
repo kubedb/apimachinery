@@ -72,13 +72,6 @@ spec:
                   disabled:
                     type: boolean
                 type: object
-              configSecret:
-                properties:
-                  name:
-                    default: ""
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               configuration:
                 properties:
                   applyConfig:

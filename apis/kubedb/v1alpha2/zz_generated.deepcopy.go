@@ -2751,11 +2751,6 @@ func (in *IgniteSpec) DeepCopyInto(out *IgniteSpec) {
 		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
 		*out = new(ConfigurationSpec)
@@ -6282,11 +6277,6 @@ func (in *QdrantSpec) DeepCopyInto(out *QdrantSpec) {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
-	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
 	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
