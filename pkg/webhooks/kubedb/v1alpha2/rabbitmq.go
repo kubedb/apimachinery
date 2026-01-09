@@ -175,10 +175,16 @@ func (w *RabbitMQCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.RabbitMQ) er
 		}
 	}
 
-	if db.Spec.Configuration != nil && db.Spec.Configuration.SecretName == "" {
+	if db.Spec.ConfigSecret != nil && db.Spec.ConfigSecret.Name == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configSecret").Child("name"),
 			db.GetName(),
 			"ConfigSecret Name can not be empty"))
+	}
+
+	if db.Spec.Configuration != nil && db.Spec.Configuration.SecretName == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
+			db.GetName(),
+			"Configuration Secret Name can not be empty"))
 	}
 
 	if len(allErr) == 0 {
