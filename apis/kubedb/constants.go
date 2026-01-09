@@ -1714,6 +1714,7 @@ const (
 	ClickHouseConfigVolumeName               = "clickhouse-config"
 	ClickHouseKeeperConfigVolumeName         = "clickhouse-keeper-config"
 	ClickHouseInternalKeeperConfigVolumeName = "clickhouse-internal-keeper-config"
+	ClickHouseApplyConfig                    = "apply-config"
 
 	ClickHouseDefaultStorageSize = "2Gi"
 
