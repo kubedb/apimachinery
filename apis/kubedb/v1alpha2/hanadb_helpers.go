@@ -221,7 +221,8 @@ func (h *HanaDB) ObserverPetSetName() string {
 }
 
 func (h *HanaDB) ConfigSecretName() string {
-	return metautil.NameWithSuffix(h.OffshootName(), "config")
+	uid := string(h.UID)
+	return metautil.NameWithSuffix(h.OffshootName(), uid[len(uid)-6:])
 }
 
 func (h *HanaDB) IsStandalone() bool {

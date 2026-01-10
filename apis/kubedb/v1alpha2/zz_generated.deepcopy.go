@@ -2373,10 +2373,10 @@ func (in *HanaDBSpec) DeepCopyInto(out *HanaDBSpec) {
 		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.PodTemplate != nil {
 		in, out := &in.PodTemplate, &out.PodTemplate
