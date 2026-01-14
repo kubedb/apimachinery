@@ -91,7 +91,7 @@ func GetClusterResponse(
 			RootCAs: caPool,
 		}
 
-		if db.Spec.TLS.ClientHTTPTLS != nil && *db.Spec.TLS.ClientHTTPTLS {
+		if db.Spec.TLS.Client != nil && *db.Spec.TLS.Client {
 			clientSecret := &corev1.Secret{}
 			err := kc.Get(ctx, types.NamespacedName{
 				Name:      db.GetCertSecretName(api.QdrantClientCert),
