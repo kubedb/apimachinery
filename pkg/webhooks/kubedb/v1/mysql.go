@@ -34,7 +34,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/utils/ptr"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
@@ -227,12 +226,6 @@ func (w MySQLCustomWebhook) ValidateMySQL(mysql *dbapi.MySQL) error {
 				}
 			}
 		}
-	}
-
-	if mysql.Spec.Configuration != nil && mysql.Spec.Configuration.SecretName != "" && mysql.Spec.ConfigSecret != nil {
-		return field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
-			mysql.Name,
-			"cannot use both configuration.secretName and configSecret, use configuration.secretName")
 	}
 
 	if err := validateEnvsForAllContainers(mysql); err != nil {
