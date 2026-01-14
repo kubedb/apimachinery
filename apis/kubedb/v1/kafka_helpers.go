@@ -344,7 +344,7 @@ func (k *Kafka) SetDefaults(kc client.Client) {
 	if k.Spec.StorageType == "" {
 		k.Spec.StorageType = StorageTypeDurable
 	}
-	k.copyConfigurationFields()
+	k.Spec.Configuration = copyConfigurationField(k.Spec.Configuration, k.Spec.ConfigSecret)
 
 	if !k.Spec.DisableSecurity {
 		if k.Spec.AuthSecret == nil {
@@ -498,18 +498,6 @@ func (k *Kafka) SetDefaultEnvs() {
 	} else {
 		k.setClusterIDEnv(&k.Spec.PodTemplate, clusterID)
 	}
-}
-
-func (k *Kafka) copyConfigurationFields() {
-	if (k.Spec.Configuration == nil) || (k.Spec.Configuration != nil && k.Spec.Configuration.SecretName == "") {
-		if k.Spec.ConfigSecret != nil {
-			if k.Spec.Configuration == nil {
-				k.Spec.Configuration = &ConfigurationSpec{}
-			}
-			k.Spec.Configuration.SecretName = k.Spec.ConfigSecret.Name
-		}
-	}
-	k.Spec.ConfigSecret = nil
 }
 
 func (k *Kafka) setClusterIDEnv(podTemplate *ofst.PodTemplateSpec, clusterID string) {

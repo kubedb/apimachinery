@@ -470,7 +470,7 @@ func (d *Druid) SetDefaults(kc client.Client) {
 		klog.Errorf("failed to parse druid version :%s\n", err.Error())
 		return
 	}
-	d.copyConfigurationFields()
+	d.Spec.Configuration = copyConfigurationField(d.Spec.Configuration, d.Spec.ConfigSecret)
 
 	if d.Spec.Topology != nil {
 		if d.Spec.Topology.Coordinators == nil {
@@ -601,18 +601,6 @@ func (d *Druid) SetDefaults(kc client.Client) {
 	if d.Spec.EnableSSL {
 		d.SetTLSDefaults()
 	}
-}
-
-func (d *Druid) copyConfigurationFields() {
-	if (d.Spec.Configuration == nil) || (d.Spec.Configuration != nil && d.Spec.Configuration.SecretName == "") {
-		if d.Spec.ConfigSecret != nil {
-			if d.Spec.Configuration == nil {
-				d.Spec.Configuration = &ConfigurationSpec{}
-			}
-			d.Spec.Configuration.SecretName = d.Spec.ConfigSecret.Name
-		}
-	}
-	d.Spec.ConfigSecret = nil
 }
 
 func (d *Druid) SetTLSDefaults() {
