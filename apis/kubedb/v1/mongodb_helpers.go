@@ -726,16 +726,6 @@ func (m *MongoDB) copyConfigurationFields() {
 	}
 }
 
-func copyConfigurationField(cnf *ConfigurationSpec, sec *core.LocalObjectReference) *ConfigurationSpec {
-	if cnf == nil && sec != nil {
-		cnf = &ConfigurationSpec{
-			SecretName: sec.Name,
-		}
-	}
-	sec = nil
-	return cnf
-}
-
 func (m *MongoDB) initializePodTemplates() {
 	if m.Spec.ShardTopology != nil {
 		if m.Spec.ShardTopology.Shard.PodTemplate == nil {
