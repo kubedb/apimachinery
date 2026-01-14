@@ -144,10 +144,7 @@ func GetClusterResponse(
 		return nil, fmt.Errorf("request failed: %w", err)
 	}
 	defer func() {
-		if err := res.Body.Close(); err != nil {
-			// use your logger here
-			// log.Error(err, "failed to close response body")
-		}
+		_ = res.Body.Close()
 	}()
 
 	if res.StatusCode != http.StatusOK {
