@@ -318,6 +318,7 @@ func (r *RabbitMQ) SetDefaults(kc client.Client) {
 	r.SetTLSDefaults()
 
 	r.Spec.Configuration = copyConfigurationField(r.Spec.Configuration, r.Spec.ConfigSecret)
+	r.Spec.ConfigSecret = nil
 
 	r.SetHealthCheckerDefaults()
 	if r.Spec.Monitor != nil {
