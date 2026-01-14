@@ -5614,6 +5614,11 @@ func (in *PgpoolSpec) DeepCopyInto(out *PgpoolSpec) {
 		*out = new(corev1.LocalObjectReference)
 		**out = **in
 	}
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
 		*out = new(InitSpec)

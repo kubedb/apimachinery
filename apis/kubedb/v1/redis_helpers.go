@@ -238,7 +238,7 @@ func (r *Redis) SetDefaults(rdVersion *catalog.RedisVersion) error {
 		r.Spec.Replicas = pointer.Int32P(1)
 	}
 
-	r.copyConfigurationFields()
+	copyConfigurationField(r.Spec.Configuration, r.Spec.ConfigSecret)
 
 	// perform defaulting
 	switch r.Spec.Mode {
@@ -311,15 +311,6 @@ func (r *Redis) SetHealthCheckerDefaults() {
 	if r.Spec.HealthChecker.FailureThreshold == nil {
 		r.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
 	}
-}
-
-func (r *Redis) copyConfigurationFields() {
-	if r.Spec.Configuration == nil && r.Spec.ConfigSecret != nil {
-		r.Spec.Configuration = &ConfigurationSpec{
-			SecretName: r.Spec.ConfigSecret.Name,
-		}
-	}
-	r.Spec.ConfigSecret = nil
 }
 
 func (r *Redis) SetTLSDefaults() {

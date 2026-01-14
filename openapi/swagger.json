@@ -28754,6 +28754,7 @@
       "type": "object",
       "properties": {
         "applyConfig": {
+          "description": "ApplyConfig contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
           "type": "object",
           "additionalProperties": {
             "type": "string",
@@ -28764,10 +28765,16 @@
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisAclSpec"
         },
         "configSecret": {
+          "description": "ConfigSecret is an optional field to provide custom configuration file for the database (i.e. mssql.conf, mongod.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). Configurations from this secret will override default configurations.",
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
         "removeCustomConfig": {
+          "description": "RemoveCustomConfig when set to true, removes any previous custom configuration (config secret and apply configs) and uses only current configurations (if provided) and the default configurations.",
           "type": "boolean"
+        },
+        "restart": {
+          "description": "Restart controls whether to restart the database during reconfiguration. - auto (default): Operator determines if restart is needed based on configuration changes. - true: Restart the database during reconfiguration. - false: Don't restart the database during reconfiguration.",
+          "type": "string"
         }
       }
     },
