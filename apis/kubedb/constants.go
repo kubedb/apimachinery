@@ -1468,7 +1468,6 @@ const (
 	RabbitMQConfigVolName      = "rabbitmq-config"
 	RabbitMQPluginsVolName     = "rabbitmq-plugins"
 	RabbitMQTempConfigVolName  = "temp-config"
-	RabbitMQApplyConfigVolName = "apply-config.conf"
 
 	RabbitMQContainerName              = "rabbitmq"
 	RabbitMQInitContainerName          = "rabbitmq-init"
@@ -1536,6 +1535,7 @@ const (
 	RabbitMQSSLVerifyKey           = "ssl.verify"
 	RabbitMQSSLFailIfNoPeerKey     = "ssl.fail_if_no_peer_cert"
 	RabbitMQConfigFileName         = "rabbitmq.conf"
+	RabbitMQApplyConfigFileName    = "apply.conf"
 	RabbitMQEnabledPluginsFileName = "enabled_plugins"
 	RabbitMQHealthCheckerQueueName = "kubedb-system"
 )

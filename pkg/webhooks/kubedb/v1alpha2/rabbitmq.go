@@ -194,7 +194,7 @@ var rabbitmqReservedVolumes = []string{
 	kubedb.RabbitMQVolumeData,
 	kubedb.RabbitMQVolumeConfig,
 	kubedb.RabbitMQVolumeTempConfig,
-	kubedb.RabbitMQApplyConfigVolName,
+	kubedb.RabbitMQVolumeApplyConfig,
 }
 
 func (w *RabbitMQCustomWebhook) validateVolumes(db *olddbapi.RabbitMQ) error {
