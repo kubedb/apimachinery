@@ -705,24 +705,18 @@ func (m *MongoDB) SetDefaults(mgVersion *v1alpha1.MongoDBVersion) {
 
 func (m *MongoDB) copyConfigurationFields() {
 	if m.Spec.ShardTopology != nil {
-		m.Spec.ShardTopology.Shard.Configuration = copyConfigurationField(m.Spec.ShardTopology.Shard.Configuration, m.Spec.ShardTopology.Shard.ConfigSecret)
-		m.Spec.ShardTopology.Shard.ConfigSecret = nil
-		m.Spec.ShardTopology.ConfigServer.Configuration = copyConfigurationField(m.Spec.ShardTopology.ConfigServer.Configuration, m.Spec.ShardTopology.ConfigServer.ConfigSecret)
-		m.Spec.ShardTopology.ConfigServer.ConfigSecret = nil
-		m.Spec.ShardTopology.Mongos.Configuration = copyConfigurationField(m.Spec.ShardTopology.Mongos.Configuration, m.Spec.ShardTopology.Mongos.ConfigSecret)
-		m.Spec.ShardTopology.Mongos.ConfigSecret = nil
+		m.Spec.ShardTopology.Shard.Configuration = copyConfigurationField(m.Spec.ShardTopology.Shard.Configuration, &m.Spec.ShardTopology.Shard.ConfigSecret)
+		m.Spec.ShardTopology.ConfigServer.Configuration = copyConfigurationField(m.Spec.ShardTopology.ConfigServer.Configuration, &m.Spec.ShardTopology.ConfigServer.ConfigSecret)
+		m.Spec.ShardTopology.Mongos.Configuration = copyConfigurationField(m.Spec.ShardTopology.Mongos.Configuration, &m.Spec.ShardTopology.Mongos.ConfigSecret)
 	} else {
-		m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, m.Spec.ConfigSecret)
-		m.Spec.ConfigSecret = nil
+		m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, &m.Spec.ConfigSecret)
 	}
 
 	if m.Spec.Arbiter != nil {
-		m.Spec.Arbiter.Configuration = copyConfigurationField(m.Spec.Arbiter.Configuration, m.Spec.Arbiter.ConfigSecret)
-		m.Spec.Arbiter.ConfigSecret = nil
+		m.Spec.Arbiter.Configuration = copyConfigurationField(m.Spec.Arbiter.Configuration, &m.Spec.Arbiter.ConfigSecret)
 	}
 	if m.Spec.Hidden != nil {
-		m.Spec.Hidden.Configuration = copyConfigurationField(m.Spec.Hidden.Configuration, m.Spec.Hidden.ConfigSecret)
-		m.Spec.Hidden.ConfigSecret = nil
+		m.Spec.Hidden.Configuration = copyConfigurationField(m.Spec.Hidden.Configuration, &m.Spec.Hidden.ConfigSecret)
 	}
 }
 

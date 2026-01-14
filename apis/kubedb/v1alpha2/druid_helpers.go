@@ -470,7 +470,7 @@ func (d *Druid) SetDefaults(kc client.Client) {
 		klog.Errorf("failed to parse druid version :%s\n", err.Error())
 		return
 	}
-	d.Spec.Configuration = copyConfigurationField(d.Spec.Configuration, d.Spec.ConfigSecret)
+	d.Spec.Configuration = copyConfigurationField(d.Spec.Configuration, &d.Spec.ConfigSecret)
 
 	if d.Spec.Topology != nil {
 		if d.Spec.Topology.Coordinators == nil {

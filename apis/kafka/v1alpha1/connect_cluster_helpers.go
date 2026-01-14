@@ -257,7 +257,7 @@ func (k *ConnectCluster) SetDefaults(kc client.Client) {
 	if k.Spec.Replicas == nil {
 		k.Spec.Replicas = pointer.Int32P(1)
 	}
-	k.Spec.Configuration = copyConfigurationField(k.Spec.Configuration, k.Spec.ConfigSecret)
+	k.Spec.Configuration = copyConfigurationField(k.Spec.Configuration, &k.Spec.ConfigSecret)
 
 	var kfVersion catalog.KafkaVersion
 	err := kc.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, &kfVersion)

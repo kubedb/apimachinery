@@ -402,18 +402,15 @@ func (s *Singlestore) SetDefaults(kc client.Client) {
 func (s *Singlestore) copyConfigurationFields() {
 	if s.Spec.Topology != nil {
 		if s.Spec.Topology.Aggregator != nil {
-			s.Spec.Topology.Aggregator.Configuration = copyConfigurationField(s.Spec.Topology.Aggregator.Configuration, s.Spec.Topology.Aggregator.ConfigSecret)
-			s.Spec.Topology.Aggregator.ConfigSecret = nil
+			s.Spec.Topology.Aggregator.Configuration = copyConfigurationField(s.Spec.Topology.Aggregator.Configuration, &s.Spec.Topology.Aggregator.ConfigSecret)
 		}
 
 		if s.Spec.Topology.Leaf != nil {
-			s.Spec.Topology.Leaf.Configuration = copyConfigurationField(s.Spec.Topology.Leaf.Configuration, s.Spec.Topology.Leaf.ConfigSecret)
-			s.Spec.Topology.Leaf.ConfigSecret = nil
+			s.Spec.Topology.Leaf.Configuration = copyConfigurationField(s.Spec.Topology.Leaf.Configuration, &s.Spec.Topology.Leaf.ConfigSecret)
 		}
 	}
 
-	s.Spec.Configuration = copyConfigurationField(s.Spec.Configuration, s.Spec.ConfigSecret)
-	s.Spec.ConfigSecret = nil
+	s.Spec.Configuration = copyConfigurationField(s.Spec.Configuration, &s.Spec.ConfigSecret)
 }
 
 func (s *Singlestore) setDefaultContainerSecurityContext(sdbVersion *catalog.SinglestoreVersion, podTemplate *ofst.PodTemplateSpec) {

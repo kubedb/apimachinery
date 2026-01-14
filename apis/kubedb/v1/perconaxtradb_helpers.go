@@ -233,7 +233,7 @@ func (p *PerconaXtraDB) SetDefaults(pVersion *v1alpha1.PerconaXtraDBVersion) {
 		p.Spec.PodTemplate.Spec.ServiceAccountName = p.OffshootName()
 	}
 
-	p.Spec.Configuration = copyConfigurationField(p.Spec.Configuration, p.Spec.ConfigSecret)
+	p.Spec.Configuration = copyConfigurationField(p.Spec.Configuration, &p.Spec.ConfigSecret)
 	// Need to set FSGroup equal to  p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup.
 	// So that /var/pv directory have the group permission for the RunAsGroup user GID.
 	// Otherwise, We will get write permission denied.

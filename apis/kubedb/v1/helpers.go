@@ -185,12 +185,12 @@ func IsVirtualAuthSecretReferred(authSecret *SecretReference) bool {
 	return authSecret != nil && authSecret.APIGroup == vsecretapi.GroupName
 }
 
-func copyConfigurationField(cnf *ConfigurationSpec, sec *core.LocalObjectReference) *ConfigurationSpec {
-	if cnf == nil && sec != nil && sec.Name != "" {
+func copyConfigurationField(cnf *ConfigurationSpec, sec **core.LocalObjectReference) *ConfigurationSpec {
+	if cnf == nil && (*sec) != nil && (*sec).Name != "" {
 		cnf = &ConfigurationSpec{
-			SecretName: sec.Name,
+			SecretName: (*sec).Name,
 		}
 	}
-	sec = nil
+	*sec = nil
 	return cnf
 }

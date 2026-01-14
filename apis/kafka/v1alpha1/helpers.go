@@ -22,12 +22,12 @@ import (
 	core "k8s.io/api/core/v1"
 )
 
-func copyConfigurationField(cnf *dbapi.ConfigurationSpec, sec *core.LocalObjectReference) *dbapi.ConfigurationSpec {
-	if cnf == nil && sec != nil && sec.Name != "" {
+func copyConfigurationField(cnf *dbapi.ConfigurationSpec, sec **core.LocalObjectReference) *dbapi.ConfigurationSpec {
+	if cnf == nil && (*sec) != nil && (*sec).Name != "" {
 		cnf = &dbapi.ConfigurationSpec{
-			SecretName: sec.Name,
+			SecretName: (*sec).Name,
 		}
 	}
-	sec = nil
+	*sec = nil
 	return cnf
 }

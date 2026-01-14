@@ -358,7 +358,7 @@ func (m *MySQL) SetDefaults(myVersion *v1alpha1.MySQLVersion) error {
 	if m.Spec.PodTemplate.Spec.ServiceAccountName == "" {
 		m.Spec.PodTemplate.Spec.ServiceAccountName = m.OffshootName()
 	}
-	m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, m.Spec.ConfigSecret)
+	m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, &m.Spec.ConfigSecret)
 	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)
 	m.SetTLSDefaults()
 	m.SetHealthCheckerDefaults()

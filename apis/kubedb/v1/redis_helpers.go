@@ -238,7 +238,7 @@ func (r *Redis) SetDefaults(rdVersion *catalog.RedisVersion) error {
 		r.Spec.Replicas = pointer.Int32P(1)
 	}
 
-	copyConfigurationField(r.Spec.Configuration, r.Spec.ConfigSecret)
+	r.Spec.Configuration = copyConfigurationField(r.Spec.Configuration, &r.Spec.ConfigSecret)
 
 	// perform defaulting
 	switch r.Spec.Mode {

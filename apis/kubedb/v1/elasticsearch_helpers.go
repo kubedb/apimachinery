@@ -473,7 +473,7 @@ func (e *Elasticsearch) SetDefaults(esVersion *catalog.ElasticsearchVersion) {
 			e.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
 		}
 	}
-	e.Spec.Configuration = copyConfigurationField(e.Spec.Configuration, e.Spec.ConfigSecret)
+	e.Spec.Configuration = copyConfigurationField(e.Spec.Configuration, &e.Spec.ConfigSecret)
 
 	// set default elasticsearch node name prefix
 	if e.Spec.Topology != nil {

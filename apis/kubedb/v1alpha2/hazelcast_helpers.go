@@ -171,7 +171,7 @@ func (h *Hazelcast) SetDefaults(kc client.Client) {
 	if h.Spec.PodTemplate.Spec.TerminationGracePeriodSeconds == nil {
 		h.Spec.PodTemplate.Spec.TerminationGracePeriodSeconds = pointer.Int64P(600)
 	}
-	h.Spec.Configuration = copyConfigurationField(h.Spec.Configuration, h.Spec.ConfigSecret)
+	h.Spec.Configuration = copyConfigurationField(h.Spec.Configuration, &h.Spec.ConfigSecret)
 	h.setDefaultContainerSecurityContext(&hzVersion, &h.Spec.PodTemplate)
 	h.setDefaultContainerResourceLimits(&h.Spec.PodTemplate)
 	h.setDefaultProbes(&h.Spec.PodTemplate)

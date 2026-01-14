@@ -380,7 +380,7 @@ func (p *Pgpool) SetDefaults(client client.Client) {
 		}
 	}
 
-	copyConfigurationField(p.Spec.Configuration, p.Spec.ConfigSecret)
+	p.Spec.Configuration = copyConfigurationField(p.Spec.Configuration, &p.Spec.ConfigSecret)
 
 	ppVersion := catalog.PgpoolVersion{}
 	err := client.Get(context.TODO(), types.NamespacedName{

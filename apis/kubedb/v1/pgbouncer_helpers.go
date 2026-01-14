@@ -236,7 +236,7 @@ func (p *PgBouncer) SetDefaults(pgBouncerVersion *catalog.PgBouncerVersion, uses
 		p.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
 	}
 
-	copyConfigurationField(p.Spec.Configuration, p.Spec.ConfigSecret)
+	p.Spec.Configuration = copyConfigurationField(p.Spec.Configuration, &p.Spec.ConfigSecret)
 
 	p.setPgBouncerContainerDefaults(&p.Spec.PodTemplate, pgBouncerVersion)
 	p.setDefaultPodSecurityContext()

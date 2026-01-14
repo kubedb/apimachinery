@@ -313,7 +313,7 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 	if m.Spec.Init != nil && m.Spec.Init.Archiver != nil && m.Spec.Init.Archiver.ReplicationStrategy == nil {
 		m.Spec.Init.Archiver.ReplicationStrategy = ptr.To(ReplicationStrategySync)
 	}
-	m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, m.Spec.ConfigSecret)
+	m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, &m.Spec.ConfigSecret)
 	m.setDefaultContainerSecurityContext(mdVersion, &m.Spec.PodTemplate)
 	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)
 	m.SetTLSDefaults()

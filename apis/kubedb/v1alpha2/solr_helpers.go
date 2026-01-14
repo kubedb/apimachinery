@@ -316,8 +316,7 @@ func (s *Solr) SetDefaults(kc client.Client) {
 		s.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
 
-	s.Spec.Configuration = copyConfigurationField(s.Spec.Configuration, s.Spec.ConfigSecret)
-	s.Spec.ConfigSecret = nil
+	s.Spec.Configuration = copyConfigurationField(s.Spec.Configuration, &s.Spec.ConfigSecret)
 
 	if s.Spec.ClientAuthSSL != "need" && s.Spec.ClientAuthSSL != "want" {
 		s.Spec.ClientAuthSSL = ""

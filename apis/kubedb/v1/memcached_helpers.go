@@ -215,8 +215,7 @@ func (m *Memcached) SetDefaults(mcVersion *catalog.MemcachedVersion) {
 		}
 	}
 
-	m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, m.Spec.ConfigSecret)
-	m.Spec.ConfigSecret = nil
+	m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, &m.Spec.ConfigSecret)
 
 	m.setDefaultContainerSecurityContext(mcVersion, &m.Spec.PodTemplate)
 	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)

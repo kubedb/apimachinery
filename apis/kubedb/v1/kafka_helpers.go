@@ -344,7 +344,7 @@ func (k *Kafka) SetDefaults(kc client.Client) {
 	if k.Spec.StorageType == "" {
 		k.Spec.StorageType = StorageTypeDurable
 	}
-	k.Spec.Configuration = copyConfigurationField(k.Spec.Configuration, k.Spec.ConfigSecret)
+	k.Spec.Configuration = copyConfigurationField(k.Spec.Configuration, &k.Spec.ConfigSecret)
 
 	if !k.Spec.DisableSecurity {
 		if k.Spec.AuthSecret == nil {
