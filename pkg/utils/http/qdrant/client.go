@@ -26,11 +26,11 @@ import (
 	"strconv"
 	"time"
 
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/types"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -61,14 +61,12 @@ type RaftInfo struct {
 	IsVoter           bool   `json:"is_voter,omitempty"`
 }
 
-
 func GetClusterResponse(
 	ctx context.Context,
 	db *api.Qdrant,
 	kc client.Client,
 	address string,
 ) (*ClusterResponse, error) {
-
 	scheme := "http"
 	var transport *http.Transport
 
