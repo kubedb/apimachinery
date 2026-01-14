@@ -30411,7 +30411,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSpec(ref common.ReferenceCal
 					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Configuration holds the custom config for memcached",
+							Description: "Configuration holds the custom config for hanadb",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
 						},
 					},
