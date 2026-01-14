@@ -102,8 +102,8 @@ func GetClusterResponse(
 			}
 
 			cert, err := tls.X509KeyPair(
-				clientSecret.Data["client.crt"],
-				clientSecret.Data["client.key"],
+				clientSecret.Data["tls.crt"],
+				clientSecret.Data["tls.key"],
 			)
 			if err != nil {
 				return nil, fmt.Errorf("invalid client cert/key: %w", err)
