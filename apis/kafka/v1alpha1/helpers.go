@@ -23,11 +23,10 @@ import (
 )
 
 func copyConfigurationField(cnf *dbapi.ConfigurationSpec, sec *core.LocalObjectReference) *dbapi.ConfigurationSpec {
-	if sec != nil {
-		if cnf == nil {
-			cnf = &dbapi.ConfigurationSpec{}
+	if cnf == nil && sec != nil && sec.Name != "" {
+		cnf = &dbapi.ConfigurationSpec{
+			SecretName: sec.Name,
 		}
-		cnf.SecretName = sec.Name
 	}
 	sec = nil
 	return cnf

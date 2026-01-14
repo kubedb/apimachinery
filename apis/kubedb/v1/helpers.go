@@ -186,11 +186,10 @@ func IsVirtualAuthSecretReferred(authSecret *SecretReference) bool {
 }
 
 func copyConfigurationField(cnf *ConfigurationSpec, sec *core.LocalObjectReference) *ConfigurationSpec {
-	if sec != nil {
-		if cnf == nil {
-			cnf = &ConfigurationSpec{}
+	if cnf == nil && sec != nil && sec.Name != "" {
+		cnf = &ConfigurationSpec{
+			SecretName: sec.Name,
 		}
-		cnf.SecretName = sec.Name
 	}
 	sec = nil
 	return cnf
