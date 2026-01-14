@@ -420,6 +420,7 @@ func (m *MSSQLServer) SetDefaults(kc client.Client) {
 	}
 
 	m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, m.Spec.ConfigSecret)
+	m.Spec.ConfigSecret = nil
 
 	m.SetArbiterDefault()
 
