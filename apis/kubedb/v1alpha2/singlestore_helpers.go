@@ -250,10 +250,6 @@ func (s *Singlestore) PodLabel(podTemplate *ofst.PodTemplateSpec) map[string]str
 	return s.offshootLabels(s.OffshootSelectors(), nil)
 }
 
-func (s *Singlestore) ConfigSecretName() string {
-	return metautil.NameWithSuffix(s.OffshootName(), "config")
-}
-
 func (s *Singlestore) PetSetName() string {
 	return s.OffshootName()
 }
@@ -553,18 +549,12 @@ func (s *Singlestore) ReplicasAreReady(lister pslister.PetSetLister) (bool, stri
 	return checkReplicasOfPetSet(lister.PetSets(s.Namespace), labels.SelectorFromSet(s.OffshootLabels()), expectedItems)
 }
 
-// InlineConfigSecretName returns the name of the inline config secret
+// ConfigSecretName returns the name of the inline config secret
 // it expects a suffix to differentiate between aggregator and leaf config secrets
-func (s *Singlestore) InlineConfigSecretName(suf string) string {
+func (s *Singlestore) ConfigSecretName(suf string) string {
 	secretName := metautil.NameWithSuffix(s.OffshootName(), suf)
 	uid := string(s.UID)
-	trimmedUID := ""
-	if len(uid) > 6 {
-		trimmedUID = uid[len(uid)-6:]
-	} else {
-		trimmedUID = uid
-	}
-	return metautil.NameWithSuffix(secretName, trimmedUID)
+	return metautil.NameWithSuffix(secretName, uid[len(uid)-6:])
 }
 
 type SinglestoreBind struct {

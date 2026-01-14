@@ -181,11 +181,7 @@ func (p Postgres) OffshootDistributedGRPCSecretName() string {
 
 func (p Postgres) ConfigSecretName() string {
 	uid := string(p.UID)
-	suffix := uid
-	if len(uid) > 6 {
-		suffix = uid[len(uid)-6:]
-	}
-	return meta_util.NameWithSuffix(p.OffshootName(), suffix)
+	return meta_util.NameWithSuffix(p.OffshootName(), uid[len(uid)-6:])
 }
 
 type postgresApp struct {

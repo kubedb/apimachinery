@@ -584,15 +584,9 @@ func (m *MariaDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, 
 	return checkReplicas(lister.PetSets(m.Namespace), labels.SelectorFromSet(m.OffshootLabels()), expectedItems)
 }
 
-func (m *MariaDB) InlineConfigSecretName() string {
+func (m *MariaDB) ConfigSecretName() string {
 	uid := string(m.UID)
-	trimmedUID := ""
-	if len(uid) > 6 {
-		trimmedUID = uid[len(uid)-6:]
-	} else {
-		trimmedUID = uid
-	}
-	return meta_util.NameWithSuffix(m.OffshootName(), trimmedUID)
+	return meta_util.NameWithSuffix(m.OffshootName(), uid[len(uid)-6:])
 }
 
 func (m *MariaDB) CertMountPath(alias MariaDBCertificateAlias) string {

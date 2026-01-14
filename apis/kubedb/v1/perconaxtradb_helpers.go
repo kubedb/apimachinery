@@ -418,13 +418,7 @@ func (p *PerconaXtraDB) CertFilePath(certAlias PerconaXtraDBCertificateAlias, ce
 	return filepath.Join(p.CertMountPath(certAlias), certFileName)
 }
 
-func (p *PerconaXtraDB) InlineConfigSecretName() string {
+func (p *PerconaXtraDB) ConfigSecretName() string {
 	uid := string(p.UID)
-	trimmedUID := ""
-	if len(uid) > 6 {
-		trimmedUID = uid[len(uid)-6:]
-	} else {
-		trimmedUID = uid
-	}
-	return meta_util.NameWithSuffix(p.OffshootName(), trimmedUID)
+	return meta_util.NameWithSuffix(p.OffshootName(), uid[len(uid)-6:])
 }

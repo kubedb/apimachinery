@@ -592,11 +592,5 @@ func (m *MySQL) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplat
 
 func (m *MySQL) ConfigSecretName() string {
 	uid := string(m.UID)
-	trimmedUID := ""
-	if len(uid) > 6 {
-		trimmedUID = uid[len(uid)-6:]
-	} else {
-		trimmedUID = uid
-	}
-	return meta_util.NameWithSuffix(m.OffshootName(), trimmedUID)
+	return meta_util.NameWithSuffix(m.OffshootName(), uid[len(uid)-6:])
 }
