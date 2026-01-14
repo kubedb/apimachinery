@@ -419,7 +419,7 @@ func (m *MSSQLServer) SetDefaults(kc client.Client) {
 		return
 	}
 
-	m.updateConfigurationFieldIfNeeded()
+	m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, m.Spec.ConfigSecret)
 
 	m.SetArbiterDefault()
 
@@ -458,15 +458,6 @@ func (m *MSSQLServer) SetDefaults(kc client.Client) {
 			m.Spec.Init.Archiver.ManifestRepository.Namespace = m.GetNamespace()
 		}
 	}
-}
-
-func (m *MSSQLServer) updateConfigurationFieldIfNeeded() {
-	if m.Spec.Configuration == nil && m.Spec.ConfigSecret != nil {
-		m.Spec.Configuration = &ConfigurationSpec{
-			SecretName: m.Spec.ConfigSecret.Name,
-		}
-	}
-	m.Spec.ConfigSecret = nil
 }
 
 func (m *MSSQLServer) setDefaultContainerSecurityContext(mssqlVersion *catalog.MSSQLServerVersion, podTemplate *ofst.PodTemplateSpec) {

@@ -118,6 +118,29 @@ func (p ProxySQL) ConfigSecretName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), uid[len(uid)-6:])
 }
 
+// HasInitConfigSecretName safely checks if ps.Spec.Configuration.Init.SecretName is set
+func (p *ProxySQL) HasInitConfigSecretName() bool {
+	return p.Spec.Configuration != nil &&
+		p.Spec.Configuration.Init != nil &&
+		p.Spec.Configuration.Init.SecretName != ""
+}
+
+// GetInitConfigInline safely returns p.Spec.Configuration.Init.Inline or nil
+func (p *ProxySQL) GetInitConfigInline() *ProxySQLConfiguration {
+	if p.Spec.Configuration != nil && p.Spec.Configuration.Init != nil {
+		return p.Spec.Configuration.Init.Inline
+	}
+	return nil
+}
+
+// InitConfigSecretName safely returns p.Spec.Configuration.Init.SecretName or empty string
+func (p *ProxySQL) InitConfigSecretName() string {
+	if !p.HasInitConfigSecretName() {
+		return ""
+	}
+	return p.Spec.Configuration.Init.SecretName
+}
+
 func (p ProxySQL) ServiceName() string {
 	return p.OffshootName()
 }

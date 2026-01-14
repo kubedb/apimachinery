@@ -131,11 +131,6 @@ func (m *Memcached) ConfigSecretName() string {
 	return meta_util.NameWithSuffix(m.OffshootName(), uid[len(uid)-6:])
 }
 
-func (m *Memcached) CustomConfigSecretName() string {
-	uid := string(m.UID)
-	return meta_util.NameWithSuffix(meta_util.NameWithSuffix(m.OffshootName(), "custom"), uid[len(uid)-6:])
-}
-
 type memcachedApp struct {
 	*Memcached
 }
@@ -219,6 +214,8 @@ func (m *Memcached) SetDefaults(mcVersion *catalog.MemcachedVersion) {
 			m.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
 		}
 	}
+
+	m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, m.Spec.ConfigSecret)
 
 	m.setDefaultContainerSecurityContext(mcVersion, &m.Spec.PodTemplate)
 	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)
