@@ -1456,6 +1456,7 @@ const (
 	RabbitMQVolumeConfig       = "rabbitmqconfig"
 	RabbitMQVolumeTempConfig   = "temp-config"
 	RabbitMQVolumeCustomConfig = "custom-config"
+	RabbitMQVolumeApplyConfig  = "apply-config"
 
 	RabbitMQDataDir         = "/var/lib/rabbitmq/mnesia"
 	RabbitMQConfigDir       = "/config/"
