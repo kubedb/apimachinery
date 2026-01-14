@@ -20,7 +20,6 @@ import (
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -121,18 +120,14 @@ type QdrantSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
-
-	// Monitor is used monitor database instance
-	// +optional
-	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 }
 
 type QdrantTLSConfig struct {
 	kmapi.TLSConfig `json:",inline"`
 	// +optional
-	P2PTLS *bool `json:"p2pTLS"`
+	P2P *bool `json:"p2p"`
 	// +optional
-	ClientHTTPTLS *bool `json:"clientHTTPTLS"`
+	Client *bool `json:"client"`
 }
 
 // QdrantStatus defines the observed state of Qdrant.
