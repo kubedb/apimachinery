@@ -310,7 +310,7 @@ func (r *Cassandra) SetDefaults(kc client.Client) {
 		}
 	}
 
-	r.copyConfigurationFields()
+	r.Spec.Configuration = copyConfigurationField(r.Spec.Configuration, r.Spec.ConfigSecret)
 
 	if !r.Spec.DisableSecurity {
 		if r.Spec.AuthSecret == nil {
@@ -392,18 +392,6 @@ func (r *Cassandra) SetDefaults(kc client.Client) {
 			r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = casVersion.Spec.SecurityContext.RunAsUser
 		}
 	}
-}
-
-func (r *Cassandra) copyConfigurationFields() {
-	if (r.Spec.Configuration == nil) || (r.Spec.Configuration != nil && r.Spec.Configuration.SecretName == "") {
-		if r.Spec.ConfigSecret != nil {
-			if r.Spec.Configuration == nil {
-				r.Spec.Configuration = &ConfigurationSpec{}
-			}
-			r.Spec.Configuration.SecretName = r.Spec.ConfigSecret.Name
-		}
-	}
-	r.Spec.ConfigSecret = nil
 }
 
 func (r *Cassandra) setDefaultContainerSecurityContext(csVersion *catalog.CassandraVersion, podTemplate *ofst.PodTemplateSpec) {
