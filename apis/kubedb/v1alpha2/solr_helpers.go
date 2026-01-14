@@ -317,6 +317,7 @@ func (s *Solr) SetDefaults(kc client.Client) {
 	}
 
 	s.Spec.Configuration = copyConfigurationField(s.Spec.Configuration, s.Spec.ConfigSecret)
+	s.Spec.ConfigSecret = nil
 
 	if s.Spec.ClientAuthSSL != "need" && s.Spec.ClientAuthSSL != "want" {
 		s.Spec.ClientAuthSSL = ""

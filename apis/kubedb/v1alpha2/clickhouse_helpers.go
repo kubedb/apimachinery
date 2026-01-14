@@ -336,6 +336,7 @@ func (c *ClickHouse) SetDefaults(kc client.Client) {
 	}
 
 	c.Spec.Configuration = copyConfigurationField(c.Spec.Configuration, c.Spec.ConfigSecret)
+	c.Spec.ConfigSecret = nil
 
 	if !c.Spec.DisableSecurity {
 		if c.Spec.AuthSecret == nil {
