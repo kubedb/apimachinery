@@ -313,7 +313,7 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 	if m.Spec.Init != nil && m.Spec.Init.Archiver != nil && m.Spec.Init.Archiver.ReplicationStrategy == nil {
 		m.Spec.Init.Archiver.ReplicationStrategy = ptr.To(ReplicationStrategySync)
 	}
-	m.copyConfigurationFields()
+	m.Spec.Configuration = copyConfigurationField(m.Spec.Configuration, m.Spec.ConfigSecret)
 	m.setDefaultContainerSecurityContext(mdVersion, &m.Spec.PodTemplate)
 	m.setDefaultContainerResourceLimits(&m.Spec.PodTemplate)
 	m.SetTLSDefaults()
@@ -344,18 +344,6 @@ func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
 			m.Spec.Init.Archiver.ManifestRepository.Namespace = m.GetNamespace()
 		}
 	}
-}
-
-func (m *MariaDB) copyConfigurationFields() {
-	if (m.Spec.Configuration == nil) || (m.Spec.Configuration != nil && m.Spec.Configuration.SecretName == "") {
-		if m.Spec.ConfigSecret != nil {
-			if m.Spec.Configuration == nil {
-				m.Spec.Configuration = &ConfigurationSpec{}
-			}
-			m.Spec.Configuration.SecretName = m.Spec.ConfigSecret.Name
-		}
-	}
-	m.Spec.ConfigSecret = nil
 }
 
 func (m *MariaDB) SetDefaultsMaxscale(mdVersion *v1alpha1.MariaDBVersion, maxscale *MaxScaleSpec) {
