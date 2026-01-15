@@ -540,6 +540,10 @@ func (s *Singlestore) ConfigSecretName(suf string) string {
 	return metautil.NameWithSuffix(secretName, uid[len(uid)-6:])
 }
 
+func (s *Singlestore) AddKeyPrefix(key string) string {
+	return metautil.NameWithPrefix(kubedb.InlineConfigKeyPrefixZZ, key)
+}
+
 type SinglestoreBind struct {
 	*Singlestore
 }
