@@ -115,7 +115,7 @@ func (s *Solr) SolrSecretKey() string {
 }
 
 func (s *Solr) SolrApplyConfigSecretKey() string {
-	return fmt.Sprintf("%s-%s", kubedb.SolrApplyConfig, kubedb.SolrSecretKey)
+	return fmt.Sprintf("%s-%s", kubedb.InlineConfigKeyPrefix, kubedb.SolrSecretKey)
 }
 
 func (s *Solr) Merge(opt map[string]string) map[string]string {

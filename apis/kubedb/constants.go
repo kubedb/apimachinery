@@ -41,9 +41,10 @@ const (
 	PrometheusTokenFile       = "/var/prometheus-data/token.txt"
 	MonitoringAgentAnnotation = GroupName + "/monitoring-agent"
 
-	ApplyConfigKeyPrefix              = "apply"
-	ApplyConfigKeyPrefixZZ            = "zz-apply"
-	ApplyConfigKeyPrefixElasticsearch = "applyconfig"
+	InlineConfigKey                    = "inline.conf"
+	InlineConfigKeyPrefix              = "inline"
+	InlineConfigKeyPrefixZZ            = "zz-inline"
+	InlineConfigKeyPrefixElasticsearch = "applyconfig"
 
 	// distributed const
 	DistributedDatabaseLabel                   = GroupName + "/distributed"
@@ -561,7 +562,6 @@ const (
 	PostgresSharedTlsVolumeMountPath = "/tls/certs"
 	PostgresCustomConfigFile         = "user.conf"
 	PostgresTuningConfigFile         = "pgtune.conf"
-	PostgresApplyConfigFile          = "apply.conf"
 	PostgresKeyFileSecretSuffix      = "key"
 	PostgresPEMSecretSuffix          = "pem"
 	PostgresDefaultUsername          = "postgres"
@@ -615,7 +615,6 @@ const (
 	// =========================== Redis Constants ============================
 	RedisConfigKey      = "redis.conf"    // RedisConfigKey is going to create for the customize redis configuration
 	RedisAclUserListKey = "user_acl.conf" // RedisAclUserListKey is going to create for the redis acl user list configuration
-	RedisApplyConfigKey = "apply.conf"    // RedisApplyConfigKey is going to create for the redis apply configuration
 	// DefaultConfigKey is going to create for the default redis configuration
 	RedisContainerName             = "redis"
 	RedisSentinelContainerName     = "redissentinel"
@@ -1085,7 +1084,6 @@ const (
 	SolrZkDigest          = "zk-digest"
 	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
-	SolrApplyConfig         = "apply-config"
 	SolrVolumeDefaultConfig = "default-config"
 	SolrVolumeCustomConfig  = "custom-config"
 	SolrVolumeAuthConfig    = "auth-config"
@@ -1538,7 +1536,6 @@ const (
 	RabbitMQSSLVerifyKey           = "ssl.verify"
 	RabbitMQSSLFailIfNoPeerKey     = "ssl.fail_if_no_peer_cert"
 	RabbitMQConfigFileName         = "rabbitmq.conf"
-	RabbitMQApplyConfigFileName    = "apply.conf"
 	RabbitMQEnabledPluginsFileName = "enabled_plugins"
 	RabbitMQHealthCheckerQueueName = "kubedb-system"
 )
@@ -1718,7 +1715,6 @@ const (
 	ClickHouseConfigVolumeName               = "clickhouse-config"
 	ClickHouseKeeperConfigVolumeName         = "clickhouse-keeper-config"
 	ClickHouseInternalKeeperConfigVolumeName = "clickhouse-internal-keeper-config"
-	ClickHouseApplyConfig                    = "apply-config"
 
 	ClickHouseDefaultStorageSize = "2Gi"
 
