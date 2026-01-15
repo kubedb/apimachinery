@@ -26844,9 +26844,9 @@ func schema_apimachinery_apis_kubedb_v1_ConfigurationSpec(ref common.ReferenceCa
 							Format:      "",
 						},
 					},
-					"applyConfig": {
+					"inline": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ApplyConfig contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Description: "Inline contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -30980,14 +30980,15 @@ func schema_apimachinery_apis_kubedb_v1_PostgresConfiguration(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"secretName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecretName is an optional field to provide custom configuration file for database (i.e postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Description: "SecretName is an optional field to provide custom configuration file for the database (i.e. elasticsearch.yml, mongod.conf ..). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). configurations from this secret will override default configurations. This secret must be created by user.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"applyConfig": {
+					"inline": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"object"},
+							Description: "Inline contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
 								Schema: &spec.Schema{

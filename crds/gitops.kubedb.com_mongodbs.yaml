@@ -108,7 +108,7 @@ spec:
                     x-kubernetes-map-type: atomic
                   configuration:
                     properties:
-                      applyConfig:
+                      inline:
                         additionalProperties:
                           type: string
                         type: object
@@ -3413,7 +3413,7 @@ spec:
                 x-kubernetes-map-type: atomic
               configuration:
                 properties:
-                  applyConfig:
+                  inline:
                     additionalProperties:
                       type: string
                     type: object
@@ -3473,7 +3473,7 @@ spec:
                     x-kubernetes-map-type: atomic
                   configuration:
                     properties:
-                      applyConfig:
+                      inline:
                         additionalProperties:
                           type: string
                         type: object
@@ -11462,7 +11462,7 @@ spec:
                         x-kubernetes-map-type: atomic
                       configuration:
                         properties:
-                          applyConfig:
+                          inline:
                             additionalProperties:
                               type: string
                             type: object
@@ -14823,7 +14823,7 @@ spec:
                         x-kubernetes-map-type: atomic
                       configuration:
                         properties:
-                          applyConfig:
+                          inline:
                             additionalProperties:
                               type: string
                             type: object
@@ -18085,7 +18085,7 @@ spec:
                         x-kubernetes-map-type: atomic
                       configuration:
                         properties:
-                          applyConfig:
+                          inline:
                             additionalProperties:
                               type: string
                             type: object

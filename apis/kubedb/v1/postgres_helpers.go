@@ -359,7 +359,7 @@ func getMajorPgVersion(postgresVersion *catalog.PostgresVersion) (uint64, error)
 func (p *Postgres) updateConfigurationFieldIfNeeded() {
 	if p.Spec.Configuration == nil && p.Spec.ConfigSecret != nil {
 		p.Spec.Configuration = &PostgresConfiguration{
-			SecretName: p.Spec.ConfigSecret.Name,
+			ConfigurationSpec: ConfigurationSpec{SecretName: p.Spec.ConfigSecret.Name},
 		}
 		p.Spec.ConfigSecret = nil
 	} else if p.Spec.ConfigSecret != nil && p.Spec.Configuration != nil && p.Spec.Configuration.SecretName == "" {

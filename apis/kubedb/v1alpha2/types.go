@@ -230,10 +230,10 @@ type ConfigurationSpec struct {
 	// +optional
 	SecretName string `json:"secretName,omitempty"`
 
-	// ApplyConfig contains key-value pairs of configurations to be applied to the database.
+	// Inline contains key-value pairs of configurations to be applied to the database.
 	// These configurations will override both default configurations and configurations from the config secret (if any).
 	// +optional
-	ApplyConfig map[string]string `json:"applyConfig,omitempty"`
+	Inline map[string]string `json:"inline,omitempty"`
 }
 
 type Age struct {

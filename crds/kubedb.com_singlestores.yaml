@@ -79,7 +79,7 @@ spec:
                 type: object
               configuration:
                 properties:
-                  applyConfig:
+                  inline:
                     additionalProperties:
                       type: string
                     type: object
@@ -4952,7 +4952,7 @@ spec:
                     properties:
                       configuration:
                         properties:
-                          applyConfig:
+                          inline:
                             additionalProperties:
                               type: string
                             type: object
@@ -8293,7 +8293,7 @@ spec:
                     properties:
                       configuration:
                         properties:
-                          applyConfig:
+                          inline:
                             additionalProperties:
                               type: string
                             type: object

@@ -27833,9 +27833,9 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ConfigurationSpec(ref common.Refer
 							Format:      "",
 						},
 					},
-					"applyConfig": {
+					"inline": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ApplyConfig contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Description: "Inline contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,

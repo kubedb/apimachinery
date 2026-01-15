@@ -87,7 +87,7 @@ spec:
                 type: integer
               configuration:
                 properties:
-                  applyConfig:
+                  inline:
                     additionalProperties:
                       type: string
                     type: object

@@ -1239,7 +1239,7 @@ func Convert_v1_BrokerRack_To_v1alpha2_BrokerRack(in *v1.BrokerRack, out *Broker
 
 func autoConvert_v1alpha2_ConfigurationSpec_To_v1_ConfigurationSpec(in *ConfigurationSpec, out *v1.ConfigurationSpec, s conversion.Scope) error {
 	out.SecretName = in.SecretName
-	out.ApplyConfig = *(*map[string]string)(unsafe.Pointer(&in.ApplyConfig))
+	out.Inline = *(*map[string]string)(unsafe.Pointer(&in.Inline))
 	return nil
 }
 
@@ -1250,7 +1250,7 @@ func Convert_v1alpha2_ConfigurationSpec_To_v1_ConfigurationSpec(in *Configuratio
 
 func autoConvert_v1_ConfigurationSpec_To_v1alpha2_ConfigurationSpec(in *v1.ConfigurationSpec, out *ConfigurationSpec, s conversion.Scope) error {
 	out.SecretName = in.SecretName
-	out.ApplyConfig = *(*map[string]string)(unsafe.Pointer(&in.ApplyConfig))
+	out.Inline = *(*map[string]string)(unsafe.Pointer(&in.Inline))
 	return nil
 }
 

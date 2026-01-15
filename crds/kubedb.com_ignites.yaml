@@ -74,7 +74,7 @@ spec:
                 type: object
               configuration:
                 properties:
-                  applyConfig:
+                  inline:
                     additionalProperties:
                       type: string
                     type: object
