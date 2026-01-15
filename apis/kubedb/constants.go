@@ -41,7 +41,9 @@ const (
 	PrometheusTokenFile       = "/var/prometheus-data/token.txt"
 	MonitoringAgentAnnotation = GroupName + "/monitoring-agent"
 
-	ApplyConfigKeyPrefix = "zz-apply"
+	ApplyConfigKeyPrefix              = "apply"
+	ApplyConfigKeyPrefixZZ            = "zz-apply"
+	ApplyConfigKeyPrefixElasticsearch = "applyconfig"
 
 	// distributed const
 	DistributedDatabaseLabel                   = GroupName + "/distributed"
