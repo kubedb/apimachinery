@@ -118,7 +118,7 @@ func NewUncachedClient(cfg *rest.Config) (client.Client, error) {
 		return nil, err
 	}
 
-	if err := kubesliceapi.AddToScheme(scheme); err != nil {
+	if err := kubesliceapi.Install(scheme); err != nil {
 		return nil, err
 	}
 	if err := shardapi.AddToScheme(scheme); err != nil {
