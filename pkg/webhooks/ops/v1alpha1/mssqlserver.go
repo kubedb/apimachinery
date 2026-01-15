@@ -238,6 +238,10 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 		return fmt.Errorf("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
+	if reconfigureSpec.ConfigSecret == nil && req.Spec.Configuration.ApplyConfig == nil && !reconfigureSpec.RemoveCustomConfig {
+		return fmt.Errorf("no reconfiguration request is provided in Configuration Spec")
+	}
+
 	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
@@ -268,11 +272,6 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 		if !ok {
 			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.MSSQLConfigKey)
 		}
-	}
-
-	// Add validation to not allow both RemoveCustomConfig and ConfigSecret together
-	if req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret != nil {
-		return fmt.Errorf("`spec.configuration.removeCustomConfig` and `spec.configuration.configSecret` is not supported together")
 	}
 
 	return nil

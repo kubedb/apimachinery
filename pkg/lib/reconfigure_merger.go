@@ -114,9 +114,8 @@ func (m *ReconfigureMerger) populateList() error {
 	return nil
 }
 
-func (m ReconfigureMerger) Run() (int, error) {
+func (m *ReconfigureMerger) Run() (int, error) {
 	skip, pendingReconfigureOps := m.FindPendingReconfigureOpsToMerge()
-	klog.Infof("%v ////////////////// skip=%v pending=%v \n", m.currentOps.GetName(), skip, len(pendingReconfigureOps))
 	if skip != MergeNeeded {
 		return skip, nil
 	}
@@ -176,8 +175,6 @@ func (m *ReconfigureMerger) FindPendingReconfigureOpsToMerge() (int, []opsapi.Ac
 		return ContinueGeneral, nil
 	}
 
-	klog.Infof("FindPendingReconfigureOpsToMerge 111 %v\n", m.currentOps.GetName())
-
 	// Collect all pending Reconfigure ops requests for the same database
 	var pendingReconfigureOps []opsapi.Accessor
 	for _, o := range m.opsReqList {
@@ -207,8 +204,6 @@ func (m *ReconfigureMerger) FindPendingReconfigureOpsToMerge() (int, []opsapi.Ac
 		}
 	}
 
-	klog.Infof("FindPendingReconfigureOpsToMerge 2222 %v %v \n", m.currentOps.GetName(), len(pendingReconfigureOps))
-
 	// If only one or none, no need to merge
 	if len(pendingReconfigureOps) <= 1 {
 		return ContinueGeneral, nil
@@ -225,10 +220,9 @@ func (m *ReconfigureMerger) FindPendingReconfigureOpsToMerge() (int, []opsapi.Ac
 			Name:      mergedOpsName,
 			Namespace: meta.GetNamespace(),
 		}); err != nil {
-			_ = fmt.Errorf("failed to mark already merged ops request %s/%s as skipped: %w", meta.GetNamespace(), meta.GetName(), err)
+			klog.Errorf("failed to mark already merged ops request %s/%s as skipped: %v", meta.GetNamespace(), meta.GetName(), err)
 			return RequeueNotNeeded, nil
 		}
-		klog.Infof(" FindPendingReconfigureOpsToMerge 3333 %v\n", m.currentOps.GetName())
 		return RequeueNotNeeded, nil // Skip this ops as it's already part of a merge
 	}
 
@@ -361,7 +355,6 @@ func (m *ReconfigureMerger) EnsureMergedOpsRequest(mergedOpsRequest opsapi.Acces
 	for _, ops := range pendingReconfigureOps {
 		opsNames = append(opsNames, ops.GetObjectMeta().Name)
 	}
-	klog.Infof("EnsureMergedOps 44444444 %v %v \n", m.currentOps.GetName(), opsNames)
 
 	mergedFromOpsMessage := strings.Join(opsNames, ", ")
 	if verb == kutil.VerbCreated {
@@ -373,7 +366,6 @@ func (m *ReconfigureMerger) EnsureMergedOpsRequest(mergedOpsRequest opsapi.Acces
 		return fmt.Errorf("failed to record merged-from condition for %s/%s: %w", mergedOpsRequest.GetObjectMeta().Namespace, mergedOpsRequest.GetObjectMeta().Name, err)
 	}
 
-	klog.Infof("EnsureMergedOps 55555555 %v \n", m.currentOps.GetName())
 	for _, op := range pendingReconfigureOps {
 		err = m.markAsSkippedForMergedOps(op, mergedOpsRequest.GetObjectMeta())
 		if err != nil {

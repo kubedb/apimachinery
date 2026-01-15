@@ -172,10 +172,7 @@ type PostgresSpec struct {
 }
 
 type PostgresConfiguration struct {
-	// SecretName is an optional field to provide custom configuration file for database (i.e postgresql.conf).
-	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
-	SecretName  string            `json:"secretName,omitempty"`
-	ApplyConfig map[string]string `json:"applyConfig,omitempty"`
+	ConfigurationSpec `json:",inline,omitempty"`
 	// +optional
 	Tuning *PostgresTuningConfig `json:"tuning,omitempty"`
 }

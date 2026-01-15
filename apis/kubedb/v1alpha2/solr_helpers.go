@@ -98,6 +98,11 @@ func (s *Solr) SolrSecretName(suffix string) string {
 	return strings.Join([]string{s.Name, suffix}, "-")
 }
 
+func (s *Solr) SolrConfigSecretName() string {
+	uid := string(s.UID)
+	return meta_util.NameWithSuffix(s.OffshootName(), uid[len(uid)-6:])
+}
+
 func (s *Solr) GetAuthSecretName() string {
 	if s.Spec.AuthSecret != nil && s.Spec.AuthSecret.Name != "" {
 		return s.Spec.AuthSecret.Name
@@ -107,6 +112,10 @@ func (s *Solr) GetAuthSecretName() string {
 
 func (s *Solr) SolrSecretKey() string {
 	return kubedb.SolrSecretKey
+}
+
+func (s *Solr) SolrInlineConfigSecretKey(key string) string {
+	return fmt.Sprintf("%s-%s", kubedb.InlineConfigKeyPrefix, key)
 }
 
 func (s *Solr) Merge(opt map[string]string) map[string]string {

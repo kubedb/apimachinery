@@ -222,7 +222,7 @@ func validatePgBouncerReconfigurationOpsRequest(req *opsapi.PgBouncerOpsRequest,
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	bouncerConfigReq := req.Spec.Configuration.PgBouncer
+	bouncerConfigReq := req.Spec.Configuration
 
 	if bouncerConfigReq.ConfigSecret == nil && bouncerConfigReq.ApplyConfig == nil {
 		return errors.New("custom configuration should be specified in`spec.configuration.pgbouncer` for Reconfigure type")
