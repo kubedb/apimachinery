@@ -109,15 +109,21 @@ func (s *Solr) SolrSecretKey() string {
 	return kubedb.SolrSecretKey
 }
 
-func (s *Solr) Merge(opt map[string]string) map[string]string {
-	if len(s.Spec.SolrOpts) == 0 {
-		return opt
-	}
+func (s *Solr) Merge(opt map[string]string, secret *v1.Secret) map[string]string {
 	for _, y := range s.Spec.SolrOpts {
 		sr := strings.Split(y, "=")
 		_, ok := opt[sr[0]]
 		if !ok || sr[0] != "-Dsolr.node.roles" {
 			opt[sr[0]] = sr[1]
+		}
+	}
+	if secret != nil {
+		if val, exist := secret.Data["AWS_ACCESS_KEY_ID"]; exist {
+			opt["-Daws.accessKeyId"] = string(val)
+		}
+
+		if val, exist := secret.Data["AWS_SECRET_ACCESS_KEY"]; exist {
+			opt["-Daws.secretAccessKey"] = string(val)
 		}
 	}
 	return opt

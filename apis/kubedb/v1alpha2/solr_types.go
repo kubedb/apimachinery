@@ -136,6 +136,14 @@ type SolrSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+
+	// GCS cred for solr backup
+	// +optional
+	GcsCredSecret *core.LocalObjectReference `json:"gcsCredSecret,omitempty"`
+
+	// S3 cred for solr backup
+	// +optional
+	S3CredSecret *core.LocalObjectReference `json:"s3CredSecret,omitempty"`
 }
 
 type SolrClusterTopology struct {

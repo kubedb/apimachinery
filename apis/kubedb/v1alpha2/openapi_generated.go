@@ -39163,6 +39163,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
 						},
 					},
+					"gcsCredSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GCS cred for solr backup",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"s3CredSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "S3 cred for solr backup",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
