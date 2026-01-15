@@ -1539,7 +1539,6 @@ const (
 	RabbitMQSSLVerifyKey           = "ssl.verify"
 	RabbitMQSSLFailIfNoPeerKey     = "ssl.fail_if_no_peer_cert"
 	RabbitMQConfigFileName         = "rabbitmq.conf"
-	RabbitMQInlineConfigFileName   = "inline.conf"
 	RabbitMQEnabledPluginsFileName = "enabled_plugins"
 	RabbitMQHealthCheckerQueueName = "kubedb-system"
 )
