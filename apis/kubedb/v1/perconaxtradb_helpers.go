@@ -88,7 +88,7 @@ func (p PerconaXtraDB) offshootLabels(selector, override map[string]string) map[
 }
 
 func (m PerconaXtraDB) AddKeyPrefix(key string) string {
-	return meta_util.NameWithPrefix("zz", key)
+	return meta_util.NameWithPrefix(kubedb.ApplyConfigKeyPrefix, key)
 }
 
 func (p PerconaXtraDB) ResourceFQN() string {

@@ -123,7 +123,7 @@ func (m MySQL) offshootLabels(selector, override map[string]string) map[string]s
 }
 
 func (m MySQL) AddKeyPrefix(key string) string {
-	return meta_util.NameWithPrefix("zz", key)
+	return meta_util.NameWithPrefix(kubedb.ApplyConfigKeyPrefix, key)
 }
 
 func (m MySQL) ResourceFQN() string {
