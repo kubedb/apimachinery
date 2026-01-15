@@ -184,11 +184,6 @@ func (q *Qdrant) PodLabels(extraLabels ...map[string]string) map[string]string {
 	return q.offshootLabels(meta_util.OverwriteKeys(q.OffshootSelectors(), extraLabels...), q.Spec.PodTemplate.Labels)
 }
 
-func (q *Qdrant) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
-	svcTemplate := GetServiceTemplate(q.Spec.ServiceTemplates, alias)
-	return q.offshootLabels(meta_util.OverwriteKeys(q.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
-}
-
 func (q *Qdrant) CertificateName(alias QdrantCertificateAlias) string {
 	return meta_util.NameWithSuffix(q.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
