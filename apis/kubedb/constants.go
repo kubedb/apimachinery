@@ -41,6 +41,7 @@ const (
 	PrometheusTokenFile       = "/var/prometheus-data/token.txt"
 	MonitoringAgentAnnotation = GroupName + "/monitoring-agent"
 
+	InlinePropertiesKey                = "inline.properties"
 	InlineConfigKey                    = "inline.conf"
 	InlineConfigKeyPrefix              = "inline"
 	InlineConfigKeyPrefixZZ            = "zz-inline"
