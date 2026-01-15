@@ -326,11 +326,6 @@ func (in *CassandraSpec) DeepCopyInto(out *CassandraSpec) {
 		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
 		*out = new(ConfigurationSpec)
@@ -588,11 +583,6 @@ func (in *ClickHouseSpec) DeepCopyInto(out *ClickHouseSpec) {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
-	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
 	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
@@ -1332,11 +1322,6 @@ func (in *DruidSpec) DeepCopyInto(out *DruidSpec) {
 		in, out := &in.Init, &out.Init
 		*out = new(InitSpec)
 		(*in).DeepCopyInto(*out)
-	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
 	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
@@ -2574,11 +2559,6 @@ func (in *HazelcastSpec) DeepCopyInto(out *HazelcastSpec) {
 		in, out := &in.JavaOpts, &out.JavaOpts
 		*out = make([]string, len(*in))
 		copy(*out, *in)
-	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
 	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
@@ -5101,10 +5081,10 @@ func (in *OracleSpec) DeepCopyInto(out *OracleSpec) {
 		*out = new(corev1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
+	if in.Configuration != nil {
+		in, out := &in.Configuration, &out.Configuration
+		*out = new(ConfigurationSpec)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
@@ -7179,11 +7159,6 @@ func (in *SinglestoreSpec) DeepCopyInto(out *SinglestoreSpec) {
 		*out = new(corev1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
 		*out = new(ConfigurationSpec)
@@ -7489,11 +7464,6 @@ func (in *SolrSpec) DeepCopyInto(out *SolrSpec) {
 		*out = new(apiv1.TLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
 		*out = new(ConfigurationSpec)
@@ -7744,11 +7714,6 @@ func (in *WeaviateSpec) DeepCopyInto(out *WeaviateSpec) {
 		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
 		*out = new(ConfigurationSpec)
@@ -7899,11 +7864,6 @@ func (in *ZooKeeperSpec) DeepCopyInto(out *ZooKeeperSpec) {
 		in, out := &in.AuthSecret, &out.AuthSecret
 		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
-	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
 	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration

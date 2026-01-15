@@ -63,13 +63,6 @@ spec:
                 default: 2182
                 format: int32
                 type: integer
-              configSecret:
-                properties:
-                  name:
-                    default: ""
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               configuration:
                 properties:
                   applyConfig:

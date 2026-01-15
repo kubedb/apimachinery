@@ -139,7 +139,7 @@ func (r Redis) ConfigSecretName() string {
 
 func (r Redis) CustomConfigSecretName() string {
 	uid := string(r.UID)
-	return meta_util.NameWithSuffix(meta_util.NameWithSuffix(r.OffshootName(), "custom"), uid[len(uid)-6:])
+	return meta_util.NameWithSuffix(r.OffshootName(), uid[len(uid)-6:])
 }
 
 func (r Redis) BaseNameForShard() string {

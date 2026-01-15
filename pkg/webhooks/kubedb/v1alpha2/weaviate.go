@@ -156,12 +156,6 @@ func (w *WeaviateCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Weaviate) er
 		}
 	}
 
-	if db.Spec.ConfigSecret != nil && db.Spec.ConfigSecret.Name == "" {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configSecret").Child("name"),
-			db.GetName(),
-			"ConfigSecret Name can not be empty"))
-	}
-
 	if len(allErr) == 0 {
 		return nil
 	}

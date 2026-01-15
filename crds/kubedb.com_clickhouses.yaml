@@ -6768,13 +6768,6 @@ spec:
                         type: string
                     type: object
                 type: object
-              configSecret:
-                properties:
-                  name:
-                    default: ""
-                    type: string
-                type: object
-                x-kubernetes-map-type: atomic
               configuration:
                 properties:
                   applyConfig:

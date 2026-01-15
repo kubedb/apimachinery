@@ -409,8 +409,6 @@ func (s *Singlestore) copyConfigurationFields() {
 			s.Spec.Topology.Leaf.Configuration = copyConfigurationField(s.Spec.Topology.Leaf.Configuration, &s.Spec.Topology.Leaf.ConfigSecret)
 		}
 	}
-
-	s.Spec.Configuration = copyConfigurationField(s.Spec.Configuration, &s.Spec.ConfigSecret)
 }
 
 func (s *Singlestore) setDefaultContainerSecurityContext(sdbVersion *catalog.SinglestoreVersion, podTemplate *ofst.PodTemplateSpec) {

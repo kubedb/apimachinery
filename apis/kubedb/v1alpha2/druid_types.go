@@ -77,11 +77,9 @@ type DruidSpec struct {
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
 
-	// ConfigSecret is an optional field to provide custom configuration file for database (i.e. config.properties).
+	// Configuration is an optional field to provide custom configuration file for database (i.e. config.properties).
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
-	// +optional
-	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
-
+	// You can provide custom configurations using Secret or ApplyConfig.
 	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 

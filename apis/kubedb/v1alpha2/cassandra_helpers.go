@@ -310,8 +310,6 @@ func (r *Cassandra) SetDefaults(kc client.Client) {
 		}
 	}
 
-	r.Spec.Configuration = copyConfigurationField(r.Spec.Configuration, &r.Spec.ConfigSecret)
-
 	if !r.Spec.DisableSecurity {
 		if r.Spec.AuthSecret == nil {
 			r.Spec.AuthSecret = &SecretReference{}

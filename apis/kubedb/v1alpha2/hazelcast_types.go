@@ -81,9 +81,6 @@ type HazelcastSpec struct {
 	DisableSecurity bool `json:"disableSecurity,omitempty"`
 
 	// +optional
-	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
-
-	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
 	// +optional
