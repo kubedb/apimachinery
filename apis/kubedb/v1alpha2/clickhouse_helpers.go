@@ -566,6 +566,6 @@ func (c *ClickHouse) ReplicasAreReady(lister pslister.PetSetLister) (bool, strin
 	return checkReplicasOfPetSet(lister.PetSets(c.Namespace), labels.SelectorFromSet(c.OffshootLabels()), expectedItems)
 }
 
-func (c *ClickHouse) ClickHouseApplyConfigSecretKey(key string) string {
+func (c *ClickHouse) ClickHouseInlineConfigSecretKey(key string) string {
 	return fmt.Sprintf("%s-%s", kubedb.InlineConfigKeyPrefix, key)
 }

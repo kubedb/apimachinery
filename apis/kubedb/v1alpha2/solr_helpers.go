@@ -114,7 +114,7 @@ func (s *Solr) SolrSecretKey() string {
 	return kubedb.SolrSecretKey
 }
 
-func (s *Solr) SolrApplyConfigSecretKey(key string) string {
+func (s *Solr) SolrInlineConfigSecretKey(key string) string {
 	return fmt.Sprintf("%s-%s", kubedb.InlineConfigKeyPrefix, key)
 }
 
