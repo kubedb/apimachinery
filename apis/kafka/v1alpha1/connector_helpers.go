@@ -40,17 +40,7 @@ func (k *Connector) Default() {
 		k.Spec.DeletionPolicy = dbapi.DeletionPolicyDelete
 	}
 
-	if (k.Spec.Configuration == nil) || (k.Spec.Configuration != nil && k.Spec.Configuration.SecretName == "") {
-		if k.Spec.ConfigSecret != nil {
-			if k.Spec.Configuration == nil {
-				k.Spec.Configuration = &dbapi.ConfigurationSpec{}
-			}
-			k.Spec.Configuration.SecretName = k.Spec.ConfigSecret.Name
-		}
-	}
-	if k.Spec.ConfigSecret != nil {
-		k.Spec.ConfigSecret = nil
-	}
+	k.Spec.Configuration = copyConfigurationField(k.Spec.Configuration, &k.Spec.ConfigSecret)
 }
 
 func (k *Connector) ResourceShortCode() string {
