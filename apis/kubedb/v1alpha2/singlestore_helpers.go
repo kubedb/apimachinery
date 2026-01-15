@@ -369,7 +369,7 @@ func (s *Singlestore) SetDefaults(kc client.Client) {
 		s.setDefaultContainerSecurityContext(&sdbVersion, s.Spec.Topology.Aggregator.PodTemplate)
 		s.setDefaultContainerSecurityContext(&sdbVersion, s.Spec.Topology.Leaf.PodTemplate)
 	}
-	s.copyConfigurationFields()
+
 	s.SetTLSDefaults()
 
 	s.SetHealthCheckerDefaults()
@@ -396,18 +396,6 @@ func (s *Singlestore) SetDefaults(kc client.Client) {
 		s.setDefaultContainerResourceLimits(s.Spec.Topology.Leaf.PodTemplate)
 	} else {
 		s.setDefaultContainerResourceLimits(s.Spec.PodTemplate)
-	}
-}
-
-func (s *Singlestore) copyConfigurationFields() {
-	if s.Spec.Topology != nil {
-		if s.Spec.Topology.Aggregator != nil {
-			s.Spec.Topology.Aggregator.Configuration = copyConfigurationField(s.Spec.Topology.Aggregator.Configuration, &s.Spec.Topology.Aggregator.ConfigSecret)
-		}
-
-		if s.Spec.Topology.Leaf != nil {
-			s.Spec.Topology.Leaf.Configuration = copyConfigurationField(s.Spec.Topology.Leaf.Configuration, &s.Spec.Topology.Leaf.ConfigSecret)
-		}
 	}
 }
 

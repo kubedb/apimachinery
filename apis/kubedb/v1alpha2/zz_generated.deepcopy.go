@@ -7112,11 +7112,6 @@ func (in *SinglestoreNode) DeepCopyInto(out *SinglestoreNode) {
 		*out = new(int32)
 		**out = **in
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
 		*out = new(ConfigurationSpec)

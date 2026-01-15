@@ -4950,13 +4950,6 @@ spec:
                 properties:
                   aggregator:
                     properties:
-                      configSecret:
-                        properties:
-                          name:
-                            default: ""
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
                       configuration:
                         properties:
                           applyConfig:
@@ -8298,13 +8291,6 @@ spec:
                     type: object
                   leaf:
                     properties:
-                      configSecret:
-                        properties:
-                          name:
-                            default: ""
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
                       configuration:
                         properties:
                           applyConfig:

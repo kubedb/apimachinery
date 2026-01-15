@@ -133,11 +133,8 @@ type SinglestoreNode struct {
 	// +optional
 	Suffix string `json:"suffix,omitempty"`
 
-	// ConfigSecret is an optional field to provide custom configuration file for database (i.e config.properties).
+	// Configuration is an optional field to provide custom configuration file for database (i.e config.properties).
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
-	// +optional
-	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
-
 	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
