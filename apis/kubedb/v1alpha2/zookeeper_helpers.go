@@ -91,6 +91,10 @@ func (z *ZooKeeper) ConfigSecretName() string {
 	return meta_util.NameWithSuffix(z.OffshootName(), uid[len(uid)-6:])
 }
 
+func (z *ZooKeeper) AddKeyPrefix(key string) string {
+	return meta_util.NameWithPrefix(kubedb.InlineConfigKeyPrefixZZ, key)
+}
+
 func (z *ZooKeeper) PVCName(alias string) string {
 	return alias
 }
