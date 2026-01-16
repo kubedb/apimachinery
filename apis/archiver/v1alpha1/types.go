@@ -17,6 +17,11 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"fmt"
+	"regexp"
+	"strconv"
+	"time"
+
 	api "kubedb.dev/apimachinery/apis/kubedb/v1"
 
 	batch "k8s.io/api/batch/v1"
@@ -79,8 +84,8 @@ type LogBackupOptions struct {
 	ConfigSecret *GenericSecretReference `json:"configSecret,omitempty"`
 
 	// RetentionPeriod is the retention policy to be used for Logs (i.e. '60d') means how long logs will be retained before being pruned.
-	// The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months.
-	// +kubebuilder:validation:Pattern=^[1-9][0-9]*[dwm]$
+	// The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years.
+	// +kubebuilder:validation:Pattern=^[1-9][0-9]*[dwmy]$
 	// +optional
 	RetentionPeriod string `json:"retentionPeriod,omitempty"`
 	// time.RFC3339 We need to parse the time to RFC3339 format
@@ -104,19 +109,24 @@ type LogBackupOptions struct {
 	LogRetentionHistoryLimit int32 `json:"logRetentionHistoryLimit,omitempty"`
 }
 
-//func ParsePolicy(policy string) (string, error) {
-//	unitName := map[string]string{
-//		"d": "DAYS",
-//		"w": "WEEKS",
-//		"m": "MONTHS",
-//	}
-//	matches := regexPolicy.FindStringSubmatch(policy)
-//	if len(matches) < 3 {
-//		return "", fmt.Errorf("not a valid policy")
-//	}
-//
-//	return fmt.Sprintf("RECOVERY WINDOW OF %v %v", matches[1], unitName[matches[2]]), nil
-//}
+func ParseCutoffTimeFromPeriod(period string, now time.Time) (time.Time, error) {
+	regexPolicy := regexp.MustCompile(`^([1-9][0-9]*)([dwmy])$`)
+	unitFunc := map[string]func(int) time.Time{
+		"d": func(v int) time.Time { return now.AddDate(0, 0, -v) },
+		"w": func(v int) time.Time { return now.AddDate(0, 0, -v*7) },
+		"m": func(v int) time.Time { return now.AddDate(0, -v, 0) },
+		"y": func(v int) time.Time { return now.AddDate(-v, 0, 0) },
+	}
+	matches := regexPolicy.FindStringSubmatch(period)
+	if len(matches) < 3 {
+		return time.Time{}, fmt.Errorf("not a valid period")
+	}
+	value, err := strconv.Atoi(matches[1])
+	if err != nil {
+		return time.Time{}, fmt.Errorf("invalid numeric value: %w", err)
+	}
+	return unitFunc[matches[2]](value), nil
+}
 
 type Task struct {
 	Params *runtime.RawExtension `json:"params"`

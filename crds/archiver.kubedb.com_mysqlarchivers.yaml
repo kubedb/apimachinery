@@ -6209,7 +6209,7 @@ spec:
                     format: int32
                     type: integer
                   retentionPeriod:
-                    pattern: ^[1-9][0-9]*[dwm]$
+                    pattern: ^[1-9][0-9]*[dwmy]$
                     type: string
                   runtimeSettings:
                     properties:
