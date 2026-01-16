@@ -1917,8 +1917,8 @@ kmodules.xyz/webhook-runtime/admission/v1
 kubeops.dev/csi-driver-cacerts/apis/cacerts
 kubeops.dev/csi-driver-cacerts/apis/cacerts/v1alpha1
 kubeops.dev/csi-driver-cacerts/crds
-# kubeops.dev/operator-shard-manager v0.0.4
-## explicit; go 1.24.0
+# kubeops.dev/operator-shard-manager v0.0.5
+## explicit; go 1.25
 kubeops.dev/operator-shard-manager/api/v1alpha1
 kubeops.dev/operator-shard-manager/crds
 # kubeops.dev/petset v0.0.15
