@@ -790,8 +790,8 @@ kmodules.xyz/resource-metrics v0.34.0 h1:cqscgTx3PONxHj6PIySK3sTlKKv8iKTGzRd+S6Y
 kmodules.xyz/resource-metrics v0.34.0/go.mod h1:R34IKtp5+NqcQz7AQJheBJK6Iem0LqrCbm/55Mn+ECQ=
 kmodules.xyz/webhook-runtime v0.34.0 h1:EmETNISlE6C89H492+u6EGUB/5ub/vvC+l2fXpV2e2g=
 kmodules.xyz/webhook-runtime v0.34.0/go.mod h1:sBzU7/eqCcF788jzmiTFqR+v1VH0WSXuIWDRqNACNYg=
-kubeops.dev/csi-driver-cacerts v0.4.0 h1:aGZjDVk9Rv5a0EqDQ/atvg9yVhN7xEU5VKaNI2m1g74=
-kubeops.dev/csi-driver-cacerts v0.4.0/go.mod h1:v1595ZuAd8PGs6egLt7dj6EVWTifdLqRKzUGEqp6eI0=
+kubeops.dev/csi-driver-cacerts v0.5.0 h1:B6okHzYEDP0cN4MFldDah2nOM/GIv2pY0Wn1c1XtNC8=
+kubeops.dev/csi-driver-cacerts v0.5.0/go.mod h1:VNbwC3gTWfmdQCVxd8mkVx+n1+0F1lOA5X3usyZN1rk=
 kubeops.dev/operator-shard-manager v0.0.5 h1:i7VnyUfIa9u3RQhSTVWNsooXcgmrWWxJyI9gJ10onE8=
 kubeops.dev/operator-shard-manager v0.0.5/go.mod h1:NE6GzlhwLRiwiUUpqi4Uf+J7e/gniITM0uJnE5r1mzY=
 kubeops.dev/petset v0.0.15 h1:iwTRFAp0RNw0A87sw2c97UZ6WIA9H/nhJBpDhXLa7fk=

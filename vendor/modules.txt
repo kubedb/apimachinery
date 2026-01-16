@@ -1912,8 +1912,8 @@ kmodules.xyz/resource-metrics/ops.kubedb.com/v1alpha1
 # kmodules.xyz/webhook-runtime v0.34.0
 ## explicit; go 1.24.0
 kmodules.xyz/webhook-runtime/admission/v1
-# kubeops.dev/csi-driver-cacerts v0.4.0
-## explicit; go 1.24.0
+# kubeops.dev/csi-driver-cacerts v0.5.0
+## explicit; go 1.25.0
 kubeops.dev/csi-driver-cacerts/apis/cacerts
 kubeops.dev/csi-driver-cacerts/apis/cacerts/v1alpha1
 kubeops.dev/csi-driver-cacerts/crds
