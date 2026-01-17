@@ -238,7 +238,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 		return fmt.Errorf("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if reconfigureSpec.ConfigSecret == nil && req.Spec.Configuration.ApplyConfig == nil && !reconfigureSpec.RemoveCustomConfig {
+	if reconfigureSpec.ConfigSecret == nil && reconfigureSpec.ConfigSecret.Name == "" && req.Spec.Configuration.ApplyConfig == nil && !reconfigureSpec.RemoveCustomConfig {
 		return fmt.Errorf("no reconfiguration request is provided in Configuration Spec")
 	}
 

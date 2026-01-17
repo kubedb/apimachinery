@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -281,17 +282,46 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteHorizontalScalingOpsReque
 	return nil
 }
 
-func (rv *IgniteOpsRequestCustomWebhook) validateIgniteReconfigurationOpsRequest(req *opsapi.IgniteOpsRequest) error {
-	configurationSpec := req.Spec.Configuration
-	if configurationSpec == nil {
+func (w *IgniteOpsRequestCustomWebhook) validateIgniteReconfigurationOpsRequest(req *opsapi.IgniteOpsRequest) error {
+	reconfigureSpec := req.Spec.Configuration
+	if reconfigureSpec == nil {
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
-	if err := rv.hasDatabaseRef(req); err != nil {
+
+	if reconfigureSpec.ConfigSecret == nil && reconfigureSpec.ConfigSecret.Name == "" && req.Spec.Configuration.ApplyConfig == nil && !reconfigureSpec.RemoveCustomConfig {
+		return fmt.Errorf("no reconfiguration request is provided in Configuration Spec")
+	}
+
+	if err := w.hasDatabaseRef(req); err != nil {
 		return err
 	}
-	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
-		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
+
+	if reconfigureSpec.ConfigSecret != nil && reconfigureSpec.ConfigSecret.Name == "" {
+		var secret core.Secret
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      reconfigureSpec.ConfigSecret.Name,
+			Namespace: req.Namespace,
+		}, &secret)
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("referenced config secret %s/%s not found", req.Namespace, reconfigureSpec.ConfigSecret.Name)
+			}
+			return err
+		}
+
+		if _, ok := secret.Data[kubedb.IgniteConfigFileName]; !ok {
+			return fmt.Errorf("config secret %s/%s does not have file named '%v'", req.Namespace, reconfigureSpec.ConfigSecret.Name, kubedb.IgniteConfigFileName)
+		}
 	}
+
+	// Validate ApplyConfig has the required config file if provided
+	if req.Spec.Configuration.ApplyConfig != nil {
+		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.IgniteConfigFileName]
+		if !ok {
+			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.IgniteConfigFileName)
+		}
+	}
+
 	return nil
 }
 
