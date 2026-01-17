@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strings"
 
+	core "k8s.io/api/core/v1"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -122,11 +123,49 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	}
 
 	var allErr field.ErrorList
-	var db dbapi.RedisSentinel
+	var db *dbapi.RedisSentinel
+	var err error
+
+	if db, err = w.hasDatabaseRef(req); err != nil {
+		return err
+	}
+
 	switch opsapi.RedisSentinelOpsRequestType(req.GetRequestType()) {
+	case opsapi.RedisSentinelOpsRequestTypeRestart:
+		// Restart just needs database ref validation which is already done above
 	case opsapi.RedisSentinelOpsRequestTypeUpdateVersion:
-		if err := w.validateRedisSentinelUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := w.validateRedisSentinelUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.RedisSentinelOpsRequestTypeHorizontalScaling:
+		if err := w.validateRedisSentinelHorizontalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.RedisSentinelOpsRequestTypeVerticalScaling:
+		if err := w.validateRedisSentinelVerticalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.RedisSentinelOpsRequestTypeReconfigure:
+		if err := w.validateRedisSentinelReconfigureOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.RedisSentinelOpsRequestTypeReconfigureTLS:
+		if err := w.validateRedisSentinelReconfigureTLSOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.RedisSentinelOpsRequestTypeRotateAuth:
+		if err := w.validateRedisSentinelRotateAuthenticationOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
 		}
@@ -183,4 +222,111 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelUpdateVersio
 		}
 	}
 	return nil
+}
+
+func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelReconfigureOpsRequest(req *opsapi.RedisSentinelOpsRequest) error {
+	reconfigureSpec := req.Spec.Configuration
+	if reconfigureSpec == nil {
+		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
+	}
+
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && req.Spec.Configuration.ApplyConfig == nil {
+		return fmt.Errorf("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	}
+
+	return nil
+}
+
+func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelHorizontalScalingOpsRequest(req *opsapi.RedisSentinelOpsRequest) error {
+	horizontalScalingSpec := req.Spec.HorizontalScaling
+	if horizontalScalingSpec == nil {
+		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
+	}
+
+	if horizontalScalingSpec.Replicas == nil {
+		return errors.New("`spec.horizontalScaling.replicas` must be specified")
+	}
+
+	if *horizontalScalingSpec.Replicas <= 0 {
+		return fmt.Errorf("`spec.horizontalScaling.replicas` can't be less than or equal 0")
+	}
+
+	return nil
+}
+
+func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelVerticalScalingOpsRequest(req *opsapi.RedisSentinelOpsRequest) error {
+	verticalScalingSpec := req.Spec.VerticalScaling
+	if verticalScalingSpec == nil {
+		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
+	}
+
+	if verticalScalingSpec.RedisSentinel == nil && verticalScalingSpec.Exporter == nil {
+		return errors.New("at least one of `spec.verticalScaling.redissentinel` or `spec.verticalScaling.exporter` must be specified")
+	}
+
+	return nil
+}
+
+func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelReconfigureTLSOpsRequest(req *opsapi.RedisSentinelOpsRequest) error {
+	tls := req.Spec.TLS
+	if tls == nil {
+		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
+	}
+
+	configCount := 0
+	if tls.Remove {
+		configCount++
+	}
+	if tls.RotateCertificates {
+		configCount++
+	}
+	if tls.IssuerRef != nil || tls.Certificates != nil {
+		configCount++
+	}
+
+	if configCount == 0 {
+		return errors.New("at least one of `Remove`, `RotateCertificates`, `IssuerRef`, or `Certificates` must be specified in TLS spec")
+	}
+
+	if configCount > 1 {
+		return errors.New("only one TLS reconfiguration operation (`Remove`, `RotateCertificates`, or certificate update) is allowed at a time")
+	}
+
+	return nil
+}
+
+func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelRotateAuthenticationOpsRequest(db *dbapi.RedisSentinel, req *opsapi.RedisSentinelOpsRequest) error {
+	if db.Spec.DisableAuth {
+		return fmt.Errorf("%s is running in disable auth mode. RotateAuth is not applicable", req.GetDBRefName())
+	}
+
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return errors.New("spec.authentication.secretRef.name can not be empty")
+		}
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &core.Secret{})
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name)
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (w *RedisSentinelOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RedisSentinelOpsRequest) (*dbapi.RedisSentinel, error) {
+	db := dbapi.RedisSentinel{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      req.GetDBRefName(),
+		Namespace: req.GetNamespace(),
+	}, &db); err != nil {
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+	}
+	return &db, nil
 }
