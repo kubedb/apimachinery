@@ -292,7 +292,7 @@ func (w *IgniteOpsRequestCustomWebhook) validateIgniteReconfigurationOpsRequest(
 		return err
 	}
 
-	if !reconfigureSpec.RemoveCustomConfig && (reconfigureSpec.ConfigSecret == nil || reconfigureSpec.ConfigSecret.Name == "") && req.Spec.Configuration.ApplyConfig == nil {
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && len(reconfigureSpec.ApplyConfig) == 0 {
 		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
