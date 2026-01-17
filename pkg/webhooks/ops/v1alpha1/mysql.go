@@ -250,8 +250,12 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(re
 		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
-	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ApplyConfig == nil && req.Spec.Configuration.ConfigSecret == nil) {
-		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
+	if req.Spec.Configuration == nil {
+		return errors.New("`.Spec.Configuration` field is nil")
+	}
+
+	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ApplyConfig == nil && req.Spec.Configuration.ConfigSecret == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
 	return nil

@@ -224,15 +224,11 @@ func validatePgBouncerReconfigurationOpsRequest(req *opsapi.PgBouncerOpsRequest,
 
 	bouncerConfigReq := req.Spec.Configuration
 
-	if bouncerConfigReq.ConfigSecret == nil && bouncerConfigReq.ApplyConfig == nil {
-		return errors.New("custom configuration should be specified in`spec.configuration.pgbouncer` for Reconfigure type")
+	if !bouncerConfigReq.RemoveCustomConfig && bouncerConfigReq.ConfigSecret == nil && bouncerConfigReq.ApplyConfig == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
-	if bouncerConfigReq.ConfigSecret != nil && bouncerConfigReq.ApplyConfig != nil {
-		return errors.New("`spec.configuration.pgbouncer.configSecret` and `spec.configuration.pgbouncer.applyConfig` both can not be taken for Reconfigure type")
-	}
-
-	if bouncerConfigReq.ConfigSecret != nil {
+	if bouncerConfigReq.ConfigSecret != nil && bouncerConfigReq.ConfigSecret.Name != "" {
 		var secret v1.Secret
 		if err := client.Get(context.TODO(), types.NamespacedName{Name: bouncerConfigReq.ConfigSecret.Name, Namespace: req.Namespace}, &secret); err != nil {
 			return err

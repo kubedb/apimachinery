@@ -126,15 +126,51 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 	var allErr field.ErrorList
 	var db dbapi.Redis
 	switch opsapi.RedisOpsRequestType(req.GetRequestType()) {
+	case opsapi.RedisOpsRequestTypeRestart:
+		if err := w.hasDatabaseRef(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.RedisOpsRequestTypeHorizontalScaling:
 		if err := w.validateRedisHorizontalScalingOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.RedisOpsRequestTypeVerticalScaling:
+		if err := w.validateRedisVerticalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.RedisOpsRequestTypeVolumeExpansion:
+		if err := w.validateRedisVolumeExpansionOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.RedisOpsRequestTypeUpdateVersion:
 		if err := w.validateRedisUpdateVersionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.RedisOpsRequestTypeReconfigure:
+		if err := w.validateRedisReconfigureOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.RedisOpsRequestTypeReconfigureTLS:
+		if err := w.validateRedisReconfigureTLSOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.RedisOpsRequestTypeReplaceSentinel:
+		if err := w.validateRedisReplaceSentinelOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sentinel"),
 				req.Name,
 				err.Error()))
 		}
@@ -302,6 +338,19 @@ func (w *RedisOpsRequestCustomWebhook) checkHorizontalOpsReqForSentinelMode(req 
 	return nil
 }
 
+func (w *RedisOpsRequestCustomWebhook) validateRedisReconfigureOpsRequest(req *opsapi.RedisOpsRequest) error {
+	reconfigureSpec := req.Spec.Configuration
+	if reconfigureSpec == nil {
+		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
+	}
+
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && len(reconfigureSpec.ApplyConfig) == 0 {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	}
+
+	return nil
+}
+
 func (w *RedisOpsRequestCustomWebhook) validateRedisRotateAuthenticationOpsRequest(req *opsapi.RedisOpsRequest) error {
 	redis := dbapi.Redis{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Namespace: req.Namespace, Name: req.GetDBRefName()}, &redis)
@@ -358,6 +407,127 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisAnnounceOpsRequest(req *opsa
 				return fmt.Errorf("endpoint %d in announce shard %d is empty", j, i)
 			}
 		}
+	}
+
+	return nil
+}
+
+func (w *RedisOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RedisOpsRequest) error {
+	redis := dbapi.Redis{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      req.GetDBRefName(),
+		Namespace: req.GetNamespace(),
+	}, &redis); err != nil {
+		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+	}
+	return nil
+}
+
+func (w *RedisOpsRequestCustomWebhook) validateRedisVerticalScalingOpsRequest(req *opsapi.RedisOpsRequest) error {
+	verticalScalingSpec := req.Spec.VerticalScaling
+	if verticalScalingSpec == nil {
+		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
+	}
+	err := w.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
+	if verticalScalingSpec.Redis == nil && verticalScalingSpec.Exporter == nil && verticalScalingSpec.Coordinator == nil {
+		return errors.New("at least one of `spec.verticalScaling.redis`, `spec.verticalScaling.exporter`, or `spec.verticalScaling.coordinator` must be specified")
+	}
+	return nil
+}
+
+func (w *RedisOpsRequestCustomWebhook) validateRedisVolumeExpansionOpsRequest(req *opsapi.RedisOpsRequest) error {
+	if req.Spec.VolumeExpansion == nil || req.Spec.VolumeExpansion.Redis == nil {
+		return errors.New("`spec.volumeExpansion.redis` field is required, can not be nil")
+	}
+
+	db := &dbapi.Redis{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return fmt.Errorf("failed to get redis: %s/%s: %v", req.Namespace, req.Spec.DatabaseRef.Name, err)
+	}
+
+	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
+	if !ok {
+		return errors.New("failed to parse current storage size")
+	}
+
+	if cur.Cmp(*req.Spec.VolumeExpansion.Redis) >= 0 {
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+	}
+
+	return nil
+}
+
+func (w *RedisOpsRequestCustomWebhook) validateRedisReconfigureTLSOpsRequest(req *opsapi.RedisOpsRequest) error {
+	tls := req.Spec.TLS
+	if tls == nil {
+		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
+	}
+	err := w.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
+
+	configCount := 0
+	if tls.Remove {
+		configCount++
+	}
+	if tls.RotateCertificates {
+		configCount++
+	}
+	if tls.IssuerRef != nil || tls.Certificates != nil {
+		configCount++
+	}
+
+	if configCount == 0 {
+		return errors.New("at least one of `Remove`, `RotateCertificates`, `IssuerRef`, or `Certificates` must be specified in TLS spec")
+	}
+
+	if configCount > 1 {
+		return errors.New("only one TLS reconfiguration operation (`Remove`, `RotateCertificates`, or certificate update) is allowed at a time")
+	}
+
+	return nil
+}
+
+func (w *RedisOpsRequestCustomWebhook) validateRedisReplaceSentinelOpsRequest(req *opsapi.RedisOpsRequest) error {
+	if req.Spec.Sentinel == nil {
+		return errors.New("`spec.sentinel` is required for ReplaceSentinel ops request")
+	}
+
+	if req.Spec.Sentinel.Ref == nil {
+		return errors.New("`spec.sentinel.ref` is required for ReplaceSentinel ops request")
+	}
+
+	if req.Spec.Sentinel.Ref.Name == "" {
+		return errors.New("`spec.sentinel.ref.name` can not be empty")
+	}
+
+	redis := &dbapi.Redis{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, redis)
+	if err != nil {
+		return fmt.Errorf("failed to get redis: %s/%s: %v", req.Namespace, req.Spec.DatabaseRef.Name, err)
+	}
+
+	if redis.Spec.Mode != dbapi.RedisModeSentinel {
+		return errors.New("ReplaceSentinel is only applicable for Redis in Sentinel mode")
+	}
+
+	// Check if the new sentinel exists
+	sentinelNamespace := req.Spec.Sentinel.Ref.Namespace
+	if sentinelNamespace == "" {
+		sentinelNamespace = req.Namespace
+	}
+	newSentinel := &dbapi.RedisSentinel{}
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.Sentinel.Ref.Name, Namespace: sentinelNamespace}, newSentinel)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			return fmt.Errorf("referenced sentinel %s/%s not found", sentinelNamespace, req.Spec.Sentinel.Ref.Name)
+		}
+		return err
 	}
 
 	return nil

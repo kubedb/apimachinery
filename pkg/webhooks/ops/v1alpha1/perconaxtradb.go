@@ -249,8 +249,12 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBReconfigurat
 		return errors.Wrap(err, fmt.Sprintf("failed to get percona-xtradb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
-	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && len(req.Spec.Configuration.ApplyConfig) == 0 && req.Spec.Configuration.ConfigSecret == nil) {
-		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
+	if req.Spec.Configuration == nil {
+		return errors.New("`.Spec.Configuration` field is nil")
+	}
+
+	if !req.Spec.Configuration.RemoveCustomConfig && len(req.Spec.Configuration.ApplyConfig) == 0 && req.Spec.Configuration.ConfigSecret == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
 	return nil
