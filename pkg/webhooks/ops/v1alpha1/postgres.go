@@ -236,15 +236,15 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureOpsRequest(
 		return err
 	}
 
+	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExistsForPostgres(req.Spec.Configuration.ApplyConfig) && req.Spec.Configuration.Tuning == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, `Tuning` or `ApplyConfig` must be specified")
+	}
+
 	if applyConfigExistsForPostgres(req.Spec.Configuration.ApplyConfig) {
 		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.PostgresCustomConfigFile]
 		if !ok {
 			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.PostgresCustomConfigFile)
 		}
-	}
-
-	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExistsForPostgres(req.Spec.Configuration.ApplyConfig) {
-		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
 	if req.Spec.Configuration.Restart == opsapi.ReconfigureRestartFalse && req.Spec.Configuration.RemoveCustomConfig {
