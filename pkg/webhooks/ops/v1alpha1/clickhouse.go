@@ -222,16 +222,18 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScaling
 }
 
 func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseReconfigurationOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
-	configurationSpec := req.Spec.Configuration
-	if configurationSpec == nil {
+	reconfigureSpec := req.Spec.Configuration
+	if reconfigureSpec == nil {
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
 	if err := rv.hasDatabaseRef(req); err != nil {
 		return err
 	}
-	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
-		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
+
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && req.Spec.Configuration.ApplyConfig == nil {
+		return fmt.Errorf("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
+
 	return nil
 }
 
