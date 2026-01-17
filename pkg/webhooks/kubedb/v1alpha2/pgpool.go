@@ -150,15 +150,6 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 		))
 	}
 
-	if pp.Spec.ConfigSecret != nil && (pp.Spec.InitConfiguration != nil && pp.Spec.InitConfiguration.PgpoolConfig != nil) {
-		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configSecret"),
-			pp.Name,
-			"use either `spec.configSecret` or `spec.initConfig`"))
-		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("initConfig"),
-			pp.Name,
-			"use either `spec.configSecret` or `spec.initConfig`"))
-	}
-
 	if pp.DeletionTimestamp == nil {
 		apb := appcat.AppBinding{}
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{

@@ -52,7 +52,7 @@ require (
 	kmodules.xyz/offshoot-api v0.34.0
 	kmodules.xyz/resource-metadata v0.41.0
 	kmodules.xyz/webhook-runtime v0.34.0
-	kubeops.dev/csi-driver-cacerts v0.4.0
+	kubeops.dev/csi-driver-cacerts v0.5.0
 	kubeops.dev/operator-shard-manager v0.0.5
 	kubeops.dev/petset v0.0.15
 	kubeops.dev/sidekick v0.0.12

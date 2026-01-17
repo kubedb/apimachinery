@@ -27111,24 +27111,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedCustomConfigurationSpec": {
-      "type": "object",
-      "properties": {
-        "applyConfig": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "configSecret": {
-          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
-        },
-        "removeCustomConfig": {
-          "type": "boolean"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for Memcached horizontal scaling",
       "type": "object",
@@ -27223,7 +27205,7 @@
         },
         "configuration": {
           "description": "Specifies information necessary for custom configuration of Memcached",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedCustomConfigurationSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReconfigurationSpec"
         },
         "databaseRef": {
           "description": "Specifies the Memcached reference",

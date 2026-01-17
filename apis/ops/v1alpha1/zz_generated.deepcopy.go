@@ -3206,7 +3206,7 @@ func (in *MemcachedOpsRequestSpec) DeepCopyInto(out *MemcachedOpsRequestSpec) {
 	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
-		*out = new(MemcachedCustomConfigurationSpec)
+		*out = new(ReconfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.TLS != nil {

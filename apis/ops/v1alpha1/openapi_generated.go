@@ -31100,7 +31100,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MemcachedOpsRequestSpec(ref common.Re
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for custom configuration of Memcached",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedCustomConfigurationSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
 						},
 					},
 					"tls": {
@@ -31145,7 +31145,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MemcachedOpsRequestSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
