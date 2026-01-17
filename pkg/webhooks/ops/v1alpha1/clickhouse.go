@@ -211,11 +211,11 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScaling
 	}
 
 	if horizontalScalingSpec.Replicas == nil {
-		return errors.New("spec.horizontalScaling.node can not be empty")
+		return errors.New("spec.horizontalScaling.replicas can not be empty")
 	}
 
 	if *horizontalScalingSpec.Replicas <= 0 {
-		return errors.New("spec.horizontalScaling.node must be positive")
+		return errors.New("spec.horizontalScaling.replicas must be positive")
 	}
 
 	return nil

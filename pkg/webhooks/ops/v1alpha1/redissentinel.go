@@ -248,7 +248,7 @@ func (w *RedisSentinelOpsRequestCustomWebhook) validateRedisSentinelHorizontalSc
 	}
 
 	if *horizontalScalingSpec.Replicas <= 0 {
-		return fmt.Errorf("`spec.horizontalScaling.replicas` can't be less than or equal 0")
+		return fmt.Errorf("`spec.horizontalScaling.replicas` can not be less than or equal 0")
 	}
 
 	return nil

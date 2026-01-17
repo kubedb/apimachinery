@@ -23,7 +23,6 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -220,14 +219,7 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperReconfigureOpsReques
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if applyConfigExists(req.Spec.Configuration.ApplyConfig) {
-		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.ZooKeeperConfigFileName]
-		if !ok {
-			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.ZooKeeperConfigFileName)
-		}
-	}
-
-	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExists(req.Spec.Configuration.ApplyConfig) {
+	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && req.Spec.Configuration.ApplyConfig == nil {
 		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
