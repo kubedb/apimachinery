@@ -288,15 +288,15 @@ func (w *IgniteOpsRequestCustomWebhook) validateIgniteReconfigurationOpsRequest(
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
 
-	if reconfigureSpec.ConfigSecret == nil && reconfigureSpec.ConfigSecret.Name == "" && req.Spec.Configuration.ApplyConfig == nil && !reconfigureSpec.RemoveCustomConfig {
-		return fmt.Errorf("no reconfiguration request is provided in Configuration Spec")
-	}
-
 	if err := w.hasDatabaseRef(req); err != nil {
 		return err
 	}
 
-	if reconfigureSpec.ConfigSecret != nil && reconfigureSpec.ConfigSecret.Name == "" {
+	if !reconfigureSpec.RemoveCustomConfig && (reconfigureSpec.ConfigSecret == nil || reconfigureSpec.ConfigSecret.Name == "") && req.Spec.Configuration.ApplyConfig == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	}
+
+	if reconfigureSpec.ConfigSecret != nil && reconfigureSpec.ConfigSecret.Name != "" {
 		var secret core.Secret
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      reconfigureSpec.ConfigSecret.Name,

@@ -237,8 +237,9 @@ func (rv *CassandraOpsRequestCustomWebhook) validateCassandraReconfigurationOpsR
 	if err := rv.hasDatabaseRef(req); err != nil {
 		return err
 	}
-	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
-		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
+
+	if !configurationSpec.RemoveCustomConfig && configurationSpec.ConfigSecret == nil && len(configurationSpec.ApplyConfig) == 0 {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 	return nil
 }

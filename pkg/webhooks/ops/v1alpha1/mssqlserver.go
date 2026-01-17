@@ -238,17 +238,17 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 		return fmt.Errorf("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if reconfigureSpec.ConfigSecret == nil && reconfigureSpec.ConfigSecret.Name == "" && req.Spec.Configuration.ApplyConfig == nil && !reconfigureSpec.RemoveCustomConfig {
-		return fmt.Errorf("no reconfiguration request is provided in Configuration Spec")
-	}
-
 	err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
 
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && req.Spec.Configuration.ApplyConfig == nil {
+		return fmt.Errorf("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	}
+
 	// Validate ConfigSecret exists if provided and has the required config file
-	if reconfigureSpec.ConfigSecret != nil {
+	if reconfigureSpec.ConfigSecret != nil && reconfigureSpec.ConfigSecret.Name != "" {
 		var secret core.Secret
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      reconfigureSpec.ConfigSecret.Name,

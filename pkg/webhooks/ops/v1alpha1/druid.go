@@ -311,7 +311,7 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidReconfigurationOpsRequest(re
 	}
 
 	if !configurationSpec.RemoveCustomConfig && configurationSpec.ConfigSecret == nil && len(configurationSpec.ApplyConfig) == 0 {
-		return errors.New("`RemoveCustomConfig`, `ConfigSecret` and `ApplyConfig`, all can not be empty together")
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 	return nil
 }

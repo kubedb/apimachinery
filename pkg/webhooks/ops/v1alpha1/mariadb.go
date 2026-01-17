@@ -277,8 +277,12 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReques
 }
 
 func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBReconfigurationOpsRequest(req *opsapi.MariaDBOpsRequest) error {
-	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && len(req.Spec.Configuration.ApplyConfig) == 0 && req.Spec.Configuration.ConfigSecret == nil) {
-		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
+	if req.Spec.Configuration == nil {
+		return errors.New("`.Spec.Configuration` field is nil")
+	}
+
+	if !req.Spec.Configuration.RemoveCustomConfig && len(req.Spec.Configuration.ApplyConfig) == 0 && req.Spec.Configuration.ConfigSecret == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
 	return nil
