@@ -1938,7 +1938,7 @@ kubeops.dev/petset/crds
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
 kubeops.dev/sidekick/crds
-# kubestash.dev/apimachinery v0.23.0-rc.0
+# kubestash.dev/apimachinery v0.23.0
 ## explicit; go 1.25.0
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/addons/v1alpha1
