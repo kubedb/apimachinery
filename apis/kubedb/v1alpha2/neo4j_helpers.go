@@ -263,6 +263,9 @@ func (r *Neo4j) AppBindingMeta() appcat.AppBindingMeta {
 
 func (r *Neo4j) GetConnectionScheme() string {
 	scheme := "http" // TODO:()
+	if r.Spec.TLS != nil {
+		scheme = "https"
+	}
 	return scheme
 }
 
@@ -308,7 +311,11 @@ func (r neo4jStatsService) Path() string {
 }
 
 func (r neo4jStatsService) Scheme() string {
-	return ""
+	scheme := "http" // TODO:()
+	if r.Spec.TLS != nil {
+		scheme = "https"
+	}
+	return scheme
 }
 
 func (r neo4jStatsService) TLSConfig() *promapi.TLSConfig {
