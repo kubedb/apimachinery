@@ -58,10 +58,13 @@ type ConnectorSpec struct {
 	// ConnectClusterRef is a required field, where Connector will add tasks to produce or consume data from kafka topics.
 	ConnectClusterRef *kmapi.ObjectReference `json:"connectClusterRef"`
 
-	// ConfigSecret is a required field to provide configuration file for Connector to create connectors for Kafka connect cluster(i.e connector.properties).
+	// ConfigSecret is deprecated and will be removed in a future release.
+	// Use `configuration` instead.
 	// +optional
+	// +kubebuilder:deprecatedversion
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
+	// Configuration is a required field to provide a configuration file for Connector to create connectors for Kafka connect cluster(i.e. connector.properties).
 	Configuration *dbapi.ConfigurationSpec `json:"configuration"`
 
 	// DeletionPolicy controls the delete operation for database
