@@ -24,7 +24,6 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
@@ -113,15 +112,16 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Postgres are %s", req.Spec.Type, strings.Join(opsapi.PostgresOpsRequestTypeNames(), ", ")))
 	}
 
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
+	}
+
 	var allErr field.ErrorList
-	var db dbapi.Postgres
+
 	switch opsapi.PostgresOpsRequestType(req.GetRequestType()) {
 	case opsapi.PostgresOpsRequestTypeRestart:
-		if err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
+
 	case opsapi.PostgresOpsRequestTypeVerticalScaling:
 		if err := w.validatePostgresVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -141,7 +141,7 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 				err.Error()))
 		}
 	case opsapi.PostgresOpsRequestTypeUpdateVersion:
-		if err := w.validatePostgresUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := w.validatePostgresUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -181,15 +181,15 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Postgresopsrequests.kubedb.com", Kind: "PostgresOpsRequest"}, req.Name, allErr)
 }
 
-func (w *PostgresOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PostgresOpsRequest) error {
-	postgres := olddbapi.Postgres{}
+func (w *PostgresOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PostgresOpsRequest) (*dbapi.Postgres, error) {
+	postgres := &dbapi.Postgres{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &postgres); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+	}, postgres); err != nil {
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return nil
+	return postgres, nil
 }
 
 func (w *PostgresOpsRequestCustomWebhook) validatePostgresVerticalScalingOpsRequest(req *opsapi.PostgresOpsRequest) error {
@@ -197,10 +197,7 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVerticalScalingOpsRequ
 	if verticalScalingSpec == nil {
 		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
 	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
+
 	if verticalScalingSpec.Postgres == nil && verticalScalingSpec.Coordinator == nil && verticalScalingSpec.Arbiter == nil {
 		return errors.New("`spec.verticalScaling.Postgres`, `spec.verticalScaling.Coordinator`, `spec.verticalScaling.Arbiter` at least any of them should be present in vertical scaling ops request")
 	}
@@ -212,10 +209,6 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRe
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
 		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
-	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
 	}
 	if horizontalScalingSpec.Replicas == nil {
 		return errors.New("`spec.horizontalScaling.Replicas has to be mentioned")
@@ -230,10 +223,6 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureOpsRequest(
 	reconfigureSpec := req.Spec.Configuration
 	if reconfigureSpec == nil {
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
-	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
 	}
 
 	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExistsForPostgres(req.Spec.Configuration.ApplyConfig) && req.Spec.Configuration.Tuning == nil {
@@ -266,10 +255,7 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsReques
 	if !yes {
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
-	err = w.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
+
 	postgresTargetVersion := &catalog.PostgresVersion{}
 	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: updateVersionSpec.TargetVersion,
@@ -284,10 +270,6 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureTLSOpsReque
 	tls := req.Spec.TLS
 	if tls == nil {
 		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
-	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
 	}
 
 	return nil
