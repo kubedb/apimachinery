@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -151,10 +150,10 @@ func (w *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Fer
 func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBVerticalScalingOpsRequest(req *opsapi.FerretDBOpsRequest) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
-		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
+		return fmt.Errorf("`spec.verticalScaling` nil not supported in VerticalScaling type")
 	}
 	if verticalScalingSpec.Primary == nil && verticalScalingSpec.Secondary == nil {
-		return errors.New("both `spec.verticalScaling.primary` and `spec.verticalScaling.secondary` can't be non-empty at vertical scaling ops request")
+		return fmt.Errorf("both `spec.verticalScaling.primary` and `spec.verticalScaling.secondary` can't be non-empty at vertical scaling ops request")
 	}
 
 	return nil
@@ -163,16 +162,16 @@ func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBVerticalScalingOpsRequ
 func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBHorizontalScalingOpsRequest(req *opsapi.FerretDBOpsRequest) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
-		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
+		return fmt.Errorf("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
 	}
 	if horizontalScalingSpec.Primary == nil && horizontalScalingSpec.Secondary == nil {
-		return errors.New("both `spec.horizontalScaling.primary.replicas` and `spec.horizontalScaling.secondary.replicas` can't be empty")
+		return fmt.Errorf("both `spec.horizontalScaling.primary.replicas` and `spec.horizontalScaling.secondary.replicas` can't be empty")
 	}
 	if horizontalScalingSpec.Primary != nil && *horizontalScalingSpec.Primary.Replicas <= 0 {
-		return errors.New("`spec.horizontalScaling.primary.replicas` can't be less than or equal 0")
+		return fmt.Errorf("`spec.horizontalScaling.primary.replicas` can't be less than or equal 0")
 	}
 	if horizontalScalingSpec.Secondary != nil && *horizontalScalingSpec.Secondary.Replicas <= 0 {
-		return errors.New("`spec.horizontalScaling.secondary.replicas` can't be less than or equal 0")
+		return fmt.Errorf("`spec.horizontalScaling.secondary.replicas` can't be less than or equal 0")
 	}
 	return nil
 }
@@ -180,7 +179,7 @@ func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBHorizontalScalingOpsRe
 func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBUpdateVersionOpsRequest(db *olddbapi.FerretDB, req *opsapi.FerretDBOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
-		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
+		return fmt.Errorf("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
 	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindFerretDBVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
@@ -197,7 +196,7 @@ func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBUpdateVersionOpsReques
 func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBReconfigureTLSOpsRequest(req *opsapi.FerretDBOpsRequest) error {
 	tls := req.Spec.TLS
 	if tls == nil {
-		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
+		return fmt.Errorf("`spec.tls` nil not supported in ReconfigureTLS type")
 	}
 
 	return nil
@@ -209,7 +208,7 @@ func (w *FerretDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.FerretDBOps
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, db); err != nil {
-		return nil, errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
 	return db, nil
 }

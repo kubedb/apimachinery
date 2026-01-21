@@ -22,7 +22,6 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -147,14 +146,6 @@ func (w *PgBouncerOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PgBouncerO
 		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
 	return db, nil
-}
-
-func getPgBouncer(client client.Client, opsReq *opsapi.PgBouncerOpsRequest) (*dbapi.PgBouncer, error) {
-	bouncer := &dbapi.PgBouncer{}
-	if err := client.Get(context.TODO(), types.NamespacedName{Name: opsReq.GetDBRefName(), Namespace: opsReq.Namespace}, bouncer); err != nil {
-		return nil, err
-	}
-	return bouncer, nil
 }
 
 func (w *PgBouncerOpsRequestCustomWebhook) validatePgBouncerReconfigureTLSOpsRequest(req *opsapi.PgBouncerOpsRequest) error {
