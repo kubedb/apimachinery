@@ -30,6 +30,7 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
@@ -107,9 +108,12 @@ func (w *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Fer
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for FerretDB are %s", req.Spec.Type, strings.Join(opsapi.FerretDBOpsRequestTypeNames(), ", ")))
 	}
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
+	}
 
 	var allErr field.ErrorList
-	var db dbapi.FerretDB
 	switch opsapi.FerretDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.FerretDBOpsRequestTypeRestart:
 	case opsapi.FerretDBOpsRequestTypeVerticalScaling:
@@ -125,7 +129,7 @@ func (w *FerretDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Fer
 				err.Error()))
 		}
 	case opsapi.FerretDBOpsRequestTypeUpdateVersion:
-		if err := w.validateFerretDBUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := w.validateFerretDBUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -197,4 +201,15 @@ func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBReconfigureTLSOpsReque
 	}
 
 	return nil
+}
+
+func (w *FerretDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.FerretDBOpsRequest) (*dbapi.FerretDB, error) {
+	db := &dbapi.FerretDB{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      req.GetDBRefName(),
+		Namespace: req.GetNamespace(),
+	}, db); err != nil {
+		return nil, errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+	}
+	return db, nil
 }

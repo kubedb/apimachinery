@@ -20,7 +20,6 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
@@ -97,15 +96,14 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MariaDB are %s", req.Spec.Type, strings.Join(opsapi.MariaDBOpsRequestTypeNames(), ", ")))
 	}
 
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
+	}
+
 	var allErr field.ErrorList
-	var db olddbapi.MariaDB
 	switch opsapi.MariaDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.MariaDBOpsRequestTypeRestart:
-		if err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
 	case opsapi.MariaDBOpsRequestTypeVerticalScaling:
 		if err := w.validateMariaDBScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -125,7 +123,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 				err.Error()))
 		}
 	case opsapi.MariaDBOpsRequestTypeUpdateVersion:
-		if err := w.validateMariaDBUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := w.validateMariaDBUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -157,15 +155,15 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 	return apierrors.NewInvalid(schema.GroupKind{Group: "MariaDBopsrequests.kubedb.com", Kind: "MariaDBOpsRequest"}, req.Name, allErr)
 }
 
-func (w *MariaDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MariaDBOpsRequest) error {
-	md := dbapi.MariaDB{}
+func (w *MariaDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MariaDBOpsRequest) (*dbapi.MariaDB, error) {
+	md := &dbapi.MariaDB{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &md); err != nil {
-		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+	}, md); err != nil {
+		return nil, errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
 	}
-	return nil
+	return md, nil
 }
 
 func validateMariaDBOpsRequest(obj, oldObj runtime.Object) error {
@@ -180,7 +178,7 @@ func validateMariaDBOpsRequest(obj, oldObj runtime.Object) error {
 	return nil
 }
 
-func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBUpdateVersionOpsRequest(db *olddbapi.MariaDB, req *opsapi.MariaDBOpsRequest) error {
+func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBUpdateVersionOpsRequest(db *dbapi.MariaDB, req *opsapi.MariaDBOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
