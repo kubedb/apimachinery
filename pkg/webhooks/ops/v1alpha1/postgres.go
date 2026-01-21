@@ -107,6 +107,7 @@ func validatePostgresOpsRequest(req *opsapi.PostgresOpsRequest, oldReq *opsapi.P
 }
 
 func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.PostgresOpsRequest) error {
+	postgresLog.Info("validate create", "name", req.Name, "namespace", req.Namespace, "type", req.Spec.Type, "databaseRef", req.Spec.DatabaseRef, "requestedAt", req.Spec.UpdateVersion)
 	if validType, _ := arrays.Contains(opsapi.PostgresOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Postgres are %s", req.Spec.Type, strings.Join(opsapi.PostgresOpsRequestTypeNames(), ", ")))
