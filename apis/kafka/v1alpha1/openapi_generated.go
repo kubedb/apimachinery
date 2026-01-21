@@ -26891,7 +26891,7 @@ func schema_apimachinery_apis_kafka_v1alpha1_ConnectorSpec(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"connectClusterRef", "configSecret"},
+				Required: []string{"connectClusterRef", "configuration"},
 			},
 		},
 		Dependencies: []string{
