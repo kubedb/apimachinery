@@ -259,7 +259,6 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest
 }
 
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformation(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
-
 	curVersion := semver.MustParse(db.Spec.Version)
 	refVersion := semver.MustParse("8.4.2")
 

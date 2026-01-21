@@ -305,7 +305,6 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureTLSOp
 }
 
 func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerRotateAuthenticationOpsRequest(db *olddbapi.MSSQLServer, req *opsapi.MSSQLServerOpsRequest) error {
-
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
