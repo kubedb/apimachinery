@@ -94,12 +94,14 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for PerconaXtraDB are %s", req.Spec.Type, strings.Join(opsapi.PerconaXtraDBOpsRequestTypeNames(), ", ")))
 	}
-
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
 	var allErr field.ErrorList
-	var db dbapi.PerconaXtraDB
 	switch opsapi.PerconaXtraDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.PerconaXtraDBOpsRequestTypeRestart:
-		if err := w.hasDatabaseRef(req); err != nil {
+		if _, err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
 				req.Name,
 				err.Error()))
@@ -123,7 +125,7 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				err.Error()))
 		}
 	case opsapi.PerconaXtraDBOpsRequestTypeUpdateVersion:
-		if err := w.validatePerconaXtraDBUpgradeOpsRequest(&db, req); err != nil {
+		if err := w.validatePerconaXtraDBUpgradeOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -148,15 +150,15 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	return apierrors.NewInvalid(schema.GroupKind{Group: "PerconaXtraDBopsrequests.kubedb.com", Kind: "PerconaXtraDBOpsRequest"}, req.Name, allErr)
 }
 
-func (w *PerconaXtraDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PerconaXtraDBOpsRequest) error {
-	px := dbapi.PerconaXtraDB{}
+func (w *PerconaXtraDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PerconaXtraDBOpsRequest) (*dbapi.PerconaXtraDB, error) {
+	px := &dbapi.PerconaXtraDB{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &px); err != nil {
-		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+	}, px); err != nil {
+		return nil, errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
 	}
-	return nil
+	return px, nil
 }
 
 func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBOpsRequest(obj, oldObj runtime.Object) error {

@@ -23,6 +23,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
@@ -93,8 +94,10 @@ func (w *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.Pg
 	if validType, _ := arrays.Contains(opsapi.PgBouncerOpsRequestTypeNames(), string(obj.Spec.Type)); !validType {
 		return fmt.Errorf("defined OpsRequestType %s is not supported, supported types for PgBouncer are %s", obj.Spec.Type, strings.Join(opsapi.PgBouncerOpsRequestTypeNames(), ", "))
 	}
-	if !w.isDatabaseRefValid(obj) {
-		return fmt.Errorf("target database pgbouncer %s is not valid", obj.GetDBRefName())
+
+	db, err := w.hasDatabaseRef(obj)
+	if err != nil {
+		return err
 	}
 
 	var allErr field.ErrorList
@@ -104,7 +107,7 @@ func (w *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.Pg
 	case opsapi.PgBouncerOpsRequestTypeVerticalScaling:
 		return validatePgBouncerVerticalScalingOpsRequest(obj)
 	case opsapi.PgBouncerOpsRequestTypeUpdateVersion:
-		if err := validatePgBouncerUpdateVersionOpsRequest(obj, w.DefaultClient); err != nil {
+		if err := validatePgBouncerUpdateVersionOpsRequest(db, obj, w.DefaultClient); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				obj.Name,
 				err.Error()))
@@ -135,9 +138,15 @@ func validatePgBouncerOpsRequest(obj, oldObj runtime.Object) error {
 	return nil
 }
 
-func (w *PgBouncerOpsRequestCustomWebhook) isDatabaseRefValid(obj *opsapi.PgBouncerOpsRequest) bool {
-	_, err := getPgBouncer(w.DefaultClient, obj)
-	return err == nil
+func (w *PgBouncerOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PgBouncerOpsRequest) (*olddbapi.PgBouncer, error) {
+	db := &olddbapi.PgBouncer{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      req.GetDBRefName(),
+		Namespace: req.GetNamespace(),
+	}, db); err != nil {
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+	}
+	return db, nil
 }
 
 func getPgBouncer(client client.Client, opsReq *opsapi.PgBouncerOpsRequest) (*dbapi.PgBouncer, error) {
@@ -176,9 +185,8 @@ func validatePgBouncerVerticalScalingOpsRequest(req *opsapi.PgBouncerOpsRequest)
 	return nil
 }
 
-func validatePgBouncerUpdateVersionOpsRequest(req *opsapi.PgBouncerOpsRequest, client client.Client) error {
+func validatePgBouncerUpdateVersionOpsRequest(db *olddbapi.PgBouncer, req *opsapi.PgBouncerOpsRequest, client client.Client) error {
 	updateVersionSpec := req.Spec.UpdateVersion
-	var db dbapi.PgBouncer
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}

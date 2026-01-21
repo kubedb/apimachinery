@@ -110,11 +110,15 @@ func (w *PgpoolOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pgpoo
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Pgpool are %s", req.Spec.Type, strings.Join(opsapi.PgpoolOpsRequestTypeNames(), ", ")))
 	}
 
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
+
 	var allErr field.ErrorList
-	var db olddbapi.Pgpool
 	switch opsapi.PgpoolOpsRequestType(req.GetRequestType()) {
 	case opsapi.PgpoolOpsRequestTypeRestart:
-		if err := w.hasDatabaseRef(req); err != nil {
+		if _, err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
 				req.Name,
 				err.Error()))
@@ -138,7 +142,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pgpoo
 				err.Error()))
 		}
 	case opsapi.PgpoolOpsRequestTypeUpdateVersion:
-		if err := w.validatePgpoolUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := w.validatePgpoolUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -157,15 +161,15 @@ func (w *PgpoolOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pgpoo
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Pgpoolopsrequests.kubedb.com", Kind: "PgpoolOpsRequest"}, req.Name, allErr)
 }
 
-func (w *PgpoolOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PgpoolOpsRequest) error {
-	pgpool := olddbapi.Pgpool{}
+func (w *PgpoolOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PgpoolOpsRequest) (*olddbapi.Pgpool, error) {
+	pgpool := &olddbapi.Pgpool{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &pgpool); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+	}, pgpool); err != nil {
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return nil
+	return pgpool, nil
 }
 
 func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolVerticalScalingOpsRequest(req *opsapi.PgpoolOpsRequest) error {
@@ -173,7 +177,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolVerticalScalingOpsRequest(
 	if verticalScalingSpec == nil {
 		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
 	}
-	err := w.hasDatabaseRef(req)
+	_, err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -189,7 +193,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolHorizontalScalingOpsReques
 	if horizontalScalingSpec == nil {
 		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
 	}
-	err := w.hasDatabaseRef(req)
+	_, err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -207,7 +211,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(req 
 	if reconfigureSpec == nil {
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
-	err := w.hasDatabaseRef(req)
+	_, err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -240,7 +244,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolUpdateVersionOpsRequest(db
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
-	err = w.hasDatabaseRef(req)
+	_, err = w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -259,7 +263,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureTLSOpsRequest(r
 	if tls == nil {
 		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
 	}
-	err := w.hasDatabaseRef(req)
+	_, err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}

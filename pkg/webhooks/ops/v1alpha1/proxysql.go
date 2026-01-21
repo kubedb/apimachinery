@@ -107,11 +107,15 @@ func (w *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pro
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ProxySQL are %s", req.Spec.Type, strings.Join(opsapi.ProxySQLOpsRequestTypeNames(), ", ")))
 	}
 
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
+
 	var allErr field.ErrorList
-	var db dbapi.ProxySQL
 	switch opsapi.ProxySQLOpsRequestType(req.GetRequestType()) {
 	case opsapi.ProxySQLOpsRequestTypeRestart:
-		if err := w.hasDatabaseRef(req); err != nil {
+		if _, err := w.hasDatabaseRef(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
 				req.Name,
 				err.Error()))
@@ -135,7 +139,7 @@ func (w *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pro
 				err.Error()))
 		}
 	case opsapi.ProxySQLOpsRequestTypeUpdateVersion:
-		if err := w.validateProxySQLUpgradeOpsRequest(&db, req); err != nil {
+		if err := w.validateProxySQLUpgradeOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -154,15 +158,15 @@ func (w *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pro
 	return apierrors.NewInvalid(schema.GroupKind{Group: "ProxySQLopsrequests.kubedb.com", Kind: "ProxySQLOpsRequest"}, req.Name, allErr)
 }
 
-func (w *ProxySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ProxySQLOpsRequest) error {
-	prx := dbapi.ProxySQL{}
+func (w *ProxySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ProxySQLOpsRequest) (*dbapi.ProxySQL, error) {
+	prx := &dbapi.ProxySQL{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &prx); err != nil {
-		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+	}, prx); err != nil {
+		return nil, errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
 	}
-	return nil
+	return prx, nil
 }
 
 func (w *ProxySQLOpsRequestCustomWebhook) validateProxySQLUpgradeOpsRequest(db *dbapi.ProxySQL, req *opsapi.ProxySQLOpsRequest) error {
