@@ -59,10 +59,10 @@ type ConnectorSpec struct {
 	ConnectClusterRef *kmapi.ObjectReference `json:"connectClusterRef"`
 
 	// ConfigSecret is a required field to provide configuration file for Connector to create connectors for Kafka connect cluster(i.e connector.properties).
-	ConfigSecret *core.LocalObjectReference `json:"configSecret"`
-
 	// +optional
-	Configuration *dbapi.ConfigurationSpec `json:"configuration,omitempty"`
+	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
+
+	Configuration *dbapi.ConfigurationSpec `json:"configuration"`
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
