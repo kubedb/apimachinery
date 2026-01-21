@@ -28,7 +28,6 @@ import (
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -110,21 +109,15 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Singlestore are %s", req.Spec.Type, strings.Join(opsapi.SinglestoreOpsRequestTypeNames(), ", ")))
 	}
 
-	var allErr field.ErrorList
-	var db dbapi.Singlestore
-	pp := &dbapi.Singlestore{ObjectMeta: metav1.ObjectMeta{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}}
-	err := s.DefaultClient.Get(context.TODO(), client.ObjectKeyFromObject(pp), pp)
-	if err != nil && apierrors.IsNotFound(err) {
-		return fmt.Errorf("referenced database %s/%s is not found", req.Namespace, req.Spec.DatabaseRef.Name)
+	db, err := s.hasDatabaseRef(req)
+	if err != nil {
+		return err
 	}
+	var allErr field.ErrorList
 
 	switch opsapi.SinglestoreOpsRequestType(req.GetRequestType()) {
 	case opsapi.SinglestoreOpsRequestTypeRestart:
-		if _, err := s.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
+
 	case opsapi.SinglestoreOpsRequestTypeVerticalScaling:
 		if err := s.validateSinglestoreVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -156,7 +149,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.SinglestoreOpsRequestTypeUpdateVersion:
-		if err := s.validateSinglestoreUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := s.validateSinglestoreUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
