@@ -101,11 +101,6 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	var allErr field.ErrorList
 	switch opsapi.PerconaXtraDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.PerconaXtraDBOpsRequestTypeRestart:
-		if _, err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
 	case opsapi.PerconaXtraDBOpsRequestTypeVerticalScaling:
 		if err := w.validatePerconaXtraDBScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),

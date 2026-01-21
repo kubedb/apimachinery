@@ -23,7 +23,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
@@ -163,8 +163,8 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 	return apierrors.NewInvalid(schema.GroupKind{Group: "hazelcastopsrequests.kubedb.com", Kind: "HazelcastOpsRequest"}, req.Name, allErr)
 }
 
-func (w *HazelcastOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.HazelcastOpsRequest) (*dbapi.Hazelcast, error) {
-	hz := &dbapi.Hazelcast{}
+func (w *HazelcastOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.HazelcastOpsRequest) (*olddbapi.Hazelcast, error) {
+	hz := &olddbapi.Hazelcast{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
@@ -210,7 +210,7 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVolumeExpansionOpsRe
 	return nil
 }
 
-func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastUpdateVersionOpsRequest(db *dbapi.Hazelcast, req *opsapi.HazelcastOpsRequest) error {
+func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastUpdateVersionOpsRequest(db *olddbapi.Hazelcast, req *opsapi.HazelcastOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")

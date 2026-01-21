@@ -118,11 +118,6 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 	}
 	switch opsapi.MemcachedOpsRequestType(req.GetRequestType()) {
 	case opsapi.MemcachedOpsRequestTypeRestart:
-		if _, err := c.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
 	case opsapi.MemcachedOpsRequestTypeHorizontalScaling:
 		if err := c.validateMemcachedHorizontalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
@@ -224,9 +219,6 @@ func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedReconfigureTLSOpsReq
 	TLSSpec := req.Spec.TLS
 	if TLSSpec == nil {
 		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
-	}
-	if _, err := c.hasDatabaseRef(req); err != nil {
-		return err
 	}
 	configCount := 0
 	if req.Spec.TLS.Remove {

@@ -115,11 +115,6 @@ func (w *ProxySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pro
 	var allErr field.ErrorList
 	switch opsapi.ProxySQLOpsRequestType(req.GetRequestType()) {
 	case opsapi.ProxySQLOpsRequestTypeRestart:
-		if _, err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
 	case opsapi.ProxySQLOpsRequestTypeVerticalScaling:
 		if err := w.validateProxySQLScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),

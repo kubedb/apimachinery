@@ -23,7 +23,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
@@ -177,7 +177,7 @@ func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBHorizontalScalingOpsRe
 	return nil
 }
 
-func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBUpdateVersionOpsRequest(db *dbapi.FerretDB, req *opsapi.FerretDBOpsRequest) error {
+func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBUpdateVersionOpsRequest(db *olddbapi.FerretDB, req *opsapi.FerretDBOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
@@ -203,8 +203,8 @@ func (w *FerretDBOpsRequestCustomWebhook) validateFerretDBReconfigureTLSOpsReque
 	return nil
 }
 
-func (w *FerretDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.FerretDBOpsRequest) (*dbapi.FerretDB, error) {
-	db := &dbapi.FerretDB{}
+func (w *FerretDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.FerretDBOpsRequest) (*olddbapi.FerretDB, error) {
+	db := &olddbapi.FerretDB{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),

@@ -109,7 +109,7 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Solr are %s", req.Spec.Type, strings.Join(opsapi.SolrOpsRequestTypeNames(), ", ")))
 	}
-	_, err := w.hasDatabaseRef(req)
+	db, err := w.hasDatabaseRef(req)
 	if err != nil {
 		return err
 	}
@@ -127,7 +127,11 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 	case opsapi.SolrOpsRequestTypeReconfigure:
 
 	case opsapi.SolrOpsRequestTypeUpdateVersion:
-
+		if err := w.validateSolrUpdateVersionOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.SolrOpsRequestTypeVerticalScaling:
 		if err := w.validateSolrVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -157,29 +161,19 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 	if len(allErr) == 0 {
 		return nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "Solropsrequests.kubedb.com", Kind: "SolrOpsRequest"}, req.Name, allErr)
+	return apierrors.NewInvalid(schema.GroupKind{Group: "solropsrequests.kubedb.com", Kind: "SolrOpsRequest"}, req.Name, allErr)
 }
 
 func (w *SolrOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.SolrOpsRequest) (*olddbapi.Solr, error) {
 	db := &olddbapi.Solr{}
-	updateVersionSpec := req.Spec.UpdateVersion
-	if updateVersionSpec == nil {
-		return nil, errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
-	}
-
-	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindSolrVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
-	if err != nil {
-		return nil, err
-	}
-	if !yes {
-		return nil, fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
-	}
-	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, db); err != nil {
+	}, db)
+	if err != nil {
 		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
+
 	return db, nil
 }
 
@@ -265,6 +259,23 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrRotateAuthenticationOpsRequest
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (w *SolrOpsRequestCustomWebhook) validateSolrUpdateVersionOpsRequest(db *olddbapi.Solr, req *opsapi.SolrOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindSolrVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
 	return nil
