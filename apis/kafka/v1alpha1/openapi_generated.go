@@ -26874,13 +26874,14 @@ func schema_apimachinery_apis_kafka_v1alpha1_ConnectorSpec(ref common.ReferenceC
 					},
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret is a required field to provide configuration file for Connector to create connectors for Kafka connect cluster(i.e connector.properties).",
+							Description: "ConfigSecret is deprecated and will be removed in a future release. Use `configuration` instead.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec"),
+							Description: "Configuration is a required field to provide a configuration file for Connector to create connectors for Kafka connect cluster(i.e. connector.properties).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec"),
 						},
 					},
 					"deletionPolicy": {
