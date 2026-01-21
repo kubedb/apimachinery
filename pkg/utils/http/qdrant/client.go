@@ -83,7 +83,7 @@ func GetClusterResponse(
 		}
 
 		caPool := x509.NewCertPool()
-		if !caPool.AppendCertsFromPEM(caSecret.Data["ca.crt"]) {
+		if !caPool.AppendCertsFromPEM(caSecret.Data[kubedb.QdrantSecretKeyCACert]) {
 			return nil, fmt.Errorf("failed to append server CA cert")
 		}
 
@@ -91,7 +91,7 @@ func GetClusterResponse(
 			RootCAs: caPool,
 		}
 
-		if db.Spec.TLS.Client != nil && *db.Spec.TLS.Client {
+		if db.Spec.TLS.Client != nil {
 			clientSecret := &corev1.Secret{}
 			err := kc.Get(ctx, types.NamespacedName{
 				Name:      db.GetCertSecretName(api.QdrantClientCert),
@@ -102,8 +102,8 @@ func GetClusterResponse(
 			}
 
 			cert, err := tls.X509KeyPair(
-				clientSecret.Data["tls.crt"],
-				clientSecret.Data["tls.key"],
+				clientSecret.Data[kubedb.QdrantSecretKeyTLSCert],
+				clientSecret.Data[kubedb.QdrantSecretKeyTLSKey],
 			)
 			if err != nil {
 				return nil, fmt.Errorf("invalid client cert/key: %w", err)

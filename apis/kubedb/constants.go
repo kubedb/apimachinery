@@ -2240,6 +2240,16 @@ const (
 
 	QdrantAPIKey         = "api-key"
 	QdrantReadOnlyAPIKey = "read-only-api-key"
+
+	QdrantSecretKeyCACert  = "ca.crt"
+	QdrantSecretKeyTLSCert = "tls.crt"
+	QdrantSecretKeyTLSKey  = "tls.key"
+	QdrantServerCACertPath = "ca.pem"
+	QdrantServerCertPath   = "cert.pem"
+	QdrantServerKeyPath    = "key.pem"
+	QdrantClientCACertPath = "ca.crt"
+	QdrantClientCertPath   = "client.crt"
+	QdrantClientKeyPath    = "client.key"
 )
 
 // =========================== HanaDB Constants ============================
