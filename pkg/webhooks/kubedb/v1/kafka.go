@@ -256,6 +256,12 @@ func (w *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 		}
 	}
 
+	if err := w.validateTieredStorage(db); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tieredStorage"),
+			db.Name,
+			err.Error()))
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -381,6 +387,55 @@ func (w *KafkaCustomWebhook) validateVolumesMountPaths(podTemplate *ofstv2.PodTe
 					return errors.New("Can't use a reserve volume mount path name: " + rvmp)
 				}
 			}
+		}
+	}
+
+	return nil
+}
+
+func (w *KafkaCustomWebhook) validateTieredStorage(db *dbapi.Kafka) error {
+	ts := db.Spec.TieredStorage
+	if ts.Backend == nil {
+		return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend"),
+			db.Name,
+			"tieredStorage backend can not be nil")
+	}
+	if ts.S3 == nil && ts.GCS == nil && ts.Azure == nil && ts.Local == nil {
+		return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend"),
+			db.Name,
+			"at least one of the tieredStorage backend (s3, gcs, azure or local) must be configured")
+	}
+	if ts.S3 != nil {
+		if ts.S3.Bucket == "" {
+			return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend").Child("s3").Child("bucket"),
+				db.Name,
+				"s3.bucket can not be empty")
+		}
+		if ts.S3.Endpoint == "" {
+			return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend").Child("s3").Child("endpoint"),
+				db.Name,
+				"s3.endpoint can not be empty")
+		}
+	}
+	if ts.GCS != nil {
+		if ts.GCS.Bucket == "" {
+			return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend").Child("gcs").Child("bucket"),
+				db.Name,
+				"gcs.bucket can not be empty")
+		}
+	}
+	if ts.Azure != nil {
+		if ts.Azure.Container == "" {
+			return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend").Child("azure").Child("container"),
+				db.Name,
+				"azure.container can not be empty")
+		}
+	}
+	if ts.Local != nil {
+		if ts.Local.MountPath == "" {
+			return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend").Child("local").Child("mountPath"),
+				db.Name,
+				"local.mountPath can not be empty")
 		}
 	}
 

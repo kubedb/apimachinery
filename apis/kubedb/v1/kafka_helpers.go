@@ -423,6 +423,15 @@ func (k *Kafka) SetDefaults(kc client.Client) {
 		k.SetTLSDefaults()
 	}
 	k.SetHealthCheckerDefaults()
+
+	if k.Spec.TieredStorage != nil {
+		if k.Spec.TieredStorage.StorageManagerClassPath == "" {
+			k.Spec.TieredStorage.StorageManagerClassPath = fmt.Sprintf("%s/*", kubedb.KafkaTieredStoragePluginDir)
+		}
+		if k.Spec.TieredStorage.StorageManagerClassName == "" {
+			k.Spec.TieredStorage.StorageManagerClassName = kubedb.KafkaAivenTieredStorageClassName
+		}
+	}
 }
 
 func (k *Kafka) setDefaultContainerSecurityContext(kfVersion *catalog.KafkaVersion, podTemplate *ofst.PodTemplateSpec) {

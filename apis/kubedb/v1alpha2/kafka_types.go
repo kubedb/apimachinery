@@ -22,7 +22,6 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
-	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 )
 
 const (
@@ -68,8 +67,6 @@ type KafkaSpec struct {
 	// Kafka topology for node specification
 	// +optional
 	Topology *KafkaClusterTopology `json:"topology,omitempty"`
-
-	TieredStorage *KafkaTieredStorage `json:"tieredStorage,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -188,20 +185,6 @@ type KafkaStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
-}
-
-type KafkaTieredStorage struct {
-	// Backend is the storage backend to be used for tiered storage
-	*storageapi.Backend `json:",omitempty"`
-
-	// StorageManagerClassName is defined as the class name of the storage manager to be used for tiered storage
-	// It can be used your own custom storage manager class name
-	// +optional
-	StorageManagerClassName string `json:"storageManagerClassName,omitempty"`
-
-	// StorageManagerClassPath is defined as the class path of the storage manager to be used for tiered storage
-	// If you use your own custom storage manager class, you can specify the class path here
-	StorageManagerClassPath string `json:"storageManagerClassPath,omitempty"`
 }
 
 type KafkaCruiseControl struct {

@@ -1074,6 +1074,16 @@ const (
 	KafkaCCMetricReporter         = "com.linkedin.kafka.cruisecontrol.metricsreporter.CruiseControlMetricsReporter"
 	KafkaJMXMetricReporter        = "org.apache.kafka.common.metrics.JmxReporter"
 
+	// Kafka Tiered Storage Constants
+	KafkaAivenTieredStorageClassName      = "io.aiven.kafka.tieredstorage.RemoteStorageManager"
+	KafkaVolumeTieredStoragePlugins       = "tiered-plugins"
+	KafkaTieredStoragePluginDir           = "/opt/kafka/libs/tiered-plugins"
+	KafkaVolumeTieredStorageChunkCache    = "tiered-chunk-cache"
+	KafkaTieredStorageChunkCacheDir       = "/opt/kafka/tiered-storage/cache"
+	KafkaVolumeTieredStorageGCSCredential = "gcs-credential"
+	KafkaTieredStorageGCSCredentialDir    = "/etc/credentials"
+	KafkaVolumeTieredStorageLocalDir      = "tiered-local"
+
 	// =========================== Solr Constants ============================
 	SolrPortName          = "http"
 	SolrRestPort          = 8983
