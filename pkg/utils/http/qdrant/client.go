@@ -68,7 +68,7 @@ func GetClusterResponse(
 	address string,
 ) (*ClusterResponse, error) {
 	scheme := "http"
-	var transport *http.Transport
+	transport := http.DefaultTransport.(*http.Transport).Clone()
 
 	if db.Spec.TLS != nil {
 		scheme = "https"
