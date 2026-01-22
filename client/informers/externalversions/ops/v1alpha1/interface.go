@@ -72,6 +72,8 @@ type Interface interface {
 	SinglestoreOpsRequests() SinglestoreOpsRequestInformer
 	// SolrOpsRequests returns a SolrOpsRequestInformer.
 	SolrOpsRequests() SolrOpsRequestInformer
+	// WeaviateOpsRequests returns a WeaviateOpsRequestInformer.
+	WeaviateOpsRequests() WeaviateOpsRequestInformer
 	// ZooKeeperOpsRequests returns a ZooKeeperOpsRequestInformer.
 	ZooKeeperOpsRequests() ZooKeeperOpsRequestInformer
 }
@@ -205,6 +207,11 @@ func (v *version) SinglestoreOpsRequests() SinglestoreOpsRequestInformer {
 // SolrOpsRequests returns a SolrOpsRequestInformer.
 func (v *version) SolrOpsRequests() SolrOpsRequestInformer {
 	return &solrOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// WeaviateOpsRequests returns a WeaviateOpsRequestInformer.
+func (v *version) WeaviateOpsRequests() WeaviateOpsRequestInformer {
+	return &weaviateOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeeperOpsRequests returns a ZooKeeperOpsRequestInformer.
