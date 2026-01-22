@@ -133,6 +133,10 @@ func (c *FakeOpsV1alpha1) SolrOpsRequests(namespace string) v1alpha1.SolrOpsRequ
 	return &FakeSolrOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) WeaviateOpsRequests(namespace string) v1alpha1.WeaviateOpsRequestInterface {
+	return &FakeWeaviateOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) ZooKeeperOpsRequests(namespace string) v1alpha1.ZooKeeperOpsRequestInterface {
 	return &FakeZooKeeperOpsRequests{c, namespace}
 }

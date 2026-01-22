@@ -70,4 +70,6 @@ type SinglestoreOpsRequestExpansion interface{}
 
 type SolrOpsRequestExpansion interface{}
 
+type WeaviateOpsRequestExpansion interface{}
+
 type ZooKeeperOpsRequestExpansion interface{}
