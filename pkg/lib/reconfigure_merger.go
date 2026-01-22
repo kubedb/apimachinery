@@ -154,7 +154,7 @@ func (m *ReconfigureMerger) CheckIfAnyOpsRequestIsProgressing() bool {
 		}
 
 		// If any Reconfigure is Progressing (other than current), requeue current request
-		if req.GetStatus().Phase == opsapi.OpsRequestPhaseProgressing {
+		if req.GetStatus().Phase == opsapi.OpsRequestPhaseProgressing && m.currentOps.GetRequestType() == opsapi.Reconfigure && m.currentOps.GetName() != req.GetName() {
 			m.log.Info(fmt.Sprintf("A ops request %s/%s is already progressing for database %s",
 				req.GetObjectMeta().Namespace, req.GetObjectMeta().Name, req.GetDBRefName()))
 			return true
