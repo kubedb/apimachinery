@@ -16,6 +16,7 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -28,6 +29,7 @@ import (
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -187,11 +189,34 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindMySQLVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	var cur catalog.MySQLVersion
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &cur)
 	if err != nil {
 		return err
 	}
-	if !yes {
+
+	var versions unstructured.UnstructuredList
+	versions.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   catalog.SchemeGroupVersion.Group,
+		Version: catalog.SchemeGroupVersion.Version,
+		Kind:    catalog.ResourceKindMySQLVersion,
+	})
+
+	var list []string
+	if db.Spec.Topology != nil {
+		if db.Spec.Topology.Mode != nil && *db.Spec.Topology.Mode == dbapi.MySQLModeGroupReplication {
+			list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
+		if err != nil {
+			return err
+		}
+	}
+	if !slices.Contains(list, updateVersionSpec.TargetVersion) {
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
