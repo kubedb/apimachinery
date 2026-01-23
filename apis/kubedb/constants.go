@@ -151,7 +151,9 @@ const (
 	ElasticsearchVolumeData                      = "data"
 	ElasticsearchVolumeTemp                      = "temp"
 	ElasticsearchConfigFileName                  = "elasticsearch.yml"
-	ElasticsearchScriptFileName                  = "config-merger.sh"
+	ElasticsearchScriptFileName                  = "startup.sh"
+	ElasticsearchVolumeScriptFileName            = "startup-script"
+	ElasticsearchVolumeScriptDir                 = "/script"
 
 	// Ref:
 	//	- https://www.elastic.co/guide/en/elasticsearch/reference/7.6/heap-size.html#heap-size
