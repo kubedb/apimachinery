@@ -395,6 +395,9 @@ func (w *KafkaCustomWebhook) validateVolumesMountPaths(podTemplate *ofstv2.PodTe
 
 func (w *KafkaCustomWebhook) validateTieredStorage(db *dbapi.Kafka) error {
 	ts := db.Spec.TieredStorage
+	if ts == nil {
+		return nil
+	}
 	if ts.Backend == nil {
 		return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend"),
 			db.Name,
