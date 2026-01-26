@@ -33,11 +33,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+type ConvertFunc func(u *unstructured.Unstructured) (opsapi.Accessor, error)
+
 type OpsRequestController struct {
 	ParallelCtrl map[string]*ParallelismController
 	Mux          sync.Mutex
-	KBClient     client.Client
+	kbClient     client.Client
 	Kind         string
+
+	convertFn ConvertFunc
 }
 
 type ParallelismController struct {
@@ -45,12 +49,13 @@ type ParallelismController struct {
 	*sync.Mutex
 }
 
-func NewOpsRequestController(kbClient client.Client, kind string) *OpsRequestController {
+func NewOpsRequestController(kbClient client.Client, kind string, convertFunc ConvertFunc) *OpsRequestController {
 	return &OpsRequestController{
 		ParallelCtrl: make(map[string]*ParallelismController),
 		Mux:          sync.Mutex{},
-		KBClient:     kbClient,
+		kbClient:     kbClient,
 		Kind:         kind,
+		convertFn:    convertFunc,
 	}
 }
 
@@ -125,30 +130,25 @@ func (c *OpsRequestController) ShouldProceed(key, conditionType string) bool {
 }
 
 func (c *OpsRequestController) IsCompleted(key, conditionType string) bool {
-	var ops opsapi.Accessor
-	err := c.getObjectFromKey(key, ops)
-	if kerr.IsNotFound(err) || ops.GetDeletionTimestamp() != nil {
+	ops, err := c.getOpsObjFromKey(key)
+
+	if kerr.IsNotFound(err) || (ops != nil && ops.GetDeletionTimestamp() != nil) {
 		return true
 	}
 	if err != nil {
 		return false
 	}
+
 	return cutil.IsConditionTrue(ops.GetStatus().Conditions, conditionType) || cutil.IsConditionTrue(ops.GetStatus().Conditions, opsapi.Successful) ||
 		ops.GetStatus().Phase == opsapi.OpsRequestPhaseSuccessful || ops.GetStatus().Phase == opsapi.OpsRequestPhaseFailed ||
 		ops.GetStatus().Phase == opsapi.OpsRequestPhaseSkipped
 }
 
-func (c *OpsRequestController) getObjectFromKey(key string, object client.Object) error {
-	if object == nil {
-		return fmt.Errorf("object is nil")
-	}
+func (c *OpsRequestController) getOpsObjFromKey(key string) (opsapi.Accessor, error) {
 	namespace, name, err := cache.SplitMetaNamespaceKey(key)
 	if err != nil {
-		return err
+		return nil, err
 	}
-
-	obectKey := types.NamespacedName{Name: name, Namespace: namespace}
-	err = c.KBClient.Get(context.TODO(), obectKey, object)
 
 	uns := &unstructured.Unstructured{}
 	uns.SetGroupVersionKind(schema.GroupVersionKind{
@@ -157,9 +157,18 @@ func (c *OpsRequestController) getObjectFromKey(key string, object client.Object
 		Kind:    c.Kind,
 	})
 
-	err = c.KBClient.Get(context.TODO(), types.NamespacedName{
+	err = c.kbClient.Get(context.TODO(), types.NamespacedName{
 		Namespace: namespace,
 		Name:      name,
 	}, uns)
-	return err
+	if err != nil {
+		return nil, err
+	}
+
+	var object opsapi.Accessor
+	object, err = c.convertFn(uns)
+	if err != nil {
+		return nil, fmt.Errorf("failed to convert unstructured to %s: %v", c.Kind, err)
+	}
+	return object, err
 }
