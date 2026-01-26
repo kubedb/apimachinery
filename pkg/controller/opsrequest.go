@@ -47,13 +47,13 @@ type ParallelismController struct {
 	*sync.Mutex
 }
 
-func NewOpsRequestController(kbClient client.Client, kind string, scm *runtime.Scheme) *OpsRequestController {
+func NewOpsRequestController(kbClient client.Client, kind string) *OpsRequestController {
 	return &OpsRequestController{
 		parallelCtrl: make(map[string]*ParallelismController),
 		mux:          sync.Mutex{},
 		kbClient:     kbClient,
 		kind:         kind,
-		scheme:       scm,
+		scheme:       kbClient.Scheme(),
 	}
 }
 
