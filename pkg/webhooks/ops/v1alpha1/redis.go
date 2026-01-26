@@ -123,17 +123,17 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Redis are %s", req.Spec.Type, strings.Join(opsapi.RedisOpsRequestTypeNames(), ", ")))
 	}
 
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
 	var allErr field.ErrorList
-	var db dbapi.Redis
+
 	switch opsapi.RedisOpsRequestType(req.GetRequestType()) {
 	case opsapi.RedisOpsRequestTypeRestart:
-		if err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
+
 	case opsapi.RedisOpsRequestTypeHorizontalScaling:
-		if err := w.validateRedisHorizontalScalingOpsRequest(&db, req); err != nil {
+		if err := w.validateRedisHorizontalScalingOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
@@ -151,7 +151,7 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 				err.Error()))
 		}
 	case opsapi.RedisOpsRequestTypeUpdateVersion:
-		if err := w.validateRedisUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := w.validateRedisUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -412,15 +412,15 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisAnnounceOpsRequest(req *opsa
 	return nil
 }
 
-func (w *RedisOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RedisOpsRequest) error {
-	redis := dbapi.Redis{}
+func (w *RedisOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RedisOpsRequest) (*dbapi.Redis, error) {
+	redis := &dbapi.Redis{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &redis); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+	}, redis); err != nil {
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return nil
+	return redis, nil
 }
 
 func (w *RedisOpsRequestCustomWebhook) validateRedisVerticalScalingOpsRequest(req *opsapi.RedisOpsRequest) error {
@@ -428,10 +428,7 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisVerticalScalingOpsRequest(re
 	if verticalScalingSpec == nil {
 		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
 	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
+
 	if verticalScalingSpec.Redis == nil && verticalScalingSpec.Exporter == nil && verticalScalingSpec.Coordinator == nil {
 		return errors.New("at least one of `spec.verticalScaling.redis`, `spec.verticalScaling.exporter`, or `spec.verticalScaling.coordinator` must be specified")
 	}
@@ -465,10 +462,6 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisReconfigureTLSOpsRequest(req
 	tls := req.Spec.TLS
 	if tls == nil {
 		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
-	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
 	}
 
 	configCount := 0
