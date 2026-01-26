@@ -26,6 +26,7 @@ import (
 
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/cache"
@@ -33,15 +34,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type ConvertFunc func(u *unstructured.Unstructured) (opsapi.Accessor, error)
-
 type OpsRequestController struct {
-	ParallelCtrl map[string]*ParallelismController
-	Mux          sync.Mutex
+	parallelCtrl map[string]*ParallelismController
+	mux          sync.Mutex
 	kbClient     client.Client
-	Kind         string
-
-	convertFn ConvertFunc
+	kind         string
+	scheme       *runtime.Scheme
 }
 
 type ParallelismController struct {
@@ -49,44 +47,44 @@ type ParallelismController struct {
 	*sync.Mutex
 }
 
-func NewOpsRequestController(kbClient client.Client, kind string, convertFunc ConvertFunc) *OpsRequestController {
+func NewOpsRequestController(kbClient client.Client, kind string, scm *runtime.Scheme) *OpsRequestController {
 	return &OpsRequestController{
-		ParallelCtrl: make(map[string]*ParallelismController),
-		Mux:          sync.Mutex{},
+		parallelCtrl: make(map[string]*ParallelismController),
+		mux:          sync.Mutex{},
 		kbClient:     kbClient,
-		Kind:         kind,
-		convertFn:    convertFunc,
+		kind:         kind,
+		scheme:       scm,
 	}
 }
 
 func (c *OpsRequestController) KeyExists(key string) bool {
-	c.Mux.Lock()
-	defer c.Mux.Unlock()
-	_, ok := c.ParallelCtrl[key]
+	c.mux.Lock()
+	defer c.mux.Unlock()
+	_, ok := c.parallelCtrl[key]
 	return ok
 }
 
 func (c *OpsRequestController) GetParallelismController(key string) *ParallelismController {
-	c.Mux.Lock()
-	defer c.Mux.Unlock()
+	c.mux.Lock()
+	defer c.mux.Unlock()
 
-	return c.ParallelCtrl[key]
+	return c.parallelCtrl[key]
 }
 
 func (c *OpsRequestController) SetParallelismController(key string, cancelFunc *context.CancelFunc) {
-	c.Mux.Lock()
-	defer c.Mux.Unlock()
-	c.ParallelCtrl[key] = &ParallelismController{cancelContext: cancelFunc, Mutex: &sync.Mutex{}}
+	c.mux.Lock()
+	defer c.mux.Unlock()
+	c.parallelCtrl[key] = &ParallelismController{cancelContext: cancelFunc, Mutex: &sync.Mutex{}}
 }
 
 func (c *OpsRequestController) DeleteParallelismController(key string) {
-	c.Mux.Lock()
-	defer c.Mux.Unlock()
-	if c.ParallelCtrl[key] != nil {
-		if c.ParallelCtrl[key].cancelContext != nil {
-			(*c.ParallelCtrl[key].cancelContext)()
+	c.mux.Lock()
+	defer c.mux.Unlock()
+	if c.parallelCtrl[key] != nil {
+		if c.parallelCtrl[key].cancelContext != nil {
+			(*c.parallelCtrl[key].cancelContext)()
 		}
-		delete(c.ParallelCtrl, key)
+		delete(c.parallelCtrl, key)
 	}
 }
 
@@ -95,8 +93,8 @@ func (c *OpsRequestController) RemoveCancelFunc(key string) {
 	if pCtrl == nil {
 		return
 	}
-	c.Mux.Lock()
-	defer c.Mux.Unlock()
+	c.mux.Lock()
+	defer c.mux.Unlock()
 	if pCtrl.cancelContext != nil {
 		(*pCtrl.cancelContext)()
 		pCtrl.cancelContext = nil
@@ -154,7 +152,7 @@ func (c *OpsRequestController) getOpsObjFromKey(key string) (opsapi.Accessor, er
 	uns.SetGroupVersionKind(schema.GroupVersionKind{
 		Group:   "ops.kubedb.com",
 		Version: "v1alpha1",
-		Kind:    c.Kind,
+		Kind:    c.kind,
 	})
 
 	err = c.kbClient.Get(context.TODO(), types.NamespacedName{
@@ -165,10 +163,33 @@ func (c *OpsRequestController) getOpsObjFromKey(key string) (opsapi.Accessor, er
 		return nil, err
 	}
 
-	var object opsapi.Accessor
-	object, err = c.convertFn(uns)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert unstructured to %s: %v", c.Kind, err)
+	return c.unstructuredToOpsAccessor(uns)
+}
+
+func (c *OpsRequestController) unstructuredToOpsAccessor(u *unstructured.Unstructured) (opsapi.Accessor, error) {
+	if u == nil {
+		return nil, fmt.Errorf("unstructured object is nil")
 	}
-	return object, err
+
+	gvk := u.GroupVersionKind()
+	obj, err := c.scheme.New(gvk)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create object for GVK %v: %w", gvk, err)
+	}
+
+	// Convert unstructured -> typed
+	if err := runtime.DefaultUnstructuredConverter.FromUnstructured(
+		u.Object,
+		obj,
+	); err != nil {
+		return nil, fmt.Errorf("failed to convert unstructured to %v: %w", gvk, err)
+	}
+
+	// Ensure it implements Accessor
+	accessor, ok := obj.(opsapi.Accessor)
+	if !ok {
+		return nil, fmt.Errorf("object %T does not implement opsapi.Accessor", obj)
+	}
+
+	return accessor, nil
 }
