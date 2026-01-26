@@ -53,7 +53,7 @@ func (r MSSQLServer) ResourceCalculator() api.ResourceCalculator {
 	}
 }
 
-func (r MSSQLServer) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
+func (r MSSQLServer) roleReplicasFn(obj map[string]any) (api.ReplicaList, error) {
 	replicas, found, err := unstructured.NestedInt64(obj, "spec", "replicas")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read spec.replicas %v: %w", obj, err)
@@ -64,7 +64,7 @@ func (r MSSQLServer) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList
 	return api.ReplicaList{api.PodRoleDefault: replicas}, nil
 }
 
-func (r MSSQLServer) modeFn(obj map[string]interface{}) (string, error) {
+func (r MSSQLServer) modeFn(obj map[string]any) (string, error) {
 	mode, found, err := unstructured.NestedString(obj, "spec", "topology", "mode")
 	if err != nil {
 		return "", err
@@ -75,7 +75,7 @@ func (r MSSQLServer) modeFn(obj map[string]interface{}) (string, error) {
 	return DBModeStandalone, nil
 }
 
-func (r MSSQLServer) usesTLSFn(obj map[string]interface{}) (bool, error) {
+func (r MSSQLServer) usesTLSFn(obj map[string]any) (bool, error) {
 	enabled, found, err := unstructured.NestedBool(obj, "spec", "tls", "clientTLS")
 	if err != nil {
 		return false, err
@@ -87,8 +87,8 @@ func (r MSSQLServer) usesTLSFn(obj map[string]interface{}) (bool, error) {
 	return false, nil
 }
 
-func (r MSSQLServer) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
-	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
+func (r MSSQLServer) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]any) (map[api.PodRole]api.PodInfo, error) {
+	return func(obj map[string]any) (map[api.PodRole]api.PodInfo, error) {
 		container, replicas, err := api.AppNodeResourcesV2(obj, fn, MSSQLServerContainerName, "spec")
 		if err != nil {
 			return nil, err

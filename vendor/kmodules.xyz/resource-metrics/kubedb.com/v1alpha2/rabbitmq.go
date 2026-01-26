@@ -53,7 +53,7 @@ func (r RabbitMQ) ResourceCalculator() api.ResourceCalculator {
 	}
 }
 
-func (r RabbitMQ) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
+func (r RabbitMQ) roleReplicasFn(obj map[string]any) (api.ReplicaList, error) {
 	replicas, found, err := unstructured.NestedInt64(obj, "spec", "replicas")
 	if err != nil {
 		return nil, fmt.Errorf("failed to read spec.replicas %v: %w", obj, err)
@@ -64,7 +64,7 @@ func (r RabbitMQ) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, e
 	return api.ReplicaList{api.PodRoleDefault: replicas}, nil
 }
 
-func (r RabbitMQ) modeFn(obj map[string]interface{}) (string, error) {
+func (r RabbitMQ) modeFn(obj map[string]any) (string, error) {
 	replicas, _, err := unstructured.NestedInt64(obj, "spec", "replicas")
 	if err != nil {
 		return "", err
@@ -75,13 +75,13 @@ func (r RabbitMQ) modeFn(obj map[string]interface{}) (string, error) {
 	return DBModeStandalone, nil
 }
 
-func (r RabbitMQ) usesTLSFn(obj map[string]interface{}) (bool, error) {
+func (r RabbitMQ) usesTLSFn(obj map[string]any) (bool, error) {
 	_, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "tls")
 	return found, err
 }
 
-func (r RabbitMQ) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
-	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
+func (r RabbitMQ) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]any) (map[api.PodRole]api.PodInfo, error) {
+	return func(obj map[string]any) (map[api.PodRole]api.PodInfo, error) {
 		container, replicas, err := api.AppNodeResourcesV2(obj, fn, RabbitMQContainerName, "spec")
 		if err != nil {
 			return nil, err

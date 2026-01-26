@@ -19,12 +19,126 @@ limitations under the License.
 package fake
 
 import (
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
+
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )
 
 type FakeUiV1alpha1 struct {
 	*testing.Fake
+}
+
+func (c *FakeUiV1alpha1) DatabaseConnections(namespace string) v1alpha1.DatabaseConnectionInterface {
+	return &FakeDatabaseConnections{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) DatabaseInfos() v1alpha1.DatabaseInfoInterface {
+	return &FakeDatabaseInfos{c}
+}
+
+func (c *FakeUiV1alpha1) ElasticsearchInsights(namespace string) v1alpha1.ElasticsearchInsightInterface {
+	return &FakeElasticsearchInsights{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) ElasticsearchNodesStatses(namespace string) v1alpha1.ElasticsearchNodesStatsInterface {
+	return &FakeElasticsearchNodesStatses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) ElasticsearchSchemaOverviews(namespace string) v1alpha1.ElasticsearchSchemaOverviewInterface {
+	return &FakeElasticsearchSchemaOverviews{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) MariaDBInsights(namespace string) v1alpha1.MariaDBInsightInterface {
+	return &FakeMariaDBInsights{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) MariaDBQuerieses(namespace string) v1alpha1.MariaDBQueriesInterface {
+	return &FakeMariaDBQuerieses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) MariaDBSchemaOverviews(namespace string) v1alpha1.MariaDBSchemaOverviewInterface {
+	return &FakeMariaDBSchemaOverviews{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) MongoDBInsights(namespace string) v1alpha1.MongoDBInsightInterface {
+	return &FakeMongoDBInsights{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) MongoDBQuerieses(namespace string) v1alpha1.MongoDBQueriesInterface {
+	return &FakeMongoDBQuerieses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) MongoDBSchemaOverviews(namespace string) v1alpha1.MongoDBSchemaOverviewInterface {
+	return &FakeMongoDBSchemaOverviews{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) MySQLInsights(namespace string) v1alpha1.MySQLInsightInterface {
+	return &FakeMySQLInsights{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) MySQLQuerieses(namespace string) v1alpha1.MySQLQueriesInterface {
+	return &FakeMySQLQuerieses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) MySQLSchemaOverviews(namespace string) v1alpha1.MySQLSchemaOverviewInterface {
+	return &FakeMySQLSchemaOverviews{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) PgBouncerInsights(namespace string) v1alpha1.PgBouncerInsightInterface {
+	return &FakePgBouncerInsights{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) PgBouncerPoolOverviews(namespace string) v1alpha1.PgBouncerPoolOverviewInterface {
+	return &FakePgBouncerPoolOverviews{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) PgBouncerServerOverviews(namespace string) v1alpha1.PgBouncerServerOverviewInterface {
+	return &FakePgBouncerServerOverviews{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) PgBouncerSettingses(namespace string) v1alpha1.PgBouncerSettingsInterface {
+	return &FakePgBouncerSettingses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) PostgresInsights(namespace string) v1alpha1.PostgresInsightInterface {
+	return &FakePostgresInsights{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) PostgresQuerieses(namespace string) v1alpha1.PostgresQueriesInterface {
+	return &FakePostgresQuerieses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) PostgresSchemaOverviews(namespace string) v1alpha1.PostgresSchemaOverviewInterface {
+	return &FakePostgresSchemaOverviews{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) PostgresSettingses(namespace string) v1alpha1.PostgresSettingsInterface {
+	return &FakePostgresSettingses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) ProxySQLInsights(namespace string) v1alpha1.ProxySQLInsightInterface {
+	return &FakeProxySQLInsights{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) ProxySQLQuerieses(namespace string) v1alpha1.ProxySQLQueriesInterface {
+	return &FakeProxySQLQuerieses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) ProxySQLSettingses(namespace string) v1alpha1.ProxySQLSettingsInterface {
+	return &FakeProxySQLSettingses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) RedisInsights(namespace string) v1alpha1.RedisInsightInterface {
+	return &FakeRedisInsights{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) RedisQuerieses(namespace string) v1alpha1.RedisQueriesInterface {
+	return &FakeRedisQuerieses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) RedisSchemaOverviews(namespace string) v1alpha1.RedisSchemaOverviewInterface {
+	return &FakeRedisSchemaOverviews{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

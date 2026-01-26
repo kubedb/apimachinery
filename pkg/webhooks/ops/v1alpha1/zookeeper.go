@@ -23,7 +23,6 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -110,15 +109,18 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ZooKeeper are %s", req.Spec.Type, strings.Join(opsapi.ZooKeeperOpsRequestTypeNames(), ", ")))
 	}
-	if err := z.hasDatabaseRef(req); err != nil {
-		return err
+	var (
+		zookeeper *dbapi.ZooKeeper
+		err       error
+	)
+	if zookeeper, err = z.hasDatabaseRef(req); err != nil {
+		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
 	}
 
 	var allErr field.ErrorList
-	var db dbapi.ZooKeeper
-	switch req.GetRequestType().(opsapi.ZooKeeperOpsRequestType) {
+	switch opsapi.ZooKeeperOpsRequestType(req.GetRequestType()) {
 	case opsapi.ZooKeeperOpsRequestTypeUpdateVersion:
-		if err := z.validateZooKeeperUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := z.validateZooKeeperUpdateVersionOpsRequest(zookeeper, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -155,15 +157,15 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 	return apierrors.NewInvalid(schema.GroupKind{Group: "ZooKeeperopsrequests.kubedb.com", Kind: "ZooKeeperOpsRequest"}, req.Name, allErr)
 }
 
-func (z *ZooKeeperOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ZooKeeperOpsRequest) error {
-	sdb := dbapi.ZooKeeper{}
+func (z *ZooKeeperOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ZooKeeperOpsRequest) (*dbapi.ZooKeeper, error) {
+	zk := dbapi.ZooKeeper{}
 	if err := z.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &sdb); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+	}, &zk); err != nil {
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return nil
+	return &zk, nil
 }
 
 func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVerticalScalingOpsRequest(req *opsapi.ZooKeeperOpsRequest) error {
@@ -220,15 +222,8 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperReconfigureOpsReques
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if applyConfigExists(req.Spec.Configuration.ApplyConfig) {
-		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.ZooKeeperConfigFileName]
-		if !ok {
-			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.ZooKeeperConfigFileName)
-		}
-	}
-
-	if req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret != nil {
-		return errors.New("can not use `spec.configuration.removeCustomConfig` and `spec.configuration.configSecret` is not supported together")
+	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && req.Spec.Configuration.ApplyConfig == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
 	return nil

@@ -25,6 +25,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -162,10 +163,17 @@ func (w *Neo4jCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Neo4j) error {
 		}
 	}
 
-	if db.Spec.ConfigSecret != nil && db.Spec.ConfigSecret.Name == "" {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configSecret").Child("name"),
-			db.GetName(),
-			"ConfigSecret Name can not be empty"))
+	if db.Spec.Configuration != nil && db.Spec.Configuration.SecretName != "" {
+		configSecret := &core.Secret{}
+		err := w.DefaultClient.Get(context.TODO(), client.ObjectKey{
+			Name:      db.Spec.Configuration.SecretName,
+			Namespace: db.Namespace,
+		}, configSecret)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
+				db.GetName(),
+				"failed to get ConfigSecret"))
+		}
 	}
 
 	if len(allErr) == 0 {

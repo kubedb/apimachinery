@@ -111,15 +111,15 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MSSQLServer are %s", req.Spec.Type, strings.Join(opsapi.MSSQLServerOpsRequestTypeNames(), ", ")))
 	}
 
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
+	}
+
 	var allErr field.ErrorList
-	var db olddbapi.MSSQLServer
-	switch req.GetRequestType().(opsapi.MSSQLServerOpsRequestType) {
+	switch opsapi.MSSQLServerOpsRequestType(req.GetRequestType()) {
 	case opsapi.MSSQLServerOpsRequestTypeRestart:
-		if err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
+
 	case opsapi.MSSQLServerOpsRequestTypeVerticalScaling:
 		if err := w.validateMSSQLServerVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -145,7 +145,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.MSSQLServerOpsRequestTypeUpdateVersion:
-		if err := w.validateMSSQLServerUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := w.validateMSSQLServerUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -157,7 +157,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.MSSQLServerOpsRequestTypeRotateAuth:
-		if err := w.validateMSSQLServerRotateAuthenticationOpsRequest(req); err != nil {
+		if err := w.validateMSSQLServerRotateAuthenticationOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
@@ -171,15 +171,15 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	return apierrors.NewInvalid(schema.GroupKind{Group: "MSSQLServeropsrequests.kubedb.com", Kind: "MSSQLServerOpsRequest"}, req.Name, allErr)
 }
 
-func (w *MSSQLServerOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MSSQLServerOpsRequest) error {
-	mssqlserver := olddbapi.MSSQLServer{}
+func (w *MSSQLServerOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MSSQLServerOpsRequest) (*olddbapi.MSSQLServer, error) {
+	mssqlserver := &olddbapi.MSSQLServer{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &mssqlserver); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+	}, mssqlserver); err != nil {
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return nil
+	return mssqlserver, nil
 }
 
 func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVerticalScalingOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
@@ -187,10 +187,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVerticalScalingO
 	if verticalScalingSpec == nil {
 		return errors.New("`spec.verticalScaling` is nil. Not supported in VerticalScaling type")
 	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
+
 	if verticalScalingSpec.MSSQLServer == nil {
 		return fmt.Errorf("`spec.verticalScaling.mssqlserver` can't be nil in vertical scaling ops request")
 	}
@@ -203,13 +200,6 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVolumeExpansionO
 	if volumeExpansionSpec == nil {
 		return fmt.Errorf("spec.volumeExpansion is nil, not supported in VolumeExpansion type")
 	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
-	if volumeExpansionSpec.MSSQLServer == nil {
-		return fmt.Errorf("spec.volumeExpansion.mssqlserver is nil, not supported in VolumeExpansion type")
-	}
 
 	return nil
 }
@@ -219,10 +209,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerHorizontalScalin
 	if horizontalScalingSpec == nil {
 		return fmt.Errorf("`spec.horizontalScaling` is nil. Not supported in HorizontalScaling type")
 	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
+
 	if horizontalScalingSpec.Replicas == nil {
 		return fmt.Errorf("`spec.horizontalScaling.replicas` can't be nil in HorizontalScaling ops request")
 	}
@@ -238,13 +225,12 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 		return fmt.Errorf("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && req.Spec.Configuration.ApplyConfig == nil {
+		return fmt.Errorf("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
 	// Validate ConfigSecret exists if provided and has the required config file
-	if reconfigureSpec.ConfigSecret != nil {
+	if reconfigureSpec.ConfigSecret != nil && reconfigureSpec.ConfigSecret.Name != "" {
 		var secret core.Secret
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      reconfigureSpec.ConfigSecret.Name,
@@ -268,11 +254,6 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureOpsRe
 		if !ok {
 			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.MSSQLConfigKey)
 		}
-	}
-
-	// Add validation to not allow both RemoveCustomConfig and ConfigSecret together
-	if req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret != nil {
-		return fmt.Errorf("`spec.configuration.removeCustomConfig` and `spec.configuration.configSecret` is not supported together")
 	}
 
 	return nil
@@ -300,10 +281,6 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureTLSOp
 	if tls == nil {
 		return fmt.Errorf("`spec.tls` nil not supported in ReconfigureTLS type")
 	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
 
 	configCount := 0
 	if req.Spec.TLS.Remove {
@@ -327,15 +304,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerReconfigureTLSOp
 	return nil
 }
 
-func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerRotateAuthenticationOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
-	db := &olddbapi.MSSQLServer{}
-	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name:      req.GetDBRefName(),
-		Namespace: req.GetNamespace(),
-	}, db); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
-	}
-
+func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerRotateAuthenticationOpsRequest(db *olddbapi.MSSQLServer, req *opsapi.MSSQLServerOpsRequest) error {
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {

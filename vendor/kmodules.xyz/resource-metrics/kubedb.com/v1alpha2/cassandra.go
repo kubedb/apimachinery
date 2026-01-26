@@ -54,7 +54,7 @@ func (r Cassandra) ResourceCalculator() api.ResourceCalculator {
 	}
 }
 
-func (r Cassandra) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, error) {
+func (r Cassandra) roleReplicasFn(obj map[string]any) (api.ReplicaList, error) {
 	result := api.ReplicaList{}
 	topology, found, err := unstructured.NestedMap(obj, "spec", "topology")
 	if err != nil {
@@ -70,7 +70,7 @@ func (r Cassandra) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, 
 
 		for _, rack := range racks {
 
-			replica, _, err := unstructured.NestedInt64(rack.(map[string]interface{}), "replicas")
+			replica, _, err := unstructured.NestedInt64(rack.(map[string]any), "replicas")
 			if err != nil {
 				return nil, err
 			}
@@ -93,7 +93,7 @@ func (r Cassandra) roleReplicasFn(obj map[string]interface{}) (api.ReplicaList, 
 	return result, nil
 }
 
-func (r Cassandra) modeFn(obj map[string]interface{}) (string, error) {
+func (r Cassandra) modeFn(obj map[string]any) (string, error) {
 	topology, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "topology")
 	if err != nil {
 		return "", err
@@ -104,13 +104,13 @@ func (r Cassandra) modeFn(obj map[string]interface{}) (string, error) {
 	return DBModeStandalone, nil
 }
 
-func (r Cassandra) usesTLSFn(obj map[string]interface{}) (bool, error) {
+func (r Cassandra) usesTLSFn(obj map[string]any) (bool, error) {
 	_, found, err := unstructured.NestedFieldNoCopy(obj, "spec", "tls")
 	return found, err
 }
 
-func (r Cassandra) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
-	return func(obj map[string]interface{}) (map[api.PodRole]api.PodInfo, error) {
+func (r Cassandra) roleResourceFn(fn func(rr core.ResourceRequirements) core.ResourceList) func(obj map[string]any) (map[api.PodRole]api.PodInfo, error) {
+	return func(obj map[string]any) (map[api.PodRole]api.PodInfo, error) {
 		exporter, err := api.ContainerResources(obj, fn, "spec", "monitor", "prometheus", "exporter")
 		if err != nil {
 			return nil, err
@@ -128,7 +128,7 @@ func (r Cassandra) roleResourceFn(fn func(rr core.ResourceRequirements) core.Res
 			var totalReplicas int64 = 0
 			var totalRes core.ResourceList
 			for i, c := range racks {
-				rack := c.(map[string]interface{})
+				rack := c.(map[string]any)
 
 				cRes, cReplicas, err := api.AppNodeResourcesV2(rack, fn, CassandraContainerName)
 				if err != nil {

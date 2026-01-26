@@ -112,14 +112,12 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 	}
 
 	var allErr field.ErrorList
-	var db olddbapi.Memcached
-	switch req.GetRequestType().(opsapi.MemcachedOpsRequestType) {
+	db, err := c.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
+	switch opsapi.MemcachedOpsRequestType(req.GetRequestType()) {
 	case opsapi.MemcachedOpsRequestTypeRestart:
-		if err := c.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
 	case opsapi.MemcachedOpsRequestTypeHorizontalScaling:
 		if err := c.validateMemcachedHorizontalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
@@ -139,7 +137,7 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 				err.Error()))
 		}
 	case opsapi.MemcachedOpsRequestTypeUpdateVersion:
-		if err := c.validateMemcachedUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := c.validateMemcachedUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -165,15 +163,15 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Memcachedopsrequests.kubedb.com", Kind: "MemcachedOpsRequest"}, req.Name, allErr)
 }
 
-func (c *MemcachedOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MemcachedOpsRequest) error {
-	db := olddbapi.Memcached{}
+func (c *MemcachedOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MemcachedOpsRequest) (*olddbapi.Memcached, error) {
+	db := &olddbapi.Memcached{}
 	if err := c.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &db); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+	}, db); err != nil {
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return nil
+	return db, nil
 }
 
 func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedVerticalScalingOpsRequest(req *opsapi.MemcachedOpsRequest) error {
@@ -221,9 +219,6 @@ func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedReconfigureTLSOpsReq
 	TLSSpec := req.Spec.TLS
 	if TLSSpec == nil {
 		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
-	}
-	if err := c.hasDatabaseRef(req); err != nil {
-		return err
 	}
 	configCount := 0
 	if req.Spec.TLS.Remove {

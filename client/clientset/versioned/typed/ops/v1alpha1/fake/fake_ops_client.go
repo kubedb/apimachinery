@@ -105,6 +105,10 @@ func (c *FakeOpsV1alpha1) ProxySQLOpsRequests(namespace string) v1alpha1.ProxySQ
 	return &FakeProxySQLOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) QdrantOpsRequests(namespace string) v1alpha1.QdrantOpsRequestInterface {
+	return &FakeQdrantOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) RabbitMQOpsRequests(namespace string) v1alpha1.RabbitMQOpsRequestInterface {
 	return &FakeRabbitMQOpsRequests{c, namespace}
 }

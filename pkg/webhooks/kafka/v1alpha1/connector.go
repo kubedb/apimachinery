@@ -108,6 +108,12 @@ func (k ConnectorCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.
 
 func (k ConnectorCustomWebhook) ValidateCreateOrUpdate(c *kafkapi.Connector) error {
 	var allErr field.ErrorList
+	if c.Spec.Configuration != nil && c.Spec.Configuration.SecretName != "" && c.Spec.ConfigSecret != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
+			c.Name,
+			"cannot use both configuration.secretName and configSecret, use configuration.secretName"))
+	}
+
 	if c.Spec.DeletionPolicy == dbapi.DeletionPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
 			c.Name,

@@ -119,18 +119,14 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 	}
 
 	var allErr field.ErrorList
-	var db dbapi.Druid
-	opsType := req.GetRequestType().(opsapi.DruidOpsRequestType)
+
+	opsType := opsapi.DruidOpsRequestType(req.GetRequestType())
 
 	switch opsType {
 	case opsapi.DruidOpsRequestTypeRestart:
-		if _, err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
+
 	case opsapi.DruidOpsRequestTypeUpdateVersion:
-		if err := w.validateDruidUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := w.validateDruidUpdateVersionOpsRequest(druid, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -306,15 +302,9 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidReconfigurationOpsRequest(re
 	if configurationSpec == nil {
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
-	if _, err := w.hasDatabaseRef(req); err != nil {
-		return err
-	}
 
-	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
-		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
-	}
 	if !configurationSpec.RemoveCustomConfig && configurationSpec.ConfigSecret == nil && len(configurationSpec.ApplyConfig) == 0 {
-		return errors.New("`RemoveCustomConfig`, `ConfigSecret` and `ApplyConfig`, all can not be empty together")
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 	return nil
 }
@@ -324,9 +314,7 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidReconfigurationTLSOpsRequest
 	if TLSSpec == nil {
 		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
 	}
-	if _, err := w.hasDatabaseRef(req); err != nil {
-		return err
-	}
+
 	configCount := 0
 	if req.Spec.TLS.Remove {
 		configCount++

@@ -123,7 +123,7 @@ func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaO
 	}
 
 	var allErr field.ErrorList
-	switch req.GetRequestType().(opsapi.KafkaOpsRequestType) {
+	switch opsapi.KafkaOpsRequestType(req.GetRequestType()) {
 	case opsapi.KafkaOpsRequestTypeUpdateVersion:
 		if err := w.validateKafkaUpdateVersionOpsRequest(kafka, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
@@ -278,8 +278,8 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaReconfigurationOpsRequest(re
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
 
-	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
-		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
+	if !configurationSpec.RemoveCustomConfig && configurationSpec.ConfigSecret == nil && len(configurationSpec.ApplyConfig) == 0 {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 	return nil
 }

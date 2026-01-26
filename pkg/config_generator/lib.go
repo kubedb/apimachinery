@@ -65,6 +65,61 @@ func (generator *CustomConfigGenerator) GetMergedConfigString() (string, error) 
 	return fmt.Sprintf("%s\n\n%s\n%s", generator.CurrentConfig, generator.ConfigBlockDivider, ConvertMapInToString(requestedDataMap)), nil
 }
 
+// GetMergedConfigStringWithoutPrevConfig func return new config string where the current config string and requested config strings are merged without keeping previous config sample.
+func (generator *CustomConfigGenerator) GetMergedConfigStringWithoutPreviousConfig() (string, error) {
+	if len(generator.KeyValueSeparators) == 0 {
+		return "", fmt.Errorf("KeyValueSeparators is empty")
+	}
+
+	requestedDataMap := ConvertStringInToMap(strings.TrimSpace(generator.RequestedConfig), generator.KeyValueSeparators)
+	// there is no valid apply config provided. so just return the current config
+	if len(requestedDataMap.Keys()) == 0 {
+		return generator.CurrentConfig, nil
+	}
+
+	curInlineConfigMap := ConvertStringInToMap(strings.TrimSpace(generator.CurrentConfig), generator.KeyValueSeparators)
+	mergedConfigString := ConvertMapInToString(MergeAndOverWriteMap(curInlineConfigMap, requestedDataMap))
+
+	// Let's get the first non commented line from the current config, which will be used as first line of the merged config like [mysqld]/[mariadb]
+	firstLine := ""
+	outputs := strings.Split(generator.CurrentConfig, "\n")
+
+	for _, output := range outputs {
+		output = strings.TrimSpace(output)
+		// if configs has any line starts with # is a commented line we are going to ignore this line
+		if len(output) == 0 || output[:1] == "#" {
+			continue
+		}
+		firstLine = output
+		break
+	}
+
+	return fmt.Sprintf("%s\n%s", firstLine, mergedConfigString), nil
+}
+
+// GetMergedConfig func return new config map where the current config and requested config  are merged
+func GetMergedConfig(currentConfig, reqConfig map[string]string) (map[string]string, error) {
+	for fileName, fileValue := range reqConfig {
+		if curConfig, exists := currentConfig[fileName]; exists && len(curConfig) != 0 {
+			customConfGen := &CustomConfigGenerator{
+				CurrentConfig:   curConfig,
+				RequestedConfig: fileValue,
+				KeyValueSeparators: []string{
+					"=",
+				},
+			}
+			result, err := customConfGen.GetMergedConfigStringWithoutPreviousConfig()
+			if err != nil {
+				return nil, err
+			}
+			currentConfig[fileName] = result
+		} else {
+			currentConfig[fileName] = fileValue
+		}
+	}
+	return currentConfig, nil
+}
+
 func ConvertStringInToMap(configString string, separators []string) (configData *orderedmap.OrderedMap) {
 	configData = orderedmap.New()
 	outputs := strings.Split(configString, "\n")

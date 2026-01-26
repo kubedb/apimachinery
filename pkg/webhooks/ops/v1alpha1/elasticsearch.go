@@ -143,7 +143,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name,
 			fmt.Sprintf("referenced database %s/%s is not found", req.Namespace, req.Spec.DatabaseRef.Name)))
 	}
-	switch req.GetRequestType().(opsapi.ElasticsearchOpsRequestType) {
+	switch opsapi.ElasticsearchOpsRequestType(req.GetRequestType()) {
 	case opsapi.ElasticsearchOpsRequestTypeUpdateVersion:
 		if err := w.validateElasticsearchUpdateVersionOpsRequest(req, db); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
