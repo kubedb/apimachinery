@@ -94,16 +94,13 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for PerconaXtraDB are %s", req.Spec.Type, strings.Join(opsapi.PerconaXtraDBOpsRequestTypeNames(), ", ")))
 	}
-
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
 	var allErr field.ErrorList
-	var db dbapi.PerconaXtraDB
-	switch req.GetRequestType().(opsapi.PerconaXtraDBOpsRequestType) {
+	switch opsapi.PerconaXtraDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.PerconaXtraDBOpsRequestTypeRestart:
-		if err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
 	case opsapi.PerconaXtraDBOpsRequestTypeVerticalScaling:
 		if err := w.validatePerconaXtraDBScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -123,7 +120,7 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				err.Error()))
 		}
 	case opsapi.PerconaXtraDBOpsRequestTypeUpdateVersion:
-		if err := w.validatePerconaXtraDBUpgradeOpsRequest(&db, req); err != nil {
+		if err := w.validatePerconaXtraDBUpgradeOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -148,15 +145,15 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	return apierrors.NewInvalid(schema.GroupKind{Group: "PerconaXtraDBopsrequests.kubedb.com", Kind: "PerconaXtraDBOpsRequest"}, req.Name, allErr)
 }
 
-func (w *PerconaXtraDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PerconaXtraDBOpsRequest) error {
-	px := dbapi.PerconaXtraDB{}
+func (w *PerconaXtraDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PerconaXtraDBOpsRequest) (*dbapi.PerconaXtraDB, error) {
+	px := &dbapi.PerconaXtraDB{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &px); err != nil {
-		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+	}, px); err != nil {
+		return nil, errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
 	}
-	return nil
+	return px, nil
 }
 
 func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBOpsRequest(obj, oldObj runtime.Object) error {
@@ -243,22 +240,18 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpans
 }
 
 func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBReconfigurationOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
-	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && len(req.Spec.Configuration.ApplyConfig) == 0 && req.Spec.Configuration.ConfigSecret == nil) {
-		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
+	db := &dbapi.PerconaXtraDB{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get percona-xtradb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
-	assign := 0
-	if req.Spec.Configuration.RemoveCustomConfig {
-		assign++
+	if req.Spec.Configuration == nil {
+		return errors.New("`.Spec.Configuration` field is nil")
 	}
-	if req.Spec.Configuration.ApplyConfig != nil {
-		assign++
-	}
-	if req.Spec.Configuration.ConfigSecret != nil {
-		assign++
-	}
-	if assign > 1 {
-		return errors.New("more than 1 field have assigned to reconfigure your database but at a time you you are allowed to run one operation(`RemoveCustomConfig`, `ApplyConfig` or `ConfigSecret`) to reconfigure")
+
+	if !req.Spec.Configuration.RemoveCustomConfig && len(req.Spec.Configuration.ApplyConfig) == 0 && req.Spec.Configuration.ConfigSecret == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
 	return nil

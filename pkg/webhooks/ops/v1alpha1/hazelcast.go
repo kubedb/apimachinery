@@ -23,7 +23,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
@@ -110,15 +110,14 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Hazelcast are %s", req.Spec.Type, strings.Join(opsapi.HazelcastOpsRequestTypeNames(), ", ")))
 	}
 
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
+	}
+
 	var allErr field.ErrorList
-	var db dbapi.Hazelcast
-	switch req.GetRequestType().(opsapi.HazelcastOpsRequestType) {
+	switch opsapi.HazelcastOpsRequestType(req.GetRequestType()) {
 	case opsapi.HazelcastOpsRequestTypeRestart:
-		if err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
 	case opsapi.HazelcastOpsRequestTypeHorizontalScaling:
 		if err := w.validateHazelcastHorizontalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type").Child("HorizontalScaling"),
@@ -126,13 +125,8 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 				err.Error()))
 		}
 	case opsapi.HazelcastOpsRequestTypeReconfigure:
-		if err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
-				req.Name,
-				err.Error()))
-		}
 	case opsapi.HazelcastOpsRequestTypeUpdateVersion:
-		if err := w.validateHazelcastUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := w.validateHazelcastUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -169,25 +163,21 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 	return apierrors.NewInvalid(schema.GroupKind{Group: "hazelcastopsrequests.kubedb.com", Kind: "HazelcastOpsRequest"}, req.Name, allErr)
 }
 
-func (w *HazelcastOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.HazelcastOpsRequest) error {
-	hz := dbapi.Hazelcast{}
+func (w *HazelcastOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.HazelcastOpsRequest) (*olddbapi.Hazelcast, error) {
+	hz := &olddbapi.Hazelcast{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &hz); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+	}, hz); err != nil {
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return nil
+	return hz, nil
 }
 
 func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVerticalScalingOpsRequest(req *opsapi.HazelcastOpsRequest) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
-	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
 	}
 	if verticalScalingSpec.Hazelcast == nil {
 		return errors.New("spec.verticalScaling.Hazelcast can't be empty at the same ops request")
@@ -201,10 +191,6 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastHorizontalScalingOps
 	if horizontalScalingSpec == nil {
 		return errors.New("spec.horizontalScaling nil not supported in VerticalScaling type")
 	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
 	if horizontalScalingSpec.Hazelcast == nil {
 		return errors.New("spec.horizontalScalingSpec.Hazelcast can't be empty at the same ops request")
 	}
@@ -217,10 +203,6 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVolumeExpansionOpsRe
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
-	err := w.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
 	if volumeExpansionSpec.Hazelcast == nil {
 		return errors.New("spec.volumeExpansion.Hazelcast can't be empty at the same ops request")
 	}
@@ -228,7 +210,7 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVolumeExpansionOpsRe
 	return nil
 }
 
-func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastUpdateVersionOpsRequest(db *dbapi.Hazelcast, req *opsapi.HazelcastOpsRequest) error {
+func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastUpdateVersionOpsRequest(db *olddbapi.Hazelcast, req *opsapi.HazelcastOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
@@ -249,9 +231,6 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastReconfigureTLSOpsReq
 	TLSSpec := req.Spec.TLS
 	if TLSSpec == nil {
 		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
-	}
-	if err := w.hasDatabaseRef(req); err != nil {
-		return err
 	}
 	configCount := 0
 	if req.Spec.TLS.Remove {
@@ -276,9 +255,6 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastReconfigureTLSOpsReq
 
 func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastRotateAuthenticationOpsRequest(req *opsapi.HazelcastOpsRequest) error {
 	authSpec := req.Spec.Authentication
-	if err := w.hasDatabaseRef(req); err != nil {
-		return err
-	}
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
 			return errors.New("spec.authentication.secretRef.name can not be empty")

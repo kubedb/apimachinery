@@ -66,12 +66,15 @@ spec:
                 type: array
               resources:
                 items:
-                  description: TypeReference represents an object type.
                   properties:
                     apiGroup:
                       type: string
                     kind:
                       type: string
+                    shardKey:
+                      type: string
+                    useCooperativeShardMigration:
+                      type: boolean
                   type: object
                 minItems: 1
                 type: array

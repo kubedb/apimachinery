@@ -110,15 +110,16 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for RabbitMQ are %s", req.Spec.Type, strings.Join(opsapi.RabbitMQOpsRequestTypeNames(), ", ")))
 	}
 
-	var allErr field.ErrorList
-	var db olddbapi.RabbitMQ
-	switch req.GetRequestType().(opsapi.RabbitMQOpsRequestType) {
-	case opsapi.RabbitMQOpsRequestTypeRestart:
-		if err := rv.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
+	var (
+		allErr   field.ErrorList
+		rabbitmq *olddbapi.RabbitMQ
+		err      error
+	)
+	if rabbitmq, err = rv.hasDatabaseRef(req); err != nil {
+		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
+	}
+
+	switch opsapi.RabbitMQOpsRequestType(req.GetRequestType()) {
 	case opsapi.RabbitMQOpsRequestTypeVerticalScaling:
 		if err := rv.validateRabbitMQVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -150,7 +151,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 				err.Error()))
 		}
 	case opsapi.RabbitMQOpsRequestTypeUpdateVersion:
-		if err := rv.validateRabbitMQUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := rv.validateRabbitMQUpdateVersionOpsRequest(rabbitmq, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -166,18 +167,18 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 	if len(allErr) == 0 {
 		return nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "RabbitMQopsrequests.kubedb.com", Kind: "RabbitMQOpsRequest"}, req.Name, allErr)
+	return apierrors.NewInvalid(schema.GroupKind{Group: "rabbitmqopsrequests.kubedb.com", Kind: "RabbitMQOpsRequest"}, req.Name, allErr)
 }
 
-func (rv *RabbitMQOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RabbitMQOpsRequest) error {
+func (rv *RabbitMQOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.RabbitMQOpsRequest) (*olddbapi.RabbitMQ, error) {
 	rabbitmq := &olddbapi.RabbitMQ{}
 	if err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, rabbitmq); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return nil
+	return rabbitmq, nil
 }
 
 func (w *RabbitMQOpsRequestCustomWebhook) validateRabbitMQRotateAuthenticationOpsRequest(req *opsapi.RabbitMQOpsRequest) error {
@@ -216,10 +217,6 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVerticalScalingOpsReq
 	if verticalScalingSpec == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
-	err := rv.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
 	if verticalScalingSpec.Node == nil {
 		return errors.New("spec.verticalScaling.Node can't be empty")
 	}
@@ -231,10 +228,6 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVolumeExpansionOpsReq
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
-	}
-	err := rv.hasDatabaseRef(req)
-	if err != nil {
-		return err
 	}
 	if volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.Node can't be empty")
@@ -255,9 +248,6 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQUpdateVersionOpsReque
 	}
 	if !yes {
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
-	}
-	if err = rv.hasDatabaseRef(req); err != nil {
-		return err
 	}
 
 	nextRabbitMQVersion := catalog.RabbitMQVersion{}
@@ -280,10 +270,6 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQHorizontalScalingOpsR
 	if horizontalScalingSpec == nil {
 		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
 	}
-	err := rv.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
 
 	if horizontalScalingSpec.Node == nil {
 		return errors.New("spec.horizontalScaling.node can not be empty")
@@ -301,11 +287,9 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQReconfigurationOpsReq
 	if configurationSpec == nil {
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
-	if err := rv.hasDatabaseRef(req); err != nil {
-		return err
-	}
-	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
-		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
+
+	if !configurationSpec.RemoveCustomConfig && configurationSpec.ConfigSecret == nil && len(configurationSpec.ApplyConfig) == 0 {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 	return nil
 }
@@ -314,9 +298,6 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQReconfigurationTLSOps
 	TLSSpec := req.Spec.TLS
 	if TLSSpec == nil {
 		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
-	}
-	if err := rv.hasDatabaseRef(req); err != nil {
-		return err
 	}
 	configCount := 0
 	if req.Spec.TLS.Remove {

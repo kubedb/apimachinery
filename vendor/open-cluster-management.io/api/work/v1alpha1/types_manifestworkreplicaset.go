@@ -1,3 +1,4 @@
+// Copyright Contributors to the Open Cluster Management project
 /*
 Copyright 2022.
 
@@ -22,9 +23,6 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -54,10 +52,10 @@ type ManifestWorkReplicaSet struct {
 
 // ManifestWorkReplicaSetSpec defines the desired state of ManifestWorkReplicaSet
 type ManifestWorkReplicaSetSpec struct {
-	// ManifestWorkTemplate is the ManifestWorkSpec that will be used to generate a per-cluster ManifestWork
+	// manifestWorkTemplate is the ManifestWorkSpec that will be used to generate a per-cluster ManifestWork
 	ManifestWorkTemplate work.ManifestWorkSpec `json:"manifestWorkTemplate"`
 
-	// PacementRefs is a list of the names of the Placement resource, from which a PlacementDecision will be found and used
+	// placementRefs is a list of the names of the Placement resource, from which a PlacementDecision will be found and used
 	// to distribute the ManifestWork.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
@@ -77,9 +75,6 @@ type ManifestWorkReplicaSetSpec struct {
 
 // ManifestWorkReplicaSetStatus defines the observed state of ManifestWorkReplicaSet
 type ManifestWorkReplicaSetStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
 	// Conditions contains the different condition statuses for distrbution of ManifestWork resources
 	// Valid condition types are:
 	// 1. AppliedManifestWorks represents ManifestWorks have been distributed as per placement All, Partial, None, Problem
@@ -131,7 +126,11 @@ type ManifestWorkReplicaSetSummary struct {
 	// TODO: Degraded is the number of ManifestWorks with condition Degraded: true
 	Degraded int `json:"degraded"`
 	// Applied is the number of ManifestWorks with condition Applied: true
-	Applied int `json:"Applied"`
+	Applied int `json:"applied"`
+	// DesiredTotal is the number of ManifestWorks that will be created by the ManifestWorkReplicaSet.
+	DesiredTotal int `json:"desiredTotal"`
+	// Updated is the number of clusters with updated revision applied.
+	Updated int `json:"updated"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -181,6 +180,20 @@ const (
 	//
 	// Reason: AsExpected, NotAsExpected or Processing
 	ManifestWorkReplicaSetConditionManifestworkApplied string = "ManifestworkApplied"
+)
+
+const (
+	// ManifestWorkReplicaSetControllerNameLabelKey is the label key on manifestwork to ref to the ManifestWorkReplicaSet
+	// that owns this manifestwork
+	ManifestWorkReplicaSetControllerNameLabelKey = "work.open-cluster-management.io/manifestworkreplicaset"
+
+	// ManifestWorkReplicaSetPlacementNameLabelKey is the label key on manifestwork to ref to the Placement that selects
+	// the managedCluster on the manifestWorkReplicaSet's PlacementRef.
+	ManifestWorkReplicaSetPlacementNameLabelKey = "work.open-cluster-management.io/placementname"
+
+	// ManifestWorkReplicaSetFinalizer is the name of the finalizer added to ManifestWorkReplicaSet. It is used to ensure
+	// related ManifestWorks are deleted.
+	ManifestWorkReplicaSetFinalizer = "work.open-cluster-management.io/manifest-work-cleanup"
 )
 
 // CascadeDeletionPolicy decides the manifestWorkReplicaSet is deleted before/after the related manifestWorks are gone.

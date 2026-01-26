@@ -22,7 +22,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
@@ -93,8 +93,10 @@ func (w *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.Pg
 	if validType, _ := arrays.Contains(opsapi.PgBouncerOpsRequestTypeNames(), string(obj.Spec.Type)); !validType {
 		return fmt.Errorf("defined OpsRequestType %s is not supported, supported types for PgBouncer are %s", obj.Spec.Type, strings.Join(opsapi.PgBouncerOpsRequestTypeNames(), ", "))
 	}
-	if !w.isDatabaseRefValid(obj) {
-		return fmt.Errorf("target database pgbouncer %s is not valid", obj.GetDBRefName())
+
+	db, err := w.hasDatabaseRef(obj)
+	if err != nil {
+		return err
 	}
 
 	var allErr field.ErrorList
@@ -104,7 +106,7 @@ func (w *PgBouncerOpsRequestCustomWebhook) validateCreateOrUpdate(obj *opsapi.Pg
 	case opsapi.PgBouncerOpsRequestTypeVerticalScaling:
 		return validatePgBouncerVerticalScalingOpsRequest(obj)
 	case opsapi.PgBouncerOpsRequestTypeUpdateVersion:
-		if err := validatePgBouncerUpdateVersionOpsRequest(obj, w.DefaultClient); err != nil {
+		if err := validatePgBouncerUpdateVersionOpsRequest(db, obj, w.DefaultClient); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				obj.Name,
 				err.Error()))
@@ -135,17 +137,15 @@ func validatePgBouncerOpsRequest(obj, oldObj runtime.Object) error {
 	return nil
 }
 
-func (w *PgBouncerOpsRequestCustomWebhook) isDatabaseRefValid(obj *opsapi.PgBouncerOpsRequest) bool {
-	_, err := getPgBouncer(w.DefaultClient, obj)
-	return err == nil
-}
-
-func getPgBouncer(client client.Client, opsReq *opsapi.PgBouncerOpsRequest) (*dbapi.PgBouncer, error) {
-	bouncer := &dbapi.PgBouncer{}
-	if err := client.Get(context.TODO(), types.NamespacedName{Name: opsReq.GetDBRefName(), Namespace: opsReq.Namespace}, bouncer); err != nil {
-		return nil, err
+func (w *PgBouncerOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PgBouncerOpsRequest) (*olddbapi.PgBouncer, error) {
+	db := &olddbapi.PgBouncer{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      req.GetDBRefName(),
+		Namespace: req.GetNamespace(),
+	}, db); err != nil {
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return bouncer, nil
+	return db, nil
 }
 
 func (w *PgBouncerOpsRequestCustomWebhook) validatePgBouncerReconfigureTLSOpsRequest(req *opsapi.PgBouncerOpsRequest) error {
@@ -176,9 +176,8 @@ func validatePgBouncerVerticalScalingOpsRequest(req *opsapi.PgBouncerOpsRequest)
 	return nil
 }
 
-func validatePgBouncerUpdateVersionOpsRequest(req *opsapi.PgBouncerOpsRequest, client client.Client) error {
+func validatePgBouncerUpdateVersionOpsRequest(db *olddbapi.PgBouncer, req *opsapi.PgBouncerOpsRequest, client client.Client) error {
 	updateVersionSpec := req.Spec.UpdateVersion
-	var db dbapi.PgBouncer
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
@@ -222,17 +221,13 @@ func validatePgBouncerReconfigurationOpsRequest(req *opsapi.PgBouncerOpsRequest,
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	bouncerConfigReq := req.Spec.Configuration.PgBouncer
+	bouncerConfigReq := req.Spec.Configuration
 
-	if bouncerConfigReq.ConfigSecret == nil && bouncerConfigReq.ApplyConfig == nil {
-		return errors.New("custom configuration should be specified in`spec.configuration.pgbouncer` for Reconfigure type")
+	if !bouncerConfigReq.RemoveCustomConfig && bouncerConfigReq.ConfigSecret == nil && bouncerConfigReq.ApplyConfig == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
-	if bouncerConfigReq.ConfigSecret != nil && bouncerConfigReq.ApplyConfig != nil {
-		return errors.New("`spec.configuration.pgbouncer.configSecret` and `spec.configuration.pgbouncer.applyConfig` both can not be taken for Reconfigure type")
-	}
-
-	if bouncerConfigReq.ConfigSecret != nil {
+	if bouncerConfigReq.ConfigSecret != nil && bouncerConfigReq.ConfigSecret.Name != "" {
 		var secret v1.Secret
 		if err := client.Get(context.TODO(), types.NamespacedName{Name: bouncerConfigReq.ConfigSecret.Name, Namespace: req.Namespace}, &secret); err != nil {
 			return err

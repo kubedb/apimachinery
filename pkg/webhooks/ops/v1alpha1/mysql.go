@@ -16,12 +16,11 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
@@ -30,6 +29,7 @@ import (
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -99,23 +99,24 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MySQL are %s", req.Spec.Type, strings.Join(opsapi.MySQLOpsRequestTypeNames(), ", ")))
 	}
 
+	db, err := w.hasDatabaseRef(req)
+	if err != nil {
+		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
+	}
+
 	var allErr field.ErrorList
-	var db olddbapi.MySQL
-	switch req.GetRequestType().(opsapi.MySQLOpsRequestType) {
+
+	switch opsapi.MySQLOpsRequestType(req.GetRequestType()) {
 	case opsapi.MySQLOpsRequestTypeRestart:
-		if err := w.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
+
 	case opsapi.MySQLOpsRequestTypeVerticalScaling:
-		if err := w.validateMySQLScalingOpsRequest(req); err != nil {
+		if err := w.validateMySQLScalingOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeHorizontalScaling:
-		if err := w.validateMySQLScalingOpsRequest(req); err != nil {
+		if err := w.validateMySQLScalingOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
@@ -127,7 +128,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeUpdateVersion:
-		if err := w.validateMySQLUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := w.validateMySQLUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -139,25 +140,25 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeVolumeExpansion:
-		if err := w.validateMySQLVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateMySQLVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeReplicationModeTransformation:
-		if err := w.validateMySQLReplicationModeTransformation(req); err != nil {
+		if err := w.validateMySQLReplicationModeTransformation(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicationModeTransformation"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeRotateAuth:
-		if err := w.validateMySQLRotateAuthenticationOpsRequest(req); err != nil {
+		if err := w.validateMySQLRotateAuthenticationOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeStorageMigration:
-		if err := w.validateMySQLStorageMigrationOpsRequest(req); err != nil {
+		if err := w.validateMySQLStorageMigrationOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
 				req.Name,
 				err.Error()))
@@ -171,41 +172,64 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 	return apierrors.NewInvalid(schema.GroupKind{Group: "MySQLopsrequests.kubedb.com", Kind: "MySQLOpsRequest"}, req.Name, allErr)
 }
 
-func (w *MySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MySQLOpsRequest) error {
-	md := dbapi.MySQL{}
+func (w *MySQLOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MySQLOpsRequest) (*dbapi.MySQL, error) {
+	mysql := &dbapi.MySQL{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
-	}, &md); err != nil {
-		return errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
+	}, mysql); err != nil {
+		return nil, errors.New(fmt.Sprintf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName()))
 	}
-	return nil
+	return mysql, nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *olddbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindMySQLVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	var cur catalog.MySQLVersion
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &cur)
 	if err != nil {
 		return err
 	}
-	if !yes {
+
+	var versions unstructured.UnstructuredList
+	versions.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   catalog.SchemeGroupVersion.Group,
+		Version: catalog.SchemeGroupVersion.Version,
+		Kind:    catalog.ResourceKindMySQLVersion,
+	})
+
+	var list []string
+	if db.Spec.Topology != nil {
+		if db.Spec.Topology.Mode != nil && *db.Spec.Topology.Mode == dbapi.MySQLModeGroupReplication {
+			list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
+		if err != nil {
+			return err
+		}
+	}
+	if !slices.Contains(list, updateVersionSpec.TargetVersion) {
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
 	return nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) validateMySQLScalingOpsRequest(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLScalingOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
 	if req.Spec.Type == opsapi.MySQLOpsRequestTypeHorizontalScaling {
 		if req.Spec.HorizontalScaling == nil {
 			return errors.New("`spec.Scale.HorizontalScaling` field is nil")
 		}
 
-		if err := w.ensureMySQLGroupReplication(req); err != nil {
+		if err := w.ensureMySQLGroupReplication(db); err != nil {
 			return err
 		}
 
@@ -222,19 +246,14 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLScalingOpsRequest(req *opsap
 	return nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) validateMySQLVolumeExpansionOpsRequest(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLVolumeExpansionOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
 	if req.Spec.VolumeExpansion == nil || req.Spec.VolumeExpansion.MySQL == nil {
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
-	}
-	db := &dbapi.MySQL{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
 	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
 	if !ok {
-		return errors.Wrap(err, "failed to parse current storage size")
+		return errors.New("failed to parse current storage size")
 	}
 
 	if cur.Cmp(*req.Spec.VolumeExpansion.MySQL) >= 0 {
@@ -245,51 +264,18 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLVolumeExpansionOpsRequest(re
 }
 
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationOpsRequest(req *opsapi.MySQLOpsRequest) error {
-	db := &dbapi.MySQL{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	if req.Spec.Configuration == nil {
+		return errors.New("`.Spec.Configuration` field is nil")
 	}
 
-	if req.Spec.Configuration == nil || (!req.Spec.Configuration.RemoveCustomConfig && !w.applyConfigExists(req.Spec.Configuration.ApplyConfig) && req.Spec.Configuration.ConfigSecret == nil) {
-		return errors.New("`.Spec.Configuration` field is nil/not assigned properly")
-	}
-
-	assign := 0
-	if req.Spec.Configuration.RemoveCustomConfig {
-		assign++
-	}
-	if w.applyConfigExists(req.Spec.Configuration.ApplyConfig) {
-		assign++
-	}
-	if req.Spec.Configuration.ConfigSecret != nil {
-		assign++
-	}
-	if assign > 1 {
-		return errors.New("more than 1 field have assigned to reconfigure your database but at a time you you are allowed to run one operation(`RemoveCustomConfig`, `ApplyConfig` or `ConfigSecret`) to reconfigure")
-	}
-	if db.Spec.ConfigSecret == nil && req.Spec.Configuration.RemoveCustomConfig {
-		return errors.New("database is not custom configured. so no need to run `RemoveCustomConfig` operation.")
+	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ApplyConfig == nil && req.Spec.Configuration.ConfigSecret == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
 
 	return nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) applyConfigExists(applyConfig map[string]string) bool {
-	if applyConfig == nil {
-		return false
-	}
-	_, exists := applyConfig[kubedb.MySQLCustomConfigFile]
-	return exists
-}
-
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest(req *opsapi.MySQLOpsRequest) error {
-	db := &dbapi.MySQL{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
-
 	if req.Spec.TLS == nil || (req.Spec.TLS.Remove && req.Spec.TLS.RotateCertificates) {
 		return errors.New("more than 1 field have assigned to reconfigureTLS to your database but at a time you you are allowed to run one operation(`Remove` or `RotateCertificates`)")
 	}
@@ -297,37 +283,25 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest
 	return nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformation(req *opsapi.MySQLOpsRequest) error {
-	db := &dbapi.MySQL{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
-
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformation(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
 	curVersion := semver.MustParse(db.Spec.Version)
 	refVersion := semver.MustParse("8.4.2")
 
 	if curVersion.LessThan(refVersion) {
-		return errors.Wrap(err, fmt.Sprintf("MySQL Replication Mode Transformation support only support for %s or upper.", refVersion))
+		return errors.New(fmt.Sprintf("MySQL Replication Mode Transformation support only support for %s or upper.", refVersion))
 	}
 
 	if req.Spec.ReplicationModeTransformation != nil {
 		if req.Spec.ReplicationModeTransformation.RequireSSL != nil && (req.Spec.ReplicationModeTransformation.IssuerRef == nil &&
 			req.Spec.ReplicationModeTransformation.Certificates == nil) {
-			return errors.Wrap(err, "MySQL Replication Mode Transformation requires TLS configuration to be enabled.")
+			return errors.New("MySQL Replication Mode Transformation requires TLS configuration to be enabled.")
 		}
 	}
 
 	return nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) validateMySQLRotateAuthenticationOpsRequest(req *opsapi.MySQLOpsRequest) error {
-	db := &dbapi.MySQL{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
-
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLRotateAuthenticationOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
@@ -362,19 +336,13 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLRotateAuthenticationOpsReque
 	return nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(req *opsapi.MySQLOpsRequest) error {
-	db := &dbapi.MySQL{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
-
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
 	if req.Spec.Migration.StorageClassName == nil {
 		return errors.New("spec.migration.storageClassName is required")
 	}
 	// check new storageClass
 	var newstorage, oldstorage storagev1.StorageClass
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: *req.Spec.Migration.StorageClassName,
 	}, &newstorage)
 	if err != nil {
@@ -400,13 +368,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(r
 	return nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) ensureMySQLGroupReplication(req *opsapi.MySQLOpsRequest) error {
-	db := &dbapi.MySQL{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get mysql: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
-
+func (w *MySQLOpsRequestCustomWebhook) ensureMySQLGroupReplication(db *dbapi.MySQL) error {
 	if db.Spec.Topology == nil || db.Spec.Topology.Mode == nil {
 		return errors.New("OpsRequest haven't pointed to a Group Replication, Horizontal scaling applicable only for group Replication")
 	}

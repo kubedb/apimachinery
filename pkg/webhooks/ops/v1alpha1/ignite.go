@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -110,15 +111,14 @@ func (rv *IgniteOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Igni
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Ignite are %s", req.Spec.Type, strings.Join(opsapi.IgniteOpsRequestTypeNames(), ", ")))
 	}
 
+	db, err := rv.hasDatabaseRef(req)
+	if err != nil {
+		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
+	}
+
 	var allErr field.ErrorList
-	var db olddbapi.Ignite
-	switch req.GetRequestType().(opsapi.IgniteOpsRequestType) {
+	switch opsapi.IgniteOpsRequestType(req.GetRequestType()) {
 	case opsapi.IgniteOpsRequestTypeRestart:
-		if err := rv.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
 	case opsapi.IgniteOpsRequestTypeVerticalScaling:
 		if err := rv.validateIgniteVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -150,7 +150,7 @@ func (rv *IgniteOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Igni
 				err.Error()))
 		}
 	case opsapi.IgniteOpsRequestTypeUpdateVersion:
-		if err := rv.validateIgniteUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := rv.validateIgniteUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
@@ -169,15 +169,15 @@ func (rv *IgniteOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Igni
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Igniteopsrequests.kubedb.com", Kind: "IgniteOpsRequest"}, req.Name, allErr)
 }
 
-func (rv *IgniteOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.IgniteOpsRequest) error {
+func (rv *IgniteOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.IgniteOpsRequest) (*olddbapi.Ignite, error) {
 	ignite := &olddbapi.Ignite{}
 	if err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, ignite); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return nil
+	return ignite, nil
 }
 
 func (w *IgniteOpsRequestCustomWebhook) validateIgniteRotateAuthenticationOpsRequest(req *opsapi.IgniteOpsRequest) error {
@@ -216,10 +216,7 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteVerticalScalingOpsRequest
 	if verticalScalingSpec == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
-	err := rv.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
+
 	if verticalScalingSpec.Ignite == nil {
 		return errors.New("spec.verticalScaling.Node can't be empty")
 	}
@@ -232,10 +229,7 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteVolumeExpansionOpsRequest
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
-	err := rv.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
+
 	if volumeExpansionSpec.Ignite == nil {
 		return errors.New("spec.volumeExpansion.Node can't be empty")
 	}
@@ -265,10 +259,6 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteHorizontalScalingOpsReque
 	if horizontalScalingSpec == nil {
 		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
 	}
-	err := rv.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
 
 	if horizontalScalingSpec.Ignite == nil {
 		return errors.New("spec.horizontalScaling.node can not be empty")
@@ -281,17 +271,42 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteHorizontalScalingOpsReque
 	return nil
 }
 
-func (rv *IgniteOpsRequestCustomWebhook) validateIgniteReconfigurationOpsRequest(req *opsapi.IgniteOpsRequest) error {
-	configurationSpec := req.Spec.Configuration
-	if configurationSpec == nil {
+func (w *IgniteOpsRequestCustomWebhook) validateIgniteReconfigurationOpsRequest(req *opsapi.IgniteOpsRequest) error {
+	reconfigureSpec := req.Spec.Configuration
+	if reconfigureSpec == nil {
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
-	if err := rv.hasDatabaseRef(req); err != nil {
-		return err
+
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && len(reconfigureSpec.ApplyConfig) == 0 {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
 	}
-	if configurationSpec.RemoveCustomConfig && (configurationSpec.ConfigSecret != nil || len(configurationSpec.ApplyConfig) != 0) {
-		return errors.New("at a time one configuration is allowed to run one operation(`RemoveCustomConfig` or `ConfigSecret with or without ApplyConfig`) to reconfigure")
+
+	if reconfigureSpec.ConfigSecret != nil && reconfigureSpec.ConfigSecret.Name != "" {
+		var secret core.Secret
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      reconfigureSpec.ConfigSecret.Name,
+			Namespace: req.Namespace,
+		}, &secret)
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("referenced config secret %s/%s not found", req.Namespace, reconfigureSpec.ConfigSecret.Name)
+			}
+			return err
+		}
+
+		if _, ok := secret.Data[kubedb.IgniteConfigFileName]; !ok {
+			return fmt.Errorf("config secret %s/%s does not have file named '%v'", req.Namespace, reconfigureSpec.ConfigSecret.Name, kubedb.IgniteConfigFileName)
+		}
 	}
+
+	// Validate ApplyConfig has the required config file if provided
+	if req.Spec.Configuration.ApplyConfig != nil {
+		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.IgniteConfigFileName]
+		if !ok {
+			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.IgniteConfigFileName)
+		}
+	}
+
 	return nil
 }
 
@@ -300,9 +315,7 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteReconfigurationTLSOpsRequ
 	if TLSSpec == nil {
 		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
 	}
-	if err := rv.hasDatabaseRef(req); err != nil {
-		return err
-	}
+
 	configCount := 0
 	if req.Spec.TLS.Remove {
 		configCount++

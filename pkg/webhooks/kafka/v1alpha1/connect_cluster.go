@@ -158,6 +158,12 @@ func (k *ConnectClusterCustomWebhook) ValidateCreateOrUpdate(c *kafkapi.ConnectC
 			"number of replicas can not be 0 or less"))
 	}
 
+	if c.Spec.Configuration != nil && c.Spec.Configuration.SecretName != "" && c.Spec.ConfigSecret != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
+			c.Name,
+			"cannot use both configuration.secretName and configSecret, use configuration.secretName"))
+	}
+
 	err := k.validateVersion(c)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),

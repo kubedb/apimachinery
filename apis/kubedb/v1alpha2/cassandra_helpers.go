@@ -165,7 +165,8 @@ func (r *Cassandra) GetAuthSecretName() string {
 }
 
 func (r *Cassandra) ConfigSecretName() string {
-	return meta_util.NameWithSuffix(r.OffshootName(), "config")
+	uid := string(r.UID)
+	return meta_util.NameWithSuffix(r.OffshootName(), uid[len(uid)-6:])
 }
 
 func (r *Cassandra) DefaultUserCredSecretName(username string) string {

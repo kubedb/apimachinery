@@ -23,10 +23,11 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -84,15 +85,15 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ClickHouse are %s", req.Spec.Type, strings.Join(opsapi.ClickHouseOpsRequestTypeNames(), ", ")))
 	}
+	db, err := rv.hasDatabaseRef(req)
+	if err != nil {
+		return err
+	}
 	var allErr field.ErrorList
-	var db dbapi.ClickHouse
-	switch req.GetRequestType().(opsapi.ClickHouseOpsRequestType) {
+
+	switch opsapi.ClickHouseOpsRequestType(req.GetRequestType()) {
 	case opsapi.ClickHouseOpsRequestTypeRestart:
-		if err := rv.hasDatabaseRef(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restart"),
-				req.Name,
-				err.Error()))
-		}
+
 	case opsapi.ClickHouseOpsRequestTypeVerticalScaling:
 		if err := rv.validateClickHouseVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
@@ -100,8 +101,38 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.ClickHouseOpsRequestTypeUpdateVersion:
-		if err := rv.validateClickHouseUpdateVersionOpsRequest(&db, req); err != nil {
+		if err := rv.validateClickHouseUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.ClickHouseOpsRequestTypeVolumeExpansion:
+		if err := rv.validateClickHouseVolumeExpansionOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.ClickHouseOpsRequestTypeHorizontalScaling:
+		if err := rv.validateClickHouseHorizontalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.ClickHouseOpsRequestTypeReconfigure:
+		if err := rv.validateClickHouseReconfigurationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.ClickHouseOpsRequestTypeReconfigureTLS:
+		if err := rv.validateClickHouseReconfigurationTLSOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.ClickHouseOpsRequestTypeRotateAuth:
+		if err := rv.validateClickHouseRotateAuthenticationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
 		}
@@ -113,15 +144,15 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	return apierrors.NewInvalid(schema.GroupKind{Group: "ClickHouseopsrequests.kubedb.com", Kind: "ClickHouseOpsRequest"}, req.Name, allErr)
 }
 
-func (rv *ClickHouseOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ClickHouseOpsRequest) error {
-	clickhouse := &dbapi.ClickHouse{}
+func (rv *ClickHouseOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ClickHouseOpsRequest) (*olddbapi.ClickHouse, error) {
+	clickhouse := &olddbapi.ClickHouse{}
 	if err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
 	}, clickhouse); err != nil {
-		return fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
+		return nil, fmt.Errorf("spec.databaseRef %s/%s, is invalid or not found", req.GetNamespace(), req.GetDBRefName())
 	}
-	return nil
+	return clickhouse, nil
 }
 
 func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVerticalScalingOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
@@ -136,7 +167,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVerticalScalingOp
 	return nil
 }
 
-func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseUpdateVersionOpsRequest(db *dbapi.ClickHouse, req *opsapi.ClickHouseOpsRequest) error {
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseUpdateVersionOpsRequest(db *olddbapi.ClickHouse, req *opsapi.ClickHouseOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
@@ -150,5 +181,106 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseUpdateVersionOpsR
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
+	return nil
+}
+
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVolumeExpansionOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+	volumeExpansionSpec := req.Spec.VolumeExpansion
+	if volumeExpansionSpec == nil {
+		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
+	}
+
+	if volumeExpansionSpec.Node == nil {
+		return errors.New("spec.volumeExpansion.Node can't be empty")
+	}
+
+	return nil
+}
+
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScalingOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+	horizontalScalingSpec := req.Spec.HorizontalScaling
+	if horizontalScalingSpec == nil {
+		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
+	}
+
+	if horizontalScalingSpec.Replicas == nil {
+		return errors.New("spec.horizontalScaling.replicas can not be empty")
+	}
+
+	if *horizontalScalingSpec.Replicas <= 0 {
+		return errors.New("spec.horizontalScaling.replicas must be positive")
+	}
+
+	return nil
+}
+
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseReconfigurationOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+	reconfigureSpec := req.Spec.Configuration
+	if reconfigureSpec == nil {
+		return errors.New("spec.configuration nil not supported in Reconfigure type")
+	}
+
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && req.Spec.Configuration.ApplyConfig == nil {
+		return fmt.Errorf("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	}
+
+	return nil
+}
+
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseReconfigurationTLSOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+	TLSSpec := req.Spec.TLS
+	if TLSSpec == nil {
+		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
+	}
+
+	configCount := 0
+	if req.Spec.TLS.Remove {
+		configCount++
+	}
+	if req.Spec.TLS.RotateCertificates {
+		configCount++
+	}
+	if req.Spec.TLS.IssuerRef != nil || req.Spec.TLS.Certificates != nil {
+		configCount++
+	}
+
+	if configCount == 0 {
+		return errors.New("no reconfiguration is provided in TLS spec")
+	}
+
+	if configCount > 1 {
+		return errors.New("more than 1 field have assigned to spec.reconfigureTLS but at a time one is allowed to run one operation")
+	}
+	return nil
+}
+
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseRotateAuthenticationOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+	clickhouse := &olddbapi.ClickHouse{}
+	err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Namespace: req.Namespace,
+		Name:      req.GetDBRefName(),
+	}, clickhouse)
+	if err != nil {
+		return err
+	}
+	if clickhouse.Spec.DisableSecurity {
+		return fmt.Errorf("disableSecurity is on, RotateAuth is not applicable")
+	}
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return errors.New("spec.authentication.secretRef.name can not be empty")
+		}
+		err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &core.Secret{})
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
+			}
+			return err
+		}
+	}
 	return nil
 }
