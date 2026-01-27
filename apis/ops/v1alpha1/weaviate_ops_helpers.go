@@ -16,6 +16,26 @@ limitations under the License.
 
 package v1alpha1
 
+import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+var _ Accessor = &WeaviateOpsRequest{}
+
+func (w *WeaviateOpsRequest) GetObjectMeta() metav1.ObjectMeta {
+	return w.ObjectMeta
+}
+
+func (w *WeaviateOpsRequest) GetDBRefName() string {
+	return w.Spec.DatabaseRef.Name
+}
+
 func (w *WeaviateOpsRequest) GetRequestType() string {
 	return string(w.Spec.Type)
+}
+
+func (w *WeaviateOpsRequest) GetStatus() OpsRequestStatus {
+	return w.Status
+}
+
+func (w *WeaviateOpsRequest) SetStatus(s OpsRequestStatus) {
+	w.Status = s
 }
