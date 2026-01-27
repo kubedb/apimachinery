@@ -89,7 +89,7 @@ func (w *SolrOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj
 		return nil, err
 	}
 	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
-		var db olddbapi.ClickHouse
+		var db olddbapi.Solr
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
 		if err != nil {
 			return nil, err
