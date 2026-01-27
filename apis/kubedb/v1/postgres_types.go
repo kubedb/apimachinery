@@ -169,6 +169,9 @@ type PostgresSpec struct {
 
 	// +optional
 	Replication *PostgresReplication `json:"replication,omitempty"`
+
+	// +optional
+	ReadReaplicas []ReadReplicaSpec `json:"readReaplicas,omitempty"`
 }
 
 type PostgresConfiguration struct {
@@ -217,6 +220,29 @@ type ArbiterSpec struct {
 	// If specified, the pod's tolerations.
 	// +optional
 	Tolerations []core.Toleration `json:"tolerations,omitempty"`
+}
+
+type ReadReplicaSpec struct {
+	// Name specifies the name of the read replica
+	Name string `json:"name"`
+	// Number of instances to deploy for a Postgres database.
+	Replicas *int32 `json:"replicas,omitempty"`
+	// Compute Resources required by the sidecar container.
+	// +optional
+	Resources core.ResourceRequirements `json:"resources,omitempty"`
+	// NodeSelector is a selector which must be true for the pod to fit on a node.
+	// Selector which must match a node's labels for the pod to be scheduled on that node.
+	// More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+	// +optional
+	// +mapType=atomic
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// If specified, the pod's tolerations.
+	// +optional
+	Tolerations []core.Toleration `json:"tolerations,omitempty"`
+	// StorageType can be durable (default) or ephemeral
+	StorageType StorageType `json:"storageType,omitempty"`
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 }
 
 // PostgreLeaderElectionConfig contains essential attributes of leader election.
