@@ -23,6 +23,7 @@ import (
 	"slices"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -150,7 +151,7 @@ func isOpsReqCompleted(phase opsapi.OpsRequestPhase) bool {
 func resumeDatabase(kc client.Client, db dbapi.Accessor) error {
 	_, err := cu.PatchStatus(context.TODO(), kc, db, func(obj client.Object) client.Object {
 		ret := obj.(dbapi.Accessor)
-		ret.RemoveCondition(opsapi.PauseDatabase)
+		ret.RemoveCondition(kubedb.DatabasePaused)
 		return ret
 	})
 	return err
