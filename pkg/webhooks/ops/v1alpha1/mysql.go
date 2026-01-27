@@ -202,6 +202,10 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *
 		Kind:    catalog.ResourceKindMySQLVersion,
 	})
 
+	if err := w.DefaultClient.List(context.Background(), &versions); err != nil {
+		return err
+	}
+
 	var list []string
 	if db.Spec.Topology != nil {
 		if db.Spec.Topology.Mode != nil && *db.Spec.Topology.Mode == dbapi.MySQLModeGroupReplication {
