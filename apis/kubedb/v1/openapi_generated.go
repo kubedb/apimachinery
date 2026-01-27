@@ -28155,7 +28155,8 @@ func schema_apimachinery_apis_kubedb_v1_KafkaSpec(ref common.ReferenceCallback) 
 					},
 					"tieredStorage": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.KafkaTieredStorage"),
+							Description: "TieredStorage defines the tiered storage specification for Kafka",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.KafkaTieredStorage"),
 						},
 					},
 					"storageType": {

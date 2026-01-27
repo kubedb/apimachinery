@@ -70,6 +70,8 @@ type KafkaSpec struct {
 	// +optional
 	Topology *KafkaClusterTopology `json:"topology,omitempty"`
 
+	// TieredStorage defines the tiered storage specification for Kafka
+	// +optional
 	TieredStorage *KafkaTieredStorage `json:"tieredStorage,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
@@ -186,6 +188,7 @@ type KafkaStatus struct {
 
 type KafkaTieredStorage struct {
 	// Backend is the storage backend to be used for tiered storage
+	// +optional
 	*storageapi.Backend `json:",omitempty"`
 
 	// StorageManagerClassName is defined as the class name of the storage manager to be used for tiered storage
@@ -195,6 +198,7 @@ type KafkaTieredStorage struct {
 
 	// StorageManagerClassPath is defined as the class path of the storage manager to be used for tiered storage
 	// If you use your own custom storage manager class, you can specify the class path here
+	// +optional
 	StorageManagerClassPath string `json:"storageManagerClassPath,omitempty"`
 }
 
