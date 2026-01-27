@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -32,7 +33,10 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/mergepatch"
+	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -70,11 +74,44 @@ func (w *CassandraOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, o
 func (w *CassandraOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.CassandraOpsRequest)
 	if !ok {
-		return nil, fmt.Errorf("expected an CassandraOpsRequest object but got %T", newObj)
+		return nil, fmt.Errorf("expected an DruidOpsRequest object but got %T", newObj)
 	}
-	cassandraLog.Info("validate update", "name", ops.Name)
+	druidLog.Info("validate update", "name", ops.Name)
 
-	return nil, w.validateCreateOrUpdate(ops)
+	oldOps, ok := oldObj.(*opsapi.CassandraOpsRequest)
+	if !ok {
+		return nil, fmt.Errorf("expected an DruidOpsRequest object but got %T", oldObj)
+	}
+
+	if err := validateCassandraOpsRequest(ops, oldOps); err != nil {
+		return nil, err
+	}
+
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db dbapi.Cassandra
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
+}
+
+func validateCassandraOpsRequest(req *opsapi.CassandraOpsRequest, oldReq *opsapi.CassandraOpsRequest) error {
+	preconditions := meta_util.PreConditionSet{Set: sets.New[string]("spec")}
+	_, err := meta_util.CreateStrategicPatch(oldReq, req, preconditions.PreconditionFunc()...)
+	if err != nil {
+		if mergepatch.IsPreconditionFailed(err) {
+			return fmt.Errorf("%v.%v", err, preconditions.Error())
+		}
+		return err
+	}
+	return nil
 }
 
 func (w *CassandraOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
