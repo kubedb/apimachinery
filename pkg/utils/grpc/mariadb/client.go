@@ -104,6 +104,25 @@ func RunCommand(grpcClient pb.CommandServiceClient, cmd string) ([]byte, error) 
 	return resp.Output, nil
 }
 
+func RunCommandWithPayload(grpcClient pb.CommandServiceClient, cmd string, data []byte) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
+	defer cancel()
+
+	req := &pb.CommandRequest{
+		Command: cmd,
+		Data:    data,
+	}
+	resp, err := grpcClient.ExecuteCommand(ctx, req)
+	if err != nil {
+		klog.Infof("failed to execute command: %v", err)
+		return nil, err
+	}
+	if resp.Status != "success" {
+		return nil, fmt.Errorf("failed to execute command: %s, Output: %s, err: %v", cmd, string(resp.Output), resp.Error)
+	}
+	return resp.Output, nil
+}
+
 func serverAddress(db *dbapi.MariaDB, podName string) string {
 	return fmt.Sprintf("%s.%s.%s.svc:%v", podName, db.GoverningServiceName(), db.Namespace, port)
 }

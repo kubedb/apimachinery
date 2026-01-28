@@ -1,7 +1,7 @@
 syntax="proto3";
 
 package proto;
-option go_package = "grpc/protogen";
+option go_package = "pkg/utils/grpc/mariadb/protogen";
 
 // CommandService provides a method to execute commands in the pod.
 service CommandService {
@@ -12,6 +12,7 @@ service CommandService {
 // CommandRequest defines the command to execute and authentication key.
 message CommandRequest {
   string command = 1; // The command to run (e.g., "cat /scripts/seqno").
+  bytes data = 2;  // backup job.
 }
 
 // CommandResponse contains the command output or error.
