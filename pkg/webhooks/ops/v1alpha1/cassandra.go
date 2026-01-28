@@ -22,7 +22,6 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -74,13 +73,13 @@ func (w *CassandraOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, o
 func (w *CassandraOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
 	ops, ok := newObj.(*opsapi.CassandraOpsRequest)
 	if !ok {
-		return nil, fmt.Errorf("expected an DruidOpsRequest object but got %T", newObj)
+		return nil, fmt.Errorf("expected an CassandraOpsRequest object but got %T", newObj)
 	}
-	druidLog.Info("validate update", "name", ops.Name)
+	cassandraLog.Info("validate update", "name", ops.Name)
 
 	oldOps, ok := oldObj.(*opsapi.CassandraOpsRequest)
 	if !ok {
-		return nil, fmt.Errorf("expected an DruidOpsRequest object but got %T", oldObj)
+		return nil, fmt.Errorf("expected an CassandraOpsRequest object but got %T", oldObj)
 	}
 
 	if err := validateCassandraOpsRequest(ops, oldOps); err != nil {
@@ -92,7 +91,7 @@ func (w *CassandraOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, o
 	}
 
 	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
-		var db dbapi.Cassandra
+		var db olddbapi.Cassandra
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
 		if err != nil {
 			return nil, err
