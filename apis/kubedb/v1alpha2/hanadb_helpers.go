@@ -274,6 +274,16 @@ func (h *HanaDB) SetDefaults(kc client.Client) {
 			h.Spec.Replicas = pointer.Int32P(1)
 		}
 	}
+	if h.Spec.Topology != nil && h.Spec.Topology.Mode != nil &&
+		*h.Spec.Topology.Mode == HanaDBModeSystemReplication &&
+		h.Spec.Topology.SystemReplication != nil {
+		if h.Spec.Topology.SystemReplication.ReplicationMode == "" {
+			h.Spec.Topology.SystemReplication.ReplicationMode = ReplicationModeSync
+		}
+		if h.Spec.Topology.SystemReplication.OperationMode == "" {
+			h.Spec.Topology.SystemReplication.OperationMode = OperationModeLogReplay
+		}
+	}
 
 	h.setDefaultContainerSecurityContext(&hanadbVersion, h.Spec.PodTemplate)
 
