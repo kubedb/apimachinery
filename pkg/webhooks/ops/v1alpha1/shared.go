@@ -23,6 +23,9 @@ import (
 	"slices"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/Masterminds/semver/v3"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -30,6 +33,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
+	cu "kmodules.xyz/client-go/client"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -138,4 +142,17 @@ func getUpgradableVersions(allowList, denyList []string, versions *unstructured.
 		}
 	}
 	return allowedVersions, nil
+}
+
+func isOpsReqCompleted(phase opsapi.OpsRequestPhase) bool {
+	return phase == opsapi.OpsRequestPhaseSuccessful || phase == opsapi.OpsRequestPhaseFailed
+}
+
+func resumeDatabase(kc client.Client, db dbapi.Accessor) error {
+	_, err := cu.PatchStatus(context.TODO(), kc, db, func(obj client.Object) client.Object {
+		ret := obj.(dbapi.Accessor)
+		ret.RemoveCondition(kubedb.DatabasePaused)
+		return ret
+	})
+	return err
 }

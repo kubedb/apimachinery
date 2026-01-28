@@ -23,7 +23,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
@@ -85,7 +85,19 @@ func (w *DruidOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err := validateDruidOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(ops)
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db olddbapi.Druid
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *DruidOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -175,8 +187,8 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Druidopsrequests.kubedb.com", Kind: "DruidOpsRequest"}, req.Name, allErr)
 }
 
-func (w *DruidOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.DruidOpsRequest) (*dbapi.Druid, error) {
-	druid := dbapi.Druid{}
+func (w *DruidOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.DruidOpsRequest) (*olddbapi.Druid, error) {
+	druid := olddbapi.Druid{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
@@ -186,7 +198,7 @@ func (w *DruidOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.DruidOpsReques
 	return &druid, nil
 }
 
-func (w *DruidOpsRequestCustomWebhook) validateDruidUpdateVersionOpsRequest(db *dbapi.Druid, req *opsapi.DruidOpsRequest) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidUpdateVersionOpsRequest(db *olddbapi.Druid, req *opsapi.DruidOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
@@ -203,7 +215,7 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidUpdateVersionOpsRequest(db *
 	return nil
 }
 
-func (w *DruidOpsRequestCustomWebhook) validateDruidHorizontalScalingOpsRequest(req *opsapi.DruidOpsRequest, druid *dbapi.Druid) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidHorizontalScalingOpsRequest(req *opsapi.DruidOpsRequest, druid *olddbapi.Druid) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
 		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
@@ -237,7 +249,7 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidHorizontalScalingOpsRequest(
 	return nil
 }
 
-func (w *DruidOpsRequestCustomWebhook) validateDruidVerticalScalingOpsRequest(req *opsapi.DruidOpsRequest, druid *dbapi.Druid) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidVerticalScalingOpsRequest(req *opsapi.DruidOpsRequest, druid *olddbapi.Druid) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 
 	if verticalScalingSpec == nil {
@@ -269,7 +281,7 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidVerticalScalingOpsRequest(re
 	return nil
 }
 
-func (w *DruidOpsRequestCustomWebhook) validateDruidVolumeExpansionOpsRequest(req *opsapi.DruidOpsRequest, druid *dbapi.Druid) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidVolumeExpansionOpsRequest(req *opsapi.DruidOpsRequest, druid *olddbapi.Druid) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 
 	if volumeExpansionSpec == nil {
@@ -288,10 +300,10 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidVolumeExpansionOpsRequest(re
 		return errors.New("spec.verticalScaling.Historicals can not be set as Historicals does not exist in the database instance")
 	}
 
-	if volumeExpansionSpec.Historicals != nil && druid.Spec.Topology.Historicals.StorageType != dbapi.StorageTypeDurable {
+	if volumeExpansionSpec.Historicals != nil && druid.Spec.Topology.Historicals.StorageType != olddbapi.StorageTypeDurable {
 		return errors.New("volumeExpansionSpec.historicals can not be set when storageType of historicals of the database is not Durable ")
 	}
-	if volumeExpansionSpec.MiddleManagers != nil && druid.Spec.Topology.MiddleManagers.StorageType != dbapi.StorageTypeDurable {
+	if volumeExpansionSpec.MiddleManagers != nil && druid.Spec.Topology.MiddleManagers.StorageType != olddbapi.StorageTypeDurable {
 		return errors.New("volumeExpansionSpec.middleManagers can not be set when storageType of middleManagers of the database is not Durable ")
 	}
 	return nil
