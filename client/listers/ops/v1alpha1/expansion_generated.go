@@ -218,6 +218,14 @@ type SolrOpsRequestListerExpansion interface{}
 // SolrOpsRequestNamespaceLister.
 type SolrOpsRequestNamespaceListerExpansion interface{}
 
+// WeaviateOpsRequestListerExpansion allows custom methods to be added to
+// WeaviateOpsRequestLister.
+type WeaviateOpsRequestListerExpansion interface{}
+
+// WeaviateOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// WeaviateOpsRequestNamespaceLister.
+type WeaviateOpsRequestNamespaceListerExpansion interface{}
+
 // ZooKeeperOpsRequestListerExpansion allows custom methods to be added to
 // ZooKeeperOpsRequestLister.
 type ZooKeeperOpsRequestListerExpansion interface{}
