@@ -243,6 +243,10 @@ type ReadReplicaSpec struct {
 	StorageType StorageType `json:"storageType,omitempty"`
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+	// PodPlacementPolicy is the reference of the podPlacementPolicy
+	// +kubebuilder:default={name:"default"}
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
 // PostgreLeaderElectionConfig contains essential attributes of leader election.
