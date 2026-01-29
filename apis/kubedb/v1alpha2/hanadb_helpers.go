@@ -290,6 +290,22 @@ func (h *HanaDB) SetDefaults(kc client.Client) {
 	h.SetHealthCheckerDefaults()
 
 	h.setDefaultContainerResourceLimits(h.Spec.PodTemplate)
+
+	if h.Spec.Monitor != nil {
+		if h.Spec.Monitor.Prometheus == nil {
+			h.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
+		if h.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			h.Spec.Monitor.Prometheus.Exporter.Port = kubedb.HanaDBExporterPort
+		}
+		h.Spec.Monitor.SetDefaults()
+		if h.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+			h.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = hanadbVersion.Spec.SecurityContext.RunAsUser
+		}
+		if h.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+			h.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = hanadbVersion.Spec.SecurityContext.RunAsGroup
+		}
+	}
 }
 
 func (h *HanaDB) setDefaultContainerSecurityContext(hanadbVersion *catalog.HanaDBVersion, podTemplate *ofst.PodTemplateSpec) {
