@@ -35,6 +35,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	core_util "kmodules.xyz/client-go/core/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -256,6 +257,12 @@ func (w *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 		}
 	}
 
+	if err := w.validateTieredStorage(db); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tieredStorage"),
+			db.Name,
+			err.Error()))
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -381,6 +388,70 @@ func (w *KafkaCustomWebhook) validateVolumesMountPaths(podTemplate *ofstv2.PodTe
 					return errors.New("Can't use a reserve volume mount path name: " + rvmp)
 				}
 			}
+		}
+	}
+
+	return nil
+}
+
+func (w *KafkaCustomWebhook) validateTieredStorage(db *dbapi.Kafka) error {
+	ts := db.Spec.TieredStorage
+	if ts == nil {
+		return nil
+	}
+	if ts.Backend == nil {
+		// user need to configure using .spec.configuration if backend is nil
+		if db.Spec.Configuration == nil {
+			return errors.New("either tieredStorage.backend or configuration must be configured to ensure tiered storage configuration")
+		}
+		return nil
+	}
+	if ts.S3 == nil && ts.GCS == nil && ts.Azure == nil && ts.Local == nil {
+		// user need to configure using .spec.configuration if no backend is provided
+		if db.Spec.Configuration == nil {
+			return fmt.Errorf("%s configuration must be provided using .spec.configuration", ts.Provider)
+		}
+		return nil
+	}
+
+	if ts.S3 != nil {
+		if ts.Provider != storageapi.ProviderS3 {
+			return errors.New("tieredStorage.provider must be 's3' when s3 backend is provided")
+		}
+		if ts.S3.Bucket == "" {
+			return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend").Child("s3").Child("bucket"),
+				db.Name,
+				"s3.bucket can not be empty")
+		}
+	}
+	if ts.GCS != nil {
+		if ts.Provider != storageapi.ProviderGCS {
+			return errors.New("tieredStorage.provider must be 'gcs' when gcs backend is provided")
+		}
+		if ts.GCS.Bucket == "" {
+			return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend").Child("gcs").Child("bucket"),
+				db.Name,
+				"gcs.bucket can not be empty")
+		}
+	}
+	if ts.Azure != nil {
+		if ts.Provider != storageapi.ProviderAzure {
+			return errors.New("tieredStorage.provider must be 'azure' when azure backend is provided")
+		}
+		if ts.Azure.Container == "" {
+			return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend").Child("azure").Child("container"),
+				db.Name,
+				"azure.container can not be empty")
+		}
+	}
+	if ts.Local != nil {
+		if ts.Provider != storageapi.ProviderLocal {
+			return errors.New("tieredStorage.provider must be 'local' when local backend is provided")
+		}
+		if ts.Local.MountPath == "" {
+			return field.Invalid(field.NewPath("spec").Child("tieredStorage").Child("backend").Child("local").Child("mountPath"),
+				db.Name,
+				"local.mountPath can not be empty")
 		}
 	}
 
