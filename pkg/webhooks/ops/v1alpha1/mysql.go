@@ -86,7 +86,19 @@ func (w *MySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err := w.validateMySQLOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(ops)
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db dbapi.MySQL
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *MySQLOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -201,6 +213,10 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *
 		Version: catalog.SchemeGroupVersion.Version,
 		Kind:    catalog.ResourceKindMySQLVersion,
 	})
+
+	if err := w.DefaultClient.List(context.Background(), &versions); err != nil {
+		return err
+	}
 
 	var list []string
 	if db.Spec.Topology != nil {

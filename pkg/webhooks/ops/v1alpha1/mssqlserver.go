@@ -86,7 +86,19 @@ func (w *MSSQLServerOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context,
 	if err := validateMSSQLServerOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(ops)
+
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db olddbapi.MSSQLServer
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *MSSQLServerOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {

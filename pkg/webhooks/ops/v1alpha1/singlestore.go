@@ -22,7 +22,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
@@ -84,7 +84,19 @@ func (w *SinglestoreOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context,
 	if err := validateSinglestoreOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(ops)
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db olddbapi.Singlestore
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *SinglestoreOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -162,8 +174,8 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Singlestoreopsrequests.kubedb.com", Kind: "SinglestoreOpsRequest"}, req.Name, allErr)
 }
 
-func (s *SinglestoreOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.SinglestoreOpsRequest) (*dbapi.Singlestore, error) {
-	sdb := dbapi.Singlestore{}
+func (s *SinglestoreOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.SinglestoreOpsRequest) (*olddbapi.Singlestore, error) {
+	sdb := olddbapi.Singlestore{}
 	if err := s.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
@@ -295,7 +307,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreHorizontalScalin
 	return nil
 }
 
-func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreUpdateVersionOpsRequest(db *dbapi.Singlestore, req *opsapi.SinglestoreOpsRequest) error {
+func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreUpdateVersionOpsRequest(db *olddbapi.Singlestore, req *opsapi.SinglestoreOpsRequest) error {
 	// right now, kubeDB support the following singlestore version: 8.1.32, 8.5.7
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {

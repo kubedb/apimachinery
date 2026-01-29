@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -82,7 +83,19 @@ func (w *PgBouncerOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, o
 	if err := validatePgBouncerOpsRequest(newReq, oldReq); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return nil, w.validateCreateOrUpdate(newReq)
+
+	if err := w.validateCreateOrUpdate(newReq); err != nil {
+		return nil, err
+	}
+	if isOpsReqCompleted(newReq.Status.Phase) && !isOpsReqCompleted(oldReq.Status.Phase) { // just completed
+		var db dbapi.PgBouncer
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: newReq.Spec.DatabaseRef.Name, Namespace: newReq.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *PgBouncerOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {

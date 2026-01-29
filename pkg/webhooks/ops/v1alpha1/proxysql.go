@@ -94,7 +94,20 @@ func (w *ProxySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, ol
 	if err := validateProxySQLOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(ops)
+
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db dbapi.ProxySQL
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.ProxyRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *ProxySQLOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {

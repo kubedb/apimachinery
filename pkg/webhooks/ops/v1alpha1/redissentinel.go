@@ -92,7 +92,19 @@ func (w *RedisSentinelOpsRequestCustomWebhook) ValidateUpdate(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(newReq)
+
+	if err = w.validateCreateOrUpdate(newReq); err != nil {
+		return nil, err
+	}
+	if isOpsReqCompleted(newReq.Status.Phase) && !isOpsReqCompleted(oldReq.Status.Phase) { // just completed
+		var db dbapi.RedisSentinel
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: newReq.Spec.DatabaseRef.Name, Namespace: newReq.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *RedisSentinelOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {

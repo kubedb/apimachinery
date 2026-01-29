@@ -32,7 +32,10 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/mergepatch"
+	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -73,7 +76,27 @@ func (w *ClickHouseOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, 
 		return nil, fmt.Errorf("expected an ClickHouseOpsRequest object but got %T", newObj)
 	}
 	clickhouseLog.Info("validate update", "name", ops.Name)
-	return nil, w.validateCreateOrUpdate(ops)
+
+	oldOps, ok := oldObj.(*opsapi.ClickHouseOpsRequest)
+	if !ok {
+		return nil, fmt.Errorf("expected an ClickHouseOpsRequest object but got %T", oldObj)
+	}
+
+	if err := w.validateClickHouseOpsRequest(ops, oldOps); err != nil {
+		return nil, err
+	}
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db olddbapi.ClickHouse
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *ClickHouseOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -281,6 +304,18 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseRotateAuthenticat
 			}
 			return err
 		}
+	}
+	return nil
+}
+
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseOpsRequest(req *opsapi.ClickHouseOpsRequest, oldReq *opsapi.ClickHouseOpsRequest) error {
+	preconditions := meta_util.PreConditionSet{Set: sets.New[string]("spec")}
+	_, err := meta_util.CreateStrategicPatch(oldReq, req, preconditions.PreconditionFunc()...)
+	if err != nil {
+		if mergepatch.IsPreconditionFailed(err) {
+			return fmt.Errorf("%v.%v", err, preconditions.Error())
+		}
+		return err
 	}
 	return nil
 }

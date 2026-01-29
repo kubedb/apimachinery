@@ -23,7 +23,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
@@ -85,7 +85,18 @@ func (w *ZooKeeperOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, o
 		return nil, err
 	}
 
-	return nil, w.validateCreateOrUpdate(ops)
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db olddbapi.ZooKeeper
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *ZooKeeperOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -110,7 +121,7 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ZooKeeper are %s", req.Spec.Type, strings.Join(opsapi.ZooKeeperOpsRequestTypeNames(), ", ")))
 	}
 	var (
-		zookeeper *dbapi.ZooKeeper
+		zookeeper *olddbapi.ZooKeeper
 		err       error
 	)
 	if zookeeper, err = z.hasDatabaseRef(req); err != nil {
@@ -157,8 +168,8 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 	return apierrors.NewInvalid(schema.GroupKind{Group: "ZooKeeperopsrequests.kubedb.com", Kind: "ZooKeeperOpsRequest"}, req.Name, allErr)
 }
 
-func (z *ZooKeeperOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ZooKeeperOpsRequest) (*dbapi.ZooKeeper, error) {
-	zk := dbapi.ZooKeeper{}
+func (z *ZooKeeperOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ZooKeeperOpsRequest) (*olddbapi.ZooKeeper, error) {
+	zk := olddbapi.ZooKeeper{}
 	if err := z.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
@@ -180,7 +191,7 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVerticalScalingOpsRe
 	return nil
 }
 
-func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperUpdateVersionOpsRequest(db *dbapi.ZooKeeper, req *opsapi.ZooKeeperOpsRequest) error {
+func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperUpdateVersionOpsRequest(db *olddbapi.ZooKeeper, req *opsapi.ZooKeeperOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
