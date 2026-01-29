@@ -47,7 +47,7 @@ require (
 	kmodules.xyz/client-go v0.34.2
 	kmodules.xyz/crd-schema-fuzz v0.34.1
 	kmodules.xyz/custom-resources v0.34.0
-	kmodules.xyz/monitoring-agent-api v0.34.0
+	kmodules.xyz/monitoring-agent-api v0.34.1-0.20260129162443-1a9c94512625
 	kmodules.xyz/objectstore-api v0.34.0
 	kmodules.xyz/offshoot-api v0.34.0
 	kmodules.xyz/resource-metadata v0.41.0

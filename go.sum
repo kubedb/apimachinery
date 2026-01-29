@@ -776,8 +776,8 @@ kmodules.xyz/custom-resources v0.34.0 h1:ljkIYzIq0A3Awj87kkpuYqS9aifuyR3Hr9q2OVK
 kmodules.xyz/custom-resources v0.34.0/go.mod h1:pcA/n/CnrycjKCRNtU9Z+l5svhzFncLY2Kn9pqeXDVs=
 kmodules.xyz/go-containerregistry v0.0.15 h1:PRY5FDOzb6u23KOulQ4SWNdeUkBKmezLyJXP88q4EPw=
 kmodules.xyz/go-containerregistry v0.0.15/go.mod h1:rO0DEbYYEu1BfVcZ1pXV+3RgzVXr/k5hXcO+BQYVVDI=
-kmodules.xyz/monitoring-agent-api v0.34.0 h1:SNgKvC1j8oYWQcdClyV2T5GsOQoG40c3pK9aYKm0j8A=
-kmodules.xyz/monitoring-agent-api v0.34.0/go.mod h1:XFDfMHDZQeNEPdTDeDr4M0dT4UCWs+4IYzgHw7JDlms=
+kmodules.xyz/monitoring-agent-api v0.34.1-0.20260129162443-1a9c94512625 h1:lXdd/uLigiWxGh/aTTjdMSoz1aJQNfcL0ZoIHNKv0ws=
+kmodules.xyz/monitoring-agent-api v0.34.1-0.20260129162443-1a9c94512625/go.mod h1:XFDfMHDZQeNEPdTDeDr4M0dT4UCWs+4IYzgHw7JDlms=
 kmodules.xyz/objectstore-api v0.34.0 h1:h16QGeKAJB27mj0rhvm3I0q0ulE99TgIulob/UkXzRc=
 kmodules.xyz/objectstore-api v0.34.0/go.mod h1:x6snmU8evi1K0qcWKrTXbkSN18hamcuGraYGCgtG9JY=
 kmodules.xyz/offshoot-api v0.34.0 h1:HnOOp8FrCjTWjtNApRDo6Ahe79tOlLrJmyye4xxO4Kk=
