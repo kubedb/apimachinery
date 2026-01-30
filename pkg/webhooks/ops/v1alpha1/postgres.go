@@ -394,7 +394,8 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequ
 			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 		}
 	}
-	if req.Spec.VolumeExpansion.Arbiter != nil {
+	if req.Spec.VolumeExpansion.Arbiter != nil && (req.Status.Phase == opsapi.OpsRequestPhasePending ||
+		req.Status.Phase == "") {
 		if db.Spec.Arbiter != nil && db.Spec.Arbiter.Resources.Requests.Storage() != nil {
 			curArbiter, ok := db.Spec.Arbiter.Resources.Requests[core.ResourceStorage]
 			if !ok {
