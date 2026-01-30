@@ -26,6 +26,7 @@ import (
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"github.com/pkg/errors"
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -213,6 +214,19 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"), db.Name, err.Error()))
 	}
 
+	if db.Spec.Configuration != nil && db.Spec.Configuration.SecretName != "" {
+		configSecret := &core.Secret{}
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      db.Spec.Configuration.SecretName,
+			Namespace: db.Namespace,
+		}, configSecret)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
+				db.Spec.Configuration.SecretName,
+				"failed to get configuration secret"))
+		}
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -225,11 +239,14 @@ var hanadbReservedVolumes = []string{
 	kubedb.HanaDBDataVolume,
 	kubedb.HanaDBVolumeScripts,
 	kubedb.HanaDBVolumePasswordSecret,
+	kubedb.HanaDBConfigVolumeName,
 }
 
 var hanadbReservedVolumesMountPaths = []string{
 	kubedb.HanaDBDataDir,
 	kubedb.HanaDBVolumeMountScripts,
+	kubedb.HanaDBConfigDir,
+	kubedb.HanaDBConfigMountPath,
 }
 
 func (w *HanaDBCustomWebhook) hanadbValidateVersion(db *api.HanaDB) error {

@@ -2255,10 +2255,14 @@ const (
 	// Mount paths
 	HanaDBDataDir         = "/hana/mounts"
 	HanaDBSecretMountPath = "/etc/hana-secrets"
+	HanaDBConfigFileName  = "global.ini"
+	HanaDBConfigDir       = "/hana/mounts/system/config"
+	HanaDBConfigMountPath = "/etc/hanadb-config"
 
 	// Volume names
 	HanaDBDataVolume           = "data"
 	HanaDBVolumePasswordSecret = "password-secret"
+	HanaDBConfigVolumeName     = "hanadb-config"
 
 	// User and Group IDs
 	HanaDBUserID  = 12000 // hxeadm UID
@@ -2287,10 +2291,8 @@ const (
 
 	HanaDBPrimaryServicePortName = "primary"
 
-	HanaDBCoordinatorPort           = 2380
-	HanaDBCoordinatorClientPort     = 2379
-	HanaDBCoordinatorPortName       = "coordinator"
-	HanaDBCoordinatorClientPortName = "coordinator-client"
+	HanaDBCoordinatorPort       = 2380
+	HanaDBCoordinatorClientPort = 2379
 
 	// TenantDatabaseName is the name of the KubeDB managed tenant database
 	KubeDBTenantDatabaseName = "KUBEDB_HEALTH_CHECK"
