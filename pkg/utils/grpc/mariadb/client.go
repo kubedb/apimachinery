@@ -104,10 +104,7 @@ func RunCommand(grpcClient pb.CommandServiceClient, cmd string) ([]byte, error) 
 	return resp.Output, nil
 }
 
-func RunCommandWithPayload(grpcClient pb.CommandServiceClient, cmd string, data []byte) ([]byte, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 300*time.Second)
-	defer cancel()
-
+func RunCommandWithPayload(ctx context.Context, grpcClient pb.CommandServiceClient, cmd string, data []byte) ([]byte, error) {
 	req := &pb.CommandRequest{
 		Command: cmd,
 		Data:    data,
