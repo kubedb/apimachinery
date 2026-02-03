@@ -897,17 +897,17 @@ const (
 	MilvusUsername = "root"
 
 	MilvusGrpcPortName = "grpc"
+	MilvusMetricsPortName = "metrics"
 	MilvusGrpcPort     = int32(19530)
 
-	MilvusVolumeNameDisk        = "disk"
-	MilvusVolumeNameWoodpecker  = "woodpecker"
+	MilvusDiskVolName        = "disk"
+	MilvusWoodpeckerVolName  = "woodpecker"
 	MilvusConfigVolName         = "milvus-config"
-	MilvusConfigDefaultFileName = "default.yaml"
-	MilvusConfigUserFileName    = "user.yaml"
 	MilvusToolsVolName          = "tools"
 	MilvusConfigFileName        = "milvus.yaml"
+	MilvusLogFileName           = "glog.conf"
 
-	MilvusQueryNodeDataSubPath = "/var/lib/milvus/data"
+	MilvusQueryNodeDataDir = "/var/lib/milvus/data"
 	MilvusDataDir              = "/var/lib/milvus"
 	MilvusConfigVolDir         = "/milvus/configs/"
 	MilvusToolsVolDir          = "/milvus/tools"
