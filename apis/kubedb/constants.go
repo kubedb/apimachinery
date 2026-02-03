@@ -63,12 +63,13 @@ const (
 	DistributedMaxVolumeUsed                   = "max_used"
 	DistributedVolumeCapacity                  = "capacity"
 	KubesliceContainerExcludeLabel             = "kubeslice.io/exclude"
+	KubeSliceDomainSuffix                      = ".slice.local"
 	DistributedPrimaryServiceExportSuffix      = "primary-serviceexport"
 
 	KubeSliceNSMIPKey         = "kubeslice.io/nsmIP"
 	KubeSlicePodIPVolumeName  = "podip"
 	KubeSlicePodIPFileName    = "podip"
-	KubeSliceNSMContainerName = "cmd-nsc"
+	KubeSliceNSMContainerName = "cmd-nsc-grpc"
 
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
@@ -407,6 +408,7 @@ const (
 	MariaDBDistributedVolumeCapacityGetCommand  = "get-volume-capacity"
 	MariaDBDistributedBackupCommand             = "take-backup"
 	MariaDBDistributedRestoreCommand            = "restore-backup"
+	MariaDBDistributedVolumeSnapshot            = "take-volume-snapshot"
 	MariaDBDistributedRecoveryFileCreateCommand = "create-recovery-done-file"
 	MariaDBArchiverPVCRestorerSuffix            = "pvc-restorer"
 	MariaDBBinlogRestoreSidekickSuffix          = "binlog-restorer"

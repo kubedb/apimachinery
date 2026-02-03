@@ -293,7 +293,11 @@ func (m MariaDB) StatsServiceLabels() map[string]string {
 }
 
 func (m MariaDB) PrimaryServiceDNS() string {
-	return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
+	if m.Spec.Distributed {
+		return fmt.Sprintf("%s.%s.svc%s", m.ServiceName(), m.Namespace, kubedb.KubeSliceDomainSuffix)
+	} else {
+		return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
+	}
 }
 
 func (m *MariaDB) SetDefaults(mdVersion *v1alpha1.MariaDBVersion) {
