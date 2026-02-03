@@ -896,22 +896,22 @@ const (
 const (
 	MilvusUsername = "root"
 
-	MilvusGrpcPortName = "grpc"
+	MilvusGrpcPortName    = "grpc"
 	MilvusMetricsPortName = "metrics"
-	MilvusGrpcPort     = int32(19530)
+	MilvusGrpcPort        = int32(19530)
 
-	MilvusDiskVolName        = "disk"
-	MilvusWoodpeckerVolName  = "woodpecker"
-	MilvusConfigVolName         = "milvus-config"
-	MilvusToolsVolName          = "tools"
-	MilvusConfigFileName        = "milvus.yaml"
-	MilvusLogFileName           = "glog.conf"
+	MilvusDiskVolName       = "disk"
+	MilvusWoodpeckerVolName = "woodpecker"
+	MilvusConfigVolName     = "milvus-config"
+	MilvusToolsVolName      = "tools"
+	MilvusConfigFileName    = "milvus.yaml"
+	MilvusLogFileName       = "glog.conf"
 
 	MilvusQueryNodeDataDir = "/var/lib/milvus/data"
-	MilvusDataDir              = "/var/lib/milvus"
-	MilvusConfigVolDir         = "/milvus/configs/"
-	MilvusToolsVolDir          = "/milvus/tools"
-	MilvusContainerName        = "milvus"
+	MilvusDataDir          = "/var/lib/milvus"
+	MilvusConfigVolDir     = "/milvus/configs/"
+	MilvusToolsVolDir      = "/milvus/tools"
+	MilvusContainerName    = "milvus"
 
 	EtcdEndpointsName = "ETCD_ENDPOINTS"
 	EtcdAPIVersion    = "operator.etcd.io/v1alpha1"
