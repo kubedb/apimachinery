@@ -1,0 +1,35 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the AppsCode Free Trial License 1.0.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Free-Trial-1.0.0.md
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package v1alpha1
+
+// YAMLConfig defines the desired state of Migrator
+type YAMLConfig struct {
+	Source Source `yaml:"source"`
+	Target Target `yaml:"target"`
+}
+
+// Source defines the source database configuration
+type Source struct {
+	// Postgres refers to the source Postgres database configuration
+	Postgres *PostgresSource `yaml:"postgres" json:"postgres,omitempty"`
+}
+
+// Target defines the target database configuration
+type Target struct {
+	// Postgres refers to the target Postgres database configuration
+	Postgres *PostgresTarget `yaml:"postgres" json:"postgres,omitempty"`
+}

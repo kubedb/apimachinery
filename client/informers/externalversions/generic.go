@@ -29,6 +29,7 @@ import (
 	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	migratorv1alpha1 "kubedb.dev/apimachinery/apis/migrator/v1alpha1"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
@@ -341,6 +342,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Weaviates().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("zookeepers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ZooKeepers().Informer()}, nil
+
+		// Group=migrator.kubedb.com, Version=v1alpha1
+	case migratorv1alpha1.SchemeGroupVersion.WithResource("migrators"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Migrator().V1alpha1().Migrators().Informer()}, nil
+	case migratorv1alpha1.SchemeGroupVersion.WithResource("migratoraddons"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Migrator().V1alpha1().MigratorAddons().Informer()}, nil
 
 		// Group=ops.kubedb.com, Version=v1alpha1
 	case opsv1alpha1.SchemeGroupVersion.WithResource("cassandraopsrequests"):
