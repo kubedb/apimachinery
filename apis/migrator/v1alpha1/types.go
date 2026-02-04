@@ -16,10 +16,10 @@ limitations under the License.
 
 package v1alpha1
 
-// YAMLConfig defines the desired state of Migrator
-type YAMLConfig struct {
-	Source Source `yaml:"source"`
-	Target Target `yaml:"target"`
+// MigrationConfig defines the desired state of Migrator
+type MigrationConfig struct {
+	Source Source `yaml:"source" json:"source"`
+	Target Target `yaml:"target" json:"target"`
 }
 
 // Source defines the source database configuration

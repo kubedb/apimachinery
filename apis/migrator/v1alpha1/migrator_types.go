@@ -70,6 +70,7 @@ type MigratorSpec struct {
 type MigratorStatus struct {
 	// Phase represents the current phase of migration
 	// +optional
+	// +kubebuilder:default:=Pending
 	Phase MigratorPhase `json:"phase,omitempty"`
 
 	// Progress contains the current progress of migration

@@ -514,6 +514,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.JobDefaults":                                 schema_apimachinery_apis_migrator_v1alpha1_JobDefaults(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.LogicalReplication":                          schema_apimachinery_apis_migrator_v1alpha1_LogicalReplication(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigrationConfig":                             schema_apimachinery_apis_migrator_v1alpha1_MigrationConfig(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.Migrator":                                    schema_apimachinery_apis_migrator_v1alpha1_Migrator(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigratorAddon":                               schema_apimachinery_apis_migrator_v1alpha1_MigratorAddon(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigratorAddonList":                           schema_apimachinery_apis_migrator_v1alpha1_MigratorAddonList(ref),
@@ -530,7 +531,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.Source":                                      schema_apimachinery_apis_migrator_v1alpha1_Source(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.Subscription":                                schema_apimachinery_apis_migrator_v1alpha1_Subscription(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.Target":                                      schema_apimachinery_apis_migrator_v1alpha1_Target(ref),
-		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.YAMLConfig":                                  schema_apimachinery_apis_migrator_v1alpha1_YAMLConfig(ref),
 	}
 }
 
@@ -26534,6 +26534,34 @@ func schema_apimachinery_apis_migrator_v1alpha1_LogicalReplication(ref common.Re
 	}
 }
 
+func schema_apimachinery_apis_migrator_v1alpha1_MigrationConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MigrationConfig defines the desired state of Migrator",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.Source"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.Target"),
+						},
+					},
+				},
+				Required: []string{"source", "target"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.Source", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.Target"},
+	}
+}
+
 func schema_apimachinery_apis_migrator_v1alpha1_Migrator(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -27223,33 +27251,5 @@ func schema_apimachinery_apis_migrator_v1alpha1_Target(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget"},
-	}
-}
-
-func schema_apimachinery_apis_migrator_v1alpha1_YAMLConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "YAMLConfig defines the desired state of Migrator",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"Source": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.Source"),
-						},
-					},
-					"Target": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.Target"),
-						},
-					},
-				},
-				Required: []string{"Source", "Target"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.Source", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.Target"},
 	}
 }

@@ -2889,6 +2889,7 @@ spec:
                 - type
                 x-kubernetes-list-type: map
               phase:
+                default: Pending
                 type: string
               progress:
                 properties:

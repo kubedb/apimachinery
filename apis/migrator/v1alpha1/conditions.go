@@ -80,24 +80,6 @@ func (m *Migrator) CalculatePhase() MigratorPhase {
 	return MigratorPhasePending
 }
 
-func SetDestroySignalSentConditionToTrue(migrator *Migrator) {
-	newCond := kmapi.Condition{
-		Type:    DestroySignalSend,
-		Status:  metav1.ConditionTrue,
-		Message: "Destroy signal has been sent.",
-	}
-	migrator.Status.Conditions = cutil.SetCondition(migrator.Status.Conditions, newCond)
-}
-
-func SetDestroySignalSentConditionToFalse(migrator *Migrator, err error) {
-	newCond := kmapi.Condition{
-		Type:    DestroySignalSend,
-		Status:  metav1.ConditionFalse,
-		Message: err.Error(),
-	}
-	migrator.Status.Conditions = cutil.SetCondition(migrator.Status.Conditions, newCond)
-}
-
 // SetMigrationRunningCondition sets the condition indicating migration is in progress
 func SetMigrationRunningCondition(migrator *Migrator) {
 	newCond := kmapi.Condition{
