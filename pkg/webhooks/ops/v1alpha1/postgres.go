@@ -87,7 +87,19 @@ func (w *PostgresOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, ol
 	if err := validatePostgresOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(ops)
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db dbapi.Postgres
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *PostgresOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -248,16 +260,18 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsReques
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
 	}
-	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindPostgresVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
-	if err != nil {
-		return err
-	}
-	if !yes {
-		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	if req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "" {
+		yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindPostgresVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+		if err != nil {
+			return err
+		}
+		if !yes {
+			return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+		}
 	}
 
 	postgresTargetVersion := &catalog.PostgresVersion{}
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: updateVersionSpec.TargetVersion,
 	}, postgresTargetVersion)
 	if err != nil {
@@ -374,12 +388,14 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequ
 		return errors.New("failed to parse current storage size")
 	}
 
-	if req.Spec.VolumeExpansion.Postgres != nil {
+	if req.Spec.VolumeExpansion.Postgres != nil && (req.Status.Phase == opsapi.OpsRequestPhasePending ||
+		req.Status.Phase == "") {
 		if cur.Cmp(*req.Spec.VolumeExpansion.Postgres) >= 0 {
 			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 		}
 	}
-	if req.Spec.VolumeExpansion.Arbiter != nil {
+	if req.Spec.VolumeExpansion.Arbiter != nil && (req.Status.Phase == opsapi.OpsRequestPhasePending ||
+		req.Status.Phase == "") {
 		if db.Spec.Arbiter != nil && db.Spec.Arbiter.Resources.Requests.Storage() != nil {
 			curArbiter, ok := db.Spec.Arbiter.Resources.Requests[core.ResourceStorage]
 			if !ok {

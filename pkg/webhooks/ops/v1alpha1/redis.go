@@ -93,7 +93,18 @@ func (w *RedisOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(newReq)
+	if err = w.validateCreateOrUpdate(newReq); err != nil {
+		return nil, err
+	}
+	if isOpsReqCompleted(newReq.Status.Phase) && !isOpsReqCompleted(oldReq.Status.Phase) { // just completed
+		var db dbapi.Redis
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: newReq.Spec.DatabaseRef.Name, Namespace: newReq.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *RedisOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -451,7 +462,7 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisVolumeExpansionOpsRequest(re
 		return errors.New("failed to parse current storage size")
 	}
 
-	if cur.Cmp(*req.Spec.VolumeExpansion.Redis) >= 0 {
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.Redis) >= 0 {
 		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 

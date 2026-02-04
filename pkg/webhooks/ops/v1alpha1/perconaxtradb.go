@@ -82,7 +82,19 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Contex
 	if err := w.validatePerconaXtraDBOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(ops)
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db dbapi.PerconaXtraDB
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *PerconaXtraDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -233,7 +245,7 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpans
 		return errors.Wrap(err, "failed to parse current storage size")
 	}
 
-	if cur.Cmp(*req.Spec.VolumeExpansion.PerconaXtraDB) >= 0 {
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.PerconaXtraDB) >= 0 {
 		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 	return nil

@@ -23,7 +23,6 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"github.com/pkg/errors"
@@ -86,7 +85,18 @@ func (w *MemcachedOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, o
 	if err := validateMemcachedOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(ops)
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db dbapi.Memcached
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *MemcachedOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -163,8 +173,8 @@ func (c *MemcachedOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Me
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Memcachedopsrequests.kubedb.com", Kind: "MemcachedOpsRequest"}, req.Name, allErr)
 }
 
-func (c *MemcachedOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MemcachedOpsRequest) (*olddbapi.Memcached, error) {
-	db := &olddbapi.Memcached{}
+func (c *MemcachedOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MemcachedOpsRequest) (*dbapi.Memcached, error) {
+	db := &dbapi.Memcached{}
 	if err := c.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
@@ -198,7 +208,7 @@ func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedHorizontalScalingOps
 	return nil
 }
 
-func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedUpdateVersionOpsRequest(db *olddbapi.Memcached, req *opsapi.MemcachedOpsRequest) error {
+func (c *MemcachedOpsRequestCustomWebhook) validateMemcachedUpdateVersionOpsRequest(db *dbapi.Memcached, req *opsapi.MemcachedOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")

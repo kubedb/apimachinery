@@ -83,7 +83,20 @@ func (w *MariaDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, old
 	if err := validateMariaDBOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(ops)
+
+	if err := w.validateCreateOrUpdate(ops); err != nil {
+		return nil, err
+	}
+
+	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
+		var db dbapi.MariaDB
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *MariaDBOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -242,7 +255,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReques
 			return errors.New("failed to parse mariadb storage size")
 		}
 
-		if cur.Cmp(*req.Spec.VolumeExpansion.MariaDB) >= 0 {
+		if cur.Cmp(*req.Spec.VolumeExpansion.MariaDB) >= 0 && (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") {
 			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 		}
 	}
@@ -255,7 +268,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReques
 		if !ok {
 			return errors.New("failed to parse maxscale storage size")
 		}
-		if cur.Cmp(*req.Spec.VolumeExpansion.MaxScale) >= 0 {
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.MaxScale) >= 0 {
 			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 		}
 	}
