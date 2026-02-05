@@ -588,6 +588,10 @@ const (
 
 	PostgresGRPCIssuerName           = "grpc-issuer"
 	PostgresGRPCSelfSignedIssuerName = "grpc-selfsigned"
+	PostgresTypeLabelKey             = "postgreses.kubedb.com/database.type"
+	PostgresReplicaInstanceNameKey   = "postgreses.kubedb.com/replica-instance-name"
+	PostgresTypeLabelKeyCluster      = "cluster"
+	PostgresTypeLabelKeyReadReplica  = "read-replica"
 
 	// =========================== ProxySQL Constants ============================
 	LabelProxySQLName                  = ProxySQLKey + "/name"

@@ -106,18 +106,6 @@ func (w *PostgresOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, ob
 	return nil, nil
 }
 
-func validatePostgresOpsRequest(req *opsapi.PostgresOpsRequest, oldReq *opsapi.PostgresOpsRequest) error {
-	preconditions := meta_util.PreConditionSet{Set: sets.New[string]("spec")}
-	_, err := meta_util.CreateStrategicPatch(oldReq, req, preconditions.PreconditionFunc()...)
-	if err != nil {
-		if mergepatch.IsPreconditionFailed(err) {
-			return fmt.Errorf("%v.%v", err, preconditions.Error())
-		}
-		return err
-	}
-	return nil
-}
-
 func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.PostgresOpsRequest) error {
 	if validType, _ := arrays.Contains(opsapi.PostgresOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
@@ -135,13 +123,13 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 	case opsapi.PostgresOpsRequestTypeRestart:
 
 	case opsapi.PostgresOpsRequestTypeVerticalScaling:
-		if err := w.validatePostgresVerticalScalingOpsRequest(req); err != nil {
+		if err := w.validatePostgresVerticalScalingOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
 	case opsapi.PostgresOpsRequestTypeHorizontalScaling:
-		if err := w.validatePostgresHorizontalScalingOpsRequest(req); err != nil {
+		if err := w.validatePostgresHorizontalScalingOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
@@ -204,30 +192,51 @@ func (w *PostgresOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PostgresOps
 	return postgres, nil
 }
 
-func (w *PostgresOpsRequestCustomWebhook) validatePostgresVerticalScalingOpsRequest(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresVerticalScalingOpsRequest(db *dbapi.Postgres, req *opsapi.PostgresOpsRequest) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
 		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
 	}
 
-	if verticalScalingSpec.Postgres == nil && verticalScalingSpec.Coordinator == nil && verticalScalingSpec.Arbiter == nil {
-		return errors.New("`spec.verticalScaling.Postgres`, `spec.verticalScaling.Coordinator`, `spec.verticalScaling.Arbiter` at least any of them should be present in vertical scaling ops request")
+	if verticalScalingSpec.Postgres == nil && verticalScalingSpec.Coordinator == nil && verticalScalingSpec.Arbiter == nil && verticalScalingSpec.ReadReplica == nil {
+		return errors.New("`spec.verticalScaling.Postgres`, `spec.verticalScaling.Coordinator`, `spec.verticalScaling.Arbiter`, `spec.verticalScaling.ReadReplica` at least any of them should be present in vertical scaling ops request")
 	}
-
+	if verticalScalingSpec.ReadReplica != nil {
+		for _, rrSpec := range verticalScalingSpec.ReadReplica {
+			if !hasReadReplica(db, rrSpec.Name) {
+				return errors.New("referenced read replica " + rrSpec.Name + " is not found in database spec")
+			}
+		}
+	}
 	return nil
 }
 
-func (w *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRequest(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRequest(db *dbapi.Postgres, req *opsapi.PostgresOpsRequest) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
 		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
 	}
-	if horizontalScalingSpec.Replicas == nil {
-		return errors.New("`spec.horizontalScaling.Replicas has to be mentioned")
+	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.ReadReplica == nil {
+		return errors.New("`spec.horizontalScaling.Replicas or `spec.readReplica` has to be mentioned")
 	}
-	if *horizontalScalingSpec.Replicas <= 0 {
+	if horizontalScalingSpec.Replicas != nil && *horizontalScalingSpec.Replicas <= 0 {
 		return errors.New("`spec.horizontalScaling.Replicas` can't be less than or equal 0")
 	}
+	if horizontalScalingSpec.ReadReplica != nil {
+		for _, rrSpec := range horizontalScalingSpec.ReadReplica {
+			if rrSpec.Replicas != nil && *rrSpec.Replicas <= 0 {
+				return errors.New("`spec.horizontalScaling.readReplica.replicas` can't be less than or equal 0")
+			}
+		}
+		for i := 0; i < len(db.Spec.ReadReplicas); i++ {
+			for j := i + 1; j < len(db.Spec.ReadReplicas); j++ {
+				if db.Spec.ReadReplicas[i].Name == db.Spec.ReadReplicas[j].Name {
+					return fmt.Errorf("`db.spec.readreplicas` index %v and %v has same name, name should be different", i, j)
+				}
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -414,4 +423,25 @@ func applyConfigExistsForPostgres(applyConfig map[string]string) bool {
 	}
 	_, exists := applyConfig[kubedb.PostgresCustomConfigFile]
 	return exists
+}
+
+func validatePostgresOpsRequest(req *opsapi.PostgresOpsRequest, oldReq *opsapi.PostgresOpsRequest) error {
+	preconditions := meta_util.PreConditionSet{Set: sets.New[string]("spec")}
+	_, err := meta_util.CreateStrategicPatch(oldReq, req, preconditions.PreconditionFunc()...)
+	if err != nil {
+		if mergepatch.IsPreconditionFailed(err) {
+			return fmt.Errorf("%v.%v", err, preconditions.Error())
+		}
+		return err
+	}
+	return nil
+}
+
+func hasReadReplica(db *dbapi.Postgres, replica string) bool {
+	for _, r := range db.Spec.ReadReplicas {
+		if r.Name == replica {
+			return true
+		}
+	}
+	return false
 }

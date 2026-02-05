@@ -4873,7 +4873,7 @@ spec:
                         type: array
                     type: object
                 type: object
-              readReaplicas:
+              readReplicas:
                 items:
                   properties:
                     name:

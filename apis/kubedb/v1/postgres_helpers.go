@@ -67,6 +67,7 @@ func (p Postgres) OffshootSelectors() map[string]string {
 		meta_util.NameLabelKey:      p.ResourceFQN(),
 		meta_util.InstanceLabelKey:  p.Name,
 		meta_util.ManagedByLabelKey: kubedb.GroupName,
+		kubedb.PostgresTypeLabelKey: kubedb.PostgresTypeLabelKeyCluster,
 	}
 	if p.Spec.Distributed {
 		sel[meta_util.NamespaceLabelKey] = p.Namespace
@@ -74,16 +75,58 @@ func (p Postgres) OffshootSelectors() map[string]string {
 	return sel
 }
 
+func (p Postgres) OffshootSelectorsForReadReplica() map[string]string {
+	sel := p.OffshootSelectors()
+	sel[kubedb.PostgresTypeLabelKey] = kubedb.PostgresTypeLabelKeyReadReplica
+	return sel
+}
+
+func (p Postgres) OffshootSelectorsForSingleReadReplicaGroup(replica string) map[string]string {
+	sel := p.OffshootSelectorsForReadReplica()
+	sel[kubedb.PostgresReplicaInstanceNameKey] = replica
+	return sel
+}
+
 func (p Postgres) OffshootLabels() map[string]string {
 	return p.offshootLabels(p.OffshootSelectors(), nil)
+}
+
+func (p Postgres) OffshootLabelsforReadReplica() map[string]string {
+	l := p.offshootLabels(p.OffshootSelectors(), nil)
+	l[kubedb.PostgresTypeLabelKey] = kubedb.PostgresTypeLabelKeyReadReplica
+	return l
 }
 
 func (p Postgres) PodLabels() map[string]string {
 	return p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Labels)
 }
 
+func (p Postgres) PodLabelsForReadReplica() map[string]string {
+	pl := p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Labels)
+	pl[kubedb.PostgresTypeLabelKey] = kubedb.PostgresTypeLabelKeyReadReplica
+	return pl
+}
+
+func (p Postgres) PodLabelsForSingleReadReplicaGroup(groupName string) map[string]string {
+	pl := p.PodLabelsForReadReplica()
+	pl[kubedb.PostgresReplicaInstanceNameKey] = groupName
+	return pl
+}
+
 func (p Postgres) PodControllerLabels() map[string]string {
 	return p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Controller.Labels)
+}
+
+func (p Postgres) PodControllerLabelsForReadReplica() map[string]string {
+	pl := p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Controller.Labels)
+	pl[kubedb.PostgresTypeLabelKey] = kubedb.PostgresTypeLabelKeyReadReplica
+	return pl
+}
+
+func (p Postgres) PodControllerLabelsForSingleReadReplicaGroup(group string) map[string]string {
+	pl := p.PodControllerLabelsForReadReplica()
+	pl[kubedb.PostgresReplicaInstanceNameKey] = group
+	return pl
 }
 
 func (p Postgres) SidekickLabels(skName string) map[string]string {
@@ -97,6 +140,11 @@ func (p Postgres) SidekickLabels(skName string) map[string]string {
 func (p Postgres) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(p.Spec.ServiceTemplates, alias)
 	return p.offshootLabels(meta_util.OverwriteKeys(p.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
+
+func (p Postgres) ReadReplicaServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(p.Spec.ServiceTemplates, alias)
+	return meta_util.OverwriteKeys(meta_util.OverwriteKeys(p.OffshootSelectorsForReadReplica(), extraLabels...), svcTemplate.Labels)
 }
 
 func (p Postgres) offshootLabels(selector, override map[string]string) map[string]string {
@@ -147,6 +195,14 @@ func (p Postgres) GoverningServiceName() string {
 	return meta_util.NameWithSuffix(p.ServiceName(), "pods")
 }
 
+func (p Postgres) ReadReplicaCommonServiceName() string {
+	return meta_util.NameWithSuffix(p.ServiceName(), "rr")
+}
+
+func (p Postgres) ReadReplicaServiceName(replica string) string {
+	return meta_util.NameWithSuffix(p.ReadReplicaCommonServiceName(), replica)
+}
+
 func (p Postgres) OffshootDistributedRBACName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), kubedb.DistributedRBACNameSuffix)
 }
@@ -182,6 +238,10 @@ func (p Postgres) OffshootDistributedGRPCSecretName() string {
 func (p Postgres) ConfigSecretName() string {
 	uid := string(p.UID)
 	return meta_util.NameWithSuffix(p.OffshootName(), uid[len(uid)-6:])
+}
+
+func (p Postgres) ReadReplicaName(name string) string {
+	return meta_util.NameWithSuffix(p.OffshootName(), name)
 }
 
 type postgresApp struct {
@@ -292,6 +352,13 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 		p.Spec.PodTemplate.Spec.ServiceAccountName = p.OffshootName()
 	}
 
+	if len(p.Spec.ReadReplicas) > 0 {
+		for i := range p.Spec.ReadReplicas {
+			rr := &p.Spec.ReadReplicas[i]
+			p.defaultReadReplicaSpec(rr)
+		}
+	}
+
 	if p.Spec.TLS != nil {
 		if p.Spec.SSLMode == "" {
 			p.Spec.SSLMode = PostgresSSLModeVerifyFull
@@ -354,6 +421,18 @@ func getMajorPgVersion(postgresVersion *catalog.PostgresVersion) (uint64, error)
 		return 0, errors.Wrap(err, "Failed to get postgres major.")
 	}
 	return ver.Major(), nil
+}
+
+func (p *Postgres) defaultReadReplicaSpec(rr *ReadReplicaSpec) {
+	if rr.Replicas == nil {
+		rr.Replicas = pointer.Int32P(1)
+	}
+	if rr.StorageType == "" {
+		rr.StorageType = StorageTypeDurable
+	}
+	if rr.Storage == nil {
+		rr.Storage = p.Spec.Storage
+	}
 }
 
 func (p *Postgres) updateConfigurationFieldIfNeeded() {
