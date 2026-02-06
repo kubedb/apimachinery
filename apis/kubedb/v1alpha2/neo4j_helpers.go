@@ -32,6 +32,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
 	"k8s.io/utils/ptr"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -328,4 +329,20 @@ func (r *Neo4j) StatsService() mona.StatsAccessor {
 
 func (r *Neo4j) StatsServiceLabels() map[string]string {
 	return r.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
+}
+
+// GetCertSecretName returns the secret name for a certificate alias if any,
+// otherwise returns default certificate secret name for the given alias.
+func (r *Neo4j) GetCertSecretName(alias Neo4jCertificateType) string {
+	if r.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(r.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return r.CertificateName(alias)
+}
+
+func (r *Neo4j) CertificateName(alias Neo4jCertificateType) string {
+	return meta_util.NameWithSuffix(r.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
