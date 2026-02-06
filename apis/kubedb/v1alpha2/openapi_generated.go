@@ -33109,17 +33109,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref common.Referenc
 							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},
-					"ephemeralStorage": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EphemeralStorage spec to specify the configuration of ephemeral storage type.",
-							Ref:         ref("k8s.io/api/core/v1.EmptyDirVolumeSource"),
-						},
-					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -33403,7 +33397,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusTopology(ref common.Referenc
 				Properties: map[string]spec.Schema{
 					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "If set to - \"Standalone\", Standalone is required, and Milvus will start a Standalone Mode \"Distributed\", DistributedSpec is required, and Milvus will start a Distributed Mode",
+							Description: "If set to - \"Standalone\", Milvus will start a Standalone Mode \"Distributed\", Milvus will start a Distributed Mode",
 							Type:        []string{"string"},
 							Format:      "",
 						},

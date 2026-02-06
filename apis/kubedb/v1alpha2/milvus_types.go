@@ -112,8 +112,8 @@ type MilvusSpec struct {
 
 type MilvusTopology struct {
 	// If set to -
-	// "Standalone", Standalone is required, and Milvus will start a Standalone Mode
-	// "Distributed", DistributedSpec is required, and Milvus will start a Distributed Mode
+	// "Standalone", Milvus will start a Standalone Mode
+	// "Distributed", Milvus will start a Distributed Mode
 	Mode *MilvusMode `json:"mode,omitempty"`
 
 	// Distributed contains information of the Distributed configuration.
@@ -123,14 +123,19 @@ type MilvusTopology struct {
 }
 
 type MilvusDistributedSpec struct {
+	// +optional
 	DataNode *MilvusNode `json:"datanode,omitempty"`
 
+	// +optional
 	MixCoord *MilvusNode `json:"mixcoord,omitempty"`
 
+	// +optional
 	QueryNode *MilvusNode `json:"querynode,omitempty"`
 
+	// +optional
 	StreamingNode *MilvusDataNode `json:"streamingnode,omitempty"`
 
+	// +optional
 	Proxy *MilvusNode `json:"proxy,omitempty"`
 }
 
@@ -153,9 +158,6 @@ type MilvusDataNode struct {
 
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
-
-	// EphemeralStorage spec to specify the configuration of ephemeral storage type.
-	EphemeralStorage *core.EmptyDirVolumeSource `json:"ephemeralStorage,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

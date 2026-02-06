@@ -3970,11 +3970,6 @@ func (in *MilvusDataNode) DeepCopyInto(out *MilvusDataNode) {
 		*out = new(corev1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.EphemeralStorage != nil {
-		in, out := &in.EphemeralStorage, &out.EphemeralStorage
-		*out = new(corev1.EmptyDirVolumeSource)
-		(*in).DeepCopyInto(*out)
-	}
 	return
 }
 
