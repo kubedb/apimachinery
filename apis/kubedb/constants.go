@@ -1759,7 +1759,7 @@ const (
 	ClickHouseKeeperServerID             = "KEEPERID"
 )
 
-// =========================== Cassandra Constants ============================
+// =========================== Neo4j Constants ============================
 
 const (
 	Neo4jBoltPort       = 7687 // Bolt protocol (binary driver, neo4j:// and bolt://)

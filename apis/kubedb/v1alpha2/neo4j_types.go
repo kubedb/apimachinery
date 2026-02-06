@@ -138,6 +138,17 @@ const (
 	Neo4jProtocolTCPTx          Neo4jProtocol = "tcp-tx"
 )
 
+// +kubebuilder:validation:Enum=ca;bolt;http;client;server
+type Neo4jCertificateType string
+
+const (
+	Neo4jCertificateTypeCA     Neo4jCertificateType = "ca"
+	Neo4jCertificateTypeBolt   Neo4jCertificateType = "bolt"
+	Neo4jCertificateTypeHTTP   Neo4jCertificateType = "http"
+	Neo4jCertificateTypeClient Neo4jCertificateType = "client"
+	Neo4jCertificateTypeServer Neo4jCertificateType = "server"
+)
+
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Neo4jList contains a list of Neo4j.
