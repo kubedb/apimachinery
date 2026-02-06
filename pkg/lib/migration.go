@@ -155,7 +155,7 @@ func CreatePVCMounterPod(client kubernetes.Interface, dbPod *core.Pod, pvcMounte
 	return err
 }
 
-func CreateDataMigratorJob(client kubernetes.Interface, jobMeta metav1.ObjectMeta, pvcTemplate string, podName string) error {
+func CreateDataMigratorJob(client kubernetes.Interface, jobMeta metav1.ObjectMeta, dbPod *core.Pod, pvcTemplate string) error {
 	job := batchv1.Job{
 		ObjectMeta: jobMeta,
 		Spec: batchv1.JobSpec{
@@ -163,6 +163,10 @@ func CreateDataMigratorJob(client kubernetes.Interface, jobMeta metav1.ObjectMet
 			Template: core.PodTemplateSpec{
 				Spec: core.PodSpec{
 					RestartPolicy: core.RestartPolicyNever,
+					NodeSelector: map[string]string{
+						"kubernetes.io/hostname": dbPod.Spec.NodeName,
+					},
+					Tolerations: dbPod.Spec.Tolerations,
 					Containers: []core.Container{
 						{
 							Name:            migratorJobTemplate,
@@ -200,7 +204,7 @@ func CreateDataMigratorJob(client kubernetes.Interface, jobMeta metav1.ObjectMet
 							Name: migratorJobSourceVolumeName,
 							VolumeSource: core.VolumeSource{
 								PersistentVolumeClaim: &core.PersistentVolumeClaimVolumeSource{
-									ClaimName: GetDatabasePVCName(pvcTemplate, podName),
+									ClaimName: GetDatabasePVCName(pvcTemplate, dbPod.Name),
 								},
 							},
 						},
@@ -208,7 +212,7 @@ func CreateDataMigratorJob(client kubernetes.Interface, jobMeta metav1.ObjectMet
 							Name: migratorJobDestinationVolumeName,
 							VolumeSource: core.VolumeSource{
 								PersistentVolumeClaim: &core.PersistentVolumeClaimVolumeSource{
-									ClaimName: GetMigratorPVCName(podName),
+									ClaimName: GetMigratorPVCName(dbPod.Name),
 								},
 							},
 						},
