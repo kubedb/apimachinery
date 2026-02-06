@@ -89,7 +89,7 @@ type ServiceMonitorSpec struct {
 	// endpoints defines the list of endpoints part of this ServiceMonitor.
 	// Defines how to scrape metrics from Kubernetes [Endpoints](https://kubernetes.io/docs/concepts/services-networking/service/#endpoints) objects.
 	// In most cases, an Endpoints object is backed by a Kubernetes [Service](https://kubernetes.io/docs/concepts/services-networking/service/) object with the same name and labels.
-	// +required
+	// +optional
 	Endpoints []Endpoint `json:"endpoints"`
 }
 

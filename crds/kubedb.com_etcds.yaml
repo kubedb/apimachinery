@@ -1489,8 +1489,6 @@ spec:
                             items:
                               type: string
                             type: array
-                        required:
-                        - endpoints
                         type: object
                     type: object
                 type: object

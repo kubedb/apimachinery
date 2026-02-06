@@ -31090,7 +31090,6 @@ func schema_kmodulesxyz_monitoring_agent_api_api_v1_ServiceMonitorSpec(ref commo
 						},
 					},
 				},
-				Required: []string{"endpoints"},
 			},
 		},
 		Dependencies: []string{
