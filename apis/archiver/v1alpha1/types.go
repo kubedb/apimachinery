@@ -85,10 +85,17 @@ type LogBackupOptions struct {
 
 	// RetentionPeriod is the retention policy to be used for Logs (i.e. '60d') means how long logs will be retained before being pruned.
 	// The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years.
+	// time.RFC3339 We need to parse the time to RFC3339 format
 	// +kubebuilder:validation:Pattern=^[1-9][0-9]*[dwmy]$
+	// +kubebuilder:default="1y"
 	// +optional
 	RetentionPeriod string `json:"retentionPeriod,omitempty"`
-	// time.RFC3339 We need to parse the time to RFC3339 format
+
+	// RetentionSchedule defines the cron expression when the log retention (pruning) task will run.
+	// Cron format, e.g. "0 0 1 * *" (monthly on the 1st at 12).
+	// +kubebuilder:default="0 0 1 * *"
+	// +optional
+	RetentionSchedule string `json:"retentionSchedule,omitempty"`
 
 	// SuccessfulLogHistoryLimit defines the number of successful Logs backup status that the incremental snapshot will retain
 	// The default value is 5.

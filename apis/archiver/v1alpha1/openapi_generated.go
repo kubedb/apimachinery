@@ -33478,7 +33478,14 @@ func schema_apimachinery_apis_archiver_v1alpha1_LogBackupOptions(ref common.Refe
 					},
 					"retentionPeriod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RetentionPeriod is the retention policy to be used for Logs (i.e. '60d') means how long logs will be retained before being pruned. The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years.",
+							Description: "RetentionPeriod is the retention policy to be used for Logs (i.e. '60d') means how long logs will be retained before being pruned. The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years. time.RFC3339 We need to parse the time to RFC3339 format",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"retentionSchedule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionSchedule defines the cron expression when the log retention (pruning) task will run. Cron format, e.g. \"0 0 1 * *\" (monthly on the 1st at 12).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
