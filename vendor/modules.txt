@@ -137,7 +137,7 @@ github.com/blang/semver/v4
 # github.com/cenkalti/backoff/v5 v5.0.3
 ## explicit; go 1.23
 github.com/cenkalti/backoff/v5
-# github.com/cert-manager/cert-manager v1.19.2
+# github.com/cert-manager/cert-manager v1.19.3
 ## explicit; go 1.25.0
 github.com/cert-manager/cert-manager/pkg/apis/acme
 github.com/cert-manager/cert-manager/pkg/apis/acme/v1
@@ -1872,7 +1872,7 @@ kmodules.xyz/custom-resources/crds
 # kmodules.xyz/go-containerregistry v0.0.15
 ## explicit; go 1.24.0
 kmodules.xyz/go-containerregistry/name
-# kmodules.xyz/monitoring-agent-api v0.34.0
+# kmodules.xyz/monitoring-agent-api v0.34.1
 ## explicit; go 1.24.0
 kmodules.xyz/monitoring-agent-api/api/v1
 # kmodules.xyz/objectstore-api v0.34.0
