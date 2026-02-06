@@ -64,10 +64,10 @@ func (p Postgres) OffshootName() string {
 
 func (p Postgres) OffshootSelectors() map[string]string {
 	sel := map[string]string{
-		meta_util.NameLabelKey:              p.ResourceFQN(),
-		meta_util.InstanceLabelKey:          p.Name,
-		meta_util.ManagedByLabelKey:         kubedb.GroupName,
-		kubedb.PostgresDatabaseTypeLabelKey: kubedb.PostgresDatabaseTypeLabelKeyCluster,
+		meta_util.NameLabelKey:                 p.ResourceFQN(),
+		meta_util.InstanceLabelKey:             p.Name,
+		meta_util.ManagedByLabelKey:            kubedb.GroupName,
+		kubedb.PostgresDatabaseClusterLabelKey: p.Name,
 	}
 	if p.Spec.Distributed {
 		sel[meta_util.NamespaceLabelKey] = p.Namespace
@@ -77,13 +77,13 @@ func (p Postgres) OffshootSelectors() map[string]string {
 
 func (p Postgres) ReadReplicaOffshootSelectors() map[string]string {
 	sel := p.OffshootSelectors()
-	sel[kubedb.PostgresDatabaseTypeLabelKey] = kubedb.PostgresDatabaseTypeLabelKeyReadReplica
+	sel[kubedb.LabelRole] = kubedb.PostgresPodReadReplica
 	return sel
 }
 
 func (p Postgres) ReadReplicaSingleGroupOffshootSelectors(replica string) map[string]string {
 	sel := p.ReadReplicaOffshootSelectors()
-	sel[kubedb.PostgresReadReplicaNameLabelKey] = replica
+	sel[kubedb.PostgresDatabaseReadReplicaLabelKey] = replica
 	return sel
 }
 
@@ -93,7 +93,7 @@ func (p Postgres) OffshootLabels() map[string]string {
 
 func (p Postgres) ReadReplicaOffshootLabels() map[string]string {
 	l := p.offshootLabels(p.OffshootSelectors(), nil)
-	l[kubedb.PostgresDatabaseTypeLabelKey] = kubedb.PostgresDatabaseTypeLabelKeyReadReplica
+	l[kubedb.LabelRole] = kubedb.PostgresPodReadReplica
 	return l
 }
 
@@ -103,13 +103,13 @@ func (p Postgres) PodLabels() map[string]string {
 
 func (p Postgres) ReadReplicaPodLabels() map[string]string {
 	pl := p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Labels)
-	pl[kubedb.PostgresDatabaseTypeLabelKey] = kubedb.PostgresDatabaseTypeLabelKeyReadReplica
+	pl[kubedb.LabelRole] = kubedb.PostgresPodReadReplica
 	return pl
 }
 
 func (p Postgres) ReadReplicaSingleGroupPodLabels(groupName string) map[string]string {
 	pl := p.ReadReplicaPodLabels()
-	pl[kubedb.PostgresReadReplicaNameLabelKey] = groupName
+	pl[kubedb.PostgresDatabaseReadReplicaLabelKey] = groupName
 	return pl
 }
 
@@ -119,13 +119,13 @@ func (p Postgres) PodControllerLabels() map[string]string {
 
 func (p Postgres) ReadReplicaPodControllerLabels() map[string]string {
 	pl := p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Controller.Labels)
-	pl[kubedb.PostgresDatabaseTypeLabelKey] = kubedb.PostgresDatabaseTypeLabelKeyReadReplica
+	pl[kubedb.LabelRole] = kubedb.PostgresPodReadReplica
 	return pl
 }
 
 func (p Postgres) ReadReplicaSingleGroupPodControllerLabels(group string) map[string]string {
 	pl := p.ReadReplicaPodControllerLabels()
-	pl[kubedb.PostgresReadReplicaNameLabelKey] = group
+	pl[kubedb.PostgresDatabaseReadReplicaLabelKey] = group
 	return pl
 }
 
@@ -142,8 +142,8 @@ func (p Postgres) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]st
 	return p.offshootLabels(meta_util.OverwriteKeys(p.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
-func (p Postgres) ReadReplicaServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
-	svcTemplate := GetServiceTemplate(p.Spec.ServiceTemplates, alias)
+func (p Postgres) ReadReplicaServiceLabels(tpl []ReadReplicaServiceTemplateSpec, alias string, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetReadReplicaServiceTemplate(tpl, alias)
 	return meta_util.OverwriteKeys(meta_util.OverwriteKeys(p.ReadReplicaOffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 

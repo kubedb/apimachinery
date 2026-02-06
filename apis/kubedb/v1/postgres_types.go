@@ -21,6 +21,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -247,6 +248,9 @@ type ReadReplicaSpec struct {
 	// +kubebuilder:default={name:"default"}
 	// +optional
 	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
+	// ServiceTemplates is an optional configuration for services used to expose database
+	// +optional
+	ServiceTemplates []ReadReplicaServiceTemplateSpec `json:"serviceTemplates,omitempty"`
 }
 
 // PostgreLeaderElectionConfig contains essential attributes of leader election.
@@ -483,6 +487,15 @@ const (
 	PostgresStorageTypeHDD PostgresStorageType = "hdd"
 	PostgresStorageTypeSAN PostgresStorageType = "san"
 )
+
+type ReadReplicaServiceTemplateSpec struct {
+	// Alias represents the identifier of the service.
+	Name string `json:"alias"`
+
+	// ServiceTemplate is an optional configuration for a service used to expose database
+	// +optional
+	ofstv1.ServiceTemplateSpec `json:",inline,omitempty"`
+}
 
 var _ Accessor = &Postgres{}
 

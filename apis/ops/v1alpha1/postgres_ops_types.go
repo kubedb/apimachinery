@@ -32,6 +32,16 @@ const (
 	ResourcePluralPostgresOpsRequest   = "postgresopsrequests"
 )
 
+// +kubebuilder:validation:Enum=Durable;Ephemeral
+type StorageType string
+
+const (
+	// default storage type and requires spec.storage to be configured
+	StorageTypeDurable StorageType = "Durable"
+	// Uses emptyDir as storage
+	StorageTypeEphemeral StorageType = "Ephemeral"
+)
+
 // PostgresOpsRequest defines a PostgreSQL DBA operation.
 
 // +genclient
@@ -144,7 +154,30 @@ type PostgresHorizontalScalingSpec struct {
 }
 
 type ReadReplicaHzScalingSpec struct {
-	*dbapi.ReadReplicaSpec `json:",inline,omitempty"`
+	// Name specifies the name of the read replica
+	Name string `json:"name"`
+	// Number of instances to deploy for a Postgres database.
+	Replicas *int32 `json:"replicas,omitempty"`
+	// Compute Resources required by the sidecar container.
+	// +optional
+	Resources core.ResourceRequirements `json:"resources,omitempty"`
+	// NodeSelector is a selector which must be true for the pod to fit on a node.
+	// Selector which must match a node's labels for the pod to be scheduled on that node.
+	// More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+	// +optional
+	// +mapType=atomic
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+	// If specified, the pod's tolerations.
+	// +optional
+	Tolerations []core.Toleration `json:"tolerations,omitempty"`
+	// StorageType can be durable (default) or ephemeral
+	StorageType StorageType `json:"storageType,omitempty"`
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+	// PodPlacementPolicy is the reference of the podPlacementPolicy
+	// +kubebuilder:default={name:"default"}
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 	// We can use replicas: 0 for removing a read replica group instead of specifying remove: true
 	// However it feels more convenient to have a separate field for removing a read replica group
 	// TODO: in case we go with replicas: 0 for removing, remove the validation webhook that checks for replicas < 1
