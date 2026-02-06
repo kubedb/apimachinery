@@ -109,6 +109,7 @@ func CreatePVCMounterPod(client kubernetes.Interface, dbPod *core.Pod, pvcMounte
 			NodeSelector: map[string]string{
 				"kubernetes.io/hostname": dbPod.Spec.NodeName,
 			},
+			Tolerations: dbPod.Spec.Tolerations,
 			Containers: []core.Container{
 				{
 					Name:            pvcMounterPodTemplate,
