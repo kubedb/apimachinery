@@ -586,8 +586,12 @@ const (
 	SYS_RESOURCE              = "SYS_RESOURCE"
 	DropCapabilityALL         = "ALL"
 
-	PostgresGRPCIssuerName           = "grpc-issuer"
-	PostgresGRPCSelfSignedIssuerName = "grpc-selfsigned"
+	PostgresGRPCIssuerName                  = "grpc-issuer"
+	PostgresGRPCSelfSignedIssuerName        = "grpc-selfsigned"
+	PostgresDatabaseTypeLabelKey            = "postgreses.kubedb.com/database.type"
+	PostgresReadReplicaNameLabelKey         = "postgreses.kubedb.com/read-replica-name"
+	PostgresDatabaseTypeLabelKeyCluster     = "cluster"
+	PostgresDatabaseTypeLabelKeyReadReplica = "read-replica"
 
 	// =========================== ProxySQL Constants ============================
 	LabelProxySQLName                  = ProxySQLKey + "/name"

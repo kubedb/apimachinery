@@ -3855,7 +3855,7 @@ func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, o
 	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
 	out.Arbiter = (*ArbiterSpec)(unsafe.Pointer(in.Arbiter))
 	out.Replication = (*PostgresReplication)(unsafe.Pointer(in.Replication))
-	// WARNING: in.ReadReaplicas requires manual conversion: does not exist in peer-type
+	// WARNING: in.ReadReplicas requires manual conversion: does not exist in peer-type
 	return nil
 }
 

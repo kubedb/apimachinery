@@ -171,7 +171,7 @@ type PostgresSpec struct {
 	Replication *PostgresReplication `json:"replication,omitempty"`
 
 	// +optional
-	ReadReaplicas []ReadReplicaSpec `json:"readReaplicas,omitempty"`
+	ReadReplicas []ReadReplicaSpec `json:"readReplicas,omitempty"`
 }
 
 type PostgresConfiguration struct {

@@ -138,14 +138,32 @@ type PostgresHorizontalScalingSpec struct {
 	// Streaming mode
 	// +kubebuilder:default="Asynchronous"
 	StreamingMode *PostgresStreamingMode `json:"streamingMode,omitempty"`
+
+	// +optional
+	ReadReplicas []ReadReplicaHzScalingSpec `json:"readReplica,omitempty"`
+}
+
+type ReadReplicaHzScalingSpec struct {
+	*dbapi.ReadReplicaSpec `json:",inline,omitempty"`
+	// We can use replicas: 0 for removing a read replica group instead of specifying remove: true
+	// However it feels more convenient to have a separate field for removing a read replica group
+	// TODO: in case we go with replicas: 0 for removing, remove the validation webhook that checks for replicas < 1
+	// +optional
+	Remove bool `json:"remove,omitempty"`
 }
 
 // PostgresVerticalScalingSpec is the spec for Postgres vertical scaling
 type PostgresVerticalScalingSpec struct {
-	Postgres    *PodResources       `json:"postgres,omitempty"`
-	Exporter    *ContainerResources `json:"exporter,omitempty"`
-	Coordinator *ContainerResources `json:"coordinator,omitempty"`
-	Arbiter     *PodResources       `json:"arbiter,omitempty"`
+	Postgres    *PodResources          `json:"postgres,omitempty"`
+	Exporter    *ContainerResources    `json:"exporter,omitempty"`
+	Coordinator *ContainerResources    `json:"coordinator,omitempty"`
+	Arbiter     *PodResources          `json:"arbiter,omitempty"`
+	ReadReplica []ReadReplicaResources `json:"readReplica,omitempty"`
+}
+
+type ReadReplicaResources struct {
+	Postgres *PodResources `json:"postgres,omitempty"`
+	Name     string        `json:"name,omitempty"`
 }
 
 type PostgresMigrationSpec struct {

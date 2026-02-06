@@ -2835,8 +2835,8 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		*out = new(PostgresReplication)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ReadReaplicas != nil {
-		in, out := &in.ReadReaplicas, &out.ReadReaplicas
+	if in.ReadReplicas != nil {
+		in, out := &in.ReadReplicas, &out.ReadReplicas
 		*out = make([]ReadReplicaSpec, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
