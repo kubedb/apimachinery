@@ -356,6 +356,11 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(d
 	if req.Spec.Migration.StorageClassName == nil {
 		return errors.New("spec.migration.storageClassName is required")
 	}
+	if req.Spec.Timeout == nil {
+		// timeout is required for Storage Migration ops request because it's a long-running operation
+		// default timeout is len(pods) * 2 minute
+		return errors.New("spec.timeout is required for Storage Migration ops request")
+	}
 	// check new storageClass
 	var newstorage, oldstorage storagev1.StorageClass
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
