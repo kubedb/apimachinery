@@ -129,7 +129,7 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 				err.Error()))
 		}
 	case opsapi.PostgresOpsRequestTypeHorizontalScaling:
-		if err := w.validatePostgresHorizontalScalingOpsRequest(db, req); err != nil {
+		if err := w.validatePostgresHorizontalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
@@ -211,7 +211,7 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVerticalScalingOpsRequ
 	return nil
 }
 
-func (w *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRequest(db *dbapi.Postgres, req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRequest(req *opsapi.PostgresOpsRequest) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
 		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
