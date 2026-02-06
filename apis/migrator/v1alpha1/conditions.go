@@ -74,9 +74,6 @@ func (m *Migrator) CalculatePhase() MigratorPhase {
 	if cutil.IsConditionTrue(m.Status.Conditions, MigrationRunning) {
 		return MigratorPhaseRunning
 	}
-	if cutil.IsConditionTrue(m.Status.Conditions, MigratorJobTriggered) {
-		return MigratorPhaseRunning
-	}
 	return MigratorPhasePending
 }
 
