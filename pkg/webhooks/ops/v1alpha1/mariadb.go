@@ -255,7 +255,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReques
 			return errors.New("failed to parse mariadb storage size")
 		}
 
-		if cur.Cmp(*req.Spec.VolumeExpansion.MariaDB) >= 0 {
+		if cur.Cmp(*req.Spec.VolumeExpansion.MariaDB) >= 0 && (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") {
 			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 		}
 	}
@@ -268,7 +268,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReques
 		if !ok {
 			return errors.New("failed to parse maxscale storage size")
 		}
-		if cur.Cmp(*req.Spec.VolumeExpansion.MaxScale) >= 0 {
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.MaxScale) >= 0 {
 			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 		}
 	}
