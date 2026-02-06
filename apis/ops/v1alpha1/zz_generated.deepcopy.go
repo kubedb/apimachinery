@@ -4898,8 +4898,8 @@ func (in *PostgresHorizontalScalingSpec) DeepCopyInto(out *PostgresHorizontalSca
 		*out = new(PostgresStreamingMode)
 		**out = **in
 	}
-	if in.ReadReplica != nil {
-		in, out := &in.ReadReplica, &out.ReadReplica
+	if in.ReadReplicas != nil {
+		in, out := &in.ReadReplicas, &out.ReadReplicas
 		*out = make([]ReadReplicaHzScalingSpec, len(*in))
 		for i := range *in {
 			(*in)[i].DeepCopyInto(&(*out)[i])
