@@ -90,7 +90,7 @@ type ServiceMonitorSpec struct {
 	// Defines how to scrape metrics from Kubernetes [Endpoints](https://kubernetes.io/docs/concepts/services-networking/service/#endpoints) objects.
 	// In most cases, an Endpoints object is backed by a Kubernetes [Service](https://kubernetes.io/docs/concepts/services-networking/service/) object with the same name and labels.
 	// +optional
-	Endpoints []Endpoint `json:"endpoints"`
+	Endpoints []Endpoint `json:"endpoints,omitempty"`
 }
 
 // Endpoint defines an endpoint serving Prometheus metrics to be scraped by

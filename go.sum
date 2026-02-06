@@ -73,8 +73,8 @@ github.com/blang/semver/v4 v4.0.0 h1:1PFHFE6yCCTv8C1TeyNNarDzntLi7wMI5i/pzqYIsAM
 github.com/blang/semver/v4 v4.0.0/go.mod h1:IbckMUScFkM3pff0VJDNKRiT6TG/YpiHIM2yvyW5YoQ=
 github.com/cenkalti/backoff/v5 v5.0.3 h1:ZN+IMa753KfX5hd8vVaMixjnqRZ3y8CuJKRKj1xcsSM=
 github.com/cenkalti/backoff/v5 v5.0.3/go.mod h1:rkhZdG3JZukswDf7f0cwqPNk4K0sa+F97BxZthm/crw=
-github.com/cert-manager/cert-manager v1.19.2 h1:jSprN1h5pgNDSl7HClAmIzXuTxic/5FXJ32kbQHqjlM=
-github.com/cert-manager/cert-manager v1.19.2/go.mod h1:e9NzLtOKxTw7y99qLyWGmPo6mrC1Nh0EKKcMkRfK+GE=
+github.com/cert-manager/cert-manager v1.19.3 h1:3d0Nk/HO3BOmAdBJNaBh+6YgaO3Ciey3xCpOjiX5Obs=
+github.com/cert-manager/cert-manager v1.19.3/go.mod h1:e9NzLtOKxTw7y99qLyWGmPo6mrC1Nh0EKKcMkRfK+GE=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
@@ -776,8 +776,8 @@ kmodules.xyz/custom-resources v0.34.0 h1:ljkIYzIq0A3Awj87kkpuYqS9aifuyR3Hr9q2OVK
 kmodules.xyz/custom-resources v0.34.0/go.mod h1:pcA/n/CnrycjKCRNtU9Z+l5svhzFncLY2Kn9pqeXDVs=
 kmodules.xyz/go-containerregistry v0.0.15 h1:PRY5FDOzb6u23KOulQ4SWNdeUkBKmezLyJXP88q4EPw=
 kmodules.xyz/go-containerregistry v0.0.15/go.mod h1:rO0DEbYYEu1BfVcZ1pXV+3RgzVXr/k5hXcO+BQYVVDI=
-kmodules.xyz/monitoring-agent-api v0.34.1-0.20260206124417-c4f0b1d2470a h1:z61oDrwGNTHkpZ8d4TuInbFyTzXfCS2OL+tCDCn0DNQ=
-kmodules.xyz/monitoring-agent-api v0.34.1-0.20260206124417-c4f0b1d2470a/go.mod h1:XFDfMHDZQeNEPdTDeDr4M0dT4UCWs+4IYzgHw7JDlms=
+kmodules.xyz/monitoring-agent-api v0.34.1 h1:0ANZgff50xF9D9cFng1NBVmSeLwiYPsZKiFLcxAY9bQ=
+kmodules.xyz/monitoring-agent-api v0.34.1/go.mod h1:XFDfMHDZQeNEPdTDeDr4M0dT4UCWs+4IYzgHw7JDlms=
 kmodules.xyz/objectstore-api v0.34.0 h1:h16QGeKAJB27mj0rhvm3I0q0ulE99TgIulob/UkXzRc=
 kmodules.xyz/objectstore-api v0.34.0/go.mod h1:x6snmU8evi1K0qcWKrTXbkSN18hamcuGraYGCgtG9JY=
 kmodules.xyz/offshoot-api v0.34.0 h1:HnOOp8FrCjTWjtNApRDo6Ahe79tOlLrJmyye4xxO4Kk=
