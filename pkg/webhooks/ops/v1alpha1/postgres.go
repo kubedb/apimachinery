@@ -198,11 +198,11 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVerticalScalingOpsRequ
 		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
 	}
 
-	if verticalScalingSpec.Postgres == nil && verticalScalingSpec.Coordinator == nil && verticalScalingSpec.Arbiter == nil && verticalScalingSpec.ReadReplica == nil {
+	if verticalScalingSpec.Postgres == nil && verticalScalingSpec.Coordinator == nil && verticalScalingSpec.Arbiter == nil && verticalScalingSpec.ReadReplicas == nil {
 		return errors.New("`spec.verticalScaling.Postgres`, `spec.verticalScaling.Coordinator`, `spec.verticalScaling.Arbiter`, `spec.verticalScaling.ReadReplica` at least any of them should be present in vertical scaling ops request")
 	}
-	if verticalScalingSpec.ReadReplica != nil {
-		for _, rrSpec := range verticalScalingSpec.ReadReplica {
+	if verticalScalingSpec.ReadReplicas != nil {
+		for _, rrSpec := range verticalScalingSpec.ReadReplicas {
 			if !hasReadReplica(db, rrSpec.Name) {
 				return errors.New("referenced read replica " + rrSpec.Name + " is not found in database spec")
 			}
