@@ -28733,6 +28733,10 @@
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
         },
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for services used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        },
         "storage": {
           "description": "Storage to specify how storage shall be used.",
           "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
@@ -33882,6 +33886,22 @@
             "LoadBalancer",
             "NodePort"
           ]
+        }
+      }
+    },
+    "xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec": {
+      "description": "ServiceTemplateSpec describes the data a service should have when created from a template",
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceSpec"
         }
       }
     },

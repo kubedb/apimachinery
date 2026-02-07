@@ -41,6 +41,7 @@ import (
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
+	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ofst_util "kmodules.xyz/offshoot-api/util"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
@@ -147,8 +148,7 @@ func (p Postgres) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]st
 	return p.offshootLabels(meta_util.OverwriteKeys(p.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
-func (p Postgres) ReadReplicaServiceLabels(tpl []ReadReplicaServiceTemplateSpec, alias string, extraLabels ...map[string]string) map[string]string {
-	svcTemplate := GetReadReplicaServiceTemplate(tpl, alias)
+func (p Postgres) ReadReplicaServiceLabels(svcTemplate *ofstv1.ServiceTemplateSpec, extraLabels ...map[string]string) map[string]string {
 	return meta_util.OverwriteKeys(meta_util.OverwriteKeys(p.ReadReplicaOffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
@@ -157,8 +157,7 @@ func (p Postgres) ReadReplicaCommonServiceLabels(alias ServiceAlias, extraLabels
 	return meta_util.OverwriteKeys(meta_util.OverwriteKeys(p.ReadReplicaOffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
-func (p Postgres) ReadReplicaSingleGroupServiceLabels(tpl []ReadReplicaServiceTemplateSpec, alias, groupName string, extraLabels ...map[string]string) map[string]string {
-	svcTemplate := GetReadReplicaServiceTemplate(tpl, alias)
+func (p Postgres) ReadReplicaSingleGroupServiceLabels(svcTemplate *ofstv1.ServiceTemplateSpec, groupName string, extraLabels ...map[string]string) map[string]string {
 	return meta_util.OverwriteKeys(meta_util.OverwriteKeys(p.ReadReplicaSingleGroupOffshootSelectors(groupName), extraLabels...), svcTemplate.Labels)
 }
 

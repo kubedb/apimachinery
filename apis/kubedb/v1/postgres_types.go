@@ -248,9 +248,9 @@ type ReadReplicaSpec struct {
 	// +kubebuilder:default={name:"default"}
 	// +optional
 	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
-	// ServiceTemplates is an optional configuration for services used to expose database
+	// ServiceTemplate is an optional configuration for services used to expose database
 	// +optional
-	ServiceTemplates []ReadReplicaServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+	ServiceTemplate *ofstv1.ServiceTemplateSpec `json:"serviceTemplate,omitempty"`
 }
 
 // PostgreLeaderElectionConfig contains essential attributes of leader election.
@@ -487,15 +487,6 @@ const (
 	PostgresStorageTypeHDD PostgresStorageType = "hdd"
 	PostgresStorageTypeSAN PostgresStorageType = "san"
 )
-
-type ReadReplicaServiceTemplateSpec struct {
-	// Alias represents the identifier of the service.
-	Alias string `json:"alias"`
-
-	// ServiceTemplate is an optional configuration for a service used to expose database
-	// +optional
-	ofstv1.ServiceTemplateSpec `json:",inline,omitempty"`
-}
 
 var _ Accessor = &Postgres{}
 

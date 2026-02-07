@@ -71,17 +71,6 @@ func GetServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias
 	return ofstv1.ServiceTemplateSpec{}
 }
 
-// GetReadReplicaServiceTemplate returns a pointer to the desired serviceTemplate referred by "aliaS". Otherwise, it returns nil.
-func GetReadReplicaServiceTemplate(templates []ReadReplicaServiceTemplateSpec, alias string) ofstv1.ServiceTemplateSpec {
-	for i := range templates {
-		c := templates[i]
-		if c.Alias == alias {
-			return c.ServiceTemplateSpec
-		}
-	}
-	return ofstv1.ServiceTemplateSpec{}
-}
-
 func GetDatabasePods(db metav1.Object, psLister pslister.PetSetLister, pods []core.Pod) ([]core.Pod, error) {
 	var dbPods []core.Pod
 

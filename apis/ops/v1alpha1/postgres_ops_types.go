@@ -23,6 +23,7 @@ import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	ofstv1 "kmodules.xyz/offshoot-api/api/v1"
 )
 
 const (
@@ -178,6 +179,9 @@ type ReadReplicaHzScalingSpec struct {
 	// +kubebuilder:default={name:"default"}
 	// +optional
 	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
+	// ServiceTemplate is an optional configuration for services used to expose database
+	// +optional
+	ServiceTemplate *ofstv1.ServiceTemplateSpec `json:"serviceTemplate,omitempty"`
 	// We can use replicas: 0 for removing a read replica group instead of specifying remove: true
 	// However it feels more convenient to have a separate field for removing a read replica group
 	// TODO: in case we go with replicas: 0 for removing, remove the validation webhook that checks for replicas < 1
@@ -187,11 +191,11 @@ type ReadReplicaHzScalingSpec struct {
 
 // PostgresVerticalScalingSpec is the spec for Postgres vertical scaling
 type PostgresVerticalScalingSpec struct {
-	Postgres    *PodResources          `json:"postgres,omitempty"`
-	Exporter    *ContainerResources    `json:"exporter,omitempty"`
-	Coordinator *ContainerResources    `json:"coordinator,omitempty"`
-	Arbiter     *PodResources          `json:"arbiter,omitempty"`
-	ReadReplica []ReadReplicaResources `json:"readReplica,omitempty"`
+	Postgres     *PodResources          `json:"postgres,omitempty"`
+	Exporter     *ContainerResources    `json:"exporter,omitempty"`
+	Coordinator  *ContainerResources    `json:"coordinator,omitempty"`
+	Arbiter      *PodResources          `json:"arbiter,omitempty"`
+	ReadReplicas []ReadReplicaResources `json:"readReplica,omitempty"`
 }
 
 type ReadReplicaResources struct {

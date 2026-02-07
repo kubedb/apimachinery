@@ -34860,6 +34860,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ReadReplicaHzScalingSpec(ref common.R
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"serviceTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplate is an optional configuration for services used to expose database",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"),
+						},
+					},
 					"remove": {
 						SchemaProps: spec.SchemaProps{
 							Description: "We can use replicas: 0 for removing a read replica group instead of specifying remove: true However it feels more convenient to have a separate field for removing a read replica group",
@@ -34872,7 +34878,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ReadReplicaHzScalingSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
 	}
 }
 

@@ -4928,72 +4928,66 @@ spec:
                             x-kubernetes-int-or-string: true
                           type: object
                       type: object
-                    serviceTemplates:
-                      items:
-                        properties:
-                          alias:
-                            type: string
-                          metadata:
-                            properties:
-                              annotations:
-                                additionalProperties:
-                                  type: string
-                                type: object
-                              labels:
-                                additionalProperties:
-                                  type: string
-                                type: object
-                            type: object
-                          spec:
-                            properties:
-                              clusterIP:
+                    serviceTemplate:
+                      properties:
+                        metadata:
+                          properties:
+                            annotations:
+                              additionalProperties:
                                 type: string
-                              externalIPs:
-                                items:
-                                  type: string
-                                type: array
-                              externalTrafficPolicy:
+                              type: object
+                            labels:
+                              additionalProperties:
                                 type: string
-                              healthCheckNodePort:
-                                format: int32
-                                type: integer
-                              loadBalancerIP:
+                              type: object
+                          type: object
+                        spec:
+                          properties:
+                            clusterIP:
+                              type: string
+                            externalIPs:
+                              items:
                                 type: string
-                              loadBalancerSourceRanges:
-                                items:
-                                  type: string
-                                type: array
-                              ports:
-                                items:
-                                  properties:
-                                    name:
-                                      type: string
-                                    nodePort:
-                                      format: int32
-                                      type: integer
-                                    port:
-                                      format: int32
-                                      type: integer
-                                  required:
-                                  - port
-                                  type: object
-                                type: array
-                              sessionAffinityConfig:
+                              type: array
+                            externalTrafficPolicy:
+                              type: string
+                            healthCheckNodePort:
+                              format: int32
+                              type: integer
+                            loadBalancerIP:
+                              type: string
+                            loadBalancerSourceRanges:
+                              items:
+                                type: string
+                              type: array
+                            ports:
+                              items:
                                 properties:
-                                  clientIP:
-                                    properties:
-                                      timeoutSeconds:
-                                        format: int32
-                                        type: integer
-                                    type: object
+                                  name:
+                                    type: string
+                                  nodePort:
+                                    format: int32
+                                    type: integer
+                                  port:
+                                    format: int32
+                                    type: integer
+                                required:
+                                - port
                                 type: object
-                              type:
-                                type: string
-                            type: object
-                        required:
-                        - alias
-                        type: object
-                      type: array
+                              type: array
+                            sessionAffinityConfig:
+                              properties:
+                                clientIP:
+                                  properties:
+                                    timeoutSeconds:
+                                      format: int32
+                                      type: integer
+                                  type: object
+                              type: object
+                            type:
+                              type: string
+                          type: object
+                      type: object
                     storage:
                       properties:
                         accessModes:
