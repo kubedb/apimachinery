@@ -127,7 +127,7 @@ spec:
                 type: object
               horizontalScaling:
                 properties:
-                  readReplica:
+                  readReplicas:
                     items:
                       properties:
                         name:
@@ -713,7 +713,7 @@ spec:
                         - value
                         type: object
                     type: object
-                  readReplica:
+                  readReplicas:
                     items:
                       properties:
                         name:

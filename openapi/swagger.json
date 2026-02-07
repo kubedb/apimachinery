@@ -28200,7 +28200,7 @@
       "description": "HorizontalScaling is the spec for Postgres horizontal scaling",
       "type": "object",
       "properties": {
-        "readReplica": {
+        "readReplicas": {
           "type": "array",
           "items": {
             "default": {},
@@ -28488,7 +28488,7 @@
         "postgres": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
-        "readReplica": {
+        "readReplicas": {
           "type": "array",
           "items": {
             "default": {},

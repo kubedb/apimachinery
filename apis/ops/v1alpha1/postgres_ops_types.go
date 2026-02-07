@@ -151,7 +151,7 @@ type PostgresHorizontalScalingSpec struct {
 	StreamingMode *PostgresStreamingMode `json:"streamingMode,omitempty"`
 
 	// +optional
-	ReadReplicas []ReadReplicaHzScalingSpec `json:"readReplica,omitempty"`
+	ReadReplicas []ReadReplicaHzScalingSpec `json:"readReplicas,omitempty"`
 }
 
 type ReadReplicaHzScalingSpec struct {
@@ -195,7 +195,7 @@ type PostgresVerticalScalingSpec struct {
 	Exporter     *ContainerResources    `json:"exporter,omitempty"`
 	Coordinator  *ContainerResources    `json:"coordinator,omitempty"`
 	Arbiter      *PodResources          `json:"arbiter,omitempty"`
-	ReadReplicas []ReadReplicaResources `json:"readReplica,omitempty"`
+	ReadReplicas []ReadReplicaResources `json:"readReplicas,omitempty"`
 }
 
 type ReadReplicaResources struct {
