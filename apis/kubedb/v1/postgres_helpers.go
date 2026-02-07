@@ -152,6 +152,11 @@ func (p Postgres) ReadReplicaServiceLabels(tpl []ReadReplicaServiceTemplateSpec,
 	return meta_util.OverwriteKeys(meta_util.OverwriteKeys(p.ReadReplicaOffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
+func (p Postgres) ReadReplicaCommonServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(p.Spec.ServiceTemplates, alias)
+	return meta_util.OverwriteKeys(meta_util.OverwriteKeys(p.ReadReplicaOffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
+
 func (p Postgres) ReadReplicaSingleGroupServiceLabels(tpl []ReadReplicaServiceTemplateSpec, alias, groupName string, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetReadReplicaServiceTemplate(tpl, alias)
 	return meta_util.OverwriteKeys(meta_util.OverwriteKeys(p.ReadReplicaSingleGroupOffshootSelectors(groupName), extraLabels...), svcTemplate.Labels)
