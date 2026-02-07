@@ -75,7 +75,7 @@ func GetServiceTemplate(templates []NamedServiceTemplateSpec, alias ServiceAlias
 func GetReadReplicaServiceTemplate(templates []ReadReplicaServiceTemplateSpec, alias string) ofstv1.ServiceTemplateSpec {
 	for i := range templates {
 		c := templates[i]
-		if c.Name == alias {
+		if c.Alias == alias {
 			return c.ServiceTemplateSpec
 		}
 	}

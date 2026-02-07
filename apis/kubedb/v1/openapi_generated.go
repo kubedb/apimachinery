@@ -601,6 +601,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLList":                                        schema_apimachinery_apis_kubedb_v1_ProxySQLList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLSpec":                                        schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLStatus":                                      schema_apimachinery_apis_kubedb_v1_ProxySQLStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.ReadReplicaServiceTemplateSpec":                      schema_apimachinery_apis_kubedb_v1_ReadReplicaServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ReadReplicaSpec":                                     schema_apimachinery_apis_kubedb_v1_ReadReplicaSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.RecoveryTarget":                                      schema_apimachinery_apis_kubedb_v1_RecoveryTarget(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Redis":                                               schema_apimachinery_apis_kubedb_v1_Redis(ref),
@@ -31787,6 +31788,43 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLStatus(ref common.ReferenceCallb
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_ReadReplicaServiceTemplateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"alias": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Alias represents the identifier of the service.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceSpec"),
+						},
+					},
+				},
+				Required: []string{"alias"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.ObjectMeta", "kmodules.xyz/offshoot-api/api/v1.ServiceSpec"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_ReadReplicaSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -31869,12 +31907,26 @@ func schema_apimachinery_apis_kubedb_v1_ReadReplicaSpec(ref common.ReferenceCall
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"serviceTemplates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplates is an optional configuration for services used to expose database",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1.ReadReplicaServiceTemplateSpec"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"name"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "kubedb.dev/apimachinery/apis/kubedb/v1.ReadReplicaServiceTemplateSpec"},
 	}
 }
 

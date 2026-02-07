@@ -490,7 +490,7 @@ const (
 
 type ReadReplicaServiceTemplateSpec struct {
 	// Alias represents the identifier of the service.
-	Name string `json:"alias"`
+	Alias string `json:"alias"`
 
 	// ServiceTemplate is an optional configuration for a service used to expose database
 	// +optional

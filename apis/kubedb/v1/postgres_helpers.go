@@ -76,14 +76,18 @@ func (p Postgres) OffshootSelectors() map[string]string {
 }
 
 func (p Postgres) ReadReplicaOffshootSelectors() map[string]string {
-	sel := p.OffshootSelectors()
-	sel[kubedb.LabelRole] = kubedb.PostgresPodReadReplica
+	sel := map[string]string{
+		meta_util.NameLabelKey:      p.ResourceFQN(),
+		meta_util.InstanceLabelKey:  p.Name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
+		kubedb.LabelRole:            kubedb.PostgresPodReadReplica,
+	}
 	return sel
 }
 
-func (p Postgres) ReadReplicaSingleGroupOffshootSelectors(replica string) map[string]string {
+func (p Postgres) ReadReplicaSingleGroupOffshootSelectors(groupName string) map[string]string {
 	sel := p.ReadReplicaOffshootSelectors()
-	sel[kubedb.PostgresDatabaseReadReplicaLabelKey] = replica
+	sel[kubedb.PostgresDatabaseReadReplicaLabelKey] = groupName
 	return sel
 }
 
@@ -92,8 +96,13 @@ func (p Postgres) OffshootLabels() map[string]string {
 }
 
 func (p Postgres) ReadReplicaOffshootLabels() map[string]string {
-	l := p.offshootLabels(p.OffshootSelectors(), nil)
-	l[kubedb.LabelRole] = kubedb.PostgresPodReadReplica
+	l := p.offshootLabels(p.ReadReplicaOffshootSelectors(), nil)
+	return l
+}
+
+func (p Postgres) ReadReplicSingleGroupaffshootLabels(groupName string) map[string]string {
+	l := p.offshootLabels(p.ReadReplicaOffshootLabels(), nil)
+	l[kubedb.PostgresDatabaseReadReplicaLabelKey] = groupName
 	return l
 }
 
@@ -102,9 +111,7 @@ func (p Postgres) PodLabels() map[string]string {
 }
 
 func (p Postgres) ReadReplicaPodLabels() map[string]string {
-	pl := p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Labels)
-	pl[kubedb.LabelRole] = kubedb.PostgresPodReadReplica
-	return pl
+	return p.offshootLabels(p.ReadReplicaOffshootSelectors(), p.Spec.PodTemplate.Labels)
 }
 
 func (p Postgres) ReadReplicaSingleGroupPodLabels(groupName string) map[string]string {
@@ -118,14 +125,12 @@ func (p Postgres) PodControllerLabels() map[string]string {
 }
 
 func (p Postgres) ReadReplicaPodControllerLabels() map[string]string {
-	pl := p.offshootLabels(p.OffshootSelectors(), p.Spec.PodTemplate.Controller.Labels)
-	pl[kubedb.LabelRole] = kubedb.PostgresPodReadReplica
-	return pl
+	return p.offshootLabels(p.ReadReplicaOffshootSelectors(), p.Spec.PodTemplate.Controller.Labels)
 }
 
-func (p Postgres) ReadReplicaSingleGroupPodControllerLabels(group string) map[string]string {
+func (p Postgres) ReadReplicaSingleGroupPodControllerLabels(groupName string) map[string]string {
 	pl := p.ReadReplicaPodControllerLabels()
-	pl[kubedb.PostgresDatabaseReadReplicaLabelKey] = group
+	pl[kubedb.PostgresDatabaseReadReplicaLabelKey] = groupName
 	return pl
 }
 
@@ -145,6 +150,11 @@ func (p Postgres) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]st
 func (p Postgres) ReadReplicaServiceLabels(tpl []ReadReplicaServiceTemplateSpec, alias string, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetReadReplicaServiceTemplate(tpl, alias)
 	return meta_util.OverwriteKeys(meta_util.OverwriteKeys(p.ReadReplicaOffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
+
+func (p Postgres) ReadReplicaSingleGroupServiceLabels(tpl []ReadReplicaServiceTemplateSpec, alias, groupName string, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetReadReplicaServiceTemplate(tpl, alias)
+	return meta_util.OverwriteKeys(meta_util.OverwriteKeys(p.ReadReplicaSingleGroupOffshootSelectors(groupName), extraLabels...), svcTemplate.Labels)
 }
 
 func (p Postgres) offshootLabels(selector, override map[string]string) map[string]string {
@@ -199,8 +209,8 @@ func (p Postgres) ReadReplicaCommonServiceName() string {
 	return meta_util.NameWithSuffix(p.ServiceName(), "rr")
 }
 
-func (p Postgres) ReadReplicaServiceName(replica string) string {
-	return meta_util.NameWithSuffix(p.ReadReplicaCommonServiceName(), replica)
+func (p Postgres) ReadReplicaServiceName(groupName string) string {
+	return meta_util.NameWithSuffix(p.ReadReplicaCommonServiceName(), groupName)
 }
 
 func (p Postgres) OffshootDistributedRBACName() string {
@@ -240,7 +250,7 @@ func (p Postgres) ConfigSecretName() string {
 	return meta_util.NameWithSuffix(p.OffshootName(), uid[len(uid)-6:])
 }
 
-func (p Postgres) ReadReplicaName(name string) string {
+func (p Postgres) ReadReplicaGroupName(name string) string {
 	return meta_util.NameWithSuffix(p.OffshootName(), name)
 }
 
