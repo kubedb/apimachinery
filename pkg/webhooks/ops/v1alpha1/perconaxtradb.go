@@ -245,7 +245,7 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpans
 		return errors.Wrap(err, "failed to parse current storage size")
 	}
 
-	if cur.Cmp(*req.Spec.VolumeExpansion.PerconaXtraDB) >= 0 {
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.PerconaXtraDB) >= 0 {
 		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 	return nil

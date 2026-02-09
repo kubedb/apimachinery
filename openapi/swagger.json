@@ -21138,6 +21138,45 @@
     }
   },
   "definitions": {
+    "com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.RelabelConfig": {
+      "description": "RelabelConfig allows dynamic rewriting of the label set for targets, alerts, scraped samples and remote write samples.\n\nMore info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config",
+      "type": "object",
+      "properties": {
+        "action": {
+          "description": "action to perform based on the regex matching.\n\n`Uppercase` and `Lowercase` actions require Prometheus \u003e= v2.36.0. `DropEqual` and `KeepEqual` actions require Prometheus \u003e= v2.41.0.\n\nDefault: \"Replace\"",
+          "type": "string"
+        },
+        "modulus": {
+          "description": "modulus to take of the hash of the source label values.\n\nOnly applicable when the action is `HashMod`.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "regex": {
+          "description": "regex defines the regular expression against which the extracted value is matched.",
+          "type": "string"
+        },
+        "replacement": {
+          "description": "replacement value against which a Replace action is performed if the regular expression matches.\n\nRegex capture groups are available.",
+          "type": "string"
+        },
+        "separator": {
+          "description": "separator defines the string between concatenated SourceLabels.",
+          "type": "string"
+        },
+        "sourceLabels": {
+          "description": "sourceLabels defines the source labels select values from existing labels. Their content is concatenated using the configured Separator and matched against the configured regular expression.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "targetLabel": {
+          "description": "targetLabel defines the label to which the resulting string is written in a replacement.\n\nIt is mandatory for `Replace`, `HashMod`, `Lowercase`, `Uppercase`, `KeepEqual` and `DropEqual` actions.\n\nRegex capture groups are available.",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.AddonSpec": {
       "type": "object",
       "properties": {
@@ -33428,6 +33467,32 @@
         }
       }
     },
+    "xyz.kmodules.monitoring-agent-api.api.v1.Endpoint": {
+      "description": "Endpoint defines an endpoint serving Prometheus metrics to be scraped by Prometheus.",
+      "type": "object",
+      "properties": {
+        "metricRelabelings": {
+          "description": "metricRelabelings defines the relabeling rules to apply to the samples before ingestion.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.RelabelConfig"
+          }
+        },
+        "port": {
+          "description": "port defines the name of the Service port which this endpoint refers to.\n\nIt takes precedence over `targetPort`.",
+          "type": "string"
+        },
+        "relabelings": {
+          "description": "relabelings defines the relabeling rules to apply the target's metadata labels.\n\nThe Operator automatically adds relabelings for a few standard Kubernetes fields.\n\nThe original scrape job's name is available via the `__tmp_prometheus_job_name` label.\n\nMore info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.prometheus-operator.prometheus-operator.pkg.apis.monitoring.v1.RelabelConfig"
+          }
+        }
+      }
+    },
     "xyz.kmodules.monitoring-agent-api.api.v1.PrometheusExporterSpec": {
       "type": "object",
       "properties": {
@@ -33480,6 +33545,14 @@
     "xyz.kmodules.monitoring-agent-api.api.v1.ServiceMonitorSpec": {
       "type": "object",
       "properties": {
+        "endpoints": {
+          "description": "endpoints defines the list of endpoints part of this ServiceMonitor. Defines how to scrape metrics from Kubernetes [Endpoints](https://kubernetes.io/docs/concepts/services-networking/service/#endpoints) objects. In most cases, an Endpoints object is backed by a Kubernetes [Service](https://kubernetes.io/docs/concepts/services-networking/service/) object with the same name and labels.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.Endpoint"
+          }
+        },
         "interval": {
           "description": "Interval at which metrics should be scraped",
           "type": "string"
@@ -33488,6 +33561,22 @@
           "description": "Labels are key value pairs that is used to select Prometheus instance via ServiceMonitor labels.",
           "type": "object",
           "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "podTargetLabels": {
+          "description": "podTargetLabels defines the labels which are transferred from the associated Kubernetes `Pod` object onto the ingested metrics.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "targetLabels": {
+          "description": "targetLabels defines the labels which are transferred from the associated Kubernetes `Service` object onto the ingested metrics.",
+          "type": "array",
+          "items": {
             "type": "string",
             "default": ""
           }

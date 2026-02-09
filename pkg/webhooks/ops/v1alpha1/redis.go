@@ -462,7 +462,7 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisVolumeExpansionOpsRequest(re
 		return errors.New("failed to parse current storage size")
 	}
 
-	if cur.Cmp(*req.Spec.VolumeExpansion.Redis) >= 0 {
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.Redis) >= 0 {
 		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
