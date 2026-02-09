@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 
+	"k8s.io/utils/ptr"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -216,11 +217,49 @@ func (q qdrantStatsService) Path() string {
 }
 
 func (q qdrantStatsService) Scheme() string {
-	return ""
+	var sc promapi.Scheme
+
+	if q.Spec.TLS == nil {
+		sc = promapi.SchemeHTTP
+	} else {
+		sc = promapi.SchemeHTTPS
+	}
+
+	return sc.String()
 }
 
 func (q qdrantStatsService) TLSConfig() *promapi.TLSConfig {
-	return nil
+	if q.Spec.TLS == nil || q.Spec.TLS.Client == nil {
+		return nil
+	}
+
+	return &promapi.TLSConfig{
+		SafeTLSConfig: promapi.SafeTLSConfig{
+			CA: promapi.SecretOrConfigMap{
+				Secret: &core.SecretKeySelector{
+					LocalObjectReference: core.LocalObjectReference{
+						Name: q.GetCertSecretName(QdrantClientCert),
+					},
+					Key: kubedb.QdrantTLSCA,
+				},
+			},
+			Cert: promapi.SecretOrConfigMap{
+				Secret: &core.SecretKeySelector{
+					LocalObjectReference: core.LocalObjectReference{
+						Name: q.GetCertSecretName(QdrantClientCert),
+					},
+					Key: kubedb.QdrantTLSCert,
+				},
+			},
+			KeySecret: &core.SecretKeySelector{
+				LocalObjectReference: core.LocalObjectReference{
+					Name: q.GetCertSecretName(QdrantClientCert),
+				},
+				Key: kubedb.QdrantTLSKey,
+			},
+			InsecureSkipVerify: ptr.To(false),
+		},
+	}
 }
 
 func (q Qdrant) StatsService() mona.StatsAccessor {
