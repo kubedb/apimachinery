@@ -265,6 +265,9 @@ func (m *Milvus) GetDefaultPVC() *core.PersistentVolumeClaimSpec {
 }
 
 func (m *Milvus) setDistributedDefaults(kc client.Client) {
+	if m.Spec.Topology.Distributed == nil {
+		m.Spec.Topology.Distributed = &MilvusDistributedSpec{}
+	}
 	var mvVersion catalog.MilvusVersion
 	err := kc.Get(context.TODO(), types.NamespacedName{
 		Name: m.Spec.Version,
