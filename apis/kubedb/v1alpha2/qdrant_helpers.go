@@ -19,8 +19,8 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 
-	"k8s.io/utils/ptr"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -31,6 +31,7 @@ import (
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
@@ -229,37 +230,49 @@ func (q qdrantStatsService) Scheme() string {
 }
 
 func (q qdrantStatsService) TLSConfig() *promapi.TLSConfig {
-	if q.Spec.TLS == nil || q.Spec.TLS.Client == nil {
+	if q.Spec.TLS == nil {
 		return nil
 	}
 
-	return &promapi.TLSConfig{
-		SafeTLSConfig: promapi.SafeTLSConfig{
-			CA: promapi.SecretOrConfigMap{
-				Secret: &core.SecretKeySelector{
-					LocalObjectReference: core.LocalObjectReference{
-						Name: q.GetCertSecretName(QdrantClientCert),
-					},
-					Key: kubedb.QdrantTLSCA,
-				},
-			},
-			Cert: promapi.SecretOrConfigMap{
-				Secret: &core.SecretKeySelector{
-					LocalObjectReference: core.LocalObjectReference{
-						Name: q.GetCertSecretName(QdrantClientCert),
-					},
-					Key: kubedb.QdrantTLSCert,
-				},
-			},
-			KeySecret: &core.SecretKeySelector{
+	tlsConfig := &promapi.TLSConfig{}
+
+	// If client certificate authentication is enabled set cert and key
+	if q.Spec.TLS.Client != nil && *q.Spec.TLS.Client {
+		tlsConfig.SafeTLSConfig.Cert = promapi.SecretOrConfigMap{
+			Secret: &core.SecretKeySelector{
 				LocalObjectReference: core.LocalObjectReference{
 					Name: q.GetCertSecretName(QdrantClientCert),
 				},
-				Key: kubedb.QdrantTLSKey,
+				Key: kubedb.QdrantTLSCert,
 			},
-			InsecureSkipVerify: ptr.To(false),
+		}
+		tlsConfig.SafeTLSConfig.KeySecret = &core.SecretKeySelector{
+			LocalObjectReference: core.LocalObjectReference{
+				Name: q.GetCertSecretName(QdrantClientCert),
+			},
+			Key: kubedb.QdrantTLSKey,
+		}
+	}
+
+	// Always set CA, ServerName, and InsecureSkipVerify when TLS is enabled
+	tlsConfig.SafeTLSConfig.CA = promapi.SecretOrConfigMap{
+		Secret: &core.SecretKeySelector{
+			LocalObjectReference: core.LocalObjectReference{
+				Name: q.GetCertSecretName(QdrantClientCert),
+			},
+			Key: kubedb.QdrantTLSCA,
 		},
 	}
+	tlsConfig.SafeTLSConfig.InsecureSkipVerify = ptr.To(false)
+	tlsConfig.SafeTLSConfig.ServerName = ptr.To(
+		fmt.Sprintf(
+			"%s.%s.svc",
+			q.GetName(),
+			q.Namespace,
+		),
+	)
+
+	return tlsConfig
 }
 
 func (q Qdrant) StatsService() mona.StatsAccessor {
@@ -282,6 +295,10 @@ func (q *Qdrant) GetCertSecretName(alias QdrantCertificateAlias) string {
 		}
 	}
 	return q.CertificateName(alias)
+}
+
+func (q *Qdrant) GetTLSFilePath(file string) string {
+	return filepath.Join(kubedb.QdrantTLSVolDir, file)
 }
 
 func (q *Qdrant) SetDefaults(kc client.Client) {
