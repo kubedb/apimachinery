@@ -96,14 +96,11 @@ func CreateDatabasePVC(client kubernetes.Interface, pvcMeta metav1.ObjectMeta, p
 	return err
 }
 
-func CreatePVCMounterPod(client kubernetes.Interface, dbPod *core.Pod, pvcMounter string) error {
+func CreatePVCMounterPod(client kubernetes.Interface, dbPod *core.Pod, objMeta metav1.ObjectMeta) error {
 	pvcName := GetMigratorPVCName(dbPod.Name)
 
 	pod := &core.Pod{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      pvcMounter,
-			Namespace: dbPod.Namespace,
-		},
+		ObjectMeta: objMeta,
 		Spec: core.PodSpec{
 			RestartPolicy: core.RestartPolicyNever,
 			NodeSelector: map[string]string{
