@@ -23,10 +23,6 @@ import (
 	sync "sync"
 	time "time"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
-	cache "k8s.io/client-go/tools/cache"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	archiver "kubedb.dev/apimachinery/client/informers/externalversions/archiver"
 	autoscaling "kubedb.dev/apimachinery/client/informers/externalversions/autoscaling"
@@ -40,6 +36,11 @@ import (
 	postgres "kubedb.dev/apimachinery/client/informers/externalversions/postgres"
 	externalversionsschema "kubedb.dev/apimachinery/client/informers/externalversions/schema"
 	ui "kubedb.dev/apimachinery/client/informers/externalversions/ui"
+
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	runtime "k8s.io/apimachinery/pkg/runtime"
+	schema "k8s.io/apimachinery/pkg/runtime/schema"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SharedInformerOption defines the functional option type for SharedInformerFactory.
