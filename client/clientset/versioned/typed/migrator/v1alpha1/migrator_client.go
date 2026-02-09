@@ -30,7 +30,6 @@ import (
 type MigratorV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	MigratorsGetter
-	MigratorAddonsGetter
 }
 
 // MigratorV1alpha1Client is used to interact with features provided by the migrator.kubedb.com group.
@@ -40,10 +39,6 @@ type MigratorV1alpha1Client struct {
 
 func (c *MigratorV1alpha1Client) Migrators(namespace string) MigratorInterface {
 	return newMigrators(c, namespace)
-}
-
-func (c *MigratorV1alpha1Client) MigratorAddons(namespace string) MigratorAddonInterface {
-	return newMigratorAddons(c, namespace)
 }
 
 // NewForConfig creates a new MigratorV1alpha1Client for the given config.

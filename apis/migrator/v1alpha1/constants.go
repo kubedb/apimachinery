@@ -48,3 +48,20 @@ const (
 	KindPersistentVolumeClaim = "PersistentVolumeClaim"
 	KindJob                   = "Job"
 )
+
+// Conditions Related Constants
+const (
+	MigratorJobTriggered = "MigratorJobTriggered"
+
+	DestroySignalSend = "DestroySignalSend"
+
+	// MigrationRunning Migration status conditions
+	MigrationRunning       = "MigrationRunning"
+	ReasonMigrationRunning = "MigrationInProgress"
+
+	MigrationSucceeded       = "MigrationSucceeded"
+	ReasonMigrationSucceeded = "MigrationCompleted"
+
+	MigrationFailed       = "MigrationFailed"
+	ReasonMigrationFailed = "MigrationError"
+)

@@ -14,7 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// +k8s:openapi-gen=true
+
 package v1alpha1
+
+import kmapi "kmodules.xyz/client-go/api/v1"
 
 // MigrationConfig defines the desired state of Migrator
 type MigrationConfig struct {
@@ -32,4 +36,28 @@ type Source struct {
 type Target struct {
 	// Postgres refers to the target Postgres database configuration
 	Postgres *PostgresTarget `yaml:"postgres" json:"postgres,omitempty"`
+}
+
+type ConnectionInfo struct {
+	// AppBinding refers to the source database AppBinding name, Who contains the connection information.
+	// +optional
+	AppBinding kmapi.ObjectReference `yaml:"appBinding,omitempty" json:"appBinding,omitempty"`
+
+	// URL refers to the database connection string.e.g postgres://postgres:password@localhost:5432/postgres
+	// +optional
+	URL string `yaml:"url" json:"url,omitempty"`
+
+	// MaxConnections refers to the `MaxConns`,which means the maximum size of the pool.
+	// The default is the greater of 4 or runtime.NumCPU().
+	// +optional
+	MaxConnections *int32 `yaml:"maxConnections" json:"maxConnections,omitempty"`
+}
+
+type DBMigratorImage struct {
+	// Operator specifies the migrator operator image
+	Operator string `json:"operator,omitempty"`
+	// CLI specifies the migrator CLI image
+	CLI string `json:"cli,omitempty"`
+	// ProgressFetcher is the sidecar image used to fetch migration progress
+	ProgressFetcher string `json:"progressFetcher,omitempty"`
 }

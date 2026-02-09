@@ -346,8 +346,6 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=migrator.kubedb.com, Version=v1alpha1
 	case migratorv1alpha1.SchemeGroupVersion.WithResource("migrators"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Migrator().V1alpha1().Migrators().Informer()}, nil
-	case migratorv1alpha1.SchemeGroupVersion.WithResource("migratoraddons"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Migrator().V1alpha1().MigratorAddons().Informer()}, nil
 
 		// Group=ops.kubedb.com, Version=v1alpha1
 	case opsv1alpha1.SchemeGroupVersion.WithResource("cassandraopsrequests"):

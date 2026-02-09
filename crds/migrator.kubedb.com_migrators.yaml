@@ -42,6 +42,13 @@ spec:
             type: object
           spec:
             properties:
+              activeDeadlineSeconds:
+                format: int64
+                type: integer
+              backoffLimit:
+                default: 0
+                format: int32
+                type: integer
               jobTemplate:
                 properties:
                   controller:
@@ -2779,8 +2786,23 @@ spec:
                 properties:
                   postgres:
                     properties:
-                      appBinding:
-                        type: string
+                      connectionInfo:
+                        properties:
+                          appBinding:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          maxConnections:
+                            format: int32
+                            type: integer
+                          url:
+                            type: string
+                        type: object
                       logicalReplication:
                         properties:
                           copyData:
@@ -2809,9 +2831,6 @@ spec:
                                 type: string
                             type: object
                         type: object
-                      maxConnections:
-                        format: int32
-                        type: integer
                       pgDump:
                         properties:
                           excludeSchema:
@@ -2837,23 +2856,38 @@ spec:
                               type: string
                             type: array
                         type: object
-                      url:
-                        type: string
+                    required:
+                    - connectionInfo
                     type: object
                 type: object
               target:
                 properties:
                   postgres:
                     properties:
-                      appBinding:
-                        type: string
-                      maxConnections:
-                        format: int32
-                        type: integer
-                      url:
-                        type: string
+                      connectionInfo:
+                        properties:
+                          appBinding:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          maxConnections:
+                            format: int32
+                            type: integer
+                          url:
+                            type: string
+                        type: object
+                    required:
+                    - connectionInfo
                     type: object
                 type: object
+              ttlSecondsAfterFinished:
+                format: int32
+                type: integer
             required:
             - source
             - target
@@ -2895,12 +2929,10 @@ spec:
                 properties:
                   dbType:
                     type: string
-                  details:
+                  info:
                     additionalProperties:
                       type: string
                     type: object
-                  phase:
-                    type: string
                 type: object
             type: object
         required:

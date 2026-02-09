@@ -19,19 +19,8 @@ limitations under the License.
 package v1alpha1
 
 type PostgresSource struct {
-	// AppBinding refers to the source Postgres database AppBinding name,
-	// Who contains the connection information.
-	// +optional
-	AppBinding string `yaml:"appBinding,omitempty" json:"appBinding,omitempty"`
-
-	// URL refers to the Postgres database connection string.e.g postgres://postgres:password@localhost:5432/postgres
-	// +optional
-	URL string `yaml:"url" json:"url,omitempty"`
-
-	// MaxConnections refers to the `MaxConns`,which means the maximum size of the pool.
-	// The default is the greater of 4 or runtime.NumCPU().
-	// +optional
-	MaxConnections *int32 `yaml:"maxConnections" json:"maxConnections,omitempty"`
+	// ConnectionInfo refers to the source Postgres database connection information.
+	ConnectionInfo ConnectionInfo `yaml:"connectionInfo" json:"connectionInfo"`
 
 	// PgDump refers to the ClI name which will be used to dump the schema or data from the source Postgres database.
 	PgDump *PgDump `yaml:"pgDump" json:"pgDump,omitempty"`
@@ -41,19 +30,8 @@ type PostgresSource struct {
 }
 
 type PostgresTarget struct {
-	// AppBinding refers to the source Postgres database AppBinding name,
-	// Who contains the connection information.
-	// +optional
-	AppBinding string `yaml:"appBinding,omitempty" json:"appBinding,omitempty"`
-
-	// URL refers to the Postgres database connection string.e.g postgres://postgres:password@localhost:5432/postgres
-	// +optional
-	URL string `yaml:"url" json:"url,omitempty"`
-
-	// MaxConnections refers to the `MaxConns`,which means the maximum size of the pool.
-	// The default is the greater of 4 or runtime.NumCPU().
-	// +optional
-	MaxConnections *int32 `yaml:"maxConnections" json:"maxConnections,omitempty"`
+	// ConnectionInfo refers to the target Postgres database connection information.
+	ConnectionInfo ConnectionInfo `yaml:"connectionInfo" json:"connectionInfo"`
 }
 
 type LogicalReplication struct {

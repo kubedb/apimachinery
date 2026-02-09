@@ -17,33 +17,9 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
-	"fmt"
-	"os"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	kclient "kmodules.xyz/client-go/client"
 	cutil "kmodules.xyz/client-go/conditions"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/manager"
-	"sigs.k8s.io/yaml"
-)
-
-const (
-	MigratorJobTriggered = "MigratorJobTriggered"
-
-	DestroySignalSend = "DestroySignalSend"
-
-	// Migration status conditions
-	MigrationRunning       = "MigrationRunning"
-	ReasonMigrationRunning = "MigrationInProgress"
-
-	MigrationSucceeded       = "MigrationSucceeded"
-	ReasonMigrationSucceeded = "MigrationCompleted"
-
-	MigrationFailed       = "MigrationFailed"
-	ReasonMigrationFailed = "MigrationError"
 )
 
 func SetMigratorJobTriggeredConditionToTrue(migrator *Migrator) {
@@ -126,34 +102,4 @@ func SetMigrationFailedCondition(migrator *Migrator, err error) {
 		Message: "Migration failed.",
 	}
 	migrator.Status.Conditions = cutil.SetCondition(migrator.Status.Conditions, clearCond)
-}
-
-func CreateOrUpdateMigratorAddon(ctx context.Context, mgr manager.Manager, path string) (*MigratorAddon, error) {
-	rawYAML, err := os.ReadFile(path)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read addon file from %s: %w", path, err)
-	}
-	addonObj := &MigratorAddon{}
-	if err := yaml.Unmarshal(rawYAML, addonObj); err != nil {
-		return nil, fmt.Errorf("failed to parse addon.yaml: %w", err)
-	}
-	uncachedClient, err := client.New(mgr.GetConfig(), client.Options{
-		Scheme: mgr.GetScheme(),
-		Mapper: mgr.GetRESTMapper(),
-		Cache:  nil,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to create uncache client: %w", err)
-	}
-	_, err = kclient.CreateOrPatch(
-		ctx,
-		uncachedClient,
-		addonObj,
-		func(obj client.Object, createOp bool) client.Object {
-			in := obj.(*MigratorAddon)
-			in.Spec = addonObj.Spec
-			return in
-		},
-	)
-	return addonObj, err
 }

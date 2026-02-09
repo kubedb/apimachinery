@@ -30,6 +30,18 @@ func (Migrator) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMigrator))
 }
 
-func (MigratorAddon) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMigratorAddon))
+func GetDatabase(migrator *Migrator) string {
+	switch {
+	case migrator.Spec.Source.Postgres != nil && migrator.Spec.Target.Postgres != nil:
+		return "postgres"
+		// case migrator.Spec.Source.MySQL != nil && migrator.Spec.Target.MySQL != nil:
+		//	return m.MigratorImages.MySQL
+		// case migrator.Spec.Source.MariaDB != nil && migrator.Spec.Target.MariaDB != nil:
+		//	return m.MigratorImages.MariaDB
+		// case migrator.Spec.Source.MSSQLServer != nil && migrator.Spec.Target.MSSQLServer != nil:
+		//	return m.MigratorImages.MSSQLServer
+		// case migrator.Spec.Source.MongoDB != nil && migrator.Spec.Target.MongoDB != nil:
+		//	return m.MigratorImages.MongoDB
+	}
+	return ""
 }

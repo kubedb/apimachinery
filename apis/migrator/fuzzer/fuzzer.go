@@ -17,7 +17,7 @@ limitations under the License.
 package fuzzer
 
 import (
-	"kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	"kubedb.dev/apimachinery/apis/migrator/v1alpha1"
 
 	runtimeserializer "k8s.io/apimachinery/pkg/runtime/serializer"
 	"sigs.k8s.io/randfill"
@@ -26,13 +26,7 @@ import (
 // Funcs returns the fuzzer functions for this api group.
 var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 	return []any{
-		func(s *v1alpha1.MongoDBArchiver, c randfill.Continue) {
-			c.Fill(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.PostgresArchiver, c randfill.Continue) {
-			c.Fill(s) // fuzz self without calling this function again
-		},
-		func(s *v1alpha1.MariaDBArchiver, c randfill.Continue) {
+		func(s *v1alpha1.Migrator, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
 	}

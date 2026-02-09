@@ -33,10 +33,6 @@ func (c *FakeMigratorV1alpha1) Migrators(namespace string) v1alpha1.MigratorInte
 	return &FakeMigrators{c, namespace}
 }
 
-func (c *FakeMigratorV1alpha1) MigratorAddons(namespace string) v1alpha1.MigratorAddonInterface {
-	return &FakeMigratorAddons{c, namespace}
-}
-
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeMigratorV1alpha1) RESTClient() rest.Interface {

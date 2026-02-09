@@ -157,6 +157,15 @@ spec:
                 required:
                 - image
                 type: object
+              migrator:
+                properties:
+                  cli:
+                    type: string
+                  operator:
+                    type: string
+                  progressFetcher:
+                    type: string
+                type: object
               podSecurityPolicies:
                 properties:
                   databasePolicyName:

@@ -25,11 +25,3 @@ type MigratorListerExpansion interface{}
 // MigratorNamespaceListerExpansion allows custom methods to be added to
 // MigratorNamespaceLister.
 type MigratorNamespaceListerExpansion interface{}
-
-// MigratorAddonListerExpansion allows custom methods to be added to
-// MigratorAddonLister.
-type MigratorAddonListerExpansion interface{}
-
-// MigratorAddonNamespaceListerExpansion allows custom methods to be added to
-// MigratorAddonNamespaceLister.
-type MigratorAddonNamespaceListerExpansion interface{}

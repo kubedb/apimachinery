@@ -61,6 +61,20 @@ type MigratorSpec struct {
 	// Target defines the target database configuration
 	Target *Target `json:"target" protobuf:"bytes,2,opt,name=target"`
 
+	// BackoffLimit specifies the number of retries before marking the job as failed
+	// +kubebuilder:default=0
+	// +optional
+	BackoffLimit *int32 `json:"backoffLimit,omitempty"`
+
+	// TTLSecondsAfterFinished specifies the TTL for completed jobs
+	// +optional
+	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
+
+	// ActiveDeadlineSeconds specifies the duration in seconds relative to the startTime
+	// that the job may be active before the system tries to terminate it
+	// +optional
+	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty"`
+
 	// JobTemplate specifies runtime configurations for the backup/restore Job
 	// +optional
 	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`
@@ -90,13 +104,9 @@ type Progress struct {
 	// +optional
 	DBType string `json:"dbType,omitempty"`
 
-	// Phase indicates the current phase of migration
+	// Info contains the additional information about the current progress
 	// +optional
-	Phase string `json:"phase,omitempty"`
-
-	// Details contains additional information about the current phase
-	// +optional
-	Details map[string]string `json:"details,omitempty"`
+	Info map[string]string `json:"info,omitempty"`
 }
 
 // MigratorList contains a list of Migrator

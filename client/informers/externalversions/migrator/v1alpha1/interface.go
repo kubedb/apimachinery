@@ -26,8 +26,6 @@ import (
 type Interface interface {
 	// Migrators returns a MigratorInformer.
 	Migrators() MigratorInformer
-	// MigratorAddons returns a MigratorAddonInformer.
-	MigratorAddons() MigratorAddonInformer
 }
 
 type version struct {
@@ -44,9 +42,4 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // Migrators returns a MigratorInformer.
 func (v *version) Migrators() MigratorInformer {
 	return &migratorInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// MigratorAddons returns a MigratorAddonInformer.
-func (v *version) MigratorAddons() MigratorAddonInformer {
-	return &migratorAddonInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
