@@ -251,7 +251,7 @@ func (m *Milvus) MetaStorageEndpoints() []string {
 	return endpoints
 }
 
-func (m *Milvus) GetDefaultPVC() *core.PersistentVolumeClaimSpec {
+func (m *Milvus) SetDefaultStorage() *core.PersistentVolumeClaimSpec {
 	return &core.PersistentVolumeClaimSpec{
 		AccessModes: []core.PersistentVolumeAccessMode{
 			core.ReadWriteOnce,
@@ -268,6 +268,7 @@ func (m *Milvus) setDistributedDefaults(kc client.Client) {
 	if m.Spec.Topology.Distributed == nil {
 		m.Spec.Topology.Distributed = &MilvusDistributedSpec{}
 	}
+
 	var mvVersion catalog.MilvusVersion
 	err := kc.Get(context.TODO(), types.NamespacedName{
 		Name: m.Spec.Version,
@@ -275,78 +276,49 @@ func (m *Milvus) setDistributedDefaults(kc client.Client) {
 	if err != nil {
 		return
 	}
+	m.setCommonDefaults(&mvVersion, &m.Spec.Topology.Distributed.MixCoord)
+	m.setCommonDefaults(&mvVersion, &m.Spec.Topology.Distributed.DataNode)
+	m.setCommonDefaults(&mvVersion, &m.Spec.Topology.Distributed.Proxy)
+	m.setCommonDefaults(&mvVersion, &m.Spec.Topology.Distributed.QueryNode)
+	m.setCommonDefaults(&mvVersion, &m.Spec.Topology.Distributed.StreamingNode)
+}
 
-	if m.Spec.Topology.Distributed.MixCoord == nil {
-		m.Spec.Topology.Distributed.MixCoord = &MilvusNode{}
-	}
-	if m.Spec.Topology.Distributed.MixCoord.Replicas == nil {
-		m.Spec.Topology.Distributed.MixCoord.Replicas = pointer.Int32P(1)
-	}
-	if m.Spec.Topology.Distributed.MixCoord.PodTemplate == nil {
-		m.Spec.Topology.Distributed.MixCoord.PodTemplate = &ofstv2.PodTemplateSpec{}
-	}
-	m.setDefaultContainerSecurityContext(&mvVersion, m.Spec.Topology.Distributed.MixCoord.PodTemplate)
+func (m *Milvus) setCommonDefaults(mvVersion *catalog.MilvusVersion, node any) {
+	switch n := node.(type) {
+	case **MilvusNode:
+		if *n == nil {
+			*n = &MilvusNode{}
+		}
+		if (*n).Replicas == nil {
+			(*n).Replicas = pointer.Int32P(1)
+		}
+		if (*n).PodTemplate == nil {
+			(*n).PodTemplate = &ofstv2.PodTemplateSpec{}
+		}
+		m.setDefaultContainerSecurityContext(mvVersion, (*n).PodTemplate)
+		m.setDefaultContainerResourceLimits((*n).PodTemplate)
 
-	m.setDefaultContainerResourceLimits(m.Spec.Topology.Distributed.MixCoord.PodTemplate)
-
-	if m.Spec.Topology.Distributed.DataNode == nil {
-		m.Spec.Topology.Distributed.DataNode = &MilvusNode{}
+	case **MilvusDataNode:
+		var ok bool
+		if *n == nil {
+			ok = true
+			*n = &MilvusDataNode{}
+		}
+		if (*n).Replicas == nil {
+			(*n).Replicas = pointer.Int32P(1)
+		}
+		if (*n).PodTemplate == nil {
+			(*n).PodTemplate = &ofstv2.PodTemplateSpec{}
+		}
+		if (*n).StorageType == "" {
+			(*n).StorageType = StorageTypeDurable
+		}
+		if ok {
+			(*n).Storage = m.SetDefaultStorage()
+		}
+		m.setDefaultContainerSecurityContext(mvVersion, (*n).PodTemplate)
+		m.setDefaultContainerResourceLimits((*n).PodTemplate)
 	}
-	if m.Spec.Topology.Distributed.DataNode.Replicas == nil {
-		m.Spec.Topology.Distributed.DataNode.Replicas = pointer.Int32P(1)
-	}
-	if m.Spec.Topology.Distributed.DataNode.PodTemplate == nil {
-		m.Spec.Topology.Distributed.DataNode.PodTemplate = &ofstv2.PodTemplateSpec{}
-	}
-	m.setDefaultContainerSecurityContext(&mvVersion, m.Spec.Topology.Distributed.DataNode.PodTemplate)
-
-	m.setDefaultContainerResourceLimits(m.Spec.Topology.Distributed.DataNode.PodTemplate)
-
-	if m.Spec.Topology.Distributed.Proxy == nil {
-		m.Spec.Topology.Distributed.Proxy = &MilvusNode{}
-	}
-	if m.Spec.Topology.Distributed.Proxy.Replicas == nil {
-		m.Spec.Topology.Distributed.Proxy.Replicas = pointer.Int32P(1)
-	}
-	if m.Spec.Topology.Distributed.Proxy.PodTemplate == nil {
-		m.Spec.Topology.Distributed.Proxy.PodTemplate = &ofstv2.PodTemplateSpec{}
-	}
-	m.setDefaultContainerSecurityContext(&mvVersion, m.Spec.Topology.Distributed.Proxy.PodTemplate)
-
-	m.setDefaultContainerResourceLimits(m.Spec.Topology.Distributed.Proxy.PodTemplate)
-
-	if m.Spec.Topology.Distributed.QueryNode == nil {
-		m.Spec.Topology.Distributed.QueryNode = &MilvusNode{}
-	}
-	if m.Spec.Topology.Distributed.QueryNode.Replicas == nil {
-		m.Spec.Topology.Distributed.QueryNode.Replicas = pointer.Int32P(1)
-	}
-	if m.Spec.Topology.Distributed.QueryNode.PodTemplate == nil {
-		m.Spec.Topology.Distributed.QueryNode.PodTemplate = &ofstv2.PodTemplateSpec{}
-	}
-	m.setDefaultContainerSecurityContext(&mvVersion, m.Spec.Topology.Distributed.QueryNode.PodTemplate)
-
-	m.setDefaultContainerResourceLimits(m.Spec.Topology.Distributed.QueryNode.PodTemplate)
-
-	if m.Spec.Topology.Distributed.StreamingNode == nil {
-		m.Spec.Topology.Distributed.StreamingNode = &MilvusDataNode{}
-	}
-	if m.Spec.Topology.Distributed.StreamingNode.Replicas == nil {
-		m.Spec.Topology.Distributed.StreamingNode.Replicas = pointer.Int32P(1)
-	}
-	if m.Spec.Topology.Distributed.StreamingNode.PodTemplate == nil {
-		m.Spec.Topology.Distributed.StreamingNode.PodTemplate = &ofstv2.PodTemplateSpec{}
-	}
-	if m.Spec.Topology.Distributed.StreamingNode.StorageType == "" {
-		m.Spec.Topology.Distributed.StreamingNode.StorageType = StorageTypeDurable
-	}
-	if m.Spec.Topology.Distributed.StreamingNode.Storage == nil && m.Spec.Topology.Distributed.StreamingNode.StorageType == StorageTypeDurable {
-		m.Spec.Topology.Distributed.StreamingNode.Storage = m.GetDefaultPVC()
-	}
-
-	m.setDefaultContainerSecurityContext(&mvVersion, m.Spec.PodTemplate)
-
-	m.setDefaultContainerResourceLimits(m.Spec.Topology.Distributed.StreamingNode.PodTemplate)
 }
 
 func (m *Milvus) SetDefaults(kc client.Client) {

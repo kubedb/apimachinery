@@ -906,7 +906,7 @@ const (
 	MilvusLogFileName    = "glog.conf"
 
 	MilvusDataDir       = "/var/lib/milvus"
-	MilvusConfigVolDir  = "/milvus/configs/"
+	MilvusConfigVolDir  = "/milvus/configs"
 	MilvusContainerName = "milvus"
 
 	EtcdEndpointsName = "ETCD_ENDPOINTS"
