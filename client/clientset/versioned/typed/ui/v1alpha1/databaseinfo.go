@@ -21,10 +21,11 @@ package v1alpha1
 import (
 	"context"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 	scheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
+
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	rest "k8s.io/client-go/rest"
 )
 
 // DatabaseInfosGetter has a method to return a DatabaseInfoInterface.
