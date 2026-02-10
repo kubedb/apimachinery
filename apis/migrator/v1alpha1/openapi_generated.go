@@ -33360,9 +33360,9 @@ func schema_apimachinery_apis_migrator_v1alpha1_DBMigratorImage(ref common.Refer
 							Format:      "",
 						},
 					},
-					"progressFetcher": {
+					"progressReporter": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProgressFetcher is the sidecar image used to fetch migration progress",
+							Description: "ProgressReporter is the sidecar image used to report migration progress",
 							Type:        []string{"string"},
 							Format:      "",
 						},

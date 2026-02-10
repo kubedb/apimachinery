@@ -14138,6 +14138,834 @@
         }
       ]
     },
+    "/apis/migrator.kubedb.com/": {
+      "get": {
+        "description": "get information of a group",
+        "consumes": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom"
+        ],
+        "operationId": "getMigratorKubedbComAPIGroup",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.APIGroup"
+            }
+          }
+        }
+      }
+    },
+    "/apis/migrator.kubedb.com/v1alpha1/": {
+      "get": {
+        "description": "get available resources",
+        "consumes": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "getMigratorKubedbComV1alpha1APIResources",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.APIResourceList"
+            }
+          }
+        }
+      }
+    },
+    "/apis/migrator.kubedb.com/v1alpha1/migrators": {
+      "get": {
+        "description": "list or watch objects of kind Migrator",
+        "consumes": [
+          "*/*"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf",
+          "application/json;stream=watch",
+          "application/vnd.kubernetes.protobuf;stream=watch"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "listMigratorKubedbComV1alpha1MigratorForAllNamespaces",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MigratorList"
+            }
+          }
+        },
+        "x-kubernetes-action": "list",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/allowWatchBookmarks-HC2hJt-J"
+        },
+        {
+          "$ref": "#/parameters/continue-QfD61s0i"
+        },
+        {
+          "$ref": "#/parameters/fieldSelector-xIcQKXFG"
+        },
+        {
+          "$ref": "#/parameters/labelSelector-5Zw57w4C"
+        },
+        {
+          "$ref": "#/parameters/limit-1NfNmdNH"
+        },
+        {
+          "$ref": "#/parameters/pretty-tJGM1-ng"
+        },
+        {
+          "$ref": "#/parameters/resourceVersion-5WAnf1kx"
+        },
+        {
+          "$ref": "#/parameters/resourceVersionMatch-t8XhRHeC"
+        },
+        {
+          "$ref": "#/parameters/sendInitialEvents-rLXlEK_k"
+        },
+        {
+          "$ref": "#/parameters/timeoutSeconds-yvYezaOC"
+        },
+        {
+          "$ref": "#/parameters/watch-XNNPZGbK"
+        }
+      ]
+    },
+    "/apis/migrator.kubedb.com/v1alpha1/namespaces/{namespace}/migrators": {
+      "get": {
+        "description": "list or watch objects of kind Migrator",
+        "consumes": [
+          "*/*"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf",
+          "application/json;stream=watch",
+          "application/vnd.kubernetes.protobuf;stream=watch"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "listMigratorKubedbComV1alpha1NamespacedMigrator",
+        "parameters": [
+          {
+            "$ref": "#/parameters/allowWatchBookmarks-HC2hJt-J"
+          },
+          {
+            "$ref": "#/parameters/continue-QfD61s0i"
+          },
+          {
+            "$ref": "#/parameters/fieldSelector-xIcQKXFG"
+          },
+          {
+            "$ref": "#/parameters/labelSelector-5Zw57w4C"
+          },
+          {
+            "$ref": "#/parameters/limit-1NfNmdNH"
+          },
+          {
+            "$ref": "#/parameters/resourceVersion-5WAnf1kx"
+          },
+          {
+            "$ref": "#/parameters/resourceVersionMatch-t8XhRHeC"
+          },
+          {
+            "$ref": "#/parameters/sendInitialEvents-rLXlEK_k"
+          },
+          {
+            "$ref": "#/parameters/timeoutSeconds-yvYezaOC"
+          },
+          {
+            "$ref": "#/parameters/watch-XNNPZGbK"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MigratorList"
+            }
+          }
+        },
+        "x-kubernetes-action": "list",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "post": {
+        "description": "create a Migrator",
+        "consumes": [
+          "*/*"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "createMigratorKubedbComV1alpha1NamespacedMigrator",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+            }
+          },
+          {
+            "uniqueItems": true,
+            "type": "string",
+            "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+            "name": "dryRun",
+            "in": "query"
+          },
+          {
+            "$ref": "#/parameters/fieldManager-Qy4HdaTW"
+          },
+          {
+            "uniqueItems": true,
+            "type": "string",
+            "description": "fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered.",
+            "name": "fieldValidation",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+            }
+          }
+        },
+        "x-kubernetes-action": "post",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "delete": {
+        "description": "delete collection of Migrator",
+        "consumes": [
+          "*/*"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "deleteMigratorKubedbComV1alpha1CollectionNamespacedMigrator",
+        "parameters": [
+          {
+            "$ref": "#/parameters/body-2Y1dVQaQ"
+          },
+          {
+            "$ref": "#/parameters/continue-QfD61s0i"
+          },
+          {
+            "uniqueItems": true,
+            "type": "string",
+            "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+            "name": "dryRun",
+            "in": "query"
+          },
+          {
+            "$ref": "#/parameters/fieldSelector-xIcQKXFG"
+          },
+          {
+            "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
+            "$ref": "#/parameters/labelSelector-5Zw57w4C"
+          },
+          {
+            "$ref": "#/parameters/limit-1NfNmdNH"
+          },
+          {
+            "$ref": "#/parameters/orphanDependents-uRB25kX5"
+          },
+          {
+            "$ref": "#/parameters/propagationPolicy-6jk3prlO"
+          },
+          {
+            "$ref": "#/parameters/resourceVersion-5WAnf1kx"
+          },
+          {
+            "$ref": "#/parameters/resourceVersionMatch-t8XhRHeC"
+          },
+          {
+            "$ref": "#/parameters/sendInitialEvents-rLXlEK_k"
+          },
+          {
+            "$ref": "#/parameters/timeoutSeconds-yvYezaOC"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Status"
+            }
+          }
+        },
+        "x-kubernetes-action": "deletecollection",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/namespace-vgWSWtn3"
+        },
+        {
+          "$ref": "#/parameters/pretty-tJGM1-ng"
+        }
+      ]
+    },
+    "/apis/migrator.kubedb.com/v1alpha1/namespaces/{namespace}/migrators/{name}": {
+      "get": {
+        "description": "read the specified Migrator",
+        "consumes": [
+          "*/*"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "readMigratorKubedbComV1alpha1NamespacedMigrator",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+            }
+          }
+        },
+        "x-kubernetes-action": "get",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "put": {
+        "description": "replace the specified Migrator",
+        "consumes": [
+          "*/*"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "replaceMigratorKubedbComV1alpha1NamespacedMigrator",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+            }
+          },
+          {
+            "uniqueItems": true,
+            "type": "string",
+            "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+            "name": "dryRun",
+            "in": "query"
+          },
+          {
+            "$ref": "#/parameters/fieldManager-Qy4HdaTW"
+          },
+          {
+            "uniqueItems": true,
+            "type": "string",
+            "description": "fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered.",
+            "name": "fieldValidation",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+            }
+          }
+        },
+        "x-kubernetes-action": "put",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "delete": {
+        "description": "delete a Migrator",
+        "consumes": [
+          "*/*"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "deleteMigratorKubedbComV1alpha1NamespacedMigrator",
+        "parameters": [
+          {
+            "$ref": "#/parameters/body-2Y1dVQaQ"
+          },
+          {
+            "uniqueItems": true,
+            "type": "string",
+            "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+            "name": "dryRun",
+            "in": "query"
+          },
+          {
+            "$ref": "#/parameters/gracePeriodSeconds--K5HaBOS"
+          },
+          {
+            "$ref": "#/parameters/ignoreStoreReadErrorWithClusterBreakingPotential-QbNkfIqj"
+          },
+          {
+            "$ref": "#/parameters/orphanDependents-uRB25kX5"
+          },
+          {
+            "$ref": "#/parameters/propagationPolicy-6jk3prlO"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Status"
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Status"
+            }
+          }
+        },
+        "x-kubernetes-action": "delete",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "patch": {
+        "description": "partially update the specified Migrator",
+        "consumes": [
+          "application/json-patch+json",
+          "application/merge-patch+json",
+          "application/strategic-merge-patch+json",
+          "application/apply-patch+yaml"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "patchMigratorKubedbComV1alpha1NamespacedMigrator",
+        "parameters": [
+          {
+            "$ref": "#/parameters/body-78PwaGsr"
+          },
+          {
+            "uniqueItems": true,
+            "type": "string",
+            "description": "When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed",
+            "name": "dryRun",
+            "in": "query"
+          },
+          {
+            "$ref": "#/parameters/fieldManager-7c6nTn1T"
+          },
+          {
+            "uniqueItems": true,
+            "type": "string",
+            "description": "fieldValidation instructs the server on how to handle objects in the request (POST/PUT/PATCH) containing unknown or duplicate fields. Valid values are: - Ignore: This will ignore any unknown fields that are silently dropped from the object, and will ignore all but the last duplicate field that the decoder encounters. This is the default behavior prior to v1.23. - Warn: This will send a warning via the standard warning response header for each unknown field that is dropped from the object, and for each duplicate field that is encountered. The request will still succeed if there are no other errors, and will only persist the last of any duplicate fields. This is the default in v1.23+ - Strict: This will fail the request with a BadRequest error if any unknown fields would be dropped from the object, or if any duplicate fields are present. The error returned from the server will contain all unknown and duplicate fields encountered.",
+            "name": "fieldValidation",
+            "in": "query"
+          },
+          {
+            "$ref": "#/parameters/force-tOGGb0Yi"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+            }
+          }
+        },
+        "x-kubernetes-action": "patch",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "parameters": [
+        {
+          "uniqueItems": true,
+          "type": "string",
+          "description": "name of the Migrator",
+          "name": "name",
+          "in": "path",
+          "required": true
+        },
+        {
+          "$ref": "#/parameters/namespace-vgWSWtn3"
+        },
+        {
+          "$ref": "#/parameters/pretty-tJGM1-ng"
+        }
+      ]
+    },
+    "/apis/migrator.kubedb.com/v1alpha1/watch/migrators": {
+      "get": {
+        "description": "watch individual changes to a list of Migrator. deprecated: use the 'watch' parameter with a list operation instead.",
+        "consumes": [
+          "*/*"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf",
+          "application/json;stream=watch",
+          "application/vnd.kubernetes.protobuf;stream=watch"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "watchMigratorKubedbComV1alpha1MigratorListForAllNamespaces",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"
+            }
+          }
+        },
+        "x-kubernetes-action": "watchlist",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/allowWatchBookmarks-HC2hJt-J"
+        },
+        {
+          "$ref": "#/parameters/continue-QfD61s0i"
+        },
+        {
+          "$ref": "#/parameters/fieldSelector-xIcQKXFG"
+        },
+        {
+          "$ref": "#/parameters/labelSelector-5Zw57w4C"
+        },
+        {
+          "$ref": "#/parameters/limit-1NfNmdNH"
+        },
+        {
+          "$ref": "#/parameters/pretty-tJGM1-ng"
+        },
+        {
+          "$ref": "#/parameters/resourceVersion-5WAnf1kx"
+        },
+        {
+          "$ref": "#/parameters/resourceVersionMatch-t8XhRHeC"
+        },
+        {
+          "$ref": "#/parameters/sendInitialEvents-rLXlEK_k"
+        },
+        {
+          "$ref": "#/parameters/timeoutSeconds-yvYezaOC"
+        },
+        {
+          "$ref": "#/parameters/watch-XNNPZGbK"
+        }
+      ]
+    },
+    "/apis/migrator.kubedb.com/v1alpha1/watch/namespaces/{namespace}/migrators": {
+      "get": {
+        "description": "watch individual changes to a list of Migrator. deprecated: use the 'watch' parameter with a list operation instead.",
+        "consumes": [
+          "*/*"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf",
+          "application/json;stream=watch",
+          "application/vnd.kubernetes.protobuf;stream=watch"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "watchMigratorKubedbComV1alpha1NamespacedMigratorList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"
+            }
+          }
+        },
+        "x-kubernetes-action": "watchlist",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/allowWatchBookmarks-HC2hJt-J"
+        },
+        {
+          "$ref": "#/parameters/continue-QfD61s0i"
+        },
+        {
+          "$ref": "#/parameters/fieldSelector-xIcQKXFG"
+        },
+        {
+          "$ref": "#/parameters/labelSelector-5Zw57w4C"
+        },
+        {
+          "$ref": "#/parameters/limit-1NfNmdNH"
+        },
+        {
+          "$ref": "#/parameters/namespace-vgWSWtn3"
+        },
+        {
+          "$ref": "#/parameters/pretty-tJGM1-ng"
+        },
+        {
+          "$ref": "#/parameters/resourceVersion-5WAnf1kx"
+        },
+        {
+          "$ref": "#/parameters/resourceVersionMatch-t8XhRHeC"
+        },
+        {
+          "$ref": "#/parameters/sendInitialEvents-rLXlEK_k"
+        },
+        {
+          "$ref": "#/parameters/timeoutSeconds-yvYezaOC"
+        },
+        {
+          "$ref": "#/parameters/watch-XNNPZGbK"
+        }
+      ]
+    },
+    "/apis/migrator.kubedb.com/v1alpha1/watch/namespaces/{namespace}/migrators/{name}": {
+      "get": {
+        "description": "watch changes to an object of kind Migrator. deprecated: use the 'watch' parameter with a list operation instead, filtered to a single item with the 'fieldSelector' parameter.",
+        "consumes": [
+          "*/*"
+        ],
+        "produces": [
+          "application/json",
+          "application/yaml",
+          "application/vnd.kubernetes.protobuf",
+          "application/json;stream=watch",
+          "application/vnd.kubernetes.protobuf;stream=watch"
+        ],
+        "schemes": [
+          "https"
+        ],
+        "tags": [
+          "migratorKubedbCom_v1alpha1"
+        ],
+        "operationId": "watchMigratorKubedbComV1alpha1NamespacedMigrator",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.WatchEvent"
+            }
+          }
+        },
+        "x-kubernetes-action": "watch",
+        "x-kubernetes-group-version-kind": {
+          "group": "migrator.kubedb.com",
+          "version": "v1alpha1",
+          "kind": "Migrator"
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/allowWatchBookmarks-HC2hJt-J"
+        },
+        {
+          "$ref": "#/parameters/continue-QfD61s0i"
+        },
+        {
+          "$ref": "#/parameters/fieldSelector-xIcQKXFG"
+        },
+        {
+          "$ref": "#/parameters/labelSelector-5Zw57w4C"
+        },
+        {
+          "$ref": "#/parameters/limit-1NfNmdNH"
+        },
+        {
+          "uniqueItems": true,
+          "type": "string",
+          "description": "name of the Migrator",
+          "name": "name",
+          "in": "path",
+          "required": true
+        },
+        {
+          "$ref": "#/parameters/namespace-vgWSWtn3"
+        },
+        {
+          "$ref": "#/parameters/pretty-tJGM1-ng"
+        },
+        {
+          "$ref": "#/parameters/resourceVersion-5WAnf1kx"
+        },
+        {
+          "$ref": "#/parameters/resourceVersionMatch-t8XhRHeC"
+        },
+        {
+          "$ref": "#/parameters/sendInitialEvents-rLXlEK_k"
+        },
+        {
+          "$ref": "#/parameters/timeoutSeconds-yvYezaOC"
+        },
+        {
+          "$ref": "#/parameters/watch-XNNPZGbK"
+        }
+      ]
+    },
     "/apis/ops.kubedb.com/": {
       "get": {
         "description": "get information of a group",
@@ -22786,6 +23614,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionInitContainer"
         },
+        "migrator": {
+          "description": "Migrator defines the migration related CLI/Tools images for this Postgres version",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImage"
+        },
         "podSecurityPolicies": {
           "description": "PSP names",
           "default": {},
@@ -26554,6 +27387,346 @@
         },
         "operatorSecret": {
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo": {
+      "type": "object",
+      "properties": {
+        "appBinding": {
+          "description": "AppBinding refers to the source database AppBinding name, Who contains the connection information.",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "maxConnections": {
+          "description": "MaxConnections refers to the `MaxConns`,which means the maximum size of the pool. The default is the greater of 4 or runtime.NumCPU().",
+          "type": "integer",
+          "format": "int32"
+        },
+        "url": {
+          "description": "URL refers to the database connection string.e.g postgres://postgres:password@localhost:5432/postgres",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImage": {
+      "type": "object",
+      "properties": {
+        "cli": {
+          "description": "CLI specifies the migrator CLI image",
+          "type": "string"
+        },
+        "operator": {
+          "description": "Operator specifies the migrator operator image",
+          "type": "string"
+        },
+        "progressReporter": {
+          "description": "ProgressReporter is the sidecar image used to report migration progress",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.LogicalReplication": {
+      "type": "object",
+      "properties": {
+        "copyData": {
+          "description": "CopyData refers to whether to copy data the initial snapshot when creating the subscription.",
+          "type": "boolean"
+        },
+        "publication": {
+          "description": "Publication refers to the publication configuration.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Publication"
+        },
+        "subscription": {
+          "description": "Subscription refers to the subscription configuration.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Subscription"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator": {
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "metadata is a standard object metadata",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec defines the desired state of Migrator",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MigratorSpec"
+        },
+        "status": {
+          "description": "status defines the observed state of Migrator",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MigratorStatus"
+        }
+      },
+      "x-kubernetes-group-version-kind": [
+        {
+          "group": "migrator.kubedb.com",
+          "kind": "Migrator",
+          "version": "v1alpha1"
+        }
+      ]
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MigratorList": {
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      },
+      "x-kubernetes-group-version-kind": [
+        {
+          "group": "migrator.kubedb.com",
+          "kind": "MigratorList",
+          "version": "v1alpha1"
+        }
+      ]
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MigratorSpec": {
+      "description": "MigratorSpec defines the desired state of Migrator",
+      "type": "object",
+      "required": [
+        "source",
+        "target"
+      ],
+      "properties": {
+        "activeDeadlineSeconds": {
+          "description": "ActiveDeadlineSeconds specifies the duration in seconds relative to the startTime that the job may be active before the system tries to terminate it",
+          "type": "integer",
+          "format": "int64"
+        },
+        "backoffLimit": {
+          "description": "BackoffLimit specifies the number of retries before marking the job as failed",
+          "type": "integer",
+          "format": "int32"
+        },
+        "jobTemplate": {
+          "description": "JobTemplate specifies runtime configurations for the backup/restore Job",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
+        },
+        "source": {
+          "description": "Source defines the source database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Source"
+        },
+        "target": {
+          "description": "Target defines the target database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Target"
+        },
+        "ttlSecondsAfterFinished": {
+          "description": "TTLSecondsAfterFinished specifies the TTL for completed jobs",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MigratorStatus": {
+      "description": "MigratorStatus defines the observed state of Migrator.",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "The status of each condition is one of True, False, or Unknown.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map"
+        },
+        "phase": {
+          "description": "Phase represents the current phase of migration",
+          "type": "string"
+        },
+        "progress": {
+          "description": "Progress contains the current progress of migration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Progress"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.PgDump": {
+      "type": "object",
+      "properties": {
+        "excludeSchema": {
+          "description": "ExcludeSchema specifies PATTERN do NOT dump the specified schema(s) Equivalent to: pg_dump --exclude-schema=\u003cschema\u003e",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "excludeTable": {
+          "description": "ExcludeTable specifies do NOT dump the specified table(s) Equivalent to: pg_dump --exclude-table=\u003ctable\u003e",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "extraOptions": {
+          "description": "ExtraOptions contains additional raw pg_dump command-line flags that are not explicitly modeled by the CRD fields.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "schema": {
+          "description": "Schema specifies dump the specified schema(s) only Equivalent to: pg_dump --schema=\u003cschema\u003e",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "schemaOnly": {
+          "description": "SchemaOnly indicates dump only the schema, no data Equivalent to: pg_dump --schema-only",
+          "type": "boolean"
+        },
+        "table": {
+          "description": "Table specifies dump only the specified table(s) Equivalent to: pg_dump --table=\u003ctable\u003e",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.PostgresSource": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the source Postgres database connection information.",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
+        },
+        "logicalReplication": {
+          "description": "LogicalReplication refers to the logical replication configuration. URL: https://www.postgresql.org/docs/current/logical-replication.html",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.LogicalReplication"
+        },
+        "pgDump": {
+          "description": "PgDump refers to the ClI name which will be used to dump the schema or data from the source Postgres database.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.PgDump"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.PostgresTarget": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the target Postgres database connection information.",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.Progress": {
+      "description": "Progress contains the current progress of migration",
+      "type": "object",
+      "properties": {
+        "dbType": {
+          "description": "DBType indicates the type of database",
+          "type": "string"
+        },
+        "info": {
+          "description": "Info contains the additional information about the current progress",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.Publication": {
+      "type": "object",
+      "properties": {
+        "args": {
+          "description": "Args contains additional publication parameters, such as table names or schema names depending on the selected Mode.\n\nFor example:\n  - Mode=table -\u003e Args may include table names\n  - Mode=tableInSchema -\u003e Args may include schema names",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "mode": {
+          "description": "Mode defines how tables are selected for the publication.\n\nSupported values:\n  - default: Applies filtering behavior similar to pg_dump (manual selection).\n  - table: Publishes only the specified tables (FOR TABLE ...).\n  - allTable: Publishes all tables in the database (FOR ALL TABLES).\n  - tableInSchema: Publishes all tables within specified schemas (FOR TABLES IN SCHEMA ...).",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name is the identifier of the PostgreSQL publication. This name will be used when creating or referencing the publication in logical replication.",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.Source": {
+      "description": "Source defines the source database configuration",
+      "type": "object",
+      "properties": {
+        "postgres": {
+          "description": "Postgres refers to the source Postgres database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.PostgresSource"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.Subscription": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name is the identifier of the PostgreSQL subscription. This name will be used when creating or referencing the subscription in logical replication.",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.Target": {
+      "description": "Target defines the target database configuration",
+      "type": "object",
+      "properties": {
+        "postgres": {
+          "description": "Postgres refers to the target Postgres database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.PostgresTarget"
         }
       }
     },
@@ -32412,6 +33585,11 @@
           "version": "v1alpha2"
         },
         {
+          "group": "migrator.kubedb.com",
+          "kind": "DeleteOptions",
+          "version": "v1alpha1"
+        },
+        {
           "group": "ops.kubedb.com",
           "kind": "DeleteOptions",
           "version": "v1alpha1"
@@ -32896,6 +34074,11 @@
           "group": "kubedb.com",
           "kind": "WatchEvent",
           "version": "v1alpha2"
+        },
+        {
+          "group": "migrator.kubedb.com",
+          "kind": "WatchEvent",
+          "version": "v1alpha1"
         },
         {
           "group": "ops.kubedb.com",

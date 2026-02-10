@@ -163,7 +163,7 @@ spec:
                     type: string
                   operator:
                     type: string
-                  progressFetcher:
+                  progressReporter:
                     type: string
                 type: object
               podSecurityPolicies:

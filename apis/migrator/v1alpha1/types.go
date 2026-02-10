@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// +k8s:openapi-gen=true
-
 package v1alpha1
 
 import kmapi "kmodules.xyz/client-go/api/v1"
@@ -58,6 +56,6 @@ type DBMigratorImage struct {
 	Operator string `json:"operator,omitempty"`
 	// CLI specifies the migrator CLI image
 	CLI string `json:"cli,omitempty"`
-	// ProgressFetcher is the sidecar image used to fetch migration progress
-	ProgressFetcher string `json:"progressFetcher,omitempty"`
+	// ProgressReporter is the sidecar image used to report migration progress
+	ProgressReporter string `json:"progressReporter,omitempty"`
 }
