@@ -118,10 +118,6 @@ func (m *Milvus) GetNodeSpec(nodeType MilvusNodeRoleType) (*MilvusNode, *MilvusD
 	}
 }
 
-func (m *Milvus) PVCName(alias string) string {
-	return alias
-}
-
 func (m *Milvus) PodControllerLabels(nodeType MilvusNodeRoleType, extraLabels ...map[string]string) map[string]string {
 	nodeSpec, dataNodeSpec := m.GetNodeSpec(nodeType)
 	var labels map[string]string
@@ -295,18 +291,14 @@ func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any
 		podTemplate = &(*n).PodTemplate
 
 	case **MilvusDataNode:
-		ok := false
 		if *n == nil {
-			ok = true
 			*n = &MilvusDataNode{}
+			(*n).Storage = m.SetDefaultStorage()
 		}
 		replicas = &(*n).Replicas
 		podTemplate = &(*n).PodTemplate
 		if (*n).StorageType == "" {
 			(*n).StorageType = StorageTypeDurable
-		}
-		if ok {
-			(*n).Storage = m.SetDefaultStorage()
 		}
 	}
 
