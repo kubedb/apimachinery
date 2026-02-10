@@ -712,9 +712,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLUsers":                                       schema_apimachinery_apis_ops_v1alpha1_MySQLUsers(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVerticalScalingSpec":                         schema_apimachinery_apis_ops_v1alpha1_MySQLVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVolumeExpansionSpec":                         schema_apimachinery_apis_ops_v1alpha1_MySQLVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jHorizontalScalingSpec":                       schema_apimachinery_apis_ops_v1alpha1_Neo4jHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jOpsRequest":                                  schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jOpsRequestList":                              schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jOpsRequestSpec":                              schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jReplicaReadinessCriteria":                    schema_apimachinery_apis_ops_v1alpha1_Neo4jReplicaReadinessCriteria(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jUpdateVersionSpec":                           schema_apimachinery_apis_ops_v1alpha1_Neo4jUpdateVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVerticalScalingSpec":                         schema_apimachinery_apis_ops_v1alpha1_Neo4jVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVolumeExpansionSpec":                         schema_apimachinery_apis_ops_v1alpha1_Neo4jVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.OpsRequestStatus":                                 schema_apimachinery_apis_ops_v1alpha1_OpsRequestStatus(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBCustomConfigurationSpec":             schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBHorizontalScalingSpec":               schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBHorizontalScalingSpec(ref),
@@ -39094,6 +39099,26 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLVolumeExpansionSpec(ref common.R
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_Neo4jHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Neo4jHorizontalScalingSpec contains the horizontal scaling information of a Neo4j cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"server": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of servers",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -39196,17 +39221,175 @@ func schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequestSpec(ref common.Refere
 				Description: "Neo4jOpsRequestSpec is the spec for Neo4jOpsRequest",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the Neo4j reference",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"updateVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for upgrading Neo4j",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jUpdateVersionSpec"),
+						},
+					},
+					"horizontalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for horizontal scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jHorizontalScalingSpec"),
+						},
+					},
+					"verticalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for vertical scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVerticalScalingSpec"),
+						},
+					},
+					"volumeExpansion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for volume expansion",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVolumeExpansionSpec"),
+						},
+					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for custom configuration of Neo4j",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
+						},
+					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for configuring TLS",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for restarting database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"apply": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"databaseRef", "type"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_Neo4jReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Neo4jReplicaReadinessCriteria is the criteria for checking readiness of a Neo4j pod after updating, horizontal scaling etc.",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_Neo4jUpdateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Neo4jUpdateVersionSpec contains the update version information of a Neo4j cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the target version name from catalog",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_Neo4jVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Neo4jVerticalScalingSpec contains the vertical scaling information of a Neo4j cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"server": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for servers",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_Neo4jVolumeExpansionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Neo4jVolumeExpansionSpec is the spec for Neo4j volume expansion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"server": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for servers",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
