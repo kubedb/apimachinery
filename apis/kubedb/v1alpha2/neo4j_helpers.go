@@ -153,10 +153,22 @@ func (r *Neo4j) SetDefaults(kc client.Client) {
 		}
 	}
 
+	if r.Spec.TLS != nil && r.Spec.TLS.IssuerRef != nil {
+		r.SetTLSDefaults()
+	}
+
 	dbContainer := coreutil.GetContainerByName(r.Spec.PodTemplate.Spec.Containers, kubedb.Neo4jContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesNeo4j)
 	}
+}
+
+func (r *Neo4j) SetTLSDefaults() {
+	if r.Spec.TLS == nil || r.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(Neo4jCertificateTypeServer), r.CertificateName(Neo4jCertificateTypeServer))
+	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(Neo4jCertificateTypeClient), r.CertificateName(Neo4jCertificateTypeClient))
 }
 
 func (r *Neo4j) setDefaultContainerSecurityContext(neoVersion *catalog.Neo4jVersion, podTemplate *ofst.PodTemplateSpec) {
@@ -313,7 +325,7 @@ func (r neo4jStatsService) Path() string {
 
 func (r neo4jStatsService) Scheme() string {
 	scheme := "http" // TODO:()
-	if r.Spec.TLS != nil {
+	if r.Spec.TLS != nil && r.Spec.TLS.IssuerRef != nil {
 		scheme = "https"
 	}
 	return scheme
