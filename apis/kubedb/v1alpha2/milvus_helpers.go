@@ -239,7 +239,6 @@ func (m *Milvus) MetaStorageEndpoints() []string {
 
 	endpoints := make([]string, size)
 	for i := 0; i < size; i++ {
-		// Use pod DNS names for the etcd cluster
 		endpoints[i] = fmt.Sprintf(
 			"http://%s-%d.%s.%s.svc.cluster.local:%d",
 			m.EtcdServiceName(), i,
@@ -276,49 +275,48 @@ func (m *Milvus) setDistributedDefaults(kc client.Client) {
 	if err != nil {
 		return
 	}
-	m.setCommonDefaults(&mvVersion, &m.Spec.Topology.Distributed.MixCoord)
-	m.setCommonDefaults(&mvVersion, &m.Spec.Topology.Distributed.DataNode)
-	m.setCommonDefaults(&mvVersion, &m.Spec.Topology.Distributed.Proxy)
-	m.setCommonDefaults(&mvVersion, &m.Spec.Topology.Distributed.QueryNode)
-	m.setCommonDefaults(&mvVersion, &m.Spec.Topology.Distributed.StreamingNode)
+	m.setComponentDefaults(&mvVersion, &m.Spec.Topology.Distributed.MixCoord)
+	m.setComponentDefaults(&mvVersion, &m.Spec.Topology.Distributed.DataNode)
+	m.setComponentDefaults(&mvVersion, &m.Spec.Topology.Distributed.Proxy)
+	m.setComponentDefaults(&mvVersion, &m.Spec.Topology.Distributed.QueryNode)
+	m.setComponentDefaults(&mvVersion, &m.Spec.Topology.Distributed.StreamingNode)
 }
 
-func (m *Milvus) setCommonDefaults(mvVersion *catalog.MilvusVersion, node any) {
+func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any) {
+	var replicas **int32
+	var podTemplate **ofstv2.PodTemplateSpec
+
 	switch n := node.(type) {
 	case **MilvusNode:
 		if *n == nil {
 			*n = &MilvusNode{}
 		}
-		if (*n).Replicas == nil {
-			(*n).Replicas = pointer.Int32P(1)
-		}
-		if (*n).PodTemplate == nil {
-			(*n).PodTemplate = &ofstv2.PodTemplateSpec{}
-		}
-		m.setDefaultContainerSecurityContext(mvVersion, (*n).PodTemplate)
-		m.setDefaultContainerResourceLimits((*n).PodTemplate)
+		replicas = &(*n).Replicas
+		podTemplate = &(*n).PodTemplate
 
 	case **MilvusDataNode:
-		var ok bool
 		if *n == nil {
-			ok = true
 			*n = &MilvusDataNode{}
 		}
-		if (*n).Replicas == nil {
-			(*n).Replicas = pointer.Int32P(1)
-		}
-		if (*n).PodTemplate == nil {
-			(*n).PodTemplate = &ofstv2.PodTemplateSpec{}
-		}
+		replicas = &(*n).Replicas
+		podTemplate = &(*n).PodTemplate
 		if (*n).StorageType == "" {
 			(*n).StorageType = StorageTypeDurable
 		}
-		if ok {
+		if (*n).Storage == nil {
 			(*n).Storage = m.SetDefaultStorage()
 		}
-		m.setDefaultContainerSecurityContext(mvVersion, (*n).PodTemplate)
-		m.setDefaultContainerResourceLimits((*n).PodTemplate)
 	}
+
+	if replicas != nil && *replicas == nil {
+		*replicas = pointer.Int32P(1)
+	}
+	if podTemplate != nil && *podTemplate == nil {
+		*podTemplate = &ofstv2.PodTemplateSpec{}
+	}
+
+	m.setDefaultContainerSecurityContext(mvVersion, *podTemplate)
+	m.setDefaultContainerResourceLimits(*podTemplate)
 }
 
 func (m *Milvus) SetDefaults(kc client.Client) {
