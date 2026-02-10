@@ -23617,7 +23617,7 @@
         "migrator": {
           "description": "Migrator defines the migration related CLI/Tools images for this Postgres version",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImage"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImages"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
@@ -27409,7 +27409,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImage": {
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImages": {
       "type": "object",
       "properties": {
         "cli": {

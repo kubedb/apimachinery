@@ -46,7 +46,7 @@ spec:
                 format: int64
                 type: integer
               backoffLimit:
-                default: 0
+                default: 6
                 format: int32
                 type: integer
               jobTemplate:

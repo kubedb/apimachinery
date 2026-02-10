@@ -51,11 +51,14 @@ type ConnectionInfo struct {
 	MaxConnections *int32 `yaml:"maxConnections" json:"maxConnections,omitempty"`
 }
 
-type DBMigratorImage struct {
+type DBMigratorImages struct {
 	// Operator specifies the migrator operator image
+	// +optional
 	Operator string `json:"operator,omitempty"`
 	// CLI specifies the migrator CLI image
+	// +optional
 	CLI string `json:"cli,omitempty"`
 	// ProgressReporter is the sidecar image used to report migration progress
+	// +optional
 	ProgressReporter string `json:"progressReporter,omitempty"`
 }

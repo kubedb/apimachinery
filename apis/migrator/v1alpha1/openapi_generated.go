@@ -577,7 +577,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.Volume":                                                    schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.ConnectionInfo":                              schema_apimachinery_apis_migrator_v1alpha1_ConnectionInfo(ref),
-		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.DBMigratorImage":                             schema_apimachinery_apis_migrator_v1alpha1_DBMigratorImage(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.DBMigratorImages":                            schema_apimachinery_apis_migrator_v1alpha1_DBMigratorImages(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.LogicalReplication":                          schema_apimachinery_apis_migrator_v1alpha1_LogicalReplication(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigrationConfig":                             schema_apimachinery_apis_migrator_v1alpha1_MigrationConfig(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.Migrator":                                    schema_apimachinery_apis_migrator_v1alpha1_Migrator(ref),
@@ -33340,7 +33340,7 @@ func schema_apimachinery_apis_migrator_v1alpha1_ConnectionInfo(ref common.Refere
 	}
 }
 
-func schema_apimachinery_apis_migrator_v1alpha1_DBMigratorImage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_migrator_v1alpha1_DBMigratorImages(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{

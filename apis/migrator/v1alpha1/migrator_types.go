@@ -62,7 +62,7 @@ type MigratorSpec struct {
 	Target *Target `json:"target" protobuf:"bytes,2,opt,name=target"`
 
 	// BackoffLimit specifies the number of retries before marking the job as failed
-	// +kubebuilder:default=0
+	// +kubebuilder:default=6
 	// +optional
 	BackoffLimit *int32 `json:"backoffLimit,omitempty"`
 

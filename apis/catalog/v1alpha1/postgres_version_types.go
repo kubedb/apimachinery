@@ -94,7 +94,7 @@ type PostgresVersionSpec struct {
 	UI []ChartInfo `json:"ui,omitempty"`
 	// Migrator defines the migration related CLI/Tools images for this Postgres version
 	// +optional
-	Migrator v1alpha1.DBMigratorImage `json:"migrator,omitempty"`
+	Migrator v1alpha1.DBMigratorImages `json:"migrator,omitempty"`
 }
 
 // PostgresVersionInitContainer is the Postgres init container image

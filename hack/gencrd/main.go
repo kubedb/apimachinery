@@ -24,10 +24,10 @@ import (
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	opsinstall "kubedb.dev/apimachinery/apis/ops/install"
-	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	migratorinstall "kubedb.dev/apimachinery/apis/migrator/install"
 	migratorv1alpha1 "kubedb.dev/apimachinery/apis/migrator/v1alpha1"
+	opsinstall "kubedb.dev/apimachinery/apis/ops/install"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	gort "gomodules.xyz/runtime"
 	"k8s.io/apimachinery/pkg/runtime"
