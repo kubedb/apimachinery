@@ -161,7 +161,7 @@ func CreateDataMigratorJob(client kubernetes.Interface, jobMeta metav1.ObjectMet
 				Spec: core.PodSpec{
 					RestartPolicy: core.RestartPolicyNever,
 					NodeSelector: map[string]string{
-						"kubernetes.io/hostname": dbPod.Spec.NodeName,
+						core.LabelHostname: dbPod.Spec.NodeName,
 					},
 					Tolerations: dbPod.Spec.Tolerations,
 					Containers: []core.Container{
