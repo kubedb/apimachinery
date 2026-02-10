@@ -295,7 +295,9 @@ func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any
 		podTemplate = &(*n).PodTemplate
 
 	case **MilvusDataNode:
+		ok := false
 		if *n == nil {
+			ok = true
 			*n = &MilvusDataNode{}
 		}
 		replicas = &(*n).Replicas
@@ -303,7 +305,7 @@ func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any
 		if (*n).StorageType == "" {
 			(*n).StorageType = StorageTypeDurable
 		}
-		if (*n).Storage == nil {
+		if ok {
 			(*n).Storage = m.SetDefaultStorage()
 		}
 	}
