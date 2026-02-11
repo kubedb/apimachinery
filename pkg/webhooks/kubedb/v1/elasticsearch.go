@@ -291,9 +291,6 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(db *dbapi.Elasticsear
 	//		- OpenSearch provision fails with security plugin disabled.
 	//		- Remove the validation, once the issue is fixed.
 	//		- Issue Ref: https://github.com/opensearch-project/security/issues/1481
-	//if db.Spec.DisableSecurity && esVersion.Spec.AuthPlugin == catalogapi.ElasticsearchAuthPluginOpenSearch {
-	//	return fmt.Errorf(`'spec.disableSecurity' cannot be 'true' for opensearch`)
-	//}
 
 	monitorSpec := db.Spec.Monitor
 	if monitorSpec != nil {
