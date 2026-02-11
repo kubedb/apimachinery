@@ -578,6 +578,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.ConnectionInfo":                              schema_apimachinery_apis_migrator_v1alpha1_ConnectionInfo(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.DBMigratorImages":                            schema_apimachinery_apis_migrator_v1alpha1_DBMigratorImages(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.JobDefaults":                                 schema_apimachinery_apis_migrator_v1alpha1_JobDefaults(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.LogicalReplication":                          schema_apimachinery_apis_migrator_v1alpha1_LogicalReplication(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigrationConfig":                             schema_apimachinery_apis_migrator_v1alpha1_MigrationConfig(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.Migrator":                                    schema_apimachinery_apis_migrator_v1alpha1_Migrator(ref),
@@ -33318,6 +33319,14 @@ func schema_apimachinery_apis_migrator_v1alpha1_ConnectionInfo(ref common.Refere
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
+					"dbName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DBName refers to the database name.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"url": {
 						SchemaProps: spec.SchemaProps{
 							Description: "URL refers to the database connection string.e.g postgres://postgres:password@localhost:5432/postgres",
@@ -33365,6 +33374,48 @@ func schema_apimachinery_apis_migrator_v1alpha1_DBMigratorImages(ref common.Refe
 							Description: "ProgressReporter is the sidecar image used to report migration progress",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_JobDefaults(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "JobDefaults defines default settings for migration jobs",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"imagePullPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ImagePullPolicy specifies the image pull policy for the migrator Job\n\nPossible enum values:\n - `\"Always\"` means that kubelet always attempts to pull the latest image. Container will fail If the pull fails.\n - `\"IfNotPresent\"` means that kubelet pulls if the image isn't present on disk. Container will fail if the image isn't present and the pull fails.\n - `\"Never\"` means that kubelet never pulls an image, but only uses a local image. Container will fail if the image isn't present",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Always", "IfNotPresent", "Never"},
+						},
+					},
+					"backoffLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackoffLimit specifies the number of retries before marking the job as failed",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"ttlSecondsAfterFinished": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TTLSecondsAfterFinished specifies the TTL for completed jobs",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"activeDeadlineSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ActiveDeadlineSeconds specifies the duration in seconds relative to the startTime that the job may be active before the system tries to terminate it",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
 				},
@@ -33551,25 +33602,10 @@ func schema_apimachinery_apis_migrator_v1alpha1_MigratorSpec(ref common.Referenc
 							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.Target"),
 						},
 					},
-					"backoffLimit": {
+					"jobDefaults": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BackoffLimit specifies the number of retries before marking the job as failed",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"ttlSecondsAfterFinished": {
-						SchemaProps: spec.SchemaProps{
-							Description: "TTLSecondsAfterFinished specifies the TTL for completed jobs",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"activeDeadlineSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ActiveDeadlineSeconds specifies the duration in seconds relative to the startTime that the job may be active before the system tries to terminate it",
-							Type:        []string{"integer"},
-							Format:      "int64",
+							Description: "JobDefaults specifies default settings for migration jobs",
+							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.JobDefaults"),
 						},
 					},
 					"jobTemplate": {
@@ -33583,7 +33619,7 @@ func schema_apimachinery_apis_migrator_v1alpha1_MigratorSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.Source", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.Target"},
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.Source", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.Target"},
 	}
 }
 

@@ -41,6 +41,10 @@ type ConnectionInfo struct {
 	// +optional
 	AppBinding kmapi.ObjectReference `yaml:"appBinding,omitempty" json:"appBinding,omitempty"`
 
+	// DBName refers to the database name.
+	// +optional
+	DBName string `yaml:"dbName" json:"dbName"`
+
 	// URL refers to the database connection string.e.g postgres://postgres:password@localhost:5432/postgres
 	// +optional
 	URL string `yaml:"url" json:"url,omitempty"`

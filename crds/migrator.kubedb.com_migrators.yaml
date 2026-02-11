@@ -21,10 +21,10 @@ spec:
     - jsonPath: .status.progress.dbType
       name: DBType
       type: string
-    - jsonPath: .status.progress.details.Stage
+    - jsonPath: .status.progress.info.Stage
       name: Stage
       type: string
-    - jsonPath: .status.progress.details.Lag
+    - jsonPath: .status.progress.info.Lag
       name: Lag
       type: string
     - jsonPath: .metadata.creationTimestamp
@@ -42,13 +42,22 @@ spec:
             type: object
           spec:
             properties:
-              activeDeadlineSeconds:
-                format: int64
-                type: integer
-              backoffLimit:
-                default: 6
-                format: int32
-                type: integer
+              jobDefaults:
+                properties:
+                  activeDeadlineSeconds:
+                    format: int64
+                    type: integer
+                  backoffLimit:
+                    default: 6
+                    format: int32
+                    type: integer
+                  imagePullPolicy:
+                    default: IfNotPresent
+                    type: string
+                  ttlSecondsAfterFinished:
+                    format: int32
+                    type: integer
+                type: object
               jobTemplate:
                 properties:
                   controller:
@@ -2797,6 +2806,8 @@ spec:
                             required:
                             - name
                             type: object
+                          dbName:
+                            type: string
                           maxConnections:
                             format: int32
                             type: integer
@@ -2875,6 +2886,8 @@ spec:
                             required:
                             - name
                             type: object
+                          dbName:
+                            type: string
                           maxConnections:
                             format: int32
                             type: integer
@@ -2885,9 +2898,6 @@ spec:
                     - connectionInfo
                     type: object
                 type: object
-              ttlSecondsAfterFinished:
-                format: int32
-                type: integer
             required:
             - source
             - target

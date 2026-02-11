@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
@@ -34,8 +35,8 @@ import (
 // +kubebuilder:resource:scope=Namespaced
 // +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="DBType",type="string",JSONPath=".status.progress.dbType"
-// +kubebuilder:printcolumn:name="Stage",type="string",JSONPath=".status.progress.details.Stage"
-// +kubebuilder:printcolumn:name="Lag",type="string",JSONPath=".status.progress.details.Lag"
+// +kubebuilder:printcolumn:name="Stage",type="string",JSONPath=".status.progress.info.Stage"
+// +kubebuilder:printcolumn:name="Lag",type="string",JSONPath=".status.progress.info.Lag"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type Migrator struct {
 	metav1.TypeMeta `json:",inline"`
@@ -61,6 +62,21 @@ type MigratorSpec struct {
 	// Target defines the target database configuration
 	Target *Target `json:"target" protobuf:"bytes,2,opt,name=target"`
 
+	// JobDefaults specifies default settings for migration jobs
+	JobDefaults *JobDefaults `json:"jobDefaults,omitempty"`
+
+	// JobTemplate specifies runtime configurations for the backup/restore Job
+	// +optional
+	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`
+}
+
+// JobDefaults defines default settings for migration jobs
+type JobDefaults struct {
+	// ImagePullPolicy specifies the image pull policy for the migrator Job
+	// +kubebuilder:default=IfNotPresent
+	// +optional
+	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
+
 	// BackoffLimit specifies the number of retries before marking the job as failed
 	// +kubebuilder:default=6
 	// +optional
@@ -74,10 +90,6 @@ type MigratorSpec struct {
 	// that the job may be active before the system tries to terminate it
 	// +optional
 	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty"`
-
-	// JobTemplate specifies runtime configurations for the backup/restore Job
-	// +optional
-	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`
 }
 
 // MigratorStatus defines the observed state of Migrator.

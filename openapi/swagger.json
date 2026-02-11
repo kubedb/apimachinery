@@ -27398,6 +27398,11 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
         },
+        "dbName": {
+          "description": "DBName refers to the database name.",
+          "type": "string",
+          "default": ""
+        },
         "maxConnections": {
           "description": "MaxConnections refers to the `MaxConns`,which means the maximum size of the pool. The default is the greater of 4 or runtime.NumCPU().",
           "type": "integer",
@@ -27423,6 +27428,36 @@
         "progressReporter": {
           "description": "ProgressReporter is the sidecar image used to report migration progress",
           "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.JobDefaults": {
+      "description": "JobDefaults defines default settings for migration jobs",
+      "type": "object",
+      "properties": {
+        "activeDeadlineSeconds": {
+          "description": "ActiveDeadlineSeconds specifies the duration in seconds relative to the startTime that the job may be active before the system tries to terminate it",
+          "type": "integer",
+          "format": "int64"
+        },
+        "backoffLimit": {
+          "description": "BackoffLimit specifies the number of retries before marking the job as failed",
+          "type": "integer",
+          "format": "int32"
+        },
+        "imagePullPolicy": {
+          "description": "ImagePullPolicy specifies the image pull policy for the migrator Job\n\nPossible enum values:\n - `\"Always\"` means that kubelet always attempts to pull the latest image. Container will fail If the pull fails.\n - `\"IfNotPresent\"` means that kubelet pulls if the image isn't present on disk. Container will fail if the image isn't present and the pull fails.\n - `\"Never\"` means that kubelet never pulls an image, but only uses a local image. Container will fail if the image isn't present",
+          "type": "string",
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ]
+        },
+        "ttlSecondsAfterFinished": {
+          "description": "TTLSecondsAfterFinished specifies the TTL for completed jobs",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -27524,15 +27559,9 @@
         "target"
       ],
       "properties": {
-        "activeDeadlineSeconds": {
-          "description": "ActiveDeadlineSeconds specifies the duration in seconds relative to the startTime that the job may be active before the system tries to terminate it",
-          "type": "integer",
-          "format": "int64"
-        },
-        "backoffLimit": {
-          "description": "BackoffLimit specifies the number of retries before marking the job as failed",
-          "type": "integer",
-          "format": "int32"
+        "jobDefaults": {
+          "description": "JobDefaults specifies default settings for migration jobs",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.JobDefaults"
         },
         "jobTemplate": {
           "description": "JobTemplate specifies runtime configurations for the backup/restore Job",
@@ -27545,11 +27574,6 @@
         "target": {
           "description": "Target defines the target database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Target"
-        },
-        "ttlSecondsAfterFinished": {
-          "description": "TTLSecondsAfterFinished specifies the TTL for completed jobs",
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
