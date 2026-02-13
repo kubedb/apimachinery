@@ -33775,7 +33775,7 @@ func schema_apimachinery_apis_migrator_v1alpha1_PostgresSource(ref common.Refere
 					},
 					"pgDump": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PgDump refers to the ClI name which will be used to dump the schema or data from the source Postgres database.",
+							Description: "PgDump refers to the CLI name which will be used to dump the schema or data from the source Postgres database.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.PgDump"),
 						},
 					},
