@@ -20,7 +20,7 @@ type PostgresSource struct {
 	// ConnectionInfo refers to the source Postgres database connection information.
 	ConnectionInfo ConnectionInfo `yaml:"connectionInfo" json:"connectionInfo"`
 
-	// PgDump refers to the ClI name which will be used to dump the schema or data from the source Postgres database.
+	// PgDump refers to the CLI name which will be used to dump the schema or data from the source Postgres database.
 	PgDump *PgDump `yaml:"pgDump" json:"pgDump,omitempty"`
 
 	// LogicalReplication refers to the logical replication configuration. URL: https://www.postgresql.org/docs/current/logical-replication.html
