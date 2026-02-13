@@ -20,6 +20,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -93,6 +94,14 @@ type Neo4jSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+
+	// Monitor is used monitor database instance
+	// +optional
+	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+
+	// TLS contains tls configurations
+	// +optional
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 }
 
 // Neo4jStatus defines the observed state of Neo4j.
@@ -127,6 +136,17 @@ const (
 	Neo4jProtocolTCPBoltRouting Neo4jProtocol = "tcp-boltrouting"
 	Neo4jProtocolTCPRaft        Neo4jProtocol = "tcp-raft"
 	Neo4jProtocolTCPTx          Neo4jProtocol = "tcp-tx"
+)
+
+// +kubebuilder:validation:Enum=ca;bolt;http;client;server
+type Neo4jCertificateType string
+
+const (
+	Neo4jCertificateTypeCA     Neo4jCertificateType = "ca"
+	Neo4jCertificateTypeBolt   Neo4jCertificateType = "bolt"
+	Neo4jCertificateTypeHTTP   Neo4jCertificateType = "http"
+	Neo4jCertificateTypeClient Neo4jCertificateType = "client"
+	Neo4jCertificateTypeServer Neo4jCertificateType = "server"
 )
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

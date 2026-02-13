@@ -1759,7 +1759,7 @@ const (
 	ClickHouseKeeperServerID             = "KEEPERID"
 )
 
-// =========================== Cassandra Constants ============================
+// =========================== Neo4j Constants ============================
 
 const (
 	Neo4jBoltPort       = 7687 // Bolt protocol (binary driver, neo4j:// and bolt://)
@@ -2125,6 +2125,16 @@ var (
 		Limits: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse("4"),
 			core.ResourceMemory: resource.MustParse("10Gi"),
+		},
+	}
+
+	DefaultResourcesNeo4j = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("2Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("2Gi"),
 		},
 	}
 )
