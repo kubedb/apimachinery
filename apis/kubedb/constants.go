@@ -532,6 +532,7 @@ const (
 	PostgresDatabasePort              = 5432
 	PostgresPodPrimary                = "primary"
 	PostgresPodStandby                = "standby"
+	PostgresPodReadReplica            = "read-replica"
 	EnvPostgresUser                   = "POSTGRES_USER"
 	EnvPostgresPassword               = "POSTGRES_PASSWORD"
 	PostgresRootUser                  = "postgres"
@@ -588,8 +589,10 @@ const (
 	SYS_RESOURCE              = "SYS_RESOURCE"
 	DropCapabilityALL         = "ALL"
 
-	PostgresGRPCIssuerName           = "grpc-issuer"
-	PostgresGRPCSelfSignedIssuerName = "grpc-selfsigned"
+	PostgresGRPCIssuerName              = "grpc-issuer"
+	PostgresGRPCSelfSignedIssuerName    = "grpc-selfsigned"
+	PostgresDatabaseClusterLabelKey     = "postgreses.kubedb.com/database.cluster"
+	PostgresDatabaseReadReplicaLabelKey = "postgreses.kubedb.com/database.read-replica"
 
 	// =========================== ProxySQL Constants ============================
 	LabelProxySQLName                  = ProxySQLKey + "/name"

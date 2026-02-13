@@ -28239,6 +28239,13 @@
       "description": "HorizontalScaling is the spec for Postgres horizontal scaling",
       "type": "object",
       "properties": {
+        "readReplicas": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReadReplicaHzScalingSpec"
+          }
+        },
         "replicas": {
           "type": "integer",
           "format": "int32"
@@ -28519,6 +28526,13 @@
         },
         "postgres": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "readReplicas": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ReadReplicaResources"
+          }
         }
       }
     },
@@ -28716,6 +28730,77 @@
       "type": "object",
       "properties": {
         "proxysql": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ReadReplicaHzScalingSpec": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "Name specifies the name of the read replica",
+          "type": "string",
+          "default": ""
+        },
+        "nodeSelector": {
+          "description": "NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          },
+          "x-kubernetes-map-type": "atomic"
+        },
+        "podPlacementPolicy": {
+          "description": "PodPlacementPolicy is the reference of the podPlacementPolicy",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "remove": {
+          "description": "We can use replicas: 0 for removing a read replica group instead of specifying remove: true However it feels more convenient to have a separate field for removing a read replica group",
+          "type": "boolean"
+        },
+        "replicas": {
+          "description": "Number of instances to deploy for a Postgres database.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resources": {
+          "description": "Compute Resources required by the sidecar container.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "serviceTemplate": {
+          "description": "ServiceTemplate is an optional configuration for services used to expose database",
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec"
+        },
+        "storage": {
+          "description": "Storage to specify how storage shall be used.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        },
+        "storageType": {
+          "description": "StorageType can be durable (default) or ephemeral",
+          "type": "string"
+        },
+        "tolerations": {
+          "description": "If specified, the pod's tolerations.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.api.core.v1.Toleration"
+          }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ReadReplicaResources": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "postgres": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         }
       }
@@ -33890,6 +33975,22 @@
             "LoadBalancer",
             "NodePort"
           ]
+        }
+      }
+    },
+    "xyz.kmodules.offshoot-api.api.v1.ServiceTemplateSpec": {
+      "description": "ServiceTemplateSpec describes the data a service should have when created from a template",
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceSpec"
         }
       }
     },
