@@ -33476,6 +33476,20 @@ func schema_apimachinery_apis_archiver_v1alpha1_LogBackupOptions(ref common.Refe
 							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"),
 						},
 					},
+					"retentionPeriod": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionPeriod is the retention policy to be used for Logs (i.e. '60d') means how long logs will be retained before being pruned. The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years. time.RFC3339 We need to parse the time to RFC3339 format",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"retentionSchedule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionSchedule defines the cron expression when the log retention (pruning) task will run. Cron format, e.g. \"0 0 1 * *\" (monthly on the 1st at 12).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"successfulLogHistoryLimit": {
 						SchemaProps: spec.SchemaProps{
 							Description: "SuccessfulLogHistoryLimit defines the number of successful Logs backup status that the incremental snapshot will retain The default value is 5.",
@@ -33486,6 +33500,13 @@ func schema_apimachinery_apis_archiver_v1alpha1_LogBackupOptions(ref common.Refe
 					"failedLogHistoryLimit": {
 						SchemaProps: spec.SchemaProps{
 							Description: "FailedLogHistoryLimit defines the number of failed Logs backup that the incremental snapshot will retain for debugging purposes. The default value is 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"logRetentionHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogRetentionHistoryLimit defines the number of retention status the incremental snapshot will retain for debugging purposes. The default value is 5.",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
