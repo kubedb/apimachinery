@@ -27421,12 +27421,8 @@
           "description": "CLI specifies the migrator CLI image",
           "type": "string"
         },
-        "operator": {
-          "description": "Operator specifies the migrator operator image",
-          "type": "string"
-        },
-        "progressReporter": {
-          "description": "ProgressReporter is the sidecar image used to report migration progress",
+        "statusReporter": {
+          "description": "StatusReporter is the sidecar image used to report migration progress",
           "type": "string"
         }
       }

@@ -161,9 +161,7 @@ spec:
                 properties:
                   cli:
                     type: string
-                  operator:
-                    type: string
-                  progressReporter:
+                  statusReporter:
                     type: string
                 type: object
               podSecurityPolicies:

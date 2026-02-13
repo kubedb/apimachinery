@@ -1,5 +1,5 @@
 /*
-Copyright 2026.
+Copyright AppsCode Inc. and Contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,13 +22,15 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"kubedb.dev/apimachinery/apis/migrator"
+
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
 )
 
 var (
 	// SchemeGroupVersion is group version used to register these objects
-	SchemeGroupVersion = schema.GroupVersion{Group: "migrator.kubedb.com", Version: "v1alpha1"}
+	SchemeGroupVersion = schema.GroupVersion{Group: migrator.GroupName, Version: "v1alpha1"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: SchemeGroupVersion}

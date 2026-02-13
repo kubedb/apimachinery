@@ -33355,13 +33355,6 @@ func schema_apimachinery_apis_migrator_v1alpha1_DBMigratorImages(ref common.Refe
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"operator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Operator specifies the migrator operator image",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"cli": {
 						SchemaProps: spec.SchemaProps{
 							Description: "CLI specifies the migrator CLI image",
@@ -33369,9 +33362,9 @@ func schema_apimachinery_apis_migrator_v1alpha1_DBMigratorImages(ref common.Refe
 							Format:      "",
 						},
 					},
-					"progressReporter": {
+					"statusReporter": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ProgressReporter is the sidecar image used to report migration progress",
+							Description: "StatusReporter is the sidecar image used to report migration progress",
 							Type:        []string{"string"},
 							Format:      "",
 						},
