@@ -20,6 +20,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -28,6 +29,24 @@ const (
 	ResourceKindHanaDB     = "HanaDB"
 	ResourceSingularHanaDB = "hanadb"
 	ResourcePluralHanaDB   = "hanadbs"
+)
+
+// +kubebuilder:validation:Enum=sync;syncmem;async
+type ReplicationMode string
+
+const (
+	ReplicationModeSync    ReplicationMode = "sync"
+	ReplicationModeSyncMem ReplicationMode = "syncmem"
+	ReplicationModeAsync   ReplicationMode = "async"
+)
+
+// +kubebuilder:validation:Enum=logreplay;delta_datashipping;logreplay_readaccess
+type OperationMode string
+
+const (
+	OperationModeLogReplay           OperationMode = "logreplay"
+	OperationModeDeltaDataShipping   OperationMode = "delta_datashipping"
+	OperationModeLogReplayReadAccess OperationMode = "logreplay_readaccess"
 )
 
 // +kubebuilder:validation:Enum=Standalone;SystemReplication
@@ -92,6 +111,10 @@ type HanaDBSpec struct {
 	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
+	// Monitor is used monitor database instance
+	// +optional
+	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
@@ -115,6 +138,23 @@ type HanaDBTopology struct {
 	// Mode specifies the deployment mode.
 	// +optional
 	Mode *HanaDBMode `json:"mode,omitempty"`
+
+	// SystemReplication defines configuration for SAP HANA system replication.
+	// +optional
+	SystemReplication *HanaDBSystemReplicationSpec `json:"systemReplication,omitempty"`
+}
+
+// HanaDBSystemReplicationSpec defines system replication configuration.
+type HanaDBSystemReplicationSpec struct {
+	// ReplicationMode controls when transactions are committed relative to log shipping.
+	// +optional
+	// +kubebuilder:default=sync
+	ReplicationMode ReplicationMode `json:"replicationMode,omitempty"`
+
+	// OperationMode controls the log shipping/replay strategy on the secondary.
+	// +optional
+	// +kubebuilder:default=logreplay
+	OperationMode OperationMode `json:"operationMode,omitempty"`
 }
 
 // HanaDBStatus defines the observed state of HanaDB.

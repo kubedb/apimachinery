@@ -154,6 +154,26 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 				"number of replicas for standalone must be one "))
 		}
 	}
+	if db.Spec.Topology != nil && db.Spec.Topology.Mode != nil &&
+		*db.Spec.Topology.Mode == api.HanaDBModeSystemReplication {
+		if db.Spec.Topology.SystemReplication == nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("systemReplication"),
+				db.Name,
+				"systemReplication must be specified when topology.mode is SystemReplication"))
+		} else {
+			sr := db.Spec.Topology.SystemReplication
+			if sr.ReplicationMode == "" {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("systemReplication").Child("replicationMode"),
+					db.Name,
+					"replicationMode can't be empty for SystemReplication"))
+			}
+			if sr.OperationMode == "" {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("systemReplication").Child("operationMode"),
+					db.Name,
+					"operationMode can't be empty for SystemReplication"))
+			}
+		}
+	}
 
 	if db.Spec.PodTemplate != nil {
 		if err = w.validateEnvsForAllContainers(db); err != nil {
