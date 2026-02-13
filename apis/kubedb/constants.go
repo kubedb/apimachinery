@@ -2307,12 +2307,12 @@ const (
 	KubeSliceNSMContainerName                  = "cmd-nsc-grpc"
 
 	// Archiver
-	DistributedSnapshotInfoAnnotation       = "distributedsnapshotinfo"
-	DistributedKeySnapshots                 = "snapshots"
-	DistributedKeyRestoreSession            = "restoresession"
-	DistributedArchiverBackupCMNameSuffix   = "backup"
-	DistributedArchiverRestoreCMNameSuffix  = "restore"
-	DistributedArchiverSnapshotCMNameSuffix = "snapshots"
+	DistributedArchiverSnapshotInfoAnnotation = "distributedsnapshotinfo"
+	DistributedArchiverCMKeySnapshots         = "snapshots"
+	DistributedArchiverCMKeyRestoreSession    = "restoresession"
+	DistributedArchiverBackupCMNameSuffix     = "backup"
+	DistributedArchiverRestoreCMNameSuffix    = "restore"
+	DistributedArchiverSnapshotCMNameSuffix   = "snapshots"
 
 	// GRPC commands
 	DistributedCommandDatabasePodGet     = "get_pod"
