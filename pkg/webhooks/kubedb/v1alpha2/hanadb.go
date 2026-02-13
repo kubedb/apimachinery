@@ -155,27 +155,6 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 				"number of replicas for standalone must be one "))
 		}
 	}
-	if db.Spec.Topology != nil && db.Spec.Topology.Mode != nil &&
-		*db.Spec.Topology.Mode == api.HanaDBModeSystemReplication {
-		if db.Spec.Topology.SystemReplication == nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("systemReplication"),
-				db.Name,
-				"systemReplication must be specified when topology.mode is SystemReplication"))
-		} else {
-			sr := db.Spec.Topology.SystemReplication
-			if sr.ReplicationMode == "" {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("systemReplication").Child("replicationMode"),
-					db.Name,
-					"replicationMode can't be empty for SystemReplication"))
-			}
-			if sr.OperationMode == "" {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("systemReplication").Child("operationMode"),
-					db.Name,
-					"operationMode can't be empty for SystemReplication"))
-			}
-		}
-	}
-
 	if db.Spec.PodTemplate != nil {
 		if err = w.validateEnvsForAllContainers(db); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
@@ -223,7 +202,7 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("secretName"),
 				db.Spec.Configuration.SecretName,
-				"failed to get configuration secret"))
+				fmt.Sprintf("failed to get configuration secret: %v", err)))
 		}
 	}
 
@@ -252,9 +231,18 @@ var hanadbReservedVolumesMountPaths = []string{
 func (w *HanaDBCustomWebhook) hanadbValidateVersion(db *api.HanaDB) error {
 	hanadbVersion := catalog.HanaDBVersion{}
 
-	return w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
 	}, &hanadbVersion)
+	if err != nil {
+		return err
+	}
+
+	if db.IsSystemReplication() && hanadbVersion.Spec.Coordinator.Image == "" {
+		return fmt.Errorf("coordinator image in HanaDBVersion %q can not be empty for SystemReplication mode", db.Spec.Version)
+	}
+
+	return nil
 }
 
 func hanadbValidateVolumes(podTemplate *ofst.PodTemplateSpec) error {

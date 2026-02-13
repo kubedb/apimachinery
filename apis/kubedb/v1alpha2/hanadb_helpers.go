@@ -233,6 +233,11 @@ func (h *HanaDB) IsCluster() bool {
 	return h.Spec.Topology != nil
 }
 
+func (h *HanaDB) IsSystemReplication() bool {
+	return h.Spec.Topology != nil && h.Spec.Topology.Mode != nil &&
+		*h.Spec.Topology.Mode == HanaDBModeSystemReplication
+}
+
 func (h *HanaDB) SetHealthCheckerDefaults() {
 	if h.Spec.HealthChecker.PeriodSeconds == nil {
 		h.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(120)
@@ -274,9 +279,10 @@ func (h *HanaDB) SetDefaults(kc client.Client) {
 			h.Spec.Replicas = pointer.Int32P(1)
 		}
 	}
-	if h.Spec.Topology != nil && h.Spec.Topology.Mode != nil &&
-		*h.Spec.Topology.Mode == HanaDBModeSystemReplication &&
-		h.Spec.Topology.SystemReplication != nil {
+	if h.IsSystemReplication() {
+		if h.Spec.Topology.SystemReplication == nil {
+			h.Spec.Topology.SystemReplication = &HanaDBSystemReplicationSpec{}
+		}
 		if h.Spec.Topology.SystemReplication.ReplicationMode == "" {
 			h.Spec.Topology.SystemReplication.ReplicationMode = ReplicationModeSync
 		}
