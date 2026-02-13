@@ -996,6 +996,11 @@ func (in *DB2Spec) DeepCopyInto(out *DB2Spec) {
 		}
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.HADRConfig != nil {
+		in, out := &in.HADRConfig, &out.HADRConfig
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 

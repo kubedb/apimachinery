@@ -131,6 +131,10 @@ func (d *DB2) ResourceSingular() string {
 	return ResourceSingularDB2
 }
 
+func (d *DB2) ServiceAccountName() string {
+	return d.OffshootName()
+}
+
 func (d *DB2) SetDefaults(kc client.Client) {
 	if d.Spec.DeletionPolicy == "" {
 		d.Spec.DeletionPolicy = DeletionPolicyDelete
