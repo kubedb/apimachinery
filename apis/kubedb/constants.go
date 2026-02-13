@@ -46,11 +46,6 @@ const (
 	InlineConfigKeyPrefix   = "inline"
 	InlineConfigKeyPrefixZZ = "zz-inline"
 
-	KubeSliceNSMIPKey         = "kubeslice.io/nsmIP"
-	KubeSlicePodIPVolumeName  = "podip"
-	KubeSlicePodIPFileName    = "podip"
-	KubeSliceNSMContainerName = "cmd-nsc-grpc"
-
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
 	DatabasePodStandby                   = "standby"
@@ -2306,6 +2301,10 @@ const (
 	DistributedPhysicalRestoreContainerName    = "distributed-physical-backup-restore-0"
 	KubesliceContainerExcludeLabel             = "kubeslice.io/exclude"
 	KubeSliceDomainSuffix                      = "slice.local"
+	KubeSliceNSMIPKey                          = "kubeslice.io/nsmIP"
+	KubeSlicePodIPVolumeName                   = "podip"
+	KubeSlicePodIPFileName                     = "podip"
+	KubeSliceNSMContainerName                  = "cmd-nsc-grpc"
 
 	// Archiver
 	DistributedSnapshotInfoAnnotation       = "distributedsnapshotinfo"
