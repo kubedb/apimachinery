@@ -294,7 +294,7 @@ func (m MariaDB) StatsServiceLabels() map[string]string {
 
 func (m MariaDB) PrimaryServiceDNS() string {
 	if m.Spec.Distributed {
-		return fmt.Sprintf("%s.%s.svc%s", m.ServiceName(), m.Namespace, kubedb.KubeSliceDomainSuffix)
+		return fmt.Sprintf("%s.%s.svc.%s", m.ServiceName(), m.Namespace, kubedb.KubeSliceDomainSuffix)
 	} else {
 		return fmt.Sprintf("%s.%s.svc", m.ServiceName(), m.Namespace)
 	}

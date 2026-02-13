@@ -135,7 +135,7 @@ func RunCommandWithPayload(ctx context.Context, grpcClient pb.CommandServiceClie
 
 func serverAddress(db *dbapi.MariaDB, podName string) string {
 	if db.Spec.Distributed {
-		return fmt.Sprintf("%s.%s.%s.svc%s:%v", podName, db.GoverningServiceName(), db.Namespace, kubedb.KubeSliceDomainSuffix, port)
+		return fmt.Sprintf("%s.%s.%s.svc.%s:%v", podName, db.GoverningServiceName(), db.Namespace, kubedb.KubeSliceDomainSuffix, port)
 	} else {
 		return fmt.Sprintf("%s.%s.%s.svc:%v", podName, db.GoverningServiceName(), db.Namespace, port)
 	}

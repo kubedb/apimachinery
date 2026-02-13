@@ -63,7 +63,7 @@ const (
 	DistributedMaxVolumeUsed                   = "max_used"
 	DistributedVolumeCapacity                  = "capacity"
 	KubesliceContainerExcludeLabel             = "kubeslice.io/exclude"
-	KubeSliceDomainSuffix                      = ".slice.local"
+	KubeSliceDomainSuffix                      = "slice.local"
 	DistributedPrimaryServiceExportSuffix      = "primary-serviceexport"
 
 	KubeSliceNSMIPKey         = "kubeslice.io/nsmIP"
