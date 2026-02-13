@@ -182,11 +182,12 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 var milvusReservedVolumes = []string{
 	kubedb.MilvusVolumeNameData,
 	kubedb.MilvusConfigVolName,
+	kubedb.MilvusConfigFileName,
 }
 
 var milvusReservedVolumesMountPaths = []string{
 	kubedb.MilvusDataDir,
-	kubedb.MilvusConfigDir,
+	kubedb.MilvusConfigVolDir,
 }
 
 func (m *MilvusCustomWebhook) milvusValidateVersion(db *olddbapi.Milvus) error {

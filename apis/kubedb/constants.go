@@ -898,15 +898,18 @@ const (
 const (
 	MilvusUsername = "root"
 
-	MilvusGrpcPortName = "grpc"
-	MilvusGrpcPort     = int32(19530)
+	MilvusGrpcPortName    = "grpc"
+	MilvusMetricsPortName = "metrics"
+	MilvusGrpcPort        = int32(19530)
 
 	MilvusVolumeNameData = "data"
-	MilvusDataDir        = "/var/lib/milvus"
 	MilvusConfigVolName  = "milvus-config"
-	MilvusConfigDir      = "/milvus/configs/milvus.yaml"
 	MilvusConfigFileName = "milvus.yaml"
-	MilvusContainerName  = "milvus"
+	MilvusLogFileName    = "glog.conf"
+
+	MilvusDataDir       = "/var/lib/milvus"
+	MilvusConfigVolDir  = "/milvus/configs"
+	MilvusContainerName = "milvus"
 
 	EtcdEndpointsName = "ETCD_ENDPOINTS"
 	EtcdAPIVersion    = "operator.etcd.io/v1alpha1"
@@ -917,9 +920,14 @@ const (
 	MinioAddressName   = "MINIO_ADDRESS"
 	MinioAddressKey    = "address"
 	MinioAccessKeyName = "MINIO_ACCESS_KEY"
-	MinioAccessKey     = "accessKeyId"
+	MinioAccessKey     = "accesskey"
 	MinioSecretKeyName = "MINIO_SECRET_KEY"
-	MinioSecretKey     = "secretAccessKey"
+	MinioSecretKey     = "secretkey"
+
+	MilvusMetricsPort       = 9091
+	MilvusPortDataNode      = 21124
+	MilvusPortQueryNode     = 21123
+	MilvusPortStreamingNode = 22222
 )
 
 const (
