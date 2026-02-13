@@ -46,43 +46,6 @@ const (
 	InlineConfigKeyPrefix   = "inline"
 	InlineConfigKeyPrefixZZ = "zz-inline"
 
-	// distributed const
-	DistributedDatabaseLabel                   = GroupName + "/distributed"
-	DistributedCustomConfigSecretNameSuffix    = "custom-config"
-	DistributedRBACNameSuffix                  = "rbac"
-	DistributedServiceExportNameSuffix         = "serviceexports"
-	DistributedTLSSecretNameSuffix             = "tls-secrets"
-	DistributedGRPCSecretNameSuffix            = "grpc-secrets"
-	DistributedAuthSecretNameSuffix            = "auth"
-	DistributedPromethuesSecretNameSuffix      = "prometheus-data"
-	DistributedPromethuesSecretVolumeName      = "prometheus-data"
-	DistributedPromethuesSecretVolumeMountPath = "/var/prometheus-data"
-	DistributedMonitoringAgentENV              = "MONITORING_AGENT"
-	DistributedMonitoringAgentPrometheus       = "prometheus"
-	DistributedDBReplicaENV                    = "DB_REPLICAS"
-	DistributedMaxVolumeUsed                   = "max_used"
-	DistributedVolumeCapacity                  = "capacity"
-	KubesliceContainerExcludeLabel             = "kubeslice.io/exclude"
-	KubeSliceDomainSuffix                      = "slice.local"
-	DistributedPrimaryServiceExportSuffix      = "primary-serviceexport"
-
-	// Distributed Archiver
-	DistributedSnapshotinfoAnnotation       = "distributedsnapshotinfo"
-	SnapshotsKey                            = "snapshots"
-	RestoreSessionKey                       = "restoresession"
-	DistributedArchiverBackupCMNameSuffix   = "backup"
-	DistributedArchiverRestoreCMNameSuffix  = "restore"
-	DistributedArchiverSnapshotCMNameSuffix = "snapshots"
-
-	DistributedPodGetCommand             = "get_pod"
-	DistributedRecoveryFileCreateCommand = "kubedb_create_recovery_done_file"
-	DistributedBackupCommand             = "kubestash_backup"
-	DistributedRestoreCommand            = "kubestash_backup_restore"
-	DistributedVolumeSnapshot            = "kubestash_volume_snapshot"
-	DistributedPodMetricCommand          = "kubedb_autoscaler_get_pod_metrics"
-	DistributedVolumeUsageCommand        = "kubedb_autoscaler_volume_usage"
-	DistributedVolumeCapacityCommand     = "kubedb_autoscaler_volume_capacity"
-
 	KubeSliceNSMIPKey         = "kubeslice.io/nsmIP"
 	KubeSlicePodIPVolumeName  = "podip"
 	KubeSlicePodIPFileName    = "podip"
@@ -428,10 +391,6 @@ const (
 	MariaDBSidekickNameLabelKey                = GroupName + "/sidekick-name"
 	MariaDBArchiverBaseBackupRestic            = "Restic"
 	MariaDBArchiverBaseBackupVolumeSnapshooter = "VolumeSnapshotter"
-
-	MariaDBDistributedUpgradeCommand     = "mariadb-upgrade"
-	MariaDBKubestashBackupContainerName  = "physical-backup-1"
-	MariaDBKubestashRestoreContainerName = "distributed-physical-backup-restore-0"
 
 	// Maxscale
 	MaxscaleCommonName            = "mx"
@@ -2323,4 +2282,47 @@ const (
 
 	// TenantDatabaseName is the name of the KubeDB managed tenant database
 	KubeDBTenantDatabaseName = "KUBEDB_HEALTH_CHECK"
+)
+
+// =========================== Distributed Constants ============================
+const (
+	DistributedDatabaseLabel                   = GroupName + "/distributed"
+	DistributedCustomConfigSecretNameSuffix    = "custom-config"
+	DistributedRBACNameSuffix                  = "rbac"
+	DistributedServiceExportNameSuffix         = "serviceexports"
+	DistributedTLSSecretNameSuffix             = "tls-secrets"
+	DistributedGRPCSecretNameSuffix            = "grpc-secrets"
+	DistributedAuthSecretNameSuffix            = "auth"
+	DistributedPromethuesSecretNameSuffix      = "prometheus-data"
+	DistributedPromethuesSecretVolumeName      = "prometheus-data"
+	DistributedPromethuesSecretVolumeMountPath = "/var/prometheus-data"
+	DistributedMonitoringAgentENV              = "MONITORING_AGENT"
+	DistributedMonitoringAgentPrometheus       = "prometheus"
+	DistributedDBReplicaENV                    = "DB_REPLICAS"
+	DistributedMaxVolumeUsed                   = "max_used"
+	DistributedVolumeCapacity                  = "capacity"
+	DistributedPrimaryServiceExportSuffix      = "primary-serviceexport"
+	DistributedPhysicalBackupContainerName     = "physical-backup-1"
+	DistributedPhysicalRestoreContainerName    = "distributed-physical-backup-restore-0"
+	KubesliceContainerExcludeLabel             = "kubeslice.io/exclude"
+	KubeSliceDomainSuffix                      = "slice.local"
+
+	// Archiver
+	DistributedSnapshotInfoAnnotation       = "distributedsnapshotinfo"
+	DistributedKeySnapshots                 = "snapshots"
+	DistributedKeyRestoreSession            = "restoresession"
+	DistributedArchiverBackupCMNameSuffix   = "backup"
+	DistributedArchiverRestoreCMNameSuffix  = "restore"
+	DistributedArchiverSnapshotCMNameSuffix = "snapshots"
+
+	// GRPC commands
+	DistributedCommandDatabasePodGet     = "get_pod"
+	DistributedCommandDatabseUpgrade     = "database-upgrade"
+	DistributedCommandRecoveryFileCreate = "kubedb_create_recovery_done_file"
+	DistributedCommandBackup             = "kubestash_backup"
+	DistributedCommandRestore            = "kubestash_backup_restore"
+	DistributedCommandVolumeSnapshot     = "kubestash_volume_snapshot"
+	DistributedCommandPodMetric          = "kubedb_autoscaler_get_pod_metrics"
+	DistributedCommandVolumeUsage        = "kubedb_autoscaler_volume_usage"
+	DistributedCommandVolumeCapacity     = "kubedb_autoscaler_volume_capacity"
 )
