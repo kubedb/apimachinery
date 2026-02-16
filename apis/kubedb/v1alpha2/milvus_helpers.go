@@ -20,6 +20,8 @@ import (
 	"context"
 	"fmt"
 
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -131,11 +133,6 @@ func (m *Milvus) PodControllerLabels(nodeType MilvusNodeRoleType, extraLabels ..
 
 func (m *Milvus) ServiceAccountName() string {
 	return m.OffshootName()
-}
-
-func (m *Milvus) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
-	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
-	return m.OffshootLabel(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
 func (m *Milvus) MilvusNodeContainerPort(nodeRole MilvusNodeRoleType) int32 {
@@ -449,4 +446,50 @@ func (m *Milvus) IsDistributed() bool {
 		m.Spec.Topology != nil &&
 		m.Spec.Topology.Mode != nil &&
 		*m.Spec.Topology.Mode == "Distributed"
+}
+
+func (m *Milvus) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(m.Spec.ServiceTemplates, alias)
+	return m.OffshootLabel(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
+
+type milvusStatsService struct {
+	*Milvus
+}
+
+func (m milvusStatsService) GetNamespace() string {
+	return m.Milvus.GetNamespace()
+}
+
+func (m milvusStatsService) ServiceName() string {
+	return m.OffshootName() + "-stats"
+}
+
+func (m milvusStatsService) ServiceMonitorName() string {
+	return m.ServiceName()
+}
+
+func (m milvusStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return m.OffshootLabels()
+}
+
+func (m milvusStatsService) Path() string {
+	return kubedb.DefaultStatsPath
+}
+
+func (m milvusStatsService) Scheme() string {
+	var sc promapi.Scheme
+	return sc.String()
+}
+
+func (m Milvus) StatsService() mona.StatsAccessor {
+	return &milvusStatsService{&m}
+}
+
+func (m Milvus) StatsServiceLabels() map[string]string {
+	return m.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
+}
+
+func (m milvusStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
 }
