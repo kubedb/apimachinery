@@ -773,6 +773,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQUpdateVersionSpec":                        schema_apimachinery_apis_ops_v1alpha1_RabbitMQUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVerticalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_RabbitMQVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVolumeExpansionSpec":                      schema_apimachinery_apis_ops_v1alpha1_RabbitMQVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReadReplicaHzScalingSpec":                         schema_apimachinery_apis_ops_v1alpha1_ReadReplicaHzScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReadReplicaResources":                             schema_apimachinery_apis_ops_v1alpha1_ReadReplicaResources(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec":                              schema_apimachinery_apis_ops_v1alpha1_ReconfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisAclSpec":                                     schema_apimachinery_apis_ops_v1alpha1_RedisAclSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisCustomConfigurationSpec":                     schema_apimachinery_apis_ops_v1alpha1_RedisCustomConfigurationSpec(ref),
@@ -40353,9 +40355,24 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresHorizontalScalingSpec(ref com
 							Format:      "",
 						},
 					},
+					"readReplicas": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReadReplicaHzScalingSpec"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReadReplicaHzScalingSpec"},
 	}
 }
 
@@ -40799,11 +40816,24 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresVerticalScalingSpec(ref commo
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
 						},
 					},
+					"readReplicas": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReadReplicaResources"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReadReplicaResources"},
 	}
 }
 
@@ -41586,6 +41616,135 @@ func schema_apimachinery_apis_ops_v1alpha1_RabbitMQVolumeExpansionSpec(ref commo
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_ReadReplicaHzScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name specifies the name of the read replica",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of instances to deploy for a Postgres database.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Compute Resources required by the sidecar container.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"nodeSelector": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-map-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeSelector is a selector which must be true for the pod to fit on a node. Selector which must match a node's labels for the pod to be scheduled on that node. More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "If specified, the pod's tolerations.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType can be durable (default) or ephemeral",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"podPlacementPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodPlacementPolicy is the reference of the podPlacementPolicy",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"serviceTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplate is an optional configuration for services used to expose database",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"),
+						},
+					},
+					"remove": {
+						SchemaProps: spec.SchemaProps{
+							Description: "We can use replicas: 0 for removing a read replica group instead of specifying remove: true However it feels more convenient to have a separate field for removing a read replica group",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.Toleration", "kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_ReadReplicaResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"postgres": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
 	}
 }
 

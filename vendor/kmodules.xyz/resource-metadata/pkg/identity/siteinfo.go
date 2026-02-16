@@ -21,6 +21,7 @@ import (
 	"net"
 	"strings"
 
+	kmapi "kmodules.xyz/client-go/api/v1"
 	clustermeta "kmodules.xyz/client-go/cluster"
 	"kmodules.xyz/client-go/tools/clusterid"
 	identityapi "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
@@ -31,8 +32,10 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/sets"
+	"k8s.io/client-go/discovery/cached/memory"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/restmapper"
 )
 
 func GetSiteInfo(cfg *rest.Config, kc kubernetes.Interface, nodes []*core.Node, licenseID string) (*identityapi.SiteInfo, error) {
@@ -128,6 +131,19 @@ func GetSiteInfo(cfg *rest.Config, kc kubernetes.Interface, nodes []*core.Node, 
 		si.Kubernetes.ControlPlane.URIs = uris
 	}
 
+	si.Kubernetes.Distributions = DetectDistributions(kc)
+
+	scList, err := kc.StorageV1().StorageClasses().List(context.Background(), metav1.ListOptions{})
+	scProvisioners := sets.NewString()
+	if err == nil {
+		for _, sc := range scList.Items {
+			scProvisioners.Insert(sc.Provisioner)
+		}
+	}
+	if scProvisioners.Len() > 0 {
+		si.Kubernetes.StorageProvisioners = scProvisioners.List()
+	}
+
 	if len(nodes) == 0 {
 		result, err := kc.CoreV1().Nodes().List(context.TODO(), metav1.ListOptions{})
 		if err != nil {
@@ -187,4 +203,17 @@ func skipIP(ip net.IP) bool {
 		ip.IsInterfaceLocalMulticast() ||
 		ip.IsLinkLocalMulticast() ||
 		ip.IsLinkLocalUnicast()
+}
+
+func DetectDistributions(kc kubernetes.Interface) []string {
+	mapper := restmapper.NewDeferredDiscoveryRESTMapper(memory.NewMemCacheClient(kc.Discovery()))
+
+	distros := sets.NewString()
+	if clustermeta.IsRancherManaged(mapper) {
+		distros.Insert(kmapi.ClusterManagerRancher.Name())
+	}
+	if clustermeta.IsOpenShiftManaged(mapper) {
+		distros.Insert(kmapi.ClusterManagerOpenShift.Name())
+	}
+	return distros.List()
 }

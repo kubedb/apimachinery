@@ -40,6 +40,8 @@ import (
 	fakekubedbv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/fake"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 	fakekubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2/fake"
+	migratorv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/migrator/v1alpha1"
+	fakemigratorv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/migrator/v1alpha1/fake"
 	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 	fakeopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1/fake"
 	postgresv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/postgres/v1alpha1"
@@ -154,6 +156,11 @@ func (c *Clientset) KubedbV1alpha2() kubedbv1alpha2.KubedbV1alpha2Interface {
 // KubedbV1 retrieves the KubedbV1Client
 func (c *Clientset) KubedbV1() kubedbv1.KubedbV1Interface {
 	return &fakekubedbv1.FakeKubedbV1{Fake: &c.Fake}
+}
+
+// MigratorV1alpha1 retrieves the MigratorV1alpha1Client
+func (c *Clientset) MigratorV1alpha1() migratorv1alpha1.MigratorV1alpha1Interface {
+	return &fakemigratorv1alpha1.FakeMigratorV1alpha1{Fake: &c.Fake}
 }
 
 // OpsV1alpha1 retrieves the OpsV1alpha1Client
