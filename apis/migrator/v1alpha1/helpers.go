@@ -29,3 +29,19 @@ func GetFinalizer() string {
 func (Migrator) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMigrator))
 }
+
+func (m Migrator) GetDBKindAndCommand() (string, string) {
+	switch {
+	case m.Spec.Source.Postgres != nil && m.Spec.Target.Postgres != nil:
+		return "Postgres", "postgres"
+	}
+	return "", ""
+}
+
+func (m Migrator) GetConnectionInfos() (*ConnectionInfo, *ConnectionInfo) {
+	switch {
+	case m.Spec.Source.Postgres != nil && m.Spec.Target.Postgres != nil:
+		return &m.Spec.Source.Postgres.ConnectionInfo, &m.Spec.Target.Postgres.ConnectionInfo
+	}
+	return nil, nil
+}
