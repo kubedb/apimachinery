@@ -19,7 +19,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.87.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.87.1
-	go.bytebuilders.dev/audit v0.0.47
+	go.bytebuilders.dev/audit v0.0.48
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	go.uber.org/zap v1.27.0
 	go.virtual-secrets.dev/apimachinery v0.0.1
@@ -50,7 +50,7 @@ require (
 	kmodules.xyz/monitoring-agent-api v0.34.1
 	kmodules.xyz/objectstore-api v0.34.0
 	kmodules.xyz/offshoot-api v0.34.0
-	kmodules.xyz/resource-metadata v0.41.0
+	kmodules.xyz/resource-metadata v0.42.1
 	kmodules.xyz/webhook-runtime v0.34.0
 	kubeops.dev/csi-driver-cacerts v0.5.0
 	kubeops.dev/operator-shard-manager v0.0.5

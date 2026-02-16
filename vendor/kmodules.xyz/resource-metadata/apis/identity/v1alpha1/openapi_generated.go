@@ -19948,6 +19948,34 @@ func schema_resource_metadata_apis_identity_v1alpha1_KubernetesInfo(ref common.R
 							Ref:     ref("kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeInfo"),
 						},
 					},
+					"distributions": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"storageProvisioners": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"nodeStats"},
 			},
