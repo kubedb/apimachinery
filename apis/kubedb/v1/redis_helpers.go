@@ -310,7 +310,7 @@ func (r *Redis) copyRedisConfigurationField() {
 	// Copy deprecated ConfigSecret to Configuration.SecretName
 	cnf := r.Spec.Configuration.ConfigurationSpec
 	if cnf.SecretName == "" && cnf.Inline == nil && r.Spec.ConfigSecret != nil && r.Spec.ConfigSecret.Name != "" {
-		r.Spec.Configuration.ConfigurationSpec.SecretName = r.Spec.ConfigSecret.Name
+		r.Spec.Configuration.SecretName = r.Spec.ConfigSecret.Name
 	}
 	r.Spec.ConfigSecret = nil
 
