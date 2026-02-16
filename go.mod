@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0
-	github.com/cert-manager/cert-manager v1.19.2
+	github.com/cert-manager/cert-manager v1.19.3
 	github.com/coreos/go-semver v0.3.1
 	github.com/evanphx/json-patch v5.9.11+incompatible
 	github.com/fatih/structs v1.1.0
@@ -19,7 +19,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.87.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.87.1
-	go.bytebuilders.dev/audit v0.0.47
+	go.bytebuilders.dev/audit v0.0.48
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	go.uber.org/zap v1.27.0
 	go.virtual-secrets.dev/apimachinery v0.0.1
@@ -47,16 +47,16 @@ require (
 	kmodules.xyz/client-go v0.34.2
 	kmodules.xyz/crd-schema-fuzz v0.34.1
 	kmodules.xyz/custom-resources v0.34.0
-	kmodules.xyz/monitoring-agent-api v0.34.0
+	kmodules.xyz/monitoring-agent-api v0.34.1
 	kmodules.xyz/objectstore-api v0.34.0
 	kmodules.xyz/offshoot-api v0.34.0
-	kmodules.xyz/resource-metadata v0.41.0
+	kmodules.xyz/resource-metadata v0.42.1
 	kmodules.xyz/webhook-runtime v0.34.0
 	kubeops.dev/csi-driver-cacerts v0.5.0
 	kubeops.dev/operator-shard-manager v0.0.5
 	kubeops.dev/petset v0.0.15
 	kubeops.dev/sidekick v0.0.12
-	kubestash.dev/apimachinery v0.23.0
+	kubestash.dev/apimachinery v0.23.1-0.20260209084525-80db980e861f
 	open-cluster-management.io/api v1.1.1-0.20251222023835-510285203ee6
 	sigs.k8s.io/controller-runtime v0.22.4
 	sigs.k8s.io/randfill v1.0.0

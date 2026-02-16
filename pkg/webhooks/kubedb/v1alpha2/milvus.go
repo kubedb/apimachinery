@@ -1,5 +1,5 @@
 /*
-Copyright 2023.
+Copyright AppsCode Inc. and Contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -182,11 +182,12 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 var milvusReservedVolumes = []string{
 	kubedb.MilvusVolumeNameData,
 	kubedb.MilvusConfigVolName,
+	kubedb.MilvusConfigFileName,
 }
 
 var milvusReservedVolumesMountPaths = []string{
 	kubedb.MilvusDataDir,
-	kubedb.MilvusConfigDir,
+	kubedb.MilvusConfigVolDir,
 }
 
 func (m *MilvusCustomWebhook) milvusValidateVersion(db *olddbapi.Milvus) error {

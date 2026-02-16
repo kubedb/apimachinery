@@ -72,11 +72,13 @@ type KubernetesInfo struct {
 	// Deprecated
 	ClusterName string `json:"clusterName,omitempty"`
 	// Deprecated
-	ClusterUID   string                 `json:"clusterUID,omitempty"`
-	Cluster      *kmapi.ClusterMetadata `json:"cluster,omitempty"`
-	Version      *version.Info          `json:"version,omitempty"`
-	ControlPlane *ControlPlaneInfo      `json:"controlPlane,omitempty"`
-	NodeStats    NodeInfo               `json:"nodeStats"`
+	ClusterUID          string                 `json:"clusterUID,omitempty"`
+	Cluster             *kmapi.ClusterMetadata `json:"cluster,omitempty"`
+	Version             *version.Info          `json:"version,omitempty"`
+	ControlPlane        *ControlPlaneInfo      `json:"controlPlane,omitempty"`
+	NodeStats           NodeInfo               `json:"nodeStats"`
+	Distributions       []string               `json:"distributions,omitempty"`
+	StorageProvisioners []string               `json:"storageProvisioners,omitempty"`
 }
 
 // https://github.com/kmodules/client-go/blob/kubernetes-1.16.3/tools/analytics/analytics.go#L66
