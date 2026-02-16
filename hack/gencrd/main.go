@@ -24,6 +24,8 @@ import (
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	migratorinstall "kubedb.dev/apimachinery/apis/migrator/install"
+	migratorv1alpha1 "kubedb.dev/apimachinery/apis/migrator/v1alpha1"
 	opsinstall "kubedb.dev/apimachinery/apis/ops/install"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -45,6 +47,7 @@ func generateSwaggerJson() {
 	kubedbinstall.Install(Scheme)
 	cataloginstall.Install(Scheme)
 	opsinstall.Install(Scheme)
+	migratorinstall.Install(Scheme)
 
 	apispec, err := openapi.RenderOpenAPISpec(openapi.Config{
 		Scheme: Scheme,
@@ -66,6 +69,7 @@ func generateSwaggerJson() {
 			kubedbv1alpha2.GetOpenAPIDefinitions,
 			catalogv1alpha1.GetOpenAPIDefinitions,
 			opsv1alpha1.GetOpenAPIDefinitions,
+			migratorv1alpha1.GetOpenAPIDefinitions,
 		},
 		//nolint:govet
 		Resources: []openapi.TypeInfo{
@@ -100,6 +104,8 @@ func generateSwaggerJson() {
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralPostgresVersion, catalogv1alpha1.ResourceKindPostgresVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralProxySQLVersion, catalogv1alpha1.ResourceKindProxySQLVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralRedisVersion, catalogv1alpha1.ResourceKindRedisVersion, false},
+
+			{migratorv1alpha1.SchemeGroupVersion, migratorv1alpha1.ResourcePluralMigrator, migratorv1alpha1.ResourceKindMigrator, true},
 		},
 	})
 	if err != nil {

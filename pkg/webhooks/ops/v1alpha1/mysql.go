@@ -1,9 +1,12 @@
 /*
 Copyright AppsCode Inc. and Contributors
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
     http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -355,6 +358,11 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLRotateAuthenticationOpsReque
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
 	if req.Spec.Migration.StorageClassName == nil {
 		return errors.New("spec.migration.storageClassName is required")
+	}
+	if req.Spec.Timeout == nil {
+		// timeout is required for Storage Migration ops request because it's a long-running operation
+		// default timeout is len(pods) * 5 minute
+		return errors.New("spec.timeout is required for Storage Migration ops request, adjust timeout according to the size of your database")
 	}
 	// check new storageClass
 	var newstorage, oldstorage storagev1.StorageClass

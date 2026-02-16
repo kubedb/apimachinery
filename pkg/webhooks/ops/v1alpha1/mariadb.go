@@ -1,9 +1,12 @@
 /*
 Copyright AppsCode Inc. and Contributors
+
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
+
     http://www.apache.org/licenses/LICENSE-2.0
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -255,7 +258,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReques
 			return errors.New("failed to parse mariadb storage size")
 		}
 
-		if cur.Cmp(*req.Spec.VolumeExpansion.MariaDB) >= 0 {
+		if cur.Cmp(*req.Spec.VolumeExpansion.MariaDB) >= 0 && (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") {
 			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 		}
 	}
@@ -268,7 +271,7 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReques
 		if !ok {
 			return errors.New("failed to parse maxscale storage size")
 		}
-		if cur.Cmp(*req.Spec.VolumeExpansion.MaxScale) >= 0 {
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.MaxScale) >= 0 {
 			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 		}
 	}
