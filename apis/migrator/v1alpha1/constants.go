@@ -16,37 +16,26 @@ limitations under the License.
 
 package v1alpha1
 
-// MigratorPhase represents the current phase of migration
-type MigratorPhase string
-
 const (
-	// MigratorPhasePending indicates the migration is pending
-	MigratorPhasePending MigratorPhase = "Pending"
-	// MigratorPhaseRunning indicates the migration is in progress
-	MigratorPhaseRunning MigratorPhase = "Running"
-	// MigratorPhaseSucceeded indicates the migration completed successfully
-	MigratorPhaseSucceeded MigratorPhase = "Succeeded"
-	// MigratorPhaseFailed indicates the migration failed
-	MigratorPhaseFailed MigratorPhase = "Failed"
-)
-
-const (
-	ResourceKindMigrator          = "Migrator"
-	ResourceSingularMigrator      = "migrator"
-	ResourcePluralMigrator        = "migrators"
-	ResourceKindMigratorAddon     = "MigratorAddon"
-	ResourceSingularMigratorAddon = "migratoraddon"
-	ResourcePluralMigratorAddon   = "migratoraddons"
-	ResourceMigratorStatus        = "migrators/status"
-)
-
-// RBAC related
-const (
-	MigratorJobClusterRole    = "migrator-job"
 	KindClusterRole           = "ClusterRole"
 	KindRole                  = "Role"
 	KindPersistentVolumeClaim = "PersistentVolumeClaim"
 	KindJob                   = "Job"
+)
+
+const (
+	MigratorJobClusterRole = "migrator-job"
+	MigratorJobPrefix      = "migrator"
+	SidecarContainerName   = "status-reporter"
+	MigratorGRPCPort       = 50051
+	MigratorPVCSuffix      = "pvc"
+	PVCVolumeName          = "migrator-data"
+	PVCVolumeMountPath     = "/data"
+	ConfigVolName          = "migrator-config"
+	ConfigVolMountPath     = "/etc/migrator"
+	ConfigFileName         = "config.yaml"
+	MigratorConfigSuffix   = "config"
+	ConfigPath             = ConfigVolMountPath + "/" + ConfigFileName
 )
 
 // Conditions Related Constants
