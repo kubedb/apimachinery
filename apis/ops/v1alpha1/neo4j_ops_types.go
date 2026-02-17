@@ -19,7 +19,6 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -55,20 +54,8 @@ type Neo4jOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type Neo4jOpsRequestType `json:"type"`
-	// Specifies information necessary for upgrading Neo4j
-	UpdateVersion *Neo4jUpdateVersionSpec `json:"updateVersion,omitempty"`
-	// Specifies information necessary for horizontal scaling
-	HorizontalScaling *Neo4jHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
-	// Specifies information necessary for vertical scaling
-	VerticalScaling *Neo4jVerticalScalingSpec `json:"verticalScaling,omitempty"`
-	// Specifies information necessary for volume expansion
-	VolumeExpansion *Neo4jVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
-	// Specifies information necessary for custom configuration of Neo4j
-	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *TLSSpec `json:"tls,omitempty"`
-	// Specifies information necessary for configuring authSecret of the database
-	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -80,38 +67,13 @@ type Neo4jOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth)
+// +kubebuilder:validation:Enum=Restart;
+// ENUM(Restart)
 type Neo4jOpsRequestType string
 
 // Neo4jReplicaReadinessCriteria is the criteria for checking readiness of a Neo4j pod
 // after updating, horizontal scaling etc.
 type Neo4jReplicaReadinessCriteria struct{}
-
-// Neo4jUpdateVersionSpec contains the update version information of a Neo4j cluster
-type Neo4jUpdateVersionSpec struct {
-	// Specifies the target version name from catalog
-	TargetVersion string `json:"targetVersion,omitempty"`
-}
-
-// Neo4jHorizontalScalingSpec contains the horizontal scaling information of a Neo4j cluster
-type Neo4jHorizontalScalingSpec struct {
-	// Number of servers
-	Server *int32 `json:"server,omitempty"`
-}
-
-// Neo4jVerticalScalingSpec contains the vertical scaling information of a Neo4j cluster
-type Neo4jVerticalScalingSpec struct {
-	// Resource spec for servers
-	Server *PodResources `json:"server,omitempty"`
-}
-
-// Neo4jVolumeExpansionSpec is the spec for Neo4j volume expansion
-type Neo4jVolumeExpansionSpec struct {
-	Mode VolumeExpansionMode `json:"mode"`
-	// volume specification for servers
-	Server *resource.Quantity `json:"server,omitempty"`
-}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

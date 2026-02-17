@@ -3855,6 +3855,13 @@ spec:
                 type: string
               tls:
                 properties:
+                  bolt:
+                    properties:
+                      enabled:
+                        type: boolean
+                      mTLSEnabled:
+                        type: boolean
+                    type: object
                   certificates:
                     items:
                       properties:
@@ -3940,6 +3947,20 @@ spec:
                       - alias
                       type: object
                     type: array
+                  cluster:
+                    properties:
+                      enabled:
+                        type: boolean
+                      mTLSEnabled:
+                        type: boolean
+                    type: object
+                  http:
+                    properties:
+                      enabled:
+                        type: boolean
+                      mTLSEnabled:
+                        type: boolean
+                    type: object
                   issuerRef:
                     properties:
                       apiGroup:

@@ -101,7 +101,38 @@ type Neo4jSpec struct {
 
 	// TLS contains tls configurations
 	// +optional
-	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+	TLS *Neo4jTLSConfig `json:"tls,omitempty"`
+}
+
+type Neo4jTLSConfig struct {
+	kmapi.TLSConfig `json:",inline"`
+	// +optional
+	Bolt *BoltTLSConfig `json:"bolt,omitempty"`
+	// +optional
+	HTTP *HTTPTLSConfig `json:"http,omitempty"`
+	// +optional
+	Cluster *ClusterTLSConfig `json:"cluster,omitempty"`
+}
+
+type BoltTLSConfig struct {
+	// +optional
+	Enabled *bool `json:"enabled,omitempty"`
+	// +optional
+	MTLSEnabled *bool `json:"mTLSEnabled,omitempty"`
+}
+
+type HTTPTLSConfig struct {
+	// +optional
+	Enabled *bool `json:"enabled,omitempty"`
+	// +optional
+	MTLSEnabled *bool `json:"mTLSEnabled,omitempty"`
+}
+
+type ClusterTLSConfig struct {
+	// +optional
+	Enabled *bool `json:"enabled,omitempty"`
+	// +optional
+	MTLSEnabled *bool `json:"mTLSEnabled,omitempty"`
 }
 
 // Neo4jStatus defines the observed state of Neo4j.

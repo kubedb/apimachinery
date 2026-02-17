@@ -167,6 +167,22 @@ func (r *Neo4j) SetTLSDefaults() {
 	if r.Spec.TLS == nil || r.Spec.TLS.IssuerRef == nil {
 		return
 	}
+	if r.Spec.TLS.HTTP == nil {
+		r.Spec.TLS.HTTP = &HTTPTLSConfig{
+			Enabled: ptr.To(true),
+		}
+	}
+	if r.Spec.TLS.Bolt == nil {
+		r.Spec.TLS.Bolt = &BoltTLSConfig{
+			Enabled: ptr.To(true),
+		}
+	}
+	if r.Spec.TLS.Cluster == nil {
+		r.Spec.TLS.Cluster = &ClusterTLSConfig{
+			Enabled:     ptr.To(true),
+			MTLSEnabled: ptr.To(true),
+		}
+	}
 	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(Neo4jCertificateTypeServer), r.CertificateName(Neo4jCertificateTypeServer))
 	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(Neo4jCertificateTypeClient), r.CertificateName(Neo4jCertificateTypeClient))
 }
@@ -275,8 +291,8 @@ func (r *Neo4j) AppBindingMeta() appcat.AppBindingMeta {
 }
 
 func (r *Neo4j) GetConnectionScheme() string {
-	scheme := "http" // TODO:()
-	if r.Spec.TLS != nil {
+	scheme := "http"
+	if r.Spec.TLS != nil && r.Spec.TLS.IssuerRef != nil && *r.Spec.TLS.HTTP.Enabled {
 		scheme = "https"
 	}
 	return scheme
@@ -324,8 +340,8 @@ func (r neo4jStatsService) Path() string {
 }
 
 func (r neo4jStatsService) Scheme() string {
-	scheme := "http" // TODO:()
-	if r.Spec.TLS != nil && r.Spec.TLS.IssuerRef != nil {
+	scheme := "http"
+	if r.Spec.TLS != nil && r.Spec.TLS.IssuerRef != nil && *r.Spec.TLS.HTTP.Enabled {
 		scheme = "https"
 	}
 	return scheme
