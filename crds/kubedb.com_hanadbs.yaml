@@ -3535,6 +3535,7 @@ spec:
                         - sync
                         - syncmem
                         - async
+                        - fullsync
                         type: string
                     type: object
                 type: object
