@@ -142,12 +142,12 @@ func validateScalingRules(storageSpec *autoscalingapi.StorageAutoscalerSpec) err
 			zeroQuantityThresholds = append(zeroQuantityThresholds, sr.Threshold)
 		}
 		th := sr.Threshold
-		if strings.HasSuffix(th, "%") {
-			if !isNum(strings.TrimSuffix(th, "%")) {
+		if before, ok := strings.CutSuffix(th, "%"); ok {
+			if !isNum(before) {
 				return fmt.Errorf("%v is not a valid percentage value", th)
 			}
-		} else if strings.HasSuffix(th, "pc") {
-			if !isNum(strings.TrimSuffix(th, "pc")) {
+		} else if before, ok := strings.CutSuffix(th, "pc"); ok {
+			if !isNum(before) {
 				return fmt.Errorf("%v is not a valid percentage value", th)
 			}
 		} else {
