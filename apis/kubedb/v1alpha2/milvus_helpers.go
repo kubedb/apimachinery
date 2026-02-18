@@ -353,6 +353,22 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 	m.setMetaStorageDefaults()
 
 	m.SetHealthCheckerDefaults()
+
+	if m.Spec.Monitor != nil {
+		if m.Spec.Monitor.Prometheus == nil {
+			m.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
+		}
+		if m.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			m.Spec.Monitor.Prometheus.Exporter.Port = kubedb.MilvusMetricsPort
+		}
+		m.Spec.Monitor.SetDefaults()
+		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = mvVersion.Spec.SecurityContext.RunAsUser
+		}
+		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = mvVersion.Spec.SecurityContext.RunAsUser
+		}
+	}
 }
 
 func (m *Milvus) setMetaStorageDefaults() {
@@ -478,12 +494,7 @@ func (m milvusStatsService) Path() string {
 }
 
 func (m milvusStatsService) Scheme() string {
-	var sc promapi.Scheme
-	return sc.String()
-}
-
-func (m Milvus) StatsService() mona.StatsAccessor {
-	return &milvusStatsService{&m}
+	return "http"
 }
 
 func (m Milvus) StatsServiceLabels() map[string]string {
@@ -493,3 +504,8 @@ func (m Milvus) StatsServiceLabels() map[string]string {
 func (m milvusStatsService) TLSConfig() *promapi.TLSConfig {
 	return nil
 }
+
+func (m Milvus) StatsService() mona.StatsAccessor {
+	return &milvusStatsService{&m}
+}
+
