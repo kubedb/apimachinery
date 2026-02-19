@@ -20,13 +20,12 @@ import (
 	"context"
 	"fmt"
 
-	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -38,6 +37,7 @@ import (
 	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -508,4 +508,3 @@ func (m milvusStatsService) TLSConfig() *promapi.TLSConfig {
 func (m Milvus) StatsService() mona.StatsAccessor {
 	return &milvusStatsService{&m}
 }
-
