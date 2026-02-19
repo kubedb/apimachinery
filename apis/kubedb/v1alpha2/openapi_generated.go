@@ -838,6 +838,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.mariadbStatsService":                           schema_apimachinery_apis_kubedb_v1alpha2_mariadbStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.memcachedApp":                                  schema_apimachinery_apis_kubedb_v1alpha2_memcachedApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.memcachedStatsService":                         schema_apimachinery_apis_kubedb_v1alpha2_memcachedStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.milvusStatsService":                            schema_apimachinery_apis_kubedb_v1alpha2_milvusStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.mongoDBApp":                                    schema_apimachinery_apis_kubedb_v1alpha2_mongoDBApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.mongoDBStatsService":                           schema_apimachinery_apis_kubedb_v1alpha2_mongoDBStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.mssqlserverStatsService":                       schema_apimachinery_apis_kubedb_v1alpha2_mssqlserverStatsService(ref),
@@ -47199,6 +47200,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_memcachedStatsService(ref common.R
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Memcached"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_milvusStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Milvus": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus"),
+						},
+					},
+				},
+				Required: []string{"Milvus"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus"},
 	}
 }
 
