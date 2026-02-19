@@ -74,6 +74,10 @@ type Neo4jSpec struct {
 	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
+	// Keystore encryption secret
+	// +optional
+	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
+
 	// PodTemplate customizes the pods running Neo4j (resources, environment variables, probes, affinity, etc.).
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`

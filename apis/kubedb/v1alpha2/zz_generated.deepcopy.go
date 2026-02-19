@@ -5081,6 +5081,11 @@ func (in *Neo4jSpec) DeepCopyInto(out *Neo4jSpec) {
 		*out = new(ConfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.KeystoreCredSecret != nil {
+		in, out := &in.KeystoreCredSecret, &out.KeystoreCredSecret
+		*out = new(SecretReference)
+		(*in).DeepCopyInto(*out)
+	}
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates

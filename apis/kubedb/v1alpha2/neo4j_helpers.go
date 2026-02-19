@@ -58,6 +58,13 @@ func (r *Neo4j) GetAuthSecretName() string {
 	return meta_util.NameWithSuffix(r.OffshootName(), "auth")
 }
 
+func (r *Neo4j) GetKeystoreSecretName() string {
+	if r.Spec.KeystoreCredSecret != nil && r.Spec.KeystoreCredSecret.Name != "" {
+		return r.Spec.KeystoreCredSecret.Name
+	}
+	return meta_util.NameWithSuffix(r.OffshootName(), "keystore-cred")
+}
+
 func (r *Neo4j) OffshootName() string {
 	return r.Name
 }
