@@ -398,6 +398,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().SinglestoreOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("solropsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().SolrOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("weaviateopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().WeaviateOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("zookeeperopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().ZooKeeperOpsRequests().Informer()}, nil
 
