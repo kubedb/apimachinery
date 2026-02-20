@@ -82,9 +82,9 @@ func (generator *CustomConfigGenerator) GetMergedConfigStringWithoutPreviousConf
 
 	// Let's get the first non commented line from the current config, which will be used as first line of the merged config like [mysqld]/[mariadb]
 	firstLine := ""
-	outputs := strings.Split(generator.CurrentConfig, "\n")
+	outputs := strings.SplitSeq(generator.CurrentConfig, "\n")
 
-	for _, output := range outputs {
+	for output := range outputs {
 		output = strings.TrimSpace(output)
 		// if configs has any line starts with # is a commented line we are going to ignore this line
 		if len(output) == 0 || output[:1] == "#" {
@@ -122,8 +122,8 @@ func GetMergedConfig(currentConfig, reqConfig map[string]string) (map[string]str
 
 func ConvertStringInToMap(configString string, separators []string) (configData *orderedmap.OrderedMap) {
 	configData = orderedmap.New()
-	outputs := strings.Split(configString, "\n")
-	for _, output := range outputs {
+	outputs := strings.SplitSeq(configString, "\n")
+	for output := range outputs {
 		output = strings.TrimSpace(output)
 		// if inline configs any line starts with # is a commented line we are going to ignore this line
 		if len(output) == 0 || output[:1] == "#" {

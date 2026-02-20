@@ -174,7 +174,7 @@ func GetClusterStatus(ctx context.Context, db *api.Qdrant, kc client.Client) (st
 	replicaCount := len(cr.Result.Peers)
 	roles := []string{}
 
-	for i := 0; i < replicaCount; i++ {
+	for i := range replicaCount {
 		podAddress := db.GetPodAddress(i)
 		cr, err = GetClusterResponse(ctx, db, kc, podAddress)
 		if err != nil {
