@@ -2209,6 +2209,27 @@ const (
 	DB2EnvPassword          = "DB2_PWD"
 	DB2EnvSID               = "DB2_SID"
 	DB2EnvDataDir           = "DB2DATA"
+
+	//volume related constants
+	// volume related
+	DB2VolumeNameData                        = "data"
+	DB2VolumeMountPathData                   = "/var/opt/mssql"
+	DB2VolumeNameConfig                      = "config"
+	DB2VolumeMountPathConfig                 = "/var/opt/mssql/mssql.conf"
+	DB2VolumeNameInitScript                  = "init-scripts"
+	DB2VolumeMountPathInitScript             = "/scripts"
+	DB2VolumeNameInitDatabase                = "init-database"
+	DB2VolumeMountPathInitDatabase           = "/init-database"
+	DB2VolumeNameEndpointCert                = "endpoint-cert"
+	DB2VolumeMountPathEndpointCert           = "/var/opt/mssql/endpoint-cert"
+	DB2VolumeNameCerts                       = "certs"
+	DB2VolumeMountPathCerts                  = "/var/opt/mssql/certs"
+	DB2VolumeNameTLS                         = "tls"
+	DB2VolumeMountPathTLS                    = "/var/opt/mssql/tls"
+	DB2VolumeNameSecurityCACertificates      = "security-ca-certificates"
+	DB2VolumeMountPathSecurityCACertificates = "/var/opt/mssql/security/ca-certificates"
+	DB2VolumeNameCACerts                     = "cacerts"
+	DB2VolumeMountPathCACerts                = "/etc/ssl/certs"
 )
 
 // =========================== Qdrant Constants ============================
