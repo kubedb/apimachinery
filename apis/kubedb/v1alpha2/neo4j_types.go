@@ -74,10 +74,6 @@ type Neo4jSpec struct {
 	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
-	// Keystore encryption secret
-	// +optional
-	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
-
 	// PodTemplate customizes the pods running Neo4j (resources, environment variables, probes, affinity, etc.).
 	// +optional
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
@@ -111,32 +107,28 @@ type Neo4jSpec struct {
 type Neo4jTLSConfig struct {
 	kmapi.TLSConfig `json:",inline"`
 	// +optional
-	Bolt *BoltTLSConfig `json:"bolt,omitempty"`
+	Bolt *ProtocolTLSConfig `json:"bolt,omitempty"`
 	// +optional
-	HTTP *HTTPTLSConfig `json:"http,omitempty"`
+	HTTP *ProtocolTLSConfig `json:"http,omitempty"`
 	// +optional
-	Cluster *ClusterTLSConfig `json:"cluster,omitempty"`
+	Cluster *ProtocolTLSConfig `json:"cluster,omitempty"`
+	// Keystore encryption secret
+	// +optional
+	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
 }
 
-type BoltTLSConfig struct {
-	// +optional
-	Enabled *bool `json:"enabled,omitempty"`
-	// +optional
-	MTLSEnabled *bool `json:"mTLSEnabled,omitempty"`
-}
+type TLSMode string
 
-type HTTPTLSConfig struct {
-	// +optional
-	Enabled *bool `json:"enabled,omitempty"`
-	// +optional
-	MTLSEnabled *bool `json:"mTLSEnabled,omitempty"`
-}
+const (
+	TLSModeDisabled TLSMode = "Disabled"
+	TLSModeTLS      TLSMode = "TLS"
+	TLSModeMTLS     TLSMode = "mTLS"
+)
 
-type ClusterTLSConfig struct {
+type ProtocolTLSConfig struct {
+	// +kubebuilder:validation:Enum=Disabled;TLS;mTLS
 	// +optional
-	Enabled *bool `json:"enabled,omitempty"`
-	// +optional
-	MTLSEnabled *bool `json:"mTLSEnabled,omitempty"`
+	Mode TLSMode `json:"mode,omitempty"`
 }
 
 // Neo4jStatus defines the observed state of Neo4j.

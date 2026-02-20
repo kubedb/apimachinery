@@ -59,8 +59,8 @@ func (r *Neo4j) GetAuthSecretName() string {
 }
 
 func (r *Neo4j) GetKeystoreSecretName() string {
-	if r.Spec.KeystoreCredSecret != nil && r.Spec.KeystoreCredSecret.Name != "" {
-		return r.Spec.KeystoreCredSecret.Name
+	if r.Spec.TLS.KeystoreCredSecret != nil && r.Spec.TLS.KeystoreCredSecret.Name != "" {
+		return r.Spec.TLS.KeystoreCredSecret.Name
 	}
 	return meta_util.NameWithSuffix(r.OffshootName(), "keystore-cred")
 }
@@ -149,7 +149,7 @@ func (r *Neo4j) SetDefaults(kc client.Client) {
 			r.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
 		}
 		if r.Spec.Monitor.Prometheus.Exporter.Port == 0 {
-			r.Spec.Monitor.Prometheus.Exporter.Port = kubedb.Neo4jPrometheusPort
+			r.Spec.Monitor.Prometheus.Exporter.Port = kubedb.Neo4jExporterPort
 		}
 		r.Spec.Monitor.SetDefaults()
 		if r.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
@@ -160,9 +160,7 @@ func (r *Neo4j) SetDefaults(kc client.Client) {
 		}
 	}
 
-	if r.Spec.TLS != nil && r.Spec.TLS.IssuerRef != nil {
-		r.SetTLSDefaults()
-	}
+	r.SetTLSDefaults()
 
 	dbContainer := coreutil.GetContainerByName(r.Spec.PodTemplate.Spec.Containers, kubedb.Neo4jContainerName)
 	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
@@ -175,19 +173,18 @@ func (r *Neo4j) SetTLSDefaults() {
 		return
 	}
 	if r.Spec.TLS.HTTP == nil {
-		r.Spec.TLS.HTTP = &HTTPTLSConfig{
-			Enabled: ptr.To(true),
+		r.Spec.TLS.HTTP = &ProtocolTLSConfig{
+			Mode: TLSModeTLS,
 		}
 	}
 	if r.Spec.TLS.Bolt == nil {
-		r.Spec.TLS.Bolt = &BoltTLSConfig{
-			Enabled: ptr.To(true),
+		r.Spec.TLS.Bolt = &ProtocolTLSConfig{
+			Mode: TLSModeTLS,
 		}
 	}
 	if r.Spec.TLS.Cluster == nil {
-		r.Spec.TLS.Cluster = &ClusterTLSConfig{
-			Enabled:     ptr.To(true),
-			MTLSEnabled: ptr.To(true),
+		r.Spec.TLS.HTTP = &ProtocolTLSConfig{
+			Mode: TLSModeMTLS,
 		}
 	}
 	r.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(r.Spec.TLS.Certificates, string(Neo4jCertificateTypeServer), r.CertificateName(Neo4jCertificateTypeServer))
@@ -299,7 +296,7 @@ func (r *Neo4j) AppBindingMeta() appcat.AppBindingMeta {
 
 func (r *Neo4j) GetConnectionScheme() string {
 	scheme := "http"
-	if r.Spec.TLS != nil && r.Spec.TLS.IssuerRef != nil && *r.Spec.TLS.HTTP.Enabled {
+	if r.Spec.TLS != nil && r.Spec.TLS.HTTP.Mode != TLSModeDisabled {
 		scheme = "https"
 	}
 	return scheme
@@ -348,7 +345,7 @@ func (r neo4jStatsService) Path() string {
 
 func (r neo4jStatsService) Scheme() string {
 	scheme := "http"
-	if r.Spec.TLS != nil && r.Spec.TLS.IssuerRef != nil && *r.Spec.TLS.HTTP.Enabled {
+	if r.Spec.TLS != nil && r.Spec.TLS.HTTP.Mode != TLSModeDisabled {
 		scheme = "https"
 	}
 	return scheme

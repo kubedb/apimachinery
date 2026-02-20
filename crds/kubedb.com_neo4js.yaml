@@ -122,30 +122,6 @@ spec:
                     format: int32
                     type: integer
                 type: object
-              keystoreCredSecret:
-                properties:
-                  activeFrom:
-                    format: date-time
-                    type: string
-                  apiGroup:
-                    default: ""
-                    type: string
-                  externallyManaged:
-                    type: boolean
-                  kind:
-                    default: Secret
-                    type: string
-                  name:
-                    type: string
-                  rotateAfter:
-                    type: string
-                  secretStoreName:
-                    type: string
-                required:
-                - kind
-                - name
-                type: object
-                x-kubernetes-map-type: atomic
               monitor:
                 properties:
                   agent:
@@ -3881,10 +3857,12 @@ spec:
                 properties:
                   bolt:
                     properties:
-                      enabled:
-                        type: boolean
-                      mTLSEnabled:
-                        type: boolean
+                      mode:
+                        enum:
+                        - Disabled
+                        - TLS
+                        - mTLS
+                        type: string
                     type: object
                   certificates:
                     items:
@@ -3973,17 +3951,21 @@ spec:
                     type: array
                   cluster:
                     properties:
-                      enabled:
-                        type: boolean
-                      mTLSEnabled:
-                        type: boolean
+                      mode:
+                        enum:
+                        - Disabled
+                        - TLS
+                        - mTLS
+                        type: string
                     type: object
                   http:
                     properties:
-                      enabled:
-                        type: boolean
-                      mTLSEnabled:
-                        type: boolean
+                      mode:
+                        enum:
+                        - Disabled
+                        - TLS
+                        - mTLS
+                        type: string
                     type: object
                   issuerRef:
                     properties:
@@ -3992,6 +3974,30 @@ spec:
                       kind:
                         type: string
                       name:
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  keystoreCredSecret:
+                    properties:
+                      activeFrom:
+                        format: date-time
+                        type: string
+                      apiGroup:
+                        default: ""
+                        type: string
+                      externallyManaged:
+                        type: boolean
+                      kind:
+                        default: Secret
+                        type: string
+                      name:
+                        type: string
+                      rotateAfter:
+                        type: string
+                      secretStoreName:
                         type: string
                     required:
                     - kind
