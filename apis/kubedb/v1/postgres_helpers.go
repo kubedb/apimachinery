@@ -19,6 +19,7 @@ package v1
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"kubedb.dev/apimachinery/apis"
@@ -373,20 +374,21 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 		}
 	}
 
+	majorVersion := getOrExtractMajorPgVersion(postgresVersion)
+
 	if p.Spec.TLS != nil {
 		if p.Spec.SSLMode == "" {
 			p.Spec.SSLMode = PostgresSSLModeVerifyFull
-		}
-		if p.Spec.ClientAuthMode == "" {
-			p.Spec.ClientAuthMode = ClientAuthModeMD5
 		}
 	} else {
 		if p.Spec.SSLMode == "" {
 			p.Spec.SSLMode = PostgresSSLModeDisable
 		}
-		if p.Spec.ClientAuthMode == "" {
-			p.Spec.ClientAuthMode = ClientAuthModeMD5
-		}
+	}
+	if p.Spec.ClientAuthMode == "" && majorVersion < 18 {
+		p.Spec.ClientAuthMode = ClientAuthModeMD5
+	} else if p.Spec.ClientAuthMode == "" {
+		p.Spec.ClientAuthMode = ClientAuthModeScram
 	}
 
 	p.updateConfigurationFieldIfNeeded()
@@ -435,6 +437,23 @@ func getMajorPgVersion(postgresVersion *catalog.PostgresVersion) (uint64, error)
 		return 0, errors.Wrap(err, "Failed to get postgres major.")
 	}
 	return ver.Major(), nil
+}
+
+func getOrExtractMajorPgVersion(postgresVersion *catalog.PostgresVersion) uint64 {
+	ver, err := getMajorPgVersion(postgresVersion)
+	if err == nil {
+		return ver
+	}
+	verSlice := strings.Split(postgresVersion.Spec.Version, ".")
+	if len(verSlice) == 0 {
+		return uint64(0)
+	}
+	version, err := strconv.Atoi(verSlice[0])
+	if err != nil {
+		return uint64(0)
+	}
+	return uint64(version)
+
 }
 
 func (p *Postgres) defaultReadReplicaSpec(rr *ReadReplicaSpec) {
