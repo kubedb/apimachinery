@@ -54,8 +54,6 @@ type Neo4jOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type Neo4jOpsRequestType `json:"type"`
-	// Specifies information necessary for configuring TLS
-	TLS *TLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -70,10 +68,6 @@ type Neo4jOpsRequestSpec struct {
 // +kubebuilder:validation:Enum=Restart;
 // ENUM(Restart)
 type Neo4jOpsRequestType string
-
-// Neo4jReplicaReadinessCriteria is the criteria for checking readiness of a Neo4j pod
-// after updating, horizontal scaling etc.
-type Neo4jReplicaReadinessCriteria struct{}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
