@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"fmt"
-	"strings"
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/catalog"
@@ -56,11 +55,9 @@ func (h HanaDBVersion) ResourcePlural() string {
 func (h HanaDBVersion) ValidateSpecs() error {
 	if h.Spec.Version == "" ||
 		h.Spec.DB.Image == "" {
-		fields := []string{
-			"spec.version",
-			"spec.db.image",
-		}
-		return fmt.Errorf("atleast one of the following specs is not set for HanaDBVersion %q: %s", h.Name, strings.Join(fields, ", "))
+		return fmt.Errorf(`atleast one of the following specs is not set for HanaDBVersion "%v":
+spec.version,
+spec.db.image,`, h.Name)
 	}
 	return nil
 }
