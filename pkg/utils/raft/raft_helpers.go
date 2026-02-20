@@ -133,3 +133,55 @@ func doRaftMembershipChange(method, endpoint string, node *raftNodeInfo, user, p
 	}
 	return string(bodyText), nil
 }
+
+func GetRaftLeaderIDWithRetries(db *api.HanaDB, dbPodName, user, pass string, maxTries int, retryDelay time.Duration) (int, error) {
+	var lastErr error
+	for tries := 1; tries <= maxTries; tries++ {
+		currentLeaderID, err := GetCurrentLeaderID(db, dbPodName, user, pass)
+		if err == nil {
+			return int(currentLeaderID), nil
+		}
+		lastErr = fmt.Errorf("failed on getting current leader: %w", err)
+		time.Sleep(retryDelay)
+	}
+	return 0, fmt.Errorf("failed to get leader of raft cluster: %w", lastErr)
+}
+
+func GetRaftPrimaryNode(db *api.HanaDB, replicas int, user, pass string, maxTries int, retryDelay time.Duration) (int, error) {
+	var lastErr error
+	for rep := 0; rep < replicas; rep++ {
+		podName := fmt.Sprintf("%s-%v", db.OffshootName(), rep)
+		primaryPodID, err := GetRaftLeaderIDWithRetries(db, podName, user, pass, maxTries, retryDelay)
+		if err == nil {
+			return primaryPodID, nil
+		}
+		lastErr = err
+	}
+	return 0, lastErr
+}
+
+func AddRaftNodeWithRetries(db *api.HanaDB, primaryPodName, podName string, nodeID int, user, pass string, maxTries int, retryDelay time.Duration) error {
+	var lastErr error
+	for tries := 0; tries <= maxTries; tries++ {
+		_, err := AddNodeToRaft(db, primaryPodName, podName, nodeID, user, pass)
+		if err == nil {
+			return nil
+		}
+		lastErr = err
+		time.Sleep(retryDelay)
+	}
+	return fmt.Errorf("failed to add nodeId = %v to the raft: %w", nodeID, lastErr)
+}
+
+func RemoveRaftNodeWithRetries(db *api.HanaDB, primaryPodName string, nodeID int, user, pass string, maxTries int, retryDelay time.Duration) error {
+	var lastErr error
+	for tries := 0; tries <= maxTries; tries++ {
+		_, err := RemoveNodeFromRaft(db, primaryPodName, nodeID, user, pass)
+		if err == nil {
+			return nil
+		}
+		lastErr = err
+		time.Sleep(retryDelay)
+	}
+	return fmt.Errorf("failed to remove nodeId = %v from the raft: %w", nodeID, lastErr)
+}
