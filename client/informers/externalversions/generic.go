@@ -136,6 +136,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ClickHouseVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("db2versions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().DB2Versions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("documentdbversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().DocumentDBVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("druidversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().DruidVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("elasticsearchversions"):
@@ -284,6 +286,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ClickHouses().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("db2s"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().DB2s().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("documentdbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().DocumentDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("druids"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Druids().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("elasticsearches"):

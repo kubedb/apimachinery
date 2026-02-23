@@ -41,6 +41,10 @@ func (c *FakeKubedbV1alpha2) DB2s(namespace string) v1alpha2.DB2Interface {
 	return &FakeDB2s{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) DocumentDBs(namespace string) v1alpha2.DocumentDBInterface {
+	return &FakeDocumentDBs{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Druids(namespace string) v1alpha2.DruidInterface {
 	return &FakeDruids{c, namespace}
 }
