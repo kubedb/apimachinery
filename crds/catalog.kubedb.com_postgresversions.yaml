@@ -133,6 +133,7 @@ spec:
                 - KubeDB
                 - DocumentDB
                 - PostgreSQL
+                - Percona
                 type: string
               endOfLife:
                 type: boolean

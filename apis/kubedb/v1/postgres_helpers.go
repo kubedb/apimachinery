@@ -415,7 +415,7 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 		}
 	}
 	if p.Spec.Init != nil && p.Spec.Init.Archiver != nil && p.Spec.Init.Archiver.ReplicationStrategy == nil {
-		p.Spec.Init.Archiver.ReplicationStrategy = ptr.To(ReplicationStrategyNone)
+		p.Spec.Init.Archiver.ReplicationStrategy = ptr.To(ReplicationStrategySync)
 	}
 
 	if p.Spec.Init != nil && p.Spec.Init.Archiver != nil {
@@ -453,7 +453,6 @@ func getOrExtractMajorPgVersion(postgresVersion *catalog.PostgresVersion) uint64
 		return uint64(0)
 	}
 	return uint64(version)
-
 }
 
 func (p *Postgres) defaultReadReplicaSpec(rr *ReadReplicaSpec) {
