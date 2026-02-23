@@ -2217,7 +2217,7 @@ const (
 	DB2VolumeNameConfig                      = "config"
 	DB2VolumeMountPathConfig                 = "/var/opt/db2/db2.conf"
 	DB2VolumeNameInitScript                  = "init-scripts"
-	DB2VolumeMountPathInitScript             = "/scripts"
+	DB2VolumeMountPathInitScript             = "/script"
 	DB2VolumeNameInitDatabase                = "init-database"
 	DB2VolumeMountPathInitDatabase           = "/init-database"
 	DB2VolumeNameEndpointCert                = "endpoint-cert"
