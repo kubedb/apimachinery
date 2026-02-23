@@ -49,6 +49,7 @@ const (
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
 	DatabasePodStandby                   = "standby"
+	DatabasePodSecondary                 = "secondary"
 
 	ComponentDatabase         = "database"
 	ComponentConnectionPooler = "connection-pooler"

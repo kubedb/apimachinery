@@ -18,6 +18,7 @@ package raft
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -27,32 +28,33 @@ import (
 	"time"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	hanadbraft "kubedb.dev/apimachinery/pkg/utils/raft/hanadb"
+
+	core "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	meta_util "kmodules.xyz/client-go/meta"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-const leaderAPIRequestTimeout = 3 * time.Second
+const leaderAPIRequestTimeout = DefaultDialContextTimeout
+
+// DBRaftAddressProvider defines the minimum DB metadata required by raft helpers.
+type DBRaftAddressProvider interface {
+	GoverningServiceDNS(podName string) string
+	OffshootName() string
+}
 
 type raftNodeInfo struct {
 	NodeID *int    `json:"id" protobuf:"varint,1,opt,name=id"`
 	URL    *string `json:"url,omitempty" protobuf:"bytes,2,opt,name=url"`
 }
 
-// GetCurrentLeaderID queries raft leader id from a coordinator pod.
-func GetCurrentLeaderID(db *api.HanaDB, podName string, user, pass string) (uint64, error) {
-	dnsName := hanadbraft.GetGoverningServiceDNSName(podName, db)
-	url := "http://" + dnsName + ":" + strconv.Itoa(kubedb.HanaDBCoordinatorClientPort) + "/current-primary"
+// GetCurrentLeaderIDForDB queries raft leader id from a coordinator pod.
+func GetCurrentLeaderIDForDB(db DBRaftAddressProvider, coordinatorClientPort int, podName string, user, pass string) (uint64, error) {
+	dnsName := db.GoverningServiceDNS(podName)
+	url := "http://" + dnsName + ":" + strconv.Itoa(coordinatorClientPort) + "/current-primary"
 
 	defaultLead := uint64(0)
-	client := &http.Client{Timeout: leaderAPIRequestTimeout}
-	req, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
-		return defaultLead, err
-	}
-
-	req.Header.Add("Content-Type", "application/json; charset=UTF-8")
-	req.SetBasicAuth(user, pass)
-	resp, err := client.Do(req)
+	resp, err := DoRaftRequest(http.MethodGet, url, user, pass, nil, leaderAPIRequestTimeout)
 	if err != nil {
 		return defaultLead, err
 	}
@@ -77,13 +79,13 @@ func GetCurrentLeaderID(db *api.HanaDB, podName string, user, pass string) (uint
 	return podID, nil
 }
 
-// AddNodeToRaft requests raft membership add via coordinator /add-node endpoint.
-func AddNodeToRaft(db *api.HanaDB, primaryPodName, podName string, nodeID int, user, pass string) (string, error) {
-	primaryDNSName := hanadbraft.GetGoverningServiceDNSName(primaryPodName, db)
-	primaryURL := "http://" + primaryDNSName + ":" + strconv.Itoa(kubedb.HanaDBCoordinatorClientPort) + "/add-node"
+// AddNodeToRaftForDB requests raft membership add via coordinator /add-node endpoint.
+func AddNodeToRaftForDB(db DBRaftAddressProvider, coordinatorClientPort, coordinatorPort int, primaryPodName, podName string, nodeID int, user, pass string) (string, error) {
+	primaryDNSName := db.GoverningServiceDNS(primaryPodName)
+	primaryURL := "http://" + primaryDNSName + ":" + strconv.Itoa(coordinatorClientPort) + "/add-node"
 
-	dnsName := hanadbraft.GetGoverningServiceDNSName(podName, db)
-	url := "http://" + dnsName + ":" + strconv.Itoa(kubedb.HanaDBCoordinatorPort)
+	dnsName := db.GoverningServiceDNS(podName)
+	url := "http://" + dnsName + ":" + strconv.Itoa(coordinatorPort)
 	node := &raftNodeInfo{
 		NodeID: &nodeID,
 		URL:    &url,
@@ -92,16 +94,28 @@ func AddNodeToRaft(db *api.HanaDB, primaryPodName, podName string, nodeID int, u
 	return doRaftMembershipChange(http.MethodPost, primaryURL, node, user, pass, "add new node")
 }
 
-// RemoveNodeFromRaft requests raft membership remove via coordinator /remove-node endpoint.
-func RemoveNodeFromRaft(db *api.HanaDB, primaryPodName string, nodeID int, user, pass string) (string, error) {
-	primaryDNSName := hanadbraft.GetGoverningServiceDNSName(primaryPodName, db)
-	primaryURL := "http://" + primaryDNSName + ":" + strconv.Itoa(kubedb.HanaDBCoordinatorClientPort) + "/remove-node"
+// RemoveNodeFromRaftForDB requests raft membership remove via coordinator /remove-node endpoint.
+func RemoveNodeFromRaftForDB(db DBRaftAddressProvider, coordinatorClientPort int, primaryPodName string, nodeID int, user, pass string) (string, error) {
+	primaryDNSName := db.GoverningServiceDNS(primaryPodName)
+	primaryURL := "http://" + primaryDNSName + ":" + strconv.Itoa(coordinatorClientPort) + "/remove-node"
 
 	node := &raftNodeInfo{
 		NodeID: &nodeID,
 	}
 
 	return doRaftMembershipChange(http.MethodDelete, primaryURL, node, user, pass, "remove node")
+}
+
+// GetCurrentLeaderPodNameForDB returns current leader pod name by resolving raft leader id.
+func GetCurrentLeaderPodNameForDB(db DBRaftAddressProvider, coordinatorClientPort int, podName, user, pass string) (string, error) {
+	leaderID, err := GetCurrentLeaderIDForDB(db, coordinatorClientPort, podName, user, pass)
+	if err != nil {
+		return "", fmt.Errorf("failed on get current primary from remote host: %w", err)
+	}
+	if leaderID < 1 {
+		return "", fmt.Errorf("invalid raft leader id: %d", leaderID)
+	}
+	return fmt.Sprintf("%s-%d", db.OffshootName(), leaderID-1), nil
 }
 
 func doRaftMembershipChange(method, endpoint string, node *raftNodeInfo, user, pass, action string) (string, error) {
@@ -111,15 +125,7 @@ func doRaftMembershipChange(method, endpoint string, node *raftNodeInfo, user, p
 	}
 	requestBody := bytes.NewReader(requestByte)
 
-	httpClient := &http.Client{Timeout: leaderAPIRequestTimeout}
-	req, err := http.NewRequest(method, endpoint, requestBody)
-	if err != nil {
-		return "", fmt.Errorf("failed to %s: %w", action, err)
-	}
-	req.Header.Add("Content-Type", "application/json; charset=UTF-8")
-	req.SetBasicAuth(user, pass)
-
-	resp, err := httpClient.Do(req)
+	resp, err := DoRaftRequest(method, endpoint, user, pass, requestBody, leaderAPIRequestTimeout)
 	if err != nil {
 		return "", fmt.Errorf("failed to %s: %w", action, err)
 	}
@@ -134,10 +140,10 @@ func doRaftMembershipChange(method, endpoint string, node *raftNodeInfo, user, p
 	return string(bodyText), nil
 }
 
-func GetRaftLeaderIDWithRetries(db *api.HanaDB, dbPodName, user, pass string, maxTries int, retryDelay time.Duration) (int, error) {
+func GetRaftLeaderIDWithRetriesForDB(db DBRaftAddressProvider, coordinatorClientPort int, dbPodName, user, pass string, maxTries int, retryDelay time.Duration) (int, error) {
 	var lastErr error
 	for tries := 1; tries <= maxTries; tries++ {
-		currentLeaderID, err := GetCurrentLeaderID(db, dbPodName, user, pass)
+		currentLeaderID, err := GetCurrentLeaderIDForDB(db, coordinatorClientPort, dbPodName, user, pass)
 		if err == nil {
 			return int(currentLeaderID), nil
 		}
@@ -147,11 +153,11 @@ func GetRaftLeaderIDWithRetries(db *api.HanaDB, dbPodName, user, pass string, ma
 	return 0, fmt.Errorf("failed to get leader of raft cluster: %w", lastErr)
 }
 
-func GetRaftPrimaryNode(db *api.HanaDB, replicas int, user, pass string, maxTries int, retryDelay time.Duration) (int, error) {
+func GetRaftPrimaryNodeForDB(db DBRaftAddressProvider, coordinatorClientPort int, replicas int, user, pass string, maxTries int, retryDelay time.Duration) (int, error) {
 	var lastErr error
 	for rep := 0; rep < replicas; rep++ {
 		podName := fmt.Sprintf("%s-%v", db.OffshootName(), rep)
-		primaryPodID, err := GetRaftLeaderIDWithRetries(db, podName, user, pass, maxTries, retryDelay)
+		primaryPodID, err := GetRaftLeaderIDWithRetriesForDB(db, coordinatorClientPort, podName, user, pass, maxTries, retryDelay)
 		if err == nil {
 			return primaryPodID, nil
 		}
@@ -160,10 +166,10 @@ func GetRaftPrimaryNode(db *api.HanaDB, replicas int, user, pass string, maxTrie
 	return 0, lastErr
 }
 
-func AddRaftNodeWithRetries(db *api.HanaDB, primaryPodName, podName string, nodeID int, user, pass string, maxTries int, retryDelay time.Duration) error {
+func AddRaftNodeWithRetriesForDB(db DBRaftAddressProvider, coordinatorClientPort, coordinatorPort int, primaryPodName, podName string, nodeID int, user, pass string, maxTries int, retryDelay time.Duration) error {
 	var lastErr error
 	for tries := 0; tries <= maxTries; tries++ {
-		_, err := AddNodeToRaft(db, primaryPodName, podName, nodeID, user, pass)
+		_, err := AddNodeToRaftForDB(db, coordinatorClientPort, coordinatorPort, primaryPodName, podName, nodeID, user, pass)
 		if err == nil {
 			return nil
 		}
@@ -173,10 +179,10 @@ func AddRaftNodeWithRetries(db *api.HanaDB, primaryPodName, podName string, node
 	return fmt.Errorf("failed to add nodeId = %v to the raft: %w", nodeID, lastErr)
 }
 
-func RemoveRaftNodeWithRetries(db *api.HanaDB, primaryPodName string, nodeID int, user, pass string, maxTries int, retryDelay time.Duration) error {
+func RemoveRaftNodeWithRetriesForDB(db DBRaftAddressProvider, coordinatorClientPort int, primaryPodName string, nodeID int, user, pass string, maxTries int, retryDelay time.Duration) error {
 	var lastErr error
 	for tries := 0; tries <= maxTries; tries++ {
-		_, err := RemoveNodeFromRaft(db, primaryPodName, nodeID, user, pass)
+		_, err := RemoveNodeFromRaftForDB(db, coordinatorClientPort, primaryPodName, nodeID, user, pass)
 		if err == nil {
 			return nil
 		}
@@ -184,4 +190,57 @@ func RemoveRaftNodeWithRetries(db *api.HanaDB, primaryPodName string, nodeID int
 		time.Sleep(retryDelay)
 	}
 	return fmt.Errorf("failed to remove nodeId = %v from the raft: %w", nodeID, lastErr)
+}
+
+func TransferLeadershipByPodNameForDB(db DBRaftAddressProvider, coordinatorClientPort int, podName string, transferee int, user, pass string, timeout time.Duration) (string, error) {
+	dnsName := db.GoverningServiceDNS(podName)
+	endpoint := fmt.Sprintf("http://%s:%d/transfer", dnsName, coordinatorClientPort)
+	return TransferLeadership(endpoint, transferee, user, pass, timeout)
+}
+
+func AddNodeAsVoterWithPodNameForDB(db DBRaftAddressProvider, coordinatorClientPort, coordinatorPort int, nodeID int, podName, user, pass string) (string, error) {
+	primaryPodName, err := GetCurrentLeaderPodNameForDB(db, coordinatorClientPort, podName, user, pass)
+	if err != nil {
+		return "", fmt.Errorf("failed while trying to make node a voter: %w", err)
+	}
+	return AddNodeToRaftForDB(db, coordinatorClientPort, coordinatorPort, primaryPodName, podName, nodeID, user, pass)
+}
+
+func TransferLeadershipByPodName(db DBRaftAddressProvider, podName string, transferee int, user, pass string, timeout time.Duration) (string, error) {
+	return TransferLeadershipByPodNameForDB(db, kubedb.HanaDBCoordinatorClientPort, podName, transferee, user, pass, timeout)
+}
+
+func AddNodeAsVoterWithPodName(db DBRaftAddressProvider, nodeID int, podName, user, pass string) (string, error) {
+	return AddNodeAsVoterWithPodNameForDB(db, kubedb.HanaDBCoordinatorClientPort, kubedb.HanaDBCoordinatorPort, nodeID, podName, user, pass)
+}
+
+func GetPrimaryPods(cacheClient client.Client, pod *core.Pod, primaryRole string) (*core.PodList, error) {
+	labelSelector := &metav1.LabelSelector{
+		MatchExpressions: []metav1.LabelSelectorRequirement{
+			{
+				Key:      kubedb.LabelRole,
+				Operator: metav1.LabelSelectorOpIn,
+				Values:   []string{primaryRole},
+			},
+			{
+				Key:      meta_util.InstanceLabelKey,
+				Operator: metav1.LabelSelectorOpIn,
+				Values:   []string{pod.Labels[meta_util.InstanceLabelKey]},
+			},
+			{
+				Key:      meta_util.NameLabelKey,
+				Operator: metav1.LabelSelectorOpIn,
+				Values:   []string{pod.Labels[meta_util.NameLabelKey]},
+			},
+		},
+	}
+	pods := &core.PodList{}
+	selector, err := metav1.LabelSelectorAsSelector(labelSelector)
+	if err != nil {
+		return nil, fmt.Errorf("failed to build selector for primary pods: %w", err)
+	}
+	if err = cacheClient.List(context.TODO(), pods, &client.ListOptions{LabelSelector: selector}); err != nil {
+		return nil, fmt.Errorf("failed to list primary pods: %w", err)
+	}
+	return pods, nil
 }
