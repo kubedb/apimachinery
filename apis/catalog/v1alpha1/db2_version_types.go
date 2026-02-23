@@ -63,7 +63,7 @@ type DB2VersionSpec struct {
 	Coordinator DB2Coordinator `json:"coordinator,omitempty"`
 	// Init Docker Image
 	// +optional
-	Scripts initDocker `json:"initDocker,omitempty"`
+	Scripts initDocker `json:"scripts,omitempty"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`

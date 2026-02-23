@@ -2210,7 +2210,7 @@ const (
 	DB2EnvSID               = "DB2_SID"
 	DB2EnvDataDir           = "DB2DATA"
 
-	//volume related constants
+	// volume related constants
 	// volume related
 	DB2VolumeNameData                        = "data"
 	DB2VolumeMountPathData                   = "/var/opt/mssql"
