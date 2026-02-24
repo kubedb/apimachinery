@@ -23,7 +23,11 @@ import (
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
-// Migrator is the Schema for the migrators API
+const (
+	ResourceKindMigrator     = "Migrator"
+	ResourceSingularMigrator = "migrator"
+	ResourcePluralMigrator   = "migrators"
+)
 
 // +genclient
 // +k8s:openapi-gen=true
@@ -109,6 +113,20 @@ type MigratorStatus struct {
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
+
+// MigratorPhase represents the current phase of migration
+type MigratorPhase string
+
+const (
+	// MigratorPhasePending indicates the migration is pending
+	MigratorPhasePending MigratorPhase = "Pending"
+	// MigratorPhaseRunning indicates the migration is in progress
+	MigratorPhaseRunning MigratorPhase = "Running"
+	// MigratorPhaseSucceeded indicates the migration completed successfully
+	MigratorPhaseSucceeded MigratorPhase = "Succeeded"
+	// MigratorPhaseFailed indicates the migration failed
+	MigratorPhaseFailed MigratorPhase = "Failed"
+)
 
 // Progress contains the current progress of migration
 type Progress struct {
