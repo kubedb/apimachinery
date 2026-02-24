@@ -31,11 +31,15 @@ import (
 	v "gomodules.xyz/x/version"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/discovery/cached/memory"
+	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/restmapper"
+	"sigs.k8s.io/yaml"
 )
 
 func GetSiteInfo(cfg *rest.Config, kc kubernetes.Interface, nodes []*core.Node, licenseID string) (*identityapi.SiteInfo, error) {
@@ -142,6 +146,24 @@ func GetSiteInfo(cfg *rest.Config, kc kubernetes.Interface, nodes []*core.Node, 
 	}
 	if scProvisioners.Len() > 0 {
 		si.Kubernetes.StorageProvisioners = scProvisioners.List()
+	}
+
+	dc, err := dynamic.NewForConfig(cfg)
+	if err != nil {
+		return nil, err
+	}
+	if fc, err := dc.Resource(schema.GroupVersionResource{
+		Group:    "cluster.open-cluster-management.io",
+		Version:  "v1alpha1",
+		Resource: "ClusterClaim",
+	}).Get(context.Background(), kmapi.ClusterClaimKeyFeatures, metav1.GetOptions{}); err == nil {
+		val, ok, err := unstructured.NestedString(fc.UnstructuredContent(), "spec", "value")
+		if err == nil && ok && val != "" {
+			var features kmapi.ClusterClaimFeatures
+			if err := yaml.Unmarshal([]byte(val), &features); err == nil {
+				si.Kubernetes.Features = &features
+			}
+		}
 	}
 
 	if len(nodes) == 0 {
