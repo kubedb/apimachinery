@@ -93,6 +93,15 @@ func (p Postgres) ReadReplicaSingleGroupOffshootSelectors(groupName string) map[
 	return sel
 }
 
+func (p Postgres) GlobalSelectors() map[string]string {
+	sel := map[string]string{
+		meta_util.NameLabelKey:      p.ResourceFQN(),
+		meta_util.InstanceLabelKey:  p.Name,
+		meta_util.ManagedByLabelKey: kubedb.GroupName,
+	}
+	return sel
+}
+
 func (p Postgres) OffshootLabels() map[string]string {
 	return p.offshootLabels(p.OffshootSelectors(), nil)
 }
