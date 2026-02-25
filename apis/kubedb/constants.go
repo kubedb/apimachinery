@@ -67,8 +67,7 @@ const (
 	DBTLSVolume         = "tls-volume"
 	DBExporterTLSVolume = "exporter-tls-volume"
 
-	CACert                    = "ca.crt"
-	SidekickGlobalClusterRole = "kubedb-sidekick-clusterrole"
+	CACert = "ca.crt"
 
 	// =========================== Database key Constants ============================
 	PostgresKey      = "postgres" + "." + GroupName
