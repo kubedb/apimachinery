@@ -210,12 +210,12 @@ func (c *OpsRequestController) UpdateOpsPhaseProgressing(req opsapi.Accessor, ty
 	dbKind := strings.TrimSuffix(c.kind, "OpsRequest")
 	key := fmt.Sprintf("%s/%s/%s", dbKind, req.GetNamespace(), req.GetDBRefName())
 	p := c.getProgressTracker(key)
+
 	canLock := p.TryLock()
 	if !canLock {
 		return 10 * time.Second, nil
 	}
 	defer p.Unlock()
-
 	list := &unstructured.UnstructuredList{}
 	list.SetGroupVersionKind(schema.GroupVersionKind{
 		Group:   "ops.kubedb.com",
@@ -293,7 +293,7 @@ func (c *OpsRequestController) UpdateOpsPhaseProgressing(req opsapi.Accessor, ty
 
 func (c *OpsRequestController) getProgressTracker(key string) *ProgressingController {
 	c.progressMux.Lock()
-	defer c.mux.Unlock()
+	defer c.progressMux.Unlock()
 	if c.progressCtrl == nil {
 		c.progressCtrl = make(map[string]*ProgressingController)
 	}
