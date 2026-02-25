@@ -477,8 +477,8 @@ func (p *Postgres) defaultReadReplicaSpec(rr *ReadReplicaSpec) {
 }
 
 func (p *Postgres) updateConfigurationFieldIfNeeded() {
-	if p.Spec.Configuration != nil && p.Spec.ConfigSecret != nil && p.Spec.Configuration.SecretName == p.Spec.Configuration.SecretName {
-		p.Spec.Configuration = nil
+	if p.Spec.Configuration != nil && p.Spec.ConfigSecret != nil && p.Spec.Configuration.SecretName == p.Spec.ConfigSecret.Name {
+		p.Spec.ConfigSecret = nil
 	}
 	if p.Spec.Configuration == nil && p.Spec.ConfigSecret != nil {
 		p.Spec.Configuration = &PostgresConfiguration{
