@@ -218,6 +218,9 @@ github.com/docker/distribution/registry/client/auth/challenge
 ## explicit; go 1.21
 github.com/docker/docker-credential-helpers/client
 github.com/docker/docker-credential-helpers/credentials
+# github.com/dustin/go-humanize v1.0.1
+## explicit; go 1.16
+github.com/dustin/go-humanize
 # github.com/emicklei/go-restful/v3 v3.13.0
 ## explicit; go 1.13
 github.com/emicklei/go-restful/v3
@@ -641,6 +644,9 @@ github.com/vbatts/tar-split/archive/tar
 # github.com/x448/float16 v0.8.4
 ## explicit; go 1.11
 github.com/x448/float16
+# github.com/xiang90/probing v0.0.0-20221125231312-a49e3df8f510
+## explicit
+github.com/xiang90/probing
 # github.com/yudai/gojsondiff v1.0.0
 ## explicit
 github.com/yudai/gojsondiff
@@ -696,6 +702,27 @@ go.etcd.io/etcd/client/v3/credentials
 go.etcd.io/etcd/client/v3/internal/endpoint
 go.etcd.io/etcd/client/v3/internal/resolver
 go.etcd.io/etcd/client/v3/kubernetes
+# go.etcd.io/etcd/pkg/v3 v3.6.4 => go.etcd.io/etcd/pkg/v3 v3.5.27
+## explicit; go 1.24.0
+go.etcd.io/etcd/pkg/v3/crc
+go.etcd.io/etcd/pkg/v3/httputil
+go.etcd.io/etcd/pkg/v3/ioutil
+go.etcd.io/etcd/pkg/v3/pbutil
+# go.etcd.io/etcd/raft/v3 v3.5.27 => github.com/kubedb/etcd-io/raft/v3 v3.5.0-beta.4.0.20220324050626-a6b4ef27cbc9
+## explicit; go 1.16
+go.etcd.io/etcd/raft/v3
+go.etcd.io/etcd/raft/v3/confchange
+go.etcd.io/etcd/raft/v3/quorum
+go.etcd.io/etcd/raft/v3/raftpb
+go.etcd.io/etcd/raft/v3/tracker
+# go.etcd.io/etcd/server/v3 v3.6.4 => go.etcd.io/etcd/server/v3 v3.5.27
+## explicit; go 1.24.0
+go.etcd.io/etcd/server/v3/etcdserver/api/rafthttp
+go.etcd.io/etcd/server/v3/etcdserver/api/snap
+go.etcd.io/etcd/server/v3/etcdserver/api/snap/snappb
+go.etcd.io/etcd/server/v3/etcdserver/api/v2stats
+go.etcd.io/etcd/server/v3/wal
+go.etcd.io/etcd/server/v3/wal/walpb
 # go.opentelemetry.io/auto/sdk v1.2.1
 ## explicit; go 1.24.0
 go.opentelemetry.io/auto/sdk
@@ -2087,3 +2114,6 @@ stash.appscode.dev/apimachinery/pkg/invoker
 x-helm.dev/apimachinery/apis/releases/v1alpha1
 x-helm.dev/apimachinery/apis/shared
 x-helm.dev/apimachinery/crds
+# go.etcd.io/etcd/server/v3 => go.etcd.io/etcd/server/v3 v3.5.27
+# go.etcd.io/etcd/pkg/v3 => go.etcd.io/etcd/pkg/v3 v3.5.27
+# go.etcd.io/etcd/raft/v3 => github.com/kubedb/etcd-io/raft/v3 v3.5.0-beta.4.0.20220324050626-a6b4ef27cbc9

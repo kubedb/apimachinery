@@ -814,6 +814,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrNode":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrSpec":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrStatus":                                    schema_apimachinery_apis_kubedb_v1alpha2_SolrStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemReplicationHealthSummary":                schema_apimachinery_apis_kubedb_v1alpha2_SystemReplicationHealthSummary(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemReplicationStatus":                       schema_apimachinery_apis_kubedb_v1alpha2_SystemReplicationStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemUserSecretsSpec":                         schema_apimachinery_apis_kubedb_v1alpha2_SystemUserSecretsSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.TLSPolicy":                                     schema_apimachinery_apis_kubedb_v1alpha2_TLSPolicy(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Topology":                                      schema_apimachinery_apis_kubedb_v1alpha2_Topology(ref),
@@ -832,6 +834,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchStatsService":                     schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.etcdApp":                                       schema_apimachinery_apis_kubedb_v1alpha2_etcdApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.etcdStatsService":                              schema_apimachinery_apis_kubedb_v1alpha2_etcdStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.hanaRaftProvider":                              schema_apimachinery_apis_kubedb_v1alpha2_hanaRaftProvider(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.hanadbApp":                                     schema_apimachinery_apis_kubedb_v1alpha2_hanadbApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.hanadbStatsService":                            schema_apimachinery_apis_kubedb_v1alpha2_hanadbStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.hazelcastStatsService":                         schema_apimachinery_apis_kubedb_v1alpha2_hazelcastStatsService(ref),
@@ -46392,6 +46395,88 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrStatus(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_SystemReplicationHealthSummary(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"AllHealthy": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+					"HasActive": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+					"HasSyncing": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+					"HasError": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+					"Summary": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"AllHealthy", "HasActive", "HasSyncing", "HasError", "Summary"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_SystemReplicationStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Status": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"Details": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"ReplayBacklog": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"Status", "Details", "ReplayBacklog"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_SystemUserSecretsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -47137,6 +47222,33 @@ func schema_apimachinery_apis_kubedb_v1alpha2_etcdStatsService(ref common.Refere
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Etcd"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_hanaRaftProvider(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dnsSuffix": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"offshootName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"dnsSuffix", "offshootName"},
+			},
+		},
 	}
 }
 
