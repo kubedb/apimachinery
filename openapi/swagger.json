@@ -23120,6 +23120,7 @@
         "version",
         "db",
         "exporter",
+        "coordinator",
         "initContainer",
         "podSecurityPolicies"
       ],
@@ -23347,6 +23348,7 @@
         "version",
         "db",
         "exporter",
+        "coordinator",
         "initContainer",
         "podSecurityPolicies"
       ],
@@ -23569,6 +23571,7 @@
         "version",
         "db",
         "exporter",
+        "coordinator",
         "podSecurityPolicies"
       ],
       "properties": {
@@ -23956,6 +23959,7 @@
         "version",
         "db",
         "exporter",
+        "coordinator",
         "podSecurityPolicies"
       ],
       "properties": {

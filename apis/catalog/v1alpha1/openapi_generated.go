@@ -34486,7 +34486,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"version", "db"},
+				Required: []string{"version", "db", "coordinator"},
 			},
 		},
 		Dependencies: []string{
@@ -35763,7 +35763,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionSpec(ref common.Refe
 						},
 					},
 				},
-				Required: []string{"version", "db"},
+				Required: []string{"version", "db", "coordinator"},
 			},
 		},
 		Dependencies: []string{
@@ -36908,7 +36908,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionSpec(ref common
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "initContainer"},
+				Required: []string{"version", "db", "coordinator", "exporter", "initContainer"},
 			},
 		},
 		Dependencies: []string{
@@ -37300,7 +37300,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionSpec(ref common.Ref
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter", "coordinator", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
@@ -38552,7 +38552,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter", "coordinator", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
@@ -39090,7 +39090,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_OracleVersionSpec(ref common.Refe
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter"},
+				Required: []string{"version", "db", "exporter", "coordinator"},
 			},
 		},
 		Dependencies: []string{
@@ -39398,7 +39398,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionSpec(ref comm
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter", "coordinator", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
@@ -40295,7 +40295,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref common.Re
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter", "coordinator", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
@@ -41263,7 +41263,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
+				Required: []string{"version", "db", "exporter", "coordinator", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
@@ -41771,7 +41771,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref common
 						},
 					},
 				},
-				Required: []string{"version", "db"},
+				Required: []string{"version", "db", "coordinator"},
 			},
 		},
 		Dependencies: []string{
@@ -42518,7 +42518,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionSpec(ref common.R
 						},
 					},
 				},
-				Required: []string{"version", "db"},
+				Required: []string{"version", "db", "coordinator"},
 			},
 		},
 		Dependencies: []string{
