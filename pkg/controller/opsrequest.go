@@ -19,6 +19,7 @@ package controller
 import (
 	"context"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -30,6 +31,8 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/cache"
+	"k8s.io/klog/v2"
+	cu "kmodules.xyz/client-go/client"
 	cutil "kmodules.xyz/client-go/conditions"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -40,6 +43,9 @@ type OpsRequestController struct {
 	kbClient     client.Client
 	kind         string
 	scheme       *runtime.Scheme
+
+	progressMux  sync.Mutex
+	progressCtrl map[string]*ProgressingController
 }
 
 type ParallelismController struct {
@@ -54,6 +60,8 @@ func NewOpsRequestController(kbClient client.Client, kind string) *OpsRequestCon
 		kbClient:     kbClient,
 		kind:         kind,
 		scheme:       kbClient.Scheme(),
+		progressMux:  sync.Mutex{},
+		progressCtrl: make(map[string]*ProgressingController),
 	}
 }
 
@@ -192,4 +200,110 @@ func (c *OpsRequestController) unstructuredToOpsAccessor(u *unstructured.Unstruc
 	}
 
 	return accessor, nil
+}
+
+type ProgressingController struct {
+	sync.Mutex
+}
+
+func (c *OpsRequestController) UpdateOpsPhaseProgressing(req opsapi.Accessor, typ, msg string) (time.Duration, error) { // requeueTime as first param. if duration is zero, then don't requeue.
+	dbKind := strings.TrimSuffix(c.kind, "OpsRequest")
+	key := fmt.Sprintf("%s/%s/%s", dbKind, req.GetNamespace(), req.GetDBRefName())
+	p := c.getProgressTracker(key)
+	canLock := p.TryLock()
+	if !canLock {
+		return 10 * time.Second, nil
+	}
+	defer p.Unlock()
+
+	list := &unstructured.UnstructuredList{}
+	list.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   "ops.kubedb.com",
+		Version: "v1alpha1",
+		Kind:    c.kind,
+	})
+	err := c.kbClient.List(context.TODO(), list)
+	if err != nil {
+		return 0, err
+	}
+
+	for _, r := range list.Items {
+		ops, err := c.unstructuredToOpsAccessor(&r)
+		if err != nil {
+			return 0, err
+		}
+		if ops.GetName() == req.GetName() || ops.GetDBRefName() != req.GetDBRefName() {
+			continue
+		}
+		if ops.GetStatus().Phase == opsapi.OpsRequestPhaseProgressing {
+			klog.Info(fmt.Sprintf("another %s %s/%s is already in Progressing phase", c.kind, ops.GetNamespace(), ops.GetName()))
+			return 30 * time.Second, nil
+		}
+	}
+
+	_, err = cu.PatchStatus(context.TODO(), c.kbClient, req, func(obj client.Object) client.Object {
+		ret := obj.(opsapi.Accessor)
+		sts := ret.GetStatus()
+		sts.Phase = opsapi.OpsRequestPhaseProgressing
+		sts.ObservedGeneration = ret.GetObjectMeta().Generation
+		sts.Conditions = cutil.SetCondition(sts.Conditions, cutil.NewCondition(typ, msg, req.GetObjectMeta().Generation))
+		ret.SetStatus(sts)
+		return ret
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 11*time.Second)
+	defer cancel()
+	ticker := time.NewTicker(2 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return 30 * time.Second, nil
+		case <-ticker.C:
+
+			dummyReq := &unstructured.Unstructured{}
+			dummyReq.SetGroupVersionKind(schema.GroupVersionKind{
+				Group:   "ops.kubedb.com",
+				Version: "v1alpha1",
+				Kind:    c.kind,
+			})
+
+			err = c.kbClient.Get(context.TODO(), types.NamespacedName{
+				Namespace: req.GetNamespace(),
+				Name:      req.GetName(),
+			}, dummyReq)
+			if err != nil {
+				return 0, err
+			}
+
+			ops, err := c.unstructuredToOpsAccessor(dummyReq)
+			if err != nil {
+				return 0, err
+			}
+			if ops.GetStatus().Phase != opsapi.OpsRequestPhasePending {
+				return 0, nil
+			}
+		}
+	}
+}
+
+func (c *OpsRequestController) getProgressTracker(key string) *ProgressingController {
+	c.progressMux.Lock()
+	defer c.mux.Unlock()
+	if c.progressCtrl == nil {
+		c.progressCtrl = make(map[string]*ProgressingController)
+	}
+	if _, exists := c.progressCtrl[key]; !exists {
+		c.progressCtrl[key] = &ProgressingController{}
+	}
+	// Currently not deleting the tracker from the map to avoid complexity.
+	// as the number of DBs will be limited, memory overhead should be minimal.
+	// for 100000 dbs of 64 char name and 64 char namespace, it will take around 2-3 MB of memory.
+	// which is fully negligible for a controller process.
+	// trade off between memory and (complexity & extra go routine for periodically cleaning, getting resource for k8s).
+	return c.progressCtrl[key]
 }
