@@ -2228,10 +2228,31 @@ const (
 	DB2DatabaseRoleKey      = "db2.db/role"
 	DB2DatabaseRoleObserver = "observer"
 	DB2DatabaseRoleInstance = "instance"
-	DB2EnvUserName          = "SYS_USER"
+	DB2EnvUserName          = "db2inst1"
 	DB2EnvPassword          = "DB2_PWD"
-	DB2EnvOracleSID         = "DB2_SID"
+	DB2EnvSID               = "DB2_SID"
 	DB2EnvDataDir           = "DB2DATA"
+
+	// volume related constants
+	// volume related
+	DB2VolumeNameData                        = "database"
+	DB2VolumeMountPathData                   = "/var/opt/db2"
+	DB2VolumeNameConfig                      = "config"
+	DB2VolumeMountPathConfig                 = "/var/opt/db2/db2.conf"
+	DB2VolumeNameInitScript                  = "init-scripts"
+	DB2VolumeMountPathInitScript             = "/scripts"
+	DB2VolumeNameInitDatabase                = "init-database"
+	DB2VolumeMountPathInitDatabase           = "/init-database"
+	DB2VolumeNameEndpointCert                = "endpoint-cert"
+	DB2VolumeMountPathEndpointCert           = "/var/opt/db2/endpoint-cert"
+	DB2VolumeNameCerts                       = "certs"
+	DB2VolumeMountPathCerts                  = "/var/opt/db2/certs"
+	DB2VolumeNameTLS                         = "tls"
+	DB2VolumeMountPathTLS                    = "/var/opt/db2/tls"
+	DB2VolumeNameSecurityCACertificates      = "security-ca-certificates"
+	DB2VolumeMountPathSecurityCACertificates = "/var/opt/db2/security/ca-certificates"
+	DB2VolumeNameCACerts                     = "cacerts"
+	DB2VolumeMountPathCACerts                = "/etc/ssl/certs"
 )
 
 // =========================== Qdrant Constants ============================

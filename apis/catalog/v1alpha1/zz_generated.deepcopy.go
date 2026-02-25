@@ -587,6 +587,7 @@ func (in *DB2VersionSpec) DeepCopyInto(out *DB2VersionSpec) {
 	*out = *in
 	out.DB = in.DB
 	out.Coordinator = in.Coordinator
+	out.Scripts = in.Scripts
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	if in.UI != nil {

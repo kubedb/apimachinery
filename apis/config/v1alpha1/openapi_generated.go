@@ -576,8 +576,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                       schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.Volume":                                                    schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
+		"kubedb.dev/apimachinery/apis/config/v1alpha1.DB2HADRSpec":                                   schema_apimachinery_apis_config_v1alpha1_DB2HADRSpec(ref),
 		"kubedb.dev/apimachinery/apis/config/v1alpha1.GaleraArbitratorConfiguration":                 schema_apimachinery_apis_config_v1alpha1_GaleraArbitratorConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/config/v1alpha1.MongoDBConfiguration":                          schema_apimachinery_apis_config_v1alpha1_MongoDBConfiguration(ref),
+		"kubedb.dev/apimachinery/apis/config/v1alpha1.NamedServiceTemplateSpec":                      schema_apimachinery_apis_config_v1alpha1_NamedServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/config/v1alpha1.RedisConfiguration":                            schema_apimachinery_apis_config_v1alpha1_RedisConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/config/v1alpha1.Restriction":                                   schema_apimachinery_apis_config_v1alpha1_Restriction(ref),
 		"kubedb.dev/apimachinery/apis/config/v1alpha1.SinglestoreConfiguration":                      schema_apimachinery_apis_config_v1alpha1_SinglestoreConfiguration(ref),
@@ -33295,6 +33297,55 @@ func schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_config_v1alpha1_DB2HADRSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Primary": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"Standby": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"ConfigSecret": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"ServiceTemplates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplates is an optional configuration for services used to expose database",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/config/v1alpha1.NamedServiceTemplateSpec"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"Primary", "Standby"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/config/v1alpha1.NamedServiceTemplateSpec"},
+	}
+}
+
 func schema_apimachinery_apis_config_v1alpha1_GaleraArbitratorConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -33408,6 +33459,36 @@ func schema_apimachinery_apis_config_v1alpha1_MongoDBConfiguration(ref common.Re
 		},
 		Dependencies: []string{
 			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"},
+	}
+}
+
+func schema_apimachinery_apis_config_v1alpha1_NamedServiceTemplateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Alias": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Alias represents the identifier of the service.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ServiceTemplateSpec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplate is an optional configuration for a service used to expose database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"),
+						},
+					},
+				},
+				Required: []string{"Alias"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec"},
 	}
 }
 

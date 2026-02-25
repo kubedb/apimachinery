@@ -77,6 +77,13 @@ spec:
                 - WipeOut
                 - DoNotTerminate
                 type: string
+              hadrConfig:
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               healthChecker:
                 default:
                   failureThreshold: 3
