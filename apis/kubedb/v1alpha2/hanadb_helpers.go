@@ -117,40 +117,60 @@ func (h *HanaDB) GoverningServiceDNS(podName string) string {
 	return fmt.Sprintf("%s.%s.%s.svc.%s", podName, h.GoverningServiceName(), h.Namespace, apiutils.FindDomain())
 }
 
+type hanaRaftProvider struct {
+	dnsSuffix    string
+	offshootName string
+}
+
+func (p hanaRaftProvider) GoverningServiceDNS(podName string) string {
+	return podName + p.dnsSuffix
+}
+
+func (p hanaRaftProvider) OffshootName() string {
+	return p.offshootName
+}
+
+func getHanaRaftProvider(db *HanaDB) hanaRaftProvider {
+	return hanaRaftProvider{
+		dnsSuffix:    fmt.Sprintf(".%s.%s.svc.%s", db.GoverningServiceName(), db.Namespace, apiutils.FindDomain()),
+		offshootName: db.OffshootName(),
+	}
+}
+
 // GetCurrentLeaderID queries raft leader id from a coordinator pod.
 func GetCurrentLeaderID(db *HanaDB, podName, user, pass string) (uint64, error) {
-	return raftutils.GetCurrentLeaderIDForDB(db, kubedb.HanaDBCoordinatorClientPort, podName, user, pass)
+	return raftutils.GetCurrentLeaderID(kubedb.HanaDBCoordinatorClientPort, db.GoverningServiceDNS(podName), user, pass)
 }
 
 // AddNodeToRaft requests raft membership add via coordinator /add-node endpoint.
 func AddNodeToRaft(db *HanaDB, primaryPodName, podName string, nodeID int, user, pass string) (string, error) {
-	return raftutils.AddNodeToRaftForDB(db, kubedb.HanaDBCoordinatorClientPort, kubedb.HanaDBCoordinatorPort, primaryPodName, podName, nodeID, user, pass)
+	return raftutils.AddNodeToRaft(getHanaRaftProvider(db), kubedb.HanaDBCoordinatorClientPort, kubedb.HanaDBCoordinatorPort, primaryPodName, podName, nodeID, user, pass)
 }
 
 // RemoveNodeFromRaft requests raft membership remove via coordinator /remove-node endpoint.
 func RemoveNodeFromRaft(db *HanaDB, primaryPodName string, nodeID int, user, pass string) (string, error) {
-	return raftutils.RemoveNodeFromRaftForDB(db, kubedb.HanaDBCoordinatorClientPort, primaryPodName, nodeID, user, pass)
+	return raftutils.RemoveNodeFromRaft(getHanaRaftProvider(db), kubedb.HanaDBCoordinatorClientPort, primaryPodName, nodeID, user, pass)
 }
 
 // GetCurrentLeaderPodName returns current leader pod name by resolving raft leader id.
 func GetCurrentLeaderPodName(db *HanaDB, podName, user, pass string) (string, error) {
-	return raftutils.GetCurrentLeaderPodNameForDB(db, kubedb.HanaDBCoordinatorClientPort, podName, user, pass)
+	return raftutils.GetCurrentLeaderPodName(getHanaRaftProvider(db), kubedb.HanaDBCoordinatorClientPort, podName, user, pass)
 }
 
 func GetRaftLeaderIDWithRetries(db *HanaDB, dbPodName, user, pass string, maxTries int, retryDelay time.Duration) (int, error) {
-	return raftutils.GetRaftLeaderIDWithRetriesForDB(db, kubedb.HanaDBCoordinatorClientPort, dbPodName, user, pass, maxTries, retryDelay)
+	return raftutils.GetRaftLeaderIDWithRetries(getHanaRaftProvider(db), kubedb.HanaDBCoordinatorClientPort, dbPodName, user, pass, maxTries, retryDelay)
 }
 
 func GetRaftPrimaryNode(db *HanaDB, replicas int, user, pass string, maxTries int, retryDelay time.Duration) (int, error) {
-	return raftutils.GetRaftPrimaryNodeForDB(db, kubedb.HanaDBCoordinatorClientPort, replicas, user, pass, maxTries, retryDelay)
+	return raftutils.GetRaftPrimaryNode(getHanaRaftProvider(db), kubedb.HanaDBCoordinatorClientPort, replicas, user, pass, maxTries, retryDelay)
 }
 
 func AddRaftNodeWithRetries(db *HanaDB, primaryPodName, podName string, nodeID int, user, pass string, maxTries int, retryDelay time.Duration) error {
-	return raftutils.AddRaftNodeWithRetriesForDB(db, kubedb.HanaDBCoordinatorClientPort, kubedb.HanaDBCoordinatorPort, primaryPodName, podName, nodeID, user, pass, maxTries, retryDelay)
+	return raftutils.AddRaftNodeWithRetries(getHanaRaftProvider(db), kubedb.HanaDBCoordinatorClientPort, kubedb.HanaDBCoordinatorPort, primaryPodName, podName, nodeID, user, pass, maxTries, retryDelay)
 }
 
 func RemoveRaftNodeWithRetries(db *HanaDB, primaryPodName string, nodeID int, user, pass string, maxTries int, retryDelay time.Duration) error {
-	return raftutils.RemoveRaftNodeWithRetriesForDB(db, kubedb.HanaDBCoordinatorClientPort, primaryPodName, nodeID, user, pass, maxTries, retryDelay)
+	return raftutils.RemoveRaftNodeWithRetries(getHanaRaftProvider(db), kubedb.HanaDBCoordinatorClientPort, primaryPodName, nodeID, user, pass, maxTries, retryDelay)
 }
 
 func NewSystemReplicationStatus(status, details, replayBacklog string) SystemReplicationStatus {
