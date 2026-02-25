@@ -566,7 +566,7 @@ func (rc *RaftNode) serveChannels(period time.Duration) {
 // then the confState included in the snapshot is out of date. so We need
 // to update the confState before sending a snapshot to a follower.
 func (rc *RaftNode) processMessages(ms []raftpb.Message) []raftpb.Message {
-	for i := 0; i < len(ms); i++ {
+	for i := range ms {
 		if ms[i].Type == raftpb.MsgSnap {
 			ms[i].Snapshot.Metadata.ConfState = rc.confState
 		}

@@ -154,7 +154,7 @@ func GetRaftLeaderIDWithRetries(db DBRaftAddressProvider, coordinatorClientPort 
 
 func GetRaftPrimaryNode(db DBRaftAddressProvider, coordinatorClientPort int, replicas int, user, pass string, maxTries int, retryDelay time.Duration) (int, error) {
 	var lastErr error
-	for rep := 0; rep < replicas; rep++ {
+	for rep := range replicas {
 		podName := fmt.Sprintf("%s-%v", db.OffshootName(), rep)
 		primaryPodID, err := GetRaftLeaderIDWithRetries(db, coordinatorClientPort, podName, user, pass, maxTries, retryDelay)
 		if err == nil {

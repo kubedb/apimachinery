@@ -69,7 +69,7 @@ type PostgresVersionSpec struct {
 	// Exporter Image
 	Exporter PostgresVersionExporter `json:"exporter"`
 	// Coordinator Image
-	Coordinator PostgresVersionCoordinator `json:"coordinator,omitempty"`
+	Coordinator PostgresVersionCoordinator `json:"coordinator"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
