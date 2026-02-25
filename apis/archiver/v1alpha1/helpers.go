@@ -17,12 +17,12 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"encoding/json"
 	"fmt"
 
-	"encoding/json"
-	"k8s.io/apimachinery/pkg/runtime"
 	"kubedb.dev/apimachinery/crds"
 
+	"k8s.io/apimachinery/pkg/runtime"
 	"kmodules.xyz/client-go/apiextensions"
 )
 
