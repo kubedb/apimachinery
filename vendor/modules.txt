@@ -941,7 +941,7 @@ gomodules.xyz/mergo
 # gomodules.xyz/pointer v0.1.0
 ## explicit; go 1.15
 gomodules.xyz/pointer
-# gomodules.xyz/restic v0.1.0
+# gomodules.xyz/restic v0.2.0
 ## explicit; go 1.25
 gomodules.xyz/restic
 # gomodules.xyz/runtime v0.3.0
@@ -1981,7 +1981,7 @@ kubeops.dev/petset/crds
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
 kubeops.dev/sidekick/crds
-# kubestash.dev/apimachinery v0.24.0
+# kubestash.dev/apimachinery v0.25.0
 ## explicit; go 1.25.0
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/addons/v1alpha1
@@ -1991,7 +1991,7 @@ kubestash.dev/apimachinery/crds
 # moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7
 ## explicit; go 1.13
 moul.io/http2curl/v2
-# open-cluster-management.io/api v1.1.1-0.20251222023835-510285203ee6
+# open-cluster-management.io/api v1.2.0
 ## explicit; go 1.25.0
 open-cluster-management.io/api/client/work/clientset/versioned
 open-cluster-management.io/api/client/work/clientset/versioned/scheme
