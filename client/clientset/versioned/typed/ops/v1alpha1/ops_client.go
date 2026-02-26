@@ -55,6 +55,7 @@ type OpsV1alpha1Interface interface {
 	RedisSentinelOpsRequestsGetter
 	SinglestoreOpsRequestsGetter
 	SolrOpsRequestsGetter
+	WeaviateOpsRequestsGetter
 	ZooKeeperOpsRequestsGetter
 }
 
@@ -165,6 +166,10 @@ func (c *OpsV1alpha1Client) SinglestoreOpsRequests(namespace string) Singlestore
 
 func (c *OpsV1alpha1Client) SolrOpsRequests(namespace string) SolrOpsRequestInterface {
 	return newSolrOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) WeaviateOpsRequests(namespace string) WeaviateOpsRequestInterface {
+	return newWeaviateOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) ZooKeeperOpsRequests(namespace string) ZooKeeperOpsRequestInterface {

@@ -108,6 +108,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&SolrOpsRequestList{},
 		&ZooKeeperOpsRequest{},
 		&ZooKeeperOpsRequestList{},
+		&WeaviateOpsRequest{},
+		&WeaviateOpsRequestList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,
