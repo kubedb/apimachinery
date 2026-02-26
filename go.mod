@@ -59,7 +59,7 @@ require (
 	kubeops.dev/operator-shard-manager v0.0.5
 	kubeops.dev/petset v0.0.15
 	kubeops.dev/sidekick v0.0.12
-	kubestash.dev/apimachinery v0.25.0
+	kubestash.dev/apimachinery v0.26.0
 	open-cluster-management.io/api v1.2.0
 	sigs.k8s.io/controller-runtime v0.22.4
 	sigs.k8s.io/randfill v1.0.0
@@ -185,7 +185,7 @@ require (
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	go.bytebuilders.dev/license-proxyserver v0.0.26 // indirect
+	go.bytebuilders.dev/license-proxyserver v0.1.0 // indirect
 	go.bytebuilders.dev/license-verifier v0.15.0 // indirect
 	go.etcd.io/etcd/api/v3 v3.6.4 // indirect
 	go.etcd.io/etcd/client/v3 v3.6.4 // indirect
