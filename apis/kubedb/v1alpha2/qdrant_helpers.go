@@ -80,7 +80,13 @@ func (q QdrantApp) Type() appcat.AppType {
 }
 
 func (q *Qdrant) GetConnectionScheme() string {
-	scheme := "grpc"
+	var scheme string
+	if q.Spec.TLS == nil {
+		scheme = "http"
+	} else {
+		scheme = "https"
+	}
+
 	return scheme
 }
 
