@@ -1968,7 +1968,6 @@ func (in *MSSQLServerVersionSpec) DeepCopyInto(out *MSSQLServerVersionSpec) {
 	out.Coordinator = in.Coordinator
 	out.Exporter = in.Exporter
 	out.InitContainer = in.InitContainer
-	in.Stash.DeepCopyInto(&out.Stash)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	out.Archiver = in.Archiver

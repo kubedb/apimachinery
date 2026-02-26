@@ -69,7 +69,6 @@ type ZooKeeperVersionSpec struct {
 	// PSP names
 	// +optional
 	PodSecurityPolicies ZooKeeperVersionPodSecurityPolicy `json:"podSecurityPolicies"`
-	// Stash defines backup and restore task definitions.
 
 	// update constraints
 	// +optional
