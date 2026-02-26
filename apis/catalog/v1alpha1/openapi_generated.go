@@ -35061,12 +35061,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
 						},
 					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
 					"ui": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
@@ -35085,7 +35079,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref comm
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDashboardInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDashboardInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
@@ -36592,13 +36586,6 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionPodSecurityPolicy"),
 						},
 					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Stash defines backup and restore task definitions.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
-						},
-					},
 					"updateConstraints": {
 						SchemaProps: spec.SchemaProps{
 							Description: "update constraints",
@@ -36631,7 +36618,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
