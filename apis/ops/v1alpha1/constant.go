@@ -122,6 +122,7 @@ const (
 const (
 	Restart              = "Restart"
 	RestartNodes         = "RestartNodes"
+	RestartServer        = "RestartServer"
 	RestartPods          = "RestartPods"
 	RestartKeeperPods    = "RestartKeeperPods"
 	RestartPodsSucceeded = "RestartPodsSucceeded"
@@ -130,6 +131,7 @@ const (
 
 // Reload
 const (
+	ReloadTLS           = "ReloadTLS"
 	ReloadPods          = "ReloadPods"
 	ReloadPodsSucceeded = "ReloadPodsSucceeded"
 	ReloadPodsFailed    = "ReloadPodsFailed"

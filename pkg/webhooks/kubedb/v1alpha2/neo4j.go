@@ -31,6 +31,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -117,6 +118,11 @@ func (w *Neo4jCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Obj
 func (w *Neo4jCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Neo4j) error {
 	var allErr field.ErrorList
 
+	if db.Spec.TLS != nil && db.Spec.TLS.IssuerRef == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls").Child("issuerRef"),
+			db.Name, "spec.tls.issuerRef' is missing"))
+	}
+
 	// number of replicas can not be 0 or less
 	if db.Spec.Replicas != nil && *db.Spec.Replicas <= 0 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
@@ -160,6 +166,15 @@ func (w *Neo4jCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Neo4j) error {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 				db.GetName(),
 				"StorageType should be either durable or ephemeral"))
+		}
+	}
+
+	if db.Spec.Monitor != nil {
+		if db.Spec.Monitor.Agent == "" {
+			return fmt.Errorf("monitor.agent is missing")
+		}
+		if !mona.IsKnownAgentType(db.Spec.Monitor.Agent) {
+			return fmt.Errorf("monitor.agent '%v' is not known", db.Spec.Monitor.Agent)
 		}
 	}
 

@@ -650,6 +650,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBList":                                    schema_apimachinery_apis_kubedb_v1alpha2_HanaDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_HanaDBStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBSystemReplicationSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSystemReplicationSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBTopology":                                schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Hazelcast":                                     schema_apimachinery_apis_kubedb_v1alpha2_Hazelcast(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HazelcastApp":                                  schema_apimachinery_apis_kubedb_v1alpha2_HazelcastApp(ref),
@@ -734,6 +735,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jList":                                     schema_apimachinery_apis_kubedb_v1alpha2_Neo4jList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jSpec":                                     schema_apimachinery_apis_kubedb_v1alpha2_Neo4jSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jStatus":                                   schema_apimachinery_apis_kubedb_v1alpha2_Neo4jStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jTLSConfig":                                schema_apimachinery_apis_kubedb_v1alpha2_Neo4jTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_ObjectStorageSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObserverSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_ObserverSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Oracle":                                        schema_apimachinery_apis_kubedb_v1alpha2_Oracle(ref),
@@ -761,6 +763,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresReplication":                           schema_apimachinery_apis_kubedb_v1alpha2_PostgresReplication(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_PostgresSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresStatus":                                schema_apimachinery_apis_kubedb_v1alpha2_PostgresStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig":                             schema_apimachinery_apis_kubedb_v1alpha2_ProtocolTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQL":                                      schema_apimachinery_apis_kubedb_v1alpha2_ProxySQL(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLConfiguration":                         schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLList":                                  schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLList(ref),
@@ -811,6 +814,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrNode":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrSpec":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrStatus":                                    schema_apimachinery_apis_kubedb_v1alpha2_SolrStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemReplicationHealthSummary":                schema_apimachinery_apis_kubedb_v1alpha2_SystemReplicationHealthSummary(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemReplicationStatus":                       schema_apimachinery_apis_kubedb_v1alpha2_SystemReplicationStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemUserSecretsSpec":                         schema_apimachinery_apis_kubedb_v1alpha2_SystemUserSecretsSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.TLSPolicy":                                     schema_apimachinery_apis_kubedb_v1alpha2_TLSPolicy(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Topology":                                      schema_apimachinery_apis_kubedb_v1alpha2_Topology(ref),
@@ -829,6 +834,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchStatsService":                     schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.etcdApp":                                       schema_apimachinery_apis_kubedb_v1alpha2_etcdApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.etcdStatsService":                              schema_apimachinery_apis_kubedb_v1alpha2_etcdStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.hanaRaftProvider":                              schema_apimachinery_apis_kubedb_v1alpha2_hanaRaftProvider(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.hanadbApp":                                     schema_apimachinery_apis_kubedb_v1alpha2_hanadbApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.hanadbStatsService":                            schema_apimachinery_apis_kubedb_v1alpha2_hanadbStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.hazelcastStatsService":                         schema_apimachinery_apis_kubedb_v1alpha2_hazelcastStatsService(ref),
@@ -844,6 +850,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.mssqlserverStatsService":                       schema_apimachinery_apis_kubedb_v1alpha2_mssqlserverStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.mysqlApp":                                      schema_apimachinery_apis_kubedb_v1alpha2_mysqlApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.mysqlStatsService":                             schema_apimachinery_apis_kubedb_v1alpha2_mysqlStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.neo4jStatsService":                             schema_apimachinery_apis_kubedb_v1alpha2_neo4jStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.oracleApp":                                     schema_apimachinery_apis_kubedb_v1alpha2_oracleApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.oracleStatsService":                            schema_apimachinery_apis_kubedb_v1alpha2_oracleStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.perconaXtraDBApp":                              schema_apimachinery_apis_kubedb_v1alpha2_perconaXtraDBApp(ref),
@@ -29001,8 +29008,9 @@ func schema_kmodulesxyz_client_go_api_v1_ClusterClaimFeatures(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"enabledFeatures": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: "",
@@ -37333,6 +37341,33 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBStatus(ref common.ReferenceC
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSystemReplicationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HanaDBSystemReplicationSpec defines system replication configuration.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicationMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReplicationMode controls when transactions are committed relative to log shipping.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"operationMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OperationMode controls the log shipping/replay strategy on the secondary.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37347,9 +37382,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTopology(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"systemReplication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SystemReplication defines configuration for SAP HANA system replication.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBSystemReplicationSpec"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBSystemReplicationSpec"},
 	}
 }
 
@@ -41712,12 +41755,24 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Neo4jSpec(ref common.ReferenceCall
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used monitor database instance",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains tls configurations",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jTLSConfig"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -41761,6 +41816,61 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Neo4jStatus(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_Neo4jTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"bolt": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
+						},
+					},
+					"http": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
+						},
+					},
+					"cluster": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
+						},
+					},
+					"keystoreCredSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Keystore encryption secret",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -43436,6 +43546,24 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresStatus(ref common.Referenc
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Age"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_ProtocolTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -46275,6 +46403,88 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrStatus(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_SystemReplicationHealthSummary(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"AllHealthy": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+					"HasActive": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+					"HasSyncing": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+					"HasError": {
+						SchemaProps: spec.SchemaProps{
+							Default: false,
+							Type:    []string{"boolean"},
+							Format:  "",
+						},
+					},
+					"Summary": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"AllHealthy", "HasActive", "HasSyncing", "HasError", "Summary"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_SystemReplicationStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Status": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"Details": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"ReplayBacklog": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"Status", "Details", "ReplayBacklog"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_SystemUserSecretsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -47023,6 +47233,33 @@ func schema_apimachinery_apis_kubedb_v1alpha2_etcdStatsService(ref common.Refere
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_hanaRaftProvider(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dnsSuffix": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"offshootName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"dnsSuffix", "offshootName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_hanadbApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -47320,6 +47557,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_mysqlStatsService(ref common.Refer
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQL"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_neo4jStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Neo4j": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4j"),
+						},
+					},
+				},
+				Required: []string{"Neo4j"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4j"},
 	}
 }
 
