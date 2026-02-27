@@ -211,9 +211,9 @@ func DivideIniConfDataInSections(dataReceive, sectionsReceive *[]string) *map[st
 	sectionName := ""
 	result := make(map[string][]string)
 
-	for i := 0; i < len(data); i++ {
+	for i := range data {
 		newSectionName := ""
-		for j := 0; j < len(sections); j++ {
+		for j := range sections {
 			sectionTitle := fmt.Sprintf("%s%s%s", "[", sections[j], "]")
 			if data[i] == sectionTitle {
 				newSectionName = sections[j]

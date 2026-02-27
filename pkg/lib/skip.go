@@ -1,11 +1,11 @@
 /*
 Copyright AppsCode Inc. and Contributors
 
-Licensed under the AppsCode Free Trial License 1.0.0 (the "License");
+Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Free-Trial-1.0.0.md
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@ package lib
 import (
 	"context"
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -107,12 +108,7 @@ func (s *skipper) SkipOpsReq() (bool, error) {
 var ExcludedFromSkipperLogic = []string{"Reconfigure"} // Skip Reconfigure ops requests - they are handled by ReconfigureMerger
 
 func isInExcludeList(s string) bool {
-	for _, ex := range ExcludedFromSkipperLogic {
-		if s == ex {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(ExcludedFromSkipperLogic, s)
 }
 
 func (s *skipper) getOldestOpsAfterSkipping(opsMap map[string][]client.Object) (metav1.ObjectMeta, error) {

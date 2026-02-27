@@ -85,10 +85,6 @@ func (c *FakeKubedbV1alpha2) Memcacheds(namespace string) v1alpha2.MemcachedInte
 	return &FakeMemcacheds{c, namespace}
 }
 
-func (c *FakeKubedbV1alpha2) Milvuses(namespace string) v1alpha2.MilvusInterface {
-	return &FakeMilvuses{c, namespace}
-}
-
 func (c *FakeKubedbV1alpha2) MongoDBs(namespace string) v1alpha2.MongoDBInterface {
 	return &FakeMongoDBs{c, namespace}
 }

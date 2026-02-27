@@ -1,11 +1,11 @@
 /*
 Copyright AppsCode Inc. and Contributors
 
-Licensed under the AppsCode Free Trial License 1.0.0 (the "License");
+Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Free-Trial-1.0.0.md
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -90,10 +91,8 @@ func GetDistributedPodNamespace(kbClient client.Client, ppName, podName string) 
 	splitString := strings.Split(podName, "-")
 	ordinal, _ := strconv.Atoi(splitString[len(splitString)-1])
 	for i := 0; i < len(pp.Spec.ClusterSpreadConstraint.DistributionRules); i++ {
-		for _, ordinalIndex := range pp.Spec.ClusterSpreadConstraint.DistributionRules[i].ReplicaIndices {
-			if ordinalIndex == int32(ordinal) {
-				return pp.Spec.ClusterSpreadConstraint.DistributionRules[i].ClusterName, nil
-			}
+		if slices.Contains(pp.Spec.ClusterSpreadConstraint.DistributionRules[i].ReplicaIndices, int32(ordinal)) {
+			return pp.Spec.ClusterSpreadConstraint.DistributionRules[i].ClusterName, nil
 		}
 	}
 	return "", fmt.Errorf("no cluster found for the given ordinal %v", ordinal)
@@ -279,12 +278,7 @@ func CheckManifestWorkPodReady(mw *ocmapi.ManifestWork, log *logr.Logger) bool {
 }
 
 func IsOpsTypeSupported(supportedTypes []string, curOpsType string) bool {
-	for _, s := range supportedTypes {
-		if s == curOpsType {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(supportedTypes, curOpsType)
 }
 
 func stashOperatorExist(KBClient client.Client) bool {

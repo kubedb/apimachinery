@@ -52,6 +52,8 @@ type Interface interface {
 	MongoDBOpsRequests() MongoDBOpsRequestInformer
 	// MySQLOpsRequests returns a MySQLOpsRequestInformer.
 	MySQLOpsRequests() MySQLOpsRequestInformer
+	// Neo4jOpsRequests returns a Neo4jOpsRequestInformer.
+	Neo4jOpsRequests() Neo4jOpsRequestInformer
 	// PerconaXtraDBOpsRequests returns a PerconaXtraDBOpsRequestInformer.
 	PerconaXtraDBOpsRequests() PerconaXtraDBOpsRequestInformer
 	// PgBouncerOpsRequests returns a PgBouncerOpsRequestInformer.
@@ -157,6 +159,11 @@ func (v *version) MongoDBOpsRequests() MongoDBOpsRequestInformer {
 // MySQLOpsRequests returns a MySQLOpsRequestInformer.
 func (v *version) MySQLOpsRequests() MySQLOpsRequestInformer {
 	return &mySQLOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Neo4jOpsRequests returns a Neo4jOpsRequestInformer.
+func (v *version) Neo4jOpsRequests() Neo4jOpsRequestInformer {
+	return &neo4jOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PerconaXtraDBOpsRequests returns a PerconaXtraDBOpsRequestInformer.

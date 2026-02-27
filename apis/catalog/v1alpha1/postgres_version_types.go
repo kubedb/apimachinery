@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"kubedb.dev/apimachinery/apis/migrator/v1alpha1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 )
@@ -67,7 +69,7 @@ type PostgresVersionSpec struct {
 	// Exporter Image
 	Exporter PostgresVersionExporter `json:"exporter"`
 	// Coordinator Image
-	Coordinator PostgresVersionCoordinator `json:"coordinator,omitempty"`
+	Coordinator PostgresVersionCoordinator `json:"coordinator"`
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
@@ -90,6 +92,9 @@ type PostgresVersionSpec struct {
 	Archiver ArchiverSpec `json:"archiver,omitempty"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
+	// Migrator defines the migration related CLI/Tools images for this Postgres version
+	// +optional
+	Migrator v1alpha1.DBMigratorImages `json:"migrator,omitempty"`
 }
 
 // PostgresVersionInitContainer is the Postgres init container image
@@ -147,7 +152,7 @@ type PostgresSecurityContext struct {
 	RunAsAnyNonRoot bool `json:"runAsAnyNonRoot,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Official;TimescaleDB;PostGIS;KubeDB;DocumentDB;PostgreSQL
+// +kubebuilder:validation:Enum=Official;TimescaleDB;PostGIS;KubeDB;DocumentDB;PostgreSQL;Percona
 type PostgresDistro string
 
 const (
@@ -156,4 +161,5 @@ const (
 	PostgresDistroPostGIS     PostgresDistro = "PostGIS"
 	PostgresDistroKubeDB      PostgresDistro = "KubeDB"
 	PostgresDistroDocumentDB  PostgresDistro = "DocumentDB"
+	PostgresDistroPercona     PostgresDistro = "Percona"
 )

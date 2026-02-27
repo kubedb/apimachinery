@@ -12,7 +12,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 SHELL=/bin/bash -o pipefail
 
 GO_PKG   := kubedb.dev
@@ -22,7 +21,7 @@ BIN      := apimachinery
 CRD_OPTIONS          ?= "crd:maxDescLen=0,generateEmbeddedObjectMeta=true,allowDangerousTypes=true"
 # https://github.com/appscodelabs/gengo-builder
 CODE_GENERATOR_IMAGE ?= ghcr.io/appscode/gengo:release-1.32
-CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 kubedb:v1 gitops:v1alpha1 postgres:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1 elasticsearch:v1alpha1 schema:v1alpha1 archiver:v1alpha1 kafka:v1alpha1
+CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 kubedb:v1 gitops:v1alpha1 postgres:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1 elasticsearch:v1alpha1 schema:v1alpha1 archiver:v1alpha1 kafka:v1alpha1 migrator:v1alpha1
 API_GROUPS           ?= $(CORE_API_GROUPS) ui:v1alpha1
 
 # This version-strategy uses git tags to set the version string
@@ -168,7 +167,7 @@ openapi-%:
 		openapi-gen                                      \
 			--v 1 --logtostderr                          \
 			--go-header-file "./hack/license/go.txt" \
-			--input-dirs "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*),k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/api/resource,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/util/intstr,k8s.io/apimachinery/pkg/version,k8s.io/api/core/v1,k8s.io/api/apps/v1,kmodules.xyz/offshoot-api/api/v1,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,kmodules.xyz/monitoring-agent-api/api/v1,k8s.io/api/rbac/v1,k8s.io/api/autoscaling/v2beta2,kmodules.xyz/objectstore-api/api/v1,kmodules.xyz/client-go/api/v1,k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1" \
+			--input-dirs "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*),k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/api/resource,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/util/intstr,k8s.io/apimachinery/pkg/version,k8s.io/api/core/v1,k8s.io/api/apps/v1,kmodules.xyz/offshoot-api/api/v1,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,kmodules.xyz/monitoring-agent-api/api/v1,k8s.io/api/rbac/v1,k8s.io/api/autoscaling/v2beta2,kmodules.xyz/objectstore-api/api/v1,kmodules.xyz/client-go/api/v1,k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1,github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1" \
 			--output-package "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*)" \
 			--report-filename .config/api-rules/violation_exceptions.list
 

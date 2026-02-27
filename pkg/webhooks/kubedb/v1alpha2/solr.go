@@ -1,11 +1,11 @@
 /*
-Copyright 2023.
+Copyright AppsCode Inc. and Contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
- http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -322,13 +323,7 @@ func (w *SolrCustomWebhook) solrValidateVersion(s *olddbapi.Solr) error {
 func solrValidateModules(db *olddbapi.Solr) error {
 	modules := db.Spec.SolrModules
 	for _, mod := range modules {
-		fl := false
-		for _, av_mod := range solrAvailableModules {
-			if mod == av_mod {
-				fl = true
-				break
-			}
-		}
+		fl := slices.Contains(solrAvailableModules, mod)
 		if !fl {
 			return fmt.Errorf("%s does not exist in available modules", mod)
 		}

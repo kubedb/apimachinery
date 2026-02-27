@@ -1,5 +1,5 @@
 /*
-Copyright 2025.
+Copyright AppsCode Inc. and Contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -58,9 +58,10 @@ type DB2VersionSpec struct {
 
 	// Database Image
 	DB DB2VersionDatabase `json:"db"`
+
 	// Coordinator Image
-	// +optional
-	Coordinator DB2Coordinator `json:"coordinator,omitempty"`
+	Coordinator DB2Coordinator `json:"coordinator"`
+
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`

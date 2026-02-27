@@ -17107,8 +17107,9 @@ func schema_kmodulesxyz_client_go_api_v1_ClusterClaimFeatures(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"enabledFeatures": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: "",
@@ -19948,12 +19949,45 @@ func schema_resource_metadata_apis_identity_v1alpha1_KubernetesInfo(ref common.R
 							Ref:     ref("kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeInfo"),
 						},
 					},
+					"distributions": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"storageProvisioners": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"features": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ClusterClaimFeatures"),
+						},
+					},
 				},
 				Required: []string{"nodeStats"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/version.Info", "kmodules.xyz/client-go/api/v1.ClusterMetadata", "kmodules.xyz/resource-metadata/apis/identity/v1alpha1.ControlPlaneInfo", "kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeInfo"},
+			"k8s.io/apimachinery/pkg/version.Info", "kmodules.xyz/client-go/api/v1.ClusterClaimFeatures", "kmodules.xyz/client-go/api/v1.ClusterMetadata", "kmodules.xyz/resource-metadata/apis/identity/v1alpha1.ControlPlaneInfo", "kmodules.xyz/resource-metadata/apis/identity/v1alpha1.NodeInfo"},
 	}
 }
 

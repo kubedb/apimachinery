@@ -1,11 +1,11 @@
 /*
 Copyright AppsCode Inc. and Contributors
 
-Licensed under the AppsCode Free Trial License 1.0.0 (the "License");
+Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Free-Trial-1.0.0.md
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"time"
 
+	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	pb "kubedb.dev/apimachinery/pkg/utils/grpc/mariadb/protogen"
 
@@ -44,6 +45,7 @@ const (
 
 func Client(kbClient client.Client, db *dbapi.MariaDB, podName string) (*grpc.ClientConn, error) {
 	serverAddr := serverAddress(db, podName)
+
 	interceptor, err := UnaryClientInterceptor(kbClient, db)
 	if err != nil {
 		return nil, err
@@ -52,6 +54,7 @@ func Client(kbClient client.Client, db *dbapi.MariaDB, podName string) (*grpc.Cl
 	opts := []grpc.DialOption{
 		grpc.WithUnaryInterceptor(interceptor),
 	}
+
 	if sslEnabledMariaDB(db) {
 		clientSecret := corev1.Secret{}
 		err = kbClient.Get(context.TODO(), types.NamespacedName{
@@ -66,13 +69,16 @@ func Client(kbClient client.Client, db *dbapi.MariaDB, podName string) (*grpc.Cl
 		if !exists {
 			return nil, fmt.Errorf("%v in not present in client secret", rootCAKey)
 		}
+
 		caCertPool := x509.NewCertPool()
 		if !caCertPool.AppendCertsFromPEM(serverCa) {
 			return nil, fmt.Errorf("failed to add server CA certificate")
 		}
+
 		tlsConfig := &tls.Config{
 			RootCAs: caCertPool,
 		}
+
 		tlsCreds := credentials.NewTLS(tlsConfig)
 		opts = append(opts, grpc.WithTransportCredentials(tlsCreds))
 	} else {
@@ -83,6 +89,7 @@ func Client(kbClient client.Client, db *dbapi.MariaDB, podName string) (*grpc.Cl
 	if err != nil {
 		return nil, fmt.Errorf("did not connect to %s: %w", serverAddr, err)
 	}
+
 	return conn, nil
 }
 
@@ -93,19 +100,45 @@ func RunCommand(grpcClient pb.CommandServiceClient, cmd string) ([]byte, error) 
 	req := &pb.CommandRequest{
 		Command: cmd,
 	}
+
 	resp, err := grpcClient.ExecuteCommand(ctx, req)
 	if err != nil {
 		klog.Infof("failed to execute command: %v", err)
 		return nil, err
 	}
+
 	if resp.Status != "success" {
 		return nil, fmt.Errorf("failed to execute command: %s, Output: %s, err: %v", cmd, string(resp.Output), resp.Error)
 	}
+
+	return resp.Output, nil
+}
+
+func RunCommandWithPayload(ctx context.Context, grpcClient pb.CommandServiceClient, cmd string, data []byte) ([]byte, error) {
+	req := &pb.CommandRequest{
+		Command: cmd,
+		Data:    data,
+	}
+
+	resp, err := grpcClient.ExecuteCommand(ctx, req)
+	if err != nil {
+		klog.Infof("failed to execute command: %v", err)
+		return nil, err
+	}
+
+	if resp.Status != "success" {
+		return nil, fmt.Errorf("failed to execute command: %s, Output: %s, err: %v", cmd, string(resp.Output), resp.Error)
+	}
+
 	return resp.Output, nil
 }
 
 func serverAddress(db *dbapi.MariaDB, podName string) string {
-	return fmt.Sprintf("%s.%s.%s.svc:%v", podName, db.GoverningServiceName(), db.Namespace, port)
+	if db.Spec.Distributed {
+		return fmt.Sprintf("%s.%s.%s.svc.%s:%v", podName, db.GoverningServiceName(), db.Namespace, kubedb.KubeSliceDomainSuffix, port)
+	} else {
+		return fmt.Sprintf("%s.%s.%s.svc:%v", podName, db.GoverningServiceName(), db.Namespace, port)
+	}
 }
 
 func UnaryClientInterceptor(kbClient client.Client, db *dbapi.MariaDB) (grpc.UnaryClientInterceptor, error) {
@@ -113,6 +146,7 @@ func UnaryClientInterceptor(kbClient client.Client, db *dbapi.MariaDB) (grpc.Una
 	if err != nil {
 		return nil, err
 	}
+
 	if username == "" || password == "" {
 		return nil, fmt.Errorf("MYSQL_ROOT_USERNAME and MYSQL_ROOT_PASSWORD environment variables must be set for the client")
 	}
@@ -144,18 +178,22 @@ func getMariaDBBasicAuth(kbClient client.Client, db *dbapi.MariaDB) (string, str
 	if db.Spec.AuthSecret != nil {
 		secretName = db.GetAuthSecretName()
 	}
+
 	secret := corev1.Secret{}
 	err := kbClient.Get(context.Background(), client.ObjectKey{Namespace: db.Namespace, Name: secretName}, &secret)
 	if err != nil {
 		return "", "", err
 	}
+
 	user, ok := secret.Data[corev1.BasicAuthUsernameKey]
 	if !ok {
 		return "", "", fmt.Errorf("DB root user is not set")
 	}
+
 	pass, ok := secret.Data[corev1.BasicAuthPasswordKey]
 	if !ok {
 		return "", "", fmt.Errorf("DB root password is not set")
 	}
+
 	return string(user), string(pass), nil
 }

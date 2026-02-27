@@ -1,5 +1,5 @@
 /*
-Copyright 2023.
+Copyright AppsCode Inc. and Contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -56,16 +56,21 @@ type DruidVersionSpec struct {
 
 	// Database Image
 	DB DruidVersionDatabase `json:"db"`
+
 	// Init Container Image
 	InitContainer DruidInitContainer `json:"initContainer"`
+
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
+
 	// SecurityContext is for the additional security information for the Druid container
 	// +optional
 	SecurityContext SecurityContext `json:"securityContext"`
+
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
+
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 }

@@ -262,6 +262,32 @@ func (wh *PostgresCustomWebhook) validateVolumes(db *dbapi.Postgres) error {
 	return amv.ValidateVolumes(ofst.ConvertVolumes(db.Spec.PodTemplate.Spec.Volumes), rsv)
 }
 
+func (wh *PostgresCustomWebhook) validateReadReplicas(postgres *dbapi.Postgres) error {
+	if len(postgres.Spec.ReadReplicas) == 0 {
+		return nil
+	}
+	for i := range postgres.Spec.ReadReplicas {
+		rr := &postgres.Spec.ReadReplicas[i]
+		if rr.Name == "" {
+			return fmt.Errorf("readReplica name is missing for readReplica at index %d", i)
+		}
+		if rr.Name == kubedb.NodeTypeArbiter {
+			return fmt.Errorf("readReplica name %q can't be used for readReplica at index %d, this name is reserved", kubedb.NodeTypeArbiter, i)
+		}
+		if rr.Replicas == nil || ptr.Deref(rr.Replicas, 0) < 1 {
+			return fmt.Errorf(`spec.readReplicas[%d].replicas "%d" invalid. Value must be greater than zero`, i, ptr.Deref(rr.Replicas, 0))
+		}
+	}
+	for i := 0; i < len(postgres.Spec.ReadReplicas); i++ {
+		for j := i + 1; j < len(postgres.Spec.ReadReplicas); j++ {
+			if postgres.Spec.ReadReplicas[i].Name == postgres.Spec.ReadReplicas[j].Name {
+				return fmt.Errorf("`postgres.spec.readreplicas` index %v and %v has same name, name should be different", i, j)
+			}
+		}
+	}
+	return nil
+}
+
 func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.Warnings, error) {
 	if postgres.Spec.Version == "" {
 		return nil, errors.New(`'spec.version' is missing`)
@@ -276,6 +302,10 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 
 	if postgres.Spec.Replicas == nil || ptr.Deref(postgres.Spec.Replicas, 0) < 1 {
 		return nil, fmt.Errorf(`spec.replicas "%d" invalid. Value must be greater than zero`, ptr.Deref(postgres.Spec.Replicas, 0))
+	}
+
+	if err := wh.validateReadReplicas(postgres); err != nil {
+		return nil, err
 	}
 
 	if err := wh.validateEnvsForAllContainers(postgres); err != nil {
@@ -407,7 +437,7 @@ func (wh *PostgresCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 		return nil, fmt.Errorf("expected a Postgres but got a %T", obj)
 	}
 	pgLog.Info("validating", "name", postgres.GetName())
-
+	// Need a validation on readReplica Name, can't set arbiter as read replica name
 	return wh.validate(postgres)
 }
 

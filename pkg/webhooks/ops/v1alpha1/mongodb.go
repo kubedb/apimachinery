@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -246,10 +247,5 @@ func validateMongoDBOpsRequest(obj, oldObj runtime.Object) error {
 }
 
 func IsOpsTypeSupported(supportedTypes []string, curOpsType string) bool {
-	for _, s := range supportedTypes {
-		if s == curOpsType {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(supportedTypes, curOpsType)
 }
