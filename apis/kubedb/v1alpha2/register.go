@@ -70,8 +70,6 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&FerretDBList{},
 		&HanaDB{},
 		&HanaDBList{},
-		&Hazelcast{},
-		&HazelcastList{},
 		&Ignite{},
 		&IgniteList{},
 		&Kafka{},

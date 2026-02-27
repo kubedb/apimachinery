@@ -52,7 +52,10 @@ type HanaDBVersionSpec struct {
 	// Database Image
 	DB HanaDatabase `json:"db"`
 	// Coordinator Image
-	Coordinator HanaDBCoordinator `json:"coordinator"`
+	// +optional
+	Coordinator HanaDBCoordinator `json:"coordinator,omitempty"`
+	// Exporter Image
+	Exporter HanaDBVersionExporter `json:"exporter"`
 	// Deprecated versions usable but considered as obsolete and best avoided typically superseded
 	Deprecated bool `json:"deprecated,omitempty"`
 	// SecurityContext is for the additional config for the DB container
@@ -77,6 +80,11 @@ type HanaDatabase struct {
 
 // HanaDBCoordinator is the HanaDB coordinator Container image
 type HanaDBCoordinator struct {
+	Image string `json:"image"`
+}
+
+// HanaDBVersionExporter is the image for the HanaDB exporter
+type HanaDBVersionExporter struct {
 	Image string `json:"image"`
 }
 
