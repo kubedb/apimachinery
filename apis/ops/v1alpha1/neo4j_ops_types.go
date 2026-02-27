@@ -60,6 +60,12 @@ type Neo4jOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *Neo4jTLSSpec `json:"tls,omitempty"`
+	// Specifies information necessary for configuring authSecret of the database
+	Authentication *AuthSpec `json:"authentication,omitempty"`
+	// Specifies information necessary for custom configuration of Neo4j
+	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
+	// Specifies information necessary for horizontal scaling
+	HorizontalScaling *Neo4jHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -67,6 +73,12 @@ type Neo4jOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 	// +kubebuilder:default=1
 	MaxRetries int32 `json:"maxRetries,omitempty"`
+}
+
+// Neo4jHorizontalScalingSpec contains the horizontal scaling information of a Neo4j cluster
+type Neo4jHorizontalScalingSpec struct {
+	// Number of server
+	Server *int32 `json:"node,omitempty"`
 }
 
 type Neo4jTLSSpec struct {
