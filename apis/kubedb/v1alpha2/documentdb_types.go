@@ -20,8 +20,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	mona "kmodules.xyz/monitoring-agent-api/api/v1"
-	ofst "kmodules.xyz/offshoot-api/api/v2"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
 const (
@@ -51,40 +50,29 @@ type DocumentDB struct {
 }
 
 type DocumentDBSpec struct {
-	// AutoOps contains configuration of automatic ops-request-recommendation generation
-	// +optional
-	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
-
 	// Version of DocumentDB to be deployed.
 	Version string `json:"version"`
 
-	// DocumentDB primary and secondary server configuration
-	Server *DocumentDBServer `json:"server,omitempty"`
+	// Number of instances to deploy for a documentdb database.
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
 
-	// DocumentDB backend configuration
-	Backend *DocumentDBBackendSpec `json:"backend,omitempty"`
+	// StorageType can be durable (default) or ephemeral
+	StorageType StorageType `json:"storageType,omitempty"`
 
-	// Database authentication secret.
-	// Use this only when backend is internally managed.
-	// For externally managed backend, we will get the authSecret from AppBinding
+	// Storage to specify how storage shall be used.
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
-	// See more options: https://docs.documentdb.io/security/tls-connections/
+	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	SSLMode SSLMode `json:"sslMode,omitempty"`
+	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
-
-	// TLS contains tls configurations for client and server.
-	// +optional
-	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
-
-	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
-	// +optional
-	Halted bool `json:"halted,omitempty"`
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
@@ -94,10 +82,6 @@ type DocumentDBSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 1}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
-
-	// Monitor is used monitor database instance and KubeDB Backend
-	// +optional
-	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 }
 
 type DocumentDBStatus struct {
@@ -122,14 +106,14 @@ type DocumentDBServerSpec struct {
 	Replicas *int32 `json:"replicas,omitempty"`
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
 type DocumentDBBackendSpec struct {
 	Replicas *int32 `json:"replicas,omitempty"`
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
-	PodTemplate *ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
+	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 	// StorageType can be durable (default) or ephemeral for KubeDB Backend
 	// +optional
 	StorageType StorageType `json:"storageType,omitempty"`
@@ -153,8 +137,6 @@ type DocumentDBList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []DocumentDB `json:"items"`
 }
-
-var _ Accessor = &DocumentDB{}
 
 func (m *DocumentDB) GetObjectMeta() metav1.ObjectMeta {
 	return m.ObjectMeta

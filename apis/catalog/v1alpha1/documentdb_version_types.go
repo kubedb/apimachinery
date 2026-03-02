@@ -55,9 +55,6 @@ type DocumentDBVersionSpec struct {
 	// Database Image
 	DB DocumentDBVersionDatabase `json:"db"`
 
-	// Postgres version
-	Postgres DocumentDBVersionPostgres `json:"postgres"`
-
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`

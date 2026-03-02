@@ -56,13 +56,6 @@ spec:
                 type: boolean
               endOfLife:
                 type: boolean
-              postgres:
-                properties:
-                  version:
-                    type: string
-                required:
-                - version
-                type: object
               securityContext:
                 properties:
                   runAsUser:
@@ -99,7 +92,6 @@ spec:
                 type: string
             required:
             - db
-            - postgres
             - version
             type: object
         type: object

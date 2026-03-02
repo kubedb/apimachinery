@@ -705,7 +705,6 @@ func (in *DocumentDBVersionPostgres) DeepCopy() *DocumentDBVersionPostgres {
 func (in *DocumentDBVersionSpec) DeepCopyInto(out *DocumentDBVersionSpec) {
 	*out = *in
 	out.DB = in.DB
-	out.Postgres = in.Postgres
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	if in.UI != nil {

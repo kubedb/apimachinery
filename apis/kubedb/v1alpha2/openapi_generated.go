@@ -614,13 +614,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Database":                                      schema_apimachinery_apis_kubedb_v1alpha2_Database(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_DeepStorageSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB":                                    schema_apimachinery_apis_kubedb_v1alpha2_DocumentDB(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBApp":                                 schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBBackendSpec":                         schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBBackendSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBList":                                schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBServer":                              schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBServer(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBServerSpec":                          schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBServerSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBStatsService":                        schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid":                                         schema_apimachinery_apis_kubedb_v1alpha2_Druid(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidApp":                                      schema_apimachinery_apis_kubedb_v1alpha2_DruidApp(ref),
@@ -35262,26 +35260,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDB(ref common.ReferenceCal
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"DocumentDB": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"),
-						},
-					},
-				},
-				Required: []string{"DocumentDB"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBBackendSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -35425,13 +35403,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref common.Referenc
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"autoOps": {
-						SchemaProps: spec.SchemaProps{
-							Description: "AutoOps contains configuration of automatic ops-request-recommendation generation",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec"),
-						},
-					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Version of DocumentDB to be deployed.",
@@ -35440,29 +35411,35 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
-					"server": {
+					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DocumentDB primary and secondary server configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBServer"),
+							Description: "Number of instances to deploy for a documentdb database.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
-					"backend": {
+					"storageType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DocumentDB backend configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBBackendSpec"),
+							Description: "StorageType can be durable (default) or ephemeral",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Database authentication secret. Use this only when backend is internally managed. For externally managed backend, we will get the authSecret from AppBinding",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
-					"sslMode": {
+					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
-							Description: "See more options: https://docs.documentdb.io/security/tls-connections/",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -35479,19 +35456,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref common.Referenc
 							},
 						},
 					},
-					"tls": {
-						SchemaProps: spec.SchemaProps{
-							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
-						},
-					},
-					"halted": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DeletionPolicy controls the delete operation for database",
@@ -35506,38 +35470,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref common.Referenc
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
-					"monitor": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Monitor is used monitor database instance and KubeDB Backend",
-							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
-						},
-					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBBackendSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBServer", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"DocumentDB": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"),
-						},
-					},
-				},
-				Required: []string{"DocumentDB"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
