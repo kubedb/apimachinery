@@ -270,6 +270,9 @@ spec:
                 enum:
                 - Restart
                 - ReconfigureTLS
+                - RotateAuth
+                - Reconfigure
+                - HorizontalScaling
                 type: string
             required:
             - databaseRef
