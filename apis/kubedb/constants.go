@@ -1597,8 +1597,15 @@ const (
 	DocumentDBPrimaryRole = "primary"
 	DocumentDBStandbyRole = "standby"
 
+	DocumentDBDatabaseRoleKey      = "documentdb.db/role"
+	DocumentDBDatabaseRoleInstance = "instance"
+
 	DocumentDBDefaultUsername = "default_user"
 	DocumentDBDefaultPassword = "1234"
+
+	//volume related constants
+	DocumentDBVolumeScripts = "documentdb-data"
+	DocumentDBDataDir       = "/data"
 
 	DocumentDBContainerName = "documentdb"
 	DocumentDBMainImage     = "ghcr.io/documentdb/documentdb"
