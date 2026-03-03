@@ -1597,6 +1597,9 @@ const (
 	DocumentDBPrimaryRole = "primary"
 	DocumentDBStandbyRole = "standby"
 
+	DocumentDBDefaultUsername = "default_user"
+	DocumentDBDefaultPassword = "1234"
+
 	DocumentDBContainerName = "documentdb"
 	DocumentDBMainImage     = "ghcr.io/documentdb/documentdb"
 	DocumentDBUser          = "postgres"
