@@ -232,7 +232,7 @@ func (c *OpsRequestController) UpdateOpsPhaseProgressing(req opsapi.Accessor, ty
 		if err != nil {
 			return 0, err
 		}
-		if ops.GetName() == req.GetName() || ops.GetDBRefName() != req.GetDBRefName() {
+		if ops.GetName() == req.GetName() || ops.GetDBRefName() != req.GetDBRefName() || ops.GetNamespace() != req.GetNamespace() {
 			continue
 		}
 		if ops.GetStatus().Phase == opsapi.OpsRequestPhaseProgressing {
