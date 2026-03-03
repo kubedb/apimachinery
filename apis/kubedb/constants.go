@@ -1589,8 +1589,13 @@ const (
 	EnvDocumentDBKeyPath   = "DOCUMENTDB_LISTEN_TLS_KEY_FILE"
 	EnvDocumentDBDebugAddr = "DOCUMENTDB_DEBUG_ADDR"
 
-	DocumentDBDatabasePortName       = "db"
-	DocumentDBPrimaryServicePortName = "primary"
+	DocumentDBDatabaseServiceName = "DocumentDB"
+	DocumentDBSqlNetPortName      = "documentdb-port"
+	DocumentDBSqlNetPort          = 10260
+	DocumentDBDefaultPort         = 10260
+
+	DocumentDBPrimaryRole = "primary"
+	DocumentDBStandbyRole = "standby"
 
 	DocumentDBContainerName = "documentdb"
 	DocumentDBMainImage     = "ghcr.io/documentdb/documentdb"
@@ -1601,18 +1606,13 @@ const (
 
 	DocumentDBExternalClientPath = "/etc/certs/ext"
 
-	DocumentDBDefaultPort = 27017
 	DocumentDBMetricsPort = 56790
 	DocumentDBTLSPort     = 27018
 
 	DocumentDBMetricsPath     = "/debug/metrics"
 	DocumentDBMetricsPortName = "metrics"
 
-	DocumentDBServerTypePrimary   = "primary"
-	DocumentDBServerTypeSecondary = "secondary"
-
-	DocumentDBPrimaryLabelKey   = "documentdb.kubedb.com/server.primary"
-	DocumentDBSecondaryLabelKey = "documentdb.kubedb.com/server.secondary"
+	DocumentDBPrimaryLabelKey = "documentdb.kubedb.com/server.primary"
 
 	DocumentDBBackendInitShellFile = "data.sh"
 	DocumentDBBackendInitSqlFile   = "data.sql"
