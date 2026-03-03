@@ -1603,6 +1603,8 @@ const (
 	DocumentDBDefaultUsername = "default_user"
 	DocumentDBDefaultPassword = "1234"
 
+	DefaultDocumentDBDatabase = "sampledb"
+
 	//volume related constants
 	DocumentDBVolumeScripts = "documentdb-data"
 	DocumentDBDataDir       = "/data"

@@ -138,10 +138,6 @@ type DocumentDBList struct {
 	Items           []DocumentDB `json:"items"`
 }
 
-func (m *DocumentDB) GetObjectMeta() metav1.ObjectMeta {
-	return m.ObjectMeta
-}
-
 func (m *DocumentDB) GetConditions() []kmapi.Condition {
 	return m.Status.Conditions
 }
