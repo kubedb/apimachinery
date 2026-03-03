@@ -18,7 +18,6 @@ package v1alpha2
 
 import (
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
@@ -75,7 +74,7 @@ type PgpoolSpec struct {
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// +optional
-	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
+	Configuration *PgpoolConfiguration `json:"configuration,omitempty"`
 
 	// Init is used to initialize database
 	// +optional
@@ -132,8 +131,16 @@ type PgpoolStatus struct {
 
 type PgpoolConfiguration struct {
 	// +optional
-	// +kubebuilder:pruning:PreserveUnknownFields
-	PgpoolConfig *runtime.RawExtension `json:"pgpoolConfig,omitempty"`
+	*ConfigurationSpec `json:"configuration,omitempty"`
+
+	// +optional
+	BackendWeight []BackendWeightSpec `json:"backendWeight,omitempty"`
+}
+
+// BackendWeightSpec defines the relative probability of routing read-only (SELECT) queries to specific backend nodes
+type BackendWeightSpec struct {
+	Name   string `json:"name"`
+	Weight int32  `json:"weight"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

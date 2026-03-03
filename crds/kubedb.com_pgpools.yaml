@@ -86,12 +86,28 @@ spec:
                 type: string
               configuration:
                 properties:
-                  inline:
-                    additionalProperties:
-                      type: string
+                  backendWeight:
+                    items:
+                      properties:
+                        name:
+                          type: string
+                        weight:
+                          format: int32
+                          type: integer
+                      required:
+                      - name
+                      - weight
+                      type: object
+                    type: array
+                  configuration:
+                    properties:
+                      inline:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      secretName:
+                        type: string
                     type: object
-                  secretName:
-                    type: string
                 type: object
               deletionPolicy:
                 enum:
