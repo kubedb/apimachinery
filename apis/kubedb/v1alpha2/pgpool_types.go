@@ -133,14 +133,17 @@ type PgpoolConfiguration struct {
 	// +optional
 	*ConfigurationSpec `json:"configuration,omitempty"`
 
+	// Backends are used to specify the load balancing configuration.
+	// Each backend node is represented by a LoadBalancingSpec, which includes the node name of the backend and its corresponding weight.
 	// +optional
-	BackendWeight []BackendWeightSpec `json:"backendWeight,omitempty"`
+	Backends []LoadBalancingSpec `json:"backends,omitempty"`
 }
 
-// BackendWeightSpec defines the relative probability of routing read-only (SELECT) queries to specific backend nodes
-type BackendWeightSpec struct {
-	Name   string `json:"name"`
-	Weight int32  `json:"weight"`
+// LoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.
+type LoadBalancingSpec struct {
+	// NodeName is the name of the backend node to which the load balancing configuration applies.
+	NodeName string `json:"nodeName"`
+	Weight   int32  `json:"weight"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

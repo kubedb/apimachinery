@@ -86,16 +86,16 @@ spec:
                 type: string
               configuration:
                 properties:
-                  backendWeight:
+                  backends:
                     items:
                       properties:
-                        name:
+                        nodeName:
                           type: string
                         weight:
                           format: int32
                           type: integer
                       required:
-                      - name
+                      - nodeName
                       - weight
                       type: object
                     type: array
