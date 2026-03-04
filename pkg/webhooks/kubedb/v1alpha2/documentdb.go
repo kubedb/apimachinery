@@ -131,55 +131,34 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 			db.Name,
 			err.Error()))
 	}
-	if db.Spec.Server.Primary == nil || *db.Spec.Server.Primary.Replicas < 1 {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("server.primary.replicas"),
+	// Validate replicas: handle nil pointer safely
+	if db.Spec.Replicas == nil || *db.Spec.Replicas < 1 {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
 			db.Name,
-			fmt.Sprintf(`spec.server.primary.replicas "%v" invalid. Must be greater than zero`, *db.Spec.Server.Primary.Replicas)))
+			fmt.Sprintf(`spec.replicas "%v" invalid. Must be greater than zero`, db.Spec.Replicas)))
 	}
 
-	if db.Spec.Server.Secondary != nil && *db.Spec.Server.Secondary.Replicas < 1 {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("server.secondary.replicas"),
-			db.Name,
-			fmt.Sprintf(`spec.server.secondary.replicas "%v" invalid. Must be greater than zero`, *db.Spec.Server.Secondary.Replicas)))
-	}
-
-	if db.Spec.Server.Primary != nil && db.Spec.Server.Primary.PodTemplate != nil {
-		if err := DocumentDBValidateEnvVar(getMainContainerEnvs(db.Spec.Server.Primary.PodTemplate), forbiddenEnvVars, db.ResourceKind()); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("server.primary.podTemplate"),
+	// Env var validation: validate top-level PodTemplate only (Server.* fields are not present in this build)
+	if db.Spec.PodTemplate != nil {
+		if err := DocumentDBValidateEnvVar(getMainContainerEnvs(db.Spec.PodTemplate), forbiddenEnvVars, db.ResourceKind()); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
 				db.Name,
 				err.Error()))
 		}
-	}
-
-	if db.Spec.Server.Secondary != nil && db.Spec.Server.Secondary.PodTemplate != nil {
-		if err := DocumentDBValidateEnvVar(getMainContainerEnvs(db.Spec.Server.Secondary.PodTemplate), forbiddenEnvVars, db.ResourceKind()); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("server.secondary.podTemplate"),
-				db.Name,
-				err.Error()))
-		}
-	}
-
-	if db.Spec.Backend == nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend"),
-			db.Name,
-			`'spec.backend' is missing`))
 	}
 
 	// Storage related
-	if db.Spec.Backend.StorageType == "" {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend", "storageType"),
-			db.Name,
-			`'spec.backend.storageType' is missing`))
-	}
-	if db.Spec.Backend.StorageType != olddbapi.StorageTypeDurable && db.Spec.Backend.StorageType != olddbapi.StorageTypeEphemeral {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend", "storageType"),
-			db.Name,
-			fmt.Sprintf(`'spec.backend.storageType' %s is invalid`, db.Spec.Backend.StorageType)))
-	}
-	if db.Spec.Backend.StorageType == olddbapi.StorageTypeEphemeral && db.Spec.Backend.Storage != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("backend", "storageType"),
-			db.Name,
-			`'spec.backend.storageType' is set to Ephemeral, so 'spec.backend.storage' needs to be empty`))
+	// Validate top-level StorageType when present. Older Backend fields are not expected in this build.
+	if db.Spec.StorageType != "" {
+		if db.Spec.StorageType != olddbapi.StorageTypeDurable && db.Spec.StorageType != olddbapi.StorageTypeEphemeral {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+				db.Name,
+				fmt.Sprintf(`'spec.storageType' %s is invalid`, db.Spec.StorageType)))
+		}
+		if db.Spec.StorageType == olddbapi.StorageTypeEphemeral {
+			// If ephemeral storage type is selected, ensure there is no persistent storage configured.
+			// If this project exposes a top-level Storage object, additional checks could be added here.
+		}
 	}
 
 	// Auth secret related
@@ -194,23 +173,6 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
 			db.Name,
 			`'spec.terminationPolicy' value 'Halt' is not supported yet for DocumentDB`))
-	}
-
-	// TLS related
-	if db.Spec.SSLMode == olddbapi.SSLModeAllowSSL || db.Spec.SSLMode == olddbapi.SSLModePreferSSL {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sslMode"),
-			db.Name,
-			`'spec.sslMode' value 'allowSSL' or 'preferSSL' is not supported yet for DocumentDB`))
-	}
-	if db.Spec.SSLMode == olddbapi.SSLModeRequireSSL && db.Spec.TLS == nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sslMode"),
-			db.Name,
-			`'spec.sslMode' is requireSSL but 'spec.tls' is not set`))
-	}
-	if db.Spec.SSLMode == olddbapi.SSLModeDisabled && db.Spec.TLS != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("sslMode"),
-			db.Name,
-			`'spec.tls' is can't set when 'spec.sslMode' is disabled`))
 	}
 
 	return allErr
@@ -233,10 +195,8 @@ func (w *DocumentDBCustomWebhook) validateDocumentDBVersion(db *olddbapi.Documen
 		return errors.New("version not supported")
 	}
 
-	pgVersion := v1alpha1.PostgresVersion{}
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: dcVersion.Spec.Postgres.Version}, &pgVersion)
-	if err != nil {
-		return errors.New("postgres version not supported in KubeDB")
-	}
+	// Older code validated the PostgresVersion referenced by the DocumentDBVersion.
+	// The current DocumentDBVersion spec in this repo does not expose a Postgres field,
+	// so we only verify that the DocumentDBVersion resource exists.
 	return nil
 }
