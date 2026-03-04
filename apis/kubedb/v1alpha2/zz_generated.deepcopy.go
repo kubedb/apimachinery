@@ -2381,6 +2381,11 @@ func (in *HanaDBSpec) DeepCopyInto(out *HanaDBSpec) {
 		}
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.Arbiter != nil {
+		in, out := &in.Arbiter, &out.Arbiter
+		*out = new(ArbiterSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
