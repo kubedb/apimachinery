@@ -38628,10 +38628,16 @@ func schema_apimachinery_apis_kubedb_v1alpha2_LoadBalancingSpec(ref common.Refer
 				Description: "LoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name should match with read replica group name in the KubeDB controlled postgresql server. For primary and standby node this should be \"PRIMARY\" and \"STANDBY\" respectively.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"hostName": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HostName is the address of the backend node.",
-							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -38644,9 +38650,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_LoadBalancingSpec(ref common.Refer
 					},
 					"flag": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"weight": {
@@ -38657,7 +38662,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_LoadBalancingSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"hostName", "port", "flag", "weight"},
+				Required: []string{"weight"},
 			},
 		},
 	}
@@ -42862,7 +42867,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolConfiguration(ref common.Ref
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"configuration": {
+					"inline": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
 						},
