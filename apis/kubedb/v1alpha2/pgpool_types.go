@@ -131,7 +131,7 @@ type PgpoolStatus struct {
 
 type PgpoolConfiguration struct {
 	// +optional
-	*ConfigurationSpec `json:",inline"`
+	*ConfigurationSpec `json:",inline,omitempty"`
 
 	// Backends are used to specify the load balancing configuration.
 	// Each backend node is represented by a LoadBalancingSpec, which includes the node of the backend, its corresponding weight and other load balancing parameters.

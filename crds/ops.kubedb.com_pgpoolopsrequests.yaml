@@ -72,6 +72,17 @@ spec:
                     additionalProperties:
                       type: string
                     type: object
+                  backend:
+                    properties:
+                      delete:
+                        items:
+                          type: string
+                        type: array
+                      sync:
+                        items:
+                          type: string
+                        type: array
+                    type: object
                   configSecret:
                     properties:
                       name:
