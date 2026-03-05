@@ -38628,12 +38628,25 @@ func schema_apimachinery_apis_kubedb_v1alpha2_LoadBalancingSpec(ref common.Refer
 				Description: "LoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"nodeName": {
+					"hostName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "NodeName is the name of the backend node to which the load balancing configuration applies.",
+							Description: "HostName is the address of the backend node.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"flag": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
 						},
 					},
 					"weight": {
@@ -38644,7 +38657,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_LoadBalancingSpec(ref common.Refer
 						},
 					},
 				},
-				Required: []string{"nodeName", "weight"},
+				Required: []string{"hostName", "port", "flag", "weight"},
 			},
 		},
 	}
@@ -42856,7 +42869,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolConfiguration(ref common.Ref
 					},
 					"backends": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Backends are used to specify the load balancing configuration. Each backend node is represented by a LoadBalancingSpec, which includes the node name of the backend and its corresponding weight.",
+							Description: "Backends are used to specify the load balancing configuration. Each backend node is represented by a LoadBalancingSpec, which includes the node of the backend, its corresponding weight and other load balancing parameters.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
