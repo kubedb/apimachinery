@@ -71,6 +71,8 @@ spec:
                           type: string
                         hostName:
                           type: string
+                        name:
+                          type: string
                         port:
                           format: int32
                           type: integer
@@ -78,13 +80,10 @@ spec:
                           format: int32
                           type: integer
                       required:
-                      - flag
-                      - hostName
-                      - port
                       - weight
                       type: object
                     type: array
-                  configuration:
+                  inline:
                     properties:
                       inline:
                         additionalProperties:
