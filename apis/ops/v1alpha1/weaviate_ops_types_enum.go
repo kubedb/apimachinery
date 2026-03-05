@@ -11,14 +11,35 @@ import (
 )
 
 const (
+	// WeaviateOpsRequestTypeUpdateVersion is a WeaviateOpsRequestType of type UpdateVersion.
+	WeaviateOpsRequestTypeUpdateVersion WeaviateOpsRequestType = "UpdateVersion"
+	// WeaviateOpsRequestTypeHorizontalScaling is a WeaviateOpsRequestType of type HorizontalScaling.
+	WeaviateOpsRequestTypeHorizontalScaling WeaviateOpsRequestType = "HorizontalScaling"
+	// WeaviateOpsRequestTypeVerticalScaling is a WeaviateOpsRequestType of type VerticalScaling.
+	WeaviateOpsRequestTypeVerticalScaling WeaviateOpsRequestType = "VerticalScaling"
+	// WeaviateOpsRequestTypeVolumeExpansion is a WeaviateOpsRequestType of type VolumeExpansion.
+	WeaviateOpsRequestTypeVolumeExpansion WeaviateOpsRequestType = "VolumeExpansion"
+	// WeaviateOpsRequestTypeReconfigure is a WeaviateOpsRequestType of type Reconfigure.
+	WeaviateOpsRequestTypeReconfigure WeaviateOpsRequestType = "Reconfigure"
 	// WeaviateOpsRequestTypeRestart is a WeaviateOpsRequestType of type Restart.
 	WeaviateOpsRequestTypeRestart WeaviateOpsRequestType = "Restart"
+	// WeaviateOpsRequestTypeReconfigureTLS is a WeaviateOpsRequestType of type ReconfigureTLS.
+	WeaviateOpsRequestTypeReconfigureTLS WeaviateOpsRequestType = "ReconfigureTLS"
+	// WeaviateOpsRequestTypeRotateAuth is a WeaviateOpsRequestType of type RotateAuth.
+	WeaviateOpsRequestTypeRotateAuth WeaviateOpsRequestType = "RotateAuth"
 )
 
 var ErrInvalidWeaviateOpsRequestType = fmt.Errorf("not a valid WeaviateOpsRequestType, try [%s]", strings.Join(_WeaviateOpsRequestTypeNames, ", "))
 
 var _WeaviateOpsRequestTypeNames = []string{
+	string(WeaviateOpsRequestTypeUpdateVersion),
+	string(WeaviateOpsRequestTypeHorizontalScaling),
+	string(WeaviateOpsRequestTypeVerticalScaling),
+	string(WeaviateOpsRequestTypeVolumeExpansion),
+	string(WeaviateOpsRequestTypeReconfigure),
 	string(WeaviateOpsRequestTypeRestart),
+	string(WeaviateOpsRequestTypeReconfigureTLS),
+	string(WeaviateOpsRequestTypeRotateAuth),
 }
 
 // WeaviateOpsRequestTypeNames returns a list of possible string values of WeaviateOpsRequestType.
@@ -31,7 +52,14 @@ func WeaviateOpsRequestTypeNames() []string {
 // WeaviateOpsRequestTypeValues returns a list of the values for WeaviateOpsRequestType
 func WeaviateOpsRequestTypeValues() []WeaviateOpsRequestType {
 	return []WeaviateOpsRequestType{
+		WeaviateOpsRequestTypeUpdateVersion,
+		WeaviateOpsRequestTypeHorizontalScaling,
+		WeaviateOpsRequestTypeVerticalScaling,
+		WeaviateOpsRequestTypeVolumeExpansion,
+		WeaviateOpsRequestTypeReconfigure,
 		WeaviateOpsRequestTypeRestart,
+		WeaviateOpsRequestTypeReconfigureTLS,
+		WeaviateOpsRequestTypeRotateAuth,
 	}
 }
 
@@ -48,7 +76,14 @@ func (x WeaviateOpsRequestType) IsValid() bool {
 }
 
 var _WeaviateOpsRequestTypeValue = map[string]WeaviateOpsRequestType{
-	"Restart": WeaviateOpsRequestTypeRestart,
+	"UpdateVersion":     WeaviateOpsRequestTypeUpdateVersion,
+	"HorizontalScaling": WeaviateOpsRequestTypeHorizontalScaling,
+	"VerticalScaling":   WeaviateOpsRequestTypeVerticalScaling,
+	"VolumeExpansion":   WeaviateOpsRequestTypeVolumeExpansion,
+	"Reconfigure":       WeaviateOpsRequestTypeReconfigure,
+	"Restart":           WeaviateOpsRequestTypeRestart,
+	"ReconfigureTLS":    WeaviateOpsRequestTypeReconfigureTLS,
+	"RotateAuth":        WeaviateOpsRequestTypeRotateAuth,
 }
 
 // ParseWeaviateOpsRequestType attempts to convert a string to a WeaviateOpsRequestType.
