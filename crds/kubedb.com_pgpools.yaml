@@ -89,13 +89,20 @@ spec:
                   backends:
                     items:
                       properties:
-                        nodeName:
+                        flag:
                           type: string
+                        hostName:
+                          type: string
+                        port:
+                          format: int32
+                          type: integer
                         weight:
                           format: int32
                           type: integer
                       required:
-                      - nodeName
+                      - flag
+                      - hostName
+                      - port
                       - weight
                       type: object
                     type: array

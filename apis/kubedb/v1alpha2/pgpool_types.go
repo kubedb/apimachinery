@@ -134,15 +134,17 @@ type PgpoolConfiguration struct {
 	*ConfigurationSpec `json:"configuration,omitempty"`
 
 	// Backends are used to specify the load balancing configuration.
-	// Each backend node is represented by a LoadBalancingSpec, which includes the node name of the backend and its corresponding weight.
+	// Each backend node is represented by a LoadBalancingSpec, which includes the node of the backend, its corresponding weight and other load balancing parameters.
 	// +optional
 	Backends []LoadBalancingSpec `json:"backends,omitempty"`
 }
 
 // LoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.
 type LoadBalancingSpec struct {
-	// NodeName is the name of the backend node to which the load balancing configuration applies.
-	NodeName string `json:"nodeName"`
+	// HostName is the address of the backend node.
+	HostName string `json:"hostName"`
+	Port     *int32 `json:"port"`
+	Flag     string `json:"flag"`
 	Weight   int32  `json:"weight"`
 }
 
