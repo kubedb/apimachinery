@@ -84,14 +84,11 @@ spec:
                       type: object
                     type: array
                   inline:
-                    properties:
-                      inline:
-                        additionalProperties:
-                          type: string
-                        type: object
-                      secretName:
-                        type: string
+                    additionalProperties:
+                      type: string
                     type: object
+                  secretName:
+                    type: string
                 type: object
               deletionPolicy:
                 enum:
