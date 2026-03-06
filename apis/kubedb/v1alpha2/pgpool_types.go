@@ -136,11 +136,11 @@ type PgpoolConfiguration struct {
 	// Backends are used to specify the load balancing configuration.
 	// Each backend node is represented by a LoadBalancingSpec, which includes the node of the backend, its corresponding weight and other load balancing parameters.
 	// +optional
-	Backends []LoadBalancingSpec `json:"backends,omitempty"`
+	Backends []PgpoolLoadBalancingSpec `json:"backends,omitempty"`
 }
 
-// LoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.
-type LoadBalancingSpec struct {
+// PgpoolLoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.
+type PgpoolLoadBalancingSpec struct {
 	// Name should match with read replica group name in the KubeDB controlled postgresql server.
 	// For primary and standby node this should be "PRIMARY" and "STANDBY" respectively.
 	Name string `json:"name,omitempty"`

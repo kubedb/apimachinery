@@ -35,6 +35,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -394,6 +395,21 @@ func PgpoolValidateLoadBalancingSpec(pgpool *olddbapi.Pgpool) error {
 	}
 	if groupNameEnabled && hostNameEnabled {
 		return errors.New("group name and host name can not be used together in load balancing configuration")
+	}
+
+	// check for duplicate group name or host name
+	identityList := make(map[string]bool)
+	for _, lbSpec := range backends {
+		identity := lbSpec.Name
+		if hostNameEnabled {
+			identity = lbSpec.HostName
+		}
+		identity = fmt.Sprintf("%s:%d", identity, ptr.Deref(lbSpec.Port, 5432))
+
+		if _, present := identityList[identity]; present {
+			return errors.Errorf("duplicate group name or host name with port found in load balancing configuration: %s", identity)
+		}
+		identityList[identity] = true
 	}
 	return nil
 }

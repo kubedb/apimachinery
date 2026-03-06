@@ -107,9 +107,9 @@ type PgpoolHorizontalScalingSpec struct {
 	Node *int32 `json:"node,omitempty"`
 }
 
-type PgpoolLoadBalancingSpec struct {
+type PgpoolUpdateBackendSpec struct {
 	// Sync specifies the list of backends that should be synced with the database.
-	Sync []string `json:"sync,omitempty"`
+	Sync []v1alpha2.PgpoolLoadBalancingSpec `json:"sync,omitempty"`
 
 	// Delete specifies the list of backends that should be removed from the database.
 	Delete []string `json:"delete,omitempty"`
@@ -117,7 +117,7 @@ type PgpoolLoadBalancingSpec struct {
 
 type PgpoolCustomConfigurationSpec struct {
 	*ReconfigurationSpec `json:",inline,omitempty"`
-	Backend              *PgpoolLoadBalancingSpec `json:"backend,omitempty"`
+	Backend              *PgpoolUpdateBackendSpec `json:"backend,omitempty"`
 }
 
 // PgpoolVerticalScalingSpec contains the vertical scaling information of a Pgpool cluster
