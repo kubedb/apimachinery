@@ -675,7 +675,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaStatus":                                   schema_apimachinery_apis_kubedb_v1alpha2_KafkaStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KernelSettings":                                schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_ListenerSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LoadBalancingSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_LoadBalancingSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServer":                                   schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServer(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerApp":                                schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerAvailabilityGroupSpec":              schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerAvailabilityGroupSpec(ref),
@@ -755,6 +754,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Pgpool":                                        schema_apimachinery_apis_kubedb_v1alpha2_Pgpool(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolConfiguration":                           schema_apimachinery_apis_kubedb_v1alpha2_PgpoolConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolList":                                    schema_apimachinery_apis_kubedb_v1alpha2_PgpoolList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolLoadBalancingSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_PgpoolLoadBalancingSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolStatsService":                            schema_apimachinery_apis_kubedb_v1alpha2_PgpoolStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_PgpoolStatus(ref),
@@ -38621,53 +38621,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ListenerSpec(ref common.ReferenceC
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_LoadBalancingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "LoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name should match with read replica group name in the KubeDB controlled postgresql server. For primary and standby node this should be \"PRIMARY\" and \"STANDBY\" respectively.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"hostName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "HostName is the address of the backend node.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"port": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"flag": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"weight": {
-						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
-						},
-					},
-				},
-				Required: []string{"weight"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -42898,7 +42851,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolConfiguration(ref common.Ref
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LoadBalancingSpec"),
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolLoadBalancingSpec"),
 									},
 								},
 							},
@@ -42908,7 +42861,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolConfiguration(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LoadBalancingSpec"},
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolLoadBalancingSpec"},
 	}
 }
 
@@ -42958,6 +42911,53 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolList(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Pgpool"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolLoadBalancingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PgpoolLoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name should match with read replica group name in the KubeDB controlled postgresql server. For primary and standby node this should be \"PRIMARY\" and \"STANDBY\" respectively.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HostName is the address of the backend node.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"flag": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"weight": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+				},
+				Required: []string{"weight"},
+			},
+		},
 	}
 }
 

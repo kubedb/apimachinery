@@ -80,7 +80,22 @@ spec:
                         type: array
                       sync:
                         items:
-                          type: string
+                          properties:
+                            flag:
+                              type: string
+                            hostName:
+                              type: string
+                            name:
+                              type: string
+                            port:
+                              format: int32
+                              type: integer
+                            weight:
+                              format: int32
+                              type: integer
+                          required:
+                          - weight
+                          type: object
                         type: array
                     type: object
                   configSecret:
