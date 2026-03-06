@@ -48,6 +48,29 @@ spec:
                 - IfReady
                 - Always
                 type: string
+              configuration:
+                properties:
+                  applyConfig:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  configSecret:
+                    properties:
+                      name:
+                        default: ""
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  removeCustomConfig:
+                    type: boolean
+                  restart:
+                    default: auto
+                    enum:
+                    - auto
+                    - "true"
+                    - "false"
+                    type: string
+                type: object
               databaseRef:
                 properties:
                   name:
@@ -66,6 +89,7 @@ spec:
               type:
                 enum:
                 - Restart
+                - Reconfigure
                 type: string
             required:
             - databaseRef

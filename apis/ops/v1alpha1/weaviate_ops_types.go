@@ -60,7 +60,7 @@ type WeaviateOpsRequestSpec struct {
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 
-	// Specifies information necessary for custom configuration of hazelcast
+	// Specifies information necessary for custom configuration of weaviate
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -74,8 +74,8 @@ type WeaviateOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart
-// ENUM(Restart)
+// +kubebuilder:validation:Enum=Restart;Reconfigure
+// ENUM(Restart,Reconfigure)
 type WeaviateOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
