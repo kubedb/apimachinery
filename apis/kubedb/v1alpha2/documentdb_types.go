@@ -97,39 +97,6 @@ type DocumentDBStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-type DocumentDBServer struct {
-	Primary   *DocumentDBServerSpec `json:"primary,omitempty"`
-	Secondary *DocumentDBServerSpec `json:"secondary,omitempty"`
-}
-
-type DocumentDBServerSpec struct {
-	Replicas *int32 `json:"replicas,omitempty"`
-	// PodTemplate is an optional configuration for pods used to expose database
-	// +optional
-	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
-}
-
-type DocumentDBBackendSpec struct {
-	Replicas *int32 `json:"replicas,omitempty"`
-	// PodTemplate is an optional configuration for pods used to expose database
-	// +optional
-	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
-	// StorageType can be durable (default) or ephemeral for KubeDB Backend
-	// +optional
-	StorageType StorageType `json:"storageType,omitempty"`
-
-	// Storage to specify how storage shall be used for KubeDB Backend.
-	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
-}
-
-// +kubebuilder:validation:Enum=server;client
-type DocumentDBCertificateAlias string
-
-const (
-	DocumentDBServerCert DocumentDBCertificateAlias = "server"
-	DocumentDBClientCert DocumentDBCertificateAlias = "client"
-)
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 type DocumentDBList struct {

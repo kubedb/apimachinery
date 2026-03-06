@@ -614,10 +614,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Database":                                      schema_apimachinery_apis_kubedb_v1alpha2_Database(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_DeepStorageSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB":                                    schema_apimachinery_apis_kubedb_v1alpha2_DocumentDB(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBBackendSpec":                         schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBBackendSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBList":                                schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBList(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBServer":                              schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBServer(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBServerSpec":                          schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBServerSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid":                                         schema_apimachinery_apis_kubedb_v1alpha2_Druid(ref),
@@ -35260,45 +35257,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDB(ref common.ReferenceCal
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBBackendSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"replicas": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"podTemplate": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
-						},
-					},
-					"storageType": {
-						SchemaProps: spec.SchemaProps{
-							Description: "StorageType can be durable (default) or ephemeral for KubeDB Backend",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"storage": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Storage to specify how storage shall be used for KubeDB Backend.",
-							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -35344,56 +35302,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBList(ref common.Referenc
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBServer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"primary": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBServerSpec"),
-						},
-					},
-					"secondary": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBServerSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBServerSpec"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBServerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"replicas": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"podTemplate": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PodTemplate is an optional configuration for pods used to expose database",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
