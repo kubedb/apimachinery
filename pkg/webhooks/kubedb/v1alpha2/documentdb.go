@@ -157,7 +157,12 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 		}
 		if db.Spec.StorageType == olddbapi.StorageTypeEphemeral {
 			// If ephemeral storage type is selected, ensure there is no persistent storage configured.
-			// If this project exposes a top-level Storage object, additional checks could be added here.
+			// The top-level 'Storage' field is a PersistentVolumeClaimSpec; it must be empty when using Ephemeral storage.
+			if db.Spec.Storage != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
+					db.Name,
+					`'spec.storageType' is set to Ephemeral, so 'spec.storage' needs to be empty`))
+			}
 		}
 	}
 
