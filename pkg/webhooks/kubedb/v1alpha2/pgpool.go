@@ -238,11 +238,13 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 		))
 	}
 
-	if err := PgpoolValidateLoadBalancingSpec(pp); err != nil {
-		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configuration").Child("backends"),
-			pp.Name,
-			err.Error(),
-		))
+	if pp.Spec.Configuration != nil {
+		if err := PgpoolValidateLoadBalancingSpec(pp.Spec.Configuration.Backends); err != nil {
+			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configuration").Child("backends"),
+				pp.Name,
+				err.Error(),
+			))
+		}
 	}
 
 	if len(errorList) == 0 {
@@ -370,11 +372,10 @@ var PgpoolReservedVolumesMountPaths = []string{
 	kubedb.PgpoolTlsVolumeMountPath,
 }
 
-func PgpoolValidateLoadBalancingSpec(pgpool *olddbapi.Pgpool) error {
-	if pgpool.Spec.Configuration == nil || pgpool.Spec.Configuration.Backends == nil {
+func PgpoolValidateLoadBalancingSpec(backends []olddbapi.PgpoolLoadBalancingSpec) error {
+	if backends == nil {
 		return nil
 	}
-	backends := pgpool.Spec.Configuration.Backends
 
 	groupNameEnabled, hostNameEnabled := false, false
 	for _, lbSpec := range backends {

@@ -26,6 +26,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	dbwebhook "kubedb.dev/apimachinery/pkg/webhooks/kubedb/v1alpha2"
 
 	"gomodules.xyz/x/arrays"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -143,7 +144,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pgpoo
 				err.Error()))
 		}
 	case opsapi.PgpoolOpsRequestTypeReconfigure:
-		if err := w.validatePgpoolReconfigureOpsRequest(req); err != nil {
+		if err := w.validatePgpoolReconfigureOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
@@ -206,7 +207,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolHorizontalScalingOpsReques
 	return nil
 }
 
-func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(req *opsapi.PgpoolOpsRequest) error {
+func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(pp *olddbapi.Pgpool, req *opsapi.PgpoolOpsRequest) error {
 	reconfigureSpec := req.Spec.Configuration
 	if reconfigureSpec == nil {
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
@@ -219,10 +220,67 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(req 
 		}
 	}
 
-	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExists(req.Spec.Configuration.ApplyConfig) {
-		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExists(req.Spec.Configuration.ApplyConfig) &&
+		req.Spec.Configuration.Backend == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` or `Backend` must be specified")
 	}
 
+	if req.Spec.Configuration.Backend != nil {
+		err := dbwebhook.PgpoolValidateLoadBalancingSpec(req.Spec.Configuration.Backend.Sync)
+		if err != nil {
+			return fmt.Errorf("invalid load balancing configuration: %v", err)
+		}
+
+		mergedBackend := []olddbapi.PgpoolLoadBalancingSpec{}
+		if pp.Spec.Configuration != nil && pp.Spec.Configuration.Backends != nil {
+			mergedBackend = append(mergedBackend, pp.Spec.Configuration.Backends...)
+		}
+
+		if req.Spec.Configuration.Backend.Delete != nil {
+			for _, backendToDelete := range req.Spec.Configuration.Backend.Delete {
+				for i, backend := range mergedBackend {
+					node := backend.Name
+					if node == "" {
+						node = backend.HostName
+					}
+					if node == backendToDelete {
+						mergedBackend = append(mergedBackend[:i], mergedBackend[i+1:]...)
+						break
+					}
+				}
+			}
+		}
+
+		if req.Spec.Configuration.Backend.Sync != nil {
+			for _, backend := range req.Spec.Configuration.Backend.Sync {
+				node1 := backend.Name
+				if node1 == "" {
+					node1 = backend.HostName
+				}
+				found := false
+
+				for i, backend2 := range mergedBackend {
+					node2 := backend2.Name
+					if node2 == "" {
+						node2 = backend2.HostName
+					}
+					if node2 == node1 {
+						found = true
+						mergedBackend[i] = backend
+						break
+					}
+				}
+				if !found {
+					mergedBackend = append(mergedBackend, backend)
+				}
+			}
+		}
+
+		err = dbwebhook.PgpoolValidateLoadBalancingSpec(mergedBackend)
+		if err != nil {
+			return fmt.Errorf("the load balancing configuration doesn't match with the old one: %v", err)
+		}
+	}
 	return nil
 }
 
