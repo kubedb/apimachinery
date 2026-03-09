@@ -302,6 +302,7 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 		o.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
 	}
 
+	klog.Info("Setting default values for Oracle database")
 	o.SetListenerDefaults()
 	o.initializePodTemplates()
 
@@ -360,18 +361,29 @@ func (o *Oracle) SetListenerDefaults() {
 }
 
 func (o *Oracle) initializePodTemplates() {
+	klog.Info("initializePodTemplates started")
+
 	if o.Spec.Mode == OracleModeDataGuard {
+		klog.Info("Mode is DataGuard")
+
 		if o.Spec.DataGuard == nil {
+			klog.Info("Creating DataGuard spec")
 			o.Spec.DataGuard = &DataGuardSpec{}
 		}
+
 		if o.Spec.DataGuard.Observer == nil {
+			klog.Info("Creating Observer spec")
 			o.Spec.DataGuard.Observer = &ObserverSpec{}
 		}
+
 		if o.Spec.DataGuard.Observer.PodTemplate == nil {
+			klog.Info("Creating Observer PodTemplate")
 			o.Spec.DataGuard.Observer.PodTemplate = new(ofst.PodTemplateSpec)
 		}
 	}
+
 	if o.Spec.PodTemplate == nil {
+		klog.Info("Creating main PodTemplate")
 		o.Spec.PodTemplate = new(ofst.PodTemplateSpec)
 	}
 }
