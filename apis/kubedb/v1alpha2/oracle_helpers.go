@@ -318,6 +318,7 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 	}
 
 	if o.Spec.Mode == OracleModeDataGuard {
+		klog.Info("Setting default values for Oracle dataGuard")
 		o.SetDataGuardDefaults()
 		o.SetObserverInitContainerDefaults(o.Spec.DataGuard.Observer.PodTemplate, oraVersion)
 		o.SetOracleObserverContainerDefaults(o.Spec.DataGuard.Observer.PodTemplate, oraVersion)
@@ -435,6 +436,7 @@ func (o *Oracle) SetOracleContainerDefaults(podTemplate *ofst.PodTemplateSpec, o
 }
 
 func (o *Oracle) SetOracleObserverContainerDefaults(podTemplate *ofst.PodTemplateSpec, oraVersion *catalog.OracleVersion) {
+	klog.Info("Set Oracle Observer Container Defaults started")
 	if podTemplate == nil {
 		return
 	}
@@ -453,7 +455,9 @@ func (o *Oracle) SetCoordinatorContainerDefaults(podTemplate *ofst.PodTemplateSp
 }
 
 func (o *Oracle) setContainerDefaultSecurityContext(container *core.Container, _ *catalog.OracleVersion) {
+	klog.Info("Set container default security context")
 	if container.SecurityContext == nil {
+		klog.Info("Creating container default security context since it is nil")
 		container.SecurityContext = &core.SecurityContext{}
 	}
 	// TODO: Check what part of security context make oracle fail to run
