@@ -398,15 +398,36 @@ func (o *Oracle) SetDefaultPodSecurityContext(podTemplate *ofst.PodTemplateSpec,
 	klog.Info("Setting default PodSecurityContext, important")
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
+		klog.Info("PodSecurityContext was nil, initialized new one")
 	}
+
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = oraVersion.Spec.SecurityContext.RunAsUser
+		klog.Infof("FSGroup was nil, setting to %d", *oraVersion.Spec.SecurityContext.RunAsUser)
 	}
+
 	if podTemplate.Spec.SecurityContext.RunAsUser == nil {
 		podTemplate.Spec.SecurityContext.RunAsUser = oraVersion.Spec.SecurityContext.RunAsUser
+		klog.Infof("RunAsUser was nil, setting to %d", *oraVersion.Spec.SecurityContext.RunAsUser)
 	}
+
 	if podTemplate.Spec.SecurityContext.RunAsGroup == nil {
 		podTemplate.Spec.SecurityContext.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
+		klog.Infof("RunAsGroup was nil, setting to %d", *oraVersion.Spec.SecurityContext.RunAsUser)
+	}
+
+	// Print final values
+	//TODO: Remove these logs after confirming the values are set correctly
+	if podTemplate.Spec.SecurityContext.FSGroup != nil {
+		klog.Infof("Final FSGroup: %d", *podTemplate.Spec.SecurityContext.FSGroup)
+	}
+
+	if podTemplate.Spec.SecurityContext.RunAsUser != nil {
+		klog.Infof("Final RunAsUser: %d", *podTemplate.Spec.SecurityContext.RunAsUser)
+	}
+
+	if podTemplate.Spec.SecurityContext.RunAsGroup != nil {
+		klog.Infof("Final RunAsGroup: %d", *podTemplate.Spec.SecurityContext.RunAsGroup)
 	}
 }
 
