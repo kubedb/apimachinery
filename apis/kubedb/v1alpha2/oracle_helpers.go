@@ -390,10 +390,12 @@ func (o *Oracle) initializePodTemplates() {
 }
 
 func (o *Oracle) SetDefaultPodSecurityContext(podTemplate *ofst.PodTemplateSpec, oraVersion *catalog.OracleVersion) {
+	klog.Info("Setting default values for Oracle dataGuard")
 	if podTemplate == nil {
+		klog.Info("PodTemplate is nil, skipping setting default PodSecurityContext")
 		return
 	}
-
+	klog.Info("Setting default PodSecurityContext, important")
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
