@@ -390,7 +390,7 @@ func PgpoolValidateLoadBalancingSpec(backends []olddbapi.PgpoolLoadBalancingSpec
 		}
 		if lbSpec.Name != "" {
 			if lbSpec.Port != nil {
-				return errors.New("port can not be used when group name is used in load balancing configuration")
+				return errors.New("port can not be used when `backends[i].name` is used in load balancing configuration")
 			}
 		}
 	}

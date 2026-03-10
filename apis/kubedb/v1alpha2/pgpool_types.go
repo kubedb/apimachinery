@@ -147,8 +147,9 @@ type PgpoolLoadBalancingSpec struct {
 	// HostName is the address of the backend node.
 	HostName string `json:"hostName,omitempty"`
 	Port     *int32 `json:"port,omitempty"`
-	Flag     string `json:"flag,omitempty"`
-	Weight   int32  `json:"weight"`
+	// Flag is used to set Pgpool backend flag (e.g. 'ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER', 'ALWAYS_PRIMARY')
+	Flag   string `json:"flag,omitempty"`
+	Weight int32  `json:"weight"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
