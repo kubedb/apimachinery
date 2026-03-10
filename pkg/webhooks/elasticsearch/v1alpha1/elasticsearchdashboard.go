@@ -169,12 +169,6 @@ func (w *ElasticsearchdashboardCustomWebhook) Validate(ed *edapi.ElasticsearchDa
 			"Invalid spec.podtemplate.spec.containers[i].env , avoid using the forbidden env variables"))
 	}
 
-	initContainer := coreutil.GetContainerByName(ed.Spec.PodTemplate.Spec.InitContainers, kubedb.ElasticsearchInitConfigMergerContainerName)
-	if err := amv.ValidateEnvVar(initContainer.Env, forbiddenEnvVars, edapi.ResourceKindElasticsearchDashboard); err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podtemplate").Child("spec").Child("initContainers").Child("env"), ed.Name,
-			"Invalid spec.podtemplate.spec.initContainers[i].env , avoid using the forbidden env variables"))
-	}
-
 	if len(allErr) == 0 {
 		return nil
 	}
