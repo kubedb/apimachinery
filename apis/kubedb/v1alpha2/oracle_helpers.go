@@ -487,9 +487,7 @@ func (o *Oracle) setContainerDefaultSecurityContext(container *core.Container, o
 }
 
 func (p *Oracle) assignDefaultContainerSecurityContext(sc *core.SecurityContext, oraVersion *catalog.OracleVersion) {
-	if sc.AllowPrivilegeEscalation == nil {
-		sc.AllowPrivilegeEscalation = pointer.BoolP(false) //2nd
-	}
+	klog.Info("Delete 2nd")
 	klog.Info("Set container default security context - AllowPrivilegeEscalation set to false")
 	klog.Info("Deleted")
 	if sc.RunAsNonRoot == nil { //4th
