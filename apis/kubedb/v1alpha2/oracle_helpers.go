@@ -491,13 +491,7 @@ func (p *Oracle) assignDefaultContainerSecurityContext(sc *core.SecurityContext,
 		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
 	}
 	klog.Info("Set container default security context - AllowPrivilegeEscalation set to false")
-	//TODO: if doesnt work, remove this block and try
-	if sc.Capabilities == nil {
-		sc.Capabilities = &core.Capabilities{
-			Drop: []core.Capability{"ALL"},
-		}
-	}
-
+	klog.Info("Deleted")
 	if sc.RunAsNonRoot == nil {
 		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
