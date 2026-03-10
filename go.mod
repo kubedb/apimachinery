@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/Masterminds/semver/v3 v3.4.0
-	github.com/cert-manager/cert-manager v1.19.3
+	github.com/cert-manager/cert-manager v1.19.4
 	github.com/coreos/go-semver v0.3.1
 	github.com/evanphx/json-patch v5.9.11+incompatible
 	github.com/fatih/structs v1.1.0
@@ -59,8 +59,8 @@ require (
 	kubeops.dev/operator-shard-manager v0.0.5
 	kubeops.dev/petset v0.0.15
 	kubeops.dev/sidekick v0.0.12
-	kubestash.dev/apimachinery v0.24.0
-	open-cluster-management.io/api v1.1.1-0.20251222023835-510285203ee6
+	kubestash.dev/apimachinery v0.26.0
+	open-cluster-management.io/api v1.2.0
 	sigs.k8s.io/controller-runtime v0.22.4
 	sigs.k8s.io/randfill v1.0.0
 	sigs.k8s.io/yaml v1.6.0
@@ -185,7 +185,7 @@ require (
 	github.com/yudai/gojsondiff v1.0.0 // indirect
 	github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82 // indirect
 	github.com/zeebo/xxh3 v1.0.2 // indirect
-	go.bytebuilders.dev/license-proxyserver v0.0.26 // indirect
+	go.bytebuilders.dev/license-proxyserver v0.1.0 // indirect
 	go.bytebuilders.dev/license-verifier v0.15.0 // indirect
 	go.etcd.io/etcd/api/v3 v3.6.4 // indirect
 	go.etcd.io/etcd/client/v3 v3.6.4 // indirect
@@ -217,7 +217,7 @@ require (
 	gomodules.xyz/go-sh v0.2.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.5.0 // indirect
 	gomodules.xyz/mergo v0.3.13 // indirect
-	gomodules.xyz/restic v0.1.0 // indirect
+	gomodules.xyz/restic v0.2.0 // indirect
 	gomodules.xyz/sets v0.2.1 // indirect
 	gomodules.xyz/sync v0.1.0 // indirect
 	google.golang.org/api v0.255.0 // indirect

@@ -22289,10 +22289,6 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionExporter"
         },
-        "gitSyncer": {
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
-        },
         "initContainer": {
           "description": "Init container Image",
           "default": {},
