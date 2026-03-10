@@ -488,11 +488,11 @@ func (o *Oracle) setContainerDefaultSecurityContext(container *core.Container, o
 
 func (p *Oracle) assignDefaultContainerSecurityContext(sc *core.SecurityContext, oraVersion *catalog.OracleVersion) {
 	if sc.AllowPrivilegeEscalation == nil {
-		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false) //2nd
 	}
 	klog.Info("Set container default security context - AllowPrivilegeEscalation set to false")
 	klog.Info("Deleted")
-	if sc.RunAsNonRoot == nil {
+	if sc.RunAsNonRoot == nil { //4th
 		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
 	if sc.RunAsUser == nil {
@@ -501,7 +501,7 @@ func (p *Oracle) assignDefaultContainerSecurityContext(sc *core.SecurityContext,
 	if sc.RunAsGroup == nil {
 		sc.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
 	}
-	if sc.SeccompProfile == nil {
+	if sc.SeccompProfile == nil { //3rd
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
