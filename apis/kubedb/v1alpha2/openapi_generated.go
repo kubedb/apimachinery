@@ -42943,8 +42943,9 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolLoadBalancingSpec(ref common
 					},
 					"flag": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Flag is used to set Pgpool backend flag (e.g. 'ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER', 'ALWAYS_PRIMARY')",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"weight": {
