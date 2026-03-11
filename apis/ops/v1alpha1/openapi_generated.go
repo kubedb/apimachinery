@@ -37249,6 +37249,11 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVerticalScalingSpec(ref co
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ContainerResources"),
 						},
 					},
+					"arbiter": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
 				},
 			},
 		},
