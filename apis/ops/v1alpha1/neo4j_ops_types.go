@@ -75,10 +75,30 @@ type Neo4jOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
+// ReallocateStrategy defines how reallocation should be performed
+type ReallocateStrategy string
+
+const (
+	StrategyIncremental ReallocateStrategy = "incremental" // safe, batch by batch
+	StrategyFull        ReallocateStrategy = "full"        // all at once
+)
+
+// ReallocateConfig defines reallocation behaviour
+type ReallocateConfig struct {
+	// +kubebuilder:validation:Enum=StrategyIncremental;StrategyFull
+	// incremental or full
+	Strategy ReallocateStrategy `json:"strategy,omitempty"`
+	// only used when Strategy == incremental
+	BatchSize *int32 `json:"batchSize,omitempty"`
+}
+
 // Neo4jHorizontalScalingSpec contains the horizontal scaling information of a Neo4j cluster
 type Neo4jHorizontalScalingSpec struct {
 	// Number of server
 	Server *int32 `json:"node,omitempty"`
+	// how to handle reallocation after scaling
+	// +optional
+	Reallocate ReallocateConfig `json:"reallocate,omitempty"`
 }
 
 type Neo4jTLSSpec struct {

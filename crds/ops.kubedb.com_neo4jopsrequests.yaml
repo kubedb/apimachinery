@@ -101,6 +101,17 @@ spec:
                   node:
                     format: int32
                     type: integer
+                  reallocate:
+                    properties:
+                      batchSize:
+                        format: int32
+                        type: integer
+                      strategy:
+                        enum:
+                        - StrategyIncremental
+                        - StrategyFull
+                        type: string
+                    type: object
                 type: object
               maxRetries:
                 default: 1

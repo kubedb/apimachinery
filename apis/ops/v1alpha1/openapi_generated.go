@@ -780,6 +780,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RabbitMQVolumeExpansionSpec":                      schema_apimachinery_apis_ops_v1alpha1_RabbitMQVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReadReplicaHzScalingSpec":                         schema_apimachinery_apis_ops_v1alpha1_ReadReplicaHzScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReadReplicaResources":                             schema_apimachinery_apis_ops_v1alpha1_ReadReplicaResources(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReallocateConfig":                                 schema_apimachinery_apis_ops_v1alpha1_ReallocateConfig(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec":                              schema_apimachinery_apis_ops_v1alpha1_ReconfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisAclSpec":                                     schema_apimachinery_apis_ops_v1alpha1_RedisAclSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisCustomConfigurationSpec":                     schema_apimachinery_apis_ops_v1alpha1_RedisCustomConfigurationSpec(ref),
@@ -39111,9 +39112,18 @@ func schema_apimachinery_apis_ops_v1alpha1_Neo4jHorizontalScalingSpec(ref common
 							Format:      "int32",
 						},
 					},
+					"reallocate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "how to handle reallocation after scaling",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReallocateConfig"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReallocateConfig"},
 	}
 }
 
@@ -42015,6 +42025,33 @@ func schema_apimachinery_apis_ops_v1alpha1_ReadReplicaResources(ref common.Refer
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_ReallocateConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ReallocateConfig defines reallocation behaviour",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"strategy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "incremental or full",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"batchSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "only used when Strategy == incremental",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
