@@ -107,7 +107,7 @@ type PgpoolHorizontalScalingSpec struct {
 	Node *int32 `json:"node,omitempty"`
 }
 
-type PgpoolUpdateBackendSpec struct {
+type PgpoolBackendConfigurationSpec struct {
 	// Sync specifies the list of backends that should be synced with the database.
 	Sync []v1alpha2.PgpoolLoadBalancingSpec `json:"sync,omitempty"`
 
@@ -117,7 +117,7 @@ type PgpoolUpdateBackendSpec struct {
 
 type PgpoolCustomConfigurationSpec struct {
 	*ReconfigurationSpec `json:",inline,omitempty"`
-	Backend              *PgpoolUpdateBackendSpec `json:"backend,omitempty"`
+	Backend              *PgpoolBackendConfigurationSpec `json:"backend,omitempty"`
 }
 
 // PgpoolVerticalScalingSpec contains the vertical scaling information of a Pgpool cluster

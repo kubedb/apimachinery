@@ -734,13 +734,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerTLSSpec":                                 schema_apimachinery_apis_ops_v1alpha1_PgBouncerTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerUpdateVersionSpec":                       schema_apimachinery_apis_ops_v1alpha1_PgBouncerUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgBouncerVerticalScalingSpec":                     schema_apimachinery_apis_ops_v1alpha1_PgBouncerVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolBackendConfigurationSpec":                   schema_apimachinery_apis_ops_v1alpha1_PgpoolBackendConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolCustomConfigurationSpec":                    schema_apimachinery_apis_ops_v1alpha1_PgpoolCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolHorizontalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_PgpoolHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_PgpoolOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolTLSSpec":                                    schema_apimachinery_apis_ops_v1alpha1_PgpoolTLSSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolUpdateBackendSpec":                          schema_apimachinery_apis_ops_v1alpha1_PgpoolUpdateBackendSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolUpdateVersionSpec":                          schema_apimachinery_apis_ops_v1alpha1_PgpoolUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolVerticalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_PgpoolVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources":                                     schema_apimachinery_apis_ops_v1alpha1_PodResources(ref),
@@ -40097,6 +40097,49 @@ func schema_apimachinery_apis_ops_v1alpha1_PgBouncerVerticalScalingSpec(ref comm
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_PgpoolBackendConfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"sync": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Sync specifies the list of backends that should be synced with the database.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolLoadBalancingSpec"),
+									},
+								},
+							},
+						},
+					},
+					"delete": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Delete specifies the list of backends that should be removed from the database.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolLoadBalancingSpec"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_PgpoolCustomConfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40141,14 +40184,14 @@ func schema_apimachinery_apis_ops_v1alpha1_PgpoolCustomConfigurationSpec(ref com
 					},
 					"backend": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolUpdateBackendSpec"),
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolBackendConfigurationSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolUpdateBackendSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PgpoolBackendConfigurationSpec"},
 	}
 }
 
@@ -40418,49 +40461,6 @@ func schema_apimachinery_apis_ops_v1alpha1_PgpoolTLSSpec(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
-	}
-}
-
-func schema_apimachinery_apis_ops_v1alpha1_PgpoolUpdateBackendSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"sync": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Sync specifies the list of backends that should be synced with the database.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolLoadBalancingSpec"),
-									},
-								},
-							},
-						},
-					},
-					"delete": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Delete specifies the list of backends that should be removed from the database.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolLoadBalancingSpec"},
 	}
 }
 

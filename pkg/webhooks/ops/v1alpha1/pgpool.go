@@ -239,7 +239,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(pp *
 		if req.Spec.Configuration.Backend.Delete != nil {
 			for _, backendToDelete := range req.Spec.Configuration.Backend.Delete {
 				for i, backend := range mergedBackend {
-					node := backend.Name
+					node := backend.GroupName
 					if node == "" {
 						node = backend.HostName
 					}
@@ -253,14 +253,14 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(pp *
 
 		if req.Spec.Configuration.Backend.Sync != nil {
 			for _, backend := range req.Spec.Configuration.Backend.Sync {
-				node1 := backend.Name
+				node1 := backend.GroupName
 				if node1 == "" {
 					node1 = backend.HostName
 				}
 				found := false
 
 				for i, backend2 := range mergedBackend {
-					node2 := backend2.Name
+					node2 := backend2.GroupName
 					if node2 == "" {
 						node2 = backend2.HostName
 					}

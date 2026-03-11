@@ -42845,7 +42845,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolConfiguration(ref common.Ref
 					},
 					"backends": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Backends are used to specify the load balancing configuration. Each backend node is represented by a LoadBalancingSpec, which includes the node of the backend, its corresponding weight and other load balancing parameters.",
+							Description: "Backends are used to specify the load balancing configuration. Each backend node is represented by a PgpoolLoadBalancingSpec, which includes the backend’s name, host, port, its corresponding weight, and other load-balancing parameters.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42921,9 +42921,9 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolLoadBalancingSpec(ref common
 				Description: "PgpoolLoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"name": {
+					"groupName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Name should match with read replica group name in the KubeDB controlled postgresql server. For primary and standby node this should be \"PRIMARY\" and \"STANDBY\" respectively.",
+							Description: "GroupName should match with read replica group name in the KubeDB controlled postgresql server. For primary and standby node this should be \"PRIMARY\" and \"STANDBY\" respectively.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -42950,9 +42950,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolLoadBalancingSpec(ref common
 					},
 					"weight": {
 						SchemaProps: spec.SchemaProps{
-							Default: 0,
-							Type:    []string{"integer"},
-							Format:  "int32",
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},

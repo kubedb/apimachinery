@@ -379,16 +379,16 @@ func PgpoolValidateLoadBalancingSpec(backends []olddbapi.PgpoolLoadBalancingSpec
 
 	groupNameEnabled, hostNameEnabled := false, false
 	for _, lbSpec := range backends {
-		if lbSpec.Name != "" {
+		if lbSpec.GroupName != "" {
 			groupNameEnabled = true
 		}
 		if lbSpec.HostName != "" {
 			hostNameEnabled = true
 		}
-		if lbSpec.Name == "" && lbSpec.HostName == "" {
+		if lbSpec.GroupName == "" && lbSpec.HostName == "" {
 			return errors.New("name or hostName is required for each backend in load balancing configuration")
 		}
-		if lbSpec.Name != "" {
+		if lbSpec.GroupName != "" {
 			if lbSpec.Port != nil {
 				return errors.New("port can not be used when `backends[i].name` is used in load balancing configuration")
 			}
@@ -401,7 +401,7 @@ func PgpoolValidateLoadBalancingSpec(backends []olddbapi.PgpoolLoadBalancingSpec
 	// check for duplicate group name or host name
 	identityList := make(map[string]bool)
 	for _, lbSpec := range backends {
-		identity := lbSpec.Name
+		identity := lbSpec.GroupName
 		if hostNameEnabled {
 			identity = lbSpec.HostName
 		}

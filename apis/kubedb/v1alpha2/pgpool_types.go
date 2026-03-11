@@ -134,22 +134,24 @@ type PgpoolConfiguration struct {
 	*ConfigurationSpec `json:",inline,omitempty"`
 
 	// Backends are used to specify the load balancing configuration.
-	// Each backend node is represented by a LoadBalancingSpec, which includes the node of the backend, its corresponding weight and other load balancing parameters.
+	// Each backend node is represented by a PgpoolLoadBalancingSpec, which includes
+	// the backend’s name, host, port, its corresponding weight, and other
+	// load-balancing parameters.
 	// +optional
 	Backends []PgpoolLoadBalancingSpec `json:"backends,omitempty"`
 }
 
 // PgpoolLoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.
 type PgpoolLoadBalancingSpec struct {
-	// Name should match with read replica group name in the KubeDB controlled postgresql server.
+	// GroupName should match with read replica group name in the KubeDB controlled postgresql server.
 	// For primary and standby node this should be "PRIMARY" and "STANDBY" respectively.
-	Name string `json:"name,omitempty"`
+	GroupName string `json:"groupName,omitempty"`
 	// HostName is the address of the backend node.
 	HostName string `json:"hostName,omitempty"`
 	Port     *int32 `json:"port,omitempty"`
 	// Flag is used to set Pgpool backend flag (e.g. 'ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER', 'ALWAYS_PRIMARY')
 	Flag   string `json:"flag,omitempty"`
-	Weight int32  `json:"weight"`
+	Weight *int32 `json:"weight"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -83,9 +83,9 @@ spec:
                           properties:
                             flag:
                               type: string
-                            hostName:
+                            groupName:
                               type: string
-                            name:
+                            hostName:
                               type: string
                             port:
                               format: int32

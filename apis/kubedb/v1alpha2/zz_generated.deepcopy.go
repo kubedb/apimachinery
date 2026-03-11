@@ -5747,6 +5747,11 @@ func (in *PgpoolLoadBalancingSpec) DeepCopyInto(out *PgpoolLoadBalancingSpec) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.Weight != nil {
+		in, out := &in.Weight, &out.Weight
+		*out = new(int32)
+		**out = **in
+	}
 	return
 }
 
