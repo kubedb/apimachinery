@@ -303,7 +303,6 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 		o.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
 	}
 
-	klog.Info("Setting default values for Oracle database")
 	o.SetListenerDefaults()
 	o.initializePodTemplates()
 
@@ -319,7 +318,6 @@ func (o *Oracle) SetDefaults(kc client.Client) {
 	}
 
 	if o.Spec.Mode == OracleModeDataGuard {
-		klog.Info("Setting default values for Oracle dataGuard")
 		o.SetDataGuardDefaults()
 		o.SetDefaultPodSecurityContext(o.Spec.DataGuard.Observer.PodTemplate, oraVersion)
 		o.SetObserverInitContainerDefaults(o.Spec.DataGuard.Observer.PodTemplate, oraVersion)
@@ -364,69 +362,39 @@ func (o *Oracle) SetListenerDefaults() {
 }
 
 func (o *Oracle) initializePodTemplates() {
-	klog.Info("initializePodTemplates started")
-
 	if o.Spec.Mode == OracleModeDataGuard {
-		klog.Info("Mode is DataGuard")
-
 		if o.Spec.DataGuard == nil {
-			klog.Info("Creating DataGuard spec")
 			o.Spec.DataGuard = &DataGuardSpec{}
 		}
 
 		if o.Spec.DataGuard.Observer == nil {
-			klog.Info("Creating Observer spec")
 			o.Spec.DataGuard.Observer = &ObserverSpec{}
 		}
 
 		if o.Spec.DataGuard.Observer.PodTemplate == nil {
-			klog.Info("Creating Observer PodTemplate")
 			o.Spec.DataGuard.Observer.PodTemplate = new(ofst.PodTemplateSpec)
 		}
 	}
-
 	if o.Spec.PodTemplate == nil {
-		klog.Info("Creating main PodTemplate")
 		o.Spec.PodTemplate = new(ofst.PodTemplateSpec)
 	}
 }
 
 func (o *Oracle) SetDefaultPodSecurityContext(podTemplate *ofst.PodTemplateSpec, oraVersion *catalog.OracleVersion) {
-	klog.Info("Setting default values for Oracle dataGuard")
 	if podTemplate == nil {
-		klog.Info("PodTemplate is nil, skipping setting default PodSecurityContext")
 		return
 	}
-	klog.Info("Setting default PodSecurityContext, important")
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
-		klog.Info("PodSecurityContext was nil, initialized new one")
 	}
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = oraVersion.Spec.SecurityContext.RunAsUser
-		klog.Infof("FSGroup was nil, setting to %d", *oraVersion.Spec.SecurityContext.RunAsUser)
 	}
 	if podTemplate.Spec.SecurityContext.RunAsUser == nil {
 		podTemplate.Spec.SecurityContext.RunAsUser = oraVersion.Spec.SecurityContext.RunAsUser
-		klog.Infof("RunAsUser was nil, setting to %d", *oraVersion.Spec.SecurityContext.RunAsUser)
 	}
 	if podTemplate.Spec.SecurityContext.RunAsGroup == nil {
 		podTemplate.Spec.SecurityContext.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
-		klog.Infof("RunAsGroup was nil, setting to %d", *oraVersion.Spec.SecurityContext.RunAsUser)
-	}
-
-	// Print final values
-	//TODO: Remove these logs after confirming the values are set correctly
-	if podTemplate.Spec.SecurityContext.FSGroup != nil {
-		klog.Infof("Final FSGroup: %d", *podTemplate.Spec.SecurityContext.FSGroup)
-	}
-
-	if podTemplate.Spec.SecurityContext.RunAsUser != nil {
-		klog.Infof("Final RunAsUser: %d", *podTemplate.Spec.SecurityContext.RunAsUser)
-	}
-
-	if podTemplate.Spec.SecurityContext.RunAsGroup != nil {
-		klog.Infof("Final RunAsGroup: %d", *podTemplate.Spec.SecurityContext.RunAsGroup)
 	}
 }
 
@@ -458,7 +426,6 @@ func (o *Oracle) SetOracleContainerDefaults(podTemplate *ofst.PodTemplateSpec, o
 }
 
 func (o *Oracle) SetOracleObserverContainerDefaults(podTemplate *ofst.PodTemplateSpec, oraVersion *catalog.OracleVersion) {
-	klog.Info("Set Oracle Observer Container Defaults started")
 	if podTemplate == nil {
 		return
 	}
@@ -477,9 +444,7 @@ func (o *Oracle) SetCoordinatorContainerDefaults(podTemplate *ofst.PodTemplateSp
 }
 
 func (o *Oracle) setContainerDefaultSecurityContext(container *core.Container, oraVersion *catalog.OracleVersion) {
-	klog.Info("Set container default security context")
 	if container.SecurityContext == nil {
-		klog.Info("Creating container default security context since it is nil")
 		container.SecurityContext = &core.SecurityContext{}
 	}
 	// TODO: Check what part of security context make oracle fail to run
@@ -487,10 +452,13 @@ func (o *Oracle) setContainerDefaultSecurityContext(container *core.Container, o
 }
 
 func (p *Oracle) assignDefaultContainerSecurityContext(sc *core.SecurityContext, oraVersion *catalog.OracleVersion) {
-	klog.Info("Delete 2nd")
-	klog.Info("Set container default security context - AllowPrivilegeEscalation set to false")
-	klog.Info("Deleted")
-	if sc.RunAsNonRoot == nil { //4th
+	//TODO: worked after removing sc.Capabilities and sc.AllowPrivilegeEscalation
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
 		sc.RunAsNonRoot = pointer.BoolP(true)
 	}
 	if sc.RunAsUser == nil {
@@ -499,7 +467,7 @@ func (p *Oracle) assignDefaultContainerSecurityContext(sc *core.SecurityContext,
 	if sc.RunAsGroup == nil {
 		sc.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
 	}
-	if sc.SeccompProfile == nil { //3rd
+	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
