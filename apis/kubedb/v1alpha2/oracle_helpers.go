@@ -19,8 +19,6 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
-	"kmodules.xyz/client-go/policy/secomp"
-
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -499,9 +497,7 @@ func (p *Oracle) assignDefaultContainerSecurityContext(sc *core.SecurityContext,
 	if sc.RunAsGroup == nil {
 		sc.RunAsGroup = oraVersion.Spec.SecurityContext.RunAsUser
 	}
-	if sc.SeccompProfile == nil { //3rd
-		sc.SeccompProfile = secomp.DefaultSeccompProfile()
-	}
+	klog.Info("Delete 3rd")
 }
 
 func (o *Oracle) setContainerDefaultResources(container *core.Container, defaultResources core.ResourceRequirements) {
