@@ -19,7 +19,6 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
-	"kmodules.xyz/client-go/policy/secomp"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -36,6 +35,7 @@ import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	metautil "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
@@ -452,7 +452,7 @@ func (o *Oracle) setContainerDefaultSecurityContext(container *core.Container, o
 }
 
 func (p *Oracle) assignDefaultContainerSecurityContext(sc *core.SecurityContext, oraVersion *catalog.OracleVersion) {
-	//TODO: worked after removing sc.Capabilities and sc.AllowPrivilegeEscalation
+	// TODO: worked after removing sc.AllowPrivilegeEscalation
 	if sc.Capabilities == nil {
 		sc.Capabilities = &core.Capabilities{
 			Drop: []core.Capability{"ALL"},
