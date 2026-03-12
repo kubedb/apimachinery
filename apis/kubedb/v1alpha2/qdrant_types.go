@@ -125,6 +125,8 @@ type QdrantSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+	// +optional
+	Init *QdrantInitSpec `json:"init"`
 }
 
 type QdrantTLSConfig struct {
@@ -133,6 +135,14 @@ type QdrantTLSConfig struct {
 	P2P *bool `json:"p2p,omitempty"`
 	// +optional
 	Client *bool `json:"client,omitempty"`
+}
+
+type QdrantInitSpec struct {
+	Restore *QdrantRestoreSpec `json:"restore"`
+}
+
+type QdrantRestoreSpec struct {
+	SnapshotName string `json:"snapshotName"`
 }
 
 // QdrantStatus defines the observed state of Qdrant.

@@ -51,7 +51,6 @@ func (c *Client) NewRequest(
 	path string,
 	body io.Reader,
 ) (*http.Request, error) {
-
 	url := c.baseURL + path
 
 	req, err := http.NewRequestWithContext(ctx, method, url, body)

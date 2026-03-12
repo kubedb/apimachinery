@@ -108,6 +108,18 @@ spec:
                     format: int32
                     type: integer
                 type: object
+              init:
+                properties:
+                  restore:
+                    properties:
+                      snapshotName:
+                        type: string
+                    required:
+                    - snapshotName
+                    type: object
+                required:
+                - restore
+                type: object
               mode:
                 enum:
                 - Standalone
