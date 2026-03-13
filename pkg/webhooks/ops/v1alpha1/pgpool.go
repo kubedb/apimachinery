@@ -278,7 +278,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(pp *
 
 		err = dbwebhook.PgpoolValidateLoadBalancingSpec(mergedBackend)
 		if err != nil {
-			return fmt.Errorf("the load balancing configuration doesn't match with the old one: %v", err)
+			return fmt.Errorf("`spec.configuration.backend` is not compatible with the running load balancing configuration: %v", err)
 		}
 	}
 	return nil
