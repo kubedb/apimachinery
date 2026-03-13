@@ -4099,7 +4099,11 @@ func (in *Neo4jHorizontalScalingSpec) DeepCopyInto(out *Neo4jHorizontalScalingSp
 		*out = new(int32)
 		**out = **in
 	}
-	in.Reallocate.DeepCopyInto(&out.Reallocate)
+	if in.Reallocate != nil {
+		in, out := &in.Reallocate, &out.Reallocate
+		*out = new(ReallocateConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

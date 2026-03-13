@@ -39105,7 +39105,7 @@ func schema_apimachinery_apis_ops_v1alpha1_Neo4jHorizontalScalingSpec(ref common
 				Description: "Neo4jHorizontalScalingSpec contains the horizontal scaling information of a Neo4j cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"node": {
+					"server": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Number of server",
 							Type:        []string{"integer"},
@@ -39115,7 +39115,6 @@ func schema_apimachinery_apis_ops_v1alpha1_Neo4jHorizontalScalingSpec(ref common
 					"reallocate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "how to handle reallocation after scaling",
-							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReallocateConfig"),
 						},
 					},
@@ -42037,9 +42036,8 @@ func schema_apimachinery_apis_ops_v1alpha1_ReallocateConfig(ref common.Reference
 				Properties: map[string]spec.Schema{
 					"strategy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "incremental or full",
-							Type:        []string{"string"},
-							Format:      "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"batchSize": {
