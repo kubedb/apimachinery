@@ -35,12 +35,12 @@ const (
 // +k8s:deepcopy-gen=false
 type Event struct {
 	LicenseID  string           `json:"licenseID,omitempty"`
-	ResourceID kmapi.ResourceID `json:"resourceID,omitempty"`
+	ResourceID kmapi.ResourceID `json:"resourceID"`
 	Resource   client.Object    `json:"resource,omitempty"`
 }
 
 type UnstructuredEvent struct {
 	LicenseID  string                     `json:"licenseID,omitempty"`
-	ResourceID kmapi.ResourceID           `json:"resourceID,omitempty"`
+	ResourceID kmapi.ResourceID           `json:"resourceID"`
 	Resource   *unstructured.Unstructured `json:"resource,omitempty"`
 }

@@ -22289,10 +22289,6 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionExporter"
         },
-        "gitSyncer": {
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
-        },
         "initContainer": {
           "description": "Init container Image",
           "default": {},
@@ -23120,6 +23116,7 @@
         "version",
         "db",
         "exporter",
+        "coordinator",
         "initContainer",
         "podSecurityPolicies"
       ],
@@ -23347,6 +23344,7 @@
         "version",
         "db",
         "exporter",
+        "coordinator",
         "initContainer",
         "podSecurityPolicies"
       ],
@@ -23569,6 +23567,7 @@
         "version",
         "db",
         "exporter",
+        "coordinator",
         "podSecurityPolicies"
       ],
       "properties": {
@@ -23956,6 +23955,7 @@
         "version",
         "db",
         "exporter",
+        "coordinator",
         "podSecurityPolicies"
       ],
       "properties": {
@@ -27414,16 +27414,42 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorCLI": {
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImages": {
       "type": "object",
       "properties": {
         "cli": {
           "description": "CLI specifies the migrator CLI image",
-          "type": "string"
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorCLI"
         },
         "statusReporter": {
           "description": "StatusReporter is the sidecar image used to report migration progress",
-          "type": "string"
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorStatusReporter"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorStatusReporter": {
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
         }
       }
     },

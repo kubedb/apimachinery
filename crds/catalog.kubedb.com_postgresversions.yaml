@@ -133,6 +133,7 @@ spec:
                 - KubeDB
                 - DocumentDB
                 - PostgreSQL
+                - Percona
                 type: string
               endOfLife:
                 type: boolean
@@ -160,9 +161,19 @@ spec:
               migrator:
                 properties:
                   cli:
-                    type: string
+                    properties:
+                      image:
+                        type: string
+                    required:
+                    - image
+                    type: object
                   statusReporter:
-                    type: string
+                    properties:
+                      image:
+                        type: string
+                    required:
+                    - image
+                    type: object
                 type: object
               podSecurityPolicies:
                 properties:
@@ -260,6 +271,7 @@ spec:
               version:
                 type: string
             required:
+            - coordinator
             - db
             - exporter
             - podSecurityPolicies

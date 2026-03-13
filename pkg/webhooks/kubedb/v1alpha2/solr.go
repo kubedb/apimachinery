@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -322,13 +323,7 @@ func (w *SolrCustomWebhook) solrValidateVersion(s *olddbapi.Solr) error {
 func solrValidateModules(db *olddbapi.Solr) error {
 	modules := db.Spec.SolrModules
 	for _, mod := range modules {
-		fl := false
-		for _, av_mod := range solrAvailableModules {
-			if mod == av_mod {
-				fl = true
-				break
-			}
-		}
+		fl := slices.Contains(solrAvailableModules, mod)
 		if !fl {
 			return fmt.Errorf("%s does not exist in available modules", mod)
 		}

@@ -38,11 +38,11 @@ import (
 )
 
 type DummyCatalog struct {
-	Spec DummyCatalogSpec `json:"spec,omitempty" yaml:"spec,omitempty"`
+	Spec DummyCatalogSpec `json:"spec" yaml:"spec,omitempty"`
 }
 
 type DummyCatalogSpec struct {
-	UpdateConstraints catalog.UpdateConstraints `json:"updateConstraints,omitempty"`
+	UpdateConstraints catalog.UpdateConstraints `json:"updateConstraints"`
 }
 
 func IsUpgradable(kc client.Client, kind string, curr, target string) (bool, error) {

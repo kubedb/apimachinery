@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"slices"
 	"time"
 
 	"github.com/pkg/errors"
@@ -96,10 +97,8 @@ func WaitForShardIdUpdate(kc client.Client, shardConfigName string) {
 				klog.V(6).Infoln(err.Error())
 				continue
 			}
-			for _, pod := range pods {
-				if pod == hostName {
-					return
-				}
+			if slices.Contains(pods, hostName) {
+				return
 			}
 		}
 	}

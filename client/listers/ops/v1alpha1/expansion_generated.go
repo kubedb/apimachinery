@@ -130,6 +130,14 @@ type MySQLOpsRequestListerExpansion interface{}
 // MySQLOpsRequestNamespaceLister.
 type MySQLOpsRequestNamespaceListerExpansion interface{}
 
+// Neo4jOpsRequestListerExpansion allows custom methods to be added to
+// Neo4jOpsRequestLister.
+type Neo4jOpsRequestListerExpansion interface{}
+
+// Neo4jOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// Neo4jOpsRequestNamespaceLister.
+type Neo4jOpsRequestNamespaceListerExpansion interface{}
+
 // PerconaXtraDBOpsRequestListerExpansion allows custom methods to be added to
 // PerconaXtraDBOpsRequestLister.
 type PerconaXtraDBOpsRequestListerExpansion interface{}
