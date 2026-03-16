@@ -35786,7 +35786,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionSpec(ref common.Refe
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter"},
+				Required: []string{"version", "db", "coordinator", "exporter"},
 			},
 		},
 		Dependencies: []string{

@@ -52,8 +52,7 @@ type HanaDBVersionSpec struct {
 	// Database Image
 	DB HanaDatabase `json:"db"`
 	// Coordinator Image
-	// +optional
-	Coordinator HanaDBCoordinator `json:"coordinator,omitempty"`
+	Coordinator HanaDBCoordinator `json:"coordinator"`
 	// Exporter Image
 	Exporter HanaDBVersionExporter `json:"exporter"`
 	// Deprecated versions usable but considered as obsolete and best avoided typically superseded

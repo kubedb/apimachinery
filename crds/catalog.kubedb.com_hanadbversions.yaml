@@ -106,6 +106,7 @@ spec:
               version:
                 type: string
             required:
+            - coordinator
             - db
             - exporter
             - version
