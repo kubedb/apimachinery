@@ -19,7 +19,9 @@ package apis
 import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
+	
 )
 
 const (
@@ -49,6 +51,7 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 			if l, exist := req.Limits[name]; exist && l.Cmp(r) > 0 {
 				return l
 			}
+			klog.Infof("resuest : %v", r)
 			return r
 		}
 		if l, ok := req.Limits[name]; ok {
@@ -92,6 +95,7 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 	// Calculate limits first
 	for l := range defaultResources.Limits {
 		req.Limits[l] = calLimit(l, defaultResources.Limits[l])
+		klog.Infof("resuest call : %v", req.Limits[l])
 	}
 
 	// Calculate requests after limits
@@ -99,23 +103,22 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 		req.Requests[r] = calRequest(r, defaultResources.Requests[r], originalLimits[r])
 	}
 
-	// Ensure memory limit and request are the same
-	// Use the higher value between limit and request for memory
+	// Ensure memory,cpu limit is greater than or equal to request
 	if memLimit, hasLimit := req.Limits[core.ResourceMemory]; hasLimit {
 		if memRequest, hasRequest := req.Requests[core.ResourceMemory]; hasRequest {
-			if memLimit.Cmp(memRequest) > 0 {
-				// Limit is higher, set request to match limit
-				req.Requests[core.ResourceMemory] = memLimit
-			} else {
+			if memLimit.Cmp(memRequest) <= 0 {
 				// Request is higher or equal, set limit to match request
 				req.Limits[core.ResourceMemory] = memRequest
 			}
-		} else {
-			// No request, set request to match limit
-			req.Requests[core.ResourceMemory] = memLimit
 		}
-	} else if memRequest, hasRequest := req.Requests[core.ResourceMemory]; hasRequest {
-		// No limit, set limit to match request
-		req.Limits[core.ResourceMemory] = memRequest
+	}
+
+	if memLimit, hasLimit := req.Limits[core.ResourceCPU]; hasLimit {
+		if memRequest, hasRequest := req.Requests[core.ResourceCPU]; hasRequest {
+			if memLimit.Cmp(memRequest) <= 0 {
+				// Request is higher or equal, set limit to match request
+				req.Limits[core.ResourceCPU] = memRequest
+			}
+		}
 	}
 }
