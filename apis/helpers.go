@@ -19,9 +19,7 @@ package apis
 import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
-	"k8s.io/klog/v2"
 	"kmodules.xyz/client-go/apiextensions"
-	
 )
 
 const (
@@ -51,7 +49,6 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 			if l, exist := req.Limits[name]; exist && l.Cmp(r) > 0 {
 				return l
 			}
-			klog.Infof("resuest : %v", r)
 			return r
 		}
 		if l, ok := req.Limits[name]; ok {
@@ -95,7 +92,6 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 	// Calculate limits first
 	for l := range defaultResources.Limits {
 		req.Limits[l] = calLimit(l, defaultResources.Limits[l])
-		klog.Infof("resuest call : %v", req.Limits[l])
 	}
 
 	// Calculate requests after limits
