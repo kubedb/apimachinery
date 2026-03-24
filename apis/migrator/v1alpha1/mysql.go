@@ -31,8 +31,13 @@ type MySQLTarget struct {
 
 type MySQLSchema struct {
 	// Enabled controls whether the Schema Phase should be executed.
-	// +optional
 	Enabled bool `yaml:"enabled" json:"enabled"`
+	// Database is the list of databases to migrate.
+	// +optional
+	Database []string `yaml:"database" json:"database,omitempty"`
+	// ExcludeDatabase is the list of databases to exclude from migration.
+	// +optional
+	ExcludeDatabase []string `yaml:"excludeDatabase" json:"excludeDatabase,omitempty"`
 }
 
 type MySQLSnapshot struct {
