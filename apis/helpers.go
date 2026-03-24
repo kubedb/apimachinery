@@ -98,4 +98,24 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 	for r := range defaultResources.Requests {
 		req.Requests[r] = calRequest(r, defaultResources.Requests[r], originalLimits[r])
 	}
+
+	// Ensure memory limit and request are the same
+	// Use the higher value between limit and request for memory
+	if memLimit, hasLimit := req.Limits[core.ResourceMemory]; hasLimit {
+		if memRequest, hasRequest := req.Requests[core.ResourceMemory]; hasRequest {
+			if memLimit.Cmp(memRequest) > 0 {
+				// Limit is higher, set request to match limit
+				req.Requests[core.ResourceMemory] = memLimit
+			} else {
+				// Request is higher or equal, set limit to match request
+				req.Limits[core.ResourceMemory] = memRequest
+			}
+		} else {
+			// No request, set request to match limit
+			req.Requests[core.ResourceMemory] = memLimit
+		}
+	} else if memRequest, hasRequest := req.Requests[core.ResourceMemory]; hasRequest {
+		// No limit, set limit to match request
+		req.Limits[core.ResourceMemory] = memRequest
+	}
 }
