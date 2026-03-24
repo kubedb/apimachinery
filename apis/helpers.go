@@ -109,11 +109,11 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 		}
 	}
 
-	if memLimit, hasLimit := req.Limits[core.ResourceCPU]; hasLimit {
-		if memRequest, hasRequest := req.Requests[core.ResourceCPU]; hasRequest {
-			if memLimit.Cmp(memRequest) <= 0 {
+	if cpuLimit, hasLimit := req.Limits[core.ResourceCPU]; hasLimit {
+		if cpuRequest, hasRequest := req.Requests[core.ResourceCPU]; hasRequest {
+			if cpuLimit.Cmp(cpuRequest) <= 0 {
 				// Request is higher or equal, set limit to match request
-				req.Limits[core.ResourceCPU] = memRequest
+				req.Limits[core.ResourceCPU] = cpuRequest
 			}
 		}
 	}
