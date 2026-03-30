@@ -24,9 +24,9 @@ import (
 	"net/http"
 )
 
-// GetClusterInfo retrieves information about the cluster
-func (c *Client) GetClusterInfo(ctx context.Context) (*GetClusterInfoResponse, error) {
-	path := "/cluster"
+// HealthCheck checks the health of the Qdrant instance
+func (c *Client) HealthCheck(ctx context.Context) (*HealthCheckResponse, error) {
+	path := "/healthz"
 
 	req, err := c.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
@@ -44,35 +44,7 @@ func (c *Client) GetClusterInfo(ctx context.Context) (*GetClusterInfoResponse, e
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response GetClusterInfoResponse
-	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
-		return nil, fmt.Errorf("decoding response: %w", err)
-	}
-
-	return &response, nil
-}
-
-// GetCollectionClusterInfo retrieves cluster information for a specific collection
-func (c *Client) GetCollectionClusterInfo(ctx context.Context, collectionName string) (*GetCollectionClusterInfoResponse, error) {
-	path := fmt.Sprintf("/collections/%s/cluster", collectionName)
-
-	req, err := c.NewRequest(ctx, http.MethodGet, path, nil)
-	if err != nil {
-		return nil, fmt.Errorf("creating request: %w", err)
-	}
-
-	resp, err := c.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("executing request: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		bodyBytes, _ := io.ReadAll(resp.Body)
-		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
-	}
-
-	var response GetCollectionClusterInfoResponse
+	var response HealthCheckResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}

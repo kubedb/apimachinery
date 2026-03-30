@@ -1,4 +1,20 @@
-package types
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package qdrant
 
 // CollectionInfo represents basic information about a collection
 type CollectionInfo struct {
@@ -60,4 +76,26 @@ type CollectionDetails struct {
 	AutoMigrate    *bool                  `json:"auto_migrate,omitempty"`
 	RAMUsage       uint64                 `json:"ram_usage,omitempty"`
 	DiskUsage      uint64                 `json:"disk_usage,omitempty"`
+}
+
+// VectorParams defines the configuration for a single vector field
+type VectorParams struct {
+	Size     uint64 `json:"size"`
+	Distance string `json:"distance"`
+}
+
+// VectorParamsMap maps vector names to their configurations
+type VectorParamsMap map[string]*VectorParams
+
+// CreateCollectionRequest represents the request body for creating a collection
+type CreateCollectionRequest struct {
+	CollectionName string      `json:"-"`
+	VectorsConfig  interface{} `json:"vectors_config"`
+}
+
+// CreateCollectionResponse represents the response from creating a collection
+type CreateCollectionResponse struct {
+	Time   float64 `json:"time"`
+	Status string  `json:"status"`
+	Result bool    `json:"result"`
 }

@@ -24,16 +24,22 @@ import (
 	"net/http"
 )
 
-// GetClusterInfo retrieves information about the cluster
-func (c *Client) GetClusterInfo(ctx context.Context) (*GetClusterInfoResponse, error) {
-	path := "/cluster"
+// Upsert upserts points into a collection
+func (c *Client) Upsert(ctx context.Context, req *UpsertPointsRequest) (*UpsertPointsResponse, error) {
+	path := fmt.Sprintf("/collections/%s/points", req.CollectionName)
 
-	req, err := c.NewRequest(ctx, http.MethodGet, path, nil)
+	bodyBytes, err := json.Marshal(req)
+	if err != nil {
+		return nil, fmt.Errorf("marshaling request body: %w", err)
+	}
+
+	httpReq, err := c.NewRequest(ctx, http.MethodPut, path, toReader(bodyBytes))
 	if err != nil {
 		return nil, fmt.Errorf("creating request: %w", err)
 	}
+	httpReq.Header.Set("Content-Type", "application/json")
 
-	resp, err := c.Do(req)
+	resp, err := c.Do(httpReq)
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
@@ -44,7 +50,7 @@ func (c *Client) GetClusterInfo(ctx context.Context) (*GetClusterInfoResponse, e
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response GetClusterInfoResponse
+	var response UpsertPointsResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -52,16 +58,22 @@ func (c *Client) GetClusterInfo(ctx context.Context) (*GetClusterInfoResponse, e
 	return &response, nil
 }
 
-// GetCollectionClusterInfo retrieves cluster information for a specific collection
-func (c *Client) GetCollectionClusterInfo(ctx context.Context, collectionName string) (*GetCollectionClusterInfoResponse, error) {
-	path := fmt.Sprintf("/collections/%s/cluster", collectionName)
+// Get retrieves points from a collection by their IDs
+func (c *Client) Get(ctx context.Context, req *GetPointsRequest) (*GetPointsResponse, error) {
+	path := fmt.Sprintf("/collections/%s/points", req.CollectionName)
 
-	req, err := c.NewRequest(ctx, http.MethodGet, path, nil)
+	bodyBytes, err := json.Marshal(req)
+	if err != nil {
+		return nil, fmt.Errorf("marshaling request body: %w", err)
+	}
+
+	httpReq, err := c.NewRequest(ctx, http.MethodPost, path, toReader(bodyBytes))
 	if err != nil {
 		return nil, fmt.Errorf("creating request: %w", err)
 	}
+	httpReq.Header.Set("Content-Type", "application/json")
 
-	resp, err := c.Do(req)
+	resp, err := c.Do(httpReq)
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
@@ -72,7 +84,7 @@ func (c *Client) GetCollectionClusterInfo(ctx context.Context, collectionName st
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response GetCollectionClusterInfoResponse
+	var response GetPointsResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}

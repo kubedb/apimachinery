@@ -1,3 +1,19 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package qdrant
 
 import (
@@ -6,12 +22,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"kubedb.dev/apimachinery/pkg/utils/http/qdrant/types"
 )
 
 // CreateFullSnapshot creates a new full storage snapshot
-func (c *Client) CreateFullSnapshot(ctx context.Context) (*types.CreateSnapshotResponse, error) {
+func (c *Client) CreateFullSnapshot(ctx context.Context) (*CreateSnapshotResponse, error) {
 	path := "/snapshots"
 
 	req, err := c.NewRequest(ctx, http.MethodPost, path, nil)
@@ -30,7 +44,7 @@ func (c *Client) CreateFullSnapshot(ctx context.Context) (*types.CreateSnapshotR
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.CreateSnapshotResponse
+	var response CreateSnapshotResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -39,7 +53,7 @@ func (c *Client) CreateFullSnapshot(ctx context.Context) (*types.CreateSnapshotR
 }
 
 // ListFullSnapshots lists all full storage snapshots
-func (c *Client) ListFullSnapshots(ctx context.Context) (*types.ListSnapshotsResponse, error) {
+func (c *Client) ListFullSnapshots(ctx context.Context) (*ListSnapshotsResponse, error) {
 	path := "/snapshots"
 
 	req, err := c.NewRequest(ctx, http.MethodGet, path, nil)
@@ -58,7 +72,7 @@ func (c *Client) ListFullSnapshots(ctx context.Context) (*types.ListSnapshotsRes
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.ListSnapshotsResponse
+	var response ListSnapshotsResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -67,7 +81,7 @@ func (c *Client) ListFullSnapshots(ctx context.Context) (*types.ListSnapshotsRes
 }
 
 // DeleteFullSnapshot deletes a specific full storage snapshot
-func (c *Client) DeleteFullSnapshot(ctx context.Context, snapshotName string) (*types.DeleteSnapshotResponse, error) {
+func (c *Client) DeleteFullSnapshot(ctx context.Context, snapshotName string) (*DeleteSnapshotResponse, error) {
 	path := fmt.Sprintf("/snapshots/%s", snapshotName)
 
 	req, err := c.NewRequest(ctx, http.MethodDelete, path, nil)
@@ -86,7 +100,7 @@ func (c *Client) DeleteFullSnapshot(ctx context.Context, snapshotName string) (*
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.DeleteSnapshotResponse
+	var response DeleteSnapshotResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -95,7 +109,7 @@ func (c *Client) DeleteFullSnapshot(ctx context.Context, snapshotName string) (*
 }
 
 // RecoverFullSnapshot Recovers a full storage snapshot from a specified location
-func (c *Client) RecoverFullSnapshot(ctx context.Context, location string) (*types.RecoverSnapshotResponse, error) {
+func (c *Client) RecoverFullSnapshot(ctx context.Context, location string) (*RecoverSnapshotResponse, error) {
 	path := "/snapshots/upload"
 
 	requestBody := map[string]string{
@@ -125,7 +139,7 @@ func (c *Client) RecoverFullSnapshot(ctx context.Context, location string) (*typ
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.RecoverSnapshotResponse
+	var response RecoverSnapshotResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -134,7 +148,7 @@ func (c *Client) RecoverFullSnapshot(ctx context.Context, location string) (*typ
 }
 
 // CreateCollectionSnapshot creates a new snapshot for a collection
-func (c *Client) CreateCollectionSnapshot(ctx context.Context, collectionName string) (*types.CreateSnapshotResponse, error) {
+func (c *Client) CreateCollectionSnapshot(ctx context.Context, collectionName string) (*CreateSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/snapshots", collectionName)
 
 	req, err := c.NewRequest(ctx, http.MethodPost, path, nil)
@@ -153,7 +167,7 @@ func (c *Client) CreateCollectionSnapshot(ctx context.Context, collectionName st
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.CreateSnapshotResponse
+	var response CreateSnapshotResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -162,7 +176,7 @@ func (c *Client) CreateCollectionSnapshot(ctx context.Context, collectionName st
 }
 
 // ListCollectionSnapshots lists all snapshots for a collection
-func (c *Client) ListCollectionSnapshots(ctx context.Context, collectionName string) (*types.ListSnapshotsResponse, error) {
+func (c *Client) ListCollectionSnapshots(ctx context.Context, collectionName string) (*ListSnapshotsResponse, error) {
 	path := fmt.Sprintf("/collections/%s/snapshots", collectionName)
 
 	req, err := c.NewRequest(ctx, http.MethodGet, path, nil)
@@ -181,7 +195,7 @@ func (c *Client) ListCollectionSnapshots(ctx context.Context, collectionName str
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.ListSnapshotsResponse
+	var response ListSnapshotsResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -190,7 +204,7 @@ func (c *Client) ListCollectionSnapshots(ctx context.Context, collectionName str
 }
 
 // DeleteCollectionSnapshot deletes a specific snapshot for a collection
-func (c *Client) DeleteCollectionSnapshot(ctx context.Context, collectionName string, snapshotName string) (*types.DeleteSnapshotResponse, error) {
+func (c *Client) DeleteCollectionSnapshot(ctx context.Context, collectionName string, snapshotName string) (*DeleteSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/snapshots/%s", collectionName, snapshotName)
 
 	req, err := c.NewRequest(ctx, http.MethodDelete, path, nil)
@@ -209,7 +223,7 @@ func (c *Client) DeleteCollectionSnapshot(ctx context.Context, collectionName st
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.DeleteSnapshotResponse
+	var response DeleteSnapshotResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -218,7 +232,7 @@ func (c *Client) DeleteCollectionSnapshot(ctx context.Context, collectionName st
 }
 
 // RecoverCollectionSnapshot Recovers a collection snapshot from a specified location
-func (c *Client) RecoverCollectionSnapshot(ctx context.Context, collectionName string, location string) (*types.RecoverSnapshotResponse, error) {
+func (c *Client) RecoverCollectionSnapshot(ctx context.Context, collectionName string, location string) (*RecoverSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/snapshots/upload", collectionName)
 
 	requestBody := map[string]string{
@@ -248,7 +262,7 @@ func (c *Client) RecoverCollectionSnapshot(ctx context.Context, collectionName s
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.RecoverSnapshotResponse
+	var response RecoverSnapshotResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -282,7 +296,7 @@ func (c *Client) DownloadCollectionSnapshot(ctx context.Context, collectionName 
 }
 
 // CreateShardSnapshot creates a new snapshot for a specific shard
-func (c *Client) CreateShardSnapshot(ctx context.Context, collectionName string, shardID string) (*types.CreateSnapshotResponse, error) {
+func (c *Client) CreateShardSnapshot(ctx context.Context, collectionName string, shardID string) (*CreateSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/shards/%s/snapshots", collectionName, shardID)
 
 	req, err := c.NewRequest(ctx, http.MethodPost, path, nil)
@@ -301,7 +315,7 @@ func (c *Client) CreateShardSnapshot(ctx context.Context, collectionName string,
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.CreateSnapshotResponse
+	var response CreateSnapshotResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -310,7 +324,7 @@ func (c *Client) CreateShardSnapshot(ctx context.Context, collectionName string,
 }
 
 // ListShardSnapshots lists all snapshots for a specific shard
-func (c *Client) ListShardSnapshots(ctx context.Context, collectionName string, shardID string) (*types.ListSnapshotsResponse, error) {
+func (c *Client) ListShardSnapshots(ctx context.Context, collectionName string, shardID string) (*ListSnapshotsResponse, error) {
 	path := fmt.Sprintf("/collections/%s/shards/%s/snapshots", collectionName, shardID)
 
 	req, err := c.NewRequest(ctx, http.MethodGet, path, nil)
@@ -329,7 +343,7 @@ func (c *Client) ListShardSnapshots(ctx context.Context, collectionName string, 
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.ListSnapshotsResponse
+	var response ListSnapshotsResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -338,7 +352,7 @@ func (c *Client) ListShardSnapshots(ctx context.Context, collectionName string, 
 }
 
 // DeleteShardSnapshot deletes a specific snapshot for a shard
-func (c *Client) DeleteShardSnapshot(ctx context.Context, collectionName string, shardID string, snapshotName string) (*types.DeleteSnapshotResponse, error) {
+func (c *Client) DeleteShardSnapshot(ctx context.Context, collectionName string, shardID string, snapshotName string) (*DeleteSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/shards/%s/snapshots/%s", collectionName, shardID, snapshotName)
 
 	req, err := c.NewRequest(ctx, http.MethodDelete, path, nil)
@@ -357,7 +371,7 @@ func (c *Client) DeleteShardSnapshot(ctx context.Context, collectionName string,
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.DeleteSnapshotResponse
+	var response DeleteSnapshotResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
@@ -367,7 +381,7 @@ func (c *Client) DeleteShardSnapshot(ctx context.Context, collectionName string,
 
 // RecoverShardSnapshot Recovers a shard snapshot from a specified location
 // The location can be a URL or a file path depending on the Qdrant configuration
-func (c *Client) RecoverShardSnapshot(ctx context.Context, collectionName string, shardID string, snapshotName string, location string) (*types.RecoverSnapshotResponse, error) {
+func (c *Client) RecoverShardSnapshot(ctx context.Context, collectionName string, shardID string, snapshotName string, location string) (*RecoverSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/shards/%s/snapshots/upload", collectionName, shardID)
 
 	requestBody := map[string]string{
@@ -397,7 +411,7 @@ func (c *Client) RecoverShardSnapshot(ctx context.Context, collectionName string
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response types.RecoverSnapshotResponse
+	var response RecoverSnapshotResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
