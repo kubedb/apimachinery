@@ -21,3 +21,9 @@ type Result struct {
 	OperationId uint64 `json:"operation_id,omitempty"`
 	Status      string `json:"status,omitempty"`
 }
+
+type GenericResponse struct {
+	Time   float64 `json:"time"`
+	Status string  `json:"status"`
+	Result bool    `json:"result"`
+}
