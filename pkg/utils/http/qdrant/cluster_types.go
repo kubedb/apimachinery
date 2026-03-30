@@ -87,6 +87,7 @@ type ClusterInfo struct {
 	ShardTransfers        []ShardTransfer        `json:"shard_transfers"`
 	ConsensusThreadStatus map[string]interface{} `json:"consensus_thread_status"`
 	MessageSendFailures   map[string]int         `json:"message_send_failures"`
+	RaftInfo              RaftInfo               `json:"raft_info"`
 }
 
 // GetClusterInfoResponse represents the response from getting cluster info
@@ -101,4 +102,13 @@ type GetCollectionClusterInfoResponse struct {
 	Time   float64               `json:"time"`
 	Status string                `json:"status"`
 	Result CollectionClusterInfo `json:"result"`
+}
+
+type RaftInfo struct {
+	Term              uint64  `json:"term"`
+	Commit            uint64  `json:"commit"`
+	PendingOperations int     `json:"pending_operations"` // >= 0
+	IsVoter           bool    `json:"is_voter"`
+	Leader            *uint64 `json:"leader"` // nil if no leader
+	Role              string  `json:"role"`
 }

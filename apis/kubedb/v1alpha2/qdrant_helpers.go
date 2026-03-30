@@ -121,13 +121,12 @@ func (q *Qdrant) ServiceDNS() string {
 	return fmt.Sprintf("%s.%s.svc", q.ServiceName(), q.Namespace)
 }
 
-func (q *Qdrant) GetPodAddress(i int) string {
-	return fmt.Sprintf("%s-%d.%s.%s.svc:%d",
+func (q *Qdrant) PodDNS(ordinal string) string {
+	return fmt.Sprintf("%s-%s.%s.%s.svc",
 		q.OffshootName(),
-		i,
+		ordinal,
 		q.GoverningServiceName(),
 		q.Namespace,
-		kubedb.QdrantHTTPPort,
 	)
 }
 
