@@ -15,3 +15,9 @@ limitations under the License.
 */
 
 package qdrant
+
+// Result represents the result of an operation
+type Result struct {
+	OperationId uint64 `json:"operation_id,omitempty"`
+	Status      string `json:"status,omitempty"`
+}
