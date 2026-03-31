@@ -754,6 +754,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Pgpool":                                        schema_apimachinery_apis_kubedb_v1alpha2_Pgpool(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolConfiguration":                           schema_apimachinery_apis_kubedb_v1alpha2_PgpoolConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolList":                                    schema_apimachinery_apis_kubedb_v1alpha2_PgpoolList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolLoadBalancingSpec":                       schema_apimachinery_apis_kubedb_v1alpha2_PgpoolLoadBalancingSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolStatsService":                            schema_apimachinery_apis_kubedb_v1alpha2_PgpoolStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_PgpoolStatus(ref),
@@ -42826,16 +42827,48 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolConfiguration(ref common.Ref
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"pgpoolConfig": {
+					"secretName": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+							Description: "SecretName is an optional field to provide custom configuration file for the database (i.e. mssql.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). Configurations from this secret will override default configurations. This secret must be created by user.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"inline": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Inline contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"backends": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Backends are used to specify the load balancing configuration. Each backend node is represented by a PgpoolLoadBalancingSpec, which includes the backend’s name, host, port, its corresponding weight, and other load-balancing parameters.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolLoadBalancingSpec"),
+									},
+								},
+							},
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolLoadBalancingSpec"},
 	}
 }
 
@@ -42885,6 +42918,53 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolList(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Pgpool"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolLoadBalancingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PgpoolLoadBalancingSpec defines the load balancing configuration for a backend node in Pgpool.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"groupName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GroupName should match with read replica group name in the KubeDB controlled postgresql server. For primary and standby node this should be \"PRIMARY\" and \"STANDBY\" respectively.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"hostName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HostName is the address of the backend node.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"flag": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Flag is used to set Pgpool backend flag (e.g. 'ALLOW_TO_FAILOVER', 'DISALLOW_TO_FAILOVER', 'ALWAYS_PRIMARY')",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"weight": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"weight"},
+			},
+		},
 	}
 }
 
@@ -42938,7 +43018,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref common.ReferenceCal
 					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolConfiguration"),
 						},
 					},
 					"init": {
@@ -43012,7 +43092,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PgpoolSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.ObjectReference", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PgpoolConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
