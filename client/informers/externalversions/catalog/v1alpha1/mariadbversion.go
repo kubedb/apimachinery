@@ -22,15 +22,14 @@ import (
 	"context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
-	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
-
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
+	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
+	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 )
 
 // MariaDBVersionInformer provides access to a shared informer and lister for

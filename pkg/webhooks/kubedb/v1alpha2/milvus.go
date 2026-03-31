@@ -178,6 +178,37 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 		}
 	}
 
+	if db.Spec.TLS != nil {
+		if db.Spec.TLS.IssuerRef == nil {
+			allErr = append(allErr, field.Invalid(
+				field.NewPath("spec").Child("tls").Child("issuerRef"),
+				db.Name,
+				"spec.tls.issuerRef is required when TLS is configured",
+			))
+		}
+
+		// Validate external TLS
+		if db.Spec.TLS.External != nil {
+			if db.Spec.TLS.External.Mode == "" {
+				allErr = append(allErr, field.Invalid(
+					field.NewPath("spec").Child("tls").Child("external").Child("mode"),
+					db.Name,
+					"spec.tls.external.mode must be specified",
+				))
+			}
+		}
+
+		if db.Spec.TLS.Internal != nil {
+			if db.Spec.TLS.Internal.Enabled == nil {
+				allErr = append(allErr, field.Invalid(
+					field.NewPath("spec").Child("tls").Child("internal").Child("enabled"),
+					db.Name,
+					"spec.tls.internal.enabled must be explicitly set to true or false",
+				))
+			}
+		}
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}

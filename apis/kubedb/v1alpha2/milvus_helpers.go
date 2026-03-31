@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -354,6 +355,8 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 
 	m.SetHealthCheckerDefaults()
 
+	m.SetTLSDefaults()
+
 	if m.Spec.Monitor != nil {
 		if m.Spec.Monitor.Prometheus == nil {
 			m.Spec.Monitor.Prometheus = &mona.PrometheusSpec{}
@@ -369,6 +372,27 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = mvVersion.Spec.SecurityContext.RunAsUser
 		}
 	}
+}
+
+func (m *Milvus) SetTLSDefaults() {
+	if m.Spec.TLS == nil || m.Spec.TLS.IssuerRef == nil {
+		return
+	}
+
+	if m.Spec.TLS.External == nil {
+		m.Spec.TLS.External = &MilvusExternalProtocolTLSConfig{
+			Mode: MilvusTLSModeDisabled,
+		}
+	}
+
+	if m.Spec.TLS.Internal == nil {
+		m.Spec.TLS.Internal = &MilvusInternalProtocolTLSConfig{
+			Enabled: pointer.BoolP(false),
+		}
+	}
+
+	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MilvusCertificateTypeServer), m.CertificateName(MilvusCertificateTypeServer))
+	m.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(m.Spec.TLS.Certificates, string(MilvusCertificateTypeClient), m.CertificateName(MilvusCertificateTypeClient))
 }
 
 func (m *Milvus) setMetaStorageDefaults() {
@@ -507,4 +531,20 @@ func (m milvusStatsService) TLSConfig() *promapi.TLSConfig {
 
 func (m Milvus) StatsService() mona.StatsAccessor {
 	return &milvusStatsService{&m}
+}
+
+// GetCertSecretName returns the secret name for a certificate alias if any,
+// otherwise returns default certificate secret name for the given alias.
+func (m *Milvus) GetCertSecretName(alias MilvusCertificateType) string {
+	if m.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(m.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return m.CertificateName(alias)
+}
+
+func (m *Milvus) CertificateName(alias MilvusCertificateType) string {
+	return meta_util.NameWithSuffix(m.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
