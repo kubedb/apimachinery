@@ -322,7 +322,7 @@ func (ed *ElasticsearchDashboard) setDefaultContainerSecurityContext(esVersion c
 
 func (ed *ElasticsearchDashboard) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
 	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.ElasticsearchContainerName)
-	if container != nil && (container.Resources.Requests == nil && container.Resources.Limits == nil) {
+	if container != nil {
 		apis.SetDefaultResourceLimits(&container.Resources, kubedb.DefaultResources)
 	}
 }
