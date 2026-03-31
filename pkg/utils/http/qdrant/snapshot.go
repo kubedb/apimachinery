@@ -259,7 +259,6 @@ func (c *Client) RecoverCollectionSnapshot(
 	collectionName string,
 	snapshotPath string,
 ) (*RecoverSnapshotResponse, error) {
-
 	// Endpoint
 	urlPath := fmt.Sprintf("/collections/%s/snapshots/upload", collectionName)
 

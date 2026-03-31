@@ -35,19 +35,19 @@ type RaftInfo struct {
 
 // MessageSendError represents a message send failure record.
 type MessageSendError struct {
-	Count              int     `json:"count"`
-	LatestError        *string `json:"latest_error"`
-	LatestErrorTime    *string `json:"latest_error_timestamp"`
+	Count           int     `json:"count"`
+	LatestError     *string `json:"latest_error"`
+	LatestErrorTime *string `json:"latest_error_timestamp"`
 }
 
 // ClusterInfo represents the overall cluster information.
 type ClusterInfo struct {
-	PeerID                uint64                 `json:"peer_id"`
-	Peers                 map[string]PeerState   `json:"peers"`
-	ShardTransfers        []ShardTransfer        `json:"shard_transfers"`
-	ConsensusThreadStatus map[string]interface{} `json:"consensus_thread_status"`
+	PeerID                uint64                      `json:"peer_id"`
+	Peers                 map[string]PeerState        `json:"peers"`
+	ShardTransfers        []ShardTransfer             `json:"shard_transfers"`
+	ConsensusThreadStatus map[string]interface{}      `json:"consensus_thread_status"`
 	MessageSendFailures   map[string]MessageSendError `json:"message_send_failures"`
-	RaftInfo              RaftInfo               `json:"raft_info"`
+	RaftInfo              RaftInfo                    `json:"raft_info"`
 }
 
 // GetClusterInfoResponse represents the response from getting cluster info.
