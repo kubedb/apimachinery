@@ -17,11 +17,15 @@ limitations under the License.
 package qdrant
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
+	"os"
+	"path/filepath"
 )
 
 type byteReader struct {
@@ -249,37 +253,64 @@ func (c *Client) DeleteCollectionSnapshot(ctx context.Context, collectionName st
 	return &response, nil
 }
 
-// RecoverCollectionSnapshot recovers a collection from a snapshot at the given location.
-func (c *Client) RecoverCollectionSnapshot(ctx context.Context, collectionName string, location string) (*RecoverSnapshotResponse, error) {
-	path := fmt.Sprintf("/collections/%s/snapshots/upload", collectionName)
+// RecoverCollectionSnapshot uploads and restores a collection from a snapshot file
+func (c *Client) RecoverCollectionSnapshot(
+	ctx context.Context,
+	collectionName string,
+	snapshotPath string,
+) (*RecoverSnapshotResponse, error) {
 
-	requestBody := map[string]string{
-		"location": location,
-	}
+	// Endpoint
+	urlPath := fmt.Sprintf("/collections/%s/snapshots/upload", collectionName)
 
-	bodyBytes, err := json.Marshal(requestBody)
+	// Open snapshot file
+	file, err := os.Open(snapshotPath)
 	if err != nil {
-		return nil, fmt.Errorf("marshaling request body: %w", err)
+		return nil, fmt.Errorf("opening snapshot file: %w", err)
+	}
+	defer file.Close()
+
+	// Prepare multipart body
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+
+	part, err := writer.CreateFormFile("snapshot", filepath.Base(snapshotPath))
+	if err != nil {
+		return nil, fmt.Errorf("creating form file: %w", err)
 	}
 
-	req, err := c.NewRequest(ctx, http.MethodPut, path, toReader(bodyBytes))
+	_, err = io.Copy(part, file)
+	if err != nil {
+		return nil, fmt.Errorf("copying file data: %w", err)
+	}
+
+	err = writer.Close()
+	if err != nil {
+		return nil, fmt.Errorf("closing multipart writer: %w", err)
+	}
+
+	// Create request
+	req, err := c.NewRequest(ctx, http.MethodPost, urlPath, body)
 	if err != nil {
 		return nil, fmt.Errorf("creating request: %w", err)
 	}
 
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Content-Type", writer.FormDataContentType())
 
+	// Execute request
 	resp, err := c.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
 	defer resp.Body.Close()
 
+	// Handle non-200 response
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
+	// Decode response
 	var response RecoverSnapshotResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
