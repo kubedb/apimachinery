@@ -476,7 +476,7 @@ func (m *Milvus) AssignDefaultContainerSecurityContext(mvVersion *catalog.Milvus
 
 func (m *Milvus) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplateSpec) {
 	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.MilvusContainerName)
-	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+	if dbContainer != nil {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
 }
