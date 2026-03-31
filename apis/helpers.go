@@ -39,6 +39,7 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 	// if request is set,
 	//		- limit set:
 	//			- return max(limit,request)
+	//      return request
 	// else if limit set:
 	//		- return limit
 	// else
@@ -57,14 +58,12 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 		return defaultValue
 	}
 
-	// if request is not set,
-	//		- if limit exists:
-	//				- copy limit
-	//		- else
-	//				- set default
-	// else
-	// 		- return request
-	// endif
+	// if request is set,
+	//     return request
+	//
+	// if limit exists:
+	//		return limit
+	//	return default
 	calRequest := func(name core.ResourceName, defaultValue resource.Quantity, originalLimit resource.Quantity) resource.Quantity {
 		if r, ok := req.Requests[name]; ok {
 			return r
@@ -99,21 +98,12 @@ func SetDefaultResourceLimits(req *core.ResourceRequirements, defaultResources c
 		req.Requests[r] = calRequest(r, defaultResources.Requests[r], originalLimits[r])
 	}
 
-	// Ensure memory,cpu limit is greater than or equal to request
-	if memLimit, hasLimit := req.Limits[core.ResourceMemory]; hasLimit {
-		if memRequest, hasRequest := req.Requests[core.ResourceMemory]; hasRequest {
-			if memLimit.Cmp(memRequest) <= 0 {
+	// Ensure resource limit is greater than or equal to request
+	for res, resReq := range req.Requests {
+		if resLim, limExists := req.Limits[res]; limExists {
+			if resLim.Cmp(resReq) <= 0 {
 				// Request is higher or equal, set limit to match request
-				req.Limits[core.ResourceMemory] = memRequest
-			}
-		}
-	}
-
-	if cpuLimit, hasLimit := req.Limits[core.ResourceCPU]; hasLimit {
-		if cpuRequest, hasRequest := req.Requests[core.ResourceCPU]; hasRequest {
-			if cpuLimit.Cmp(cpuRequest) <= 0 {
-				// Request is higher or equal, set limit to match request
-				req.Limits[core.ResourceCPU] = cpuRequest
+				req.Limits[res] = resReq
 			}
 		}
 	}
