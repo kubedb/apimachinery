@@ -46,31 +46,10 @@ const (
 	InlineConfigKeyPrefix   = "inline"
 	InlineConfigKeyPrefixZZ = "zz-inline"
 
-	// distributed const
-	DistributedDatabaseLabel                   = GroupName + "/distributed"
-	DistributedCustomConfigSecretNameSuffix    = "custom-config"
-	DistributedRBACNameSuffix                  = "rbac"
-	DistributedServiceExportNameSuffix         = "serviceexports"
-	DistributedTLSSecretNameSuffix             = "tls-secrets"
-	DistributedGRPCSecretNameSuffix            = "grpc-secrets"
-	DistributedAuthSecretNameSuffix            = "auth"
-	DistributedPromethuesSecretNameSuffix      = "prometheus-data"
-	DistributedPromethuesSecretVolumeName      = "prometheus-data"
-	DistributedPromethuesSecretVolumeMountPath = "/var/prometheus-data"
-	DistributedMonitoringAgentENV              = "MONITORING_AGENT"
-	DistributedMonitoringAgentPrometheus       = "prometheus"
-	DistributedDBReplicaENV                    = "DB_REPLICAS"
-	DistributedMaxVolumeUsed                   = "max_used"
-	DistributedVolumeCapacity                  = "capacity"
-
-	KubeSliceNSMIPKey         = "kubeslice.io/nsmIP"
-	KubeSlicePodIPVolumeName  = "podip"
-	KubeSlicePodIPFileName    = "podip"
-	KubeSliceNSMContainerName = "cmd-nsc"
-
 	ReplicationModeDetectorContainerName = "replication-mode-detector"
 	DatabasePodPrimary                   = "primary"
 	DatabasePodStandby                   = "standby"
+	DatabasePodSecondary                 = "secondary"
 
 	ComponentDatabase         = "database"
 	ComponentConnectionPooler = "connection-pooler"
@@ -400,11 +379,16 @@ const (
 	DatabasePodMasterComponent  = "Master"
 	DatabasePodSlaveComponent   = "Slave"
 
-	MariaDBDistributedUpgradeCommand           = "mariadb-upgrade"
-	MariaDBDistributedPodMetricGetCommand      = "get-pod-metrics"
-	MariaDBDistributedPodGetCommand            = "get-pod"
-	MariaDBDistributedVolumeUsageGetCommand    = "get-volume-usage"
-	MariaDBDistributedVolumeCapacityGetCommand = "get-volume-capacity"
+	MariaDBArchiverPVCRestorerSuffix           = "pvc-restorer"
+	MariaDBBinlogRestoreSidekickSuffix         = "binlog-restorer"
+	MariaDBBinlogRestoreServiceSuffix          = "binlog-restore"
+	MariaDBXtraBackupInfoFile                  = "/var/lib/mysql/mariadb_backup_binlog_info"
+	MariaDBBackupInfoFile                      = "/var/lib/mysql/xtrabackup_binlog_info"
+	MariaDBArchiverRestoreRecoveryFileName     = "/tmp/recovery.done"
+	MariaDBArchiverBackupJobSelector           = GroupName + "/archiver-job-name"
+	MariaDBSidekickNameLabelKey                = GroupName + "/sidekick-name"
+	MariaDBArchiverBaseBackupRestic            = "Restic"
+	MariaDBArchiverBaseBackupVolumeSnapshooter = "VolumeSnapshotter"
 
 	// Maxscale
 	MaxscaleCommonName            = "mx"
@@ -1776,19 +1760,19 @@ const (
 	ClickHouseKeeperServerID             = "KEEPERID"
 )
 
-// =========================== Cassandra Constants ============================
+// =========================== Neo4j Constants ============================
 
 const (
-	Neo4jBoltPort       = 7687 // Bolt protocol (binary driver, neo4j:// and bolt://)
-	Neo4jHTTPPort       = 7474 // Neo4j Browser and Cypher HTTP API
-	Neo4jHTTPSPort      = 7473 // Neo4j Browser and Cypher HTTPS API
-	Neo4jBackupPort     = 6362 // Online backup service (internal)
-	Neo4jGraphitePort   = 2003 // Graphite metrics (optional)
-	Neo4jPrometheusPort = 2004 // Prometheus metrics (optional)
-	Neo4jJMXPort        = 3637 // Java Management Extensions (o // ptional)
-	Neo4jRoutingPort    = 7688 // Routing protocol for Causal Clustering
-	Neo4jRaftPort       = 7000 // Raft protocol for Causal Clustering
-	Neo4jClusterTxPort  = 6000 // Cluster transaction protocol for Causal Clustering
+	Neo4jBoltPort      = 7687 // Bolt protocol (binary driver, neo4j:// and bolt://)
+	Neo4jHTTPPort      = 7474 // Neo4j Browser and Cypher HTTP API
+	Neo4jHTTPSPort     = 7473 // Neo4j Browser and Cypher HTTPS API
+	Neo4jBackupPort    = 6362 // Online backup service (internal)
+	Neo4jGraphitePort  = 2003 // Graphite metrics (optional)
+	Neo4jExporterPort  = 2004 // Prometheus metrics (optional)
+	Neo4jJMXPort       = 3637 // Java Management Extensions (o // ptional)
+	Neo4jRoutingPort   = 7688 // Routing protocol for Causal Clustering
+	Neo4jRaftPort      = 7000 // Raft protocol for Causal Clustering
+	Neo4jClusterTxPort = 6000 // Cluster transaction protocol for Causal Clustering
 
 	Neo4jConfigVolName      = "neo4j-conf"
 	Neo4jVolumeCustomConfig = "custom-config"
@@ -2144,6 +2128,16 @@ var (
 			core.ResourceMemory: resource.MustParse("10Gi"),
 		},
 	}
+
+	DefaultResourcesNeo4j = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("2Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("2Gi"),
+		},
+	}
 )
 
 func DefaultArbiter(computeOnly bool) core.ResourceRequirements {
@@ -2290,10 +2284,14 @@ const (
 	// Mount paths
 	HanaDBDataDir         = "/hana/mounts"
 	HanaDBSecretMountPath = "/etc/hana-secrets"
+	HanaDBConfigFileName  = "global.ini"
+	HanaDBConfigDir       = "/hana/mounts/system/config"
+	HanaDBConfigMountPath = "/etc/hanadb-config"
 
 	// Volume names
 	HanaDBDataVolume           = "data"
 	HanaDBVolumePasswordSecret = "password-secret"
+	HanaDBConfigVolumeName     = "hanadb-config"
 
 	// User and Group IDs
 	HanaDBUserID  = 12000 // hxeadm UID
@@ -2322,11 +2320,56 @@ const (
 
 	HanaDBPrimaryServicePortName = "primary"
 
-	HanaDBCoordinatorPort           = 2380
-	HanaDBCoordinatorClientPort     = 2379
-	HanaDBCoordinatorPortName       = "coordinator"
-	HanaDBCoordinatorClientPortName = "coordinator-client"
+	HanaDBCoordinatorPort       = 2380
+	HanaDBCoordinatorClientPort = 2379
 
 	// TenantDatabaseName is the name of the KubeDB managed tenant database
 	KubeDBTenantDatabaseName = "KUBEDB_HEALTH_CHECK"
+)
+
+// =========================== Distributed Constants ============================
+const (
+	DistributedDatabaseLabel                   = GroupName + "/distributed"
+	DistributedCustomConfigSecretNameSuffix    = "custom-config"
+	DistributedRBACNameSuffix                  = "rbac"
+	DistributedServiceExportNameSuffix         = "serviceexports"
+	DistributedTLSSecretNameSuffix             = "tls-secrets"
+	DistributedGRPCSecretNameSuffix            = "grpc-secrets"
+	DistributedAuthSecretNameSuffix            = "auth"
+	DistributedPromethuesSecretNameSuffix      = "prometheus-data"
+	DistributedPromethuesSecretVolumeName      = "prometheus-data"
+	DistributedPromethuesSecretVolumeMountPath = "/var/prometheus-data"
+	DistributedMonitoringAgentENV              = "MONITORING_AGENT"
+	DistributedMonitoringAgentPrometheus       = "prometheus"
+	DistributedDBReplicaENV                    = "DB_REPLICAS"
+	DistributedMaxVolumeUsed                   = "max_used"
+	DistributedVolumeCapacity                  = "capacity"
+	DistributedPrimaryServiceExportSuffix      = "primary-serviceexport"
+	DistributedPhysicalBackupContainerName     = "physical-backup-1"
+	DistributedPhysicalRestoreContainerName    = "distributed-physical-backup-restore-0"
+	KubesliceContainerExcludeLabel             = "kubeslice.io/exclude"
+	KubeSliceDomainSuffix                      = "slice.local"
+	KubeSliceNSMIPKey                          = "kubeslice.io/nsmIP"
+	KubeSlicePodIPVolumeName                   = "podip"
+	KubeSlicePodIPFileName                     = "podip"
+	KubeSliceNSMContainerName                  = "cmd-nsc-grpc"
+
+	// Archiver
+	DistributedArchiverSnapshotInfoAnnotation = "distributedsnapshotinfo"
+	DistributedArchiverCMKeySnapshots         = "snapshots"
+	DistributedArchiverCMKeyRestoreSession    = "restoresession"
+	DistributedArchiverBackupCMNameSuffix     = "backup"
+	DistributedArchiverRestoreCMNameSuffix    = "restore"
+	DistributedArchiverSnapshotCMNameSuffix   = "snapshots"
+
+	// GRPC commands
+	DistributedCommandDatabasePodGet     = "get_pod"
+	DistributedCommandDatabseUpgrade     = "database-upgrade"
+	DistributedCommandRecoveryFileCreate = "kubedb_create_recovery_done_file"
+	DistributedCommandBackup             = "kubestash_backup"
+	DistributedCommandRestore            = "kubestash_backup_restore"
+	DistributedCommandVolumeSnapshot     = "kubestash_volume_snapshot"
+	DistributedCommandPodMetric          = "kubedb_autoscaler_get_pod_metrics"
+	DistributedCommandVolumeUsage        = "kubedb_autoscaler_volume_usage"
+	DistributedCommandVolumeCapacity     = "kubedb_autoscaler_volume_capacity"
 )

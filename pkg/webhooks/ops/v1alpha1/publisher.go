@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	"slices"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
@@ -150,11 +151,9 @@ func (w *PublisherCustomWebhook) validateCreateOrUpdate(req *replapi.Publisher) 
 
 func (w *PublisherCustomWebhook) validatePubForMajorVersion10(pub *replapi.Publisher, dbVersion *catalog.PostgresVersion) error {
 	if pub.Spec.Parameters != nil && pub.Spec.Parameters.Operations != nil {
-		for _, value := range pub.Spec.Parameters.Operations {
-			if value == replapi.DMLOpTruncate {
-				msg := fmt.Sprintf("truncate in publish paramaters is not allowed in postgresVersion %s", dbVersion.Spec.Version)
-				return errors.New(msg)
-			}
+		if slices.Contains(pub.Spec.Parameters.Operations, replapi.DMLOpTruncate) {
+			msg := fmt.Sprintf("truncate in publish paramaters is not allowed in postgresVersion %s", dbVersion.Spec.Version)
+			return errors.New(msg)
 		}
 	}
 	return nil

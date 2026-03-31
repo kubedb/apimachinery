@@ -214,6 +214,21 @@ func (in *KubernetesInfo) DeepCopyInto(out *KubernetesInfo) {
 		(*in).DeepCopyInto(*out)
 	}
 	in.NodeStats.DeepCopyInto(&out.NodeStats)
+	if in.Distributions != nil {
+		in, out := &in.Distributions, &out.Distributions
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
+	if in.StorageProvisioners != nil {
+		in, out := &in.StorageProvisioners, &out.StorageProvisioners
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
+	if in.Features != nil {
+		in, out := &in.Features, &out.Features
+		*out = new(v1.ClusterClaimFeatures)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

@@ -52,7 +52,7 @@ type NatsConfig struct {
 
 // NatsCredential represents the api response of the register licensed user api
 type NatsCredential struct {
-	NatsConfig `json:",inline,omitempty"`
+	NatsConfig `json:",inline"`
 	Credential []byte `json:"credential"`
 }
 

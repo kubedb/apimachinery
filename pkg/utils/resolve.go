@@ -58,10 +58,10 @@ func findDomain() (string, error) {
 			continue
 		}
 		if strings.HasPrefix(line, "search ") {
-			fields := strings.Fields(line)
+			fields := strings.FieldsSeq(line)
 			// search demo.svc.cluster.local svc.cluster.local cluster.local
 			// search demo.svc.cluster.local svc.cluster.local cluster.local lan
-			for _, field := range fields {
+			for field := range fields {
 				if strings.HasPrefix(field, "svc.") &&
 					!strings.HasPrefix(field, "svc.svc.") {
 					return strings.TrimPrefix(field, "svc."), nil

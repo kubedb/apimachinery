@@ -19,6 +19,7 @@ package license
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -81,10 +82,5 @@ func MeetsLicenseRestrictions(kc client.Client, lr configapi.LicenseRestrictions
 }
 
 func contains(list []string, str string) bool {
-	for _, v := range list {
-		if v == str {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(list, str)
 }

@@ -121,6 +121,25 @@ spec:
                 - notAfter
                 - notBefore
                 type: object
+              distributions:
+                items:
+                  type: string
+                type: array
+              features:
+                properties:
+                  disabledFeatures:
+                    items:
+                      type: string
+                    type: array
+                  enabledFeatures:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  externallyManagedFeatures:
+                    items:
+                      type: string
+                    type: array
+                type: object
               nodeStats:
                 properties:
                   allocatable:
@@ -202,6 +221,10 @@ spec:
                         type: integer
                     type: object
                 type: object
+              storageProvisioners:
+                items:
+                  type: string
+                type: array
               version:
                 description: |-
                   Info contains versioning information.
