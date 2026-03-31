@@ -16,6 +16,7 @@ limitations under the License.
 
 package qdrant
 
+// Snapshot represents information about a snapshot.
 type Snapshot struct {
 	Name         string `json:"name"`
 	Size         uint64 `json:"size"`
@@ -23,22 +24,28 @@ type Snapshot struct {
 	Checksum     string `json:"checksum"`
 }
 
-type ListSnapshotsResponse struct {
-	Time   float64    `json:"time"`
-	Status string     `json:"status"`
-	Result []Snapshot `json:"result"`
-}
+// CreateSnapshotResponse represents the response from creating a snapshot.
 type CreateSnapshotResponse struct {
 	Time   float64  `json:"time"`
 	Status string   `json:"status"`
 	Result Snapshot `json:"result"`
 }
+
+// ListSnapshotsResponse represents the response from listing snapshots.
+type ListSnapshotsResponse struct {
+	Time   float64    `json:"time"`
+	Status string     `json:"status"`
+	Result []Snapshot `json:"result"`
+}
+
+// DeleteSnapshotResponse represents the response from deleting a snapshot.
 type DeleteSnapshotResponse struct {
 	Time   float64 `json:"time"`
 	Status string  `json:"status"`
 	Result bool    `json:"result"`
 }
 
+// RecoverSnapshotResponse represents the response from recovering a snapshot.
 type RecoverSnapshotResponse struct {
 	Time   float64 `json:"time"`
 	Status string  `json:"status"`

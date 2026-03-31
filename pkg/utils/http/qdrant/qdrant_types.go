@@ -16,7 +16,7 @@ limitations under the License.
 
 package qdrant
 
-// HealthCheckResponse represents the response from a health check
+// HealthCheckResponse represents the response from a health check.
 type HealthCheckResponse struct {
 	Title   string `json:"title"`
 	Version string `json:"version"`

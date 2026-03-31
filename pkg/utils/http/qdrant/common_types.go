@@ -22,7 +22,8 @@ type Result struct {
 	Status      string `json:"status,omitempty"`
 }
 
-type GenericResponse struct {
+// Response is a generic response for simple boolean-result operations.
+type Response struct {
 	Time   float64 `json:"time"`
 	Status string  `json:"status"`
 	Result bool    `json:"result"`

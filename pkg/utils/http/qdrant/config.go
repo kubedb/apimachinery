@@ -23,6 +23,14 @@ import (
 	"time"
 )
 
+const (
+	defaultHost             = "localhost"
+	defaultPort             = 6333
+	defaultKeepAliveTime    = 90
+	defaultKeepAliveTimeout = 30
+)
+
+// Config holds the configuration for a Qdrant HTTP client.
 type Config struct {
 	Host             string
 	Port             int
@@ -32,13 +40,6 @@ type Config struct {
 	KeepAliveTime    int
 	KeepAliveTimeout uint
 }
-
-const (
-	defaultHost             = "localhost"
-	defaultPort             = 6333
-	defaultKeepAliveTime    = 90
-	defaultKeepAliveTimeout = 30
-)
 
 func (c *Config) getBaseURL() string {
 	host := c.Host

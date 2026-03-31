@@ -24,9 +24,9 @@ import (
 	"net/http"
 )
 
-// Upsert upserts points into a collection
-func (c *Client) Upsert(ctx context.Context, req *UpsertPointsRequest) (*UpsertPointsResponse, error) {
-	path := fmt.Sprintf("/collections/%s/points", req.CollectionName)
+// Upsert upserts points into a collection.
+func (c *Client) Upsert(ctx context.Context, collectionName string, req *UpsertPointsRequest) (*UpsertPointsResponse, error) {
+	path := fmt.Sprintf("/collections/%s/points", collectionName)
 
 	bodyBytes, err := json.Marshal(req)
 	if err != nil {
@@ -58,9 +58,9 @@ func (c *Client) Upsert(ctx context.Context, req *UpsertPointsRequest) (*UpsertP
 	return &response, nil
 }
 
-// Get retrieves points from a collection by their IDs
-func (c *Client) Get(ctx context.Context, req *GetPointsRequest) (*GetPointsResponse, error) {
-	path := fmt.Sprintf("/collections/%s/points", req.CollectionName)
+// Get retrieves points from a collection by their IDs.
+func (c *Client) Get(ctx context.Context, collectionName string, req *GetPointsRequest) (*GetPointsResponse, error) {
+	path := fmt.Sprintf("/collections/%s/points", collectionName)
 
 	bodyBytes, err := json.Marshal(req)
 	if err != nil {

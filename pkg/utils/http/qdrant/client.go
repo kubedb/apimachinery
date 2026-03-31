@@ -23,19 +23,18 @@ import (
 	"net/http"
 )
 
+// Client is an HTTP client for the Qdrant API.
+// Client is an HTTP client for the Qdrant API.
 type Client struct {
 	client  *http.Client
 	baseURL string
 	apiKey  string
 }
 
+// NewClient creates a new Qdrant HTTP client from the given config.
 func NewClient(config *Config) (*Client, error) {
 	if config == nil {
 		return nil, fmt.Errorf("config cannot be nil")
-	}
-
-	if config.Host == "" {
-		return nil, fmt.Errorf("host is required")
 	}
 
 	if config.Port == 0 {
@@ -53,6 +52,7 @@ func NewClient(config *Config) (*Client, error) {
 	}, nil
 }
 
+// Do executes an HTTP request, adding the API key header if configured.
 func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	if c.apiKey != "" {
 		req.Header.Set("api-key", c.apiKey)
@@ -61,6 +61,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	return c.client.Do(req)
 }
 
+// NewRequest creates a new HTTP request bound to the client's base URL.
 func (c *Client) NewRequest(
 	ctx context.Context,
 	method string,
@@ -77,6 +78,7 @@ func (c *Client) NewRequest(
 	return req, nil
 }
 
+// Close closes idle connections in the underlying HTTP client.
 func (c *Client) Close() {
 	if tr, ok := c.client.Transport.(*http.Transport); ok {
 		tr.CloseIdleConnections()

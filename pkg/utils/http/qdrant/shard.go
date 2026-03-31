@@ -24,38 +24,67 @@ import (
 	"net/http"
 )
 
-func (c *Client) DropReplica(ctx context.Context, collection string, peerID uint64, shardID uint64) (*GenericResponse, error) {
-	path := fmt.Sprintf("/collections/%s/cluster", collection)
-	requestBody := map[string]interface{}{
-		"drop_replica": map[string]interface{}{
-			"shard_id": shardID,
-			"peer_id":  peerID,
-		},
-	}
+// MoveShard moves a shard from one peer to another.
+func (c *Client) MoveShard(ctx context.Context, collectionName string, req *MoveShardRequest) (*Response, error) {
+	path := fmt.Sprintf("/collections/%s/cluster", collectionName)
 
-	bodyBytes, err := json.Marshal(requestBody)
+	bodyBytes, err := json.Marshal(req)
 	if err != nil {
 		return nil, fmt.Errorf("marshaling request body: %w", err)
 	}
 
-	req, err := c.NewRequest(ctx, http.MethodPost, path, toReader(bodyBytes))
-	req.Header.Set("Content-Type", "application/json")
+	httpReq, err := c.NewRequest(ctx, http.MethodPost, path, toReader(bodyBytes))
 	if err != nil {
 		return nil, fmt.Errorf("creating request: %w", err)
 	}
+	httpReq.Header.Set("Content-Type", "application/json")
 
-	resp, err := c.Do(req)
+	resp, err := c.Do(httpReq)
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		resp.Body.Close()
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response GenericResponse
+	var response Response
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return nil, fmt.Errorf("decoding response: %w", err)
+	}
+
+	return &response, nil
+}
+
+// DropReplica drops a shard replica from a peer.
+func (c *Client) DropReplica(ctx context.Context, collectionName string, req *DropReplicaRequest) (*Response, error) {
+	path := fmt.Sprintf("/collections/%s/cluster", collectionName)
+
+	bodyBytes, err := json.Marshal(req)
+	if err != nil {
+		return nil, fmt.Errorf("marshaling request body: %w", err)
+	}
+
+	httpReq, err := c.NewRequest(ctx, http.MethodPost, path, toReader(bodyBytes))
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+	httpReq.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.Do(httpReq)
+	if err != nil {
+		return nil, fmt.Errorf("executing request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
+	}
+
+	var response Response
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}

@@ -24,7 +24,7 @@ import (
 	"net/http"
 )
 
-// ListCollections returns a list of all existing collections
+// ListCollections returns a list of all existing collections.
 func (c *Client) ListCollections(ctx context.Context) (*ListCollectionsResponse, error) {
 	path := "/collections"
 
@@ -52,7 +52,7 @@ func (c *Client) ListCollections(ctx context.Context) (*ListCollectionsResponse,
 	return &response, nil
 }
 
-// GetCollection returns information about a specific collection
+// GetCollection returns information about a specific collection.
 func (c *Client) GetCollection(ctx context.Context, collectionName string) (*CollectionInfoResponse, error) {
 	path := fmt.Sprintf("/collections/%s", collectionName)
 
@@ -107,9 +107,9 @@ func (c *Client) CollectionExists(ctx context.Context, collectionName string) (b
 	return false, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 }
 
-// CreateCollection creates a new collection
-func (c *Client) CreateCollection(ctx context.Context, req *CreateCollectionRequest) (*CreateCollectionResponse, error) {
-	path := fmt.Sprintf("/collections/%s", req.CollectionName)
+// CreateCollection creates a new collection.
+func (c *Client) CreateCollection(ctx context.Context, collectionName string, req *CreateCollectionRequest) (*CreateCollectionResponse, error) {
+	path := fmt.Sprintf("/collections/%s", collectionName)
 
 	bodyBytes, err := json.Marshal(req)
 	if err != nil {

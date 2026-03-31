@@ -24,7 +24,7 @@ import (
 	"net/http"
 )
 
-// HealthCheck checks the health of the Qdrant instance
+// HealthCheck checks the health of the Qdrant instance.
 func (c *Client) HealthCheck(ctx context.Context) (*HealthCheckResponse, error) {
 	path := "/healthz"
 

@@ -24,7 +24,25 @@ import (
 	"net/http"
 )
 
-// CreateFullSnapshot creates a new full storage snapshot
+type byteReader struct {
+	data []byte
+	pos  int
+}
+
+func (r *byteReader) Read(p []byte) (n int, err error) {
+	if r.pos >= len(r.data) {
+		return 0, io.EOF
+	}
+	n = copy(p, r.data[r.pos:])
+	r.pos += n
+	return n, nil
+}
+
+func toReader(b []byte) io.Reader {
+	return &byteReader{data: b}
+}
+
+// CreateFullSnapshot creates a snapshot of the entire Qdrant instance.
 func (c *Client) CreateFullSnapshot(ctx context.Context) (*CreateSnapshotResponse, error) {
 	path := "/snapshots"
 
@@ -52,7 +70,7 @@ func (c *Client) CreateFullSnapshot(ctx context.Context) (*CreateSnapshotRespons
 	return &response, nil
 }
 
-// ListFullSnapshots lists all full storage snapshots
+// ListFullSnapshots lists all snapshots of the entire Qdrant instance.
 func (c *Client) ListFullSnapshots(ctx context.Context) (*ListSnapshotsResponse, error) {
 	path := "/snapshots"
 
@@ -80,7 +98,7 @@ func (c *Client) ListFullSnapshots(ctx context.Context) (*ListSnapshotsResponse,
 	return &response, nil
 }
 
-// DeleteFullSnapshot deletes a specific full storage snapshot
+// DeleteFullSnapshot deletes a full snapshot by name.
 func (c *Client) DeleteFullSnapshot(ctx context.Context, snapshotName string) (*DeleteSnapshotResponse, error) {
 	path := fmt.Sprintf("/snapshots/%s", snapshotName)
 
@@ -108,7 +126,7 @@ func (c *Client) DeleteFullSnapshot(ctx context.Context, snapshotName string) (*
 	return &response, nil
 }
 
-// RecoverFullSnapshot Recovers a full storage snapshot from a specified location
+// RecoverFullSnapshot recovers the entire Qdrant instance from a snapshot at the given location.
 func (c *Client) RecoverFullSnapshot(ctx context.Context, location string) (*RecoverSnapshotResponse, error) {
 	path := "/snapshots/upload"
 
@@ -147,7 +165,7 @@ func (c *Client) RecoverFullSnapshot(ctx context.Context, location string) (*Rec
 	return &response, nil
 }
 
-// CreateCollectionSnapshot creates a new snapshot for a collection
+// CreateCollectionSnapshot creates a snapshot of a specific collection.
 func (c *Client) CreateCollectionSnapshot(ctx context.Context, collectionName string) (*CreateSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/snapshots", collectionName)
 
@@ -175,7 +193,7 @@ func (c *Client) CreateCollectionSnapshot(ctx context.Context, collectionName st
 	return &response, nil
 }
 
-// ListCollectionSnapshots lists all snapshots for a collection
+// ListCollectionSnapshots lists all snapshots of a specific collection.
 func (c *Client) ListCollectionSnapshots(ctx context.Context, collectionName string) (*ListSnapshotsResponse, error) {
 	path := fmt.Sprintf("/collections/%s/snapshots", collectionName)
 
@@ -203,7 +221,7 @@ func (c *Client) ListCollectionSnapshots(ctx context.Context, collectionName str
 	return &response, nil
 }
 
-// DeleteCollectionSnapshot deletes a specific snapshot for a collection
+// DeleteCollectionSnapshot deletes a specific snapshot of a collection.
 func (c *Client) DeleteCollectionSnapshot(ctx context.Context, collectionName string, snapshotName string) (*DeleteSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/snapshots/%s", collectionName, snapshotName)
 
@@ -231,7 +249,7 @@ func (c *Client) DeleteCollectionSnapshot(ctx context.Context, collectionName st
 	return &response, nil
 }
 
-// RecoverCollectionSnapshot Recovers a collection snapshot from a specified location
+// RecoverCollectionSnapshot recovers a collection from a snapshot at the given location.
 func (c *Client) RecoverCollectionSnapshot(ctx context.Context, collectionName string, location string) (*RecoverSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/snapshots/upload", collectionName)
 
@@ -270,9 +288,7 @@ func (c *Client) RecoverCollectionSnapshot(ctx context.Context, collectionName s
 	return &response, nil
 }
 
-// DownloadCollectionSnapshot downloads a collection snapshot file
-// Returns the response body containing the snapshot file data
-// The caller is responsible for closing the returned reader
+// DownloadCollectionSnapshot downloads a specific collection snapshot.
 func (c *Client) DownloadCollectionSnapshot(ctx context.Context, collectionName string, snapshotName string) (io.ReadCloser, error) {
 	path := fmt.Sprintf("/collections/%s/snapshots/%s", collectionName, snapshotName)
 
@@ -295,7 +311,7 @@ func (c *Client) DownloadCollectionSnapshot(ctx context.Context, collectionName 
 	return resp.Body, nil
 }
 
-// CreateShardSnapshot creates a new snapshot for a specific shard
+// CreateShardSnapshot creates a snapshot of a specific shard.
 func (c *Client) CreateShardSnapshot(ctx context.Context, collectionName string, shardID string) (*CreateSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/shards/%s/snapshots", collectionName, shardID)
 
@@ -323,7 +339,8 @@ func (c *Client) CreateShardSnapshot(ctx context.Context, collectionName string,
 	return &response, nil
 }
 
-// ListShardSnapshots lists all snapshots for a specific shard
+// ListShardSnapshots lists all snapshots of a specific shard.
+// ListShardSnapshots lists all snapshots of a specific shard.
 func (c *Client) ListShardSnapshots(ctx context.Context, collectionName string, shardID string) (*ListSnapshotsResponse, error) {
 	path := fmt.Sprintf("/collections/%s/shards/%s/snapshots", collectionName, shardID)
 
@@ -351,7 +368,8 @@ func (c *Client) ListShardSnapshots(ctx context.Context, collectionName string, 
 	return &response, nil
 }
 
-// DeleteShardSnapshot deletes a specific snapshot for a shard
+// DeleteShardSnapshot deletes a specific snapshot of a shard.
+// DeleteShardSnapshot deletes a specific snapshot of a shard.
 func (c *Client) DeleteShardSnapshot(ctx context.Context, collectionName string, shardID string, snapshotName string) (*DeleteSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/shards/%s/snapshots/%s", collectionName, shardID, snapshotName)
 
@@ -379,8 +397,7 @@ func (c *Client) DeleteShardSnapshot(ctx context.Context, collectionName string,
 	return &response, nil
 }
 
-// RecoverShardSnapshot Recovers a shard snapshot from a specified location
-// The location can be a URL or a file path depending on the Qdrant configuration
+// RecoverShardSnapshot recovers a specific shard from a snapshot at the given location.
 func (c *Client) RecoverShardSnapshot(ctx context.Context, collectionName string, shardID string, snapshotName string, location string) (*RecoverSnapshotResponse, error) {
 	path := fmt.Sprintf("/collections/%s/shards/%s/snapshots/upload", collectionName, shardID)
 
@@ -419,11 +436,9 @@ func (c *Client) RecoverShardSnapshot(ctx context.Context, collectionName string
 	return &response, nil
 }
 
-// DownloadShardSnapshot downloads a shard snapshot file
-// Returns the response body containing the snapshot file data
-// The caller is responsible for closing the returned reader
-func (c *Client) DownloadShardSnapshot(ctx context.Context, collectionName string, shardID int, snapshotName string) (io.ReadCloser, error) {
-	path := fmt.Sprintf("/collections/%s/shards/%d/snapshots/%s", collectionName, shardID, snapshotName)
+// DownloadShardSnapshot downloads a specific shard snapshot.
+func (c *Client) DownloadShardSnapshot(ctx context.Context, collectionName string, shardID string, snapshotName string) (io.ReadCloser, error) {
+	path := fmt.Sprintf("/collections/%s/shards/%s/snapshots/%s", collectionName, shardID, snapshotName)
 
 	req, err := c.NewRequest(ctx, http.MethodGet, path, nil)
 	if err != nil {
@@ -442,24 +457,4 @@ func (c *Client) DownloadShardSnapshot(ctx context.Context, collectionName strin
 	}
 
 	return resp.Body, nil
-}
-
-// toReader converts a byte slice to an io.Reader
-func toReader(b []byte) io.Reader {
-	return &byteReader{data: b}
-}
-
-// byteReader implements io.Reader for a byte slice
-type byteReader struct {
-	data []byte
-	pos  int
-}
-
-func (r *byteReader) Read(p []byte) (n int, err error) {
-	if r.pos >= len(r.data) {
-		return 0, io.EOF
-	}
-	n = copy(p, r.data[r.pos:])
-	r.pos += n
-	return n, nil
 }

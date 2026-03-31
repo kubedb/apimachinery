@@ -16,6 +16,18 @@ limitations under the License.
 
 package qdrant
 
+import "encoding/json"
+
+// Distance represents the distance function used to compare vectors.
+type Distance string
+
+const (
+	DistanceCosine    Distance = "Cosine"
+	DistanceEuclid    Distance = "Euclid"
+	DistanceDot       Distance = "Dot"
+	DistanceManhattan Distance = "Manhattan"
+)
+
 // CollectionInfo represents basic information about a collection
 type CollectionInfo struct {
 	Name string `json:"name"`
@@ -24,6 +36,58 @@ type CollectionInfo struct {
 // CollectionsResult contains the list of collections
 type CollectionsResult struct {
 	Collections []CollectionInfo `json:"collections"`
+}
+
+// VectorParams represents parameters for a single vector data storage
+type VectorParams struct {
+	Size              uint64      `json:"size"`
+	Distance          Distance    `json:"distance"`
+	OnDisk            *bool       `json:"on_disk,omitempty"`
+	Datatype          *string     `json:"datatype,omitempty"`
+	MultivectorConfig interface{} `json:"multivector_config,omitempty"`
+}
+
+// VectorsConfig represents vector configuration for single or multiple vector modes
+type VectorsConfig struct {
+	Single *VectorParams            `json:"-"`
+	Named  map[string]*VectorParams `json:"-"`
+}
+
+func (v VectorsConfig) MarshalJSON() ([]byte, error) {
+	if v.Single != nil {
+		return json.Marshal(v.Single)
+	}
+	if v.Named != nil {
+		return json.Marshal(v.Named)
+	}
+	return json.Marshal(nil)
+}
+
+// CreateCollectionRequest represents the request body for creating a collection.
+type CreateCollectionRequest struct {
+	VectorsConfig          *VectorsConfig         `json:"vectors,omitempty"`
+	ShardNumber            *uint                  `json:"shard_number,omitempty"`
+	ReplicationFactor      *uint                  `json:"replication_factor,omitempty"`
+	WriteConsistencyFactor *uint                  `json:"write_consistency_factor,omitempty"`
+	OnDiskPayload          *bool                  `json:"on_disk_payload,omitempty"`
+	Metadata               map[string]interface{} `json:"metadata,omitempty"`
+}
+
+// NewVectorsConfig creates a VectorsConfig from a single vector params.
+func NewVectorsConfig(params *VectorParams) *VectorsConfig {
+	return &VectorsConfig{Single: params}
+}
+
+// NewNamedVectorsConfig creates a VectorsConfig from named vector params.
+func NewNamedVectorsConfig(named map[string]*VectorParams) *VectorsConfig {
+	return &VectorsConfig{Named: named}
+}
+
+// CreateCollectionResponse represents the response from creating a collection
+type CreateCollectionResponse struct {
+	Time   float64 `json:"time"`
+	Status string  `json:"status"`
+	Result bool    `json:"result"`
 }
 
 // UsageHardware represents hardware usage information
@@ -76,26 +140,4 @@ type CollectionDetails struct {
 	AutoMigrate    *bool                  `json:"auto_migrate,omitempty"`
 	RAMUsage       uint64                 `json:"ram_usage,omitempty"`
 	DiskUsage      uint64                 `json:"disk_usage,omitempty"`
-}
-
-// VectorParams defines the configuration for a single vector field
-type VectorParams struct {
-	Size     uint64 `json:"size"`
-	Distance string `json:"distance"`
-}
-
-// VectorParamsMap maps vector names to their configurations
-type VectorParamsMap map[string]*VectorParams
-
-// CreateCollectionRequest represents the request body for creating a collection
-type CreateCollectionRequest struct {
-	CollectionName string      `json:"-"`
-	VectorsConfig  interface{} `json:"vectors_config"`
-}
-
-// CreateCollectionResponse represents the response from creating a collection
-type CreateCollectionResponse struct {
-	Time   float64 `json:"time"`
-	Status string  `json:"status"`
-	Result bool    `json:"result"`
 }
