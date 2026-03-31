@@ -59,7 +59,7 @@ func (c *Client) CreateFullSnapshot(ctx context.Context) (*CreateSnapshotRespons
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -87,7 +87,7 @@ func (c *Client) ListFullSnapshots(ctx context.Context) (*ListSnapshotsResponse,
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -115,7 +115,7 @@ func (c *Client) DeleteFullSnapshot(ctx context.Context, snapshotName string) (*
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -154,7 +154,7 @@ func (c *Client) RecoverFullSnapshot(ctx context.Context, location string) (*Rec
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -182,7 +182,7 @@ func (c *Client) CreateCollectionSnapshot(ctx context.Context, collectionName st
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -210,7 +210,7 @@ func (c *Client) ListCollectionSnapshots(ctx context.Context, collectionName str
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -238,7 +238,7 @@ func (c *Client) DeleteCollectionSnapshot(ctx context.Context, collectionName st
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -267,7 +267,7 @@ func (c *Client) RecoverCollectionSnapshot(
 	if err != nil {
 		return nil, fmt.Errorf("opening snapshot file: %w", err)
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	// Prepare multipart body
 	body := &bytes.Buffer{}
@@ -301,7 +301,7 @@ func (c *Client) RecoverCollectionSnapshot(
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	// Handle non-200 response
 	if resp.StatusCode != http.StatusOK {
@@ -334,7 +334,7 @@ func (c *Client) DownloadCollectionSnapshot(ctx context.Context, collectionName 
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
@@ -354,7 +354,7 @@ func (c *Client) CreateShardSnapshot(ctx context.Context, collectionName string,
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -383,7 +383,7 @@ func (c *Client) ListShardSnapshots(ctx context.Context, collectionName string, 
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -412,7 +412,7 @@ func (c *Client) DeleteShardSnapshot(ctx context.Context, collectionName string,
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -451,7 +451,7 @@ func (c *Client) RecoverShardSnapshot(ctx context.Context, collectionName string
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -482,7 +482,7 @@ func (c *Client) DownloadShardSnapshot(ctx context.Context, collectionName strin
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
-		resp.Body.Close()
+		_ = resp.Body.Close()
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 

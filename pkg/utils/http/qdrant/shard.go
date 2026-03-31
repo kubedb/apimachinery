@@ -43,7 +43,7 @@ func (c *Client) MoveShard(ctx context.Context, collectionName string, req *Move
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -77,7 +77,7 @@ func (c *Client) DropReplica(ctx context.Context, collectionName string, req *Dr
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)

@@ -17,16 +17,16 @@ limitations under the License.
 package qdrant
 
 // PointId is either a uint64 or a UUID string.
-type PointId = interface{}
+type PointId = any
 
 func PointIdFromNum(n uint64) PointId  { return n }
 func PointIdFromUUID(u string) PointId { return u }
 
 // PointStruct represents a point to be upserted into a collection.
 type PointStruct struct {
-	Id      PointId                `json:"id"`
-	Vector  interface{}            `json:"vector"`
-	Payload map[string]interface{} `json:"payload,omitempty"`
+	Id      PointId        `json:"id"`
+	Vector  any            `json:"vector"`
+	Payload map[string]any `json:"payload,omitempty"`
 }
 
 // UpsertPointsRequest represents a request to upsert points into a collection.
@@ -55,7 +55,7 @@ type GetPointsResponse struct {
 
 // Point represents a point retrieved from a collection.
 type Point struct {
-	Id      PointId                `json:"id"`
-	Vector  interface{}            `json:"vector,omitempty"`
-	Payload map[string]interface{} `json:"payload,omitempty"`
+	Id      PointId        `json:"id"`
+	Vector  any            `json:"vector,omitempty"`
+	Payload map[string]any `json:"payload,omitempty"`
 }

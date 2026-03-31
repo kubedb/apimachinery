@@ -45,7 +45,7 @@ type ClusterInfo struct {
 	PeerID                uint64                      `json:"peer_id"`
 	Peers                 map[string]PeerState        `json:"peers"`
 	ShardTransfers        []ShardTransfer             `json:"shard_transfers"`
-	ConsensusThreadStatus map[string]interface{}      `json:"consensus_thread_status"`
+	ConsensusThreadStatus map[string]any              `json:"consensus_thread_status"`
 	MessageSendFailures   map[string]MessageSendError `json:"message_send_failures"`
 	RaftInfo              RaftInfo                    `json:"raft_info"`
 }

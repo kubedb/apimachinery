@@ -37,7 +37,7 @@ func (c *Client) ListCollections(ctx context.Context) (*ListCollectionsResponse,
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -65,7 +65,7 @@ func (c *Client) GetCollection(ctx context.Context, collectionName string) (*Col
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)
@@ -93,7 +93,7 @@ func (c *Client) CollectionExists(ctx context.Context, collectionName string) (b
 	if err != nil {
 		return false, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode == http.StatusOK {
 		return true, nil
@@ -126,7 +126,7 @@ func (c *Client) CreateCollection(ctx context.Context, collectionName string, re
 	if err != nil {
 		return nil, fmt.Errorf("executing request: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		bodyBytes, _ := io.ReadAll(resp.Body)

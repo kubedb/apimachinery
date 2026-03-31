@@ -40,11 +40,11 @@ type CollectionsResult struct {
 
 // VectorParams represents parameters for a single vector data storage
 type VectorParams struct {
-	Size              uint64      `json:"size"`
-	Distance          Distance    `json:"distance"`
-	OnDisk            *bool       `json:"on_disk,omitempty"`
-	Datatype          *string     `json:"datatype,omitempty"`
-	MultivectorConfig interface{} `json:"multivector_config,omitempty"`
+	Size              uint64   `json:"size"`
+	Distance          Distance `json:"distance"`
+	OnDisk            *bool    `json:"on_disk,omitempty"`
+	Datatype          *string  `json:"datatype,omitempty"`
+	MultivectorConfig any      `json:"multivector_config,omitempty"`
 }
 
 // VectorsConfig represents vector configuration for single or multiple vector modes
@@ -65,12 +65,12 @@ func (v VectorsConfig) MarshalJSON() ([]byte, error) {
 
 // CreateCollectionRequest represents the request body for creating a collection.
 type CreateCollectionRequest struct {
-	VectorsConfig          *VectorsConfig         `json:"vectors,omitempty"`
-	ShardNumber            *uint                  `json:"shard_number,omitempty"`
-	ReplicationFactor      *uint                  `json:"replication_factor,omitempty"`
-	WriteConsistencyFactor *uint                  `json:"write_consistency_factor,omitempty"`
-	OnDiskPayload          *bool                  `json:"on_disk_payload,omitempty"`
-	Metadata               map[string]interface{} `json:"metadata,omitempty"`
+	VectorsConfig          *VectorsConfig `json:"vectors,omitempty"`
+	ShardNumber            *uint          `json:"shard_number,omitempty"`
+	ReplicationFactor      *uint          `json:"replication_factor,omitempty"`
+	WriteConsistencyFactor *uint          `json:"write_consistency_factor,omitempty"`
+	OnDiskPayload          *bool          `json:"on_disk_payload,omitempty"`
+	Metadata               map[string]any `json:"metadata,omitempty"`
 }
 
 // NewVectorsConfig creates a VectorsConfig from a single vector params.
@@ -103,7 +103,7 @@ type UsageHardware struct {
 
 // UsageInference represents inference usage information
 type UsageInference struct {
-	Models map[string]interface{} `json:"models"`
+	Models map[string]any `json:"models"`
 }
 
 // Usage represents the usage information in the response
@@ -130,14 +130,14 @@ type CollectionInfoResponse struct {
 
 // CollectionDetails contains detailed information about a collection
 type CollectionDetails struct {
-	Name           string                 `json:"name"`
-	VectorsCount   uint64                 `json:"vectors_count"`
-	PointsCount    uint64                 `json:"points_count"`
-	PayloadSchema  map[string]interface{} `json:"payload_schema"`
-	Status         string                 `json:"status"`
-	Conditions     string                 `json:"conditions,omitempty"`
-	OptimizeHidden *bool                  `json:"optimize_hidden,omitempty"`
-	AutoMigrate    *bool                  `json:"auto_migrate,omitempty"`
-	RAMUsage       uint64                 `json:"ram_usage,omitempty"`
-	DiskUsage      uint64                 `json:"disk_usage,omitempty"`
+	Name           string         `json:"name"`
+	VectorsCount   uint64         `json:"vectors_count"`
+	PointsCount    uint64         `json:"points_count"`
+	PayloadSchema  map[string]any `json:"payload_schema"`
+	Status         string         `json:"status"`
+	Conditions     string         `json:"conditions,omitempty"`
+	OptimizeHidden *bool          `json:"optimize_hidden,omitempty"`
+	AutoMigrate    *bool          `json:"auto_migrate,omitempty"`
+	RAMUsage       uint64         `json:"ram_usage,omitempty"`
+	DiskUsage      uint64         `json:"disk_usage,omitempty"`
 }
