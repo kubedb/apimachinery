@@ -20,8 +20,11 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"reflect"
 	"slices"
 	"time"
+
+	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
@@ -37,6 +40,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/event"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
 const (
@@ -110,6 +114,13 @@ type Predicator interface {
 	GetPredicateFuncsForOwnerObjects() predicate.Funcs
 }
 
+type PredicatorWithArchiverMapping interface {
+	GetOwnerObject(obj client.Object) (*unstructured.Unstructured, error)
+	GetPredicateFuncsForDatabase() predicate.Funcs
+	GetPredicateFuncsForOwnerObjects() predicate.Funcs
+	GetArchiverToDatabasesMappingFunc(ctx context.Context, obj client.Object) []reconcile.Request
+}
+
 type dbPredicate struct {
 	kc            client.Client
 	shardConfig   string
@@ -118,6 +129,16 @@ type dbPredicate struct {
 }
 
 func NewPredicator(kc client.Client, gvk schema.GroupVersionKind, shardConfig string, healthChecker *health.HealthChecker) Predicator {
+	return &dbPredicate{
+		kc:            kc,
+		shardConfig:   shardConfig,
+		healthChecker: healthChecker,
+		gvk:           gvk,
+	}
+}
+
+func NewPredicatorWithArchiverMappingFunc(kc client.Client, gvk schema.GroupVersionKind,
+	shardConfig string, healthChecker *health.HealthChecker) PredicatorWithArchiverMapping {
 	return &dbPredicate{
 		kc:            kc,
 		shardConfig:   shardConfig,
@@ -236,4 +257,101 @@ func (p *dbPredicate) GetPredicateFuncsForOwnerObjects() predicate.Funcs {
 			return rq
 		},
 	}
+}
+
+func (p *dbPredicate) GetArchiverToDatabasesMappingFunc(ctx context.Context, obj client.Object) (matched []reconcile.Request) {
+	var (
+		err    error
+		nsList *core.NamespaceList
+	)
+	consumers, err := getDatabasesFieldAsConsumer(obj)
+	if err != nil {
+		klog.Warningf("failed to get databases field as consumer for archiver: %s/%s. Reason: %v", obj.GetNamespace(), obj.GetName(), err)
+		return
+	}
+
+	if *consumers.Namespaces.From == v1.NamespacesFromSelector {
+		selector, err := metav1.LabelSelectorAsSelector(consumers.Namespaces.Selector)
+		if err != nil {
+			klog.Warningf("failed to converting namespace selector for archiver: %s/%s. Reason: %v", obj.GetNamespace(), obj.GetName(), err)
+			return
+		}
+		nsList = &core.NamespaceList{}
+		err = p.kc.List(ctx, nsList, client.MatchingLabelsSelector{
+			Selector: selector,
+		})
+		if err != nil {
+			klog.Warningf("Failed to listing namespaces for archiver: %s/%s. Reason: %v", obj.GetNamespace(), obj.GetName(), err)
+			return
+		}
+	}
+
+	selector, err := metav1.LabelSelectorAsSelector(consumers.Selector)
+	if err != nil {
+		klog.Warningf("Failed to converting namespace selector for archiver: %s/%s. Reason: %v", obj.GetNamespace(), obj.GetName(), err)
+		return
+	}
+	dbs, err := listByGVK(ctx, p.kc, p.gvk, []client.ListOption{
+		client.MatchingLabelsSelector{
+			Selector: selector,
+		},
+	})
+	if err != nil {
+		klog.Warningf("Failed to listing databases for archiver: %s/%s. Reason: %v", obj.GetNamespace(), obj.GetName(), err)
+		return matched
+	}
+	for _, db := range dbs.Items {
+		if nsList != nil {
+			found := false
+			for _, ns := range nsList.Items {
+				if ns.Name == db.GetNamespace() {
+					found = true
+				}
+			}
+			if !found {
+				continue
+			}
+		} else if *consumers.Namespaces.From == v1.NamespacesFromSame && db.GetNamespace() != obj.GetNamespace() {
+			continue
+		}
+
+		key := db.GetNamespace() + "/" + db.GetName()
+		if scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, db.GetLabels()) {
+			matched = append(matched, reconcile.Request{
+				NamespacedName: types.NamespacedName{
+					Namespace: db.GetNamespace(),
+					Name:      db.GetName(),
+				},
+			})
+		} else if p.healthChecker != nil {
+			p.healthChecker.Stop(key)
+		}
+	}
+	return
+}
+
+func listByGVK(ctx context.Context, kc client.Client, gvk schema.GroupVersionKind, opts []client.ListOption) (*unstructured.UnstructuredList, error) {
+	list := &unstructured.UnstructuredList{}
+	list.SetGroupVersionKind(gvk)
+	if err := kc.List(ctx, list, opts...); err != nil {
+		return nil, err
+	}
+
+	return list, nil
+}
+
+func getDatabasesFieldAsConsumer(obj client.Object) (*v1.AllowedConsumers, error) {
+	v := reflect.ValueOf(obj).Elem() // get struct value
+	spec := v.FieldByName("Spec")
+	if !spec.IsValid() {
+		return nil, fmt.Errorf("failed to get databases field from archiver")
+	}
+	databases := spec.FieldByName("Databases")
+	if !databases.IsValid() {
+		return nil, fmt.Errorf("failed to get databases field from archiver")
+	}
+	if databases.IsNil() {
+		return nil, fmt.Errorf("databases field is nil ")
+	}
+	return databases.Interface().(*v1.AllowedConsumers), nil
 }
