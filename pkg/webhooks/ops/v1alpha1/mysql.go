@@ -275,7 +275,8 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLVolumeExpansionOpsRequest(db
 		return errors.New("failed to parse current storage size")
 	}
 
-	if cur.Cmp(*req.Spec.VolumeExpansion.MySQL) >= 0 {
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending ||
+		req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.MySQL) >= 0 {
 		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
