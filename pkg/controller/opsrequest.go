@@ -206,6 +206,7 @@ type ProgressingController struct {
 	sync.Mutex
 }
 
+// Safely transition a OpsRequest from Pending → Progressing, ensuring that at most one OpsRequest targeting the same database is in Progressing phase at any time
 func (c *OpsRequestController) UpdateOpsPhaseProgressing(req opsapi.Accessor, typ, msg string) (time.Duration, error) { // requeueTime as first param. if duration is zero, then don't requeue.
 	dbKind := strings.TrimSuffix(c.kind, "OpsRequest")
 	key := fmt.Sprintf("%s/%s/%s", dbKind, req.GetNamespace(), req.GetDBRefName())
@@ -216,13 +217,14 @@ func (c *OpsRequestController) UpdateOpsPhaseProgressing(req opsapi.Accessor, ty
 		return 10 * time.Second, nil
 	}
 	defer p.Unlock()
+
 	list := &unstructured.UnstructuredList{}
 	list.SetGroupVersionKind(schema.GroupVersionKind{
 		Group:   "ops.kubedb.com",
 		Version: "v1alpha1",
 		Kind:    c.kind,
 	})
-	err := c.kbClient.List(context.TODO(), list)
+	err := c.kbClient.List(context.TODO(), list, client.InNamespace(req.GetNamespace()))
 	if err != nil {
 		return 0, err
 	}
@@ -232,7 +234,7 @@ func (c *OpsRequestController) UpdateOpsPhaseProgressing(req opsapi.Accessor, ty
 		if err != nil {
 			return 0, err
 		}
-		if ops.GetName() == req.GetName() || ops.GetDBRefName() != req.GetDBRefName() || ops.GetNamespace() != req.GetNamespace() {
+		if ops.GetName() == req.GetName() || ops.GetDBRefName() != req.GetDBRefName() {
 			continue
 		}
 		if ops.GetStatus().Phase == opsapi.OpsRequestPhaseProgressing {
