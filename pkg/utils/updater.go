@@ -138,7 +138,8 @@ func NewPredicator(kc client.Client, gvk schema.GroupVersionKind, shardConfig st
 }
 
 func NewPredicatorWithArchiverMappingFunc(kc client.Client, gvk schema.GroupVersionKind,
-	shardConfig string, healthChecker *health.HealthChecker) PredicatorWithArchiverMapping {
+	shardConfig string, healthChecker *health.HealthChecker,
+) PredicatorWithArchiverMapping {
 	return &dbPredicate{
 		kc:            kc,
 		shardConfig:   shardConfig,
@@ -260,74 +261,87 @@ func (p *dbPredicate) GetPredicateFuncsForOwnerObjects() predicate.Funcs {
 }
 
 func (p *dbPredicate) GetArchiverToDatabasesMappingFunc(ctx context.Context, obj client.Object) (matched []reconcile.Request) {
-	var (
-		err    error
-		nsList *core.NamespaceList
-	)
+	archiverNS, archiverName := obj.GetNamespace(), obj.GetName()
 	consumers, err := getDatabasesFieldAsConsumer(obj)
 	if err != nil {
-		klog.Warningf("failed to get databases field as consumer for archiver: %s/%s. Reason: %v", obj.GetNamespace(), obj.GetName(), err)
+		klog.Warningf("failed to get databases field as consumer for archiver: %s/%s. Reason: %v", archiverNS, archiverName, err)
 		return
 	}
 
-	if *consumers.Namespaces.From == v1.NamespacesFromSelector {
-		selector, err := metav1.LabelSelectorAsSelector(consumers.Namespaces.Selector)
-		if err != nil {
-			klog.Warningf("failed to converting namespace selector for archiver: %s/%s. Reason: %v", obj.GetNamespace(), obj.GetName(), err)
-			return
-		}
-		nsList = &core.NamespaceList{}
-		err = p.kc.List(ctx, nsList, client.MatchingLabelsSelector{
-			Selector: selector,
-		})
-		if err != nil {
-			klog.Warningf("Failed to listing namespaces for archiver: %s/%s. Reason: %v", obj.GetNamespace(), obj.GetName(), err)
-			return
-		}
-	}
-
-	selector, err := metav1.LabelSelectorAsSelector(consumers.Selector)
+	namespaceAllowlist, err := p.getAllowedNamespaceList(ctx, consumers)
 	if err != nil {
-		klog.Warningf("Failed to converting namespace selector for archiver: %s/%s. Reason: %v", obj.GetNamespace(), obj.GetName(), err)
+		klog.Warningf("failed to get allowed namespace list for archiver: %s/%s. Reason: %v", archiverNS, archiverName, err)
 		return
 	}
-	dbs, err := listByGVK(ctx, p.kc, p.gvk, []client.ListOption{
-		client.MatchingLabelsSelector{
-			Selector: selector,
-		},
-	})
+
+	dbs, err := p.listDatabasesForArchiver(ctx, consumers)
 	if err != nil {
-		klog.Warningf("Failed to listing databases for archiver: %s/%s. Reason: %v", obj.GetNamespace(), obj.GetName(), err)
-		return matched
+		klog.Warningf("failed to list dbs for archiver: %s/%s. Reason: %v", archiverNS, archiverName, err)
+		return
 	}
+
 	for _, db := range dbs.Items {
-		if nsList != nil {
-			found := false
-			for _, ns := range nsList.Items {
-				if ns.Name == db.GetNamespace() {
-					found = true
-				}
-			}
-			if !found {
-				continue
-			}
-		} else if *consumers.Namespaces.From == v1.NamespacesFromSame && db.GetNamespace() != obj.GetNamespace() {
+		dbNS, dbName := db.GetNamespace(), db.GetName()
+		if !isDatabaseNamespaceAllowed(dbNS, archiverNS, *consumers.Namespaces.From, namespaceAllowlist) {
 			continue
 		}
 
-		key := db.GetNamespace() + "/" + db.GetName()
+		key := dbNS + "/" + dbName
 		if scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, db.GetLabels()) {
 			matched = append(matched, reconcile.Request{
-				NamespacedName: types.NamespacedName{
-					Namespace: db.GetNamespace(),
-					Name:      db.GetName(),
-				},
+				NamespacedName: types.NamespacedName{Namespace: dbNS, Name: dbName},
 			})
 		} else if p.healthChecker != nil {
 			p.healthChecker.Stop(key)
 		}
 	}
 	return
+}
+
+func (p *dbPredicate) getAllowedNamespaceList(ctx context.Context, consumers *v1.AllowedConsumers) (map[string]struct{}, error) {
+	if *consumers.Namespaces.From != v1.NamespacesFromSelector {
+		return nil, nil
+	}
+	nsSelector, err := metav1.LabelSelectorAsSelector(consumers.Namespaces.Selector)
+	if err != nil {
+		return nil, fmt.Errorf("failed to converting namespace selector. Reason: %v", err)
+	}
+
+	nsList := &core.NamespaceList{}
+	err = p.kc.List(ctx, nsList, client.MatchingLabelsSelector{Selector: nsSelector})
+	if err != nil {
+		return nil, fmt.Errorf("failed to listing namespaces. Reason: %v", err)
+	}
+
+	allowlist := make(map[string]struct{}, len(nsList.Items))
+	for _, ns := range nsList.Items {
+		allowlist[ns.Name] = struct{}{}
+	}
+
+	return allowlist, nil
+}
+
+func (p *dbPredicate) listDatabasesForArchiver(ctx context.Context, consumers *v1.AllowedConsumers) (*unstructured.UnstructuredList, error) {
+	dbSelector, err := metav1.LabelSelectorAsSelector(consumers.Selector)
+	if err != nil {
+		return nil, fmt.Errorf("failed to converting namespace selector. Reason: %v", err)
+	}
+
+	dbs, err := listByGVK(ctx, p.kc, p.gvk, []client.ListOption{
+		client.MatchingLabelsSelector{Selector: dbSelector},
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to listing databases. Reason: %v", err)
+	}
+	return dbs, nil
+}
+
+func isDatabaseNamespaceAllowed(dbNamespace, archiverNamespace string, from v1.FromNamespaces, namespaceAllowlist map[string]struct{}) bool {
+	if namespaceAllowlist != nil {
+		_, ok := namespaceAllowlist[dbNamespace]
+		return ok
+	}
+	return from != v1.NamespacesFromSame || dbNamespace == archiverNamespace
 }
 
 func listByGVK(ctx context.Context, kc client.Client, gvk schema.GroupVersionKind, opts []client.ListOption) (*unstructured.UnstructuredList, error) {
