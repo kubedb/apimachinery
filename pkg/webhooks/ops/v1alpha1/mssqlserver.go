@@ -200,8 +200,9 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVerticalScalingO
 		return errors.New("`spec.verticalScaling` is nil. Not supported in VerticalScaling type")
 	}
 
-	if verticalScalingSpec.MSSQLServer == nil {
-		return fmt.Errorf("`spec.verticalScaling.mssqlserver` can't be nil in vertical scaling ops request")
+	if verticalScalingSpec.MSSQLServer == nil && verticalScalingSpec.Coordinator == nil && verticalScalingSpec.Arbiter == nil &&
+		verticalScalingSpec.Exporter == nil {
+		return errors.New("`spec.verticalScaling.MSSQLServer`, `spec.verticalScaling.Coordinator`, `spec.verticalScaling.Arbiter`, `spec.verticalScaling.Exporter` at least any of them should be present in vertical scaling ops request")
 	}
 
 	return nil

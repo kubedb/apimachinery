@@ -38946,51 +38946,29 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 				Description: "MSSQLServerSpec defines the desired state of MSSQLServer",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"autoOps": {
+					"arbiter": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AutoOps contains configuration of automatic ops-request-recommendation generation",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec"),
+							Description: "Arbiter controls spec for arbiter pods",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ArbiterSpec"),
 						},
 					},
-					"version": {
+					"archiver": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Version of MSSQLServer to be deployed.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"replicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a MSSQLServer database. In case of MSSQLServer Availability Group.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"topology": {
-						SchemaProps: spec.SchemaProps{
-							Description: "MSSQLServer cluster topology",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTopology"),
-						},
-					},
-					"storageType": {
-						SchemaProps: spec.SchemaProps{
-							Description: "StorageType can be durable (default) or ephemeral",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"storage": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Storage spec to specify how storage shall be used.",
-							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+							Description: "Archiver controls database backup using Archiver CR",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver"),
 						},
 					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database authentication secret",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"autoOps": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AutoOps contains configuration of automatic ops-request-recommendation generation",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec"),
 						},
 					},
 					"configSecret": {
@@ -39004,10 +38982,37 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
 						},
 					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy controls the delete operation for database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"halted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"healthChecker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HealthChecker defines attributes of the health checker",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
+						},
+					},
 					"init": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init is used to initialize a database",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec"),
+						},
+					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used monitor database instance",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
 						},
 					},
 					"podTemplate": {
@@ -39016,10 +39021,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
-					"tls": {
+					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TLS contains tls configurations for client and server.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTLSConfig"),
+							Description: "Number of instances to deploy for a MSSQLServer database. In case of MSSQLServer Availability Group.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"serviceTemplates": {
@@ -39036,43 +39042,37 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 							},
 						},
 					},
-					"halted": {
+					"storage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
-							Type:        []string{"boolean"},
-							Format:      "",
+							Description: "Storage spec to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},
-					"deletionPolicy": {
+					"storageType": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DeletionPolicy controls the delete operation for database",
+							Description: "StorageType can be durable (default) or ephemeral",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"healthChecker": {
+					"tls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "HealthChecker defines attributes of the health checker",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
+							Description: "TLS contains tls configurations for client and server.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTLSConfig"),
 						},
 					},
-					"monitor": {
+					"topology": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Monitor is used monitor database instance",
-							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+							Description: "MSSQLServer cluster topology",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerTopology"),
 						},
 					},
-					"archiver": {
+					"version": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Archiver controls database backup using Archiver CR",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver"),
-						},
-					},
-					"arbiter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Arbiter controls spec for arbiter pods",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ArbiterSpec"),
+							Description: "Version of MSSQLServer to be deployed.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
