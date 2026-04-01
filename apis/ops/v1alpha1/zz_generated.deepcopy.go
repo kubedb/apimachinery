@@ -2721,6 +2721,11 @@ func (in *MSSQLServerVerticalScalingSpec) DeepCopyInto(out *MSSQLServerVerticalS
 		*out = new(ContainerResources)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Arbiter != nil {
+		in, out := &in.Arbiter, &out.Arbiter
+		*out = new(PodResources)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
