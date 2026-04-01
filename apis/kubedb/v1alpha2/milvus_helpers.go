@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 
-	kmapi "kmodules.xyz/client-go/api/v1"
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -33,6 +32,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -81,6 +81,9 @@ func (m Milvus) Type() appcat.AppType {
 
 func (m *Milvus) GetConnectionScheme() string {
 	scheme := "http"
+	if m.Spec.TLS != nil && m.Spec.TLS.External != nil && m.Spec.TLS.External.Mode != MilvusTLSModeDisabled {
+		scheme = "https"
+	}
 	return scheme
 }
 

@@ -21,9 +21,10 @@ package v1alpha1
 import (
 	"net/http"
 
-	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
+
+	rest "k8s.io/client-go/rest"
 )
 
 type OpsV1alpha1Interface interface {
@@ -40,6 +41,7 @@ type OpsV1alpha1Interface interface {
 	MSSQLServerOpsRequestsGetter
 	MariaDBOpsRequestsGetter
 	MemcachedOpsRequestsGetter
+	MilvusOpsRequestsGetter
 	MongoDBOpsRequestsGetter
 	MySQLOpsRequestsGetter
 	Neo4jOpsRequestsGetter
@@ -108,6 +110,10 @@ func (c *OpsV1alpha1Client) MariaDBOpsRequests(namespace string) MariaDBOpsReque
 
 func (c *OpsV1alpha1Client) MemcachedOpsRequests(namespace string) MemcachedOpsRequestInterface {
 	return newMemcachedOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) MilvusOpsRequests(namespace string) MilvusOpsRequestInterface {
+	return newMilvusOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) MongoDBOpsRequests(namespace string) MongoDBOpsRequestInterface {

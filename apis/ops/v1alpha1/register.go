@@ -76,6 +76,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MariaDBOpsRequestList{},
 		&MemcachedOpsRequest{},
 		&MemcachedOpsRequestList{},
+		&MilvusOpsRequest{},
+		&MilvusOpsRequestList{},
 		&MongoDBOpsRequest{},
 		&MongoDBOpsRequestList{},
 		&MSSQLServerOpsRequest{},

@@ -114,6 +114,14 @@ type MemcachedOpsRequestListerExpansion interface{}
 // MemcachedOpsRequestNamespaceLister.
 type MemcachedOpsRequestNamespaceListerExpansion interface{}
 
+// MilvusOpsRequestListerExpansion allows custom methods to be added to
+// MilvusOpsRequestLister.
+type MilvusOpsRequestListerExpansion interface{}
+
+// MilvusOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// MilvusOpsRequestNamespaceLister.
+type MilvusOpsRequestNamespaceListerExpansion interface{}
+
 // MongoDBOpsRequestListerExpansion allows custom methods to be added to
 // MongoDBOpsRequestLister.
 type MongoDBOpsRequestListerExpansion interface{}
