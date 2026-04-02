@@ -133,6 +133,14 @@ type QdrantTLSConfig struct {
 	P2P *bool `json:"p2p,omitempty"`
 	// +optional
 	Client *bool `json:"client,omitempty"`
+
+	// RotateCertificates tells operator to initiate certificate rotation
+	// +optional
+	RotateCertificates bool `json:"rotateCertificates,omitempty"`
+
+	// Remove tells operator to remove TLS configuration
+	// +optional
+	Remove bool `json:"remove,omitempty"`
 }
 
 // QdrantStatus defines the observed state of Qdrant.

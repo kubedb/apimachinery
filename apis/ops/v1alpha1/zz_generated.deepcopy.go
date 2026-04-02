@@ -5803,7 +5803,7 @@ func (in *QdrantOpsRequestSpec) DeepCopyInto(out *QdrantOpsRequestSpec) {
 	}
 	if in.TLS != nil {
 		in, out := &in.TLS, &out.TLS
-		*out = new(TLSSpec)
+		*out = new(v1alpha2.QdrantTLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.Authentication != nil {

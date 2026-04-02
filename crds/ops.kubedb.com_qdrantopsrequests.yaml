@@ -197,6 +197,8 @@ spec:
                       - alias
                       type: object
                     type: array
+                  client:
+                    type: boolean
                   issuerRef:
                     properties:
                       apiGroup:
@@ -210,6 +212,8 @@ spec:
                     - name
                     type: object
                     x-kubernetes-map-type: atomic
+                  p2p:
+                    type: boolean
                   remove:
                     type: boolean
                   rotateCertificates:
