@@ -18,6 +18,10 @@ limitations under the License.
 
 package v1alpha1
 
+// AerospikeVersionListerExpansion allows custom methods to be added to
+// AerospikeVersionLister.
+type AerospikeVersionListerExpansion interface{}
+
 // CassandraVersionListerExpansion allows custom methods to be added to
 // CassandraVersionLister.
 type CassandraVersionListerExpansion interface{}

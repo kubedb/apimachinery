@@ -29,6 +29,10 @@ type FakeCatalogV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeCatalogV1alpha1) AerospikeVersions() v1alpha1.AerospikeVersionInterface {
+	return &FakeAerospikeVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) CassandraVersions() v1alpha1.CassandraVersionInterface {
 	return &FakeCassandraVersions{c}
 }
