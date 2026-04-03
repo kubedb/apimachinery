@@ -66,6 +66,8 @@ type Neo4jOpsRequestSpec struct {
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *Neo4jHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
+	// Specifies information necessary for vertical scaling
+	VerticalScaling *Neo4jVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -108,6 +110,11 @@ type Neo4jHorizontalScalingSpec struct {
 	Reallocate *ReallocateConfig `json:"reallocate,omitempty"`
 }
 
+type Neo4jVerticalScalingSpec struct {
+	// Resource spec for neo4j servers
+	Server *PodResources `json:"server,omitempty"`
+}
+
 type Neo4jTLSSpec struct {
 	// Neo4jTLSSpec contains updated tls configurations for client and server.
 	// +optional
@@ -122,8 +129,8 @@ type Neo4jTLSSpec struct {
 	Remove bool `json:"remove,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;HorizontalScaling
-// ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling)
+// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;VerticalScaling;HorizontalScaling
+// ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling,VerticalScaling)
 type Neo4jOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

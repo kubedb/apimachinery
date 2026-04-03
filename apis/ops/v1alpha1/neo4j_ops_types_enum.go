@@ -21,6 +21,8 @@ const (
 	Neo4jOpsRequestTypeReconfigure Neo4jOpsRequestType = "Reconfigure"
 	// Neo4jOpsRequestTypeHorizontalScaling is a Neo4jOpsRequestType of type HorizontalScaling.
 	Neo4jOpsRequestTypeHorizontalScaling Neo4jOpsRequestType = "HorizontalScaling"
+	// Neo4jOpsRequestTypeVerticalScaling is a Neo4jOpsRequestType of type VerticalScaling.
+	Neo4jOpsRequestTypeVerticalScaling Neo4jOpsRequestType = "VerticalScaling"
 )
 
 var ErrInvalidNeo4jOpsRequestType = fmt.Errorf("not a valid Neo4jOpsRequestType, try [%s]", strings.Join(_Neo4jOpsRequestTypeNames, ", "))
@@ -31,6 +33,7 @@ var _Neo4jOpsRequestTypeNames = []string{
 	string(Neo4jOpsRequestTypeRotateAuth),
 	string(Neo4jOpsRequestTypeReconfigure),
 	string(Neo4jOpsRequestTypeHorizontalScaling),
+	string(Neo4jOpsRequestTypeVerticalScaling),
 }
 
 // Neo4jOpsRequestTypeNames returns a list of possible string values of Neo4jOpsRequestType.
@@ -48,6 +51,7 @@ func Neo4jOpsRequestTypeValues() []Neo4jOpsRequestType {
 		Neo4jOpsRequestTypeRotateAuth,
 		Neo4jOpsRequestTypeReconfigure,
 		Neo4jOpsRequestTypeHorizontalScaling,
+		Neo4jOpsRequestTypeVerticalScaling,
 	}
 }
 
@@ -69,6 +73,7 @@ var _Neo4jOpsRequestTypeValue = map[string]Neo4jOpsRequestType{
 	"RotateAuth":        Neo4jOpsRequestTypeRotateAuth,
 	"Reconfigure":       Neo4jOpsRequestTypeReconfigure,
 	"HorizontalScaling": Neo4jOpsRequestTypeHorizontalScaling,
+	"VerticalScaling":   Neo4jOpsRequestTypeVerticalScaling,
 }
 
 // ParseNeo4jOpsRequestType attempts to convert a string to a Neo4jOpsRequestType.
