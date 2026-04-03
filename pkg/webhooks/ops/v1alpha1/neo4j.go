@@ -179,7 +179,21 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jHorizontalScalingOpsRequest(
 
 	current := *neo4j.Spec.Replicas
 	target := *horizontalScalingSpec.Server
-	return validateNeo4jHorizontalScaling(current, target)
+
+	if err := validateNeo4jHorizontalScaling(current, target); err != nil {
+		return err
+	}
+
+	// validate reallocate strategy against scaling direction
+	if horizontalScalingSpec.Reallocate != nil && horizontalScalingSpec.Reallocate.Strategy == opsapi.StrategyNone {
+		if target < current {
+			return errors.New("reallocate strategy 'none' is not allowed when downscaling: " +
+				"removing nodes without reallocation will cause data loss. " +
+				"Use 'incremental' or 'full' strategy instead")
+		}
+	}
+
+	return nil
 }
 
 func validateNeo4jHorizontalScaling(current, target int32) error {
