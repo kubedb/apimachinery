@@ -220,7 +220,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(pp *
 		}
 	}
 
-	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && !applyConfigExists(reconfigureSpec.ApplyConfig) &&
+	if (reconfigureSpec.ReconfigurationSpec == nil || (!reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && !applyConfigExists(reconfigureSpec.ApplyConfig))) &&
 		reconfigureSpec.Backend == nil {
 		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` or `Backend` must be specified")
 	}
