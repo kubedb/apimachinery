@@ -18,170 +18,69 @@ package qdrant
 
 import (
 	"context"
-	"crypto/tls"
-	"crypto/x509"
-	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
-	"strconv"
-	"time"
-
-	"kubedb.dev/apimachinery/apis/kubedb"
-	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type ClusterResponse struct {
-	Result ClusterResult `json:"result"`
-	Status string        `json:"status"`
-	Time   float64       `json:"time"`
+// Client is an HTTP client for the Qdrant API.
+// Client is an HTTP client for the Qdrant API.
+type Client struct {
+	client  *http.Client
+	baseURL string
+	apiKey  string
 }
 
-type ClusterResult struct {
-	Status               string                     `json:"status"`
-	PeerID               *int64                     `json:"peer_id,omitempty"`
-	Peers                map[string]ClusterPeer     `json:"peers"`
-	RaftInfo             *RaftInfo                  `json:"raft_info,omitempty"`
-	ConsensusThreadState map[string]json.RawMessage `json:"consensus_thread_status,omitempty"`
-}
-
-type ClusterPeer struct {
-	URI string `json:"uri"`
-}
-
-type RaftInfo struct {
-	Term              int64  `json:"term"`
-	Commit            int64  `json:"commit"`
-	PendingOperations int64  `json:"pending_operations"`
-	Leader            *int64 `json:"leader,omitempty"`
-	Role              string `json:"role,omitempty"`
-	IsVoter           bool   `json:"is_voter,omitempty"`
-}
-
-func GetClusterResponse(
-	ctx context.Context,
-	db *api.Qdrant,
-	kc client.Client,
-	address string,
-) (*ClusterResponse, error) {
-	scheme := "http"
-	transport := http.DefaultTransport.(*http.Transport).Clone()
-
-	if db.Spec.TLS != nil {
-		scheme = "https"
-
-		caSecret := &corev1.Secret{}
-		err := kc.Get(ctx, types.NamespacedName{
-			Name:      db.GetCertSecretName(api.QdrantServerCert),
-			Namespace: db.Namespace,
-		}, caSecret)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get server cert secret: %w", err)
-		}
-
-		caPool := x509.NewCertPool()
-		if !caPool.AppendCertsFromPEM(caSecret.Data["ca.crt"]) {
-			return nil, fmt.Errorf("failed to append server CA cert")
-		}
-
-		tlsConfig := &tls.Config{
-			RootCAs: caPool,
-		}
-
-		if db.Spec.TLS.Client != nil && *db.Spec.TLS.Client {
-			clientSecret := &corev1.Secret{}
-			err := kc.Get(ctx, types.NamespacedName{
-				Name:      db.GetCertSecretName(api.QdrantClientCert),
-				Namespace: db.Namespace,
-			}, clientSecret)
-			if err != nil {
-				return nil, fmt.Errorf("failed to get client cert secret: %w", err)
-			}
-
-			cert, err := tls.X509KeyPair(
-				clientSecret.Data["tls.crt"],
-				clientSecret.Data["tls.key"],
-			)
-			if err != nil {
-				return nil, fmt.Errorf("invalid client cert/key: %w", err)
-			}
-
-			tlsConfig.Certificates = []tls.Certificate{cert}
-		}
-
-		transport = &http.Transport{
-			TLSClientConfig: tlsConfig,
-		}
+// NewClient creates a new Qdrant HTTP client from the given config.
+func NewClient(config *Config) (*Client, error) {
+	if config == nil {
+		return nil, fmt.Errorf("config cannot be nil")
 	}
 
-	apiKey := db.GetAPIKey(ctx, kc)
+	if config.Port == 0 {
+		config.Port = 6333
+	}
 
-	req, err := http.NewRequestWithContext(
-		ctx,
-		http.MethodGet,
-		fmt.Sprintf("%s://%s/cluster", scheme, address),
-		nil,
-	)
+	if config.KeepAliveTimeout == 0 {
+		config.KeepAliveTimeout = 30
+	}
+
+	return &Client{
+		client:  config.getHTTPClient(),
+		baseURL: config.getBaseURL(),
+		apiKey:  config.APIKey,
+	}, nil
+}
+
+// Do executes an HTTP request, adding the API key header if configured.
+func (c *Client) Do(req *http.Request) (*http.Response, error) {
+	if c.apiKey != "" {
+		req.Header.Set("api-key", c.apiKey)
+	}
+
+	return c.client.Do(req)
+}
+
+// NewRequest creates a new HTTP request bound to the client's base URL.
+func (c *Client) NewRequest(
+	ctx context.Context,
+	method string,
+	path string,
+	body io.Reader,
+) (*http.Request, error) {
+	url := c.baseURL + path
+
+	req, err := http.NewRequestWithContext(ctx, method, url, body)
 	if err != nil {
 		return nil, err
 	}
 
-	if apiKey != "" {
-		req.Header.Set("api-key", apiKey)
-	}
-	req.Header.Set("Accept", "application/json")
-
-	client := &http.Client{
-		Timeout:   5 * time.Second,
-		Transport: transport,
-	}
-
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("request failed: %w", err)
-	}
-	defer func() {
-		_ = res.Body.Close()
-	}()
-
-	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf(
-			"bad status %d from %s",
-			res.StatusCode,
-			address,
-		)
-	}
-
-	var cr ClusterResponse
-	if err := json.NewDecoder(res.Body).Decode(&cr); err != nil {
-		return nil, fmt.Errorf("decode err: %w", err)
-	}
-
-	return &cr, nil
+	return req, nil
 }
 
-func GetClusterStatus(ctx context.Context, db *api.Qdrant, kc client.Client) (string, int, []string, error) {
-	address := db.ServiceDNS() + ":" + strconv.Itoa(kubedb.QdrantHTTPPort)
-
-	cr, err := GetClusterResponse(ctx, db, kc, address)
-	if err != nil {
-		return "", 0, nil, err
+// Close closes idle connections in the underlying HTTP client.
+func (c *Client) Close() {
+	if tr, ok := c.client.Transport.(*http.Transport); ok {
+		tr.CloseIdleConnections()
 	}
-
-	replicaCount := len(cr.Result.Peers)
-	roles := []string{}
-
-	for i := range replicaCount {
-		podAddress := db.GetPodAddress(i)
-		cr, err = GetClusterResponse(ctx, db, kc, podAddress)
-		if err != nil {
-			return "", 0, nil, err
-		}
-		roles = append(roles, cr.Result.RaftInfo.Role)
-	}
-
-	return cr.Result.Status, replicaCount, roles, nil
 }
