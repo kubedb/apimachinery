@@ -4050,7 +4050,7 @@ spec:
                     type: object
                   internal:
                     properties:
-                      enabled:
+                      internalTLSEnabled:
                         type: boolean
                     type: object
                   issuerRef:
