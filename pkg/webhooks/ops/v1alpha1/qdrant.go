@@ -141,12 +141,6 @@ func (w *QdrantOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Qdran
 				req.Name,
 				err.Error()))
 		}
-	case opsapi.QdrantOpsRequestTypeReconfigureTLS:
-		if err := w.validateQdrantReconfigureTLSOpsRequest(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
-				req.Name,
-				err.Error()))
-		}
 	}
 
 	if len(allErr) == 0 {
@@ -227,39 +221,5 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantRotateAuthOpsRequest(db *d
 			return err
 		}
 	}
-	return nil
-}
-
-func (w *QdrantOpsRequestCustomWebhook) validateQdrantReconfigureTLSOpsRequest(req *opsapi.QdrantOpsRequest) error {
-	TLSSpec := req.Spec.TLS
-	if TLSSpec == nil {
-		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
-	}
-
-	configCount := 0
-	if *req.Spec.TLS.Client {
-		configCount++
-	}
-	if *req.Spec.TLS.P2P {
-		configCount++
-	}
-	if req.Spec.TLS.Remove {
-		configCount++
-	}
-	if req.Spec.TLS.RotateCertificates {
-		configCount++
-	}
-	if req.Spec.TLS.IssuerRef != nil || req.Spec.TLS.Certificates != nil {
-		configCount++
-	}
-
-	if configCount == 0 {
-		return errors.New("no reconfiguration is provided in TLS spec")
-	}
-
-	if configCount > 1 {
-		return errors.New("more than 1 field have assigned to spec.reconfigureTLS but at a time one is allowed to run one operation")
-	}
-
 	return nil
 }
