@@ -223,3 +223,20 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantRotateAuthOpsRequest(db *d
 	}
 	return nil
 }
+
+func (w *QdrantOpsRequestCustomWebhook) validateQdrantUpdateVersionOpsRequest(db *dbapi.Qdrant, req *opsapi.QdrantOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindQdrantVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+
+	return nil
+}
