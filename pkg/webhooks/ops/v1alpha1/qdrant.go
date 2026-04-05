@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -236,6 +237,19 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantUpdateVersionOpsRequest(db
 	}
 	if !yes {
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+
+	return nil
+}
+
+func (w *QdrantOpsRequestCustomWebhook) validateQdrantVerticalScalingOpsRequest(req *opsapi.QdrantOpsRequest) error {
+	verticalScalingSpec := req.Spec.VerticalScaling
+	if verticalScalingSpec == nil {
+		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
+	}
+
+	if verticalScalingSpec.Qdrant == nil {
+		return errors.New("spec.verticalScaling.Node can't be empty")
 	}
 
 	return nil
