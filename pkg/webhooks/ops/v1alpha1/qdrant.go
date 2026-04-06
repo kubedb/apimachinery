@@ -129,28 +129,53 @@ func (w *QdrantOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Qdran
 
 	var allErr field.ErrorList
 	switch opsapi.QdrantOpsRequestType(req.GetRequestType()) {
-	case opsapi.QdrantOpsRequestTypeRestart:
+	case opsapi.QdrantOpsRequestTypeHorizontalScaling:
+		if err := w.validateQdrantHorizontalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
+				req.Name,
+				err.Error()))
+		}
+
 	case opsapi.QdrantOpsRequestTypeReconfigure:
 		if err := w.validateQdrantReconfigurationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
 		}
+
+	case opsapi.QdrantOpsRequestTypeReconfigureTLS:
+		if err := w.validateQdrantReconfigureTLSOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
+				req.Name,
+				err.Error()))
+		}
+
+	case opsapi.QdrantOpsRequestTypeRestart:
+
 	case opsapi.QdrantOpsRequestTypeRotateAuth:
 		if err := w.validateQdrantRotateAuthOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
 				req.Name,
 				err.Error()))
 		}
+
 	case opsapi.QdrantOpsRequestTypeUpdateVersion:
 		if err := w.validateQdrantUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
+
 	case opsapi.QdrantOpsRequestTypeVerticalScaling:
 		if err := w.validateQdrantVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
+				req.Name,
+				err.Error()))
+		}
+
+	case opsapi.QdrantOpsRequestTypeVolumeExpansion:
+		if err := w.validateQdrantVolumeExpansionOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
 		}
@@ -172,6 +197,23 @@ func (w *QdrantOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.QdrantOpsRequ
 	}
 
 	return qdrant, nil
+}
+
+func (w *QdrantOpsRequestCustomWebhook) validateQdrantHorizontalScalingOpsRequest(req *opsapi.QdrantOpsRequest) error {
+	horizontalScalingSpec := req.Spec.HorizontalScaling
+	if horizontalScalingSpec == nil {
+		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
+	}
+
+	if horizontalScalingSpec.Node == nil {
+		return errors.New("spec.horizontalScaling.node can not be empty")
+	}
+
+	if *horizontalScalingSpec.Node <= 0 {
+		return errors.New("spec.horizontalScaling.node must be positive")
+	}
+
+	return nil
 }
 
 func (w *QdrantOpsRequestCustomWebhook) validateQdrantReconfigurationOpsRequest(req *opsapi.QdrantOpsRequest) error {
@@ -208,6 +250,40 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantReconfigurationOpsRequest(
 		if !ok {
 			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.QdrantConfigFileName)
 		}
+	}
+
+	return nil
+}
+
+func (w *QdrantOpsRequestCustomWebhook) validateQdrantReconfigureTLSOpsRequest(req *opsapi.QdrantOpsRequest) error {
+	TLSSpec := req.Spec.TLS
+	if TLSSpec == nil {
+		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
+	}
+
+	configCount := 0
+	if *req.Spec.TLS.Client {
+		configCount++
+	}
+	if *req.Spec.TLS.P2P {
+		configCount++
+	}
+	if req.Spec.TLS.Remove {
+		configCount++
+	}
+	if req.Spec.TLS.RotateCertificates {
+		configCount++
+	}
+	if req.Spec.TLS.IssuerRef != nil || req.Spec.TLS.Certificates != nil {
+		configCount++
+	}
+
+	if configCount == 0 {
+		return errors.New("no reconfiguration is provided in TLS spec")
+	}
+
+	if configCount > 1 {
+		return errors.New("more than 1 field have assigned to spec.reconfigureTLS but at a time one is allowed to run one operation")
 	}
 
 	return nil
@@ -262,6 +338,19 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantVerticalScalingOpsRequest(
 
 	if verticalScalingSpec.Qdrant == nil {
 		return errors.New("spec.verticalScaling.Node can't be empty")
+	}
+
+	return nil
+}
+
+func (w *QdrantOpsRequestCustomWebhook) validateQdrantVolumeExpansionOpsRequest(req *opsapi.QdrantOpsRequest) error {
+	volumeExpansionSpec := req.Spec.VolumeExpansion
+	if volumeExpansionSpec == nil {
+		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
+	}
+
+	if volumeExpansionSpec.Node == nil {
+		return errors.New("spec.volumeExpansion.Node can't be empty")
 	}
 
 	return nil

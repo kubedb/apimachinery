@@ -120,24 +120,22 @@ type ListCollectionsResponse struct {
 	Result *CollectionsResult `json:"result"`
 }
 
-// CollectionInfoResponse represents the response from getting collection info
-type CollectionInfoResponse struct {
-	Usage  *Usage             `json:"usage"`
-	Time   float64            `json:"time"`
-	Status string             `json:"status"`
-	Result *CollectionDetails `json:"result"`
+type CollectionParams struct {
+	ShardNumber       uint64 `json:"shard_number"`
+	ReplicationFactor uint64 `json:"replication_factor"`
+}
+
+type CollectionConfig struct {
+	Params CollectionParams `json:"params"`
 }
 
 // CollectionDetails contains detailed information about a collection
 type CollectionDetails struct {
-	Name           string         `json:"name"`
-	VectorsCount   uint64         `json:"vectors_count"`
-	PointsCount    uint64         `json:"points_count"`
-	PayloadSchema  map[string]any `json:"payload_schema"`
-	Status         string         `json:"status"`
-	Conditions     string         `json:"conditions,omitempty"`
-	OptimizeHidden *bool          `json:"optimize_hidden,omitempty"`
-	AutoMigrate    *bool          `json:"auto_migrate,omitempty"`
-	RAMUsage       uint64         `json:"ram_usage,omitempty"`
-	DiskUsage      uint64         `json:"disk_usage,omitempty"`
+	Config CollectionConfig `json:"config"`
+}
+
+type GetCollectionDetailsResponse struct {
+	Time   float64           `json:"time"`
+	Status string            `json:"status"`
+	Result CollectionDetails `json:"result"`
 }

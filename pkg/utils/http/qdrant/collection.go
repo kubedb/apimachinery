@@ -52,8 +52,8 @@ func (c *Client) ListCollections(ctx context.Context) (*ListCollectionsResponse,
 	return &response, nil
 }
 
-// GetCollection returns information about a specific collection.
-func (c *Client) GetCollection(ctx context.Context, collectionName string) (*CollectionInfoResponse, error) {
+// GetCollectionDetails retrieves parameters from the specified collection.
+func (c *Client) GetCollectionDetails(ctx context.Context, collectionName string) (*GetCollectionDetailsResponse, error) {
 	path := fmt.Sprintf("/collections/%s", collectionName)
 
 	req, err := c.NewRequest(ctx, http.MethodGet, path, nil)
@@ -72,7 +72,7 @@ func (c *Client) GetCollection(ctx context.Context, collectionName string) (*Col
 		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
 	}
 
-	var response CollectionInfoResponse
+	var response GetCollectionDetailsResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}
