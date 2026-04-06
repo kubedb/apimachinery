@@ -142,9 +142,15 @@ func (w *QdrantOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Qdran
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.QdrantOpsRequestTypeUpdateVersion:
+		if err := w.validateQdrantUpdateVersionOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.QdrantOpsRequestTypeVerticalScaling:
 		if err := w.validateQdrantVerticalScalingOpsRequest(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
 		}
