@@ -122,23 +122,6 @@ clientset:
 			"$(API_GROUPS)" \
 			--go-header-file "./hack/license/go.txt"
 
-.PHONY: listers
-listers:
-	@docker run --rm \
-		-u $$(id -u):$$(id -g) \
-		-v /tmp:/.cache \
-		-v $$(pwd):$(DOCKER_REPO_ROOT) \
-		-w $(DOCKER_REPO_ROOT) \
-		--env HTTP_PROXY=$(HTTP_PROXY) \
-		--env HTTPS_PROXY=$(HTTPS_PROXY) \
-		$(CODE_GENERATOR_IMAGE) \
-		/go/src/k8s.io/code-generator/generate-groups.sh \
-			lister \
-			$(GO_PKG)/$(REPO)/client \
-			$(GO_PKG)/$(REPO)/apis \
-			"$(API_GROUPS)" \
-			--go-header-file "./hack/license/go.txt"
-
 .PHONY: gen-conversion
 gen-conversion:
 	@docker run --rm                                   \
