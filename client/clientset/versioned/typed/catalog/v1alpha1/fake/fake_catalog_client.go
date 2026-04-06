@@ -89,6 +89,10 @@ func (c *FakeCatalogV1alpha1) MemcachedVersions() v1alpha1.MemcachedVersionInter
 	return &FakeMemcachedVersions{c}
 }
 
+func (c *FakeCatalogV1alpha1) MilvusVersions() v1alpha1.MilvusVersionInterface {
+	return &FakeMilvusVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) MongoDBVersions() v1alpha1.MongoDBVersionInterface {
 	return &FakeMongoDBVersions{c}
 }
