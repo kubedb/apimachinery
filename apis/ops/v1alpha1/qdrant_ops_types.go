@@ -105,7 +105,7 @@ type QdrantHorizontalScalingSpec struct {
 // QdrantVerticalScalingSpec contains the vertical scaling information of a Qdrant cluster
 type QdrantVerticalScalingSpec struct {
 	// Resource spec for nodes
-	Qdrant *PodResources `json:"node,omitempty"`
+	Node *PodResources `json:"node,omitempty"`
 }
 
 // QdrantVolumeExpansionSpec is the spec for Qdrant volume expansion

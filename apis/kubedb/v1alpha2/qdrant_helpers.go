@@ -19,12 +19,16 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"path/filepath"
+	"strconv"
+	"strings"
 
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
+	"kubedb.dev/apimachinery/pkg/utils/http/qdrant"
 
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
@@ -421,4 +425,41 @@ func (q *Qdrant) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplate
 	if dbContainer != nil {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
+}
+
+func GetPodOrdinalToPeer(ctx context.Context, client *qdrant.Client) (map[uint64]uint64, error) {
+	clusterResp, err := client.GetClusterInfo(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	podOrdinalToPeer := make(map[uint64]uint64)
+
+	for peerIDStr, peerInfo := range clusterResp.Result.Peers {
+		peerID, _ := strconv.ParseUint(peerIDStr, 10, 64)
+
+		ordinal, err := ExtractOrdinal(&peerInfo)
+		if err != nil {
+			return nil, err
+		}
+
+		podOrdinalToPeer[ordinal] = peerID
+	}
+
+	return podOrdinalToPeer, nil
+}
+
+func ExtractOrdinal(input *qdrant.PeerState) (uint64, error) {
+	u, err := url.Parse(input.URI)
+	if err != nil {
+		return 0, err
+	}
+
+	host := u.Hostname()
+	podName := strings.Split(host, ".")[0]
+
+	parts := strings.Split(podName, "-")
+	ordinalStr := parts[len(parts)-1]
+
+	return strconv.ParseUint(ordinalStr, 10, 64)
 }

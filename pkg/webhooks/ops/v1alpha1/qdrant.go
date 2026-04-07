@@ -336,7 +336,7 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantVerticalScalingOpsRequest(
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
 
-	if verticalScalingSpec.Qdrant == nil {
+	if verticalScalingSpec.Node == nil {
 		return errors.New("spec.verticalScaling.Node can't be empty")
 	}
 
