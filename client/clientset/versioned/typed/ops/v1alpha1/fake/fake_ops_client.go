@@ -53,6 +53,10 @@ func (c *FakeOpsV1alpha1) FerretDBOpsRequests(namespace string) v1alpha1.FerretD
 	return &FakeFerretDBOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) HanaDBOpsRequests(namespace string) v1alpha1.HanaDBOpsRequestInterface {
+	return &FakeHanaDBOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) HazelcastOpsRequests(namespace string) v1alpha1.HazelcastOpsRequestInterface {
 	return &FakeHazelcastOpsRequests{c, namespace}
 }

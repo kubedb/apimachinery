@@ -33,6 +33,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/utils/ptr"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -212,6 +213,57 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 		}
 	}
 
+	if db.Spec.TLS != nil {
+		if db.Spec.TLS.IssuerRef == nil {
+			allErr = append(allErr, field.Invalid(
+				field.NewPath("spec").Child("tls").Child("issuerRef"),
+				nil,
+				"spec.tls.issuerRef is missing",
+			))
+		}
+
+		allowedAliases := map[string]struct{}{
+			string(api.HanaDBServerCert): {},
+			string(api.HanaDBClientCert): {},
+		}
+		hasClientAlias := false
+		for i, cert := range db.Spec.TLS.Certificates {
+			if _, ok := allowedAliases[cert.Alias]; !ok {
+				allErr = append(allErr, field.Invalid(
+					field.NewPath("spec").Child("tls").Child("certificates").Index(i).Child("alias"),
+					cert.Alias,
+					fmt.Sprintf("supported aliases are %q and %q", api.HanaDBServerCert, api.HanaDBClientCert),
+				))
+				continue
+			}
+			if cert.Alias == string(api.HanaDBClientCert) {
+				hasClientAlias = true
+			}
+			if _, seen := kmapi.GetCertificate(db.Spec.TLS.Certificates[:i], cert.Alias); seen != nil {
+				allErr = append(allErr, field.Duplicate(
+					field.NewPath("spec").Child("tls").Child("certificates").Index(i).Child("alias"),
+					cert.Alias,
+				))
+			}
+		}
+
+		if (db.Spec.TLS.ServerName != "" || db.Spec.TLS.InsecureSkipVerify) && !ptr.Deref(db.Spec.TLS.ClientTLS, false) {
+			allErr = append(allErr, field.Invalid(
+				field.NewPath("spec").Child("tls").Child("clientTLS"),
+				db.Spec.TLS.ClientTLS,
+				"spec.tls.clientTLS must be enabled when using client-side TLS options",
+			))
+		}
+
+		if ptr.Deref(db.Spec.TLS.ClientTLS, false) && !hasClientAlias && db.Spec.TLS.IssuerRef == nil {
+			allErr = append(allErr, field.Invalid(
+				field.NewPath("spec").Child("tls").Child("certificates"),
+				nil,
+				fmt.Sprintf("%q certificate alias must be configured when clientTLS is enabled", api.HanaDBClientCert),
+			))
+		}
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -224,12 +276,16 @@ var hanadbReservedVolumes = []string{
 	kubedb.HanaDBDataVolume,
 	kubedb.HanaDBVolumeScripts,
 	kubedb.HanaDBVolumePasswordSecret,
+	kubedb.HanaDBVolumeTLS,
+	kubedb.HanaDBVolumeTLSInput,
 	kubedb.HanaDBConfigVolumeName,
 }
 
 var hanadbReservedVolumesMountPaths = []string{
 	kubedb.HanaDBDataDir,
 	kubedb.HanaDBVolumeMountScripts,
+	kubedb.HanaDBTLSMountPath,
+	kubedb.HanaDBTLSInputPath,
 	kubedb.HanaDBConfigDir,
 	kubedb.HanaDBConfigMountPath,
 }
