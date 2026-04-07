@@ -427,7 +427,7 @@ func (q *Qdrant) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplate
 	}
 }
 
-func GetPodOrdinalToPeer(ctx context.Context, client *qdrant.Client) (map[uint64]uint64, error) {
+func (q *Qdrant) GetPodOrdinalToPeer(ctx context.Context, client *qdrant.Client) (map[uint64]uint64, error) {
 	clusterResp, err := client.GetClusterInfo(ctx)
 	if err != nil {
 		return nil, err
