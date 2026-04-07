@@ -130,17 +130,6 @@ func NewPredicator(kc client.Client, gvk schema.GroupVersionKind, shardConfig st
 	}
 }
 
-func NewPredicatorWithArchiverMappingFunc(kc client.Client, gvk schema.GroupVersionKind,
-	shardConfig string, healthChecker *health.HealthChecker,
-) Predicator {
-	return &dbPredicate{
-		kc:            kc,
-		shardConfig:   shardConfig,
-		healthChecker: healthChecker,
-		gvk:           gvk,
-	}
-}
-
 func (p *dbPredicate) GetOwnerObject(obj client.Object) (*unstructured.Unstructured, error) {
 	ctrl := metav1.GetControllerOf(obj)
 	if ctrl == nil {
@@ -255,13 +244,13 @@ func (p *dbPredicate) GetPredicateFuncsForOwnerObjects() predicate.Funcs {
 
 func (p *dbPredicate) GetArchiverToDatabasesMappingFunc(ctx context.Context, obj client.Object) (matched []reconcile.Request) {
 	archiverNS, archiverName := obj.GetNamespace(), obj.GetName()
-	consumers, err := getDatabasesFieldAsConsumer(obj)
+	consumers, err := getAllowedConsumers(obj)
 	if err != nil {
 		klog.Warningf("failed to get databases field as consumer for archiver: %s/%s. Reason: %v", archiverNS, archiverName, err)
 		return
 	}
 
-	namespaceAllowlist, err := p.getAllowedNamespaceList(ctx, consumers)
+	namespaceAllowlist, err := getAllowedNamespaceList(ctx, p.kc, consumers)
 	if err != nil {
 		klog.Warningf("failed to get allowed namespace list for archiver: %s/%s. Reason: %v", archiverNS, archiverName, err)
 		return
@@ -291,7 +280,23 @@ func (p *dbPredicate) GetArchiverToDatabasesMappingFunc(ctx context.Context, obj
 	return
 }
 
-func (p *dbPredicate) getAllowedNamespaceList(ctx context.Context, consumers *v1.AllowedConsumers) (map[string]struct{}, error) {
+func getAllowedConsumers(obj client.Object) (*v1.AllowedConsumers, error) {
+	v := reflect.ValueOf(obj).Elem() // get struct value
+	spec := v.FieldByName("Spec")
+	if !spec.IsValid() {
+		return nil, fmt.Errorf("failed to get databases field from archiver")
+	}
+	databases := spec.FieldByName("Databases")
+	if !databases.IsValid() {
+		return nil, fmt.Errorf("failed to get databases field from archiver")
+	}
+	if databases.IsNil() {
+		return nil, fmt.Errorf("databases field is nil ")
+	}
+	return databases.Interface().(*v1.AllowedConsumers), nil
+}
+
+func getAllowedNamespaceList(ctx context.Context, kc client.Client, consumers *v1.AllowedConsumers) (map[string]struct{}, error) {
 	if *consumers.Namespaces.From != v1.NamespacesFromSelector {
 		return nil, nil
 	}
@@ -301,7 +306,7 @@ func (p *dbPredicate) getAllowedNamespaceList(ctx context.Context, consumers *v1
 	}
 
 	nsList := &core.NamespaceList{}
-	err = p.kc.List(ctx, nsList, client.MatchingLabelsSelector{Selector: nsSelector})
+	err = kc.List(ctx, nsList, client.MatchingLabelsSelector{Selector: nsSelector})
 	if err != nil {
 		return nil, fmt.Errorf("failed to listing namespaces. Reason: %v", err)
 	}
@@ -345,20 +350,4 @@ func listByGVK(ctx context.Context, kc client.Client, gvk schema.GroupVersionKin
 	}
 
 	return list, nil
-}
-
-func getDatabasesFieldAsConsumer(obj client.Object) (*v1.AllowedConsumers, error) {
-	v := reflect.ValueOf(obj).Elem() // get struct value
-	spec := v.FieldByName("Spec")
-	if !spec.IsValid() {
-		return nil, fmt.Errorf("failed to get databases field from archiver")
-	}
-	databases := spec.FieldByName("Databases")
-	if !databases.IsValid() {
-		return nil, fmt.Errorf("failed to get databases field from archiver")
-	}
-	if databases.IsNil() {
-		return nil, fmt.Errorf("databases field is nil ")
-	}
-	return databases.Interface().(*v1.AllowedConsumers), nil
 }
