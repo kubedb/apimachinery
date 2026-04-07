@@ -112,15 +112,8 @@ type Predicator interface {
 	GetOwnerObject(obj client.Object) (*unstructured.Unstructured, error)
 	GetPredicateFuncsForDatabase() predicate.Funcs
 	GetPredicateFuncsForOwnerObjects() predicate.Funcs
-}
-
-type PredicatorWithArchiverMapping interface {
-	GetOwnerObject(obj client.Object) (*unstructured.Unstructured, error)
-	GetPredicateFuncsForDatabase() predicate.Funcs
-	GetPredicateFuncsForOwnerObjects() predicate.Funcs
 	GetArchiverToDatabasesMappingFunc(ctx context.Context, obj client.Object) []reconcile.Request
 }
-
 type dbPredicate struct {
 	kc            client.Client
 	shardConfig   string
@@ -139,7 +132,7 @@ func NewPredicator(kc client.Client, gvk schema.GroupVersionKind, shardConfig st
 
 func NewPredicatorWithArchiverMappingFunc(kc client.Client, gvk schema.GroupVersionKind,
 	shardConfig string, healthChecker *health.HealthChecker,
-) PredicatorWithArchiverMapping {
+) Predicator {
 	return &dbPredicate{
 		kc:            kc,
 		shardConfig:   shardConfig,
