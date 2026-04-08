@@ -429,4 +429,5 @@ const (
 // Qdrant Constants
 const (
 	RebalanceShards = "RebalanceShards"
+	RemovePeers     = "RemovePeers"
 )

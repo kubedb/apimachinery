@@ -83,7 +83,6 @@ func (c *Client) GetCollectionClusterInfo(ctx context.Context, collectionName st
 
 // RemovePeer removes a peer from the cluster.
 // The peerID parameter is required.
-// The timeout parameter is optional - wait for operation commit timeout in seconds.
 // The force parameter is optional - if true, removes peer even if it has shards/replicas on it.
 func (c *Client) RemovePeer(ctx context.Context, peerID uint64, force bool) (*RemovePeerResponse, error) {
 	path := fmt.Sprintf("/cluster/peer/%d", peerID)
