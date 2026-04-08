@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 )
 
 // GetClusterInfo retrieves information about the cluster
@@ -73,6 +74,46 @@ func (c *Client) GetCollectionClusterInfo(ctx context.Context, collectionName st
 	}
 
 	var response GetCollectionClusterInfoResponse
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return nil, fmt.Errorf("decoding response: %w", err)
+	}
+
+	return &response, nil
+}
+
+// RemovePeer removes a peer from the cluster.
+// The peerID parameter is required.
+// The timeout parameter is optional - wait for operation commit timeout in seconds.
+// The force parameter is optional - if true, removes peer even if it has shards/replicas on it.
+func (c *Client) RemovePeer(ctx context.Context, peerID uint64, force bool) (*RemovePeerResponse, error) {
+	path := fmt.Sprintf("/cluster/peer/%d", peerID)
+
+	queryParams := url.Values{}
+	if force {
+		queryParams.Set("force", "true")
+	}
+
+	if queryParams.Encode() != "" {
+		path += "?" + queryParams.Encode()
+	}
+
+	req, err := c.NewRequest(ctx, http.MethodDelete, path, nil)
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+
+	resp, err := c.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("executing request: %w", err)
+	}
+	defer func() { _ = resp.Body.Close() }()
+
+	if resp.StatusCode != http.StatusOK {
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("unexpected status code %d: %s", resp.StatusCode, string(bodyBytes))
+	}
+
+	var response RemovePeerResponse
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return nil, fmt.Errorf("decoding response: %w", err)
 	}

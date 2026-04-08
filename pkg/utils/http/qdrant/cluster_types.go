@@ -74,3 +74,39 @@ type GetCollectionClusterInfoResponse struct {
 	Status string                `json:"status"`
 	Result CollectionClusterInfo `json:"result"`
 }
+
+// RemovePeerRequest represents the request parameters for removing a peer.
+type RemovePeerRequest struct {
+	Timeout *int `json:"timeout,omitempty"` // Wait for operation commit timeout in seconds
+	Force   bool `json:"force"`             // If true - removes peer even if it has shards/replicas on it
+}
+
+// RemovePeerResponse represents the response from removing a peer.
+type RemovePeerResponse struct {
+	Usage  PeerUsage `json:"usage"`
+	Time   float64   `json:"time"`
+	Status string    `json:"status"`
+	Result bool      `json:"result"`
+}
+
+// PeerUsage represents the hardware usage of a peer.
+type PeerUsage struct {
+	Hardware  HardwareUsage  `json:"hardware"`
+	Inference InferenceUsage `json:"inference"`
+}
+
+// HardwareUsage represents hardware resource usage.
+type HardwareUsage struct {
+	CPU                 int `json:"cpu"`
+	PayloadIORead       int `json:"payload_io_read"`
+	PayloadIOWrite      int `json:"payload_io_write"`
+	PayloadIndexIORead  int `json:"payload_index_io_read"`
+	PayloadIndexIOWrite int `json:"payload_index_io_write"`
+	VectorIORead        int `json:"vector_io_read"`
+	VectorIOWrite       int `json:"vector_io_write"`
+}
+
+// InferenceUsage represents inference usage.
+type InferenceUsage struct {
+	Models map[string]any `json:"models"`
+}
