@@ -22,8 +22,8 @@ import (
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"

@@ -69,7 +69,7 @@ type DocumentDBVersionSpec struct {
 
 	// SecurityContext is for the additional security information for the DocumentDB container
 	// +optional
-	SecurityContext SecurityContext `json:"SecurityContext"`
+	SecurityContext SecurityContext `json:"securityContext"`
 
 	// which postgres version documnetdb using
 	//+ optional
