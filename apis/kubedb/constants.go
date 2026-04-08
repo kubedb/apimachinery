@@ -1609,10 +1609,14 @@ const (
 	DocumentDBVolumeScripts = "documentdb-data"
 	DocumentDBDataDir       = "/data"
 
-	DocumentDBContainerName = "documentdb"
-	DocumentDBMainImage     = "ghcr.io/documentdb/documentdb"
-	DocumentDBUser          = "postgres"
-	DocumentDBLinkedDBName  = "documentdb"
+	DocumentDBVolumeNameInitScript      = "init-scripts"
+	DocumentDBVolumeMountPathInitScript = "/scripts"
+
+	DocumentDBContainerName     = "documentdb"
+	DocumentDBInitContainerName = "documentdb-init"
+	DocumentDBMainImage         = "ghcr.io/documentdb/documentdb"
+	DocumentDBUser              = "postgres"
+	DocumentDBLinkedDBName      = "documentdb"
 
 	DocumentDBServerPath = "/etc/certs/server"
 

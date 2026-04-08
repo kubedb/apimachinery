@@ -45,6 +45,12 @@ spec:
             type: object
           spec:
             properties:
+              SecurityContext:
+                properties:
+                  runAsUser:
+                    format: int64
+                    type: integer
+                type: object
               db:
                 properties:
                   image:
@@ -56,11 +62,12 @@ spec:
                 type: boolean
               endOfLife:
                 type: boolean
-              securityContext:
+              pgVersion:
+                type: string
+              scripts:
                 properties:
-                  runAsUser:
-                    format: int64
-                    type: integer
+                  image:
+                    type: string
                 type: object
               ui:
                 items:

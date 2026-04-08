@@ -55,6 +55,10 @@ type DocumentDBVersionSpec struct {
 	// Database Image
 	DB DocumentDBVersionDatabase `json:"db"`
 
+	// init container image
+	// +optional
+	InitContainer DocumentDBInitContainer `json:"scripts,omitempty"`
+
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
@@ -65,7 +69,11 @@ type DocumentDBVersionSpec struct {
 
 	// SecurityContext is for the additional security information for the DocumentDB container
 	// +optional
-	SecurityContext SecurityContext `json:"securityContext"`
+	SecurityContext SecurityContext `json:"SecurityContext"`
+
+	// which postgres version documnetdb using
+	//+ optional
+	pgVersion string `json:"pgVersion,omitempty"`
 
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
@@ -76,9 +84,9 @@ type DocumentDBVersionDatabase struct {
 	Image string `json:"image"`
 }
 
-type DocumentDBVersionPostgres struct {
-	// Which versions pg will be used as backend of documentdb. default 13.13 when backend internally managed
-	Version string `json:"version"`
+type DocumentDBInitContainer struct {
+	// Image is the init container image for DocumentDB. This will be used to initialize the database with custom scripts. default "docker.io/bytebase/documentdb-init:latest"
+	Image string `json:"image,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

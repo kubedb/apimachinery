@@ -26,13 +26,14 @@ import (
 	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/klog/v2"
 	"k8s.io/utils/ptr"
 	"kmodules.xyz/client-go/apiextensions"
 	metautil "kmodules.xyz/client-go/meta"
-	ofst "kmodules.xyz/offshoot-api/api/v2"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -96,14 +97,14 @@ func (d *DocumentDB) offshootLabels(selector, override map[string]string) map[st
 	return metautil.FilterKeys(SchemeGroupVersion.Group, selector, metautil.OverwriteKeys(nil, d.Labels, override))
 }
 
-func (d *DocumentDB) PodLabels(podTemplate *ofst.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
+func (d *DocumentDB) PodLabels(podTemplate *ofstv2.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
 	if podTemplate != nil && podTemplate.Labels != nil {
 		return d.offshootLabels(metautil.OverwriteKeys(d.OffshootSelectors(), extraLabels...), podTemplate.Labels)
 	}
 	return d.offshootLabels(metautil.OverwriteKeys(d.OffshootSelectors(), extraLabels...), nil)
 }
 
-func (d *DocumentDB) PodControllerLabels(podTemplate *ofst.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
+func (d *DocumentDB) PodControllerLabels(podTemplate *ofstv2.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
 	if podTemplate != nil && podTemplate.Controller.Labels != nil {
 		return d.offshootLabels(metautil.OverwriteKeys(d.OffshootSelectors(), extraLabels...), podTemplate.Controller.Labels)
 	}
@@ -131,7 +132,7 @@ func (d *DocumentDB) ResourceSingular() string {
 	return ResourceSingularDocumentDB
 }
 
-func (d *DocumentDB) SetDefaults(kc client.Client) {
+func (d *DocumentDB) SetDefaults(kc client.Client, documentDBVersion catalogv1alpha1.DocumentDBVersion) {
 	if d.Spec.DeletionPolicy == "" {
 		d.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
@@ -142,6 +143,9 @@ func (d *DocumentDB) SetDefaults(kc client.Client) {
 		d.Spec.Replicas = ptr.To(int32(1))
 	}
 	d.initializePodTemplates()
+
+	d.SetDefaultPodSecurityContext(d.Spec.PodTemplate, &documentDBVersion)
+
 	documentdbVersion := &catalogv1alpha1.DocumentDBVersion{}
 	err := kc.Get(context.Background(), types.NamespacedName{Name: d.Spec.Version}, documentdbVersion)
 	if err != nil {
@@ -150,9 +154,28 @@ func (d *DocumentDB) SetDefaults(kc client.Client) {
 	}
 }
 
+func (d *DocumentDB) SetDefaultPodSecurityContext(podTemplate *ofstv2.PodTemplateSpec, documentDBVersion *catalogv1alpha1.DocumentDBVersion) {
+	if podTemplate == nil {
+		return
+	}
+
+	if podTemplate.Spec.SecurityContext == nil {
+		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
+	}
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = documentDBVersion.Spec.SecurityContext.RunAsUser
+	}
+	if podTemplate.Spec.SecurityContext.RunAsUser == nil {
+		podTemplate.Spec.SecurityContext.RunAsUser = documentDBVersion.Spec.SecurityContext.RunAsUser
+	}
+	if podTemplate.Spec.SecurityContext.RunAsGroup == nil {
+		podTemplate.Spec.SecurityContext.RunAsGroup = documentDBVersion.Spec.SecurityContext.RunAsUser
+	}
+}
+
 func (d *DocumentDB) initializePodTemplates() {
 	if d.Spec.PodTemplate == nil {
-		d.Spec.PodTemplate = new(ofst.PodTemplateSpec)
+		d.Spec.PodTemplate = new(ofstv2.PodTemplateSpec)
 	}
 }
 
