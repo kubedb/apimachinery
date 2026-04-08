@@ -43,7 +43,8 @@ type MySQLSchema struct {
 type MySQLSnapshot struct {
 	// Enabled controls whether the Snapshot Phase should be executed.
 	// +optional
-	Enabled bool `yaml:"enabled" json:"enabled"`
+	Enabled  bool                   `yaml:"enabled" json:"enabled"`
+	Pipeline *MySQLSnapshotPipeline `yaml:"pipeline" json:"pipeline,omitempty"`
 }
 
 type MySQLReplication struct {
@@ -58,4 +59,12 @@ type MySQLConnectionInfo struct {
 	Password       string `yaml:"password" json:"password"`
 	DBName         string `yaml:"dbName" json:"dbName"`
 	MaxConnections int    `yaml:"maxConnections" json:"maxConnections,omitempty"`
+}
+
+type MySQLSnapshotPipeline struct {
+	Workers        *int `yaml:"workers" json:"workers"`
+	Sinkers        *int `yaml:"sinkers" json:"sinkers"`
+	Buffer         *int `yaml:"buffer" json:"buffer"`
+	ReadBatchSize  *int `yaml:"readBatchSize" json:"read_batch_size"`
+	WriteBatchSize *int `yaml:"writeBatchSize" json:"write_batch_size"`
 }
