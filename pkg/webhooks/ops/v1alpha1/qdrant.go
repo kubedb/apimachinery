@@ -118,7 +118,7 @@ func validateQdrantOpsRequest(req *opsapi.QdrantOpsRequest, oldReq *opsapi.Qdran
 
 func (w *QdrantOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.QdrantOpsRequest) error {
 	if validType, _ := arrays.Contains(opsapi.QdrantOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		return field.Invalid(field.NewPath("spec").Child("types"), req.Name,
+		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Qdrant are %s", req.Spec.Type, strings.Join(opsapi.QdrantOpsRequestTypeNames(), ", ")))
 	}
 
@@ -131,7 +131,7 @@ func (w *QdrantOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Qdran
 	switch opsapi.QdrantOpsRequestType(req.GetRequestType()) {
 	case opsapi.QdrantOpsRequestTypeHorizontalScaling:
 		if err := w.validateQdrantHorizontalScalingOpsRequest(req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
 		}
@@ -262,19 +262,19 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantReconfigureTLSOpsRequest(r
 	}
 
 	configCount := 0
-	if *req.Spec.TLS.Client {
+	if TLSSpec.Client != nil && *TLSSpec.Client {
 		configCount++
 	}
-	if *req.Spec.TLS.P2P {
+	if TLSSpec.P2P != nil && *TLSSpec.P2P {
 		configCount++
 	}
-	if req.Spec.TLS.Remove {
+	if TLSSpec.Remove {
 		configCount++
 	}
-	if req.Spec.TLS.RotateCertificates {
+	if TLSSpec.RotateCertificates {
 		configCount++
 	}
-	if req.Spec.TLS.IssuerRef != nil || req.Spec.TLS.Certificates != nil {
+	if TLSSpec.IssuerRef != nil || TLSSpec.Certificates != nil {
 		configCount++
 	}
 

@@ -68,7 +68,7 @@ type QdrantOpsRequestSpec struct {
 	// Specifies information necessary for custom configuration of qdrant
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for configuring TLS
-	TLS *api.QdrantTLSConfig `json:"tls,omitempty"`
+	TLS *QdrantTLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for configuring authSecret of the database
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
@@ -113,6 +113,19 @@ type QdrantVolumeExpansionSpec struct {
 	Mode VolumeExpansionMode `json:"mode"`
 	// volume specification for nodes
 	Node *resource.Quantity `json:"node,omitempty"`
+}
+
+type QdrantTLSSpec struct {
+	// +optional
+	api.QdrantTLSConfig `json:",inline,omitempty"`
+
+	// RotateCertificates tells operator to initiate certificate rotation
+	// +optional
+	RotateCertificates bool `json:"rotateCertificates,omitempty"`
+
+	// Remove tells operator to remove TLS configuration
+	// +optional
+	Remove bool `json:"remove,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

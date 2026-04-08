@@ -773,6 +773,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_QdrantOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_QdrantOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantReplicaReadinessCriteria":                   schema_apimachinery_apis_ops_v1alpha1_QdrantReplicaReadinessCriteria(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantTLSSpec":                                    schema_apimachinery_apis_ops_v1alpha1_QdrantTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantUpdateVersionSpec":                          schema_apimachinery_apis_ops_v1alpha1_QdrantUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantVerticalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_QdrantVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantVolumeExpansionSpec":                        schema_apimachinery_apis_ops_v1alpha1_QdrantVolumeExpansionSpec(ref),
@@ -41720,7 +41721,7 @@ func schema_apimachinery_apis_ops_v1alpha1_QdrantOpsRequestSpec(ref common.Refer
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for configuring TLS",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantTLSConfig"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantTLSSpec"),
 						},
 					},
 					"authentication": {
@@ -41759,7 +41760,7 @@ func schema_apimachinery_apis_ops_v1alpha1_QdrantOpsRequestSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantTLSConfig", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -41771,6 +41772,66 @@ func schema_apimachinery_apis_ops_v1alpha1_QdrantReplicaReadinessCriteria(ref co
 				Type:        []string{"object"},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_QdrantTLSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"p2p": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"client": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"rotateCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RotateCertificates tells operator to initiate certificate rotation",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"remove": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Remove tells operator to remove TLS configuration",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
 	}
 }
 

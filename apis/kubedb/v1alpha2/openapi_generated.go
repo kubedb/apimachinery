@@ -44295,20 +44295,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_QdrantTLSConfig(ref common.Referen
 							Format: "",
 						},
 					},
-					"rotateCertificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RotateCertificates tells operator to initiate certificate rotation",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"remove": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Remove tells operator to remove TLS configuration",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 				},
 			},
 		},
