@@ -17,8 +17,11 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"bufio"
+	"bytes"
 	"context"
 	"fmt"
+	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -171,6 +174,40 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 		}
 	}
 
+	if db.Spec.Configuration != nil && db.Spec.Configuration.Inline != nil {
+		if len(db.Spec.Configuration.Inline) != 1 {
+			allErr = append(allErr,
+				field.Invalid(
+					field.NewPath("spec").Child("configuration").Child("inline"),
+					db.Spec.Configuration.Inline,
+					fmt.Sprintf("must contain exactly one inline entry, but found %d", len(db.Spec.Configuration.Inline)),
+				),
+			)
+		}
+		customConfigFileName := "oracle.cnf"
+		_, exist := db.Spec.Configuration.Inline[customConfigFileName]
+		if !exist {
+			allErr = append(allErr,
+				field.Invalid(
+					field.NewPath("spec").Child("configuration").Child("inline"),
+					db.Spec.Configuration.Inline,
+					fmt.Sprintf("inline config file should be named %q", customConfigFileName),
+				),
+			)
+		}
+		value := db.Spec.Configuration.Inline[customConfigFileName]
+		if err := validateConfigContent([]byte(value), fmt.Sprintf("inline config %q", customConfigFileName)); err != nil {
+			allErr = append(allErr,
+				field.Invalid(
+					field.NewPath("spec").Child("configuration").Child("inline").Key(customConfigFileName),
+					value,
+					err.Error(),
+				),
+			)
+		}
+
+	}
+
 	if db.Spec.TCPSConfig != nil && db.Spec.TCPSConfig.TLS == nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tcpsConfig").Child("tls"),
 			db.Name,
@@ -220,6 +257,33 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 	}
 
 	return allErr
+}
+
+func validateConfigContent(content []byte, source string) error {
+	scanner := bufio.NewScanner(bytes.NewReader(content))
+	for lineNo := 1; scanner.Scan(); lineNo++ {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" {
+			continue
+		}
+		if strings.Contains(line, " ") {
+			return fmt.Errorf("invalid config in %s at line %d: spaces are not allowed", source, lineNo)
+		}
+		parts := strings.Split(line, "=")
+		if len(parts) != 2 || strings.TrimSpace(parts[0]) == "" || strings.TrimSpace(parts[1]) == "" {
+			return fmt.Errorf("invalid config in %s at line %d: expected key=value", source, lineNo)
+		}
+		key := parts[0]
+		for _, ch := range key {
+			if !(ch >= 'A' && ch <= 'Z') && ch != '_' {
+				return fmt.Errorf("invalid config in %s at line %d: key can only contain uppercase letters and '_'", source, lineNo)
+			}
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("failed to parse config in %s: %w", source, err)
+	}
+	return nil
 }
 
 // reserved volume and volumes mounts for oracle
