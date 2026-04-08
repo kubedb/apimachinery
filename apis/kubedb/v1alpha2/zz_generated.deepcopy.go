@@ -2491,6 +2491,11 @@ func (in *HanaDBSpec) DeepCopyInto(out *HanaDBSpec) {
 		*out = new(ConfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Monitor != nil {
+		in, out := &in.Monitor, &out.Monitor
+		*out = new(monitoringagentapiapiv1.AgentSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.PodTemplate != nil {
 		in, out := &in.PodTemplate, &out.PodTemplate
 		*out = new(v2.PodTemplateSpec)
@@ -2504,6 +2509,11 @@ func (in *HanaDBSpec) DeepCopyInto(out *HanaDBSpec) {
 		}
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.Arbiter != nil {
+		in, out := &in.Arbiter, &out.Arbiter
+		*out = new(ArbiterSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

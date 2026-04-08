@@ -193,6 +193,12 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"), db.Name, err.Error()))
 	}
 
+	if monitorSpec := db.Spec.Monitor; monitorSpec != nil {
+		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("monitor"), db.Name, err.Error()))
+		}
+	}
+
 	if db.Spec.Configuration != nil && db.Spec.Configuration.SecretName != "" {
 		configSecret := &core.Secret{}
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
@@ -236,6 +242,11 @@ func (w *HanaDBCustomWebhook) hanadbValidateVersion(db *api.HanaDB) error {
 	}, &hanadbVersion)
 	if err != nil {
 		return err
+	}
+
+	if err := hanadbVersion.ValidateSpecs(); err != nil {
+		return fmt.Errorf("hanadb %s/%s is using invalid hanadbVersion %v. Skipped processing. reason: %v", db.Namespace,
+			db.Name, hanadbVersion.Name, err)
 	}
 
 	if db.IsSystemReplication() && hanadbVersion.Spec.Coordinator.Image == "" {
