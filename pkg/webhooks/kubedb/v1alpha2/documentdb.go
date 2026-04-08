@@ -23,6 +23,7 @@ import (
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -67,7 +68,14 @@ func (w *DocumentDBCustomWebhook) Default(ctx context.Context, obj runtime.Objec
 
 	documentdblog.Info("default", "name", db.Name)
 
-	db.SetDefaults(w.DefaultClient)
+	documentDBVersion := catalogapi.DocumentDBVersion{}
+	err := w.DefaultClient.Get(context.Background(), types.NamespacedName{Name: db.Spec.Version}, &documentDBVersion)
+	if err != nil {
+		documentdblog.Error(err, "failed to get DocumentDBVersion", "version", db.Spec.Version)
+		return nil
+	}
+
+	db.SetDefaults(w.DefaultClient, documentDBVersion)
 	return nil
 }
 
