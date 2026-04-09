@@ -39089,7 +39089,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerSpec(ref common.Referen
 						},
 					},
 				},
-				Required: []string{"version", "tls"},
+				Required: []string{"tls", "version"},
 			},
 		},
 		Dependencies: []string{
