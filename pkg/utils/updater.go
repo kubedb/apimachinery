@@ -198,49 +198,49 @@ func (p *dbPredicate) GetPredicateFuncsForDatabase() predicate.Funcs {
 func (p *dbPredicate) GetPredicateFuncsForOwnedObjects() predicate.Funcs {
 	return predicate.Funcs{
 		CreateFunc: func(e event.CreateEvent) bool {
-			dbObj, err := p.GetOwnerObject(e.Object)
+			ownerObj, err := p.GetOwnerObject(e.Object)
 			if err != nil && !kerr.IsNotFound(err) {
 				klog.Errorln(err)
 				return false
 			}
-			if dbObj == nil {
+			if ownerObj == nil {
 				return false
 			}
-			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, dbObj.GetLabels())
+			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, ownerObj.GetLabels())
 			if !rq && p.healthChecker != nil {
-				p.healthChecker.Stop(dbObj.GetNamespace() + "/" + dbObj.GetName())
+				p.healthChecker.Stop(ownerObj.GetNamespace() + "/" + ownerObj.GetName())
 			}
 			return rq
 		},
 
 		UpdateFunc: func(e event.UpdateEvent) bool {
-			dbObj, err := p.GetOwnerObject(e.ObjectNew)
+			ownerObj, err := p.GetOwnerObject(e.ObjectNew)
 			if err != nil && !kerr.IsNotFound(err) {
 				klog.Errorln(err)
 				return false
 			}
-			if dbObj == nil {
+			if ownerObj == nil {
 				return false
 			}
-			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, dbObj.GetLabels())
+			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, ownerObj.GetLabels())
 			if !rq && p.healthChecker != nil {
-				p.healthChecker.Stop(dbObj.GetNamespace() + "/" + dbObj.GetName())
+				p.healthChecker.Stop(ownerObj.GetNamespace() + "/" + ownerObj.GetName())
 			}
 			return rq
 		},
 
 		DeleteFunc: func(e event.DeleteEvent) bool {
-			dbObj, err := p.GetOwnerObject(e.Object)
+			ownerObj, err := p.GetOwnerObject(e.Object)
 			if err != nil && !kerr.IsNotFound(err) {
 				klog.Errorln(err)
 				return false
 			}
-			if dbObj == nil {
+			if ownerObj == nil {
 				return false
 			}
-			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, dbObj.GetLabels())
+			rq := scutil.ShouldEnqueueObjectForShard(p.kc, p.shardConfig, ownerObj.GetLabels())
 			if !rq && p.healthChecker != nil {
-				p.healthChecker.Stop(dbObj.GetNamespace() + "/" + dbObj.GetName())
+				p.healthChecker.Stop(ownerObj.GetNamespace() + "/" + ownerObj.GetName())
 			}
 			return rq
 		},
