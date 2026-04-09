@@ -184,22 +184,21 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 				),
 			)
 		}
-		customConfigFileName := "oracle.cnf"
-		_, exist := db.Spec.Configuration.Inline[customConfigFileName]
+		_, exist := db.Spec.Configuration.Inline[kubedb.OracleCustomConfigFileName]
 		if !exist {
 			allErr = append(allErr,
 				field.Invalid(
 					field.NewPath("spec").Child("configuration").Child("inline"),
 					db.Spec.Configuration.Inline,
-					fmt.Sprintf("inline config file should be named %q", customConfigFileName),
+					fmt.Sprintf("inline config file should be named %q", kubedb.OracleCustomConfigFileName),
 				),
 			)
 		}
-		value := db.Spec.Configuration.Inline[customConfigFileName]
-		if err := validateConfigContent([]byte(value), fmt.Sprintf("inline config %q", customConfigFileName)); err != nil {
+		value := db.Spec.Configuration.Inline[kubedb.OracleCustomConfigFileName]
+		if err := ValidateConfigContent([]byte(value), fmt.Sprintf("inline config %q", kubedb.OracleCustomConfigFileName)); err != nil {
 			allErr = append(allErr,
 				field.Invalid(
-					field.NewPath("spec").Child("configuration").Child("inline").Key(customConfigFileName),
+					field.NewPath("spec").Child("configuration").Child("inline").Key(kubedb.OracleCustomConfigFileName),
 					value,
 					err.Error(),
 				),
@@ -259,7 +258,7 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 	return allErr
 }
 
-func validateConfigContent(content []byte, source string) error {
+func ValidateConfigContent(content []byte, source string) error {
 	scanner := bufio.NewScanner(bytes.NewReader(content))
 	for lineNo := 1; scanner.Scan(); lineNo++ {
 		line := strings.TrimSpace(scanner.Text())
