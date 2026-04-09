@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"context"
 	"fmt"
 
 	"kubedb.dev/apimachinery/apis"
@@ -28,12 +27,12 @@ import (
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/klog/v2"
 	"k8s.io/utils/ptr"
 	"kmodules.xyz/client-go/apiextensions"
 	metautil "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
+	ofst_util "kmodules.xyz/offshoot-api/util"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -132,7 +131,7 @@ func (d *DocumentDB) ResourceSingular() string {
 	return ResourceSingularDocumentDB
 }
 
-func (d *DocumentDB) SetDefaults(kc client.Client, documentDBVersion catalogv1alpha1.DocumentDBVersion) {
+func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alpha1.DocumentDBVersion) {
 	if d.Spec.DeletionPolicy == "" {
 		d.Spec.DeletionPolicy = DeletionPolicyDelete
 	}
@@ -145,13 +144,7 @@ func (d *DocumentDB) SetDefaults(kc client.Client, documentDBVersion catalogv1al
 	d.initializePodTemplates()
 
 	d.SetDefaultPodSecurityContext(d.Spec.PodTemplate, &documentDBVersion)
-
-	documentdbVersion := &catalogv1alpha1.DocumentDBVersion{}
-	err := kc.Get(context.Background(), types.NamespacedName{Name: d.Spec.Version}, documentdbVersion)
-	if err != nil {
-		klog.Errorf("Failed to get database version %s: %s", err.Error(), d.Spec.Version)
-		return
-	}
+	d.SetDocumentDBContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
 }
 
 func (d *DocumentDB) SetDefaultPodSecurityContext(podTemplate *ofstv2.PodTemplateSpec, documentDBVersion *catalogv1alpha1.DocumentDBVersion) {
@@ -170,6 +163,51 @@ func (d *DocumentDB) SetDefaultPodSecurityContext(podTemplate *ofstv2.PodTemplat
 	}
 	if podTemplate.Spec.SecurityContext.RunAsGroup == nil {
 		podTemplate.Spec.SecurityContext.RunAsGroup = documentDBVersion.Spec.SecurityContext.RunAsUser
+	}
+}
+
+func (d *DocumentDB) SetDocumentDBContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, documentDBVersion *catalogv1alpha1.DocumentDBVersion) {
+	if podTemplate == nil {
+		return
+	}
+	container := ofst_util.EnsureContainerExists(podTemplate, kubedb.PostgresContainerName)
+	d.setContainerDefaultSecurityContext(container, documentDBVersion)
+	d.setContainerDefaultResources(container, *kubedb.DefaultResources.DeepCopy())
+}
+
+func (d *DocumentDB) setContainerDefaultSecurityContext(container *core.Container, documentDBVersion *catalogv1alpha1.DocumentDBVersion) {
+	if container.SecurityContext == nil {
+		container.SecurityContext = &core.SecurityContext{}
+	}
+	d.assignDefaultContainerSecurityContext(container.SecurityContext, documentDBVersion)
+}
+
+func (d *DocumentDB) setContainerDefaultResources(container *core.Container, defaultResources core.ResourceRequirements) {
+	if container.Resources.Requests == nil && container.Resources.Limits == nil {
+		apis.SetDefaultResourceLimits(&container.Resources, defaultResources)
+	}
+}
+
+func (d *DocumentDB) assignDefaultContainerSecurityContext(sc *core.SecurityContext, documentDBVersion *catalogv1alpha1.DocumentDBVersion) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &core.Capabilities{
+			Drop: []core.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = documentDBVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.RunAsGroup == nil {
+		sc.RunAsGroup = documentDBVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
 

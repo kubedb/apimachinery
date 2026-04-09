@@ -21,7 +21,6 @@ import (
 	"errors"
 	"fmt"
 
-	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
@@ -202,7 +201,7 @@ func DocumentDBValidateEnvVar(envs []core.EnvVar, forbiddenEnvs []string, resour
 }
 
 func (w *DocumentDBCustomWebhook) validateDocumentDBVersion(db *olddbapi.DocumentDB) error {
-	dcVersion := v1alpha1.DocumentDBVersion{}
+	dcVersion := catalogapi.DocumentDBVersion{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &dcVersion)
 	if err != nil {
 		return errors.New("version not supported")

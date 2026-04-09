@@ -56,13 +56,8 @@ spec:
                 type: boolean
               endOfLife:
                 type: boolean
-              pgVersion:
+              postgresVersion:
                 type: string
-              scripts:
-                properties:
-                  image:
-                    type: string
-                type: object
               securityContext:
                 properties:
                   runAsUser:
