@@ -133,12 +133,28 @@ func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jO
 		if err := w.validateNeo4jReconfigurationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
 		}
+	case opsapi.Neo4jOpsRequestTypeVerticalScaling:
+		if err := w.validateNeo4jVerticalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "neo4jopsrequests.kubedb.com", Kind: "Neo4jOpsRequest"}, req.Name, allErr)
+}
+
+func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVerticalScalingOpsRequest(req *opsapi.Neo4jOpsRequest) error {
+	verticalScalingSpec := req.Spec.VerticalScaling
+	if verticalScalingSpec == nil {
+		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
+	}
+	if verticalScalingSpec.Server == nil {
+		return errors.New("`spec.verticalScaling.Server`,should be present in vertical scaling ops request")
+	}
+
+	return nil
 }
 
 func (w *Neo4jOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.Neo4jOpsRequest) (*dbapi.Neo4j, error) {
@@ -210,13 +226,10 @@ func validateNeo4jHorizontalScaling(current, target int32) error {
 
 	if target < current {
 		if target == 2 {
-			return fmt.Errorf("cannot scale Neo4j cluster to 2 nodes. Neo4j requires minimum 3 voting members for system database. scale to 3 (minimum cluster) or 1 (standalone) instead")
+			return fmt.Errorf("cannot scale Neo4j cluster to 2 nodes. Neo4j requires minimum 3 voting members for system database. scale to 3 (minimum cluster)")
 		}
 		if target == 1 && current >= 3 {
 			return fmt.Errorf("cannot scale down from cluster (%d nodes) to standalone (1 node) directly. migration from cluster to standalone requires a full data migration process", current)
-		}
-		if target >= 3 && current >= 3 {
-			return nil
 		}
 	}
 
@@ -251,6 +264,7 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jReconfigurationTLSOpsRequest
 
 func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jRotateAuthenticationOpsRequest(req *opsapi.Neo4jOpsRequest) error {
 	authSpec := req.Spec.Authentication
+	var newAuthsecret core.Secret
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
 			return errors.New("spec.authentication.secretRef.name can not be empty")
@@ -258,12 +272,19 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jRotateAuthenticationOpsReque
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      authSpec.SecretRef.Name,
 			Namespace: req.Namespace,
-		}, &core.Secret{})
+		}, &newAuthsecret)
 		if err != nil {
 			if apierrors.IsNotFound(err) {
 				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
 			}
 			return err
+		}
+
+		if newAuthsecret.Data == nil {
+			return errors.New("spec.authentication.secretRef.name is a valid secret but it does not contain any data")
+		}
+		if newAuthsecret.Data[core.BasicAuthUsernameKey] == nil || newAuthsecret.Data[core.BasicAuthPasswordKey] == nil {
+			return errors.New("spec.authentication.secretRef.name is a valid secret but it does not contain username or password")
 		}
 	}
 
