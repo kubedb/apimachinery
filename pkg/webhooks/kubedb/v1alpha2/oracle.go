@@ -274,20 +274,6 @@ func ValidateConfigContent(content []byte, source string) error {
 		if strings.Contains(parts[0], " ") || strings.Contains(parts[1], " ") {
 			return fmt.Errorf("invalid config in %s at line %d: spaces are not allowed", source, lineNo)
 		}
-		key := parts[0]
-		ok_upper := true
-		ok_lower := true
-		for _, ch := range key {
-			if (ch < 'A' || ch > 'Z') && ch != '_' {
-				ok_upper = false
-			}
-			if (ch < 'a' || ch > 'z') && ch != '_' {
-				ok_lower = false
-			}
-		}
-		if !ok_upper && !ok_lower {
-			return fmt.Errorf("invalid config in %s at line %d", source, lineNo)
-		}
 	}
 	if err := scanner.Err(); err != nil {
 		return fmt.Errorf("failed to parse config in %s: %w", source, err)
