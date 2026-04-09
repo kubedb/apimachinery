@@ -170,7 +170,7 @@ func (d *DocumentDB) SetDocumentDBContainerDefaults(podTemplate *ofstv2.PodTempl
 	if podTemplate == nil {
 		return
 	}
-	container := ofst_util.EnsureContainerExists(podTemplate, kubedb.PostgresContainerName)
+	container := ofst_util.EnsureContainerExists(podTemplate, kubedb.DocumentDBContainerName)
 	d.setContainerDefaultSecurityContext(container, documentDBVersion)
 	d.setContainerDefaultResources(container, *kubedb.DefaultResources.DeepCopy())
 }
@@ -183,7 +183,7 @@ func (d *DocumentDB) setContainerDefaultSecurityContext(container *core.Containe
 }
 
 func (d *DocumentDB) setContainerDefaultResources(container *core.Container, defaultResources core.ResourceRequirements) {
-	if container.Resources.Requests == nil && container.Resources.Limits == nil {
+	if container != nil {
 		apis.SetDefaultResourceLimits(&container.Resources, defaultResources)
 	}
 }
