@@ -213,74 +213,83 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(pp *
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if applyConfigExists(req.Spec.Configuration.ApplyConfig) {
-		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.PgpoolCustomConfigFile]
+	if reconfigureSpec.ReconfigurationSpec != nil && applyConfigExists(reconfigureSpec.ApplyConfig) {
+		_, ok := reconfigureSpec.ApplyConfig[kubedb.PgpoolCustomConfigFile]
 		if !ok {
 			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.PgpoolCustomConfigFile)
 		}
 	}
 
-	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExists(req.Spec.Configuration.ApplyConfig) &&
-		req.Spec.Configuration.Backend == nil {
+	if (reconfigureSpec.ReconfigurationSpec == nil || (!reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && !applyConfigExists(reconfigureSpec.ApplyConfig))) &&
+		reconfigureSpec.Backend == nil {
 		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` or `Backend` must be specified")
 	}
 
-	if req.Spec.Configuration.Backend != nil {
-		err := dbwebhook.PgpoolValidateLoadBalancingSpec(req.Spec.Configuration.Backend.Sync)
-		if err != nil {
-			return fmt.Errorf("invalid load balancing configuration: %v", err)
-		}
+	if reconfigureSpec.Backend == nil {
+		return nil
+	}
 
-		mergedBackend := []olddbapi.PgpoolLoadBalancingSpec{}
-		if pp.Spec.Configuration != nil && pp.Spec.Configuration.Backends != nil {
-			mergedBackend = append(mergedBackend, pp.Spec.Configuration.Backends...)
-		}
+	removeCustomConfig := reconfigureSpec.ReconfigurationSpec != nil && reconfigureSpec.RemoveCustomConfig
 
-		if req.Spec.Configuration.Backend.Delete != nil {
-			for _, backendToDelete := range req.Spec.Configuration.Backend.Delete {
-				for i, backend := range mergedBackend {
-					node := backend.GroupName
-					if node == "" {
-						node = backend.HostName
-					}
-					if node == backendToDelete {
-						mergedBackend = append(mergedBackend[:i], mergedBackend[i+1:]...)
-						break
-					}
+	if removeCustomConfig && reconfigureSpec.Backend.Delete != nil {
+		return errors.New("`spec.configuration.backend.delete` cannot be specified when `spec.configuration.removeCustomConfig` is true")
+	}
+
+	err := dbwebhook.PgpoolValidateLoadBalancingSpec(reconfigureSpec.Backend.Sync)
+	if err != nil {
+		return fmt.Errorf("invalid load balancing configuration: %v", err)
+	}
+
+	mergedBackend := []olddbapi.PgpoolLoadBalancingSpec{}
+	if !removeCustomConfig && pp.Spec.Configuration != nil && pp.Spec.Configuration.Backends != nil {
+		mergedBackend = append(mergedBackend, pp.Spec.Configuration.Backends...)
+	}
+
+	if reconfigureSpec.Backend.Delete != nil {
+		for _, backendToDelete := range reconfigureSpec.Backend.Delete {
+			for i, backend := range mergedBackend {
+				node := backend.GroupName
+				if node == "" {
+					node = backend.HostName
+				}
+				if node == backendToDelete {
+					mergedBackend = append(mergedBackend[:i], mergedBackend[i+1:]...)
+					break
 				}
 			}
-		}
-
-		if req.Spec.Configuration.Backend.Sync != nil {
-			for _, backend := range req.Spec.Configuration.Backend.Sync {
-				node1 := backend.GroupName
-				if node1 == "" {
-					node1 = backend.HostName
-				}
-				found := false
-
-				for i, backend2 := range mergedBackend {
-					node2 := backend2.GroupName
-					if node2 == "" {
-						node2 = backend2.HostName
-					}
-					if node2 == node1 {
-						found = true
-						mergedBackend[i] = backend
-						break
-					}
-				}
-				if !found {
-					mergedBackend = append(mergedBackend, backend)
-				}
-			}
-		}
-
-		err = dbwebhook.PgpoolValidateLoadBalancingSpec(mergedBackend)
-		if err != nil {
-			return fmt.Errorf("`spec.configuration.backend` is not compatible with the running load balancing configuration: %v", err)
 		}
 	}
+
+	if reconfigureSpec.Backend.Sync != nil {
+		for _, backend := range reconfigureSpec.Backend.Sync {
+			node1 := backend.GroupName
+			if node1 == "" {
+				node1 = backend.HostName
+			}
+			found := false
+
+			for i, backend2 := range mergedBackend {
+				node2 := backend2.GroupName
+				if node2 == "" {
+					node2 = backend2.HostName
+				}
+				if node2 == node1 {
+					found = true
+					mergedBackend[i] = backend
+					break
+				}
+			}
+			if !found {
+				mergedBackend = append(mergedBackend, backend)
+			}
+		}
+	}
+
+	err = dbwebhook.PgpoolValidateLoadBalancingSpec(mergedBackend)
+	if err != nil {
+		return fmt.Errorf("`spec.configuration.backend` is not compatible with the running load balancing configuration: %v", err)
+	}
+
 	return nil
 }
 
