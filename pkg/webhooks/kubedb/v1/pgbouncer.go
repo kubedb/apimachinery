@@ -34,7 +34,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
-	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/klog/v2"
 	meta_util "kmodules.xyz/client-go/meta"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
@@ -307,11 +306,7 @@ func (pw PgBouncerCustomWebhook) Validate(ctx context.Context, db *dbapi.PgBounc
 }
 
 func validatePgBouncerUpdate(obj, oldObj runtime.Object) error {
-	preconditions := meta_util.PreConditionSet{
-		Set: sets.New[string](
-			"spec.authSecret",
-		),
-	}
+	preconditions := meta_util.PreConditionSet{}
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)
 	if err != nil {
 		if mergepatch.IsPreconditionFailed(err) {
