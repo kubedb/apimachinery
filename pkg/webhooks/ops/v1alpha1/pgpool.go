@@ -213,7 +213,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(pp *
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if applyConfigExists(reconfigureSpec.ApplyConfig) {
+	if reconfigureSpec.ReconfigurationSpec != nil && applyConfigExists(reconfigureSpec.ApplyConfig) {
 		_, ok := reconfigureSpec.ApplyConfig[kubedb.PgpoolCustomConfigFile]
 		if !ok {
 			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.PgpoolCustomConfigFile)
