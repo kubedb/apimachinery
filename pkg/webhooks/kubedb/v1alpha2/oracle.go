@@ -266,18 +266,28 @@ func validateConfigContent(content []byte, source string) error {
 		if line == "" {
 			continue
 		}
-		if strings.Contains(line, " ") {
-			return fmt.Errorf("invalid config in %s at line %d: spaces are not allowed", source, lineNo)
-		}
 		parts := strings.Split(line, "=")
 		if len(parts) != 2 || strings.TrimSpace(parts[0]) == "" || strings.TrimSpace(parts[1]) == "" {
 			return fmt.Errorf("invalid config in %s at line %d: expected key=value", source, lineNo)
 		}
+		parts[0] = strings.TrimSpace(parts[0])
+		parts[1] = strings.TrimSpace(parts[1])
+		if strings.Contains(parts[0], " ") || strings.Contains(parts[1], " ") {
+			return fmt.Errorf("invalid config in %s at line %d: spaces are not allowed", source, lineNo)
+		}
 		key := parts[0]
+		ok_upper := true
+		ok_lower := true
 		for _, ch := range key {
-			if !(ch >= 'A' && ch <= 'Z') && ch != '_' {
-				return fmt.Errorf("invalid config in %s at line %d: key can only contain uppercase letters and '_'", source, lineNo)
+			if (ch < 'A' || ch > 'Z') && ch != '_' {
+				ok_upper = false
 			}
+			if (ch < 'a' || ch > 'z') && ch != '_' {
+				ok_lower = false
+			}
+		}
+		if !ok_upper && !ok_lower {
+			return fmt.Errorf("invalid config in %s at line %d", source, lineNo)
 		}
 	}
 	if err := scanner.Err(); err != nil {
