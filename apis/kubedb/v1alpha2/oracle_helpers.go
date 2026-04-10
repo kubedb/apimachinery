@@ -255,8 +255,9 @@ func (o *Oracle) ObserverPetSetName() string {
 	return fmt.Sprintf("%s-observer", o.PetSetName())
 }
 
-func (o *Oracle) ConfigSecretName() string {
-	return metautil.NameWithSuffix(o.OffshootName(), "config")
+func (p Postgres) ConfigSecretName() string {
+	uid := string(p.UID)
+	return metautil.NameWithSuffix(p.OffshootName(), uid[len(uid)-6:])
 }
 
 func (o *Oracle) IsStandalone() bool {
