@@ -826,6 +826,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateOpsRequest":                               schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateOpsRequestList":                           schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateOpsRequestSpec":                           schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec":                      schema_apimachinery_apis_ops_v1alpha1_WeaviateReconfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperHorizontalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_ZooKeeperHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperOpsRequest":                              schema_apimachinery_apis_ops_v1alpha1_ZooKeeperOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperOpsRequestList":                          schema_apimachinery_apis_ops_v1alpha1_ZooKeeperOpsRequestList(ref),
@@ -43893,7 +43894,7 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref common.Ref
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for custom configuration of weaviate",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec"),
 						},
 					},
 					"timeout": {
@@ -43920,7 +43921,64 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_WeaviateReconfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "WeaviateReconfigurationSpec is the Weaviate-specific reconfiguration spec. It embeds the generic ReconfigurationSpec and adds Weaviate-specific fields.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret is an optional field to provide custom configuration file for the database (i.e. mssql.conf, mongod.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). Configurations from this secret will override default configurations.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"applyConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplyConfig contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"removeCustomConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RemoveCustomConfig when set to true, removes any previous custom configuration (config secret and apply configs) and uses only current configurations (if provided) and the default configurations.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Restart controls whether to restart the database during reconfiguration. - auto (default): Operator determines if restart is needed based on configuration changes. - true: Restart the database during reconfiguration. - false: Don't restart the database during reconfiguration.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"backupConfigSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackupConfigSecret is an optional field to provide environment variables from a Kubernetes Secret for the database container.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 

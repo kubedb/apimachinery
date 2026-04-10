@@ -61,7 +61,7 @@ type WeaviateOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 
 	// Specifies information necessary for custom configuration of weaviate
-	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
+	Configuration *WeaviateReconfigurationSpec `json:"configuration,omitempty"`
 
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
@@ -86,4 +86,14 @@ type WeaviateOpsRequestList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 	// Items is a list of WeaviateOpsRequest CRD objects
 	Items []WeaviateOpsRequest `json:"items,omitempty"`
+}
+
+// WeaviateReconfigurationSpec is the Weaviate-specific reconfiguration spec.
+// It embeds the generic ReconfigurationSpec and adds Weaviate-specific fields.
+type WeaviateReconfigurationSpec struct {
+	ReconfigurationSpec `json:",inline,omitempty"`
+	// BackupConfigSecret is an optional field to provide environment variables
+	// from a Kubernetes Secret for the database container.
+	// +optional
+	BackupConfigSecret *core.LocalObjectReference `json:"backupConfigSecret,omitempty"`
 }
