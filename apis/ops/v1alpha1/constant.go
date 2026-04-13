@@ -431,3 +431,8 @@ const (
 	RebalanceShards = "RebalanceShards"
 	RemovePeers     = "RemovePeers"
 )
+
+// Neo4j Constanst
+const (
+	UpdateServerPVCs = "UpdateServerPVCs"
+)
