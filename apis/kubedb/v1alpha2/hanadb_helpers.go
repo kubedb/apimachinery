@@ -595,6 +595,7 @@ func (h *HanaDB) SetDefaults(kc client.Client) {
 	}
 
 	h.SetArbiterDefault()
+
 	h.SetTLSDefaults()
 
 	h.setDefaultContainerSecurityContext(&hanadbVersion, h.Spec.PodTemplate)
@@ -726,7 +727,7 @@ func (h *HanaDB) assignDefaultContainerSecurityContext(hanadbVersion *catalog.Ha
 
 func (h *HanaDB) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSpec) {
 	dbContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.HanaDBContainerName)
-	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+	if dbContainer != nil {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResourcesHanaDB)
 	}
 
