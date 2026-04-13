@@ -133,10 +133,10 @@ func (w *CassandraCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Cassandra) 
 		rackName := map[string]bool{}
 		racks := db.Spec.Topology.Rack
 		for _, rack := range racks {
-			if rack.Replicas != nil && *rack.Replicas <= 0 {
+			if rack.Replicas != nil && *rack.Replicas <= 1 {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child("replicas"),
 					db.Name,
-					"number of replicas can't be 0 or less"))
+					"number of replicas need to be greater than 1"))
 			}
 			if rackName[rack.Name] {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child(rack.Name),
