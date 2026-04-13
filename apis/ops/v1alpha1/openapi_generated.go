@@ -713,11 +713,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVerticalScalingSpec":                         schema_apimachinery_apis_ops_v1alpha1_MySQLVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVolumeExpansionSpec":                         schema_apimachinery_apis_ops_v1alpha1_MySQLVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jHorizontalScalingSpec":                       schema_apimachinery_apis_ops_v1alpha1_Neo4jHorizontalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jMigrationSpec":                               schema_apimachinery_apis_ops_v1alpha1_Neo4jMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jOpsRequest":                                  schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jOpsRequestList":                              schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jOpsRequestSpec":                              schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jTLSSpec":                                     schema_apimachinery_apis_ops_v1alpha1_Neo4jTLSSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jUpdateVersionSpec":                           schema_apimachinery_apis_ops_v1alpha1_Neo4jUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVerticalScalingSpec":                         schema_apimachinery_apis_ops_v1alpha1_Neo4jVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVolumeExpansionSpec":                         schema_apimachinery_apis_ops_v1alpha1_Neo4jVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.OpsRequestStatus":                                 schema_apimachinery_apis_ops_v1alpha1_OpsRequestStatus(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBCustomConfigurationSpec":             schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBHorizontalScalingSpec":               schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBHorizontalScalingSpec(ref),
@@ -39140,6 +39143,33 @@ func schema_apimachinery_apis_ops_v1alpha1_Neo4jHorizontalScalingSpec(ref common
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_Neo4jMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storageClassName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"oldPVReclaimPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Delete", "Recycle", "Retain"},
+						},
+					},
+				},
+				Required: []string{"storageClassName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -39293,6 +39323,24 @@ func schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequestSpec(ref common.Refere
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVerticalScalingSpec"),
 						},
 					},
+					"volumeExpansion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for volume expansion",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVolumeExpansionSpec"),
+						},
+					},
+					"updateVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for upgrading Neo4j",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jUpdateVersionSpec"),
+						},
+					},
+					"migration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for migrating storageClass or data",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jMigrationSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -39317,7 +39365,7 @@ func schema_apimachinery_apis_ops_v1alpha1_Neo4jOpsRequestSpec(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.Neo4jVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -39390,6 +39438,26 @@ func schema_apimachinery_apis_ops_v1alpha1_Neo4jTLSSpec(ref common.ReferenceCall
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_Neo4jUpdateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Neo4jUpdateVersionSpec contains the update version information of a Neo4j cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the target version name from catalog",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_Neo4jVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -39407,6 +39475,35 @@ func schema_apimachinery_apis_ops_v1alpha1_Neo4jVerticalScalingSpec(ref common.R
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_Neo4jVolumeExpansionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Neo4jVolumeExpansionSpec is the spec for Neo4j volume expansion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"server": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for servers",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
