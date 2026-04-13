@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strings"
 
+	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -137,12 +138,63 @@ func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jO
 		if err := w.validateNeo4jVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
 		}
+	case opsapi.Neo4jOpsRequestTypeUpdateVersion:
+		if err := w.validateNeo4jUpdateVersionOpsRequest(neo4j, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
+		}
+	case opsapi.Neo4jOpsRequestTypeVolumeExpansion:
+		if err := w.validateNeo4jVolumeExpansionOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "neo4jopsrequests.kubedb.com", Kind: "Neo4jOpsRequest"}, req.Name, allErr)
+}
+
+func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVolumeExpansionOpsRequest(req *opsapi.Neo4jOpsRequest) error {
+	volumeExpansionSpec := req.Spec.VolumeExpansion
+	if volumeExpansionSpec == nil {
+		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
+	}
+
+	if volumeExpansionSpec.Server == nil {
+		return errors.New("spec.volumeExpansion.Server can't be non-empty")
+	}
+
+	return nil
+}
+
+func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jUpdateVersionOpsRequest(db *dbapi.Neo4j, req *opsapi.Neo4jOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
+	}
+
+	currentVersion, err := parseVersion(db.Spec.Version)
+	if err != nil {
+		return fmt.Errorf("invalid current Neo4j version %q: %w", db.Spec.Version, err)
+	}
+	targetVersion, err := parseVersion(updateVersionSpec.TargetVersion)
+	if err != nil {
+		return fmt.Errorf("invalid target Neo4j version %q: %w", updateVersionSpec.TargetVersion, err)
+	}
+
+	if compareVersion(targetVersion, currentVersion) <= 0 {
+		return fmt.Errorf("target version must be greater than current version (current: %s, target: %s)", db.Spec.Version, updateVersionSpec.TargetVersion)
+	}
+
+	yes, err := IsCalVerUpgradable(w.DefaultClient, catalogapi.ResourceKindNeo4jVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+
+	return nil
 }
 
 func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVerticalScalingOpsRequest(req *opsapi.Neo4jOpsRequest) error {
