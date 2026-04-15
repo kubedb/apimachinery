@@ -132,12 +132,9 @@ func (w *CassandraCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Cassandra) 
 	if db.Spec.Topology != nil {
 		rackName := map[string]bool{}
 		racks := db.Spec.Topology.Rack
+		var totalReplica int32
 		for _, rack := range racks {
-			if rack.Replicas != nil && *rack.Replicas <= 1 {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child("replicas"),
-					db.Name,
-					"number of replicas need to be greater than 1"))
-			}
+			totalReplica += *rack.Replicas
 			if rackName[rack.Name] {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("Topology").Child(rack.Name),
 					db.Name,
@@ -159,6 +156,11 @@ func (w *CassandraCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Cassandra) 
 					db.Name,
 					err.Error()))
 			}
+		}
+		if totalReplica <= 1 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("rack"),
+				db.Name,
+				"number of replicas need to be greater than 1"))
 		}
 		if db.Spec.PodTemplate != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
