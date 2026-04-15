@@ -25,7 +25,6 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -178,7 +177,7 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jUpdateVersionOpsRequest(db *
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	yes, err := IsCalVerUpgradable(w.DefaultClient, catalogapi.ResourceKindNeo4jVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	yes, err := IsCalVerUpgradable(w.DefaultClient, catalog.ResourceKindNeo4jVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
 	if err != nil {
 		return err
 	}
