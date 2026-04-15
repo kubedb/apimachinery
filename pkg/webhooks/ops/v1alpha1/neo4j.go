@@ -20,8 +20,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
+	"strconv"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -29,12 +32,14 @@ import (
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	"k8s.io/klog/v2"
 	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -173,19 +178,6 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jUpdateVersionOpsRequest(db *
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	currentVersion, err := parseVersion(db.Spec.Version)
-	if err != nil {
-		return fmt.Errorf("invalid current Neo4j version %q: %w", db.Spec.Version, err)
-	}
-	targetVersion, err := parseVersion(updateVersionSpec.TargetVersion)
-	if err != nil {
-		return fmt.Errorf("invalid target Neo4j version %q: %w", updateVersionSpec.TargetVersion, err)
-	}
-
-	if compareVersion(targetVersion, currentVersion) <= 0 {
-		return fmt.Errorf("target version must be greater than current version (current: %s, target: %s)", db.Spec.Version, updateVersionSpec.TargetVersion)
-	}
-
 	yes, err := IsCalVerUpgradable(w.DefaultClient, catalogapi.ResourceKindNeo4jVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
 	if err != nil {
 		return err
@@ -195,6 +187,214 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jUpdateVersionOpsRequest(db *
 	}
 
 	return nil
+}
+
+type CalVersionInfo struct {
+	Year  int
+	Month int
+	Day   int
+}
+
+func IsCalVerUpgradable(kc client.Client, kind string, curr, target string) (bool, error) {
+	var curVersion unstructured.Unstructured
+	curVersion.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   catalog.SchemeGroupVersion.Group,
+		Version: catalog.SchemeGroupVersion.Version,
+		Kind:    kind,
+	})
+
+	if err := kc.Get(context.Background(), types.NamespacedName{Name: curr}, &curVersion); err != nil {
+		return false, err
+	}
+
+	var cat DummyCatalog
+	if err := runtime.DefaultUnstructuredConverter.FromUnstructured(curVersion.Object, &cat); err != nil {
+		return false, fmt.Errorf("failed to unmarshal binding %s: %w", curVersion.GetName(), err)
+	}
+	klog.Infof("Checking calver upgradability of %s version %s \nIts updateConstraints = %v", kind, curr, cat.Spec.UpdateConstraints)
+
+	var versions unstructured.UnstructuredList
+	versions.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   catalog.SchemeGroupVersion.Group,
+		Version: catalog.SchemeGroupVersion.Version,
+		Kind:    kind,
+	})
+
+	if err := kc.List(context.Background(), &versions); err != nil {
+		return false, err
+	}
+	list, err := getUpgradableCalVerVersions(cat.Spec.UpdateConstraints.Allowlist, cat.Spec.UpdateConstraints.Denylist, &versions)
+	if err != nil {
+		return false, err
+	}
+	return slices.Contains(list, target), nil
+}
+
+func getUpgradableCalVerVersions(allowList, denyList []string, versions *unstructured.UnstructuredList) ([]string, error) {
+	allowedVersions := make([]string, 0)
+
+	for _, v := range versions.Items {
+		allowed := false
+		denied := false
+
+		version, found, err := unstructured.NestedString(v.Object, "spec", "version")
+		if err != nil {
+			return nil, err
+		}
+		if !found {
+			return nil, errors.New("failed to resolve version constraints, reason: .spec.field is missing")
+		}
+
+		vc, err := parseVersion(version)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, ac := range allowList {
+			ok, err := matchesCalVerRule(vc, ac)
+			if err != nil {
+				return nil, err
+			}
+			if ok {
+				allowed = true
+				break
+			}
+		}
+
+		for _, dc := range denyList {
+			ok, err := matchesCalVerRule(vc, dc)
+			if err != nil {
+				return nil, err
+			}
+			if ok {
+				denied = true
+				break
+			}
+		}
+
+		if len(allowList) == 0 {
+			allowed = true
+		}
+
+		if allowed && !denied {
+			allowedVersions = append(allowedVersions, v.GetName())
+		}
+	}
+	return allowedVersions, nil
+}
+
+func matchesCalVerRule(version *CalVersionInfo, rule string) (bool, error) {
+	rule = strings.TrimSpace(rule)
+	if rule == "" {
+		return false, errors.New("rule must not be empty")
+	}
+
+	parts := strings.Split(rule, ",")
+	for _, part := range parts {
+		operator, target, err := parseCalVerRulePart(part)
+		if err != nil {
+			return false, err
+		}
+
+		cmp := compareVersion(version, target)
+		matched := false
+		switch operator {
+		case "=":
+			matched = cmp == 0
+		case "!=":
+			matched = cmp != 0
+		case ">":
+			matched = cmp > 0
+		case ">=":
+			matched = cmp >= 0
+		case "<":
+			matched = cmp < 0
+		case "<=":
+			matched = cmp <= 0
+		default:
+			return false, fmt.Errorf("unsupported calver operator in rule %q", strings.TrimSpace(part))
+		}
+
+		if !matched {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
+func parseCalVerRulePart(rule string) (string, *CalVersionInfo, error) {
+	rule = strings.TrimSpace(rule)
+	if rule == "" {
+		return "", nil, errors.New("rule segment must not be empty")
+	}
+
+	operator := "="
+	value := rule
+	for _, op := range []string{">=", "<=", "!=", ">", "<", "="} {
+		if strings.HasPrefix(rule, op) {
+			operator = op
+			value = strings.TrimSpace(strings.TrimPrefix(rule, op))
+			break
+		}
+	}
+
+	target, err := parseVersion(value)
+	if err != nil {
+		return "", nil, fmt.Errorf("invalid version value %q in rule %q: %w", value, rule, err)
+	}
+
+	return operator, target, nil
+}
+
+func parseVersion(version string) (*CalVersionInfo, error) {
+	version = strings.TrimSpace(version)
+	version = strings.TrimPrefix(version, "v")
+	if idx := strings.Index(version, "-"); idx != -1 {
+		version = version[:idx]
+	}
+
+	parts := strings.Split(strings.TrimSpace(version), ".")
+	if len(parts) != 3 {
+		return nil, fmt.Errorf("invalid calver %q, expected format YYYY.MM.DAY", version)
+	}
+
+	year, err := strconv.Atoi(parts[0])
+	if err != nil {
+		return nil, fmt.Errorf("invalid calver %q: %w", version, err)
+	}
+	month, err := strconv.Atoi(parts[1])
+	if err != nil {
+		return nil, fmt.Errorf("invalid calver %q: %w", version, err)
+	}
+	day, err := strconv.Atoi(parts[2])
+	if err != nil {
+		return nil, fmt.Errorf("invalid calver %q: %w", version, err)
+	}
+
+	return &CalVersionInfo{Year: year, Month: month, Day: day}, nil
+}
+
+func compareVersion(current, target *CalVersionInfo) int {
+	if current.Year != target.Year {
+		if current.Year > target.Year {
+			return 1
+		}
+		return -1
+	}
+	if current.Month != target.Month {
+		if current.Month > target.Month {
+			return 1
+		}
+		return -1
+	}
+	if current.Day != target.Day {
+		if current.Day > target.Day {
+			return 1
+		}
+		return -1
+	}
+	return 0
 }
 
 func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVerticalScalingOpsRequest(req *opsapi.Neo4jOpsRequest) error {
