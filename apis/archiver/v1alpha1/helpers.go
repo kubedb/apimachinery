@@ -50,6 +50,10 @@ func (MSSQLServerArchiver) CustomResourceDefinition() *apiextensions.CustomResou
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralMSSQLServerArchiver))
 }
 
+func (ClickHouseArchiver) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralClickHouseArchiver))
+}
+
 func SetDefaultLogBackupOptions(log *LogBackupOptions) *LogBackupOptions {
 	if log == nil {
 		log = &LogBackupOptions{

@@ -25,6 +25,7 @@ import (
 	api "kubedb.dev/apimachinery/apis/kubedb/v1"
 
 	batch "k8s.io/api/batch/v1"
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -167,4 +168,64 @@ type GenericSecretReference struct {
 	Name string `json:"name"`
 
 	EnvToSecretKey map[string]string `json:"envToSecretKey"`
+}
+
+type ClickHouseFullBackupOptions struct {
+	// +kubebuilder:default:=ClickHouseBackup
+	Driver apis.Driver `json:"driver"`
+	// +optional
+	Task *Task `json:"task,omitempty"`
+	// +optional
+	Scheduler *SchedulerOptions `json:"scheduler,omitempty"`
+	// +optional
+	ContainerRuntimeSettings *ofst.ContainerRuntimeSettings `json:"containerRuntimeSettings,omitempty"`
+	// +optional
+	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`
+	// +optional
+	RetryConfig *stashcoreapi.RetryConfig `json:"retryConfig,omitempty"`
+	// +optional
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	// +optional
+	SessionHistoryLimit int32 `json:"sessionHistoryLimit,omitempty"`
+}
+
+type ClickHouseIncrementalBackupOptions struct {
+	// +optional
+	RuntimeSettings *ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
+
+	// +optional
+	ConfigSecret *GenericSecretReference `json:"configSecret,omitempty"`
+
+	// BackupInterval is the interval between incremental backups
+	// The default value is 300 seconds (5 minutes)
+	// +kubebuilder:default=300
+	// +optional
+	BackupInterval *int32 `json:"backupInterval,omitempty"`
+
+	// RetentionPeriod is the retention policy to be used for incremental backups
+	// The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years.
+	// +kubebuilder:validation:Pattern=^[1-9][0-9]*[dwmy]$
+	// +kubebuilder:default="1y"
+	// +optional
+	RetentionPeriod string `json:"retentionPeriod,omitempty"`
+
+	// SuccessfulBackupsHistoryLimit defines the number of successful backup status that the incremental snapshot will retain
+	// The default value is 5.
+	// +kubebuilder:default=5
+	// +optional
+	SuccessfulBackupsHistoryLimit int32 `json:"successfulBackupsHistoryLimit,omitempty"`
+
+	// FailedBackupsHistoryLimit defines the number of failed backup that the incremental snapshot will retain for debugging purposes.
+	// The default value is 5.
+	// +kubebuilder:default=5
+	// +optional
+	FailedBackupsHistoryLimit int32 `json:"failedBackupsHistoryLimit,omitempty"`
+
+	// Compression method to use for incremental backup
+	// +kubebuilder:default=lz4
+	// +optional
+	Compression string `json:"compression,omitempty"`
+
+	// +optional
+	Resources *core.ResourceRequirements `json:"resources,omitempty"`
 }
