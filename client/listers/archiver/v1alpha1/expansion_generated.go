@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// ClickHouseArchiverListerExpansion allows custom methods to be added to
+// ClickHouseArchiverLister.
+type ClickHouseArchiverListerExpansion interface{}
+
+// ClickHouseArchiverNamespaceListerExpansion allows custom methods to be added to
+// ClickHouseArchiverNamespaceLister.
+type ClickHouseArchiverNamespaceListerExpansion interface{}
+
 // MSSQLServerArchiverListerExpansion allows custom methods to be added to
 // MSSQLServerArchiverLister.
 type MSSQLServerArchiverListerExpansion interface{}
