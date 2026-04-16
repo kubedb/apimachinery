@@ -62,6 +62,8 @@ type Interface interface {
 	PostgresAutoscalers() PostgresAutoscalerInformer
 	// ProxySQLAutoscalers returns a ProxySQLAutoscalerInformer.
 	ProxySQLAutoscalers() ProxySQLAutoscalerInformer
+	// QdrantAutoscalers returns a QdrantAutoscalerInformer.
+	QdrantAutoscalers() QdrantAutoscalerInformer
 	// RabbitMQAutoscalers returns a RabbitMQAutoscalerInformer.
 	RabbitMQAutoscalers() RabbitMQAutoscalerInformer
 	// RedisAutoscalers returns a RedisAutoscalerInformer.
@@ -180,6 +182,11 @@ func (v *version) PostgresAutoscalers() PostgresAutoscalerInformer {
 // ProxySQLAutoscalers returns a ProxySQLAutoscalerInformer.
 func (v *version) ProxySQLAutoscalers() ProxySQLAutoscalerInformer {
 	return &proxySQLAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// QdrantAutoscalers returns a QdrantAutoscalerInformer.
+func (v *version) QdrantAutoscalers() QdrantAutoscalerInformer {
+	return &qdrantAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // RabbitMQAutoscalers returns a RabbitMQAutoscalerInformer.

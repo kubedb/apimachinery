@@ -48,6 +48,7 @@ type AutoscalingV1alpha1Interface interface {
 	PgpoolAutoscalersGetter
 	PostgresAutoscalersGetter
 	ProxySQLAutoscalersGetter
+	QdrantAutoscalersGetter
 	RabbitMQAutoscalersGetter
 	RedisAutoscalersGetter
 	RedisSentinelAutoscalersGetter
@@ -135,6 +136,10 @@ func (c *AutoscalingV1alpha1Client) PostgresAutoscalers(namespace string) Postgr
 
 func (c *AutoscalingV1alpha1Client) ProxySQLAutoscalers(namespace string) ProxySQLAutoscalerInterface {
 	return newProxySQLAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) QdrantAutoscalers(namespace string) QdrantAutoscalerInterface {
+	return newQdrantAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) RabbitMQAutoscalers(namespace string) RabbitMQAutoscalerInterface {
