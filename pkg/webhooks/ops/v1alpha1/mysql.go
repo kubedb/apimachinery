@@ -223,7 +223,7 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *
 
 	var list []string
 	if db.Spec.Topology != nil {
-		if db.Spec.Topology.Mode != nil && *db.Spec.Topology.Mode == dbapi.MySQLModeGroupReplication {
+		if db.Spec.Topology.Mode != nil && *db.Spec.Topology.Mode == dbapi.MySQLModeGroupReplication || *db.Spec.Topology.Mode == dbapi.MySQLModeInnoDBCluster {
 			list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
 			if err != nil {
 				return err
