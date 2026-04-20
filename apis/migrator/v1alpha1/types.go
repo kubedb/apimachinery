@@ -28,12 +28,16 @@ type MigrationConfig struct {
 type Source struct {
 	// Postgres refers to the source Postgres database configuration
 	Postgres *PostgresSource `yaml:"postgres" json:"postgres,omitempty"`
+	// Mongo refers to the source MongoDB database configuration
+	Mongo *MongoSource `yaml:"mongo" json:"mongo,omitempty"`
 }
 
 // Target defines the target database configuration
 type Target struct {
 	// Postgres refers to the target Postgres database configuration
 	Postgres *PostgresTarget `yaml:"postgres" json:"postgres,omitempty"`
+	// Mongo refers to the target MongoDB database configuration
+	Mongo *MongoTarget `yaml:"mongo" json:"mongo,omitempty"`
 }
 
 type ConnectionInfo struct {
