@@ -447,7 +447,7 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jHorizontalScalingOpsRequest(
 	current := *neo4j.Spec.Replicas
 	target := *horizontalScalingSpec.Server
 
-	if err := validateNeo4jHorizontalScaling(current, target); err != nil {
+	if err := validateNeo4jHorizontalScaling(current, target, req); err != nil {
 		return err
 	}
 
@@ -463,8 +463,8 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jHorizontalScalingOpsRequest(
 	return nil
 }
 
-func validateNeo4jHorizontalScaling(current, target int32) error {
-	if current == target {
+func validateNeo4jHorizontalScaling(current, target int32, req *opsapi.Neo4jOpsRequest) error {
+	if current == target && (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") {
 		return fmt.Errorf("target replicas %d is same as current replicas %d", target, current)
 	}
 
