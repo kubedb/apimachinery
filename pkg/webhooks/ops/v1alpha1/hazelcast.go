@@ -150,7 +150,7 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 				err.Error()))
 		}
 	case opsapi.HazelcastOpsRequestTypeVolumeExpansion:
-		if err := w.validateHazelcastVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateHazelcastVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -210,13 +210,24 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastHorizontalScalingOps
 	return nil
 }
 
-func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVolumeExpansionOpsRequest(req *opsapi.HazelcastOpsRequest) error {
+func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVolumeExpansionOpsRequest(db *olddbapi.Hazelcast, req *opsapi.HazelcastOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
 	if volumeExpansionSpec.Hazelcast == nil {
 		return errors.New("spec.volumeExpansion.Hazelcast can't be empty at the same ops request")
+	}
+
+	if db.Spec.Storage == nil {
+		return errors.New("storage not configured for Hazelcast")
+	}
+	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
+	if !ok {
+		return errors.New("failed to parse current storage size")
+	}
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Hazelcast) >= 0 {
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
 	return nil

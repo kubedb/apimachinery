@@ -150,7 +150,7 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeVolumeExpansion:
-		if err := w.validateSolrVolumeExpansionOpsRequest(req); err != nil {
+			if err := w.validateSolrVolumeExpansionOpsRequest(req, db); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -214,7 +214,7 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrHorizontalScalingOpsRequest(re
 	return nil
 }
 
-func (w *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req *opsapi.SolrOpsRequest, db *olddbapi.Solr) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
@@ -222,6 +222,57 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req 
 
 	if volumeExpansionSpec.Node != nil && (volumeExpansionSpec.Data != nil || volumeExpansionSpec.Overseer != nil || volumeExpansionSpec.Coordinator != nil) {
 		return errors.New("spec.volumeExpansion.Node && spec.volumeExpansion.Topology both can't be non-empty at the same ops request")
+	}
+
+	if db.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
+		if db.Spec.Storage == nil {
+			return errors.New("storage not configured for combined Solr")
+		}
+		cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
+		if !ok {
+			return errors.New("failed to parse current storage size")
+		}
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
+			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		}
+	}
+	if db.Spec.Topology != nil {
+		if volumeExpansionSpec.Data != nil {
+			if db.Spec.Topology.Data == nil || db.Spec.Topology.Data.Storage == nil {
+				return errors.New("storage not configured for Solr data node")
+			}
+			cur, ok := db.Spec.Topology.Data.Storage.Resources.Requests[core.ResourceStorage]
+			if !ok {
+				return errors.New("failed to parse current data storage size")
+			}
+			if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Data) >= 0 {
+				return fmt.Errorf("desired data storage size must be greater than current storage. Current storage: %v", cur.String())
+			}
+		}
+		if volumeExpansionSpec.Overseer != nil {
+			if db.Spec.Topology.Overseer == nil || db.Spec.Topology.Overseer.Storage == nil {
+				return errors.New("storage not configured for Solr overseer node")
+			}
+			cur, ok := db.Spec.Topology.Overseer.Storage.Resources.Requests[core.ResourceStorage]
+			if !ok {
+				return errors.New("failed to parse current overseer storage size")
+			}
+			if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Overseer) >= 0 {
+				return fmt.Errorf("desired overseer storage size must be greater than current storage. Current storage: %v", cur.String())
+			}
+		}
+		if volumeExpansionSpec.Coordinator != nil {
+			if db.Spec.Topology.Coordinator == nil || db.Spec.Topology.Coordinator.Storage == nil {
+				return errors.New("storage not configured for Solr coordinator node")
+			}
+			cur, ok := db.Spec.Topology.Coordinator.Storage.Resources.Requests[core.ResourceStorage]
+			if !ok {
+				return errors.New("failed to parse current coordinator storage size")
+			}
+			if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Coordinator) >= 0 {
+				return fmt.Errorf("desired coordinator storage size must be greater than current storage. Current storage: %v", cur.String())
+			}
+		}
 	}
 
 	return nil

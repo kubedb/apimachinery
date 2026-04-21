@@ -27,6 +27,7 @@ import (
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -137,7 +138,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.SinglestoreOpsRequestTypeVolumeExpansion:
-		if err := s.validateSinglestoreVolumeExpansionOpsRequest(req); err != nil {
+		if err := s.validateSinglestoreVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -207,14 +208,10 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreVerticalScalingO
 	return nil
 }
 
-func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreVolumeExpansionOpsRequest(req *opsapi.SinglestoreOpsRequest) error {
+func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreVolumeExpansionOpsRequest(sdb *olddbapi.Singlestore, req *opsapi.SinglestoreOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
-	}
-	sdb, err := s.hasDatabaseRef(req)
-	if err != nil {
-		return err
 	}
 	if (volumeExpansionSpec.Aggregator != nil || volumeExpansionSpec.Leaf != nil) && volumeExpansionSpec.Node != nil {
 		return errors.New("spec.volumeExpansion.Node && spec.volumeExpansion.Topology both can't be non-empty at the same ops request")
@@ -224,6 +221,16 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreVolumeExpansionO
 	}
 	if sdb.Spec.Topology == nil && volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.node can not be empty as reference database mode is standalone")
+	}
+
+	if sdb.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
+		cur, ok := sdb.Spec.Storage.Resources.Requests[core.ResourceStorage]
+		if !ok {
+			return errors.New("failed to parse current storage size")
+		}
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
+			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		}
 	}
 
 	return nil

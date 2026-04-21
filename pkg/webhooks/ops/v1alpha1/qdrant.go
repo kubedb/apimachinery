@@ -174,7 +174,7 @@ func (w *QdrantOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Qdran
 		}
 
 	case opsapi.QdrantOpsRequestTypeVolumeExpansion:
-		if err := w.validateQdrantVolumeExpansionOpsRequest(req); err != nil {
+			if err := w.validateQdrantVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -343,7 +343,7 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantVerticalScalingOpsRequest(
 	return nil
 }
 
-func (w *QdrantOpsRequestCustomWebhook) validateQdrantVolumeExpansionOpsRequest(req *opsapi.QdrantOpsRequest) error {
+func (w *QdrantOpsRequestCustomWebhook) validateQdrantVolumeExpansionOpsRequest(db *dbapi.Qdrant, req *opsapi.QdrantOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
@@ -351,6 +351,17 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantVolumeExpansionOpsRequest(
 
 	if volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.Node can't be empty")
+	}
+
+	if db.Spec.Storage == nil {
+		return errors.New("storage not configured for Qdrant")
+	}
+	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
+	if !ok {
+		return errors.New("failed to parse current storage size")
+	}
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
 	return nil

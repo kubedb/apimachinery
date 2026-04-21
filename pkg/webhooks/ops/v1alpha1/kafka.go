@@ -281,6 +281,45 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaVolumeExpansionOpsRequest(ka
 		return errors.New("spec.volumeExpansion.node can not be empty as reference database mode is combined")
 	}
 
+	if kafka.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
+		if kafka.Spec.Storage == nil {
+			return errors.New("storage not configured for combined Kafka")
+		}
+		cur, ok := kafka.Spec.Storage.Resources.Requests[core.ResourceStorage]
+		if !ok {
+			return errors.New("failed to parse current storage size")
+		}
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
+			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		}
+	}
+	if kafka.Spec.Topology != nil {
+		if volumeExpansionSpec.Broker != nil {
+			if kafka.Spec.Topology.Broker == nil || kafka.Spec.Topology.Broker.Storage == nil {
+				return errors.New("storage not configured for Kafka broker")
+			}
+			cur, ok := kafka.Spec.Topology.Broker.Storage.Resources.Requests[core.ResourceStorage]
+			if !ok {
+				return errors.New("failed to parse current broker storage size")
+			}
+			if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Broker) >= 0 {
+				return fmt.Errorf("desired broker storage size must be greater than current storage. Current storage: %v", cur.String())
+			}
+		}
+		if volumeExpansionSpec.Controller != nil {
+			if kafka.Spec.Topology.Controller == nil || kafka.Spec.Topology.Controller.Storage == nil {
+				return errors.New("storage not configured for Kafka controller")
+			}
+			cur, ok := kafka.Spec.Topology.Controller.Storage.Resources.Requests[core.ResourceStorage]
+			if !ok {
+				return errors.New("failed to parse current controller storage size")
+			}
+			if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Controller) >= 0 {
+				return fmt.Errorf("desired controller storage size must be greater than current storage. Current storage: %v", cur.String())
+			}
+		}
+	}
+
 	return nil
 }
 

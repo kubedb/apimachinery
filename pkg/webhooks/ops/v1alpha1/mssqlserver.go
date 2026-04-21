@@ -139,7 +139,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.MSSQLServerOpsRequestTypeVolumeExpansion:
-		if err := w.validateMSSQLServerVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateMSSQLServerVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -208,10 +208,24 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVerticalScalingO
 	return nil
 }
 
-func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVolumeExpansionOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
+func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVolumeExpansionOpsRequest(db *olddbapi.MSSQLServer, req *opsapi.MSSQLServerOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return fmt.Errorf("spec.volumeExpansion is nil, not supported in VolumeExpansion type")
+	}
+	if volumeExpansionSpec.MSSQLServer == nil {
+		return fmt.Errorf("spec.volumeExpansion.mssqlserver can not be empty")
+	}
+
+	if db.Spec.Storage == nil {
+		return fmt.Errorf("storage not configured for MSSQLServer")
+	}
+	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
+	if !ok {
+		return fmt.Errorf("failed to parse current storage size")
+	}
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.MSSQLServer) >= 0 {
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
 	return nil

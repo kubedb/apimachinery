@@ -27,6 +27,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
+	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -149,7 +150,7 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 				err.Error()))
 		}
 	case opsapi.ZooKeeperOpsRequestTypeVolumeExpansion:
-		if err := z.validateZooKeeperVolumeExpansionOpsRequest(req); err != nil {
+		if err := z.validateZooKeeperVolumeExpansionOpsRequest(zookeeper, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type").Child("VolumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -215,13 +216,24 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperUpdateVersionOpsRequ
 	return nil
 }
 
-func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVolumeExpansionOpsRequest(req *opsapi.ZooKeeperOpsRequest) error {
+func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVolumeExpansionOpsRequest(zk *olddbapi.ZooKeeper, req *opsapi.ZooKeeperOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
-	if volumeExpansionSpec.Node != nil {
-		return errors.New("spec.volumeExpansion.Node && spec.volumeExpansion.Topology both can't be non-empty at the same ops request")
+	if volumeExpansionSpec.Node == nil {
+		return errors.New("spec.volumeExpansion.Node can not be empty")
+	}
+
+	if zk.Spec.Storage == nil {
+		return errors.New("storage not configured for ZooKeeper")
+	}
+	cur, ok := zk.Spec.Storage.Resources.Requests[core.ResourceStorage]
+	if !ok {
+		return errors.New("failed to parse current storage size")
+	}
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
 	return nil

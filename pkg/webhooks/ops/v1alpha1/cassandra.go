@@ -143,9 +143,8 @@ func (w *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ca
 				req.Name,
 				err.Error()))
 		}
-
 	case opsapi.CassandraOpsRequestTypeVolumeExpansion:
-		if err := w.validateCassandraVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateCassandraVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -224,7 +223,7 @@ func (w *CassandraOpsRequestCustomWebhook) validateCassandraHorizontalScalingOps
 	return nil
 }
 
-func (w *CassandraOpsRequestCustomWebhook) validateCassandraVolumeExpansionOpsRequest(req *opsapi.CassandraOpsRequest) error {
+func (w *CassandraOpsRequestCustomWebhook) validateCassandraVolumeExpansionOpsRequest(db *olddbapi.Cassandra, req *opsapi.CassandraOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
@@ -232,6 +231,17 @@ func (w *CassandraOpsRequestCustomWebhook) validateCassandraVolumeExpansionOpsRe
 
 	if volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.Node can't be empty")
+	}
+
+	if db.Spec.Storage == nil {
+		return errors.New("storage not configured for Cassandra")
+	}
+	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
+	if !ok {
+		return errors.New("failed to parse current storage size")
+	}
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
 	return nil

@@ -165,7 +165,7 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 				err.Error()))
 		}
 	case opsapi.PostgresOpsRequestTypeVolumeExpansion:
-		if err := w.validatePostgresVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validatePostgresVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -378,7 +378,7 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresStorageMigrationOpsReq
 	return nil
 }
 
-func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequest(req *opsapi.PostgresOpsRequest) error {
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequest(db *dbapi.Postgres, req *opsapi.PostgresOpsRequest) error {
 	if req.Spec.VolumeExpansion == nil {
 		return errors.New("`spec.volumeExpansion` field is required, can not be nil.")
 	}
@@ -387,11 +387,6 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequ
 		return errors.New("at least one of `spec.volumeExpansion.postgres` or `spec.volumeExpansion.arbiter` must be specified in volume expansion ops request")
 	}
 
-	db := &dbapi.Postgres{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get postgres: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
 
 	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
 	if !ok {

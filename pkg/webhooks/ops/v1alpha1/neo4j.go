@@ -147,7 +147,7 @@ func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jO
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
 		}
 	case opsapi.Neo4jOpsRequestTypeVolumeExpansion:
-		if err := w.validateNeo4jVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateNeo4jVolumeExpansionOpsRequest(neo4j, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
 		}
 	}
@@ -158,7 +158,7 @@ func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jO
 	return apierrors.NewInvalid(schema.GroupKind{Group: "neo4jopsrequests.kubedb.com", Kind: "Neo4jOpsRequest"}, req.Name, allErr)
 }
 
-func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVolumeExpansionOpsRequest(req *opsapi.Neo4jOpsRequest) error {
+func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVolumeExpansionOpsRequest(db *dbapi.Neo4j, req *opsapi.Neo4jOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
@@ -166,6 +166,17 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVolumeExpansionOpsRequest(re
 
 	if volumeExpansionSpec.Server == nil {
 		return errors.New("spec.volumeExpansion.Server can't be non-empty")
+	}
+
+	if db.Spec.Storage == nil {
+		return errors.New("storage not configured for Neo4j")
+	}
+	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
+	if !ok {
+		return errors.New("failed to parse current storage size")
+	}
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Server) >= 0 {
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
 	return nil

@@ -156,7 +156,7 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 				err.Error()))
 		}
 	case opsapi.RedisOpsRequestTypeVolumeExpansion:
-		if err := w.validateRedisVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateRedisVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -446,16 +446,11 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisVerticalScalingOpsRequest(re
 	return nil
 }
 
-func (w *RedisOpsRequestCustomWebhook) validateRedisVolumeExpansionOpsRequest(req *opsapi.RedisOpsRequest) error {
+func (w *RedisOpsRequestCustomWebhook) validateRedisVolumeExpansionOpsRequest(db *dbapi.Redis, req *opsapi.RedisOpsRequest) error {
 	if req.Spec.VolumeExpansion == nil || req.Spec.VolumeExpansion.Redis == nil {
 		return errors.New("`spec.volumeExpansion.redis` field is required, can not be nil")
 	}
 
-	db := &dbapi.Redis{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return fmt.Errorf("failed to get redis: %s/%s: %v", req.Namespace, req.Spec.DatabaseRef.Name, err)
-	}
 
 	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
 	if !ok {

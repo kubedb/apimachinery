@@ -127,6 +127,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 		rabbitmq *olddbapi.RabbitMQ
 		err      error
 	)
+
 	if rabbitmq, err = rv.hasDatabaseRef(req); err != nil {
 		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
 	}
@@ -139,7 +140,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 				err.Error()))
 		}
 	case opsapi.RabbitMQOpsRequestTypeVolumeExpansion:
-		if err := rv.validateRabbitMQVolumeExpansionOpsRequest(req); err != nil {
+		if err := rv.validateRabbitMQVolumeExpansionOpsRequest(rabbitmq, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -236,13 +237,24 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVerticalScalingOpsReq
 	return nil
 }
 
-func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVolumeExpansionOpsRequest(req *opsapi.RabbitMQOpsRequest) error {
+func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVolumeExpansionOpsRequest(rabbitmq *olddbapi.RabbitMQ, req *opsapi.RabbitMQOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
 	if volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.Node can't be empty")
+	}
+
+
+	cur, ok := rabbitmq.Spec.Storage.Resources.Requests[core.ResourceStorage]
+	if !ok {
+		return errors.New("failed to parse current storage size")
+	}
+
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending ||
+		req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
 	return nil

@@ -306,6 +306,32 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidVolumeExpansionOpsRequest(re
 	if volumeExpansionSpec.MiddleManagers != nil && druid.Spec.Topology.MiddleManagers.StorageType != olddbapi.StorageTypeDurable {
 		return errors.New("volumeExpansionSpec.middleManagers can not be set when storageType of middleManagers of the database is not Durable ")
 	}
+
+	if volumeExpansionSpec.MiddleManagers != nil {
+		if druid.Spec.Topology.MiddleManagers.Storage == nil {
+			return errors.New("storage not configured for middleManagers")
+		}
+		cur, ok := druid.Spec.Topology.MiddleManagers.Storage.Resources.Requests[core.ResourceStorage]
+		if !ok {
+			return errors.New("failed to parse current middleManagers storage size")
+		}
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.MiddleManagers) >= 0 {
+			return fmt.Errorf("desired middleManagers storage size must be greater than current storage. Current storage: %v", cur.String())
+		}
+	}
+	if volumeExpansionSpec.Historicals != nil {
+		if druid.Spec.Topology.Historicals.Storage == nil {
+			return errors.New("storage not configured for historicals")
+		}
+		cur, ok := druid.Spec.Topology.Historicals.Storage.Resources.Requests[core.ResourceStorage]
+		if !ok {
+			return errors.New("failed to parse current historicals storage size")
+		}
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Historicals) >= 0 {
+			return fmt.Errorf("desired historicals storage size must be greater than current storage. Current storage: %v", cur.String())
+		}
+	}
+
 	return nil
 }
 
