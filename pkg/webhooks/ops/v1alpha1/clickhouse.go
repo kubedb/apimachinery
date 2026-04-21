@@ -130,7 +130,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.ClickHouseOpsRequestTypeVolumeExpansion:
-		if err := rv.validateClickHouseVolumeExpansionOpsRequest(req); err != nil {
+		if err := rv.validateClickHouseVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -207,7 +207,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseUpdateVersionOpsR
 	return nil
 }
 
-func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVolumeExpansionOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVolumeExpansionOpsRequest(db *olddbapi.ClickHouse, req *opsapi.ClickHouseOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
@@ -215,6 +215,16 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVolumeExpansionOp
 
 	if volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.Node can't be empty")
+	}
+
+	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
+	if !ok {
+		return errors.New("failed to parse current storage size")
+	}
+
+	if (req.Status.Phase == opsapi.OpsRequestPhasePending ||
+		req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.Node) >= 0 {
+		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
 	}
 
 	return nil
