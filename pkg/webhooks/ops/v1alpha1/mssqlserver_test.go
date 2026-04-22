@@ -119,8 +119,8 @@ func TestValidateMSSQLServerVolumeExpansionOpsRequest(t *testing.T) {
 		},
 		{
 			name:      "desired == current but progressing phase - should succeed",
-			db:        newMSSQLServerDB("10Gi"),
-			req:       newMSSQLServerVolumeExpansionOpsReq("10Gi", opsapi.OpsRequestPhaseProgressing),
+			db:        newMSSQLServerDB("11Gi"),
+			req:       newMSSQLServerVolumeExpansionOpsReq("11Gi", opsapi.OpsRequestPhaseProgressing),
 			wantError: false,
 		},
 		{
