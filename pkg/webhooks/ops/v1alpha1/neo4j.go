@@ -27,6 +27,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -147,7 +148,7 @@ func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jO
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
 		}
 	case opsapi.Neo4jOpsRequestTypeVolumeExpansion:
-		if err := w.validateNeo4jVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateNeo4jVolumeExpansionOpsRequest(neo4j, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
 		}
 	}
@@ -158,7 +159,7 @@ func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jO
 	return apierrors.NewInvalid(schema.GroupKind{Group: "neo4jopsrequests.kubedb.com", Kind: "Neo4jOpsRequest"}, req.Name, allErr)
 }
 
-func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVolumeExpansionOpsRequest(req *opsapi.Neo4jOpsRequest) error {
+func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVolumeExpansionOpsRequest(db *dbapi.Neo4j, req *opsapi.Neo4jOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
@@ -166,6 +167,10 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVolumeExpansionOpsRequest(re
 
 	if volumeExpansionSpec.Server == nil {
 		return errors.New("spec.volumeExpansion.Server can't be non-empty")
+	}
+
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Server, req.Status.Phase, "Neo4j"); err != nil {
+		return err
 	}
 
 	return nil

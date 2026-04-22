@@ -25,6 +25,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -149,7 +150,7 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 				err.Error()))
 		}
 	case opsapi.ZooKeeperOpsRequestTypeVolumeExpansion:
-		if err := z.validateZooKeeperVolumeExpansionOpsRequest(req); err != nil {
+		if err := z.validateZooKeeperVolumeExpansionOpsRequest(zookeeper, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type").Child("VolumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -215,13 +216,17 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperUpdateVersionOpsRequ
 	return nil
 }
 
-func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVolumeExpansionOpsRequest(req *opsapi.ZooKeeperOpsRequest) error {
+func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVolumeExpansionOpsRequest(zk *olddbapi.ZooKeeper, req *opsapi.ZooKeeperOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
-	if volumeExpansionSpec.Node != nil {
-		return errors.New("spec.volumeExpansion.Node && spec.volumeExpansion.Topology both can't be non-empty at the same ops request")
+	if volumeExpansionSpec.Node == nil {
+		return errors.New("spec.volumeExpansion.Node can not be empty")
+	}
+
+	if err := opsutil.ValidateStorageExpansion(zk.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "ZooKeeper"); err != nil {
+		return err
 	}
 
 	return nil
