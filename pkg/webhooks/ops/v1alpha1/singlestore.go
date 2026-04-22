@@ -214,10 +214,10 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreVolumeExpansionO
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
 	if (volumeExpansionSpec.Aggregator != nil || volumeExpansionSpec.Leaf != nil) && volumeExpansionSpec.Node != nil {
-		return errors.New("spec.volumeExpansion.Node && spec.volumeExpansion.Topology both can't be non-empty at the same ops request")
+		return errors.New("spec.volumeExpansion.node and topology settings (aggregator/leaf) cannot both be set")
 	}
 	if sdb.Spec.Topology != nil && volumeExpansionSpec.Aggregator == nil && volumeExpansionSpec.Leaf == nil {
-		return errors.New("spec.volumeExpansion.topology can not be empty as reference database mode is clustering")
+		return errors.New("topology settings (aggregator/leaf) can not be empty as reference database mode is clustering")
 	}
 	if sdb.Spec.Topology == nil && volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.node can not be empty as reference database mode is standalone")
@@ -226,6 +226,20 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreVolumeExpansionO
 	if sdb.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
 		if err := opsutil.ValidateStorageExpansion(sdb.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "Singlestore"); err != nil {
 			return err
+		}
+	}
+
+	if sdb.Spec.Topology != nil {
+		if volumeExpansionSpec.Aggregator != nil {
+			if err := opsutil.ValidateStorageExpansion(sdb.Spec.Topology.Aggregator.Storage, volumeExpansionSpec.Aggregator, req.Status.Phase, "Singlestore Aggregator"); err != nil {
+				return err
+			}
+		}
+
+		if volumeExpansionSpec.Leaf != nil {
+			if err := opsutil.ValidateStorageExpansion(sdb.Spec.Topology.Leaf.Storage, volumeExpansionSpec.Leaf, req.Status.Phase, "Singlestore Leaf"); err != nil {
+				return err
+			}
 		}
 	}
 
