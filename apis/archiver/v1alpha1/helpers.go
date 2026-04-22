@@ -87,3 +87,13 @@ func SetKeyValueToExtraArgs(args map[string]runtime.RawExtension, key string, va
 	}
 	return nil
 }
+
+func SetDefaultIncrementalBackupOptions(log *ClickHouseIncrementalBackupOptions) *ClickHouseIncrementalBackupOptions {
+	if log == nil {
+		log = &ClickHouseIncrementalBackupOptions{
+			SuccessfulLogHistoryLimit: 5,
+			FailedLogHistoryLimit:     5,
+		}
+	}
+	return log
+}

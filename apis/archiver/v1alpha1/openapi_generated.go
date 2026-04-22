@@ -33635,51 +33635,46 @@ func schema_apimachinery_apis_archiver_v1alpha1_ClickHouseIncrementalBackupOptio
 							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"),
 						},
 					},
-					"backupInterval": {
-						SchemaProps: spec.SchemaProps{
-							Description: "BackupInterval is the interval between incremental backups The default value is 300 seconds (5 minutes)",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 					"retentionPeriod": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RetentionPeriod is the retention policy to be used for incremental backups The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years.",
+							Description: "RetentionPeriod is the retention policy to be used for Logs (i.e. '60d') means how long logs will be retained before being pruned. The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years. time.RFC3339 We need to parse the time to RFC3339 format",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"successfulBackupsHistoryLimit": {
+					"retentionSchedule": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SuccessfulBackupsHistoryLimit defines the number of successful backup status that the incremental snapshot will retain The default value is 5.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"failedBackupsHistoryLimit": {
-						SchemaProps: spec.SchemaProps{
-							Description: "FailedBackupsHistoryLimit defines the number of failed backup that the incremental snapshot will retain for debugging purposes. The default value is 5.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"compression": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Compression method to use for incremental backup",
+							Description: "RetentionSchedule defines the cron expression when the log retention (pruning) task will run. Cron format, e.g. \"0 0 1 * *\" (monthly on the 1st at 12).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"resources": {
+					"successfulLogHistoryLimit": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/api/core/v1.ResourceRequirements"),
+							Description: "SuccessfulLogHistoryLimit defines the number of successful Logs backup status that the incremental snapshot will retain The default value is 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"failedLogHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FailedLogHistoryLimit defines the number of failed Logs backup that the incremental snapshot will retain for debugging purposes. The default value is 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"logRetentionHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogRetentionHistoryLimit defines the number of retention status the incremental snapshot will retain for debugging purposes. The default value is 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceRequirements", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"},
+			"kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"},
 	}
 }
 

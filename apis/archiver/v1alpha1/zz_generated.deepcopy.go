@@ -22,13 +22,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
-
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	v1 "kmodules.xyz/client-go/api/v1"
 	apiv1 "kmodules.xyz/offshoot-api/api/v1"
+	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	corev1alpha1 "kubestash.dev/apimachinery/apis/core/v1alpha1"
 	storagev1alpha1 "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 )
@@ -260,16 +258,6 @@ func (in *ClickHouseIncrementalBackupOptions) DeepCopyInto(out *ClickHouseIncrem
 	if in.ConfigSecret != nil {
 		in, out := &in.ConfigSecret, &out.ConfigSecret
 		*out = new(GenericSecretReference)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.BackupInterval != nil {
-		in, out := &in.BackupInterval, &out.BackupInterval
-		*out = new(int32)
-		**out = **in
-	}
-	if in.Resources != nil {
-		in, out := &in.Resources, &out.Resources
-		*out = new(corev1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
 	return
