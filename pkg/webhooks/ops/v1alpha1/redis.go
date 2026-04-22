@@ -355,8 +355,9 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisReconfigureOpsRequest(req *o
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && len(reconfigureSpec.ApplyConfig) == 0 {
-		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil &&
+		len(reconfigureSpec.ApplyConfig) == 0 && reconfigureSpec.Auth == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, `ApplyConfig` or `Auth` must be specified")
 	}
 
 	return nil
