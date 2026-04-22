@@ -21,7 +21,7 @@ type MySQLSource struct {
 	ConnectionInfo *MySQLConnectionInfo `yaml:"connectionInfo" json:"connectionInfo"`
 	Schema         *MySQLSchema         `yaml:"schema" json:"schema,omitempty"`
 	Snapshot       *MySQLSnapshot       `yaml:"snapshot" json:"snapshot,omitempty"`
-	Replication    *MySQLReplication    `yaml:"replication" json:"replication,omitempty"`
+	Streaming      *MySQLStreaming      `yaml:"streaming" json:"streaming,omitempty"`
 }
 
 type MySQLTarget struct {
@@ -47,7 +47,7 @@ type MySQLSnapshot struct {
 	Pipeline *MySQLSnapshotPipeline `yaml:"pipeline" json:"pipeline,omitempty"`
 }
 
-type MySQLReplication struct {
+type MySQLStreaming struct {
 	// Enabled controls whether the Logical Replication Phase should be executed.
 	// +optional
 	Enabled bool `yaml:"enabled" json:"enabled"`
