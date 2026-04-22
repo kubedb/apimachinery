@@ -36,6 +36,8 @@ type Interface interface {
 	EtcdOpsRequests() EtcdOpsRequestInformer
 	// FerretDBOpsRequests returns a FerretDBOpsRequestInformer.
 	FerretDBOpsRequests() FerretDBOpsRequestInformer
+	// HanaDBOpsRequests returns a HanaDBOpsRequestInformer.
+	HanaDBOpsRequests() HanaDBOpsRequestInformer
 	// HazelcastOpsRequests returns a HazelcastOpsRequestInformer.
 	HazelcastOpsRequests() HazelcastOpsRequestInformer
 	// IgniteOpsRequests returns a IgniteOpsRequestInformer.
@@ -119,6 +121,11 @@ func (v *version) EtcdOpsRequests() EtcdOpsRequestInformer {
 // FerretDBOpsRequests returns a FerretDBOpsRequestInformer.
 func (v *version) FerretDBOpsRequests() FerretDBOpsRequestInformer {
 	return &ferretDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// HanaDBOpsRequests returns a HanaDBOpsRequestInformer.
+func (v *version) HanaDBOpsRequests() HanaDBOpsRequestInformer {
+	return &hanaDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // HazelcastOpsRequests returns a HazelcastOpsRequestInformer.

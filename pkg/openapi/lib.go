@@ -124,6 +124,7 @@ func ConfigureOpenAPI(scheme *runtime.Scheme, serverConfig *genericapiserver.Rec
 		"/apis/validators.kubedb.com/v1alpha1/zookeeperwebhooks",
 
 		"/apis/validators.ops.kubedb.com/v1alpha1",
+		"/apis/validators.ops.kubedb.com/v1alpha1/hanadbopsrequestwebhooks",
 		"/apis/validators.ops.kubedb.com/v1alpha1/elasticsearchopsrequestwebhooks",
 		"/apis/validators.ops.kubedb.com/v1alpha1/kafkaopsrequestwebhooks",
 		"/apis/validators.ops.kubedb.com/v1alpha1/mongodbopsrequestwebhooks",
