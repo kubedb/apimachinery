@@ -27625,6 +27625,166 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoSource": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
+        },
+        "mongoshake": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Mongoshake"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoTarget": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.Mongoshake": {
+      "type": "object",
+      "properties": {
+        "checkpointStartPosition": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "extraConfiguration": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "filterDdlEnable": {
+          "description": "---------------- BOOLS → POINTERS ----------------",
+          "type": "boolean"
+        },
+        "filterNamespaceBlack": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "filterNamespaceWhite": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "filterOpTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "filterOplogGids": {
+          "type": "boolean"
+        },
+        "filterPassSpecialDb": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "fullSyncCollectionDrop": {
+          "description": "---------------- BOOLS → POINTERS ----------------",
+          "type": "boolean"
+        },
+        "fullSyncCreateIndex": {
+          "type": "string"
+        },
+        "fullSyncDoNotShardDest": {
+          "type": "boolean"
+        },
+        "fullSyncExecutorFilterOrphanDocument": {
+          "type": "boolean"
+        },
+        "fullSyncExecutorInsertOnDupUpdate": {
+          "type": "boolean"
+        },
+        "fullSyncExecutorMajorityEnable": {
+          "type": "boolean"
+        },
+        "fullSyncReaderCollectionParallel": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fullSyncReaderDocumentBatchSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fullSyncReaderFetchBatchSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fullSyncReaderOplogStoreDisk": {
+          "type": "boolean"
+        },
+        "fullSyncReaderOplogStoreDiskMaxSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "fullSyncReaderParallelIndex": {
+          "type": "string"
+        },
+        "fullSyncReaderParallelThread": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fullSyncReaderSplitMaxChunkSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fullSyncReaderWriteDocumentParallel": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "incrSyncReaderFetchBatchSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "incrSyncTunnelWriteThread": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "incrSyncWorker": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "mongoSslClientCaFile": {
+          "type": "string"
+        },
+        "mongoSslRootCaFile": {
+          "type": "string"
+        },
+        "syncMode": {
+          "description": "SyncMode: full, incr, or fullSync",
+          "type": "string"
+        },
+        "transformNamespace": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.migrator.v1alpha1.PgDump": {
       "type": "object",
       "properties": {
@@ -27751,6 +27911,10 @@
       "description": "Source defines the source database configuration",
       "type": "object",
       "properties": {
+        "mongo": {
+          "description": "Mongo refers to the source MongoDB database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoSource"
+        },
         "postgres": {
           "description": "Postgres refers to the source Postgres database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.PostgresSource"
@@ -27770,6 +27934,10 @@
       "description": "Target defines the target database configuration",
       "type": "object",
       "properties": {
+        "mongo": {
+          "description": "Mongo refers to the target MongoDB database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoTarget"
+        },
         "postgres": {
           "description": "Postgres refers to the target Postgres database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.PostgresTarget"

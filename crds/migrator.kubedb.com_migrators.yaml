@@ -2793,6 +2793,107 @@ spec:
                 type: object
               source:
                 properties:
+                  mongo:
+                    properties:
+                      connectionInfo:
+                        properties:
+                          appBinding:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          dbName:
+                            type: string
+                          maxConnections:
+                            format: int32
+                            type: integer
+                          url:
+                            type: string
+                        type: object
+                      mongoshake:
+                        properties:
+                          checkpointStartPosition:
+                            format: int64
+                            type: integer
+                          extraConfiguration:
+                            additionalProperties:
+                              type: string
+                            type: object
+                          filterDdlEnable:
+                            type: boolean
+                          filterNamespaceBlack:
+                            items:
+                              type: string
+                            type: array
+                          filterNamespaceWhite:
+                            items:
+                              type: string
+                            type: array
+                          filterOpTypes:
+                            items:
+                              type: string
+                            type: array
+                          filterOplogGids:
+                            type: boolean
+                          filterPassSpecialDb:
+                            items:
+                              type: string
+                            type: array
+                          fullSyncCollectionDrop:
+                            type: boolean
+                          fullSyncCreateIndex:
+                            type: string
+                          fullSyncDoNotShardDest:
+                            type: boolean
+                          fullSyncExecutorFilterOrphanDocument:
+                            type: boolean
+                          fullSyncExecutorInsertOnDupUpdate:
+                            type: boolean
+                          fullSyncExecutorMajorityEnable:
+                            type: boolean
+                          fullSyncReaderCollectionParallel:
+                            type: integer
+                          fullSyncReaderDocumentBatchSize:
+                            type: integer
+                          fullSyncReaderFetchBatchSize:
+                            type: integer
+                          fullSyncReaderOplogStoreDisk:
+                            type: boolean
+                          fullSyncReaderOplogStoreDiskMaxSize:
+                            format: int64
+                            type: integer
+                          fullSyncReaderParallelIndex:
+                            type: string
+                          fullSyncReaderParallelThread:
+                            type: integer
+                          fullSyncReaderSplitMaxChunkSize:
+                            type: integer
+                          fullSyncReaderWriteDocumentParallel:
+                            type: integer
+                          incrSyncReaderFetchBatchSize:
+                            type: integer
+                          incrSyncTunnelWriteThread:
+                            type: integer
+                          incrSyncWorker:
+                            type: integer
+                          mongoSslClientCaFile:
+                            type: string
+                          mongoSslRootCaFile:
+                            type: string
+                          syncMode:
+                            type: string
+                          transformNamespace:
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                    required:
+                    - connectionInfo
+                    type: object
                   postgres:
                     properties:
                       connectionInfo:
@@ -2873,6 +2974,30 @@ spec:
                 type: object
               target:
                 properties:
+                  mongo:
+                    properties:
+                      connectionInfo:
+                        properties:
+                          appBinding:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
+                          dbName:
+                            type: string
+                          maxConnections:
+                            format: int32
+                            type: integer
+                          url:
+                            type: string
+                        type: object
+                    required:
+                    - connectionInfo
+                    type: object
                   postgres:
                     properties:
                       connectionInfo:
