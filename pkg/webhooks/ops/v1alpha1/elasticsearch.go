@@ -25,6 +25,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/Masterminds/semver/v3"
 	"gomodules.xyz/x/arrays"
@@ -259,15 +260,8 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchVolumeExpans
 
 	// combined mode: db.Spec.Topology == nil
 	if db.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
-		if db.Spec.Storage == nil {
-			return errors.New("storage not configured for combined Elasticsearch")
-		}
-		cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse current storage size")
-		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
-			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "combined Elasticsearch"); err != nil {
+			return err
 		}
 	}
 
@@ -275,17 +269,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchVolumeExpans
 		if desired == nil || nodeSpec == nil {
 			return nil
 		}
-		if nodeSpec.Storage == nil {
-			return fmt.Errorf("storage not configured for %s node", nodeName)
-		}
-		cur, ok := nodeSpec.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return fmt.Errorf("failed to parse current %s storage size", nodeName)
-		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*desired) >= 0 {
-			return fmt.Errorf("desired %s storage size must be greater than current storage. Current storage: %v", nodeName, cur.String())
-		}
-		return nil
+		return opsutil.ValidateStorageExpansion(nodeSpec.Storage, desired, req.Status.Phase, nodeName)
 	}
 
 	if db.Spec.Topology != nil {

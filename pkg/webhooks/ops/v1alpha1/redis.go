@@ -25,6 +25,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/Masterminds/semver/v3"
 	"gomodules.xyz/x/arrays"
@@ -451,14 +452,8 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisVolumeExpansionOpsRequest(db
 		return errors.New("`spec.volumeExpansion.redis` field is required, can not be nil")
 	}
 
-
-	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-	if !ok {
-		return errors.New("failed to parse current storage size")
-	}
-
-	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.Redis) >= 0 {
-		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, req.Spec.VolumeExpansion.Redis, req.Status.Phase, "Redis"); err != nil {
+		return err
 	}
 
 	return nil

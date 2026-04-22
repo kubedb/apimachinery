@@ -25,6 +25,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
@@ -387,30 +388,21 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequ
 		return errors.New("at least one of `spec.volumeExpansion.postgres` or `spec.volumeExpansion.arbiter` must be specified in volume expansion ops request")
 	}
 
-
-	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-	if !ok {
-		return errors.New("failed to parse current storage size")
-	}
-
-	if req.Spec.VolumeExpansion.Postgres != nil && (req.Status.Phase == opsapi.OpsRequestPhasePending ||
-		req.Status.Phase == "") {
-		if cur.Cmp(*req.Spec.VolumeExpansion.Postgres) >= 0 {
-			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+	if req.Spec.VolumeExpansion.Postgres != nil {
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, req.Spec.VolumeExpansion.Postgres, req.Status.Phase, "Postgres"); err != nil {
+			return err
 		}
 	}
-	if req.Spec.VolumeExpansion.Arbiter != nil && (req.Status.Phase == opsapi.OpsRequestPhasePending ||
-		req.Status.Phase == "") {
-		if db.Spec.Arbiter != nil && db.Spec.Arbiter.Resources.Requests.Storage() != nil {
-			curArbiter, ok := db.Spec.Arbiter.Resources.Requests[core.ResourceStorage]
-			if !ok {
-				return errors.New("failed to parse current arbiter storage size")
-			}
-			if curArbiter.Cmp(*req.Spec.VolumeExpansion.Arbiter) >= 0 {
-				return fmt.Errorf("desired arbiter storage size must be greater than current arbiter storage. Current arbiter storage: %v", curArbiter.String())
-			}
-		} else {
+	if req.Spec.VolumeExpansion.Arbiter != nil {
+		if db.Spec.Arbiter == nil || db.Spec.Arbiter.Resources.Requests.Storage() == nil {
 			return errors.New("arbiter storage is not configured for this Postgres")
+		}
+		curArbiter, ok := db.Spec.Arbiter.Resources.Requests[core.ResourceStorage]
+		if !ok {
+			return errors.New("failed to parse current arbiter storage size")
+		}
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && curArbiter.Cmp(*req.Spec.VolumeExpansion.Arbiter) >= 0 {
+			return fmt.Errorf("desired arbiter storage size must be greater than current arbiter storage. Current arbiter storage: %v", curArbiter.String())
 		}
 	}
 

@@ -25,6 +25,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -150,7 +151,7 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeVolumeExpansion:
-			if err := w.validateSolrVolumeExpansionOpsRequest(req, db); err != nil {
+		if err := w.validateSolrVolumeExpansionOpsRequest(req, db); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -225,52 +226,36 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req 
 	}
 
 	if db.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
-		if db.Spec.Storage == nil {
-			return errors.New("storage not configured for combined Solr")
-		}
-		cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse current storage size")
-		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
-			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "combined Solr"); err != nil {
+			return err
 		}
 	}
 	if db.Spec.Topology != nil {
 		if volumeExpansionSpec.Data != nil {
-			if db.Spec.Topology.Data == nil || db.Spec.Topology.Data.Storage == nil {
-				return errors.New("storage not configured for Solr data node")
+			var dataStorage *core.PersistentVolumeClaimSpec
+			if db.Spec.Topology.Data != nil {
+				dataStorage = db.Spec.Topology.Data.Storage
 			}
-			cur, ok := db.Spec.Topology.Data.Storage.Resources.Requests[core.ResourceStorage]
-			if !ok {
-				return errors.New("failed to parse current data storage size")
-			}
-			if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Data) >= 0 {
-				return fmt.Errorf("desired data storage size must be greater than current storage. Current storage: %v", cur.String())
+			if err := opsutil.ValidateStorageExpansion(dataStorage, volumeExpansionSpec.Data, req.Status.Phase, "data"); err != nil {
+				return err
 			}
 		}
 		if volumeExpansionSpec.Overseer != nil {
-			if db.Spec.Topology.Overseer == nil || db.Spec.Topology.Overseer.Storage == nil {
-				return errors.New("storage not configured for Solr overseer node")
+			var overseerStorage *core.PersistentVolumeClaimSpec
+			if db.Spec.Topology.Overseer != nil {
+				overseerStorage = db.Spec.Topology.Overseer.Storage
 			}
-			cur, ok := db.Spec.Topology.Overseer.Storage.Resources.Requests[core.ResourceStorage]
-			if !ok {
-				return errors.New("failed to parse current overseer storage size")
-			}
-			if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Overseer) >= 0 {
-				return fmt.Errorf("desired overseer storage size must be greater than current storage. Current storage: %v", cur.String())
+			if err := opsutil.ValidateStorageExpansion(overseerStorage, volumeExpansionSpec.Overseer, req.Status.Phase, "overseer"); err != nil {
+				return err
 			}
 		}
 		if volumeExpansionSpec.Coordinator != nil {
-			if db.Spec.Topology.Coordinator == nil || db.Spec.Topology.Coordinator.Storage == nil {
-				return errors.New("storage not configured for Solr coordinator node")
+			var coordinatorStorage *core.PersistentVolumeClaimSpec
+			if db.Spec.Topology.Coordinator != nil {
+				coordinatorStorage = db.Spec.Topology.Coordinator.Storage
 			}
-			cur, ok := db.Spec.Topology.Coordinator.Storage.Resources.Requests[core.ResourceStorage]
-			if !ok {
-				return errors.New("failed to parse current coordinator storage size")
-			}
-			if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Coordinator) >= 0 {
-				return fmt.Errorf("desired coordinator storage size must be greater than current storage. Current storage: %v", cur.String())
+			if err := opsutil.ValidateStorageExpansion(coordinatorStorage, volumeExpansionSpec.Coordinator, req.Status.Phase, "coordinator"); err != nil {
+				return err
 			}
 		}
 	}

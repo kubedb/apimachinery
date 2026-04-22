@@ -27,8 +27,8 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
-	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -250,72 +250,40 @@ func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBVolumeExpansionOpsReques
 
 	// Storage size validations
 	if req.Spec.VolumeExpansion.Standalone != nil {
-		if db.Spec.Storage == nil {
-			return errors.New("storage not configured for standalone MongoDB")
-		}
-		cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse current standalone storage size")
-		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.Standalone) >= 0 {
-			return fmt.Errorf("desired standalone storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, req.Spec.VolumeExpansion.Standalone, req.Status.Phase, "standalone"); err != nil {
+			return err
 		}
 	}
 	if req.Spec.VolumeExpansion.ReplicaSet != nil {
 		if db.Spec.ReplicaSet == nil {
 			return errors.New("replicaSet not configured for this MongoDB")
 		}
-		if db.Spec.Storage == nil {
-			return errors.New("storage not configured for replicaSet MongoDB")
-		}
-		cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse current replicaSet storage size")
-		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.ReplicaSet) >= 0 {
-			return fmt.Errorf("desired replicaSet storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, req.Spec.VolumeExpansion.ReplicaSet, req.Status.Phase, "replicaSet"); err != nil {
+			return err
 		}
 	}
 	if req.Spec.VolumeExpansion.ConfigServer != nil {
 		if db.Spec.ShardTopology == nil {
 			return errors.New("shardTopology not configured for this MongoDB")
 		}
-		if db.Spec.ShardTopology.ConfigServer.Storage == nil {
-			return errors.New("storage not configured for configServer")
-		}
-		cur, ok := db.Spec.ShardTopology.ConfigServer.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse current configServer storage size")
-		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.ConfigServer) >= 0 {
-			return fmt.Errorf("desired configServer storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(db.Spec.ShardTopology.ConfigServer.Storage, req.Spec.VolumeExpansion.ConfigServer, req.Status.Phase, "configServer"); err != nil {
+			return err
 		}
 	}
 	if req.Spec.VolumeExpansion.Shard != nil {
 		if db.Spec.ShardTopology == nil {
 			return errors.New("shardTopology not configured for this MongoDB")
 		}
-		if db.Spec.ShardTopology.Shard.Storage == nil {
-			return errors.New("storage not configured for shard")
-		}
-		cur, ok := db.Spec.ShardTopology.Shard.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse current shard storage size")
-		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.Shard) >= 0 {
-			return fmt.Errorf("desired shard storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(db.Spec.ShardTopology.Shard.Storage, req.Spec.VolumeExpansion.Shard, req.Status.Phase, "shard"); err != nil {
+			return err
 		}
 	}
 	if req.Spec.VolumeExpansion.Hidden != nil {
 		if db.Spec.Hidden == nil {
 			return errors.New("hidden not configured for this MongoDB")
 		}
-		cur, ok := db.Spec.Hidden.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse current hidden storage size")
-		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.Hidden) >= 0 {
-			return fmt.Errorf("desired hidden storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(&db.Spec.Hidden.Storage, req.Spec.VolumeExpansion.Hidden, req.Status.Phase, "hidden"); err != nil {
+			return err
 		}
 	}
 

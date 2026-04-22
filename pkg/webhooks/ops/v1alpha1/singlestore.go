@@ -24,10 +24,10 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
-	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -224,12 +224,8 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreVolumeExpansionO
 	}
 
 	if sdb.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
-		cur, ok := sdb.Spec.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse current storage size")
-		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
-			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(sdb.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "Singlestore"); err != nil {
+			return err
 		}
 	}
 

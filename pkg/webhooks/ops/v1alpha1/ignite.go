@@ -26,6 +26,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -139,7 +140,7 @@ func (rv *IgniteOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Igni
 				err.Error()))
 		}
 	case opsapi.IgniteOpsRequestTypeVolumeExpansion:
-			if err := rv.validateIgniteVolumeExpansionOpsRequest(db, req); err != nil {
+		if err := rv.validateIgniteVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -247,15 +248,8 @@ func (rv *IgniteOpsRequestCustomWebhook) validateIgniteVolumeExpansionOpsRequest
 		return errors.New("spec.volumeExpansion.Node can't be empty")
 	}
 
-	if db.Spec.Storage == nil {
-		return errors.New("storage not configured for Ignite")
-	}
-	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-	if !ok {
-		return errors.New("failed to parse current storage size")
-	}
-	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Ignite) >= 0 {
-		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Ignite, req.Status.Phase, "Ignite"); err != nil {
+		return err
 	}
 
 	return nil

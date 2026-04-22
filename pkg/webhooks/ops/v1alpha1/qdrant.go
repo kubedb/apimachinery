@@ -26,6 +26,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -174,7 +175,7 @@ func (w *QdrantOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Qdran
 		}
 
 	case opsapi.QdrantOpsRequestTypeVolumeExpansion:
-			if err := w.validateQdrantVolumeExpansionOpsRequest(db, req); err != nil {
+		if err := w.validateQdrantVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -353,15 +354,8 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantVolumeExpansionOpsRequest(
 		return errors.New("spec.volumeExpansion.Node can't be empty")
 	}
 
-	if db.Spec.Storage == nil {
-		return errors.New("storage not configured for Qdrant")
-	}
-	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-	if !ok {
-		return errors.New("failed to parse current storage size")
-	}
-	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
-		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "Qdrant"); err != nil {
+		return err
 	}
 
 	return nil

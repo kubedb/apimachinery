@@ -25,6 +25,7 @@ import (
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -282,40 +283,27 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaVolumeExpansionOpsRequest(ka
 	}
 
 	if kafka.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
-		if kafka.Spec.Storage == nil {
-			return errors.New("storage not configured for combined Kafka")
-		}
-		cur, ok := kafka.Spec.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse current storage size")
-		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
-			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(kafka.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "combined Kafka"); err != nil {
+			return err
 		}
 	}
 	if kafka.Spec.Topology != nil {
 		if volumeExpansionSpec.Broker != nil {
-			if kafka.Spec.Topology.Broker == nil || kafka.Spec.Topology.Broker.Storage == nil {
-				return errors.New("storage not configured for Kafka broker")
+			var brokerStorage *core.PersistentVolumeClaimSpec
+			if kafka.Spec.Topology.Broker != nil {
+				brokerStorage = kafka.Spec.Topology.Broker.Storage
 			}
-			cur, ok := kafka.Spec.Topology.Broker.Storage.Resources.Requests[core.ResourceStorage]
-			if !ok {
-				return errors.New("failed to parse current broker storage size")
-			}
-			if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Broker) >= 0 {
-				return fmt.Errorf("desired broker storage size must be greater than current storage. Current storage: %v", cur.String())
+			if err := opsutil.ValidateStorageExpansion(brokerStorage, volumeExpansionSpec.Broker, req.Status.Phase, "broker"); err != nil {
+				return err
 			}
 		}
 		if volumeExpansionSpec.Controller != nil {
-			if kafka.Spec.Topology.Controller == nil || kafka.Spec.Topology.Controller.Storage == nil {
-				return errors.New("storage not configured for Kafka controller")
+			var controllerStorage *core.PersistentVolumeClaimSpec
+			if kafka.Spec.Topology.Controller != nil {
+				controllerStorage = kafka.Spec.Topology.Controller.Storage
 			}
-			cur, ok := kafka.Spec.Topology.Controller.Storage.Resources.Requests[core.ResourceStorage]
-			if !ok {
-				return errors.New("failed to parse current controller storage size")
-			}
-			if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Controller) >= 0 {
-				return fmt.Errorf("desired controller storage size must be greater than current storage. Current storage: %v", cur.String())
+			if err := opsutil.ValidateStorageExpansion(controllerStorage, volumeExpansionSpec.Controller, req.Status.Phase, "controller"); err != nil {
+				return err
 			}
 		}
 	}

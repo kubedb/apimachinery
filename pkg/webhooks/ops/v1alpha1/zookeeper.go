@@ -25,9 +25,9 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
-	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -225,15 +225,8 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVolumeExpansionOpsRe
 		return errors.New("spec.volumeExpansion.Node can not be empty")
 	}
 
-	if zk.Spec.Storage == nil {
-		return errors.New("storage not configured for ZooKeeper")
-	}
-	cur, ok := zk.Spec.Storage.Resources.Requests[core.ResourceStorage]
-	if !ok {
-		return errors.New("failed to parse current storage size")
-	}
-	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*volumeExpansionSpec.Node) >= 0 {
-		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+	if err := opsutil.ValidateStorageExpansion(zk.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "ZooKeeper"); err != nil {
+		return err
 	}
 
 	return nil
