@@ -25,6 +25,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -150,7 +151,7 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeVolumeExpansion:
-		if err := w.validateSolrVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateSolrVolumeExpansionOpsRequest(req, db); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -214,7 +215,7 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrHorizontalScalingOpsRequest(re
 	return nil
 }
 
-func (w *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req *opsapi.SolrOpsRequest, db *olddbapi.Solr) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
@@ -222,6 +223,41 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req 
 
 	if volumeExpansionSpec.Node != nil && (volumeExpansionSpec.Data != nil || volumeExpansionSpec.Overseer != nil || volumeExpansionSpec.Coordinator != nil) {
 		return errors.New("spec.volumeExpansion.Node && spec.volumeExpansion.Topology both can't be non-empty at the same ops request")
+	}
+
+	if db.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "combined Solr"); err != nil {
+			return err
+		}
+	}
+	if db.Spec.Topology != nil {
+		if volumeExpansionSpec.Data != nil {
+			var dataStorage *core.PersistentVolumeClaimSpec
+			if db.Spec.Topology.Data != nil {
+				dataStorage = db.Spec.Topology.Data.Storage
+			}
+			if err := opsutil.ValidateStorageExpansion(dataStorage, volumeExpansionSpec.Data, req.Status.Phase, "data"); err != nil {
+				return err
+			}
+		}
+		if volumeExpansionSpec.Overseer != nil {
+			var overseerStorage *core.PersistentVolumeClaimSpec
+			if db.Spec.Topology.Overseer != nil {
+				overseerStorage = db.Spec.Topology.Overseer.Storage
+			}
+			if err := opsutil.ValidateStorageExpansion(overseerStorage, volumeExpansionSpec.Overseer, req.Status.Phase, "overseer"); err != nil {
+				return err
+			}
+		}
+		if volumeExpansionSpec.Coordinator != nil {
+			var coordinatorStorage *core.PersistentVolumeClaimSpec
+			if db.Spec.Topology.Coordinator != nil {
+				coordinatorStorage = db.Spec.Topology.Coordinator.Storage
+			}
+			if err := opsutil.ValidateStorageExpansion(coordinatorStorage, volumeExpansionSpec.Coordinator, req.Status.Phase, "coordinator"); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil

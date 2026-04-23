@@ -25,6 +25,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -306,6 +307,18 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidVolumeExpansionOpsRequest(re
 	if volumeExpansionSpec.MiddleManagers != nil && druid.Spec.Topology.MiddleManagers.StorageType != olddbapi.StorageTypeDurable {
 		return errors.New("volumeExpansionSpec.middleManagers can not be set when storageType of middleManagers of the database is not Durable ")
 	}
+
+	if volumeExpansionSpec.MiddleManagers != nil {
+		if err := opsutil.ValidateStorageExpansion(druid.Spec.Topology.MiddleManagers.Storage, volumeExpansionSpec.MiddleManagers, req.Status.Phase, "middleManagers"); err != nil {
+			return err
+		}
+	}
+	if volumeExpansionSpec.Historicals != nil {
+		if err := opsutil.ValidateStorageExpansion(druid.Spec.Topology.Historicals.Storage, volumeExpansionSpec.Historicals, req.Status.Phase, "historicals"); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

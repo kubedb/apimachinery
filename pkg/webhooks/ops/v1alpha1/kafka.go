@@ -25,6 +25,7 @@ import (
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -279,6 +280,32 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaVolumeExpansionOpsRequest(ka
 	}
 	if kafka.Spec.Topology == nil && volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.node can not be empty as reference database mode is combined")
+	}
+
+	if kafka.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
+		if err := opsutil.ValidateStorageExpansion(kafka.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "combined Kafka"); err != nil {
+			return err
+		}
+	}
+	if kafka.Spec.Topology != nil {
+		if volumeExpansionSpec.Broker != nil {
+			var brokerStorage *core.PersistentVolumeClaimSpec
+			if kafka.Spec.Topology.Broker != nil {
+				brokerStorage = kafka.Spec.Topology.Broker.Storage
+			}
+			if err := opsutil.ValidateStorageExpansion(brokerStorage, volumeExpansionSpec.Broker, req.Status.Phase, "broker"); err != nil {
+				return err
+			}
+		}
+		if volumeExpansionSpec.Controller != nil {
+			var controllerStorage *core.PersistentVolumeClaimSpec
+			if kafka.Spec.Topology.Controller != nil {
+				controllerStorage = kafka.Spec.Topology.Controller.Storage
+			}
+			if err := opsutil.ValidateStorageExpansion(controllerStorage, volumeExpansionSpec.Controller, req.Status.Phase, "controller"); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
