@@ -90,6 +90,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&PostgresAutoscalerList{},
 		&ProxySQLAutoscaler{},
 		&ProxySQLAutoscalerList{},
+		&QdrantAutoscaler{},
+		&QdrantAutoscalerList{},
 		&RabbitMQAutoscaler{},
 		&RabbitMQAutoscalerList{},
 		&RedisAutoscaler{},
