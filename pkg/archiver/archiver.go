@@ -18,10 +18,13 @@ package archiver
 
 import (
 	"context"
+	"fmt"
 	"slices"
 	"sort"
+	"strings"
 
 	archiverapi "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/pkg/double_optin"
 
 	core "k8s.io/api/core/v1"
@@ -100,4 +103,44 @@ func getPriority(archiver metav1.ObjectMeta, projectNSList []string, dbNs string
 		idx = 1
 	}
 	return priority{archiver, idx}
+}
+
+func SetAnnotationsForStorageCredSecret(annotations map[string]string, dbName string) map[string]string {
+	databases := annotations[kubedb.OwnerDatabasesAnnotation]
+	if databases == "" {
+		annotations[kubedb.OwnerDatabasesAnnotation] = dbName
+		return annotations
+	}
+	parts := strings.Split(databases, ",")
+	if slices.Contains(parts, dbName) {
+		return annotations
+	}
+	databases = fmt.Sprintf("%s,%s", databases, dbName)
+	annotations[kubedb.OwnerDatabasesAnnotation] = databases
+	return annotations
+}
+
+func RemoveAnnotationsFromStorageCredSecret(annotations map[string]string, dbName string) map[string]string {
+	databases := annotations[kubedb.OwnerDatabasesAnnotation]
+	if databases == "" {
+		return annotations
+	}
+	parts := strings.Split(databases, ",")
+	if !slices.Contains(parts, dbName) {
+		return annotations
+	}
+	newParts := make([]string, 0, len(parts)-1)
+	for _, part := range parts {
+		if part != dbName {
+			newParts = append(newParts, part)
+		}
+	}
+
+	if len(newParts) == 0 {
+		delete(annotations, kubedb.OwnerDatabasesAnnotation)
+	} else {
+		annotations[kubedb.OwnerDatabasesAnnotation] = strings.Join(newParts, ",")
+	}
+
+	return annotations
 }
