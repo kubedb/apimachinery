@@ -105,7 +105,7 @@ func getPriority(archiver metav1.ObjectMeta, projectNSList []string, dbNs string
 	return priority{archiver, idx}
 }
 
-func SetAnnotationsForStorageCredSecret(annotations map[string]string, dbName string) map[string]string {
+func SetAnnotationForStorageCredSecret(annotations map[string]string, dbName string) map[string]string {
 	databases := annotations[kubedb.OwnerDatabasesAnnotation]
 	if databases == "" {
 		annotations[kubedb.OwnerDatabasesAnnotation] = dbName
@@ -120,27 +120,19 @@ func SetAnnotationsForStorageCredSecret(annotations map[string]string, dbName st
 	return annotations
 }
 
-func RemoveAnnotationsFromStorageCredSecret(annotations map[string]string, dbName string) map[string]string {
+func RemoveAnnotationFromStorageCredSecret(annotations map[string]string, dbName string) map[string]string {
 	databases := annotations[kubedb.OwnerDatabasesAnnotation]
 	if databases == "" {
 		return annotations
 	}
 	parts := strings.Split(databases, ",")
-	if !slices.Contains(parts, dbName) {
-		return annotations
-	}
-	newParts := make([]string, 0, len(parts)-1)
-	for _, part := range parts {
-		if part != dbName {
-			newParts = append(newParts, part)
-		}
-	}
-
-	if len(newParts) == 0 {
+	parts = slices.DeleteFunc(parts, func(s string) bool {
+		return s == dbName
+	})
+	if len(parts) == 0 {
 		delete(annotations, kubedb.OwnerDatabasesAnnotation)
 	} else {
-		annotations[kubedb.OwnerDatabasesAnnotation] = strings.Join(newParts, ",")
+		annotations[kubedb.OwnerDatabasesAnnotation] = strings.Join(parts, ",")
 	}
-
 	return annotations
 }
