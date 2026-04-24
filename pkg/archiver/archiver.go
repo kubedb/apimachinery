@@ -142,7 +142,7 @@ func RemoveAnnotationFromStorageCredSecret(annotations map[string]string, dbName
 	return annotations
 }
 
-func UpdateOrDeleteCopiedStorageCredSecretD(kc client.Client, gvk schema.GroupVersionKind, dbMeta metav1.ObjectMeta) error {
+func UpdateOrDeleteCopiedStorageCredSecret(kc client.Client, gvk schema.GroupVersionKind, dbMeta metav1.ObjectMeta) error {
 	var db unstructured.Unstructured
 	db.SetGroupVersionKind(gvk)
 	err := kc.Get(context.Background(), client.ObjectKey{Name: dbMeta.Name, Namespace: dbMeta.Namespace}, &db)
