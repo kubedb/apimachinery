@@ -35,6 +35,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -237,6 +238,15 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 		))
 	}
 
+	if pp.Spec.Configuration != nil {
+		if err := PgpoolValidateLoadBalancingSpec(pp.Spec.Configuration.Backends); err != nil {
+			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configuration").Child("backends"),
+				pp.Name,
+				err.Error(),
+			))
+		}
+	}
+
 	if len(errorList) == 0 {
 		return nil
 	}
@@ -360,4 +370,47 @@ func PgpoolValidateVolumesMountPaths(pgpool *olddbapi.Pgpool) error {
 var PgpoolReservedVolumesMountPaths = []string{
 	kubedb.PgpoolConfigSecretMountPath,
 	kubedb.PgpoolTlsVolumeMountPath,
+}
+
+func PgpoolValidateLoadBalancingSpec(backends []olddbapi.PgpoolLoadBalancingSpec) error {
+	if backends == nil {
+		return nil
+	}
+
+	groupNameEnabled, hostNameEnabled := false, false
+	for _, lbSpec := range backends {
+		if lbSpec.GroupName != "" {
+			groupNameEnabled = true
+		}
+		if lbSpec.HostName != "" {
+			hostNameEnabled = true
+		}
+		if lbSpec.GroupName == "" && lbSpec.HostName == "" {
+			return errors.New("name or hostName is required for each backend in load balancing configuration")
+		}
+		if lbSpec.GroupName != "" {
+			if lbSpec.Port != nil {
+				return errors.New("port can not be used when `backends[i].name` is used in load balancing configuration")
+			}
+		}
+	}
+	if groupNameEnabled && hostNameEnabled {
+		return errors.New("group name and host name can not be used together in load balancing configuration")
+	}
+
+	// check for duplicate group name or host name
+	identityList := make(map[string]bool)
+	for _, lbSpec := range backends {
+		identity := lbSpec.GroupName
+		if hostNameEnabled {
+			identity = lbSpec.HostName
+		}
+		identity = fmt.Sprintf("%s:%d", identity, ptr.Deref(lbSpec.Port, 5432))
+
+		if _, present := identityList[identity]; present {
+			return errors.Errorf("duplicate group name or host name with port found in load balancing configuration: %s", identity)
+		}
+		identityList[identity] = true
+	}
+	return nil
 }

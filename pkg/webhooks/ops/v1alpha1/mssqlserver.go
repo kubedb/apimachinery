@@ -26,6 +26,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -139,7 +140,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.MSSQLServerOpsRequestTypeVolumeExpansion:
-		if err := w.validateMSSQLServerVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateMSSQLServerVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -200,17 +201,25 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVerticalScalingO
 		return errors.New("`spec.verticalScaling` is nil. Not supported in VerticalScaling type")
 	}
 
-	if verticalScalingSpec.MSSQLServer == nil {
-		return fmt.Errorf("`spec.verticalScaling.mssqlserver` can't be nil in vertical scaling ops request")
+	if verticalScalingSpec.MSSQLServer == nil && verticalScalingSpec.Coordinator == nil && verticalScalingSpec.Arbiter == nil &&
+		verticalScalingSpec.Exporter == nil {
+		return errors.New("`spec.verticalScaling.MSSQLServer`, `spec.verticalScaling.Coordinator`, `spec.verticalScaling.Arbiter`, `spec.verticalScaling.Exporter` at least any of them should be present in vertical scaling ops request")
 	}
 
 	return nil
 }
 
-func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVolumeExpansionOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
+func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVolumeExpansionOpsRequest(db *olddbapi.MSSQLServer, req *opsapi.MSSQLServerOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return fmt.Errorf("spec.volumeExpansion is nil, not supported in VolumeExpansion type")
+	}
+	if volumeExpansionSpec.MSSQLServer == nil {
+		return fmt.Errorf("spec.volumeExpansion.mssqlserver can not be empty")
+	}
+
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.MSSQLServer, req.Status.Phase, "MSSQLServer"); err != nil {
+		return err
 	}
 
 	return nil

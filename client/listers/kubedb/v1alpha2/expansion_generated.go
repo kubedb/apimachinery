@@ -42,6 +42,14 @@ type DB2ListerExpansion interface{}
 // DB2NamespaceLister.
 type DB2NamespaceListerExpansion interface{}
 
+// DocumentDBListerExpansion allows custom methods to be added to
+// DocumentDBLister.
+type DocumentDBListerExpansion interface{}
+
+// DocumentDBNamespaceListerExpansion allows custom methods to be added to
+// DocumentDBNamespaceLister.
+type DocumentDBNamespaceListerExpansion interface{}
+
 // DruidListerExpansion allows custom methods to be added to
 // DruidLister.
 type DruidListerExpansion interface{}

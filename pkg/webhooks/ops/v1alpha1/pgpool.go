@@ -26,6 +26,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	dbwebhook "kubedb.dev/apimachinery/pkg/webhooks/kubedb/v1alpha2"
 
 	"gomodules.xyz/x/arrays"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -143,7 +144,7 @@ func (w *PgpoolOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pgpoo
 				err.Error()))
 		}
 	case opsapi.PgpoolOpsRequestTypeReconfigure:
-		if err := w.validatePgpoolReconfigureOpsRequest(req); err != nil {
+		if err := w.validatePgpoolReconfigureOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
@@ -206,21 +207,87 @@ func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolHorizontalScalingOpsReques
 	return nil
 }
 
-func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(req *opsapi.PgpoolOpsRequest) error {
+func (w *PgpoolOpsRequestCustomWebhook) validatePgpoolReconfigureOpsRequest(pp *olddbapi.Pgpool, req *opsapi.PgpoolOpsRequest) error {
 	reconfigureSpec := req.Spec.Configuration
 	if reconfigureSpec == nil {
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if applyConfigExists(req.Spec.Configuration.ApplyConfig) {
-		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.PgpoolCustomConfigFile]
+	if reconfigureSpec.ReconfigurationSpec != nil && applyConfigExists(reconfigureSpec.ApplyConfig) {
+		_, ok := reconfigureSpec.ApplyConfig[kubedb.PgpoolCustomConfigFile]
 		if !ok {
 			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.PgpoolCustomConfigFile)
 		}
 	}
 
-	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExists(req.Spec.Configuration.ApplyConfig) {
-		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	if (reconfigureSpec.ReconfigurationSpec == nil || (!reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && !applyConfigExists(reconfigureSpec.ApplyConfig))) &&
+		reconfigureSpec.Backend == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` or `Backend` must be specified")
+	}
+
+	if reconfigureSpec.Backend == nil {
+		return nil
+	}
+
+	removeCustomConfig := reconfigureSpec.ReconfigurationSpec != nil && reconfigureSpec.RemoveCustomConfig
+
+	if removeCustomConfig && reconfigureSpec.Backend.Delete != nil {
+		return errors.New("`spec.configuration.backend.delete` cannot be specified when `spec.configuration.removeCustomConfig` is true")
+	}
+
+	err := dbwebhook.PgpoolValidateLoadBalancingSpec(reconfigureSpec.Backend.Sync)
+	if err != nil {
+		return fmt.Errorf("invalid load balancing configuration: %v", err)
+	}
+
+	mergedBackend := []olddbapi.PgpoolLoadBalancingSpec{}
+	if !removeCustomConfig && pp.Spec.Configuration != nil && pp.Spec.Configuration.Backends != nil {
+		mergedBackend = append(mergedBackend, pp.Spec.Configuration.Backends...)
+	}
+
+	if reconfigureSpec.Backend.Delete != nil {
+		for _, backendToDelete := range reconfigureSpec.Backend.Delete {
+			for i, backend := range mergedBackend {
+				node := backend.GroupName
+				if node == "" {
+					node = backend.HostName
+				}
+				if node == backendToDelete {
+					mergedBackend = append(mergedBackend[:i], mergedBackend[i+1:]...)
+					break
+				}
+			}
+		}
+	}
+
+	if reconfigureSpec.Backend.Sync != nil {
+		for _, backend := range reconfigureSpec.Backend.Sync {
+			node1 := backend.GroupName
+			if node1 == "" {
+				node1 = backend.HostName
+			}
+			found := false
+
+			for i, backend2 := range mergedBackend {
+				node2 := backend2.GroupName
+				if node2 == "" {
+					node2 = backend2.HostName
+				}
+				if node2 == node1 {
+					found = true
+					mergedBackend[i] = backend
+					break
+				}
+			}
+			if !found {
+				mergedBackend = append(mergedBackend, backend)
+			}
+		}
+	}
+
+	err = dbwebhook.PgpoolValidateLoadBalancingSpec(mergedBackend)
+	if err != nil {
+		return fmt.Errorf("`spec.configuration.backend` is not compatible with the running load balancing configuration: %v", err)
 	}
 
 	return nil

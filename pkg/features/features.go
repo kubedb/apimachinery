@@ -40,6 +40,9 @@ const (
 	// Enable DB2 operator
 	DB2 featuregate.Feature = "DB2"
 
+	// Enables DocumentDB operator.
+	DocumentDB featuregate.Feature = "DocumentDB"
+
 	// Enables Druid operator.
 	Druid featuregate.Feature = "Druid"
 
@@ -157,12 +160,13 @@ func init() {
 // To add a new feature, define a key for it above and add it here. The features will be
 // available throughout KubeDB binaries.
 var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
-	Cassandra:     {Default: false, PreRelease: featuregate.Alpha},
-	ClickHouse:    {Default: false, PreRelease: featuregate.Alpha},
-	DB2:           {Default: false, PreRelease: featuregate.Alpha},
+	Cassandra:  {Default: false, PreRelease: featuregate.Alpha},
+	ClickHouse: {Default: false, PreRelease: featuregate.Alpha},
+	DB2:        {Default: false, PreRelease: featuregate.Alpha},
+	DocumentDB: {Default: false, PreRelease: featuregate.Alpha},
+	// Etcd:               {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
 	Druid:         {Default: false, PreRelease: featuregate.Alpha},
 	Elasticsearch: {Default: true, PreRelease: featuregate.GA},
-	// Etcd:               {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
 	FerretDB:      {Default: false, PreRelease: featuregate.Alpha},
 	Hazelcast:     {Default: true, PreRelease: featuregate.Alpha},
 	HanaDB:        {Default: false, PreRelease: featuregate.Alpha},

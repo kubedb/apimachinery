@@ -24,6 +24,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -168,6 +169,12 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 				db.Name,
 				"StorageType should be either durable or ephemeral"))
+		}
+	}
+
+	if monitorSpec := db.Spec.Monitor; monitorSpec != nil {
+		if err := amv.ValidateMonitorSpec(monitorSpec); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("monitor"), db.Name, err.Error()))
 		}
 	}
 

@@ -412,14 +412,18 @@ func (m *MySQL) SetHealthCheckerDefaults() {
 	}
 }
 
-func (m *MySQLSpec) GetPersistentSecrets() []string {
+func (m *MySQL) GetPersistentSecrets() []string {
 	if m == nil {
 		return nil
 	}
 
 	var secrets []string
-	if m.AuthSecret != nil {
-		secrets = append(secrets, m.AuthSecret.Name)
+	if m.Spec.AuthSecret != nil {
+		secrets = append(secrets, m.Spec.AuthSecret.Name)
+	}
+	if m.Spec.Monitor != nil && m.Spec.TLS != nil {
+		name := meta_util.NameWithSuffix(m.Name, kubedb.MySQLMetricsExporterConfigSecretSuffix)
+		secrets = append(secrets, name)
 	}
 	return secrets
 }
@@ -573,7 +577,7 @@ func (m *MySQL) assignDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLV
 
 func (m *MySQL) setDefaultContainerResourceLimits(podTemplate *ofstv2.PodTemplateSpec) {
 	dbContainer := core_util.GetContainerByName(podTemplate.Spec.Containers, kubedb.MySQLContainerName)
-	if dbContainer != nil && (dbContainer.Resources.Requests == nil && dbContainer.Resources.Limits == nil) {
+	if dbContainer != nil {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
 

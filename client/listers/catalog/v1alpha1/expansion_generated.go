@@ -30,6 +30,10 @@ type ClickHouseVersionListerExpansion interface{}
 // DB2VersionLister.
 type DB2VersionListerExpansion interface{}
 
+// DocumentDBVersionListerExpansion allows custom methods to be added to
+// DocumentDBVersionLister.
+type DocumentDBVersionListerExpansion interface{}
+
 // DruidVersionListerExpansion allows custom methods to be added to
 // DruidVersionLister.
 type DruidVersionListerExpansion interface{}

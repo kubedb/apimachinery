@@ -30,6 +30,8 @@ type Interface interface {
 	ClickHouseVersions() ClickHouseVersionInformer
 	// DB2Versions returns a DB2VersionInformer.
 	DB2Versions() DB2VersionInformer
+	// DocumentDBVersions returns a DocumentDBVersionInformer.
+	DocumentDBVersions() DocumentDBVersionInformer
 	// DruidVersions returns a DruidVersionInformer.
 	DruidVersions() DruidVersionInformer
 	// ElasticsearchVersions returns a ElasticsearchVersionInformer.
@@ -114,6 +116,11 @@ func (v *version) ClickHouseVersions() ClickHouseVersionInformer {
 // DB2Versions returns a DB2VersionInformer.
 func (v *version) DB2Versions() DB2VersionInformer {
 	return &dB2VersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// DocumentDBVersions returns a DocumentDBVersionInformer.
+func (v *version) DocumentDBVersions() DocumentDBVersionInformer {
+	return &documentDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // DruidVersions returns a DruidVersionInformer.
