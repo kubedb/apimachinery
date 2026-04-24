@@ -28,9 +28,14 @@ import (
 	"kubedb.dev/apimachinery/pkg/double_optin"
 
 	core "k8s.io/api/core/v1"
+	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
+	client_util "kmodules.xyz/client-go/client"
 	"kmodules.xyz/client-go/cluster"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -135,4 +140,113 @@ func RemoveAnnotationFromStorageCredSecret(annotations map[string]string, dbName
 		annotations[kubedb.OwnerDatabasesAnnotation] = strings.Join(parts, ",")
 	}
 	return annotations
+}
+
+func UpdateOrDeleteCopiedStorageCredSecretD(kc client.Client, gvk schema.GroupVersionKind, dbMeta metav1.ObjectMeta) error {
+	var db unstructured.Unstructured
+	db.SetGroupVersionKind(gvk)
+	err := kc.Get(context.Background(), client.ObjectKey{Name: dbMeta.Name, Namespace: dbMeta.Namespace}, &db)
+	if err != nil {
+		return err
+	}
+	refName, _, err := unstructured.NestedString(db.Object, "spec", "archiver", "ref", "name")
+	if err != nil {
+		return err
+	}
+
+	refNamespace, _, err := unstructured.NestedString(db.Object, "spec", "archiver", "ref", "namespace")
+	if err != nil {
+		return err
+	}
+	var archiver unstructured.Unstructured
+	archiver.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   archiverapi.SchemeGroupVersion.Group,
+		Version: archiverapi.SchemeGroupVersion.Version,
+		Kind:    fmt.Sprintf("%vArchiver", gvk.Kind),
+	})
+
+	err = kc.Get(context.Background(), client.ObjectKey{Name: refName, Namespace: refNamespace}, &archiver)
+	if err != nil && !kerr.IsNotFound(err) {
+		return err
+	}
+	if kerr.IsNotFound(err) {
+		return nil
+	}
+	bsName, _, err := unstructured.NestedString(archiver.Object, "spec", "backupStorage", "ref", "name")
+	if err != nil {
+		return err
+	}
+	bsNamespace, _, err := unstructured.NestedString(archiver.Object, "spec", "backupStorage", "ref", "namespace")
+	if err != nil {
+		return err
+	}
+
+	bs := storageapi.BackupStorage{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      bsName,
+			Namespace: bsNamespace,
+		},
+	}
+	err = kc.Get(context.Background(), client.ObjectKey{Name: bs.Name, Namespace: bs.Namespace}, &bs)
+	if err != nil && !kerr.IsNotFound(err) {
+		return err
+	}
+	if kerr.IsNotFound(err) {
+		return nil
+	}
+
+	if bs.GetNamespace() == db.GetNamespace() {
+		return nil
+	}
+	secretName, err := GetStorageSecretName(&bs)
+	if err != nil {
+		return err
+	}
+
+	secret := core.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: db.GetNamespace(),
+		},
+	}
+	err = kc.Get(context.Background(), client.ObjectKey{Name: secret.Name, Namespace: secret.Namespace}, &secret)
+	if err != nil && !kerr.IsNotFound(err) {
+		return err
+	}
+	if kerr.IsNotFound(err) {
+		return nil
+	}
+	annotations := secret.GetAnnotations()
+	annotations = RemoveAnnotationFromStorageCredSecret(annotations, db.GetName())
+	if annotations == nil || len(annotations[kubedb.OwnerDatabasesAnnotation]) == 0 {
+		err = kc.Delete(context.Background(), &secret)
+		if err != nil && !kerr.IsNotFound(err) {
+			return err
+		}
+		return nil
+	}
+	_, err = client_util.CreateOrPatch(context.TODO(), kc, &core.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: db.GetNamespace(),
+		},
+	}, func(obj client.Object, createOp bool) client.Object {
+		in := obj.(*core.Secret)
+		in.Annotations = annotations
+		return in
+	})
+	return err
+}
+
+func GetStorageSecretName(backupStorage *storageapi.BackupStorage) (string, error) {
+	if backupStorage.Spec.Storage.Provider == storageapi.ProviderS3 {
+		return backupStorage.Spec.Storage.S3.SecretName, nil
+	}
+	if backupStorage.Spec.Storage.Provider == storageapi.ProviderGCS {
+		return backupStorage.Spec.Storage.GCS.SecretName, nil
+	}
+	if backupStorage.Spec.Storage.Provider == storageapi.ProviderAzure {
+		return backupStorage.Spec.Storage.Azure.SecretName, nil
+	}
+	return "", fmt.Errorf("failed to get storage secret")
 }
