@@ -111,6 +111,9 @@ func getPriority(archiver metav1.ObjectMeta, projectNSList []string, dbNs string
 }
 
 func SetAnnotationForStorageCredSecret(annotations map[string]string, dbName string) map[string]string {
+	if annotations == nil {
+		annotations = make(map[string]string)
+	}
 	databases := annotations[kubedb.OwnerDatabasesAnnotation]
 	if databases == "" {
 		annotations[kubedb.OwnerDatabasesAnnotation] = dbName
@@ -126,6 +129,9 @@ func SetAnnotationForStorageCredSecret(annotations map[string]string, dbName str
 }
 
 func RemoveAnnotationFromStorageCredSecret(annotations map[string]string, dbName string) map[string]string {
+	if annotations == nil {
+		return nil
+	}
 	databases := annotations[kubedb.OwnerDatabasesAnnotation]
 	if databases == "" {
 		return annotations
