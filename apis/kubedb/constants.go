@@ -2420,6 +2420,7 @@ const (
 	KubeSliceNSMContainerName                  = "cmd-nsc-grpc"
 
 	// Archiver
+	OwnerDatabasesAnnotation                  = "kubedb.com/owner-databases"
 	DistributedArchiverSnapshotInfoAnnotation = "distributedsnapshotinfo"
 	DistributedArchiverCMKeySnapshots         = "snapshots"
 	DistributedArchiverCMKeyRestoreSession    = "restoresession"
