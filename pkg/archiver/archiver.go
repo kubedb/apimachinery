@@ -216,7 +216,7 @@ func SyncStorageCredSecret(kc client.Client, gvk schema.GroupVersionKind, dbMeta
 		return nil
 	}
 
-	if bs.GetNamespace() == db.GetNamespace() {
+	if bs.GetNamespace() == db.GetNamespace() || bs.IsCredentialLessModeEnabled() {
 		return nil
 	}
 	storageSecretName, err := GetStorageSecretName(bs)
