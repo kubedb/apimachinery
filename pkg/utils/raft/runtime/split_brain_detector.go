@@ -18,7 +18,6 @@ package raft
 
 import (
 	"context"
-	"fmt"
 	"math/rand"
 	"strconv"
 	"sync"
@@ -68,25 +67,14 @@ type (
 )
 
 type Config struct {
-	Namespace  string
-	PetsetName string
-	PodLists   []string
-	Replicas   int
-	PodName    string
-	ID         map[string]uint64
-	sel        map[string]string
+	Namespace string
+	PodLists  []string
+	PodName   string
+	ID        map[string]uint64 // no modify after initialization
+	sel       map[string]string
 }
 
-func NewSplitBrainDetectorConfig(cfg *Config, rc *RaftNode, kc client.Client, kv *Kvstore, csf ConnStateFunc, stopCh chan struct{}) (*SplitBrainDetectorConfig, error) {
-	if cfg == nil {
-		return nil, fmt.Errorf("config cannot be nil")
-	}
-	if cfg.ID == nil {
-		return nil, fmt.Errorf("config ID map cannot be nil")
-	}
-	if cfg.sel == nil {
-		return nil, fmt.Errorf("config selector map cannot be nil")
-	}
+func NewSplitBrainDetectorConfig(cfg *Config, rc *RaftNode, kc client.Client, kv *Kvstore, csf ConnStateFunc, stopCh chan struct{}) *SplitBrainDetectorConfig {
 	return &SplitBrainDetectorConfig{
 		nodeState:     make(map[string]NodeState),
 		stopCh:        stopCh,
@@ -95,7 +83,7 @@ func NewSplitBrainDetectorConfig(cfg *Config, rc *RaftNode, kc client.Client, kv
 		kc:            kc,
 		kv:            kv,
 		connStateFunc: csf,
-	}, nil
+	}
 }
 
 func (sbd *SplitBrainDetectorConfig) SetSkipperFunc(skipper SkipperFunc) {
@@ -127,8 +115,8 @@ func (sbd *SplitBrainDetectorConfig) RemoveNodeState(node string) {
 func (sbd *SplitBrainDetectorConfig) InitNodeState() {
 	sbd.mutex.Lock()
 	defer sbd.mutex.Unlock()
-	for i := 0; i < sbd.config.Replicas; i++ {
-		podName := fmt.Sprintf("%s-%d", sbd.config.PetsetName, i)
+	for i := 0; i < len(sbd.config.PodLists); i++ {
+		podName := sbd.config.PodLists[i]
 		sbd.nodeState[podName] = STATE_ACTIVE
 	}
 }
@@ -242,9 +230,12 @@ func (sbd *SplitBrainDetectorConfig) StartLeaderNode(shutCh chan struct{}) {
 				r++
 			}
 			quorum := (r + 1) / 2
-			active := 0
+			active := 1
 			for i := 0; i < len(sbd.config.PodLists); i++ {
 				podName := sbd.config.PodLists[i]
+				if podName == sbd.config.PodName {
+					continue
+				}
 				s := sbd.connStateFunc(podName)
 				if s == StateConnected {
 					active++
@@ -390,6 +381,10 @@ func (sbd *SplitBrainDetectorConfig) StartFollowerNodes(shutCh chan struct{}) {
 }
 
 func (sbd *SplitBrainDetectorConfig) RunSplitBrainManager() {
+	if sbd.config == nil || sbd.config.ID == nil || sbd.config.sel == nil {
+		panic("ID mapping and label selector cannot be nil in SplitBrainDetectorConfig")
+	}
+
 	klog.Infoln("[SplitBrainDetector] Starting RunSplitBrainManager - orchestrates all split brain detection goroutines")
 	u := time.After(time.Second * 40)
 	t := time.NewTicker(1 * time.Second)
@@ -412,7 +407,7 @@ func (sbd *SplitBrainDetectorConfig) RunSplitBrainManager() {
 					got++
 				}
 			}
-			if got >= sbd.config.Replicas {
+			if got >= len(sbd.config.PodLists) {
 				klog.Infof("[SplitBrainDetector] All %d replicas have LSN data, starting split brain manager", got)
 				stepDown = true
 			}
