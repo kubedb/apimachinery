@@ -123,30 +123,12 @@ type MilvusTLSConfig struct {
 
 	// External controls TLS for client-facing traffic (gRPC + REST).
 	// +optional
-	External *MilvusExternalProtocolTLSConfig `json:"external,omitempty"`
+	External *ProtocolTLSConfig `json:"external,omitempty"`
 
 	// Internal enables TLS for inter-component communication (one-way only)
 	// +optional
-	Internal *MilvusInternalProtocolTLSConfig `json:"internal,omitempty"`
+	Internal *ProtocolTLSConfig `json:"internal,omitempty"`
 }
-
-type MilvusExternalProtocolTLSConfig struct {
-	// +kubebuilder:validation:Enum=Disabled;TLS;mTLS
-	Mode MilvusTLSMode `json:"mode,omitempty"`
-}
-
-type MilvusInternalProtocolTLSConfig struct {
-	// Enabled is used for Internal TLS only.
-	InternalTLSEnabled *bool `json:"internalTLSEnabled,omitempty"`
-}
-
-type MilvusTLSMode string
-
-const (
-	MilvusTLSModeDisabled MilvusTLSMode = "Disabled"
-	MilvusTLSModeTLS      MilvusTLSMode = "TLS"
-	MilvusTLSModeMTLS     MilvusTLSMode = "mTLS"
-)
 
 // +kubebuilder:validation:Enum=server;client
 type MilvusCertificateType string

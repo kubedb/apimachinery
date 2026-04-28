@@ -81,7 +81,7 @@ func (m Milvus) Type() appcat.AppType {
 
 func (m *Milvus) GetConnectionScheme() string {
 	scheme := "http"
-	if m.Spec.TLS != nil && m.Spec.TLS.External != nil && m.Spec.TLS.External.Mode != MilvusTLSModeDisabled {
+	if m.Spec.TLS != nil && m.Spec.TLS.External != nil && m.Spec.TLS.External.Mode != TLSModeDisabled {
 		scheme = "https"
 	}
 	return scheme
@@ -383,14 +383,14 @@ func (m *Milvus) SetTLSDefaults() {
 	}
 
 	if m.Spec.TLS.External == nil {
-		m.Spec.TLS.External = &MilvusExternalProtocolTLSConfig{
-			Mode: MilvusTLSModeDisabled,
+		m.Spec.TLS.External = &ProtocolTLSConfig{
+			Mode: TLSModeDisabled,
 		}
 	}
 
 	if m.Spec.TLS.Internal == nil {
-		m.Spec.TLS.Internal = &MilvusInternalProtocolTLSConfig{
-			InternalTLSEnabled: pointer.BoolP(false),
+		m.Spec.TLS.Internal = &ProtocolTLSConfig{
+			Mode: TLSModeDisabled,
 		}
 	}
 

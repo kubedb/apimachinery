@@ -4050,8 +4050,12 @@ spec:
                     type: object
                   internal:
                     properties:
-                      internalTLSEnabled:
-                        type: boolean
+                      mode:
+                        enum:
+                        - Disabled
+                        - TLS
+                        - mTLS
+                        type: string
                     type: object
                   issuerRef:
                     properties:

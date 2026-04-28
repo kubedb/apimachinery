@@ -707,8 +707,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusApp":                                     schema_apimachinery_apis_kubedb_v1alpha2_MilvusApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDataNode":                                schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDistributedSpec":                         schema_apimachinery_apis_kubedb_v1alpha2_MilvusDistributedSpec(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExternalProtocolTLSConfig":               schema_apimachinery_apis_kubedb_v1alpha2_MilvusExternalProtocolTLSConfig(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusInternalProtocolTLSConfig":               schema_apimachinery_apis_kubedb_v1alpha2_MilvusInternalProtocolTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusList":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNode":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref),
@@ -40280,43 +40278,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDistributedSpec(ref common.R
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_MilvusExternalProtocolTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"mode": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_MilvusInternalProtocolTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"internalTLSEnabled": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Enabled is used for Internal TLS only.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_MilvusList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40591,20 +40552,20 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusTLSConfig(ref common.Referen
 					"external": {
 						SchemaProps: spec.SchemaProps{
 							Description: "External controls TLS for client-facing traffic (gRPC + REST).",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExternalProtocolTLSConfig"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
 						},
 					},
 					"internal": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Internal enables TLS for inter-component communication (one-way only)",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusInternalProtocolTLSConfig"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusExternalProtocolTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusInternalProtocolTLSConfig"},
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"},
 	}
 }
 
