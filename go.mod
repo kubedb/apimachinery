@@ -21,9 +21,10 @@ require (
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.87.1
 	go.bytebuilders.dev/audit v0.0.50
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
-	go.etcd.io/etcd/client/pkg/v3 v3.6.4
+	go.etcd.io/etcd/client/pkg/v3 v3.6.7
 	go.etcd.io/etcd/raft/v3 v3.5.27
 	go.etcd.io/etcd/server/v3 v3.6.4
+	go.etcd.io/raft/v3 v3.6.0
 	go.uber.org/zap v1.27.0
 	go.virtual-secrets.dev/apimachinery v0.0.1
 	gomodules.xyz/encoding v0.0.8
@@ -185,9 +186,9 @@ require (
 	github.com/zeebo/xxh3 v1.0.2 // indirect
 	go.bytebuilders.dev/license-proxyserver v0.1.0 // indirect
 	go.bytebuilders.dev/license-verifier v0.15.0 // indirect
-	go.etcd.io/etcd/api/v3 v3.6.4 // indirect
-	go.etcd.io/etcd/client/v3 v3.6.4 // indirect
-	go.etcd.io/etcd/pkg/v3 v3.6.4 // indirect
+	go.etcd.io/etcd/api/v3 v3.6.7 // indirect
+	go.etcd.io/etcd/client/v3 v3.6.7 // indirect
+	go.etcd.io/etcd/pkg/v3 v3.6.7 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.61.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.61.0 // indirect
@@ -237,8 +238,12 @@ require (
 	x-helm.dev/apimachinery v0.0.18 // indirect
 )
 
-replace go.etcd.io/etcd/server/v3 => go.etcd.io/etcd/server/v3 v3.5.27
+replace (
+	go.etcd.io/etcd/client/pkg/v3 => github.com/kubedb/etcd-io/client/pkg/v3 v3.0.0-20251230064943-a331b1ca21bc
+	go.etcd.io/etcd/server/v3 => github.com/kubedb/etcd-io/server/v3 v3.5.0-alpha.0.0.20251230064943-a331b1ca21bc
+	go.etcd.io/raft/v3 => github.com/kubedb/raft/v3 v3.6.0-beta.0.0.20251230054441-2a0ba1e4752c
+)
 
-replace go.etcd.io/etcd/pkg/v3 => go.etcd.io/etcd/pkg/v3 v3.5.27
+// replace go.etcd.io/etcd/pkg/v3 => go.etcd.io/etcd/pkg/v3 v3.5.27
 
 replace go.etcd.io/etcd/raft/v3 => github.com/kubedb/etcd-io/raft/v3 v3.5.0-beta.4.0.20220324050626-a6b4ef27cbc9

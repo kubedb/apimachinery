@@ -16,6 +16,7 @@ package raft
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -25,13 +26,13 @@ import (
 
 	"go.etcd.io/etcd/client/pkg/v3/fileutil"
 	"go.etcd.io/etcd/client/pkg/v3/types"
-	"go.etcd.io/etcd/raft/v3"
-	"go.etcd.io/etcd/raft/v3/raftpb"
 	"go.etcd.io/etcd/server/v3/etcdserver/api/rafthttp"
 	"go.etcd.io/etcd/server/v3/etcdserver/api/snap"
 	stats "go.etcd.io/etcd/server/v3/etcdserver/api/v2stats"
-	"go.etcd.io/etcd/server/v3/wal"
-	"go.etcd.io/etcd/server/v3/wal/walpb"
+	"go.etcd.io/etcd/server/v3/storage/wal"
+	"go.etcd.io/etcd/server/v3/storage/wal/walpb"
+	"go.etcd.io/raft/v3"
+	"go.etcd.io/raft/v3/raftpb"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"k8s.io/klog/v2"
@@ -240,8 +241,8 @@ func (rc *RaftNode) loadSnapshot() *raftpb.Snapshot {
 			klog.Fatalf("error listing snapshots (%v)", err)
 		}
 		snapshot, err := rc.snapshotter.LoadNewestAvailable(walSnaps)
-		if err != nil && err != snap.ErrNoSnapshot {
-			klog.Fatalf("error loading snapshot (%v)", err)
+		if err != nil && !errors.Is(err, snap.ErrNoSnapshot) {
+			klog.Fatalln("error loading snapshot", err.Error())
 		}
 		return snapshot
 	}
@@ -437,7 +438,11 @@ func (rc *RaftNode) maybeTriggerSnapshot(applyDoneC <-chan struct{}) {
 		compactIndex = rc.appliedIndex - snapshotCatchUpEntriesN
 	}
 	if err := rc.raftStorage.Compact(compactIndex); err != nil {
-		panic(err)
+		if !errors.Is(err, raft.ErrCompacted) {
+			panic(err)
+		}
+	} else {
+		klog.Infof("compacted log at index %d", compactIndex)
 	}
 
 	klog.Infoln("compacted log at index ", compactIndex)
@@ -522,6 +527,9 @@ func (rc *RaftNode) serveChannels(period time.Duration) {
 
 		// store raft entries to wal, then publish over commit channel
 		case rd := <-rc.Node.Ready():
+			if !raft.IsEmptySnap(rd.Snapshot) {
+				_ = rc.saveSnap(rd.Snapshot)
+			}
 			err = rc.wal.Save(rd.HardState, rd.Entries)
 			if err != nil {
 				klog.Errorln(err)
@@ -566,7 +574,7 @@ func (rc *RaftNode) serveChannels(period time.Duration) {
 // then the confState included in the snapshot is out of date. so We need
 // to update the confState before sending a snapshot to a follower.
 func (rc *RaftNode) processMessages(ms []raftpb.Message) []raftpb.Message {
-	for i := range ms {
+	for i := 0; i < len(ms); i++ {
 		if ms[i].Type == raftpb.MsgSnap {
 			ms[i].Snapshot.Metadata.ConfState = rc.confState
 		}
@@ -598,7 +606,7 @@ func (rc *RaftNode) Process(ctx context.Context, m raftpb.Message) error {
 	return rc.Node.Step(ctx, m)
 }
 
-func (rc *RaftNode) IsIDRemoved(id uint64) bool  { return false }
+func (rc *RaftNode) IsIDRemoved(_ uint64) bool   { return false }
 func (rc *RaftNode) ReportUnreachable(id uint64) { rc.Node.ReportUnreachable(id) }
 func (rc *RaftNode) ReportSnapshot(id uint64, status raft.SnapshotStatus) {
 	rc.Node.ReportSnapshot(id, status)

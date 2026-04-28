@@ -19,11 +19,16 @@ package raft
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+	"syscall"
+	"time"
 
-	"go.etcd.io/etcd/raft/v3/raftpb"
+	"go.etcd.io/raft/v3/raftpb"
 	"k8s.io/klog/v2"
 )
 
@@ -298,6 +303,48 @@ func (h *httpKVAPI) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		default:
 			w.Header().Add("Allow", http.MethodGet)
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	case "fdatasync":
+		switch r.Method {
+		case http.MethodGet:
+			tmpDir := os.TempDir()
+			tmpFile := filepath.Join(tmpDir, "tmp-xyz.txt")
+
+			fd, err := os.OpenFile(tmpFile, os.O_RDWR|os.O_CREATE, 0o750)
+			if err != nil {
+				http.Error(w, "Failed to open temp file", http.StatusInternalServerError)
+				klog.Errorf("Error opening temp file %s: %v", tmpFile, err)
+				return
+			}
+			defer func() {
+				if closeErr := fd.Close(); closeErr != nil {
+					klog.Infof("Error closing file %s: %v", tmpFile, closeErr)
+				}
+			}()
+
+			_, err = fmt.Fprintf(fd, "Some test data to flush. %v", rand.Int())
+			if err != nil {
+				http.Error(w, "Failed to write to temp file", http.StatusInternalServerError)
+				klog.Infof("Error writing to file %s: %v", tmpFile, err)
+				return
+			}
+
+			start := time.Now()
+			err = syscall.Fdatasync(int(fd.Fd()))
+			duration := time.Since(start)
+			if err != nil {
+				http.Error(w, "Failed to sync data", http.StatusInternalServerError)
+				klog.Infof("Error during fdatasync for file %s: %v", tmpFile, err)
+				return
+			}
+
+			w.Header().Set("Content-Type", "text/plain")
+			w.WriteHeader(http.StatusOK)
+			_, err = w.Write([]byte(duration.String()))
+			if err != nil {
+				http.Error(w, "failed to write on response", http.StatusInternalServerError)
+				klog.Infof("Error writing response: %v", err)
+			}
 		}
 	default:
 		http.Error(w, "not found", http.StatusNotFound)
