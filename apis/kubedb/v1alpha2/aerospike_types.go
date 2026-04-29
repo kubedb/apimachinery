@@ -55,6 +55,7 @@ type AerospikeSpec struct {
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
 
 	// Version of Aerospike to be deployed.
+	// +optional
 	Version string `json:"version"`
 
 	// Number of instances to deploy for a Aerospike instance.
@@ -94,10 +95,11 @@ type AerospikeSpec struct {
 	DeletionPolicy DeletionPolicy `json:"deletionPolicy,omitempty"`
 
 	// SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]
+	// +optional
 	SSLMode AerospikeSSLMode `json:"sslMode,omitempty"`
 
 	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
-	// +kubebuilder:default=md5
+	// +optional
 	ClientAuthMode AerospikeClientAuthMode `json:"clientAuthMode,omitempty"`
 
 	// TLS contains tls configurations for client and server.
