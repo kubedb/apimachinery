@@ -25,11 +25,13 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/Masterminds/semver/v3"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -175,6 +177,12 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.ElasticsearchOpsRequestTypeVolumeExpansion:
+		if err := w.validateElasticsearchVolumeExpansionOpsRequest(req, db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
@@ -239,6 +247,65 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchReconfigureO
 	configuration := req.Spec.Configuration
 	if configuration == nil {
 		return fmt.Errorf("configuration can not be empty for %s/%s", req.Namespace, req.Name)
+	}
+
+	return nil
+}
+
+func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchVolumeExpansionOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
+	volumeExpansionSpec := req.Spec.VolumeExpansion
+	if volumeExpansionSpec == nil {
+		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
+	}
+
+	// combined mode: db.Spec.Topology == nil
+	if db.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "combined Elasticsearch"); err != nil {
+			return err
+		}
+	}
+
+	checkNodeStorage := func(nodeName string, nodeSpec *dbapi.ElasticsearchNode, desired *resource.Quantity) error {
+		if desired == nil || nodeSpec == nil {
+			return nil
+		}
+		return opsutil.ValidateStorageExpansion(nodeSpec.Storage, desired, req.Status.Phase, nodeName)
+	}
+
+	if db.Spec.Topology != nil {
+		if err := checkNodeStorage("master", &db.Spec.Topology.Master, volumeExpansionSpec.Master); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("ingest", &db.Spec.Topology.Ingest, volumeExpansionSpec.Ingest); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("data", db.Spec.Topology.Data, volumeExpansionSpec.Data); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("dataContent", db.Spec.Topology.DataContent, volumeExpansionSpec.DataContent); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("dataHot", db.Spec.Topology.DataHot, volumeExpansionSpec.DataHot); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("dataWarm", db.Spec.Topology.DataWarm, volumeExpansionSpec.DataWarm); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("dataCold", db.Spec.Topology.DataCold, volumeExpansionSpec.DataCold); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("dataFrozen", db.Spec.Topology.DataFrozen, volumeExpansionSpec.DataFrozen); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("ml", db.Spec.Topology.ML, volumeExpansionSpec.ML); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("transform", db.Spec.Topology.Transform, volumeExpansionSpec.Transform); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("coordinating", db.Spec.Topology.Coordinating, volumeExpansionSpec.Coordinating); err != nil {
+			return err
+		}
 	}
 
 	return nil

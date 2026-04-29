@@ -24,10 +24,10 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
-	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -147,7 +147,7 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				err.Error()))
 		}
 	case opsapi.PerconaXtraDBOpsRequestTypeVolumeExpansion:
-		if err := w.validatePerconaXtraDBVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validatePerconaXtraDBVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -233,23 +233,13 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBScalingOpsRe
 	return nil
 }
 
-func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpansionOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
+func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBVolumeExpansionOpsRequest(db *dbapi.PerconaXtraDB, req *opsapi.PerconaXtraDBOpsRequest) error {
 	if req.Spec.VolumeExpansion == nil || req.Spec.VolumeExpansion.PerconaXtraDB == nil {
 		return errors.New("`.Spec.VolumeExpansion` field is nil")
 	}
-	db := &dbapi.PerconaXtraDB{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get percona-xtradb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
 
-	cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-	if !ok {
-		return errors.Wrap(err, "failed to parse current storage size")
-	}
-
-	if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.PerconaXtraDB) >= 0 {
-		return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, req.Spec.VolumeExpansion.PerconaXtraDB, req.Status.Phase, "PerconaXtraDB"); err != nil {
+		return err
 	}
 	return nil
 }
