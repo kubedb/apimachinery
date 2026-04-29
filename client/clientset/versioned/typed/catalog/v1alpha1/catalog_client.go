@@ -45,6 +45,7 @@ type CatalogV1alpha1Interface interface {
 	MSSQLServerVersionsGetter
 	MariaDBVersionsGetter
 	MemcachedVersionsGetter
+	MilvusVersionsGetter
 	MongoDBVersionsGetter
 	MySQLVersionsGetter
 	Neo4jVersionsGetter
@@ -131,6 +132,10 @@ func (c *CatalogV1alpha1Client) MariaDBVersions() MariaDBVersionInterface {
 
 func (c *CatalogV1alpha1Client) MemcachedVersions() MemcachedVersionInterface {
 	return newMemcachedVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) MilvusVersions() MilvusVersionInterface {
+	return newMilvusVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) MongoDBVersions() MongoDBVersionInterface {

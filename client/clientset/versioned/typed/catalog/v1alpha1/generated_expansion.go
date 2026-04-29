@@ -50,6 +50,8 @@ type MariaDBVersionExpansion interface{}
 
 type MemcachedVersionExpansion interface{}
 
+type MilvusVersionExpansion interface{}
+
 type MongoDBVersionExpansion interface{}
 
 type MySQLVersionExpansion interface{}
