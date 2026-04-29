@@ -688,6 +688,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedUpdateVersionSpec":                       schema_apimachinery_apis_ops_v1alpha1_MemcachedUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVerticalScalingSpec":                     schema_apimachinery_apis_ops_v1alpha1_MemcachedVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVolumeExpansionSpec":                     schema_apimachinery_apis_ops_v1alpha1_MemcachedVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequest(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestList(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusReplicaReadinessCriteria":                   schema_apimachinery_apis_ops_v1alpha1_MilvusReplicaReadinessCriteria(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusTLSSpec":                                    schema_apimachinery_apis_ops_v1alpha1_MilvusTLSSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusUpdateVersionSpec":                          schema_apimachinery_apis_ops_v1alpha1_MilvusUpdateVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVolumeExpansionSpec":                        schema_apimachinery_apis_ops_v1alpha1_MilvusVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBHorizontalScalingSpec":                     schema_apimachinery_apis_ops_v1alpha1_MongoDBHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBOpsRequest":                                schema_apimachinery_apis_ops_v1alpha1_MongoDBOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBOpsRequestList":                            schema_apimachinery_apis_ops_v1alpha1_MongoDBOpsRequestList(ref),
@@ -38090,6 +38099,360 @@ func schema_apimachinery_apis_ops_v1alpha1_MemcachedVolumeExpansionSpec(ref comm
 				Type:        []string{"object"},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusHorizontalScalingSpec contains the horizontal scaling information of a Milvus cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of node",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.OpsRequestStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OpsRequestStatus"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusOpsRequestList is a list of MilvusOpsRequests",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of MilvusOpsRequest CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequest"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequest"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusOpsRequestSpec is the spec for MilvusOpsRequest",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the Milvus reference",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"updateVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for upgrading milvus",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusUpdateVersionSpec"),
+						},
+					},
+					"horizontalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for horizontal scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingSpec"),
+						},
+					},
+					"verticalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for vertical scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingSpec"),
+						},
+					},
+					"volumeExpansion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for volume expansion",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVolumeExpansionSpec"),
+						},
+					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for custom configuration of milvus",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring TLS",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusTLSSpec"),
+						},
+					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for restarting database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"apply": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"databaseRef", "type"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MilvusReplicaReadinessCriteria(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusReplicaReadinessCriteria is the criteria for checking readiness of a Milvus pod after updating, horizontal scaling etc.",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MilvusTLSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"external": {
+						SchemaProps: spec.SchemaProps{
+							Description: "External controls TLS for client-facing traffic (gRPC + REST).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
+						},
+					},
+					"internal": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Internal enables TLS for inter-component communication (one-way only)",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
+						},
+					},
+					"rotateCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RotateCertificates tells operator to initiate certificate rotation",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"remove": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Remove tells operator to remove TLS configuration",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MilvusUpdateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusUpdateVersionSpec contains the update version information of a milvus cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the target version name from catalog",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusVerticalScalingSpec contains the vertical scaling information of a Milvus cluster",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for nodes",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MilvusVolumeExpansionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusVolumeExpansionSpec is the spec for Milvus volume expansion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for nodes",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 

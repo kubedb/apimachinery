@@ -48,6 +48,8 @@ type Interface interface {
 	MariaDBOpsRequests() MariaDBOpsRequestInformer
 	// MemcachedOpsRequests returns a MemcachedOpsRequestInformer.
 	MemcachedOpsRequests() MemcachedOpsRequestInformer
+	// MilvusOpsRequests returns a MilvusOpsRequestInformer.
+	MilvusOpsRequests() MilvusOpsRequestInformer
 	// MongoDBOpsRequests returns a MongoDBOpsRequestInformer.
 	MongoDBOpsRequests() MongoDBOpsRequestInformer
 	// MySQLOpsRequests returns a MySQLOpsRequestInformer.
@@ -149,6 +151,11 @@ func (v *version) MariaDBOpsRequests() MariaDBOpsRequestInformer {
 // MemcachedOpsRequests returns a MemcachedOpsRequestInformer.
 func (v *version) MemcachedOpsRequests() MemcachedOpsRequestInformer {
 	return &memcachedOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MilvusOpsRequests returns a MilvusOpsRequestInformer.
+func (v *version) MilvusOpsRequests() MilvusOpsRequestInformer {
+	return &milvusOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBOpsRequests returns a MongoDBOpsRequestInformer.
