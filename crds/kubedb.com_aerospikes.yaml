@@ -73,7 +73,6 @@ spec:
                     type: boolean
                 type: object
               clientAuthMode:
-                default: md5
                 enum:
                 - md5
                 - scram
@@ -4950,8 +4949,6 @@ spec:
                 type: object
               version:
                 type: string
-            required:
-            - version
             type: object
           status:
             properties:
