@@ -1199,6 +1199,11 @@ spec:
                   waitForInitialRestore:
                     type: boolean
                 type: object
+              mode:
+                enum:
+                - Standalone
+                - Cluster
+                type: string
               monitor:
                 properties:
                   agent:

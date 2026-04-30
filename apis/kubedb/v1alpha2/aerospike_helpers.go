@@ -23,10 +23,8 @@ import (
 )
 
 func (a *Aerospike) ConfigSecretName() string {
-	if a.Spec.Configuration != nil && a.Spec.Configuration.SecretName != "" {
-		return a.Spec.Configuration.SecretName
-	}
-	return a.Name + "-config"
+	uid := string(a.UID)
+	return meta_util.NameWithSuffix(a.OffshootName(), uid[len(uid)-6:])
 }
 
 func (a *Aerospike) OffshootName() string {

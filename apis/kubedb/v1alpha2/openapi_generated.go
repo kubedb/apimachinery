@@ -33714,6 +33714,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_AerospikeSpec(ref common.Reference
 							Format:      "int32",
 						},
 					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Default is \"Standalone\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Aerospike secret containing username and password for aerospike pcp user",
