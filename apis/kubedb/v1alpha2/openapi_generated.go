@@ -577,6 +577,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.Volume":                                                    schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Aerospike":                                     schema_apimachinery_apis_kubedb_v1alpha2_Aerospike(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AerospikeClusterSpec":                          schema_apimachinery_apis_kubedb_v1alpha2_AerospikeClusterSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AerospikeList":                                 schema_apimachinery_apis_kubedb_v1alpha2_AerospikeList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AerospikeSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_AerospikeSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AerospikeStatus":                               schema_apimachinery_apis_kubedb_v1alpha2_AerospikeStatus(ref),
@@ -33636,6 +33637,30 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Aerospike(ref common.ReferenceCall
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_AerospikeClusterSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"replicationFactor": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_AerospikeList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -33721,6 +33746,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_AerospikeSpec(ref common.Reference
 							Format:      "",
 						},
 					},
+					"cluster": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AerospikeClusterSpec"),
+						},
+					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Aerospike secret containing username and password for aerospike pcp user",
@@ -33802,7 +33832,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_AerospikeSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AerospikeClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
