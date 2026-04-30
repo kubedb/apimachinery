@@ -30,6 +30,14 @@ const (
 	ResourcePluralAerospike   = "aerospikes"
 )
 
+// +kubebuilder:validation:Enum=Standalone;Cluster
+type AerospikeMode string
+
+const (
+	AerospikeModeStandalone AerospikeMode = "Standalone"
+	AerospikeModeCluster    AerospikeMode = "Cluster"
+)
+
 // Aerospike is the Schema for the aerospikes API
 // +genclient
 // +k8s:openapi-gen=true
@@ -61,6 +69,9 @@ type AerospikeSpec struct {
 	// Number of instances to deploy for a Aerospike instance.
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Default is "Standalone".
+	Mode AerospikeMode `json:"mode,omitempty"`
 
 	// Aerospike secret containing username and password for aerospike pcp user
 	// +optional
