@@ -78,6 +78,15 @@ spec:
                 - scram
                 - cert
                 type: string
+              cluster:
+                properties:
+                  replicas:
+                    format: int32
+                    type: integer
+                  replicationFactor:
+                    format: int32
+                    type: integer
+                type: object
               configuration:
                 properties:
                   inline:

@@ -73,6 +73,8 @@ type AerospikeSpec struct {
 	// Default is "Standalone".
 	Mode AerospikeMode `json:"mode,omitempty"`
 
+	Cluster *AerospikeClusterSpec `json:"cluster,omitempty"`
+
 	// Aerospike secret containing username and password for aerospike pcp user
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
@@ -116,6 +118,11 @@ type AerospikeSpec struct {
 	// TLS contains tls configurations for client and server.
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+}
+
+type AerospikeClusterSpec struct {
+	Replicas          *int32 `json:"replicas,omitempty"`
+	ReplicationFactor *int32 `json:"replicationFactor,omitempty"`
 }
 
 // AerospikeStatus defines the observed state of Aerospike
