@@ -89,6 +89,10 @@ func (c *FakeOpsV1alpha1) Neo4jOpsRequests(namespace string) v1alpha1.Neo4jOpsRe
 	return &FakeNeo4jOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) OracleOpsRequests(namespace string) v1alpha1.OracleOpsRequestInterface {
+	return &FakeOracleOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) PerconaXtraDBOpsRequests(namespace string) v1alpha1.PerconaXtraDBOpsRequestInterface {
 	return &FakePerconaXtraDBOpsRequests{c, namespace}
 }

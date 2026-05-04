@@ -48,6 +48,8 @@ type MySQLOpsRequestExpansion interface{}
 
 type Neo4jOpsRequestExpansion interface{}
 
+type OracleOpsRequestExpansion interface{}
+
 type PerconaXtraDBOpsRequestExpansion interface{}
 
 type PgBouncerOpsRequestExpansion interface{}

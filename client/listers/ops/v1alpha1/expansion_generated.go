@@ -138,6 +138,14 @@ type Neo4jOpsRequestListerExpansion interface{}
 // Neo4jOpsRequestNamespaceLister.
 type Neo4jOpsRequestNamespaceListerExpansion interface{}
 
+// OracleOpsRequestListerExpansion allows custom methods to be added to
+// OracleOpsRequestLister.
+type OracleOpsRequestListerExpansion interface{}
+
+// OracleOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// OracleOpsRequestNamespaceLister.
+type OracleOpsRequestNamespaceListerExpansion interface{}
+
 // PerconaXtraDBOpsRequestListerExpansion allows custom methods to be added to
 // PerconaXtraDBOpsRequestLister.
 type PerconaXtraDBOpsRequestListerExpansion interface{}
