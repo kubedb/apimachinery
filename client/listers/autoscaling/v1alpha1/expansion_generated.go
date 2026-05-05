@@ -170,6 +170,14 @@ type ProxySQLAutoscalerListerExpansion interface{}
 // ProxySQLAutoscalerNamespaceLister.
 type ProxySQLAutoscalerNamespaceListerExpansion interface{}
 
+// QdrantAutoscalerListerExpansion allows custom methods to be added to
+// QdrantAutoscalerLister.
+type QdrantAutoscalerListerExpansion interface{}
+
+// QdrantAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// QdrantAutoscalerNamespaceLister.
+type QdrantAutoscalerNamespaceListerExpansion interface{}
+
 // RabbitMQAutoscalerListerExpansion allows custom methods to be added to
 // RabbitMQAutoscalerLister.
 type RabbitMQAutoscalerListerExpansion interface{}
