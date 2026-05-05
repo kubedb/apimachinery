@@ -18,6 +18,8 @@ limitations under the License.
 
 package v1alpha2
 
+type AerospikeExpansion interface{}
+
 type CassandraExpansion interface{}
 
 type ClickHouseExpansion interface{}
