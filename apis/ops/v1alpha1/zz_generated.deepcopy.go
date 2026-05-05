@@ -4423,6 +4423,11 @@ func (in *OracleOpsRequestSpec) DeepCopyInto(out *OracleOpsRequestSpec) {
 		*out = new(RestartSpec)
 		**out = **in
 	}
+	if in.Timeout != nil {
+		in, out := &in.Timeout, &out.Timeout
+		*out = new(metav1.Duration)
+		**out = **in
+	}
 	return
 }
 

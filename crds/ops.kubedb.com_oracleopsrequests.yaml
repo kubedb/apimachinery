@@ -74,6 +74,8 @@ spec:
                 x-kubernetes-map-type: atomic
               restart:
                 type: object
+              timeout:
+                type: string
               type:
                 enum:
                 - Restart
