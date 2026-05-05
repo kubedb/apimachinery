@@ -1607,7 +1607,16 @@ const (
 
 	// volume related constants
 	DocumentDBVolumeMountData = "documentdb-data"
-	DocumentDBDataDir         = "/data"
+	DocumentDBDataDir         = "/var/pv"
+
+	DocumentDBScripts    = "scripts"
+	DocumentDBScriptsDir = "/scripts"
+
+	DocumentDBInitScripts    = "run-scripts"
+	DocumentDBInitScriptsDir = "/run_scripts"
+
+	DocumentDBBootstrapScripts    = "bootstrap-scripts"
+	DocumentDBBootstrapScriptsDir = "/bootstrap_scripts"
 
 	DocumentDBVolumeNameInitScript      = "init-scripts"
 	DocumentDBVolumeMountPathInitScript = "/scripts"
