@@ -270,6 +270,22 @@ type Oracle struct {
 	Status OracleStatus `json:"status,omitempty"`
 }
 
+func (o Oracle) GetObjectMeta() metav1.ObjectMeta {
+	return o.ObjectMeta
+}
+
+func (o Oracle) GetConditions() []kmapi.Condition {
+	return o.Status.Conditions
+}
+
+func (o Oracle) SetCondition(cond kmapi.Condition) {
+	o.Status.Conditions = setCondition(o.Status.Conditions, cond)
+}
+
+func (o Oracle) RemoveCondition(typ string) {
+	o.Status.Conditions = removeCondition(o.Status.Conditions, typ)
+}
+
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // OracleList contains a list of Oracle.

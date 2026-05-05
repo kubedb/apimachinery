@@ -11,35 +11,17 @@ import (
 )
 
 const (
-	// OracleOpsRequestTypeUpdateVersion is a OracleOpsRequestType of type UpdateVersion.
-	OracleOpsRequestTypeUpdateVersion OracleOpsRequestType = "UpdateVersion"
-	// OracleOpsRequestTypeHorizontalScaling is a OracleOpsRequestType of type HorizontalScaling.
-	OracleOpsRequestTypeHorizontalScaling OracleOpsRequestType = "HorizontalScaling"
-	// OracleOpsRequestTypeVerticalScaling is a OracleOpsRequestType of type VerticalScaling.
-	OracleOpsRequestTypeVerticalScaling OracleOpsRequestType = "VerticalScaling"
-	// OracleOpsRequestTypeVolumeExpansion is a OracleOpsRequestType of type VolumeExpansion.
-	OracleOpsRequestTypeVolumeExpansion OracleOpsRequestType = "VolumeExpansion"
 	// OracleOpsRequestTypeRestart is a OracleOpsRequestType of type Restart.
 	OracleOpsRequestTypeRestart OracleOpsRequestType = "Restart"
 	// OracleOpsRequestTypeReconfigure is a OracleOpsRequestType of type Reconfigure.
 	OracleOpsRequestTypeReconfigure OracleOpsRequestType = "Reconfigure"
-	// OracleOpsRequestTypeReconfigureTLS is a OracleOpsRequestType of type ReconfigureTLS.
-	OracleOpsRequestTypeReconfigureTLS OracleOpsRequestType = "ReconfigureTLS"
-	// OracleOpsRequestTypeRotateAuth is a OracleOpsRequestType of type RotateAuth.
-	OracleOpsRequestTypeRotateAuth OracleOpsRequestType = "RotateAuth"
 )
 
 var ErrInvalidOracleOpsRequestType = fmt.Errorf("not a valid OracleOpsRequestType, try [%s]", strings.Join(_OracleOpsRequestTypeNames, ", "))
 
 var _OracleOpsRequestTypeNames = []string{
-	string(OracleOpsRequestTypeUpdateVersion),
-	string(OracleOpsRequestTypeHorizontalScaling),
-	string(OracleOpsRequestTypeVerticalScaling),
-	string(OracleOpsRequestTypeVolumeExpansion),
 	string(OracleOpsRequestTypeRestart),
 	string(OracleOpsRequestTypeReconfigure),
-	string(OracleOpsRequestTypeReconfigureTLS),
-	string(OracleOpsRequestTypeRotateAuth),
 }
 
 // OracleOpsRequestTypeNames returns a list of possible string values of OracleOpsRequestType.
@@ -52,14 +34,8 @@ func OracleOpsRequestTypeNames() []string {
 // OracleOpsRequestTypeValues returns a list of the values for OracleOpsRequestType
 func OracleOpsRequestTypeValues() []OracleOpsRequestType {
 	return []OracleOpsRequestType{
-		OracleOpsRequestTypeUpdateVersion,
-		OracleOpsRequestTypeHorizontalScaling,
-		OracleOpsRequestTypeVerticalScaling,
-		OracleOpsRequestTypeVolumeExpansion,
 		OracleOpsRequestTypeRestart,
 		OracleOpsRequestTypeReconfigure,
-		OracleOpsRequestTypeReconfigureTLS,
-		OracleOpsRequestTypeRotateAuth,
 	}
 }
 
@@ -76,14 +52,8 @@ func (x OracleOpsRequestType) IsValid() bool {
 }
 
 var _OracleOpsRequestTypeValue = map[string]OracleOpsRequestType{
-	"UpdateVersion":     OracleOpsRequestTypeUpdateVersion,
-	"HorizontalScaling": OracleOpsRequestTypeHorizontalScaling,
-	"VerticalScaling":   OracleOpsRequestTypeVerticalScaling,
-	"VolumeExpansion":   OracleOpsRequestTypeVolumeExpansion,
-	"Restart":           OracleOpsRequestTypeRestart,
-	"Reconfigure":       OracleOpsRequestTypeReconfigure,
-	"ReconfigureTLS":    OracleOpsRequestTypeReconfigureTLS,
-	"RotateAuth":        OracleOpsRequestTypeRotateAuth,
+	"Restart":     OracleOpsRequestTypeRestart,
+	"Reconfigure": OracleOpsRequestTypeReconfigure,
 }
 
 // ParseOracleOpsRequestType attempts to convert a string to a OracleOpsRequestType.

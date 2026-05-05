@@ -56,12 +56,12 @@ type OracleOpsRequestSpec struct {
 	Type OracleOpsRequestType `json:"type"`
 	// Specifies information necessary for custom configuration of oracle
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
-	// Specifies information necessary for configuring authSecret of the database
+	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth)
+// +kubebuilder:validation:Enum=Restart;Reconfigure
+// ENUM(Restart, Reconfigure)
 type OracleOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -39657,7 +39657,7 @@ func schema_apimachinery_apis_ops_v1alpha1_OracleOpsRequestSpec(ref common.Refer
 					},
 					"restart": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Specifies information necessary for configuring authSecret of the database",
+							Description: "Specifies information necessary for restarting database",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
