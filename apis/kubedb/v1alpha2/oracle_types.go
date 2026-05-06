@@ -270,6 +270,10 @@ type Oracle struct {
 	Status OracleStatus `json:"status,omitempty"`
 }
 
+func (o Oracle) GetObjectMeta() metav1.ObjectMeta {
+	return o.ObjectMeta
+}
+
 func (o Oracle) GetConditions() []kmapi.Condition {
 	return o.Status.Conditions
 }

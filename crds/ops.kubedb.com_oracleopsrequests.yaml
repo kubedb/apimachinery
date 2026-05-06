@@ -16,7 +16,7 @@ spec:
     listKind: OracleOpsRequestList
     plural: oracleopsrequests
     shortNames:
-    - qdops
+    - oraops
     singular: oracleopsrequest
   scope: Namespaced
   versions:

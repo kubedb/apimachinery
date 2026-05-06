@@ -36,7 +36,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=oracleopsrequests,singular=oracleopsrequest,shortName=qdops,categories={ops,kubedb,appscode}
+// +kubebuilder:resource:path=oracleopsrequests,singular=oracleopsrequest,shortName=oraops,categories={ops,kubedb,appscode}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".spec.type"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
