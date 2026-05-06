@@ -2793,7 +2793,7 @@ spec:
                 type: object
               source:
                 properties:
-                  mongo:
+                  mongodb:
                     properties:
                       connectionInfo:
                         properties:
@@ -2974,7 +2974,7 @@ spec:
                 type: object
               target:
                 properties:
-                  mongo:
+                  mongodb:
                     properties:
                       connectionInfo:
                         properties:

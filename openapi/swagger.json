@@ -22861,6 +22861,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionInitContainer"
         },
+        "migrator": {
+          "description": "Migrator defines the migration related CLI/Tools images for this MongoDB version",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImages"
+        },
         "podSecurityPolicies": {
           "description": "PSP names",
           "default": {},
@@ -27911,7 +27916,7 @@
       "description": "Source defines the source database configuration",
       "type": "object",
       "properties": {
-        "mongo": {
+        "mongodb": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoSource"
         },
         "postgres": {
@@ -27933,7 +27938,7 @@
       "description": "Target defines the target database configuration",
       "type": "object",
       "properties": {
-        "mongo": {
+        "mongodb": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoTarget"
         },
         "postgres": {

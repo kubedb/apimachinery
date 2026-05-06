@@ -2739,6 +2739,7 @@ func (in *MongoDBVersionSpec) DeepCopyInto(out *MongoDBVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	out.Migrator = in.Migrator
 	return
 }
 

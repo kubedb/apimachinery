@@ -34245,7 +34245,7 @@ func schema_apimachinery_apis_migrator_v1alpha1_Source(ref common.ReferenceCallb
 							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresSource"),
 						},
 					},
-					"mongo": {
+					"mongodb": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoSource"),
 						},
@@ -34290,7 +34290,7 @@ func schema_apimachinery_apis_migrator_v1alpha1_Target(ref common.ReferenceCallb
 							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget"),
 						},
 					},
-					"mongo": {
+					"mongodb": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoTarget"),
 						},
