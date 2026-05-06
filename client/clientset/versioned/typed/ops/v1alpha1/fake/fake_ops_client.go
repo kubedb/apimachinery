@@ -77,6 +77,10 @@ func (c *FakeOpsV1alpha1) MemcachedOpsRequests(namespace string) v1alpha1.Memcac
 	return &FakeMemcachedOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) MilvusOpsRequests(namespace string) v1alpha1.MilvusOpsRequestInterface {
+	return &FakeMilvusOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) MongoDBOpsRequests(namespace string) v1alpha1.MongoDBOpsRequestInterface {
 	return &FakeMongoDBOpsRequests{c, namespace}
 }

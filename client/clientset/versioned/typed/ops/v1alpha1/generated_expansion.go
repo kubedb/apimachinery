@@ -42,6 +42,8 @@ type MariaDBOpsRequestExpansion interface{}
 
 type MemcachedOpsRequestExpansion interface{}
 
+type MilvusOpsRequestExpansion interface{}
+
 type MongoDBOpsRequestExpansion interface{}
 
 type MySQLOpsRequestExpansion interface{}

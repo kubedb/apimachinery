@@ -918,6 +918,17 @@ const (
 	MilvusPortDataNode      = 21124
 	MilvusPortQueryNode     = 21123
 	MilvusPortStreamingNode = 22222
+
+	MilvusTLSVolName      = "milvus-tls"
+	MilvusTLSVolDir       = "/milvus/tls"
+	MilvusTLSCACert       = "ca.crt"
+	MilvusTLSCAPem        = "ca.pem"
+	MilvusTLSCert         = "tls.crt"
+	MilvusTLSKey          = "tls.key"
+	MilvusTLSServerPem    = "server.pem"
+	MilvusTLSServerKeyPem = "server.key"
+	MilvusTLSClientPem    = "client.pem"
+	MilvusTLSClientKeyPem = "client.key"
 )
 
 const (
