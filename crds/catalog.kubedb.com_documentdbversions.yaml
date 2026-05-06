@@ -56,13 +56,13 @@ spec:
                 type: boolean
               endOfLife:
                 type: boolean
-              pgVersion:
-                type: string
-              scripts:
+              initContainer:
                 properties:
                   image:
                     type: string
                 type: object
+              pgVersion:
+                type: string
               securityContext:
                 properties:
                   runAsUser:
