@@ -139,7 +139,7 @@ type MongoDBSpec struct {
 	// +optional
 	AllowedSchemas *AllowedConsumers `json:"allowedSchemas,omitempty"`
 
-	// Mongo Arbiter component of mongodb.
+	// MongoDB Arbiter component of mongodb.
 	// More info: https://docs.mongodb.com/manual/core/replica-set-arbiter/
 	// +optional
 	// +nullable

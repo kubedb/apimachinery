@@ -16,7 +16,7 @@
 **Merged pull requests:**
 
 - Use stash.appscode.dev/apimachinery@v0.9.0-rc.6 [\#504](https://github.com/kubedb/apimachinery/pull/504) ([tamalsaha](https://github.com/tamalsaha))
-- Generate keyFile for sendX509 auth mode in Mongo [\#502](https://github.com/kubedb/apimachinery/pull/502) ([tamalsaha](https://github.com/tamalsaha))
+- Generate keyFile for sendX509 auth mode in MongoDB [\#502](https://github.com/kubedb/apimachinery/pull/502) ([tamalsaha](https://github.com/tamalsaha))
 - Redesign keyFile secrets for replicaset and sharing MongoDBs [\#500](https://github.com/kubedb/apimachinery/pull/500) ([tamalsaha](https://github.com/tamalsaha))
 - Ensure that statefulset PDP allows at least 1 unavailable pod [\#498](https://github.com/kubedb/apimachinery/pull/498) ([andersosthus](https://github.com/andersosthus))
 - Add labeler field into mysqlversions CRD [\#497](https://github.com/kubedb/apimachinery/pull/497) ([suaas21](https://github.com/suaas21))
@@ -357,7 +357,7 @@
 - Update client-go to v8.0.0 [\#241](https://github.com/kubedb/apimachinery/pull/241) ([tamalsaha](https://github.com/tamalsaha))
 - Format shell script [\#240](https://github.com/kubedb/apimachinery/pull/240) ([tamalsaha](https://github.com/tamalsaha))
 - Enable status subresource for crds [\#239](https://github.com/kubedb/apimachinery/pull/239) ([tamalsaha](https://github.com/tamalsaha))
-- Mongo cluster - replicaSet [\#238](https://github.com/kubedb/apimachinery/pull/238) ([the-redback](https://github.com/the-redback))
+- MongoDB cluster - replicaSet [\#238](https://github.com/kubedb/apimachinery/pull/238) ([the-redback](https://github.com/the-redback))
 - Support custom configuration file [\#237](https://github.com/kubedb/apimachinery/pull/237) ([hossainemruz](https://github.com/hossainemruz))
 - Move openapi-spec to api folder [\#235](https://github.com/kubedb/apimachinery/pull/235) ([tamalsaha](https://github.com/tamalsaha))
 - Support ENV variables in CRDs [\#234](https://github.com/kubedb/apimachinery/pull/234) ([hossainemruz](https://github.com/hossainemruz))

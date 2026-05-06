@@ -563,8 +563,8 @@ func (in *Source) DeepCopyInto(out *Source) {
 		*out = new(PostgresSource)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Mongo != nil {
-		in, out := &in.Mongo, &out.Mongo
+	if in.MongoDB != nil {
+		in, out := &in.MongoDB, &out.MongoDB
 		*out = new(MongoSource)
 		(*in).DeepCopyInto(*out)
 	}
@@ -605,8 +605,8 @@ func (in *Target) DeepCopyInto(out *Target) {
 		*out = new(PostgresTarget)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Mongo != nil {
-		in, out := &in.Mongo, &out.Mongo
+	if in.MongoDB != nil {
+		in, out := &in.MongoDB, &out.MongoDB
 		*out = new(MongoTarget)
 		(*in).DeepCopyInto(*out)
 	}
