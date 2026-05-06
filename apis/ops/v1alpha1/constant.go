@@ -409,6 +409,11 @@ const (
 	UpdateCredentialDynamically = "UpdateCredentialDynamically"
 )
 
+// Milvus Constants
+const (
+	UpdateStreamingNodePVCs = "UpdateStreamingNodePVCs"
+)
+
 // SingleStore Constants
 const (
 	UpdateAggregatorNodePVCs = "UpdateAggregatorNodePVCs"

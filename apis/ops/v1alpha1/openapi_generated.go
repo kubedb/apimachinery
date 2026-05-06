@@ -689,6 +689,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVerticalScalingSpec":                     schema_apimachinery_apis_ops_v1alpha1_MemcachedVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVolumeExpansionSpec":                     schema_apimachinery_apis_ops_v1alpha1_MemcachedVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingTopologySpec":              schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingTopologySpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestSpec(ref),
@@ -38109,9 +38110,65 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingSpec(ref commo
 				Description: "MilvusHorizontalScalingSpec contains the horizontal scaling information of a Milvus cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"topology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Node topology specification",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingTopologySpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingTopologySpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingTopologySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusHorizontalScalingTopologySpec contains the horizontal scaling information in cluster topology mode",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
 					"node": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of node",
+							Description: "Standalone node",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"proxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of Proxy nodes",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"mixcoord": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of MixCoord nodes",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"querynode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of QueryNode nodes",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"streamingnode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of StreamingNode nodes",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"dataNode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of DataNode nodes",
 							Type:        []string{"integer"},
 							Format:      "int32",
 						},
@@ -38415,8 +38472,34 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingSpec(ref common.
 				Properties: map[string]spec.Schema{
 					"node": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Resource spec for nodes",
+							Description: "Used when Milvus runs in Standalone mode",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"proxy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Used when Milvus runs in Distributed mode",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"mixcoord": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"datanode": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"querynode": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"streamingnode": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
 						},
 					},
 				},
@@ -38443,7 +38526,13 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusVolumeExpansionSpec(ref common.
 					},
 					"node": {
 						SchemaProps: spec.SchemaProps{
-							Description: "volume specification for nodes",
+							Description: "volume specification for standalone node",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"streamingnode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for stremingnode",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},

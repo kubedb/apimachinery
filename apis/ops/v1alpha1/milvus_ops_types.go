@@ -98,21 +98,45 @@ type MilvusReplicaReadinessCriteria struct{}
 
 // MilvusHorizontalScalingSpec contains the horizontal scaling information of a Milvus cluster
 type MilvusHorizontalScalingSpec struct {
-	// Number of node
+	// Node topology specification
+	Topology *MilvusHorizontalScalingTopologySpec `json:"topology,omitempty"`
+}
+
+// MilvusHorizontalScalingTopologySpec contains the horizontal scaling information in cluster topology mode
+type MilvusHorizontalScalingTopologySpec struct {
+	// Standalone node
 	Node *int32 `json:"node,omitempty"`
+	// Number of Proxy nodes
+	Proxy *int32 `json:"proxy,omitempty"`
+	// Number of MixCoord nodes
+	MixCoord *int32 `json:"mixcoord,omitempty"`
+	// Number of QueryNode nodes
+	QueryNode *int32 `json:"querynode,omitempty"`
+	// Number of StreamingNode nodes
+	StreamingNode *int32 `json:"streamingnode,omitempty"`
+	// Number of DataNode nodes
+	DataNode *int32 `json:"dataNode,omitempty"`
 }
 
 // MilvusVerticalScalingSpec contains the vertical scaling information of a Milvus cluster
 type MilvusVerticalScalingSpec struct {
-	// Resource spec for nodes
+	// Used when Milvus runs in Standalone mode
 	Node *PodResources `json:"node,omitempty"`
+	// Used when Milvus runs in Distributed mode
+	Proxy         *PodResources `json:"proxy,omitempty"`
+	MixCoord      *PodResources `json:"mixcoord,omitempty"`
+	DataNode      *PodResources `json:"datanode,omitempty"`
+	QueryNode     *PodResources `json:"querynode,omitempty"`
+	StreamingNode *PodResources `json:"streamingnode,omitempty"`
 }
 
 // MilvusVolumeExpansionSpec is the spec for Milvus volume expansion
 type MilvusVolumeExpansionSpec struct {
 	Mode VolumeExpansionMode `json:"mode"`
-	// volume specification for nodes
+	// volume specification for standalone node
 	Node *resource.Quantity `json:"node,omitempty"`
+	// volume specification for stremingnode
+	StreamingNode *resource.Quantity `json:"streamingnode,omitempty"`
 }
 
 type MilvusTLSSpec struct {
