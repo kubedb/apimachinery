@@ -587,6 +587,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigratorList":                                schema_apimachinery_apis_migrator_v1alpha1_MigratorList(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigratorSpec":                                schema_apimachinery_apis_migrator_v1alpha1_MigratorSpec(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigratorStatus":                              schema_apimachinery_apis_migrator_v1alpha1_MigratorStatus(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoSource":                                 schema_apimachinery_apis_migrator_v1alpha1_MongoSource(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoTarget":                                 schema_apimachinery_apis_migrator_v1alpha1_MongoTarget(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.Mongoshake":                                  schema_apimachinery_apis_migrator_v1alpha1_Mongoshake(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.PgDump":                                      schema_apimachinery_apis_migrator_v1alpha1_PgDump(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresSource":                              schema_apimachinery_apis_migrator_v1alpha1_PostgresSource(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget":                              schema_apimachinery_apis_migrator_v1alpha1_PostgresTarget(ref),
@@ -33711,6 +33714,297 @@ func schema_apimachinery_apis_migrator_v1alpha1_MigratorStatus(ref common.Refere
 	}
 }
 
+func schema_apimachinery_apis_migrator_v1alpha1_MongoSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.ConnectionInfo"),
+						},
+					},
+					"mongoshake": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.Mongoshake"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.ConnectionInfo", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.Mongoshake"},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_MongoTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.ConnectionInfo"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.ConnectionInfo"},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_Mongoshake(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"syncMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SyncMode: full, incr, or fullSync",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"mongoSslRootCaFile": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"mongoSslClientCaFile": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"filterOpTypes": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterNamespaceBlack": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterNamespaceWhite": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterPassSpecialDb": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterDdlEnable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "---------------- BOOLS → POINTERS ----------------",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"filterOplogGids": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"checkpointStartPosition": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"transformNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"fullSyncReaderCollectionParallel": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"fullSyncReaderWriteDocumentParallel": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"fullSyncReaderDocumentBatchSize": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"fullSyncReaderFetchBatchSize": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"fullSyncReaderParallelThread": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"fullSyncReaderParallelIndex": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"fullSyncReaderSplitMaxChunkSize": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"fullSyncCollectionDrop": {
+						SchemaProps: spec.SchemaProps{
+							Description: "---------------- BOOLS → POINTERS ----------------",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"fullSyncReaderOplogStoreDisk": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"fullSyncExecutorInsertOnDupUpdate": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"fullSyncExecutorFilterOrphanDocument": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"fullSyncExecutorMajorityEnable": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"fullSyncDoNotShardDest": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"fullSyncCreateIndex": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"fullSyncReaderOplogStoreDiskMaxSize": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"incrSyncReaderFetchBatchSize": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"incrSyncWorker": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"incrSyncTunnelWriteThread": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"extraConfiguration": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_migrator_v1alpha1_PgDump(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -33951,11 +34245,16 @@ func schema_apimachinery_apis_migrator_v1alpha1_Source(ref common.ReferenceCallb
 							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresSource"),
 						},
 					},
+					"mongodb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoSource"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresSource"},
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresSource"},
 	}
 }
 
@@ -33991,10 +34290,15 @@ func schema_apimachinery_apis_migrator_v1alpha1_Target(ref common.ReferenceCallb
 							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget"),
 						},
 					},
+					"mongodb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoTarget"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget"},
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget"},
 	}
 }
