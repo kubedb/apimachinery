@@ -405,6 +405,7 @@ func (in *ClickHouseVersionSpec) DeepCopyInto(out *ClickHouseVersionSpec) {
 	out.InitContainer = in.InitContainer
 	out.ClickHouseKeeper = in.ClickHouseKeeper
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	out.Archiver = in.Archiver
 	if in.UI != nil {
 		in, out := &in.UI, &out.UI
 		*out = make([]ChartInfo, len(*in))
