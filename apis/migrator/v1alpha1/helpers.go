@@ -35,7 +35,7 @@ func (m Migrator) GetDBKindAndCommand() (string, string) {
 	case m.Spec.Source.Postgres != nil && m.Spec.Target.Postgres != nil:
 		return "Postgres", "postgres"
 	case m.Spec.Source.MongoDB != nil && m.Spec.Target.MongoDB != nil:
-		return "MongoDB", "mongoDB"
+		return "MongoDB", "mongodb"
 	}
 
 	return "", ""

@@ -27,6 +27,9 @@ spec:
     - jsonPath: .status.progress.info.Lag
       name: Lag
       type: string
+    - jsonPath: .status.progress.info.Progress
+      name: Progress
+      type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
