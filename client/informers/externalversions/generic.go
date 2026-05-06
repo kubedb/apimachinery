@@ -66,6 +66,8 @@ func (f *genericInformer) Lister() cache.GenericLister {
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
 	// Group=archiver.kubedb.com, Version=v1alpha1
+	case v1alpha1.SchemeGroupVersion.WithResource("clickhousearchivers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().ClickHouseArchivers().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("mssqlserverarchivers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().MSSQLServerArchivers().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("mariadbarchivers"):

@@ -34479,12 +34479,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseSpec(ref common.Referenc
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
+					"archiver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Archiver controls database backup using Archiver CR",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClickHouseTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
