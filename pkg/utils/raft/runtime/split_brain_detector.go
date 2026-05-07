@@ -49,8 +49,18 @@ const (
 )
 
 type (
-	SkipperFunc              func() bool
-	ConnStateFunc            func(node string) ConnState
+	// SkipperFunc is a function that should return true if the split brain detection
+	// should be skipped (e.g., during an ongoing ops-request)
+	// if you do not want to skip any checks, no need to set this function
+	SkipperFunc func() bool
+
+	// ConnStateFunc should take a pod name and check if it can connect to that pod (e.g., by checking raft connection status or performing a health check)
+	// it should return StateConnected if the connection is healthy, StateFailed if the connection is unhealthy, and StateUnknown if the state cannot be determined
+	ConnStateFunc func(node string) ConnState
+
+	// ReadyFunc should take a pod name and return if bootstrap has been done for that pod and if has joined the cluster
+	// we start split brain detection only after all pods are ready to avoid false positives during startup
+	// if you do not want to wait for readiness, you can ignore this function
 	ReadyFunc                func(nodeName string) bool
 	SplitBrainDetectorConfig struct {
 		nodeState     map[string]NodeState
@@ -66,6 +76,10 @@ type (
 	}
 )
 
+// Config holds the configuration for the Split Brain Detector, including namespace, list of pod names, current pod name, mapping of pod names to Raft IDs, and label selector for identifying pods in the cluster
+// PodLists should contain the names of all pods in the database cluster
+// ID should be a mapping of pod names to their corresponding Raft node IDs, which is used to monitor the replication progress of each peer
+// sel should be a label selector that can be used to list the pods in the cluster for split brain detection
 type Config struct {
 	Namespace string
 	PodLists  []string
@@ -74,6 +88,7 @@ type Config struct {
 	sel       map[string]string
 }
 
+// NewSplitBrainDetectorConfig creates a new instance of SplitBrainDetectorConfig with the provided configuration, Raft node, Kubernetes client, key-value store, connection state function, and stop channel
 func NewSplitBrainDetectorConfig(cfg *Config, rc *RaftNode, kc client.Client, kv *Kvstore, csf ConnStateFunc, stopCh chan struct{}) *SplitBrainDetectorConfig {
 	return &SplitBrainDetectorConfig{
 		nodeState:     make(map[string]NodeState),
