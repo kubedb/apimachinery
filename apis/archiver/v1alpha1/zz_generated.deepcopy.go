@@ -153,6 +153,11 @@ func (in *ClickHouseArchiverSpec) DeepCopyInto(out *ClickHouseArchiverSpec) {
 		*out = new(ClickHouseIncrementalBackupOptions)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ManifestBackup != nil {
+		in, out := &in.ManifestBackup, &out.ManifestBackup
+		*out = new(ManifestBackupOptions)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.EncryptionSecret != nil {
 		in, out := &in.EncryptionSecret, &out.EncryptionSecret
 		*out = new(v1.ObjectReference)

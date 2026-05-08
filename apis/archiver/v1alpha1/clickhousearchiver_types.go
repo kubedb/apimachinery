@@ -62,6 +62,10 @@ type ClickHouseArchiverSpec struct {
 	// IncrementalBackup defines the configuration for incremental backup
 	// +optional
 	IncrementalBackup *ClickHouseIncrementalBackupOptions `json:"incrementalBackup"`
+	// ManifestBackup defines the sessionConfig of the manifestBackup
+	// This options will eventually go to the manifest-backup job's yaml
+	// +optional
+	ManifestBackup *ManifestBackupOptions `json:"manifestBackup"`
 	// +optional
 	EncryptionSecret *kmapi.ObjectReference `json:"encryptionSecret"`
 	// BackupStorage is the backend storageRef of the BackupConfiguration

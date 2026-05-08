@@ -33505,6 +33505,12 @@ func schema_apimachinery_apis_archiver_v1alpha1_ClickHouseArchiverSpec(ref commo
 							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ClickHouseIncrementalBackupOptions"),
 						},
 					},
+					"manifestBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManifestBackup defines the sessionConfig of the manifestBackup This options will eventually go to the manifest-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
+						},
+					},
 					"encryptionSecret": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
@@ -33528,7 +33534,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_ClickHouseArchiverSpec(ref commo
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ClickHouseFullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ClickHouseIncrementalBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ClickHouseFullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ClickHouseIncrementalBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"},
 	}
 }
 
