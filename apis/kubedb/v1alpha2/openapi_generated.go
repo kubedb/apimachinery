@@ -613,6 +613,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DataGuardSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_DataGuardSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Database":                                      schema_apimachinery_apis_kubedb_v1alpha2_Database(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DeepStorageSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_DeepStorageSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB":                                    schema_apimachinery_apis_kubedb_v1alpha2_DocumentDB(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBList":                                schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid":                                         schema_apimachinery_apis_kubedb_v1alpha2_Druid(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidApp":                                      schema_apimachinery_apis_kubedb_v1alpha2_DruidApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidBind":                                     schema_apimachinery_apis_kubedb_v1alpha2_DruidBind(ref),
@@ -651,6 +655,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_HanaDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBSystemReplicationSpec":                   schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSystemReplicationSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBTLSConfig":                               schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBTopology":                                schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Hazelcast":                                     schema_apimachinery_apis_kubedb_v1alpha2_Hazelcast(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HazelcastApp":                                  schema_apimachinery_apis_kubedb_v1alpha2_HazelcastApp(ref),
@@ -35209,6 +35214,224 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DeepStorageSpec(ref common.Referen
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDB(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version of DocumentDB to be deployed.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of instances to deploy for a documentdb database.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType can be durable (default) or ephemeral",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage to specify how storage shall be used.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"authSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+					"serviceTemplates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplates is an optional configuration for services used to expose database",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy controls the delete operation for database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"healthChecker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HealthChecker defines attributes of the health checker",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
+						},
+					},
+				},
+				Required: []string{"version"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the database, such as approval or denial.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_Druid(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37256,6 +37479,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSpec(ref common.ReferenceCal
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
 						},
 					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains externally managed TLS secrets used by KubeDB clients and optional SAP HANA server-side material mounted into the database pod.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBTLSConfig"),
+						},
+					},
 					"monitor": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Monitor is used monitor database instance",
@@ -37307,7 +37536,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ArbiterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ArbiterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -37378,6 +37607,61 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSystemReplicationSpec(ref co
 				},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"clientTLS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientTLS determines whether KubeDB clients connect to the SAP HANA SQL interface over TLS.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"serverName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerName is used to verify the hostname on the certificate returned by SAP HANA.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"insecureSkipVerify": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InsecureSkipVerify controls whether KubeDB clients verify the SAP HANA server certificate chain and hostname.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
 	}
 }
 

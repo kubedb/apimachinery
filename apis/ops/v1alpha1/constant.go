@@ -122,7 +122,7 @@ const (
 const (
 	Restart              = "Restart"
 	RestartNodes         = "RestartNodes"
-	RestartServer        = "RestartServer"
+	RestartServers       = "RestartServers"
 	RestartPods          = "RestartPods"
 	RestartKeeperPods    = "RestartKeeperPods"
 	RestartPodsSucceeded = "RestartPodsSucceeded"
@@ -424,4 +424,15 @@ const (
 // Pgpool Constants
 const (
 	UpdateConfigSecret = "UpdateConfigSecret"
+)
+
+// Qdrant Constants
+const (
+	RebalanceShards = "RebalanceShards"
+	RemovePeers     = "RemovePeers"
+)
+
+// Neo4j Constanst
+const (
+	UpdateServerPVCs = "UpdateServerPVCs"
 )

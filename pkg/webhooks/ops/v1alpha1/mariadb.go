@@ -24,6 +24,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
@@ -253,13 +254,8 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReques
 	}
 
 	if req.Spec.VolumeExpansion.MariaDB != nil {
-		cur, ok := db.Spec.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse mariadb storage size")
-		}
-
-		if cur.Cmp(*req.Spec.VolumeExpansion.MariaDB) >= 0 && (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") {
-			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, req.Spec.VolumeExpansion.MariaDB, req.Status.Phase, "MariaDB"); err != nil {
+			return err
 		}
 	}
 
@@ -267,12 +263,12 @@ func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBVolumeExpansionOpsReques
 		if !db.IsMariaDBReplication() {
 			return errors.New("Topology is not mariadb replication")
 		}
-		cur, ok := db.Spec.Topology.MaxScale.Storage.Resources.Requests[core.ResourceStorage]
-		if !ok {
-			return errors.New("failed to parse maxscale storage size")
+		var maxScaleStorage *core.PersistentVolumeClaimSpec
+		if db.Spec.Topology != nil && db.Spec.Topology.MaxScale != nil {
+			maxScaleStorage = db.Spec.Topology.MaxScale.Storage
 		}
-		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") && cur.Cmp(*req.Spec.VolumeExpansion.MaxScale) >= 0 {
-			return fmt.Errorf("desired storage size must be greater than current storage. Current storage: %v", cur.String())
+		if err := opsutil.ValidateStorageExpansion(maxScaleStorage, req.Spec.VolumeExpansion.MaxScale, req.Status.Phase, "MaxScale"); err != nil {
+			return err
 		}
 	}
 

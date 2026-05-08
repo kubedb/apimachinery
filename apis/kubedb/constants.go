@@ -83,7 +83,9 @@ const (
 	ProxySQLKey      = "proxysql" + "." + GroupName
 
 	// Auth related constants
-	AuthActiveFromAnnotation = GroupName + "/auth-active-from"
+	AuthActiveFromAnnotation     = GroupName + "/auth-active-from"
+	HanaDBTLSResetModeAnnotation = GroupName + "/hanadb-tls-reset-mode"
+	HanaDBTLSResetModeClientPKI  = "clientpki"
 
 	// =========================== Elasticsearch Constants ============================
 	ElasticsearchRestPort                        = 9200
@@ -244,11 +246,13 @@ const (
 	MySQLDatabasePortName                  = "db"
 	MySQLRouterReadWritePortName           = "rw"
 	MySQLRouterReadOnlyPortName            = "ro"
+	MySQLRouterReadWriteSplitPortName      = "rwsplit"
 	MySQLPrimaryServicePortName            = "primary"
 	MySQLStandbyServicePortName            = "standby"
 	MySQLDatabasePort                      = 3306
 	MySQLRouterReadWritePort               = 6446
 	MySQLRouterReadOnlyPort                = 6447
+	MySQLRouterReadWriteSplitPort          = 6450
 
 	MySQLCoordinatorClientPort = 2379
 	MySQLCoordinatorPort       = 2380
@@ -269,6 +273,7 @@ const (
 	MySQLTLSConfigTrue       = "true"
 	MySQLTLSConfigFalse      = "false"
 	MySQLTLSConfigPreferred  = "preferred"
+	MySQLRouterSuffix        = "router"
 
 	MySQLContainerName            = "mysql"
 	MySQLRouterContainerName      = "mysql-router"
@@ -1575,6 +1580,66 @@ const (
 	WeaviateConfigVolName   = "config"
 )
 
+// =========================== DocumentDB Constants ============================
+const (
+
+	// envs
+	EnvDocumentDBUser      = "DOCUMENTDB_PG_USER"
+	EnvDocumentDBPassword  = "DOCUMENTDB_PG_PASSWORD"
+	EnvDocumentDBHandler   = "DOCUMENTDB_HANDLER"
+	EnvDocumentDBPgURL     = "DOCUMENTDB_POSTGRESQL_URL"
+	EnvDocumentDBTLSPort   = "DOCUMENTDB_LISTEN_TLS"
+	EnvDocumentDBCAPath    = "DOCUMENTDB_LISTEN_TLS_CA_FILE"
+	EnvDocumentDBCertPath  = "DOCUMENTDB_LISTEN_TLS_CERT_FILE"
+	EnvDocumentDBKeyPath   = "DOCUMENTDB_LISTEN_TLS_KEY_FILE"
+	EnvDocumentDBDebugAddr = "DOCUMENTDB_DEBUG_ADDR"
+
+	DocumentDBDatabaseServiceName = "DocumentDB"
+	DocumentDBSqlNetPortName      = "documentdb-port"
+	DocumentDBSqlNetPort          = 10260
+	DocumentDBDefaultPort         = 10260
+
+	DocumentDBPrimaryRole = "primary"
+	DocumentDBStandbyRole = "standby"
+
+	DocumentDBDatabaseRoleKey      = "documentdb.db/role"
+	DocumentDBDatabaseRoleInstance = "instance"
+
+	DocumentDBDefaultUsername = "default_user"
+	DocumentDBDefaultPassword = "1234"
+
+	DefaultDocumentDBDatabase = "sampledb"
+
+	// volume related constants
+	DocumentDBVolumeScripts = "documentdb-data"
+	DocumentDBDataDir       = "/data"
+
+	DocumentDBVolumeNameInitScript      = "init-scripts"
+	DocumentDBVolumeMountPathInitScript = "/scripts"
+
+	DocumentDBContainerName     = "documentdb"
+	DocumentDBInitContainerName = "documentdb-init"
+	DocumentDBMainImage         = "ghcr.io/documentdb/documentdb"
+	DocumentDBUser              = "postgres"
+	DocumentDBLinkedDBName      = "documentdb"
+
+	DocumentDBServerPath = "/etc/certs/server"
+
+	DocumentDBExternalClientPath = "/etc/certs/ext"
+
+	DocumentDBMetricsPort = 56790
+	DocumentDBTLSPort     = 27018
+
+	DocumentDBMetricsPath     = "/debug/metrics"
+	DocumentDBMetricsPortName = "metrics"
+
+	DocumentDBPrimaryLabelKey = "documentdb.kubedb.com/server.primary"
+
+	DocumentDBBackendInitShellFile = "data.sh"
+	DocumentDBBackendInitSqlFile   = "data.sql"
+	DocumentDBBackendConfigFile    = "user.conf"
+)
+
 // =========================== FerretDB Constants ============================
 const (
 
@@ -2194,6 +2259,8 @@ const (
 	OracleEnvDataDir               = "ORADATA"
 	OracleSharedTlsVolumeName      = "certs"
 	OracleSharedTlsVolumeMountPath = "/tls/certs"
+
+	OracleCustomConfigFileName = "oracle.cnf"
 )
 
 // =========================== DB2 Constants ============================
@@ -2284,6 +2351,8 @@ const (
 	// Mount paths
 	HanaDBDataDir         = "/hana/mounts"
 	HanaDBSecretMountPath = "/etc/hana-secrets"
+	HanaDBTLSInputPath    = "/etc/hanadb-tls/server"
+	HanaDBExporterTLSPath = "/etc/hanadb_exporter/certs"
 	HanaDBConfigFileName  = "global.ini"
 	HanaDBConfigDir       = "/hana/mounts/system/config"
 	HanaDBConfigMountPath = "/etc/hanadb-config"
@@ -2291,6 +2360,8 @@ const (
 	// Volume names
 	HanaDBDataVolume           = "data"
 	HanaDBVolumePasswordSecret = "password-secret"
+	HanaDBVolumeTLSInput       = "tls-input"
+	HanaDBVolumeExporterTLS    = "exporter-tls-volume"
 	HanaDBConfigVolumeName     = "hanadb-config"
 
 	// User and Group IDs
@@ -2358,6 +2429,7 @@ const (
 	KubeSliceNSMContainerName                  = "cmd-nsc-grpc"
 
 	// Archiver
+	OwnerDatabasesAnnotation                  = "kubedb.com/owner-databases"
 	DistributedArchiverSnapshotInfoAnnotation = "distributedsnapshotinfo"
 	DistributedArchiverCMKeySnapshots         = "snapshots"
 	DistributedArchiverCMKeyRestoreSession    = "restoresession"

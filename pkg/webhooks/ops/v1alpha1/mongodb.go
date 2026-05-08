@@ -27,6 +27,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -145,6 +146,14 @@ func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mong
 		}
 	}
 
+	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeVolumeExpansion {
+		if err = w.validateMongoDBVolumeExpansionOpsRequest(&db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -231,6 +240,53 @@ func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBHorizons(db *dbapi.Mongo
 			return errors.New("the length of ops.spec.horizons.pods has to be " + strconv.Itoa(int(*db.Spec.Replicas)))
 		}
 	}
+	return nil
+}
+
+func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBVolumeExpansionOpsRequest(db *dbapi.MongoDB, req *opsapi.MongoDBOpsRequest) error {
+	if req.Spec.VolumeExpansion == nil {
+		return errors.New("`spec.volumeExpansion` field is nil")
+	}
+
+	// Storage size validations
+	if req.Spec.VolumeExpansion.Standalone != nil {
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, req.Spec.VolumeExpansion.Standalone, req.Status.Phase, "standalone"); err != nil {
+			return err
+		}
+	}
+	if req.Spec.VolumeExpansion.ReplicaSet != nil {
+		if db.Spec.ReplicaSet == nil {
+			return errors.New("replicaSet not configured for this MongoDB")
+		}
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, req.Spec.VolumeExpansion.ReplicaSet, req.Status.Phase, "replicaSet"); err != nil {
+			return err
+		}
+	}
+	if req.Spec.VolumeExpansion.ConfigServer != nil {
+		if db.Spec.ShardTopology == nil {
+			return errors.New("shardTopology not configured for this MongoDB")
+		}
+		if err := opsutil.ValidateStorageExpansion(db.Spec.ShardTopology.ConfigServer.Storage, req.Spec.VolumeExpansion.ConfigServer, req.Status.Phase, "configServer"); err != nil {
+			return err
+		}
+	}
+	if req.Spec.VolumeExpansion.Shard != nil {
+		if db.Spec.ShardTopology == nil {
+			return errors.New("shardTopology not configured for this MongoDB")
+		}
+		if err := opsutil.ValidateStorageExpansion(db.Spec.ShardTopology.Shard.Storage, req.Spec.VolumeExpansion.Shard, req.Status.Phase, "shard"); err != nil {
+			return err
+		}
+	}
+	if req.Spec.VolumeExpansion.Hidden != nil {
+		if db.Spec.Hidden == nil {
+			return errors.New("hidden not configured for this MongoDB")
+		}
+		if err := opsutil.ValidateStorageExpansion(&db.Spec.Hidden.Storage, req.Spec.VolumeExpansion.Hidden, req.Status.Phase, "hidden"); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
