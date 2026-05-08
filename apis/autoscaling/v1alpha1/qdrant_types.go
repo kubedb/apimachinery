@@ -71,11 +71,11 @@ type QdrantComputeAutoscalerSpec struct {
 	// +optional
 	NodeTopology *NodeTopology `json:"nodeTopology,omitempty"`
 
-	Node *ComputeAutoscalerSpec `json:"qdrant,omitempty"`
+	Node *ComputeAutoscalerSpec `json:"node,omitempty"`
 }
 
 type QdrantStorageAutoscalerSpec struct {
-	Node *StorageAutoscalerSpec `json:"qdrant,omitempty"`
+	Node *StorageAutoscalerSpec `json:"node,omitempty"`
 }
 
 type QdrantOpsRequestOptions struct {

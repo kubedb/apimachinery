@@ -22,7 +22,6 @@ import (
 	"fmt"
 
 	autoscalingapi "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
-	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -64,25 +63,7 @@ func (w *QdrantAutoscalerCustomWebhook) Default(ctx context.Context, obj runtime
 }
 
 func (w *QdrantAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.QdrantAutoscaler) {
-	w.setOpsReqOptsDefaults(scaler)
-
-	if scaler.Spec.Storage != nil {
-		setDefaultStorageValues(scaler.Spec.Storage.Node)
-	}
-	if scaler.Spec.Compute != nil {
-		setDefaultComputeValues(scaler.Spec.Compute.Node)
-	}
-}
-
-func (w *QdrantAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.QdrantAutoscaler) {
-	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.QdrantOpsRequestOptions{}
-	}
-	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
-	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-	}
+	scaler.SetDefaults()
 }
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-qdrantautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=qdrantautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vqdrantautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}

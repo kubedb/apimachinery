@@ -21,10 +21,26 @@ import (
 
 	"kubedb.dev/apimachinery/apis"
 	"kubedb.dev/apimachinery/apis/autoscaling"
+	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	"kubedb.dev/apimachinery/crds"
 
 	"kmodules.xyz/client-go/apiextensions"
 )
+
+func (scaler *QdrantAutoscaler) SetDefaults() {
+	if scaler.Spec.OpsRequestOptions == nil {
+		scaler.Spec.OpsRequestOptions = &QdrantOpsRequestOptions{}
+	}
+	if scaler.Spec.OpsRequestOptions.Apply == "" {
+		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
+	}
+	if scaler.Spec.Storage != nil {
+		scaler.Spec.Storage.Node.SetDefaults()
+	}
+	if scaler.Spec.Compute != nil {
+		scaler.Spec.Compute.Node.SetDefaults()
+	}
+}
 
 func (q QdrantAutoscaler) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralQdrantAutoscaler))
