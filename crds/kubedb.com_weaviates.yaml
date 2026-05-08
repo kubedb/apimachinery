@@ -4440,6 +4440,12 @@ spec:
               replicas:
                 format: int32
                 type: integer
+              replication:
+                properties:
+                  factor:
+                    format: int32
+                    type: integer
+                type: object
               serviceTemplates:
                 items:
                   properties:

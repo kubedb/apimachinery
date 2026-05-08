@@ -68,6 +68,8 @@ type WeaviateOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for custom configuration of weaviate
 	Configuration *WeaviateReconfigurationSpec `json:"configuration,omitempty"`
+	// Specifies information necessary for configuring authSecret of the database
+	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.

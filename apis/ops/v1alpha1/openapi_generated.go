@@ -44459,6 +44459,12 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec"),
 						},
 					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -44483,7 +44489,7 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVolumeExpansionSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVolumeExpansionSpec"},
 	}
 }
 

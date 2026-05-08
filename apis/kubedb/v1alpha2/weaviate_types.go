@@ -60,6 +60,11 @@ type WeaviateSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
+	// Replication configuration for the Weaviate cluster.
+	// This controls the data replication factor per collection.
+	// +optional
+	Replication *ReplicationConfig `json:"replication,omitempty"`
+
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
 
@@ -123,6 +128,16 @@ type WeaviateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []Weaviate `json:"items"`
+}
+
+// ReplicationConfig defines replication settings for Weaviate.
+type ReplicationConfig struct {
+	// Factor is the number of replicas for each data object.
+	// Set to 1 for no replication (default), 2-3 for production HA.
+	// +optional
+	// +kubebuilder:minimum=1
+	// +kubebuilder:maximum=5
+	Factor int32 `json:"factor,omitempty"`
 }
 
 type WeaviateConfiguration struct {
