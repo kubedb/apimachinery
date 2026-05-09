@@ -94,6 +94,9 @@ func (w *ClickHouseAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosc
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
 	}
+	if scaler.Spec.OpsRequestOptions.MaxRetries == 0 {
+		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+	}
 }
 
 var _ webhook.CustomValidator = &ClickHouseAutoscalerCustomWebhook{}

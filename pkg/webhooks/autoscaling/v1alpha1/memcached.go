@@ -80,6 +80,9 @@ func (w *MemcachedAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autosca
 	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
 	}
+	if scaler.Spec.OpsRequestOptions.MaxRetries == 0 {
+		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+	}
 }
 
 // +kubebuilder:webhook:path=/validate-schema-kubedb-com-v1alpha1-memcachedautoscaler,mutating=false,failurePolicy=fail,sideEffects=None,groups=schema.kubedb.com,resources=memcachedautoscalers,verbs=create;update;delete,versions=v1alpha1,name=vmemcachedautoscaler.kb.io,admissionReviewVersions={v1,v1beta1}
