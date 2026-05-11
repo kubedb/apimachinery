@@ -133,6 +133,10 @@ func (d *DocumentDB) ResourceSingular() string {
 	return ResourceSingularDocumentDB
 }
 
+func (d *DocumentDB) ServiceAccountName() string {
+	return d.OffshootName()
+}
+
 func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alpha1.DocumentDBVersion) {
 	if d.Spec.DeletionPolicy == "" {
 		d.Spec.DeletionPolicy = DeletionPolicyDelete
