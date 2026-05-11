@@ -76,9 +76,10 @@ func (w *ZooKeeperAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Zo
 
 func (w *ZooKeeperAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ZooKeeperAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{}
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{
+			Apply:      opsapi.ApplyOptionIfReady,
+			MaxRetries: 1,
+		}
 	}
 }
 

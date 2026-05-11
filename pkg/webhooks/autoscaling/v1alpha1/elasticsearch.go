@@ -101,9 +101,12 @@ func (w *ElasticsearchAutoscalerCustomWebhook) setDefaults(scaler *autoscalingap
 
 func (w *ElasticsearchAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ElasticsearchAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.ElasticsearchOpsRequestOptions{}
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.ElasticsearchOpsRequestOptions{
+			OpsRequestOptions: autoscalingapi.OpsRequestOptions{
+				Apply:      opsapi.ApplyOptionIfReady,
+				MaxRetries: 1,
+			},
+		}
 	}
 }
 

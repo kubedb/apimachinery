@@ -73,9 +73,10 @@ func (w *ProxySQLAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Pro
 
 func (w *ProxySQLAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ProxySQLAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{}
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{
+			Apply:      opsapi.ApplyOptionIfReady,
+			MaxRetries: 1,
+		}
 	}
 }
 

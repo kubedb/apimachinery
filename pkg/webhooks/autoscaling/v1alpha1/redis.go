@@ -83,9 +83,10 @@ func (w *RedisAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.RedisA
 
 func (w *RedisAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.RedisAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{}
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{
+			Apply:      opsapi.ApplyOptionIfReady,
+			MaxRetries: 1,
+		}
 	}
 }
 

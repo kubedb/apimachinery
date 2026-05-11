@@ -76,9 +76,10 @@ func (w *PostgresAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Pos
 
 func (w *PostgresAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.PostgresAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{}
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{
+			Apply:      opsapi.ApplyOptionIfReady,
+			MaxRetries: 1,
+		}
 	}
 }
 

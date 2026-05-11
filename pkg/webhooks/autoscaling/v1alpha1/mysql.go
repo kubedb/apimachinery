@@ -76,9 +76,12 @@ func (w *MySQLAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MySQLA
 
 func (w *MySQLAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MySQLAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.MySQLOpsRequestOptions{}
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.MySQLOpsRequestOptions{
+			OpsRequestOptions: autoscalingapi.OpsRequestOptions{
+				Apply:      opsapi.ApplyOptionIfReady,
+				MaxRetries: 1,
+			},
+		}
 	}
 }
 

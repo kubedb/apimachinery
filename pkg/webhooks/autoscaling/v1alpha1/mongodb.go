@@ -108,9 +108,12 @@ func (w *MongoDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Mong
 
 func (w *MongoDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MongoDBAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.MongoDBOpsRequestOptions{}
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.MongoDBOpsRequestOptions{
+			OpsRequestOptions: autoscalingapi.OpsRequestOptions{
+				Apply:      opsapi.ApplyOptionIfReady,
+				MaxRetries: 1,
+			},
+		}
 	}
 }
 

@@ -76,9 +76,12 @@ func (w *MariaDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Mari
 
 func (w *MariaDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MariaDBAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.MariaDBOpsRequestOptions{}
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.MariaDBOpsRequestOptions{
+			OpsRequestOptions: autoscalingapi.OpsRequestOptions{
+				Apply:      opsapi.ApplyOptionIfReady,
+				MaxRetries: 1,
+			},
+		}
 	}
 }
 

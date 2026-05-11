@@ -74,9 +74,12 @@ func (w *PerconaXtraDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingap
 
 func (w *PerconaXtraDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.PerconaXtraDBAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.PerconaXtraDBOpsRequestOptions{}
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.PerconaXtraDBOpsRequestOptions{
+			OpsRequestOptions: autoscalingapi.OpsRequestOptions{
+				Apply:      opsapi.ApplyOptionIfReady,
+				MaxRetries: 1,
+			},
+		}
 	}
 }
 
