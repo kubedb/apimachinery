@@ -34,20 +34,7 @@ spec:
             properties:
               compute:
                 properties:
-                  nodeTopology:
-                    properties:
-                      name:
-                        type: string
-                      scaleDownDiffPercentage:
-                        default: 25
-                        format: int32
-                        type: integer
-                      scaleUpDiffPercentage:
-                        default: 15
-                        format: int32
-                        type: integer
-                    type: object
-                  qdrant:
+                  node:
                     properties:
                       containerControlledValues:
                         enum:
@@ -91,6 +78,19 @@ spec:
                       trigger:
                         type: string
                     type: object
+                  nodeTopology:
+                    properties:
+                      name:
+                        type: string
+                      scaleDownDiffPercentage:
+                        default: 25
+                        format: int32
+                        type: integer
+                      scaleUpDiffPercentage:
+                        default: 15
+                        format: int32
+                        type: integer
+                    type: object
                 type: object
               databaseRef:
                 properties:
@@ -107,6 +107,10 @@ spec:
                     - IfReady
                     - Always
                     type: string
+                  maxRetries:
+                    default: 1
+                    format: int32
+                    type: integer
                   readinessCriteria:
                     type: object
                   timeout:
@@ -114,7 +118,7 @@ spec:
                 type: object
               storage:
                 properties:
-                  qdrant:
+                  node:
                     properties:
                       expansionMode:
                         enum:
