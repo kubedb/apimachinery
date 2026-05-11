@@ -99,14 +99,8 @@ func (w *SinglestoreAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.
 
 func (w *SinglestoreAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.SinglestoreAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.SinglestoreOpsRequestOptions{}
-	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
-	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{}
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-	}
-	if scaler.Spec.OpsRequestOptions.MaxRetries == 0 {
 		scaler.Spec.OpsRequestOptions.MaxRetries = 1
 	}
 }

@@ -115,14 +115,8 @@ func (w *DruidAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.DruidA
 
 func (w *DruidAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.DruidAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.DruidOpsRequestOptions{}
-	}
-	// Timeout is defaulted to 600s in ops-manager retries.go (to retry 120 times with 5sec pause between each)
-	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{}
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-	}
-	if scaler.Spec.OpsRequestOptions.MaxRetries == 0 {
 		scaler.Spec.OpsRequestOptions.MaxRetries = 1
 	}
 }

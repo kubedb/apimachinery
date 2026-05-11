@@ -77,13 +77,7 @@ func (w *MySQLAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.MySQLA
 func (w *MySQLAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MySQLAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
 		scaler.Spec.OpsRequestOptions = &autoscalingapi.MySQLOpsRequestOptions{}
-	}
-	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
-	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
 		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-	}
-	if scaler.Spec.OpsRequestOptions.MaxRetries == 0 {
 		scaler.Spec.OpsRequestOptions.MaxRetries = 1
 	}
 }
