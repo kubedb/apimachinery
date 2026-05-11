@@ -76,6 +76,13 @@ spec:
                             required:
                             - name
                             type: object
+                          incBackupRestore:
+                            properties:
+                              name:
+                                type: string
+                            required:
+                            - name
+                            type: object
                           manifestBackup:
                             properties:
                               name:

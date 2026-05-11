@@ -58,6 +58,7 @@ type AddonTasks struct {
 	ManifestRestore   ManifestRestore   `json:"manifestRestore,omitempty"`
 	FullBackup        FullBackup        `json:"fullBackup,omitempty"`
 	FullBackupRestore FullBackupRestore `json:"fullBackupRestore,omitempty"`
+	IncBackupRestore  IncBackupRestore  `json:"incBackupRestore,omitempty"`
 }
 
 type FullBackup struct {
@@ -77,6 +78,10 @@ type ManifestRestore struct {
 }
 
 type FullBackupRestore struct {
+	Name string `json:"name"`
+}
+
+type IncBackupRestore struct {
 	Name string `json:"name"`
 }
 

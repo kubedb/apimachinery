@@ -22028,6 +22028,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.FullBackupRestore"
         },
+        "incBackupRestore": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.IncBackupRestore"
+        },
         "manifestBackup": {
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestBackup"
@@ -22496,6 +22500,18 @@
       ],
       "properties": {
         "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.IncBackupRestore": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
           "type": "string",
           "default": ""
         }
