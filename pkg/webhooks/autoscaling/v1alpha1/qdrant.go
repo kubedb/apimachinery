@@ -76,16 +76,10 @@ func (w *QdrantAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Qdran
 
 func (w *QdrantAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.QdrantAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.QdrantOpsRequestOptions{}
-	}
-	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
-	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
-	}
-
-	if scaler.Spec.OpsRequestOptions.MaxRetries == 0 {
-		scaler.Spec.OpsRequestOptions.MaxRetries = 1
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{
+			Apply:      opsapi.ApplyOptionIfReady,
+			MaxRetries: 1,
+		}
 	}
 }
 
