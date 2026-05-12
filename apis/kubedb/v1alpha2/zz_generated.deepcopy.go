@@ -6650,6 +6650,11 @@ func (in *QdrantSpec) DeepCopyInto(out *QdrantSpec) {
 		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Init != nil {
+		in, out := &in.Init, &out.Init
+		*out = new(InitSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
 		*out = new(ConfigurationSpec)
