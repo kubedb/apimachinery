@@ -141,7 +141,10 @@ func (m *ReconfigureMerger) Run() (int, error) {
 
 	klog.Infof("mmm %v %v \n", m.currentOps.GetName(), mergedOps.GetName())
 	err = m.EnsureMergedOpsRequest(mergedOps, pendingReconfigureOps)
-	return RequeueNeeded, err
+	if err != nil {
+		return RequeueNeeded, err
+	}
+	return RequeueNotNeeded, nil
 }
 
 func (m *ReconfigureMerger) CheckIfAnyOpsRequestIsProgressing() bool {
