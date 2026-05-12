@@ -217,6 +217,7 @@ func (m *ReconfigureMerger) FindPendingReconfigureOpsToMerge() (int, []opsapi.Ac
 		}
 
 		// If any Reconfigure is Progressing (other than current), requeue current request
+		// TODO: we got this list a few moments ago. may be we don't have the updated status...
 		if req.GetStatus().Phase == opsapi.OpsRequestPhaseProgressing {
 			m.log.Info(fmt.Sprintf("Reconfigure ops request %s/%s is already progressing for database %s, requeuing current request %s/%s",
 				req.GetObjectMeta().Namespace, req.GetObjectMeta().Name, req.GetDBRefName(), meta.GetNamespace(), meta.GetName()))
@@ -247,7 +248,6 @@ func (m *ReconfigureMerger) FindPendingReconfigureOpsToMerge() (int, []opsapi.Ac
 			Namespace: meta.GetNamespace(),
 		}); err != nil {
 			klog.Errorf("failed to mark already merged ops request %s/%s as skipped: %v", meta.GetNamespace(), meta.GetName(), err)
-			return RequeueNotNeeded, nil
 		}
 		return RequeueNotNeeded, nil // Skip this ops as it's already part of a merge
 	}
@@ -258,10 +258,14 @@ func (m *ReconfigureMerger) FindPendingReconfigureOpsToMerge() (int, []opsapi.Ac
 	sort.Slice(pendingReconfigureOps, func(i, j int) bool {
 		x := pendingReconfigureOps[i].GetObjectMeta().CreationTimestamp
 		y := pendingReconfigureOps[j].GetObjectMeta()
-		if !x.Equal(&y.CreationTimestamp) {
-			return x.Before(&y.CreationTimestamp)
+
+		if strings.Contains(pendingReconfigureOps[i].GetName(), MergedOpsSubStr) == strings.Contains(pendingReconfigureOps[j].GetName(), MergedOpsSubStr) {
+			if !x.Equal(&y.CreationTimestamp) {
+				return x.Before(&y.CreationTimestamp)
+			}
+			return strings.Compare(pendingReconfigureOps[i].GetObjectMeta().Name, pendingReconfigureOps[j].GetObjectMeta().Name) < 0
 		}
-		return strings.Compare(pendingReconfigureOps[i].GetObjectMeta().Name, pendingReconfigureOps[j].GetObjectMeta().Name) < 0
+		return strings.Contains(pendingReconfigureOps[i].GetName(), MergedOpsSubStr)
 	})
 
 	return MergeNeeded, pendingReconfigureOps
