@@ -141,7 +141,7 @@ func (m *ReconfigureMerger) Run() (int, error) {
 
 	klog.Infof("mmm %v %v \n", m.currentOps.GetName(), mergedOps.GetName())
 	err = m.EnsureMergedOpsRequest(mergedOps, pendingReconfigureOps)
-	return ContinueGeneral, err
+	return RequeueNeeded, err
 }
 
 func (m *ReconfigureMerger) CheckIfAnyOpsRequestIsProgressing() bool {
@@ -192,7 +192,7 @@ func (m *ReconfigureMerger) FindPendingReconfigureOpsToMerge() (int, []opsapi.Ac
 		// Check if the "OriginalOpsSkipped" condition is true
 		if !m.areOriginalOpsSkipped(m.currentOps.GetStatus()) {
 			m.log.Info(fmt.Sprintf("Merged ops request %s/%s waiting for original ops to be skipped, requeuing",
-				meta.GetName(), meta.GetName()))
+				meta.GetNamespace(), meta.GetName()))
 			return RequeueNeeded, nil // Requeue until original ops are skipped
 		}
 		// Original ops are skipped, proceed with reconciliation
