@@ -1602,7 +1602,6 @@ const (
 	DocumentDBDatabaseRoleInstance = "instance"
 
 	DocumentDBDefaultUsername = "default_user"
-	DocumentDBDefaultPassword = "1234"
 
 	DefaultDocumentDBDatabase = "sampledb"
 
@@ -1645,6 +1644,7 @@ const (
 	DocumentDBBackendInitSqlFile   = "data.sql"
 	DocumentDBBackendConfigFile    = "user.conf"
 )
+
 const (
 	EnvPetsetName                          = "PETSET_NAME"
 	EnvDBName                              = "DB_NAME"

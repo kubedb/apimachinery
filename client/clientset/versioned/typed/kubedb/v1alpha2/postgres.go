@@ -22,13 +22,12 @@ import (
 	"context"
 	"time"
 
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	scheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	rest "k8s.io/client-go/rest"
+	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	scheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 )
 
 // PostgresesGetter has a method to return a PostgresInterface.
