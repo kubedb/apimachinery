@@ -30,6 +30,8 @@ type Source struct {
 	Postgres *PostgresSource `yaml:"postgres" json:"postgres,omitempty"`
 	// MySQL refers to the source MySQL database configuration
 	MySQL *MySQLSource `yaml:"mysql" json:"mysql,omitempty"`
+	// MariaDB refers to the source MariaDB database configuration
+	MariaDB *MariaDBSource `yaml:"mariadb" json:"mariadb,omitempty"`
 }
 
 // Target defines the target database configuration
@@ -38,6 +40,8 @@ type Target struct {
 	Postgres *PostgresTarget `yaml:"postgres" json:"postgres,omitempty"`
 	// MySQL refers to the target MySQL database configuration
 	MySQL *MySQLTarget `yaml:"mysql" json:"mysql,omitempty"`
+	// MariaDB refers to the target MariaDB database configuration
+	MariaDB *MariaDBTarget `yaml:"mariadb" json:"mariadb,omitempty"`
 }
 
 type ConnectionInfo struct {
