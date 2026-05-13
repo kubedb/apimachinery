@@ -1,11 +1,11 @@
 /*
 Copyright AppsCode Inc. and Contributors
 
-Licensed under the Apache License, Version 2.0 (the "License");
+Licensed under the AppsCode Free Trial License 1.0.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Free-Trial-1.0.0.md
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,449 +32,656 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// -----------------------------------------------------------------------------
+// Constants & tuning knobs
+// -----------------------------------------------------------------------------
+
+const (
+	// Timing intervals.
+	managerTickInterval  = 2 * time.Second
+	leaderTickInterval   = 3 * time.Second
+	followerTickInterval = 2 * time.Second
+	peerTickInterval     = 1 * time.Second
+
+	// Thresholds.
+	splitBrainRepCountThreshold = 5  // consecutive quorum-loss ticks before declaring split-brain
+	peerInactiveThreshold       = 10 // consecutive no-progress ticks before marking a peer INACTIVE
+	peerDeletingThreshold       = 5  // counter reset when a peer pod is being deleted
+	leaderHeartbeatTryThreshold = 2  // leader heartbeat retry count before proposing
+)
+
+// -----------------------------------------------------------------------------
+// Node / connection state types
+// -----------------------------------------------------------------------------
+
+// NodeState represents the perceived health of a cluster node.
 type NodeState string
 
 const (
-	STATE_ACTIVE      NodeState = "ACTIVE"
-	STATE_INACTIVE    NodeState = "INACTIVE"
-	STATE_SPLIT_BRAIN NodeState = "SPLIT_BRAIN"
+	StateActive     NodeState = "ACTIVE"
+	StateInactive   NodeState = "INACTIVE"
+	StateSplitBrain NodeState = "SPLIT_BRAIN"
 )
 
+// ConnState represents the result of a connectivity probe to a peer.
 type ConnState string
 
 const (
-	StateFailed    ConnState = "failed"
-	StateConnected ConnState = "connected"
-	StateUnknown   ConnState = "unknown"
+	ConnStateFailed    ConnState = "failed"
+	ConnStateConnected ConnState = "connected"
+	ConnStateUnknown   ConnState = "unknown"
 )
 
-type (
-	// SkipperFunc is a function that should return true if the split brain detection
-	// should be skipped (e.g., during an ongoing ops-request)
-	// if you do not want to skip any checks, no need to set this function
-	SkipperFunc func() bool
+// -----------------------------------------------------------------------------
+// Callback function types
+// -----------------------------------------------------------------------------
 
-	// ConnStateFunc should take a pod name and check if it can connect to that pod (e.g., by checking raft connection status or performing a health check)
-	// it should return StateConnected if the connection is healthy, StateFailed if the connection is unhealthy, and StateUnknown if the state cannot be determined
-	ConnStateFunc func(node string) ConnState
+// SkipperFunc returns true when split-brain detection should be paused
+// (e.g. during an ongoing ops-request). A nil SkipperFunc never skips.
+type SkipperFunc func() bool
 
-	// ReadyFunc should take a pod name and return if bootstrap has been done for that pod and if has joined the cluster
-	// we start split brain detection only after all pods are ready to avoid false positives during startup
-	// if you do not want to wait for readiness, you can ignore this function
-	ReadyFunc                func(nodeName string) bool
-	SplitBrainDetectorConfig struct {
-		nodeState     map[string]NodeState
-		mutex         sync.RWMutex
-		stopCh        chan struct{}
-		config        *Config
-		rc            *RaftNode
-		kc            client.Client
-		kv            *Kvstore
-		skipperFunc   SkipperFunc
-		connStateFunc ConnStateFunc
-		readyFunc     ReadyFunc
-	}
-)
+// ConnStateChecker probes connectivity to a named pod.
+// It must return ConnStateConnected, ConnStateFailed, or ConnStateUnknown.
+type ConnStateChecker func(podName string) ConnState
 
-// Config holds the configuration for the Split Brain Detector, including namespace, list of pod names, current pod name, mapping of pod names to Raft IDs, and label selector for identifying pods in the cluster
-// PodLists should contain the names of all pods in the database cluster
-// ID should be a mapping of pod names to their corresponding Raft node IDs, which is used to monitor the replication progress of each peer
-// sel should be a label selector that can be used to list the pods in the cluster for split brain detection
-type Config struct {
+// ReadyChecker returns true once a pod has bootstrapped and joined the cluster.
+// The detector waits for all pods to be ready before starting, to avoid
+// false-positives at startup. A nil ReadyChecker treats all pods as ready.
+type ReadyChecker func(podName string) bool
+
+// -----------------------------------------------------------------------------
+// Configuration
+// -----------------------------------------------------------------------------
+
+// ClusterConfig describes the static topology of the database cluster.
+// All fields must be set before passing to NewDetector; none may be mutated
+// after construction.
+type ClusterConfig struct {
+	// Namespace is the Kubernetes namespace that contains all cluster pods.
 	Namespace string
-	PodLists  []string
-	PodName   string
-	ID        map[string]uint64 // no modify after initialization
-	sel       map[string]string
+
+	// PodNames lists every pod in the cluster (including the local pod).
+	PodNames []string
+
+	// LocalPod is the name of the pod running this detector instance.
+	LocalPod string
+
+	// RaftIDs maps each pod name to its Raft node ID.
+	// Used to track replication progress per peer.
+	RaftIDs map[string]uint64
+
+	// PodSelector is the label selector used to list cluster pods.
+	PodSelector map[string]string
+
+	StartUpTimeOut *time.Duration
 }
 
-// NewSplitBrainDetectorConfig creates a new instance of SplitBrainDetectorConfig with the provided configuration, Raft node, Kubernetes client, key-value store, connection state function, and stop channel
-func NewSplitBrainDetectorConfig(cfg *Config, rc *RaftNode, kc client.Client, kv *Kvstore, csf ConnStateFunc, stopCh chan struct{}) *SplitBrainDetectorConfig {
-	return &SplitBrainDetectorConfig{
-		nodeState:     make(map[string]NodeState),
-		stopCh:        stopCh,
-		config:        cfg,
-		rc:            rc,
-		kc:            kc,
-		kv:            kv,
-		connStateFunc: csf,
+func (c *ClusterConfig) validate() {
+	if c.RaftIDs == nil || c.PodSelector == nil {
+		panic("ClusterConfig: RaftIDs and PodSelector must not be nil")
 	}
 }
 
-func (sbd *SplitBrainDetectorConfig) SetSkipperFunc(skipper SkipperFunc) {
-	sbd.skipperFunc = skipper
+// quorum returns the minimum number of active nodes required to maintain
+// a healthy cluster, adjusted so that even-sized clusters use odd quorum math.
+func (c *ClusterConfig) quorum() int {
+	n := len(c.PodNames)
+	if n%2 == 0 {
+		n++
+	}
+	return (n + 1) / 2
 }
 
-func (sbd *SplitBrainDetectorConfig) SetReadyFunc(readyFunc ReadyFunc) {
-	sbd.readyFunc = readyFunc
+// peers returns all pod names except the local pod.
+func (c *ClusterConfig) peers() []string {
+	out := make([]string, 0, len(c.PodNames)-1)
+	for _, name := range c.PodNames {
+		if name != c.LocalPod {
+			out = append(out, name)
+		}
+	}
+	return out
 }
 
-func (sbd *SplitBrainDetectorConfig) SetNodeState(node string, fs NodeState) {
-	sbd.mutex.Lock()
-	defer sbd.mutex.Unlock()
-	sbd.nodeState[node] = fs
+// -----------------------------------------------------------------------------
+// Node-state registry
+// -----------------------------------------------------------------------------
+
+// nodeStateRegistry is a thread-safe store of per-pod NodeState values.
+type nodeStateRegistry struct {
+	mu    sync.RWMutex
+	state map[string]NodeState
 }
 
-func (sbd *SplitBrainDetectorConfig) GetNodeState(node string) NodeState {
-	sbd.mutex.RLock()
-	defer sbd.mutex.RUnlock()
-	return sbd.nodeState[node]
+func newNodeStateRegistry() *nodeStateRegistry {
+	return &nodeStateRegistry{state: make(map[string]NodeState)}
 }
 
-func (sbd *SplitBrainDetectorConfig) RemoveNodeState(node string) {
-	sbd.mutex.Lock()
-	defer sbd.mutex.Unlock()
-	delete(sbd.nodeState, node)
+func (r *nodeStateRegistry) set(pod string, s NodeState) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	r.state[pod] = s
 }
 
-func (sbd *SplitBrainDetectorConfig) InitNodeState() {
-	sbd.mutex.Lock()
-	defer sbd.mutex.Unlock()
-	for i := 0; i < len(sbd.config.PodLists); i++ {
-		podName := sbd.config.PodLists[i]
-		sbd.nodeState[podName] = STATE_ACTIVE
+func (r *nodeStateRegistry) get(pod string) NodeState {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	return r.state[pod]
+}
+
+func (r *nodeStateRegistry) remove(pod string) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	delete(r.state, pod)
+}
+
+// initAll marks every pod in the cluster as StateActive.
+func (r *nodeStateRegistry) initAll(pods []string) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	for _, p := range pods {
+		r.state[p] = StateActive
 	}
 }
 
-func (sbd *SplitBrainDetectorConfig) DetectSplitBrain(stopCh chan struct{}) {
-	go sbd.DetectSplitBrainWithRaft(stopCh)
+// -----------------------------------------------------------------------------
+// Detector
+// -----------------------------------------------------------------------------
+
+// Detector orchestrates split-brain detection for a single Raft cluster member.
+// It runs three goroutine loops (leader heartbeat, follower monitoring, and
+// split-brain declaration) that are started and stopped in lock-step with
+// Raft leadership changes.
+type Detector struct {
+	cfg      *ClusterConfig
+	rc       *RaftNode
+	kc       client.Client
+	kv       *Kvstore
+	registry *nodeStateRegistry
+
+	connCheck  ConnStateChecker
+	skipCheck  SkipperFunc  // may be nil
+	readyCheck ReadyChecker // may be nil
+
+	// stopCh is closed by the caller to request a full shutdown.
+	stopCh <-chan struct{}
 }
 
-func (sbd *SplitBrainDetectorConfig) DetectSplitBrainWithRaft(stopCh chan struct{}) {
-	klog.Infoln("[SplitBrainDetector] Starting DetectSplitBrainWithRaft goroutine - detects split brain by checking raft quorum and primary labels")
-	ticker := time.NewTicker(time.Second * 2)
-	defer func() {
-		ticker.Stop()
-		klog.Infoln("[SplitBrainDetector] Stopping Split Brain Detector using Raft")
+// DetectorOptions carries optional callbacks for the Detector.
+type DetectorOptions struct {
+	SkipCheck  SkipperFunc
+	ReadyCheck ReadyChecker
+}
+
+// NewDetector constructs a Detector. stopCh should be closed by the caller
+// when the entire component is shutting down.
+func NewDetector(
+	cfg *ClusterConfig,
+	rc *RaftNode,
+	kc client.Client,
+	kv *Kvstore,
+	connCheck ConnStateChecker,
+	stopCh <-chan struct{},
+	opts DetectorOptions,
+) *Detector {
+	cfg.validate()
+	return &Detector{
+		cfg:        cfg,
+		rc:         rc,
+		kc:         kc,
+		kv:         kv,
+		registry:   newNodeStateRegistry(),
+		connCheck:  connCheck,
+		skipCheck:  opts.SkipCheck,
+		readyCheck: opts.ReadyCheck,
+		stopCh:     stopCh,
+	}
+}
+
+// -----------------------------------------------------------------------------
+// Public entry point
+// -----------------------------------------------------------------------------
+
+// Run blocks and orchestrates all detection goroutines until stopCh is closed.
+// It should be called in its own goroutine.
+func (d *Detector) Run() {
+	klog.Infoln("[SplitBrainDetector] Waiting for all replicas to become ready...")
+	if !d.waitForAllReady() {
+		return // stopCh fired during wait
+	}
+	klog.Infoln("[SplitBrainDetector] All replicas ready, entering management loop")
+	d.managerLoop()
+}
+
+// waitForAllReady blocks until every pod reports ready (via ReadyChecker) or
+// startupTimeout elapses. Returns false if stopCh fires first.
+func (d *Detector) waitForAllReady() bool {
+	startupTimeout := 40 * time.Second
+	if d.cfg.StartUpTimeOut != nil {
+		startupTimeout = *d.cfg.StartUpTimeOut
+	}
+	timeout := time.After(startupTimeout)
+	ticker := time.NewTicker(peerTickInterval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-d.stopCh:
+			return false
+		case <-timeout:
+			klog.Infoln("[SplitBrainDetector] Startup timeout reached, proceeding anyway")
+			return true
+		case <-ticker.C:
+			if d.allPodsReady() {
+				klog.Infof("[SplitBrainDetector] All %d replicas ready", len(d.cfg.PodNames))
+				return true
+			}
+		}
+	}
+}
+
+func (d *Detector) allPodsReady() bool {
+	if d.readyCheck == nil {
+		return true
+	}
+	for _, pod := range d.cfg.PodNames {
+		if !d.readyCheck(pod) {
+			return false
+		}
+	}
+	return true
+}
+
+// -----------------------------------------------------------------------------
+// Manager loop
+// -----------------------------------------------------------------------------
+
+// managerLoop watches for leadership changes and starts/stops the three
+// detection sub-loops accordingly.
+func (d *Detector) managerLoop() {
+	ticker := time.NewTicker(managerTickInterval)
+	defer ticker.Stop()
+
+	var (
+		cancel      func() // nil when not leading
+		leading     bool
+		initialized bool
+	)
+
+	klog.Infoln("[SplitBrainDetector] Manager loop started")
+	defer klog.Infoln("[SplitBrainDetector] Manager loop stopped")
+
+	for {
+		select {
+		case <-d.stopCh:
+			if cancel != nil {
+				cancel()
+			}
+			return
+
+		case <-ticker.C:
+			isLeader := d.isLeader()
+
+			switch {
+			case isLeader && !leading:
+				// Became leader: start sub-loops.
+				leading = true
+				initialized = false
+				d.registry.initAll(d.cfg.PodNames)
+				var ctx context.Context
+				ctx, cancel = newCancelContext(d.stopCh)
+				klog.Infoln("[SplitBrainDetector] Became leader, starting detection sub-loops")
+				go d.leaderHeartbeatLoop(ctx.Done())
+				go d.splitBrainLoop(ctx.Done())
+				go d.followerMonitorLoop(ctx.Done())
+
+			case !isLeader && leading:
+				// Lost leadership: stop sub-loops.
+				leading = false
+				cancel()
+				cancel = nil
+				klog.Infoln("[SplitBrainDetector] Lost leadership, stopping detection sub-loops")
+
+			case !isLeader && !initialized:
+				// Follower initialisation (once per non-leader tenure).
+				initialized = true
+				d.registry.initAll(d.cfg.PodNames)
+				klog.Infoln("[SplitBrainDetector] Follower: initialized node states")
+			}
+		}
+	}
+}
+
+// newCancelContext returns a context that is cancelled when either doneCh or
+// the returned cancel function fires.
+func newCancelContext(doneCh <-chan struct{}) (context.Context, func()) {
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		select {
+		case <-doneCh:
+			cancel()
+		case <-ctx.Done():
+		}
 	}()
-	repCount := 0
+	return ctx, cancel
+}
+
+// -----------------------------------------------------------------------------
+// Leader heartbeat loop
+// -----------------------------------------------------------------------------
+
+// leaderHeartbeatLoop proposes a random Raft entry when quorum is lost, to
+// keep the Raft log advancing and prevent the leader from stepping down
+// prematurely.
+func (d *Detector) leaderHeartbeatLoop(stopCh <-chan struct{}) {
+	klog.Infoln("[SplitBrainDetector] Leader heartbeat loop started")
+	defer klog.Infoln("[SplitBrainDetector] Leader heartbeat loop stopped")
+
+	ticker := time.NewTicker(leaderTickInterval)
+	defer ticker.Stop()
+
+	tryCount := 0
+	failedOnce := false
+
 	for {
 		select {
 		case <-stopCh:
-			klog.Infoln("[SplitBrainDetector] DetectSplitBrainWithRaft stopped (stop signal)")
-			return
-		case <-sbd.stopCh:
-			klog.Infoln("[SplitBrainDetector] DetectSplitBrainWithRaft stopped (shutdown signal)")
 			return
 		case <-ticker.C:
-			if sbd.skipperFunc != nil && sbd.skipperFunc() {
-				klog.V(6).Infoln("[SplitBrainDetector] Leader heartbeat check skipped, skipper function returned true")
+			if d.shouldSkip("Leader heartbeat") {
 				continue
 			}
 
-			t := time.Now()
-			if sbd.rc.Node.Status().Lead != sbd.rc.Node.Status().ID {
+			active := d.countConnectedPeers() + 1 // +1 for self
+			if active >= d.cfg.quorum() {
+				tryCount, failedOnce = 0, false
+				klog.V(6).Infof("[SplitBrainDetector] Heartbeat: quorum OK (active=%d)", active)
 				continue
 			}
-			active := 1
-			r := len(sbd.config.PodLists)
-			if r%2 == 0 {
-				r++
-			}
-			quorum := (r + 1) / 2
-			for i := 0; i < len(sbd.config.PodLists); i++ {
-				podName := sbd.config.PodLists[i]
-				if podName == sbd.config.PodName {
-					continue
-				}
-				nodeState := sbd.GetNodeState(podName)
-				if nodeState == STATE_ACTIVE {
-					active++
-				}
-			}
-			if active < quorum {
-				repCount++
-			} else {
-				repCount = 0
-				sbd.SetNodeState(sbd.config.PodName, STATE_ACTIVE)
-			}
 
-			if repCount > 5 {
-				pods := core.PodList{}
-				sel := labels.SelectorFromSet(sbd.config.sel)
-				err := sbd.kc.List(context.TODO(), &pods, &client.ListOptions{
-					LabelSelector: sel,
-					Namespace:     sbd.config.Namespace,
-				})
-				if err == nil {
-					// TODO: check split brain commenting out this code
-					primaryCounter := 0
-					for _, pod := range pods.Items {
-						if pod.Labels[kubedb.LabelRole] == kubedb.PostgresPodPrimary {
-							primaryCounter++
-						}
-					}
-
-					if primaryCounter <= 1 {
-						continue
-					}
-					klog.Warningf("[SplitBrainDetector] Split brain detected! %d primaries found, took: %v", primaryCounter, time.Since(t))
-				}
-				sbd.SetNodeState(sbd.config.PodName, STATE_SPLIT_BRAIN)
-			}
-			klog.V(6).Infof("[SplitBrainDetector] Split brain check completed, active=%d, quorum=%d, repCount=%d, took: %v", active, quorum, repCount, time.Since(t))
-		}
-	}
-}
-
-func (sbd *SplitBrainDetectorConfig) StartLeaderNode(shutCh chan struct{}) {
-	klog.Infoln("[SplitBrainDetector] Starting StartLeaderNode goroutine - leader sends heartbeat proposals when quorum is lost")
-	ticker := time.NewTicker(3 * time.Second)
-	defer func() {
-		ticker.Stop()
-		klog.Infoln("[SplitBrainDetector] Stopped sending custom entries from leader node.")
-	}()
-	tryCount := 0
-	failedOnce := false
-	for {
-		select {
-		case <-sbd.stopCh:
-			klog.Infoln("[SplitBrainDetector] StartLeaderNode stopped (shutdown signal)")
-			return
-		case <-shutCh:
-			klog.Infoln("[SplitBrainDetector] StartLeaderNode stopped (stop signal)")
-			return
-		case <-ticker.C:
-			if sbd.skipperFunc != nil && sbd.skipperFunc() {
-				klog.V(6).Infoln("[SplitBrainDetector] Leader heartbeat check skipped, an ops request is in progress")
-				continue
-			}
-			t := time.Now()
-			r := len(sbd.config.PodLists)
-			if r%2 == 0 {
-				r++
-			}
-			quorum := (r + 1) / 2
-			active := 1
-			for i := 0; i < len(sbd.config.PodLists); i++ {
-				podName := sbd.config.PodLists[i]
-				if podName == sbd.config.PodName {
-					continue
-				}
-				s := sbd.connStateFunc(podName)
-				if s == StateConnected {
-					active++
-				}
-			}
-			if active >= quorum {
-				tryCount = 0
-				failedOnce = false
-				klog.V(6).Infof("[SplitBrainDetector] Quorum satisfied: active=%d, quorum=%d, took: %v", active, quorum, time.Since(t))
-				continue
-			}
 			tryCount++
-			klog.V(5).Infof("[SplitBrainDetector] Quorum lost: active=%d, quorum=%d, tryCount=%d", active, quorum, tryCount)
-			if !failedOnce || tryCount > 2 {
+			klog.V(5).Infof("[SplitBrainDetector] Heartbeat: quorum lost (active=%d, try=%d)", active, tryCount)
+
+			if !failedOnce || tryCount > leaderHeartbeatTryThreshold {
 				tryCount = 0
 				failedOnce = true
-
-				if sbd.rc.Node.Status().Lead == sbd.rc.Node.Status().ID {
-					proposeStart := time.Now()
-					klog.V(3).Infoln("[SplitBrainDetector] trying to propose random value to keep raft alive")
-					sbd.kv.Propose(sbd.config.PodName, strconv.Itoa(rand.Int()))
-					klog.V(3).Infoln("[SplitBrainDetector] proposed random value to keep raft alive, took:", time.Since(proposeStart))
-				}
-			}
-			klog.V(6).Infof("[SplitBrainDetector] Leader heartbeat check completed, took: %v", time.Since(t))
-		}
-	}
-}
-
-func (sbd *SplitBrainDetectorConfig) StartFollowerNodes(shutCh chan struct{}) {
-	klog.Infoln("[SplitBrainDetector] Starting StartFollowerNodes goroutine - monitors raft progress for each peer to detect inactive nodes")
-	ticker := time.NewTicker(2 * time.Second)
-	defer func() {
-		ticker.Stop()
-		klog.Infoln("[SplitBrainDetector] Stopped monitoring split brain from follower nodes.")
-	}()
-	peerMap := make(map[string]chan struct{})
-
-	for {
-		select {
-		case <-sbd.stopCh:
-			klog.Infoln("[SplitBrainDetector] StartFollowerNodes stopped (shutdown signal), closing all peer channels")
-			for pr, ch := range peerMap {
-				close(ch)
-				delete(peerMap, pr)
-			}
-			return
-		case <-shutCh:
-			klog.Infoln("[SplitBrainDetector] StartFollowerNodes stopped (stop signal), closing all peer channels")
-			for pr, ch := range peerMap {
-				close(ch)
-				delete(peerMap, pr)
-			}
-			return
-		case <-ticker.C:
-			m := make(map[string]struct{})
-			for i := 0; i < len(sbd.config.PodLists); i++ {
-				peerPodName := sbd.config.PodLists[i]
-				if peerPodName == sbd.config.PodName {
-					continue
-				}
-				m[peerPodName] = struct{}{}
-			}
-			for pr, ch := range peerMap {
-				if _, exists := m[pr]; !exists {
-					klog.Infof("[SplitBrainDetector] Removing peer monitor for: %s", pr)
-					close(ch)
-					delete(peerMap, pr)
-				}
-			}
-			for pr := range m {
-				if _, exists := peerMap[pr]; !exists {
-					klog.Infof("[SplitBrainDetector] Starting peer monitor goroutine for: %s", pr)
-					peerMap[pr] = make(chan struct{})
-					go func(peerPod string, stopCh chan struct{}, shutCh chan struct{}) {
-						klog.Infof("[SplitBrainDetector] Peer monitor goroutine started for %s - monitors raft match progress", peerPod)
-						btc := time.NewTicker(1 * time.Second)
-						defer btc.Stop()
-
-						prevMatch := uint64(0)
-						nmc := 0
-						for {
-							select {
-							case <-stopCh:
-								klog.Infof("[SplitBrainDetector] Peer monitor for %s stopped (peer removed)", peerPod)
-								return
-							case <-shutCh:
-								klog.Infof("[SplitBrainDetector] Peer monitor for %s stopped (shutdown signal)", peerPod)
-								return
-							case <-btc.C:
-
-								if sbd.skipperFunc != nil && sbd.skipperFunc() {
-									klog.V(6).Infoln("[SplitBrainDetector] Leader heartbeat check skipped, an ops request is in progress")
-									continue
-								}
-
-								t := time.Now()
-								lid := sbd.rc.Node.Status().Lead
-								if lid == 0 {
-									continue
-								}
-								id := sbd.config.ID[peerPod]
-								if id == 0 {
-									klog.Warningf("[SplitBrainDetector] No ID found for peer %s, skipping match check", peerPod)
-									continue
-								}
-								pm := sbd.rc.Node.Status().Progress
-								leaderMatch, e1 := pm[lid]
-								peerMatch, e2 := pm[id]
-								if e1 && e2 {
-									if leaderMatch.Match == peerMatch.Match || peerMatch.Match > prevMatch {
-										prevMatch = peerMatch.Match
-										sbd.SetNodeState(peerPod, STATE_ACTIVE)
-										nmc = 0
-										klog.V(6).Infof("[SplitBrainDetector] Peer %s is ACTIVE, match=%d, took: %v", peerPod, peerMatch.Match, time.Since(t))
-										continue
-									}
-									nmc++
-									klog.V(6).Infof("[SplitBrainDetector] Peer %s match not progressing, nmc=%d, leaderMatch=%d, peerMatch=%d", peerPod, nmc, leaderMatch.Match, peerMatch.Match)
-								}
-								if nmc <= 10 {
-									continue
-								}
-								pd := &core.Pod{}
-								err := sbd.kc.Get(context.TODO(), types.NamespacedName{
-									Name:      peerPod,
-									Namespace: sbd.config.Namespace,
-								}, pd)
-								if err == nil && pd != nil && (pd.DeletionTimestamp != nil || pd.Status.Phase != core.PodRunning) {
-									nmc = 5
-									klog.V(6).Infof("[SplitBrainDetector] Peer %s is being deleted or not running, resetting counter", peerPod)
-									continue
-								}
-								klog.V(6).Infof("[SplitBrainDetector] Setting peer %s to INACTIVE, nmc=%d, took: %v", peerPod, nmc, time.Since(t))
-								sbd.SetNodeState(peerPod, STATE_INACTIVE)
-							}
-						}
-					}(pr, peerMap[pr], sbd.stopCh)
+				if d.isLeader() {
+					klog.V(3).Infoln("[SplitBrainDetector] Proposing random value to keep Raft alive")
+					d.kv.Propose(d.cfg.LocalPod, strconv.Itoa(rand.Int()))
 				}
 			}
 		}
 	}
 }
 
-func (sbd *SplitBrainDetectorConfig) RunSplitBrainManager() {
-	if sbd.config == nil || sbd.config.ID == nil || sbd.config.sel == nil {
-		panic("ID mapping and label selector cannot be nil in SplitBrainDetectorConfig")
-	}
-
-	klog.Infoln("[SplitBrainDetector] Starting RunSplitBrainManager - orchestrates all split brain detection goroutines")
-	u := time.After(time.Second * 40)
-	t := time.NewTicker(1 * time.Second)
-
-	klog.Infoln("[SplitBrainDetector] Waiting for LSN data from all replicas or 40 seconds timeout...")
-	for {
-		stepDown := false
-		select {
-		case <-sbd.stopCh:
-			klog.Infoln("[SplitBrainDetector] RunSplitBrainManager stopped during initialization")
-			return
-		case <-u:
-			klog.Infoln("[SplitBrainDetector] 40 second timeout reached, starting split brain manager")
-			stepDown = true
-		case <-t.C:
-			got := 0
-			for i := 0; i < len(sbd.config.PodLists); i++ {
-				podName := sbd.config.PodLists[i]
-				if sbd.readyFunc == nil || sbd.readyFunc(podName) {
-					got++
-				}
-			}
-			if got >= len(sbd.config.PodLists) {
-				klog.Infof("[SplitBrainDetector] All %d replicas have LSN data, starting split brain manager", got)
-				stepDown = true
-			}
-		}
-		if stepDown {
-			break
+// countConnectedPeers returns the number of peers reachable via connCheck.
+func (d *Detector) countConnectedPeers() int {
+	count := 0
+	for _, peer := range d.cfg.peers() {
+		if d.connCheck(peer) == ConnStateConnected {
+			count++
 		}
 	}
-	t.Stop()
+	return count
+}
 
-	ticker := time.NewTicker(2 * time.Second)
-	defer func() {
-		ticker.Stop()
-		klog.Infoln("[SplitBrainDetector] Stopping Split Brain Manager")
-	}()
-	chanMap := make(map[string]chan struct{})
-	s := []string{"start"}
-	initialize := false
+// -----------------------------------------------------------------------------
+// Split-brain detection loop
+// -----------------------------------------------------------------------------
+
+// splitBrainLoop runs on the leader and declares a split-brain when active
+// node count falls below quorum for several consecutive ticks.
+func (d *Detector) splitBrainLoop(stopCh <-chan struct{}) {
+	klog.Infoln("[SplitBrainDetector] Split-brain detection loop started")
+	defer klog.Infoln("[SplitBrainDetector] Split-brain detection loop stopped")
+
+	ticker := time.NewTicker(managerTickInterval)
+	defer ticker.Stop()
+
+	repCount := 0
 
 	for {
 		select {
-		case <-sbd.stopCh:
-			klog.Infoln("[SplitBrainDetector] RunSplitBrainManager stopped")
+		case <-stopCh:
 			return
 		case <-ticker.C:
-			checkStart := time.Now()
-			if sbd.rc.Node.Status().Lead != sbd.rc.Node.Status().ID {
-				if !initialize {
-					initialize = true
-					sbd.InitNodeState()
-					klog.Infoln("[SplitBrainDetector] Not a leader, initialized node states")
-				}
-				for k, ch := range chanMap {
-					klog.V(5).Infof("[SplitBrainDetector] Stopping split brain monitors (not a leader)")
-					close(ch)
-					delete(chanMap, k)
-				}
-				klog.V(6).Infof("[SplitBrainDetector] Manager check completed (not leader), took: %v", time.Since(checkStart))
+			if !d.isLeader() || d.shouldSkip("Split-brain check") {
 				continue
 			}
-			initialize = false
-			for _, v := range s {
-				if _, ok := chanMap[v]; !ok {
-					klog.Infoln("[SplitBrainDetector] I am the leader, starting split brain monitor goroutines")
-					sbd.InitNodeState()
-					chanMap[v] = make(chan struct{})
-					go sbd.StartLeaderNode(chanMap[v])
-					go sbd.DetectSplitBrain(chanMap[v])
-					go sbd.StartFollowerNodes(chanMap[v])
-					klog.Infoln("[SplitBrainDetector] All split brain monitor goroutines started, took:", time.Since(checkStart))
+
+			active := d.countActiveNodes()
+			if active >= d.cfg.quorum() {
+				repCount = 0
+				d.registry.set(d.cfg.LocalPod, StateActive)
+				klog.V(6).Infof("[SplitBrainDetector] Split-brain check OK (active=%d)", active)
+				continue
+			}
+
+			repCount++
+			klog.V(6).Infof("[SplitBrainDetector] Quorum loss count=%d (active=%d)", repCount, active)
+
+			if repCount > splitBrainRepCountThreshold {
+				d.handlePotentialSplitBrain()
+			}
+		}
+	}
+}
+
+// countActiveNodes counts how many pods (including self) are in StateActive.
+func (d *Detector) countActiveNodes() int {
+	count := 1 // self is always active on the leader
+	for _, peer := range d.cfg.peers() {
+		if d.registry.get(peer) == StateActive {
+			count++
+		}
+	}
+	return count
+}
+
+// handlePotentialSplitBrain verifies a split-brain by checking how many pods
+// carry the primary label; if more than one, the local node is marked as split-brain.
+func (d *Detector) handlePotentialSplitBrain() {
+	primaryCount, err := d.countPrimaryPods()
+	if err != nil {
+		klog.Warningf("[SplitBrainDetector] Could not list pods: %v", err)
+		return
+	}
+	if primaryCount <= 1 {
+		return
+	}
+	klog.Warningf("[SplitBrainDetector] Split brain! %d primaries detected", primaryCount)
+	d.registry.set(d.cfg.LocalPod, StateSplitBrain)
+}
+
+// countPrimaryPods lists pods matching the cluster selector and returns how
+// many carry the primary role label.
+func (d *Detector) countPrimaryPods() (int, error) {
+	pods := &core.PodList{}
+	sel := labels.SelectorFromSet(d.cfg.PodSelector)
+	if err := d.kc.List(context.TODO(), pods, &client.ListOptions{
+		LabelSelector: sel,
+		Namespace:     d.cfg.Namespace,
+	}); err != nil {
+		return 0, err
+	}
+
+	count := 0
+	for _, pod := range pods.Items {
+		if pod.Labels[kubedb.LabelRole] == kubedb.PostgresPodPrimary {
+			count++
+		}
+	}
+	return count, nil
+}
+
+// -----------------------------------------------------------------------------
+// Follower / peer monitoring loop
+// -----------------------------------------------------------------------------
+
+// followerMonitorLoop manages per-peer goroutines that track Raft match
+// progress, marking lagging peers as INACTIVE.
+func (d *Detector) followerMonitorLoop(stopCh <-chan struct{}) {
+	klog.Infoln("[SplitBrainDetector] Follower monitor loop started")
+	defer klog.Infoln("[SplitBrainDetector] Follower monitor loop stopped")
+
+	ticker := time.NewTicker(followerTickInterval)
+	defer ticker.Stop()
+
+	// peerCancel maps peer pod names to their per-goroutine cancel functions.
+	peerCancel := make(map[string]func())
+
+	cleanup := func() {
+		for pod, cancel := range peerCancel {
+			cancel()
+			delete(peerCancel, pod)
+		}
+	}
+	defer cleanup()
+
+	for {
+		select {
+		case <-stopCh:
+			return
+		case <-ticker.C:
+			desired := d.peerSet()
+
+			// Stop goroutines for pods no longer in the cluster.
+			for pod, cancel := range peerCancel {
+				if _, ok := desired[pod]; !ok {
+					klog.Infof("[SplitBrainDetector] Removing peer monitor: %s", pod)
+					cancel()
+					delete(peerCancel, pod)
+				}
+			}
+
+			// Start goroutines for newly appearing pods.
+			for pod := range desired {
+				if _, ok := peerCancel[pod]; !ok {
+					klog.Infof("[SplitBrainDetector] Starting peer monitor: %s", pod)
+					ctx, cancel := newCancelContext(stopCh)
+					peerCancel[pod] = cancel
+					go d.monitorPeer(pod, ctx.Done())
 				}
 			}
 		}
 	}
+}
+
+// peerSet returns the current set of peer pod names (excluding local).
+func (d *Detector) peerSet() map[string]struct{} {
+	m := make(map[string]struct{}, len(d.cfg.PodNames)-1)
+	for _, pod := range d.cfg.peers() {
+		m[pod] = struct{}{}
+	}
+	return m
+}
+
+// monitorPeer tracks Raft match progress for a single peer and flips its
+// state between StateActive and StateInactive.
+func (d *Detector) monitorPeer(pod string, stopCh <-chan struct{}) {
+	klog.Infof("[SplitBrainDetector] Peer monitor started: %s", pod)
+	defer klog.Infof("[SplitBrainDetector] Peer monitor stopped: %s", pod)
+
+	ticker := time.NewTicker(peerTickInterval)
+	defer ticker.Stop()
+
+	prevMatch := uint64(0)
+	noProgressCount := 0
+
+	for {
+		select {
+		case <-stopCh:
+			return
+		case <-ticker.C:
+			if d.shouldSkip("Peer monitor " + pod) {
+				continue
+			}
+
+			if d.peerIsProgressing(pod, &prevMatch) {
+				noProgressCount = 0
+				d.registry.set(pod, StateActive)
+				continue
+			}
+
+			noProgressCount++
+			klog.V(6).Infof("[SplitBrainDetector] Peer %s not progressing (count=%d)", pod, noProgressCount)
+
+			if noProgressCount <= peerInactiveThreshold {
+				continue
+			}
+
+			// Before marking inactive, check if the pod is being deleted.
+			if d.podIsDeletingOrNotRunning(pod) {
+				noProgressCount = peerDeletingThreshold
+				klog.V(6).Infof("[SplitBrainDetector] Peer %s deleting/not-running, deferring inactive", pod)
+				continue
+			}
+
+			klog.V(4).Infof("[SplitBrainDetector] Marking peer %s INACTIVE", pod)
+			d.registry.set(pod, StateInactive)
+		}
+	}
+}
+
+// peerIsProgressing checks whether a peer's Raft match index has advanced
+// since the last check, or has caught up with the leader.
+// prevMatch is updated in place.
+func (d *Detector) peerIsProgressing(pod string, prevMatch *uint64) bool {
+	leaderID := d.rc.Node.Status().Lead
+	if leaderID == 0 {
+		return true // No leader yet; don't penalise.
+	}
+
+	peerID := d.cfg.RaftIDs[pod]
+	if peerID == 0 {
+		klog.Warningf("[SplitBrainDetector] No Raft ID for peer %s", pod)
+		return true // Unknown peer; be conservative.
+	}
+
+	progress := d.rc.Node.Status().Progress
+	leaderProg, leaderOK := progress[leaderID]
+	peerProg, peerOK := progress[peerID]
+	if !leaderOK || !peerOK {
+		return true // Progress not yet available.
+	}
+
+	if leaderProg.Match == peerProg.Match || peerProg.Match > *prevMatch {
+		*prevMatch = peerProg.Match
+		return true
+	}
+	return false
+}
+
+// podIsDeletingOrNotRunning returns true when the pod is being terminated or
+// is not in the Running phase (so we don't prematurely declare it inactive).
+func (d *Detector) podIsDeletingOrNotRunning(pod string) bool {
+	p := &core.Pod{}
+	err := d.kc.Get(context.TODO(), types.NamespacedName{
+		Name:      pod,
+		Namespace: d.cfg.Namespace,
+	}, p)
+	if err != nil {
+		return false // Assume running if we can't fetch.
+	}
+	return p.DeletionTimestamp != nil || p.Status.Phase != core.PodRunning
+}
+
+// -----------------------------------------------------------------------------
+// Helpers
+// -----------------------------------------------------------------------------
+
+// isLeader returns true when this node is the current Raft leader.
+func (d *Detector) isLeader() bool {
+	status := d.rc.Node.Status()
+	return status.Lead == status.ID
+}
+
+// shouldSkip returns true when the SkipperFunc signals that detection should
+// pause. Logs at V(6) if skipping.
+func (d *Detector) shouldSkip(context string) bool {
+	if d.skipCheck != nil && d.skipCheck() {
+		klog.V(6).Infof("[SplitBrainDetector] %s skipped (ops request in progress)", context)
+		return true
+	}
+	return false
 }

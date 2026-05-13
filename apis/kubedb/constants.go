@@ -1601,7 +1601,6 @@ const (
 	DocumentDBDatabaseRoleInstance = "instance"
 
 	DocumentDBDefaultUsername = "default_user"
-	DocumentDBDefaultPassword = "1234"
 
 	DefaultDocumentDBDatabase = "sampledb"
 
