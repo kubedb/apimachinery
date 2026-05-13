@@ -27661,10 +27661,12 @@
       "type": "object",
       "properties": {
         "checkpointStartPosition": {
+          "description": "CheckpointStartPosition defines initial oplog position (UTC timestamp). Used only when no checkpoint exists. Note: UTC time is 8 hours ahead of CST.",
           "type": "integer",
           "format": "int64"
         },
         "extraConfiguration": {
+          "description": "ExtraConfiguration allows additional raw mongoshake configuration. Key-value pairs passed directly without schema validation.",
           "type": "object",
           "additionalProperties": {
             "type": "string",
@@ -27672,10 +27674,11 @@
           }
         },
         "filterDdlEnable": {
-          "description": "---------------- BOOLS → POINTERS ----------------",
+          "description": "FilterDDLEnable controls whether DDL operations are filtered or passed. When enabled, only oplog operations (i/u/d) are synced. When disabled, DDL operations like create index or drop database are included.",
           "type": "boolean"
         },
         "filterNamespaceBlack": {
+          "description": "FilterNamespaceBlack excludes specified namespaces (db.collection or db). Format: db.collection or db Multiple entries separated by ';' Example: db1.col1;db2 If set, listed namespaces will be filtered out.",
           "type": "array",
           "items": {
             "type": "string",
@@ -27683,6 +27686,7 @@
           }
         },
         "filterNamespaceWhite": {
+          "description": "FilterNamespaceWhite includes only specified namespaces (db.collection or db). Format: db.collection or db Multiple entries separated by ';' Example: db1.col1;db2 If set, only listed namespaces will be allowed.",
           "type": "array",
           "items": {
             "type": "string",
@@ -27690,6 +27694,7 @@
           }
         },
         "filterOpTypes": {
+          "description": "FilterOpTypes filters MongoDB oplog operation types to include. Example values: \"i\" (insert), \"u\" (update), \"d\" (delete) Equivalent behavior: acts as oplog.op type filter",
           "type": "array",
           "items": {
             "type": "string",
@@ -27697,91 +27702,23 @@
           }
         },
         "filterOplogGids": {
+          "description": "FilterOplogGids enables filtering of oplog by GID.",
           "type": "boolean"
         },
         "filterPassSpecialDb": {
+          "description": "FilterPassSpecialDb allows special system databases to be included. Example: admin;local;config;mongoshake Note: collection-level filtering is not supported here.",
           "type": "array",
           "items": {
             "type": "string",
             "default": ""
           }
         },
-        "fullSyncCollectionDrop": {
-          "description": "---------------- BOOLS → POINTERS ----------------",
-          "type": "boolean"
-        },
-        "fullSyncCreateIndex": {
-          "type": "string"
-        },
-        "fullSyncDoNotShardDest": {
-          "type": "boolean"
-        },
-        "fullSyncExecutorFilterOrphanDocument": {
-          "type": "boolean"
-        },
-        "fullSyncExecutorInsertOnDupUpdate": {
-          "type": "boolean"
-        },
-        "fullSyncExecutorMajorityEnable": {
-          "type": "boolean"
-        },
-        "fullSyncReaderCollectionParallel": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "fullSyncReaderDocumentBatchSize": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "fullSyncReaderFetchBatchSize": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "fullSyncReaderOplogStoreDisk": {
-          "type": "boolean"
-        },
-        "fullSyncReaderOplogStoreDiskMaxSize": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "fullSyncReaderParallelIndex": {
-          "type": "string"
-        },
-        "fullSyncReaderParallelThread": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "fullSyncReaderSplitMaxChunkSize": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "fullSyncReaderWriteDocumentParallel": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "incrSyncReaderFetchBatchSize": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "incrSyncTunnelWriteThread": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "incrSyncWorker": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "mongoSslClientCaFile": {
-          "type": "string"
-        },
-        "mongoSslRootCaFile": {
-          "type": "string"
-        },
         "syncMode": {
-          "description": "SyncMode: full, incr, or fullSync",
+          "description": "SyncMode controls synchronization mode. Supported values: all, full, incr - all  : full synchronization + incremental synchronization - full : full synchronization only - incr : incremental synchronization only Equivalent behavior: defines replication mode of mongoshake",
           "type": "string"
         },
         "transformNamespace": {
+          "description": "TransformNamespace maps source namespaces to destination namespaces. Format:\n  fromDb.fromCollection:toDb.toCollection\n  fromDb:toDb\nMultiple mappings separated by ';' Example: db1.col1:db2.col1;db3:db4",
           "type": "array",
           "items": {
             "type": "string",

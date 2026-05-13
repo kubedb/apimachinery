@@ -33769,26 +33769,15 @@ func schema_apimachinery_apis_migrator_v1alpha1_Mongoshake(ref common.ReferenceC
 				Properties: map[string]spec.Schema{
 					"syncMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SyncMode: full, incr, or fullSync",
+							Description: "SyncMode controls synchronization mode. Supported values: all, full, incr - all  : full synchronization + incremental synchronization - full : full synchronization only - incr : incremental synchronization only Equivalent behavior: defines replication mode of mongoshake",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"mongoSslRootCaFile": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"mongoSslClientCaFile": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
 					"filterOpTypes": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "FilterOpTypes filters MongoDB oplog operation types to include. Example values: \"i\" (insert), \"u\" (update), \"d\" (delete) Equivalent behavior: acts as oplog.op type filter",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -33802,7 +33791,8 @@ func schema_apimachinery_apis_migrator_v1alpha1_Mongoshake(ref common.ReferenceC
 					},
 					"filterNamespaceBlack": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "FilterNamespaceBlack excludes specified namespaces (db.collection or db). Format: db.collection or db Multiple entries separated by ';' Example: db1.col1;db2 If set, listed namespaces will be filtered out.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -33816,7 +33806,8 @@ func schema_apimachinery_apis_migrator_v1alpha1_Mongoshake(ref common.ReferenceC
 					},
 					"filterNamespaceWhite": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "FilterNamespaceWhite includes only specified namespaces (db.collection or db). Format: db.collection or db Multiple entries separated by ';' Example: db1.col1;db2 If set, only listed namespaces will be allowed.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -33830,7 +33821,8 @@ func schema_apimachinery_apis_migrator_v1alpha1_Mongoshake(ref common.ReferenceC
 					},
 					"filterPassSpecialDb": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "FilterPassSpecialDb allows special system databases to be included. Example: admin;local;config;mongoshake Note: collection-level filtering is not supported here.",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -33844,26 +33836,29 @@ func schema_apimachinery_apis_migrator_v1alpha1_Mongoshake(ref common.ReferenceC
 					},
 					"filterDdlEnable": {
 						SchemaProps: spec.SchemaProps{
-							Description: "---------------- BOOLS → POINTERS ----------------",
+							Description: "FilterDDLEnable controls whether DDL operations are filtered or passed. When enabled, only oplog operations (i/u/d) are synced. When disabled, DDL operations like create index or drop database are included.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
 					"filterOplogGids": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
+							Description: "FilterOplogGids enables filtering of oplog by GID.",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 					"checkpointStartPosition": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Description: "CheckpointStartPosition defines initial oplog position (UTC timestamp). Used only when no checkpoint exists. Note: UTC time is 8 hours ahead of CST.",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
 					"transformNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
+							Description: "TransformNamespace maps source namespaces to destination namespaces. Format:\n  fromDb.fromCollection:toDb.toCollection\n  fromDb:toDb\nMultiple mappings separated by ';' Example: db1.col1:db2.col1;db3:db4",
+							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
@@ -33875,118 +33870,10 @@ func schema_apimachinery_apis_migrator_v1alpha1_Mongoshake(ref common.ReferenceC
 							},
 						},
 					},
-					"fullSyncReaderCollectionParallel": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"fullSyncReaderWriteDocumentParallel": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"fullSyncReaderDocumentBatchSize": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"fullSyncReaderFetchBatchSize": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"fullSyncReaderParallelThread": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"fullSyncReaderParallelIndex": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"fullSyncReaderSplitMaxChunkSize": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"fullSyncCollectionDrop": {
-						SchemaProps: spec.SchemaProps{
-							Description: "---------------- BOOLS → POINTERS ----------------",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"fullSyncReaderOplogStoreDisk": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"fullSyncExecutorInsertOnDupUpdate": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"fullSyncExecutorFilterOrphanDocument": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"fullSyncExecutorMajorityEnable": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"fullSyncDoNotShardDest": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"fullSyncCreateIndex": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"fullSyncReaderOplogStoreDiskMaxSize": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"incrSyncReaderFetchBatchSize": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"incrSyncWorker": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"incrSyncTunnelWriteThread": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
 					"extraConfiguration": {
 						SchemaProps: spec.SchemaProps{
-							Type: []string{"object"},
+							Description: "ExtraConfiguration allows additional raw mongoshake configuration. Key-value pairs passed directly without schema validation.",
+							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
 								Schema: &spec.Schema{

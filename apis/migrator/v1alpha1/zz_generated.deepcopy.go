@@ -376,36 +376,6 @@ func (in *Mongoshake) DeepCopyInto(out *Mongoshake) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	if in.FullSyncCollectionDrop != nil {
-		in, out := &in.FullSyncCollectionDrop, &out.FullSyncCollectionDrop
-		*out = new(bool)
-		**out = **in
-	}
-	if in.FullSyncReaderOplogStoreDisk != nil {
-		in, out := &in.FullSyncReaderOplogStoreDisk, &out.FullSyncReaderOplogStoreDisk
-		*out = new(bool)
-		**out = **in
-	}
-	if in.FullSyncExecutorInsertOnDupUpdate != nil {
-		in, out := &in.FullSyncExecutorInsertOnDupUpdate, &out.FullSyncExecutorInsertOnDupUpdate
-		*out = new(bool)
-		**out = **in
-	}
-	if in.FullSyncExecutorFilterOrphanDocument != nil {
-		in, out := &in.FullSyncExecutorFilterOrphanDocument, &out.FullSyncExecutorFilterOrphanDocument
-		*out = new(bool)
-		**out = **in
-	}
-	if in.FullSyncExecutorMajorityEnable != nil {
-		in, out := &in.FullSyncExecutorMajorityEnable, &out.FullSyncExecutorMajorityEnable
-		*out = new(bool)
-		**out = **in
-	}
-	if in.FullSyncDoNotShardDest != nil {
-		in, out := &in.FullSyncDoNotShardDest, &out.FullSyncDoNotShardDest
-		*out = new(bool)
-		**out = **in
-	}
 	if in.ExtraConfiguration != nil {
 		in, out := &in.ExtraConfiguration, &out.ExtraConfiguration
 		*out = make(map[string]string, len(*in))
