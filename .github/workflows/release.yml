@@ -38,7 +38,7 @@ jobs:
           fetch-depth: 1
           fetch-tags: true
       - name: Release
-        uses: actions/github-script@00f12e3e20659f42342b1c0226afda7f7c042325 # v6
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const { repo, owner } = context.repo;
