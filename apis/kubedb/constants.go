@@ -1595,6 +1595,19 @@ const (
 	DocumentDBSqlNetPort          = 10260
 	DocumentDBDefaultPort         = 10260
 
+	DocumentDBDatabasePortName = "postgres"
+	DocumentDBDatabasePort     = 9712
+
+	DocumentDBGatewayPortName = "gateway"
+	DocumentDBGatewayPort     = 10260
+
+	DocumentDBCoordinatorPortName       = "coordinator"
+	DocumentDBCoordinatorPort           = 2380
+	DocumentDBCoordinatorClientPortName = "coordinatclient"
+	DocumentDBCoordinatorClientPort     = 2389
+	DocumentDBGRPCServerPortName        = "grpcserver"
+	DocumentDBGRPCServerPort            = 2384
+
 	DocumentDBPrimaryRole = "primary"
 	DocumentDBStandbyRole = "standby"
 
