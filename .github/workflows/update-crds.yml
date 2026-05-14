@@ -52,8 +52,8 @@ jobs:
           cd $RUNNER_WORKSPACE
           git clone $url
           cd $(basename $INSTALLER_REPOSITORY)
-          git config user.name "${GITHUB_USER}[bot]"
-          git config user.email "${GITHUB_USER}[bot]@users.noreply.github.com"
+          git config user.name "1gtm"
+          git config user.email "1gtm@appscode.com"
 
       - name: Update crds
         env:
