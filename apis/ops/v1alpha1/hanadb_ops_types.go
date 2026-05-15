@@ -67,9 +67,9 @@ type HanaDBOpsRequestSpec struct {
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	TLS           *HanaDBTLSSpec       `json:"tls,omitempty"`
 	// Specifies information necessary for restarting database
-	Restart   *RestartSpec          `json:"restart,omitempty"`
-	Migration *HanaDBMigrationSpec  `json:"migration,omitempty"`
-	Timeout   *metav1.Duration      `json:"timeout,omitempty"`
+	Restart   *RestartSpec         `json:"restart,omitempty"`
+	Migration *HanaDBMigrationSpec `json:"migration,omitempty"`
+	Timeout   *metav1.Duration     `json:"timeout,omitempty"`
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
 	// +kubebuilder:default=1
