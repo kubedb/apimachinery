@@ -67,16 +67,23 @@ type HanaDBOpsRequestSpec struct {
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	TLS           *HanaDBTLSSpec       `json:"tls,omitempty"`
 	// Specifies information necessary for restarting database
-	Restart *RestartSpec     `json:"restart,omitempty"`
-	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	Restart   *RestartSpec          `json:"restart,omitempty"`
+	Migration *HanaDBMigrationSpec  `json:"migration,omitempty"`
+	Timeout   *metav1.Duration      `json:"timeout,omitempty"`
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
 	// +kubebuilder:default=1
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure;ReconfigureTLS
-// ENUM(Restart, Reconfigure, ReconfigureTLS)
+type HanaDBMigrationSpec struct {
+	StorageClassName *string `json:"storageClassName"`
+	// +optional
+	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=Restart;Reconfigure;ReconfigureTLS;StorageMigration
+// ENUM(Restart, Reconfigure, ReconfigureTLS, StorageMigration)
 type HanaDBOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
