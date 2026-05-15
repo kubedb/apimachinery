@@ -28,4 +28,3 @@ type MariaDBTarget struct {
 	// ConnectionInfo refers to the target MariaDB database connection information.
 	ConnectionInfo *MySQLConnectionInfo `yaml:"connectionInfo" json:"connectionInfo"`
 }
-
