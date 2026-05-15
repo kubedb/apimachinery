@@ -58,12 +58,19 @@ type OracleOpsRequestSpec struct {
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
+	// Specifies information necessary for migrating storage
+	Migration *OracleMigrationSpec `json:"migration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure
-// ENUM(Restart, Reconfigure)
+type OracleMigrationSpec struct {
+	StorageClassName   *string                            `json:"storageClassName"`
+	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=Restart;Reconfigure;StorageMigration
+// ENUM(Restart, Reconfigure, StorageMigration)
 type OracleOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
