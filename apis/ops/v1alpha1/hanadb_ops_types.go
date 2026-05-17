@@ -21,6 +21,7 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -68,6 +69,8 @@ type HanaDBOpsRequestSpec struct {
 	// Specifies information necessary for custom configuration of HanaDB
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	TLS           *HanaDBTLSSpec       `json:"tls,omitempty"`
+	// Specifies information necessary for volume expansion
+	VolumeExpansion *HanaDBVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec     `json:"restart,omitempty"`
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
@@ -77,14 +80,21 @@ type HanaDBOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;Restart;Reconfigure;ReconfigureTLS
-// ENUM(VerticalScaling, Restart, Reconfigure, ReconfigureTLS)
+// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// ENUM(VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type HanaDBOpsRequestType string
 
 // HanaDBVerticalScalingSpec contains the vertical scaling information of a HanaDB cluster
 type HanaDBVerticalScalingSpec struct {
 	// Resource spec for nodes
 	Node *PodResources `json:"node,omitempty"`
+}
+
+// HanaDBVolumeExpansionSpec is the spec for HanaDB volume expansion
+type HanaDBVolumeExpansionSpec struct {
+	Mode VolumeExpansionMode `json:"mode"`
+	// volume specification for nodes
+	Node *resource.Quantity `json:"node,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
