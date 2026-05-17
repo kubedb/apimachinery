@@ -19,6 +19,7 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -63,6 +64,9 @@ type WeaviateOpsRequestSpec struct {
 	// Specifies information necessary for custom configuration of weaviate
 	Configuration *WeaviateReconfigurationSpec `json:"configuration,omitempty"`
 
+	// Specifies information necessary for volume expansion
+	VolumeExpansion *WeaviateVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
+
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
@@ -74,8 +78,8 @@ type WeaviateOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure
-// ENUM(Restart,Reconfigure)
+// +kubebuilder:validation:Enum=Restart;Reconfigure;VolumeExpansion
+// ENUM(Restart,Reconfigure,VolumeExpansion)
 type WeaviateOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -96,4 +100,11 @@ type WeaviateReconfigurationSpec struct {
 	// from a Kubernetes Secret for the database container.
 	// +optional
 	BackupConfigSecret *core.LocalObjectReference `json:"backupConfigSecret,omitempty"`
+}
+
+// WeaviateVolumeExpansionSpec is the spec for Weaviate volume expansion
+type WeaviateVolumeExpansionSpec struct {
+	Mode VolumeExpansionMode `json:"mode"`
+	// volume specification for nodes
+	Node *resource.Quantity `json:"node,omitempty"`
 }
