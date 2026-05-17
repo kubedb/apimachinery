@@ -17,6 +17,8 @@ const (
 	OracleOpsRequestTypeReconfigure OracleOpsRequestType = "Reconfigure"
 	// OracleOpsRequestTypeVerticalScaling is a OracleOpsRequestType of type VerticalScaling.
 	OracleOpsRequestTypeVerticalScaling OracleOpsRequestType = "VerticalScaling"
+	// OracleOpsRequestTypeVolumeExpansion is a OracleOpsRequestType of type VolumeExpansion.
+	OracleOpsRequestTypeVolumeExpansion OracleOpsRequestType = "VolumeExpansion"
 )
 
 var ErrInvalidOracleOpsRequestType = fmt.Errorf("not a valid OracleOpsRequestType, try [%s]", strings.Join(_OracleOpsRequestTypeNames, ", "))
@@ -25,6 +27,7 @@ var _OracleOpsRequestTypeNames = []string{
 	string(OracleOpsRequestTypeRestart),
 	string(OracleOpsRequestTypeReconfigure),
 	string(OracleOpsRequestTypeVerticalScaling),
+	string(OracleOpsRequestTypeVolumeExpansion),
 }
 
 // OracleOpsRequestTypeNames returns a list of possible string values of OracleOpsRequestType.
@@ -40,6 +43,7 @@ func OracleOpsRequestTypeValues() []OracleOpsRequestType {
 		OracleOpsRequestTypeRestart,
 		OracleOpsRequestTypeReconfigure,
 		OracleOpsRequestTypeVerticalScaling,
+		OracleOpsRequestTypeVolumeExpansion,
 	}
 }
 
@@ -59,6 +63,7 @@ var _OracleOpsRequestTypeValue = map[string]OracleOpsRequestType{
 	"Restart":         OracleOpsRequestTypeRestart,
 	"Reconfigure":     OracleOpsRequestTypeReconfigure,
 	"VerticalScaling": OracleOpsRequestTypeVerticalScaling,
+	"VolumeExpansion": OracleOpsRequestTypeVolumeExpansion,
 }
 
 // ParseOracleOpsRequestType attempts to convert a string to a OracleOpsRequestType.
