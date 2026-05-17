@@ -19,6 +19,7 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -54,6 +55,8 @@ type OracleOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type OracleOpsRequestType `json:"type"`
+	// Specifies information necessary for volume expansion
+	VolumeExpansion *OracleVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for custom configuration of oracle
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for restarting database
@@ -62,9 +65,18 @@ type OracleOpsRequestSpec struct {
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure
-// ENUM(Restart, Reconfigure)
+// +kubebuilder:validation:Enum=Restart;Reconfigure;VolumeExpansion
+// ENUM(Restart, Reconfigure, VolumeExpansion)
 type OracleOpsRequestType string
+
+// OracleVolumeExpansionSpec is the spec for Oracle volume expansion
+type OracleVolumeExpansionSpec struct {
+	Mode VolumeExpansionMode `json:"mode"`
+	// volume specification for Oracle database nodes
+	Node *resource.Quantity `json:"node,omitempty"`
+	// volume specification for DataGuard observer
+	Observer *resource.Quantity `json:"observer,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
