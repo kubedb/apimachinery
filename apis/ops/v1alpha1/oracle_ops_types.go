@@ -54,6 +54,8 @@ type OracleOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type OracleOpsRequestType `json:"type"`
+	// Specifies information necessary for vertical scaling
+	VerticalScaling *OracleVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for custom configuration of oracle
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for restarting database
@@ -62,9 +64,15 @@ type OracleOpsRequestSpec struct {
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure
-// ENUM(Restart, Reconfigure)
+// +kubebuilder:validation:Enum=Restart;Reconfigure;VerticalScaling
+// ENUM(Restart, Reconfigure, VerticalScaling)
 type OracleOpsRequestType string
+
+// OracleVerticalScalingSpec contains the vertical scaling information of an Oracle cluster
+type OracleVerticalScalingSpec struct {
+	// Resource spec for nodes
+	Node *PodResources `json:"node,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
