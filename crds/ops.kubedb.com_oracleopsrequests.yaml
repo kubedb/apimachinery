@@ -42,6 +42,24 @@ spec:
             type: object
           spec:
             properties:
+              authentication:
+                properties:
+                  secretRef:
+                    properties:
+                      apiGroup:
+                        default: ""
+                        type: string
+                      kind:
+                        default: Secret
+                        type: string
+                      name:
+                        type: string
+                    required:
+                    - kind
+                    - name
+                    type: object
+                    x-kubernetes-map-type: atomic
+                type: object
               configuration:
                 properties:
                   applyConfig:
@@ -80,6 +98,7 @@ spec:
                 enum:
                 - Restart
                 - Reconfigure
+                - RotateAuth
                 type: string
             required:
             - databaseRef
