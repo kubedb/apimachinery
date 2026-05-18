@@ -38131,13 +38131,6 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingTopologySpec(r
 				Description: "MilvusHorizontalScalingTopologySpec contains the horizontal scaling information in cluster topology mode",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"node": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Standalone node",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 					"proxy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Number of Proxy nodes",
