@@ -634,6 +634,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBTLSSpec":                                  schema_apimachinery_apis_ops_v1alpha1_FerretDBTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBUpdateVersionSpec":                        schema_apimachinery_apis_ops_v1alpha1_FerretDBUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBVerticalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_FerretDBVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBMigrationSpec":                              schema_apimachinery_apis_ops_v1alpha1_HanaDBMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestSpec(ref),
@@ -35978,6 +35979,33 @@ func schema_apimachinery_apis_ops_v1alpha1_FerretDBVerticalScalingSpec(ref commo
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_HanaDBMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storageClassName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"oldPVReclaimPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Delete", "Recycle", "Retain"},
+						},
+					},
+				},
+				Required: []string{"storageClassName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -36108,6 +36136,11 @@ func schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
+					"migration": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBMigrationSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
@@ -36130,7 +36163,7 @@ func schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
