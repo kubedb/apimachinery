@@ -635,6 +635,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBUpdateVersionSpec":                        schema_apimachinery_apis_ops_v1alpha1_FerretDBUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FerretDBVerticalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_FerretDBVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastHorizontalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_HazelcastHorizontalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastMigrationSpec":                           schema_apimachinery_apis_ops_v1alpha1_HazelcastMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastOpsRequest":                              schema_apimachinery_apis_ops_v1alpha1_HazelcastOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastOpsRequestList":                          schema_apimachinery_apis_ops_v1alpha1_HazelcastOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastOpsRequestSpec":                          schema_apimachinery_apis_ops_v1alpha1_HazelcastOpsRequestSpec(ref),
@@ -35993,6 +35994,33 @@ func schema_apimachinery_apis_ops_v1alpha1_HazelcastHorizontalScalingSpec(ref co
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_HazelcastMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storageClassName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"oldPVReclaimPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Delete", "Recycle", "Retain"},
+						},
+					},
+				},
+				Required: []string{"storageClassName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_HazelcastOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -36158,6 +36186,12 @@ func schema_apimachinery_apis_ops_v1alpha1_HazelcastOpsRequestSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
 						},
 					},
+					"migration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for migrating storageClass or data",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastMigrationSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -36182,7 +36216,7 @@ func schema_apimachinery_apis_ops_v1alpha1_HazelcastOpsRequestSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
