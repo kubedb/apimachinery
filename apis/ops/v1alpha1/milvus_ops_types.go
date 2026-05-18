@@ -104,8 +104,6 @@ type MilvusHorizontalScalingSpec struct {
 
 // MilvusHorizontalScalingTopologySpec contains the horizontal scaling information in cluster topology mode
 type MilvusHorizontalScalingTopologySpec struct {
-	// Standalone node
-	Node *int32 `json:"node,omitempty"`
 	// Number of Proxy nodes
 	Proxy *int32 `json:"proxy,omitempty"`
 	// Number of MixCoord nodes

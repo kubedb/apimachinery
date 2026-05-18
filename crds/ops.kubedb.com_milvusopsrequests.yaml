@@ -106,9 +106,6 @@ spec:
                       mixcoord:
                         format: int32
                         type: integer
-                      node:
-                        format: int32
-                        type: integer
                       proxy:
                         format: int32
                         type: integer
