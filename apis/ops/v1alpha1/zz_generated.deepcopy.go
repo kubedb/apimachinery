@@ -7646,6 +7646,11 @@ func (in *WeaviateOpsRequestSpec) DeepCopyInto(out *WeaviateOpsRequestSpec) {
 		*out = new(WeaviateReconfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Authentication != nil {
+		in, out := &in.Authentication, &out.Authentication
+		*out = new(AuthSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Timeout != nil {
 		in, out := &in.Timeout, &out.Timeout
 		*out = new(metav1.Duration)
