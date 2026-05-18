@@ -179,7 +179,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				err.Error()))
 		}
 	case opsapi.ElasticsearchOpsRequestTypeStorageMigration:
-		if err := w.validateElasticsearchStorageMigrationOpsRequest(req); err != nil {
+		if err := w.validateElasticsearchStorageMigrationOpsRequest(req, db); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
 				req.Name,
 				err.Error()))
@@ -215,13 +215,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchUpdateVersio
 	return nil
 }
 
-func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigrationOpsRequest(req *opsapi.ElasticsearchOpsRequest) error {
-	db := &dbapi.Elasticsearch{}
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
-	if err != nil {
-		return errors.Wrap(err, fmt.Sprintf("failed to get elasticsearch: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
-	}
-
+func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigrationOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
 	if req.Spec.Migration.StorageClassName == nil {
 		return errors.New("spec.migration.storageClassName is required")
 	}
@@ -232,7 +226,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigra
 	}
 	// check new storageClass
 	var newstorage, oldstorage storagev1.StorageClass
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: *req.Spec.Migration.StorageClassName,
 	}, &newstorage)
 	if err != nil {
@@ -242,11 +236,85 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigra
 		return err
 	}
 
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: db.GetStorageClassName(),
-	}, &oldstorage)
-	if err != nil {
-		return err
+	checkStorageClassName := func(name string) error {
+		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name: name,
+		}, &oldstorage)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if db.Spec.Topology != nil {
+		err := checkStorageClassName(*db.Spec.Topology.Ingest.Storage.StorageClassName)
+		if err != nil {
+			return err
+		}
+		err = checkStorageClassName(*db.Spec.Topology.Master.Storage.StorageClassName)
+		if err != nil {
+			return err
+		}
+		if db.Spec.Topology.Data != nil {
+			err := checkStorageClassName(*db.Spec.Topology.Data.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.DataHot != nil {
+			err := checkStorageClassName(*db.Spec.Topology.DataHot.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.DataWarm != nil {
+			err := checkStorageClassName(*db.Spec.Topology.DataWarm.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.DataCold != nil {
+			err := checkStorageClassName(*db.Spec.Topology.DataCold.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.DataFrozen != nil {
+			err := checkStorageClassName(*db.Spec.Topology.DataFrozen.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.ML != nil {
+			err := checkStorageClassName(*db.Spec.Topology.ML.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.DataContent != nil {
+			err := checkStorageClassName(*db.Spec.Topology.DataContent.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.Transform != nil {
+			err := checkStorageClassName(*db.Spec.Topology.Transform.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.Coordinating != nil {
+			err := checkStorageClassName(*db.Spec.Topology.Coordinating.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+
+	} else {
+		err := checkStorageClassName(db.GetStorageClassName())
+		if err != nil {
+			return err
+		}
 	}
 
 	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
