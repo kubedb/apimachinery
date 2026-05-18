@@ -76,6 +76,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MariaDBAutoscalerList{},
 		&MemcachedAutoscaler{},
 		&MemcachedAutoscalerList{},
+		&MilvusAutoscaler{},
+		&MilvusAutoscalerList{},
 		&MongoDBAutoscaler{},
 		&MongoDBAutoscalerList{},
 		&MSSQLServerAutoscaler{},
