@@ -244,11 +244,13 @@ const (
 	MySQLDatabasePortName                  = "db"
 	MySQLRouterReadWritePortName           = "rw"
 	MySQLRouterReadOnlyPortName            = "ro"
+	MySQLRouterReadWriteSplitPortName      = "rwsplit"
 	MySQLPrimaryServicePortName            = "primary"
 	MySQLStandbyServicePortName            = "standby"
 	MySQLDatabasePort                      = 3306
 	MySQLRouterReadWritePort               = 6446
 	MySQLRouterReadOnlyPort                = 6447
+	MySQLRouterReadWriteSplitPort          = 6450
 
 	MySQLCoordinatorClientPort = 2379
 	MySQLCoordinatorPort       = 2380
@@ -269,6 +271,7 @@ const (
 	MySQLTLSConfigTrue       = "true"
 	MySQLTLSConfigFalse      = "false"
 	MySQLTLSConfigPreferred  = "preferred"
+	MySQLRouterSuffix        = "router"
 
 	MySQLContainerName            = "mysql"
 	MySQLRouterContainerName      = "mysql-router"
