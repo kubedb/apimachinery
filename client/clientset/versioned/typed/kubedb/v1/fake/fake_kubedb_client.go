@@ -19,9 +19,10 @@ limitations under the License.
 package fake
 
 import (
+	v1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1"
+
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
-	v1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1"
 )
 
 type FakeKubedbV1 struct {
