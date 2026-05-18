@@ -72,6 +72,15 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              migration:
+                properties:
+                  oldPVReclaimPolicy:
+                    type: string
+                  storageClassName:
+                    type: string
+                required:
+                - storageClassName
+                type: object
               restart:
                 type: object
               timeout:
@@ -80,6 +89,7 @@ spec:
                 enum:
                 - Restart
                 - Reconfigure
+                - StorageMigration
                 type: string
             required:
             - databaseRef
