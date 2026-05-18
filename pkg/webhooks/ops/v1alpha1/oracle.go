@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -26,8 +25,10 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -153,6 +154,49 @@ func (w *OracleOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.OracleOpsRequ
 	}
 
 	return oracle, nil
+}
+
+func (w *OracleOpsRequestCustomWebhook) validateOracleStorageMigrationOpsRequest(req *opsapi.OracleOpsRequest) error {
+	db := &dbapi.Oracle{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get postgres: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	}
+
+	if req.Spec.Migration.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
+	if req.Spec.Timeout == nil {
+		// timeout is required for Storage Migration ops request because it's a long-running operation
+		// default timeout is len(pods) * 5 minute
+		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
+	}
+	// check new storageClass
+	var newstorage, oldstorage storagev1.StorageClass
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: *req.Spec.Migration.StorageClassName,
+	}, &newstorage)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *req.Spec.Migration.StorageClassName))
+		}
+		return err
+	}
+
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.GetStorageClassName(),
+	}, &oldstorage)
+	if err != nil {
+		return err
+	}
+
+	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+		}
+	}
+
+	return nil
 }
 
 func (w *OracleOpsRequestCustomWebhook) validateOracleReconfigurationOpsRequest(req *opsapi.OracleOpsRequest) error {
