@@ -406,6 +406,9 @@ const (
 	UpdateMiddleManagersNodePVCs = "UpdateMiddleManagersNodePVCs"
 	UpdateHistoricalsNodePVCs    = "UpdateHistoricalsNodePVCs"
 
+	MigrateMiddleManagersStorage = "MigrateMiddleManagersStorage"
+	MigrateHistoricalsStorage    = "MigrateHistoricalsStorage"
+
 	UpdateCredentialDynamically = "UpdateCredentialDynamically"
 )
 
