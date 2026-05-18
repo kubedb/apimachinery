@@ -54,6 +54,8 @@ type OracleOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type OracleOpsRequestType `json:"type"`
+	// Specifies information necessary for vertical scaling
+	VerticalScaling *OracleVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for custom configuration of oracle
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for restarting database
@@ -69,8 +71,14 @@ type OracleMigrationSpec struct {
 	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure;StorageMigration
-// ENUM(Restart, Reconfigure, StorageMigration)
+// OracleVerticalScalingSpec contains the vertical scaling information of an Oracle cluster
+type OracleVerticalScalingSpec struct {
+	// Resource spec for nodes
+	Node *PodResources `json:"node,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=Restart;Reconfigure;StorageMigration;VerticalScaling
+// ENUM(Restart, Reconfigure, StorageMigration, VerticalScaling)
 type OracleOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

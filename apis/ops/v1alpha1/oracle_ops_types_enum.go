@@ -17,6 +17,8 @@ const (
 	OracleOpsRequestTypeReconfigure OracleOpsRequestType = "Reconfigure"
 	// OracleOpsRequestTypeStorageMigration is a OracleOpsRequestType of type StorageMigration.
 	OracleOpsRequestTypeStorageMigration OracleOpsRequestType = "StorageMigration"
+	// OracleOpsRequestTypeVerticalScaling is a OracleOpsRequestType of type VerticalScaling.
+	OracleOpsRequestTypeVerticalScaling OracleOpsRequestType = "VerticalScaling"
 )
 
 var ErrInvalidOracleOpsRequestType = fmt.Errorf("not a valid OracleOpsRequestType, try [%s]", strings.Join(_OracleOpsRequestTypeNames, ", "))
@@ -25,6 +27,7 @@ var _OracleOpsRequestTypeNames = []string{
 	string(OracleOpsRequestTypeRestart),
 	string(OracleOpsRequestTypeReconfigure),
 	string(OracleOpsRequestTypeStorageMigration),
+	string(OracleOpsRequestTypeVerticalScaling),
 }
 
 // OracleOpsRequestTypeNames returns a list of possible string values of OracleOpsRequestType.
@@ -40,6 +43,7 @@ func OracleOpsRequestTypeValues() []OracleOpsRequestType {
 		OracleOpsRequestTypeRestart,
 		OracleOpsRequestTypeReconfigure,
 		OracleOpsRequestTypeStorageMigration,
+		OracleOpsRequestTypeVerticalScaling,
 	}
 }
 
@@ -59,6 +63,7 @@ var _OracleOpsRequestTypeValue = map[string]OracleOpsRequestType{
 	"Restart":          OracleOpsRequestTypeRestart,
 	"Reconfigure":      OracleOpsRequestTypeReconfigure,
 	"StorageMigration": OracleOpsRequestTypeStorageMigration,
+	"VerticalScaling": OracleOpsRequestTypeVerticalScaling,
 }
 
 // ParseOracleOpsRequestType attempts to convert a string to a OracleOpsRequestType.
