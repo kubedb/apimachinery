@@ -89,6 +89,15 @@ func (w *Neo4jOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 		return nil, err
 	}
 	return nil, w.validateCreateOrUpdate(req)
+	if isOpsReqCompleted(req.Status.Phase) && !isOpsReqCompleted(oldReq.Status.Phase) { // just completed
+		var db dbapi.Milvus
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *Neo4jOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
