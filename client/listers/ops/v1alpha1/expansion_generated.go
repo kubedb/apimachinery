@@ -34,6 +34,14 @@ type ClickHouseOpsRequestListerExpansion interface{}
 // ClickHouseOpsRequestNamespaceLister.
 type ClickHouseOpsRequestNamespaceListerExpansion interface{}
 
+// DocumentDBOpsRequestListerExpansion allows custom methods to be added to
+// DocumentDBOpsRequestLister.
+type DocumentDBOpsRequestListerExpansion interface{}
+
+// DocumentDBOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// DocumentDBOpsRequestNamespaceLister.
+type DocumentDBOpsRequestNamespaceListerExpansion interface{}
+
 // DruidOpsRequestListerExpansion allows custom methods to be added to
 // DruidOpsRequestLister.
 type DruidOpsRequestListerExpansion interface{}

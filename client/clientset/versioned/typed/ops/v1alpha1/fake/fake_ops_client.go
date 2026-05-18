@@ -37,6 +37,10 @@ func (c *FakeOpsV1alpha1) ClickHouseOpsRequests(namespace string) v1alpha1.Click
 	return &FakeClickHouseOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) DocumentDBOpsRequests(namespace string) v1alpha1.DocumentDBOpsRequestInterface {
+	return &FakeDocumentDBOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) DruidOpsRequests(namespace string) v1alpha1.DruidOpsRequestInterface {
 	return &FakeDruidOpsRequests{c, namespace}
 }
