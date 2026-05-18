@@ -644,6 +644,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HiddenNode":                                       schema_apimachinery_apis_ops_v1alpha1_HiddenNode(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Horizons":                                         schema_apimachinery_apis_ops_v1alpha1_Horizons(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteHorizontalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_IgniteHorizontalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteMigrationSpec":                              schema_apimachinery_apis_ops_v1alpha1_IgniteMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_IgniteOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_IgniteOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_IgniteOpsRequestSpec(ref),
@@ -36326,6 +36327,33 @@ func schema_apimachinery_apis_ops_v1alpha1_IgniteHorizontalScalingSpec(ref commo
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_IgniteMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storageClassName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"oldPVReclaimPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Delete", "Recycle", "Retain"},
+						},
+					},
+				},
+				Required: []string{"storageClassName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_IgniteOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -36491,6 +36519,12 @@ func schema_apimachinery_apis_ops_v1alpha1_IgniteOpsRequestSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
+					"migration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for migrating storageClass or data",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteMigrationSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -36515,7 +36549,7 @@ func schema_apimachinery_apis_ops_v1alpha1_IgniteOpsRequestSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.IgniteVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
