@@ -63,6 +63,8 @@ type HanaDBTLSSpec struct {
 type HanaDBOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	Type        HanaDBOpsRequestType      `json:"type"`
+	// Specifies information necessary for vertical scaling
+	VerticalScaling *HanaDBVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for custom configuration of HanaDB
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	TLS           *HanaDBTLSSpec       `json:"tls,omitempty"`
@@ -75,9 +77,15 @@ type HanaDBOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure;ReconfigureTLS
-// ENUM(Restart, Reconfigure, ReconfigureTLS)
+// +kubebuilder:validation:Enum=VerticalScaling;Restart;Reconfigure;ReconfigureTLS
+// ENUM(VerticalScaling, Restart, Reconfigure, ReconfigureTLS)
 type HanaDBOpsRequestType string
+
+// HanaDBVerticalScalingSpec contains the vertical scaling information of a HanaDB cluster
+type HanaDBVerticalScalingSpec struct {
+	// Resource spec for nodes
+	Node *PodResources `json:"node,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type HanaDBOpsRequestList struct {
