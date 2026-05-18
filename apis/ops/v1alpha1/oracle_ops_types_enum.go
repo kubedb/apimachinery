@@ -15,6 +15,8 @@ const (
 	OracleOpsRequestTypeRestart OracleOpsRequestType = "Restart"
 	// OracleOpsRequestTypeReconfigure is a OracleOpsRequestType of type Reconfigure.
 	OracleOpsRequestTypeReconfigure OracleOpsRequestType = "Reconfigure"
+	// OracleOpsRequestTypeRotateAuth is a OracleOpsRequestType of type RotateAuth.
+	OracleOpsRequestTypeRotateAuth OracleOpsRequestType = "RotateAuth"
 )
 
 var ErrInvalidOracleOpsRequestType = fmt.Errorf("not a valid OracleOpsRequestType, try [%s]", strings.Join(_OracleOpsRequestTypeNames, ", "))
@@ -22,6 +24,7 @@ var ErrInvalidOracleOpsRequestType = fmt.Errorf("not a valid OracleOpsRequestTyp
 var _OracleOpsRequestTypeNames = []string{
 	string(OracleOpsRequestTypeRestart),
 	string(OracleOpsRequestTypeReconfigure),
+	string(OracleOpsRequestTypeRotateAuth),
 }
 
 // OracleOpsRequestTypeNames returns a list of possible string values of OracleOpsRequestType.
@@ -36,6 +39,7 @@ func OracleOpsRequestTypeValues() []OracleOpsRequestType {
 	return []OracleOpsRequestType{
 		OracleOpsRequestTypeRestart,
 		OracleOpsRequestTypeReconfigure,
+		OracleOpsRequestTypeRotateAuth,
 	}
 }
 
@@ -54,6 +58,7 @@ func (x OracleOpsRequestType) IsValid() bool {
 var _OracleOpsRequestTypeValue = map[string]OracleOpsRequestType{
 	"Restart":     OracleOpsRequestTypeRestart,
 	"Reconfigure": OracleOpsRequestTypeReconfigure,
+	"RotateAuth":  OracleOpsRequestTypeRotateAuth,
 }
 
 // ParseOracleOpsRequestType attempts to convert a string to a OracleOpsRequestType.
