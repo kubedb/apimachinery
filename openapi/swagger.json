@@ -27500,6 +27500,39 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBSource": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the source MariaDB database connection information.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+        },
+        "schema": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema"
+        },
+        "snapshot": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSnapshot"
+        },
+        "streaming": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLStreaming"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBTarget": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the target MariaDB database connection information.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator": {
       "type": "object",
       "required": [
@@ -27622,6 +27655,154 @@
         "progress": {
           "description": "Progress contains the current progress of migration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Progress"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo": {
+      "type": "object",
+      "required": [
+        "address",
+        "user",
+        "password",
+        "dbName"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "default": ""
+        },
+        "dbName": {
+          "type": "string",
+          "default": ""
+        },
+        "maxConnections": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "password": {
+          "type": "string",
+          "default": ""
+        },
+        "user": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema": {
+      "type": "object",
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "database": {
+          "description": "Database is the list of databases to migrate.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "enabled": {
+          "description": "Enabled controls whether the Schema Phase should be executed.",
+          "type": "boolean",
+          "default": false
+        },
+        "excludeDatabase": {
+          "description": "ExcludeDatabase is the list of databases to exclude from migration.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSnapshot": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enabled controls whether the Snapshot Phase should be executed.",
+          "type": "boolean",
+          "default": false
+        },
+        "pipeline": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSnapshotPipeline"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSnapshotPipeline": {
+      "type": "object",
+      "required": [
+        "workers",
+        "sinkers",
+        "buffer",
+        "read_batch_size",
+        "write_batch_size"
+      ],
+      "properties": {
+        "buffer": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "read_batch_size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sinkers": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "workers": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "write_batch_size": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSource": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the source MySQL database connection information.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+        },
+        "schema": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema"
+        },
+        "snapshot": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSnapshot"
+        },
+        "streaming": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLStreaming"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLStreaming": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enabled controls whether the Logical Replication Phase should be executed.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLTarget": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the target MySQL database connection information.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
         }
       }
     },
@@ -27751,6 +27932,14 @@
       "description": "Source defines the source database configuration",
       "type": "object",
       "properties": {
+        "mariadb": {
+          "description": "MariaDB refers to the source MariaDB database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBSource"
+        },
+        "mysql": {
+          "description": "MySQL refers to the source MySQL database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSource"
+        },
         "postgres": {
           "description": "Postgres refers to the source Postgres database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.PostgresSource"
@@ -27770,6 +27959,14 @@
       "description": "Target defines the target database configuration",
       "type": "object",
       "properties": {
+        "mariadb": {
+          "description": "MariaDB refers to the target MariaDB database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBTarget"
+        },
+        "mysql": {
+          "description": "MySQL refers to the target MySQL database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLTarget"
+        },
         "postgres": {
           "description": "Postgres refers to the target Postgres database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.PostgresTarget"
