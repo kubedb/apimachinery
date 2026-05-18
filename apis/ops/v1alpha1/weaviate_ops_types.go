@@ -57,6 +57,9 @@ type WeaviateOpsRequestSpec struct {
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type WeaviateOpsRequestType `json:"type"`
 
+	// Specifies information necessary for vertical scaling
+	VerticalScaling *WeaviateVerticalScalingSpec `json:"verticalScaling,omitempty"`
+
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 
@@ -74,9 +77,15 @@ type WeaviateOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure
-// ENUM(Restart,Reconfigure)
+// +kubebuilder:validation:Enum=VerticalScaling;Restart;Reconfigure
+// ENUM(VerticalScaling,Restart,Reconfigure)
 type WeaviateOpsRequestType string
+
+// WeaviateVerticalScalingSpec contains the vertical scaling information of a Weaviate cluster
+type WeaviateVerticalScalingSpec struct {
+	// Resource spec for nodes
+	Node *PodResources `json:"node,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

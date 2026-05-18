@@ -11,6 +11,8 @@ import (
 )
 
 const (
+	// WeaviateOpsRequestTypeVerticalScaling is a WeaviateOpsRequestType of type VerticalScaling.
+	WeaviateOpsRequestTypeVerticalScaling WeaviateOpsRequestType = "VerticalScaling"
 	// WeaviateOpsRequestTypeRestart is a WeaviateOpsRequestType of type Restart.
 	WeaviateOpsRequestTypeRestart WeaviateOpsRequestType = "Restart"
 	// WeaviateOpsRequestTypeReconfigure is a WeaviateOpsRequestType of type Reconfigure.
@@ -20,6 +22,7 @@ const (
 var ErrInvalidWeaviateOpsRequestType = fmt.Errorf("not a valid WeaviateOpsRequestType, try [%s]", strings.Join(_WeaviateOpsRequestTypeNames, ", "))
 
 var _WeaviateOpsRequestTypeNames = []string{
+	string(WeaviateOpsRequestTypeVerticalScaling),
 	string(WeaviateOpsRequestTypeRestart),
 	string(WeaviateOpsRequestTypeReconfigure),
 }
@@ -34,6 +37,7 @@ func WeaviateOpsRequestTypeNames() []string {
 // WeaviateOpsRequestTypeValues returns a list of the values for WeaviateOpsRequestType
 func WeaviateOpsRequestTypeValues() []WeaviateOpsRequestType {
 	return []WeaviateOpsRequestType{
+		WeaviateOpsRequestTypeVerticalScaling,
 		WeaviateOpsRequestTypeRestart,
 		WeaviateOpsRequestTypeReconfigure,
 	}
@@ -52,8 +56,9 @@ func (x WeaviateOpsRequestType) IsValid() bool {
 }
 
 var _WeaviateOpsRequestTypeValue = map[string]WeaviateOpsRequestType{
-	"Restart":     WeaviateOpsRequestTypeRestart,
-	"Reconfigure": WeaviateOpsRequestTypeReconfigure,
+	"VerticalScaling": WeaviateOpsRequestTypeVerticalScaling,
+	"Restart":         WeaviateOpsRequestTypeRestart,
+	"Reconfigure":     WeaviateOpsRequestTypeReconfigure,
 }
 
 // ParseWeaviateOpsRequestType attempts to convert a string to a WeaviateOpsRequestType.
