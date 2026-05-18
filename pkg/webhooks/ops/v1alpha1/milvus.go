@@ -24,7 +24,6 @@ import (
 
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	"gomodules.xyz/x/arrays"
@@ -194,8 +193,8 @@ func (w *MilvusOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Milvu
 	return apierrors.NewInvalid(schema.GroupKind{Group: "milvusopsrequests.kubedb.com", Kind: "MilvusOpsRequest"}, req.Name, allErr)
 }
 
-func (w *MilvusOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MilvusOpsRequest) (*olddbapi.Milvus, error) {
-	milvus := &olddbapi.Milvus{}
+func (w *MilvusOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MilvusOpsRequest) (*dbapi.Milvus, error) {
+	milvus := &dbapi.Milvus{}
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
 		Namespace: req.GetNamespace(),
@@ -205,7 +204,7 @@ func (w *MilvusOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MilvusOpsRequ
 	return milvus, nil
 }
 
-func (w *MilvusOpsRequestCustomWebhook) validateMilvusUpdateVersionOpsRequest(db *olddbapi.Milvus, req *opsapi.MilvusOpsRequest) error {
+func (w *MilvusOpsRequestCustomWebhook) validateMilvusUpdateVersionOpsRequest(db *dbapi.Milvus, req *opsapi.MilvusOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion
 	if updateVersionSpec == nil {
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
@@ -222,7 +221,7 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusUpdateVersionOpsRequest(db
 	return nil
 }
 
-func (w *MilvusOpsRequestCustomWebhook) validateMilvusHorizontalScalingOpsRequest(req *opsapi.MilvusOpsRequest, milvus *olddbapi.Milvus) error {
+func (w *MilvusOpsRequestCustomWebhook) validateMilvusHorizontalScalingOpsRequest(req *opsapi.MilvusOpsRequest, milvus *dbapi.Milvus) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
 		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
@@ -256,7 +255,7 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusHorizontalScalingOpsReques
 	return nil
 }
 
-func (w *MilvusOpsRequestCustomWebhook) validateMilvusVerticalScalingOpsRequest(req *opsapi.MilvusOpsRequest, milvus *olddbapi.Milvus) error {
+func (w *MilvusOpsRequestCustomWebhook) validateMilvusVerticalScalingOpsRequest(req *opsapi.MilvusOpsRequest, milvus *dbapi.Milvus) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
@@ -299,7 +298,7 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusVerticalScalingOpsRequest(
 	return nil
 }
 
-func (w *MilvusOpsRequestCustomWebhook) validateMilvusVolumeExpansionOpsRequest(req *opsapi.MilvusOpsRequest, milvus *olddbapi.Milvus) error {
+func (w *MilvusOpsRequestCustomWebhook) validateMilvusVolumeExpansionOpsRequest(req *opsapi.MilvusOpsRequest, milvus *dbapi.Milvus) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
@@ -318,14 +317,14 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusVolumeExpansionOpsRequest(
 		if volumeExpansionSpec.StreamingNode != nil && (dist == nil || dist.StreamingNode == nil) {
 			return errors.New("spec.volumeExpansion.streamingnode can not be set as StreamingNode does not exist in the database instance")
 		}
-		if dist != nil && dist.StreamingNode != nil && dist.StreamingNode.StorageType != olddbapi.StorageTypeDurable {
+		if dist != nil && dist.StreamingNode != nil && dist.StreamingNode.StorageType != dbapi.StorageTypeDurable {
 			return errors.New("spec.volumeExpansion.streamingnode can not be set when storageType of StreamingNode is not Durable")
 		}
 	} else {
 		if volumeExpansionSpec.Node == nil {
 			return errors.New("spec.volumeExpansion.node must be set when database mode is Standalone")
 		}
-		if milvus.Spec.StorageType != olddbapi.StorageTypeDurable {
+		if milvus.Spec.StorageType != dbapi.StorageTypeDurable {
 			return errors.New("spec.volumeExpansion.node can not be set when storageType of the database is not Durable")
 		}
 	}
