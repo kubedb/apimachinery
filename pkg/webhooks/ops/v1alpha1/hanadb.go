@@ -24,6 +24,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
@@ -120,6 +121,14 @@ func (w *HanaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.HanaD
 	var allErr field.ErrorList
 	switch req.Spec.Type {
 	case opsapi.HanaDBOpsRequestTypeRestart:
+	case opsapi.HanaDBOpsRequestTypeVerticalScaling:
+		if err := w.validateHanaDBVerticalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"), req.Name, err.Error()))
+		}
+	case opsapi.HanaDBOpsRequestTypeVolumeExpansion:
+		if err := w.validateHanaDBVolumeExpansionOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"), req.Name, err.Error()))
+		}
 	case opsapi.HanaDBOpsRequestTypeReconfigure:
 		if err := w.validateHanaDBReconfigureOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
@@ -127,6 +136,10 @@ func (w *HanaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.HanaD
 	case opsapi.HanaDBOpsRequestTypeReconfigureTLS:
 		if err := w.validateHanaDBReconfigureTLSOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"), req.Name, err.Error()))
+		}
+	case opsapi.HanaDBOpsRequestTypeRotateAuth:
+		if err := w.validateHanaDBRotateAuthenticationOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"), req.Name, err.Error()))
 		}
 	}
 
@@ -145,6 +158,74 @@ func (w *HanaDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.HanaDBOpsRequ
 		return nil, fmt.Errorf("spec.databaseRef %s/%s is invalid or not found", req.Namespace, req.Spec.DatabaseRef.Name)
 	}
 	return db, nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBVerticalScalingOpsRequest(req *opsapi.HanaDBOpsRequest) error {
+	verticalScalingSpec := req.Spec.VerticalScaling
+	if verticalScalingSpec == nil {
+		return errors.New("spec.verticalScaling is nil, not supported in VerticalScaling type")
+	}
+
+	if verticalScalingSpec.HanaDB == nil && verticalScalingSpec.Coordinator == nil && verticalScalingSpec.Exporter == nil {
+		return errors.New("at least one of spec.verticalScaling.hanadb, spec.verticalScaling.coordinator, or spec.verticalScaling.exporter must be specified")
+	}
+
+	return nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBVolumeExpansionOpsRequest(db *olddbapi.HanaDB, req *opsapi.HanaDBOpsRequest) error {
+	volumeExpansionSpec := req.Spec.VolumeExpansion
+	if volumeExpansionSpec == nil {
+		return errors.New("spec.volumeExpansion is nil, not supported in VolumeExpansion type")
+	}
+	if volumeExpansionSpec.HanaDB == nil {
+		return errors.New("spec.volumeExpansion.hanadb can not be empty")
+	}
+
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.HanaDB, req.Status.Phase, "HanaDB"); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBRotateAuthenticationOpsRequest(db *olddbapi.HanaDB, req *opsapi.HanaDBOpsRequest) error {
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return errors.New("spec.authentication.secretRef.name can not be empty")
+		}
+
+		var newAuthSecret, oldAuthSecret core.Secret
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &newAuthSecret)
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return errors.Errorf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name)
+			}
+			return err
+		}
+		if password, ok := newAuthSecret.Data[core.BasicAuthPasswordKey]; !ok || len(password) == 0 {
+			return errors.Errorf("referenced secret %s/%s must contain non-empty %q key", req.Namespace, authSpec.SecretRef.Name, core.BasicAuthPasswordKey)
+		}
+
+		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      db.GetAuthSecretName(),
+			Namespace: db.GetNamespace(),
+		}, &oldAuthSecret)
+		if err != nil {
+			return err
+		}
+
+		newUsername := newAuthSecret.Data[core.BasicAuthUsernameKey]
+		if len(newUsername) > 0 && string(oldAuthSecret.Data[core.BasicAuthUsernameKey]) != string(newUsername) {
+			return errors.New("database username cannot be changed")
+		}
+	}
+
+	return nil
 }
 
 func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBReconfigureOpsRequest(req *opsapi.HanaDBOpsRequest) error {

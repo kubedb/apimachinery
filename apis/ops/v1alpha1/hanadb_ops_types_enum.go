@@ -13,18 +13,27 @@ import (
 const (
 	// HanaDBOpsRequestTypeRestart is a HanaDBOpsRequestType of type Restart.
 	HanaDBOpsRequestTypeRestart HanaDBOpsRequestType = "Restart"
+	// HanaDBOpsRequestTypeVerticalScaling is a HanaDBOpsRequestType of type VerticalScaling.
+	HanaDBOpsRequestTypeVerticalScaling HanaDBOpsRequestType = "VerticalScaling"
+	// HanaDBOpsRequestTypeVolumeExpansion is a HanaDBOpsRequestType of type VolumeExpansion.
+	HanaDBOpsRequestTypeVolumeExpansion HanaDBOpsRequestType = "VolumeExpansion"
 	// HanaDBOpsRequestTypeReconfigure is a HanaDBOpsRequestType of type Reconfigure.
 	HanaDBOpsRequestTypeReconfigure HanaDBOpsRequestType = "Reconfigure"
 	// HanaDBOpsRequestTypeReconfigureTLS is a HanaDBOpsRequestType of type ReconfigureTLS.
 	HanaDBOpsRequestTypeReconfigureTLS HanaDBOpsRequestType = "ReconfigureTLS"
+	// HanaDBOpsRequestTypeRotateAuth is a HanaDBOpsRequestType of type RotateAuth.
+	HanaDBOpsRequestTypeRotateAuth HanaDBOpsRequestType = "RotateAuth"
 )
 
 var ErrInvalidHanaDBOpsRequestType = fmt.Errorf("not a valid HanaDBOpsRequestType, try [%s]", strings.Join(_HanaDBOpsRequestTypeNames, ", "))
 
 var _HanaDBOpsRequestTypeNames = []string{
 	string(HanaDBOpsRequestTypeRestart),
+	string(HanaDBOpsRequestTypeVerticalScaling),
+	string(HanaDBOpsRequestTypeVolumeExpansion),
 	string(HanaDBOpsRequestTypeReconfigure),
 	string(HanaDBOpsRequestTypeReconfigureTLS),
+	string(HanaDBOpsRequestTypeRotateAuth),
 }
 
 // HanaDBOpsRequestTypeNames returns a list of possible string values of HanaDBOpsRequestType.
@@ -38,8 +47,11 @@ func HanaDBOpsRequestTypeNames() []string {
 func HanaDBOpsRequestTypeValues() []HanaDBOpsRequestType {
 	return []HanaDBOpsRequestType{
 		HanaDBOpsRequestTypeRestart,
+		HanaDBOpsRequestTypeVerticalScaling,
+		HanaDBOpsRequestTypeVolumeExpansion,
 		HanaDBOpsRequestTypeReconfigure,
 		HanaDBOpsRequestTypeReconfigureTLS,
+		HanaDBOpsRequestTypeRotateAuth,
 	}
 }
 
@@ -56,9 +68,12 @@ func (x HanaDBOpsRequestType) IsValid() bool {
 }
 
 var _HanaDBOpsRequestTypeValue = map[string]HanaDBOpsRequestType{
-	"Restart":        HanaDBOpsRequestTypeRestart,
-	"Reconfigure":    HanaDBOpsRequestTypeReconfigure,
-	"ReconfigureTLS": HanaDBOpsRequestTypeReconfigureTLS,
+	"Restart":         HanaDBOpsRequestTypeRestart,
+	"VerticalScaling": HanaDBOpsRequestTypeVerticalScaling,
+	"VolumeExpansion": HanaDBOpsRequestTypeVolumeExpansion,
+	"Reconfigure":     HanaDBOpsRequestTypeReconfigure,
+	"ReconfigureTLS":  HanaDBOpsRequestTypeReconfigureTLS,
+	"RotateAuth":      HanaDBOpsRequestTypeRotateAuth,
 }
 
 // ParseHanaDBOpsRequestType attempts to convert a string to a HanaDBOpsRequestType.
