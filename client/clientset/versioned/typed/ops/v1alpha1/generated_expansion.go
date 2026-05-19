@@ -22,6 +22,8 @@ type CassandraOpsRequestExpansion interface{}
 
 type ClickHouseOpsRequestExpansion interface{}
 
+type DocumentDBOpsRequestExpansion interface{}
+
 type DruidOpsRequestExpansion interface{}
 
 type ElasticsearchOpsRequestExpansion interface{}
@@ -49,6 +51,8 @@ type MongoDBOpsRequestExpansion interface{}
 type MySQLOpsRequestExpansion interface{}
 
 type Neo4jOpsRequestExpansion interface{}
+
+type OracleOpsRequestExpansion interface{}
 
 type PerconaXtraDBOpsRequestExpansion interface{}
 

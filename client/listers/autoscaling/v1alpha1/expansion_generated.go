@@ -130,6 +130,14 @@ type MySQLAutoscalerListerExpansion interface{}
 // MySQLAutoscalerNamespaceLister.
 type MySQLAutoscalerNamespaceListerExpansion interface{}
 
+// OracleAutoscalerListerExpansion allows custom methods to be added to
+// OracleAutoscalerLister.
+type OracleAutoscalerListerExpansion interface{}
+
+// OracleAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// OracleAutoscalerNamespaceLister.
+type OracleAutoscalerNamespaceListerExpansion interface{}
+
 // PerconaXtraDBAutoscalerListerExpansion allows custom methods to be added to
 // PerconaXtraDBAutoscalerLister.
 type PerconaXtraDBAutoscalerListerExpansion interface{}
