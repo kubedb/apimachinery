@@ -198,6 +198,10 @@ func (q *Qdrant) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]str
 	return q.offshootLabels(meta_util.OverwriteKeys(q.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
 }
 
+func (q *Qdrant) GetStorageClassName() string {
+	return *q.Spec.Storage.StorageClassName
+}
+
 type qdrantStatsService struct {
 	*Qdrant
 }
