@@ -354,6 +354,8 @@ func (q *Qdrant) SetDefaults(kc client.Client) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
 
+	q.Spec.Monitor.SetDefaults()
+
 	q.SetHealthCheckerDefaults()
 
 	q.setDefaultContainerResourceLimits(q.Spec.PodTemplate)

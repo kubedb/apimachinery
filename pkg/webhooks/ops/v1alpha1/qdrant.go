@@ -291,10 +291,6 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantReconfigureTLSOpsRequest(r
 		return errors.New("no reconfiguration is provided in TLS spec")
 	}
 
-	if configCount > 1 {
-		return errors.New("more than 1 field have assigned to spec.reconfigureTLS but at a time one is allowed to run one operation")
-	}
-
 	return nil
 }
 
