@@ -17,8 +17,8 @@ const (
 	HanaDBOpsRequestTypeReconfigure HanaDBOpsRequestType = "Reconfigure"
 	// HanaDBOpsRequestTypeReconfigureTLS is a HanaDBOpsRequestType of type ReconfigureTLS.
 	HanaDBOpsRequestTypeReconfigureTLS HanaDBOpsRequestType = "ReconfigureTLS"
-	// HanaDBOpsRequestTypeStorageMigration is a HanaDBOpsRequestType of type StorageMigration.
-	HanaDBOpsRequestTypeStorageMigration HanaDBOpsRequestType = "StorageMigration"
+	// HanaDBOpsRequestTypeVolumeExpansion is a HanaDBOpsRequestType of type VolumeExpansion.
+	HanaDBOpsRequestTypeVolumeExpansion HanaDBOpsRequestType = "VolumeExpansion"
 )
 
 var ErrInvalidHanaDBOpsRequestType = fmt.Errorf("not a valid HanaDBOpsRequestType, try [%s]", strings.Join(_HanaDBOpsRequestTypeNames, ", "))
@@ -27,7 +27,7 @@ var _HanaDBOpsRequestTypeNames = []string{
 	string(HanaDBOpsRequestTypeRestart),
 	string(HanaDBOpsRequestTypeReconfigure),
 	string(HanaDBOpsRequestTypeReconfigureTLS),
-	string(HanaDBOpsRequestTypeStorageMigration),
+	string(HanaDBOpsRequestTypeVolumeExpansion),
 }
 
 // HanaDBOpsRequestTypeNames returns a list of possible string values of HanaDBOpsRequestType.
@@ -43,7 +43,7 @@ func HanaDBOpsRequestTypeValues() []HanaDBOpsRequestType {
 		HanaDBOpsRequestTypeRestart,
 		HanaDBOpsRequestTypeReconfigure,
 		HanaDBOpsRequestTypeReconfigureTLS,
-		HanaDBOpsRequestTypeStorageMigration,
+		HanaDBOpsRequestTypeVolumeExpansion,
 	}
 }
 
@@ -60,10 +60,10 @@ func (x HanaDBOpsRequestType) IsValid() bool {
 }
 
 var _HanaDBOpsRequestTypeValue = map[string]HanaDBOpsRequestType{
-	"Restart":          HanaDBOpsRequestTypeRestart,
-	"Reconfigure":      HanaDBOpsRequestTypeReconfigure,
-	"ReconfigureTLS":   HanaDBOpsRequestTypeReconfigureTLS,
-	"StorageMigration": HanaDBOpsRequestTypeStorageMigration,
+	"Restart":         HanaDBOpsRequestTypeRestart,
+	"Reconfigure":     HanaDBOpsRequestTypeReconfigure,
+	"ReconfigureTLS":  HanaDBOpsRequestTypeReconfigureTLS,
+	"VolumeExpansion": HanaDBOpsRequestTypeVolumeExpansion,
 }
 
 // ParseHanaDBOpsRequestType attempts to convert a string to a HanaDBOpsRequestType.

@@ -82,15 +82,6 @@ spec:
                 default: 1
                 format: int32
                 type: integer
-              migration:
-                properties:
-                  oldPVReclaimPolicy:
-                    type: string
-                  storageClassName:
-                    type: string
-                required:
-                - storageClassName
-                type: object
               restart:
                 type: object
               timeout:
@@ -211,8 +202,24 @@ spec:
                 - Restart
                 - Reconfigure
                 - ReconfigureTLS
-                - StorageMigration
+                - VolumeExpansion
                 type: string
+              volumeExpansion:
+                properties:
+                  mode:
+                    enum:
+                    - Offline
+                    - Online
+                    type: string
+                  node:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                    x-kubernetes-int-or-string: true
+                required:
+                - mode
+                type: object
             required:
             - databaseRef
             - type
