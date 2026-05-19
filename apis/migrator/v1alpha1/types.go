@@ -36,12 +36,14 @@ type Source struct {
 	MySQL *MySQLSource `yaml:"mysql" json:"mysql,omitempty"`
 	// MariaDB refers to the source MariaDB database configuration
 	MariaDB *MariaDBSource `yaml:"mariadb" json:"mariadb,omitempty"`
+	MongoDB  *MongoSource    `yaml:"mongodb" json:"mongodb,omitempty"`
 }
 
 // Target defines the target database configuration
 type Target struct {
 	// Postgres refers to the target Postgres database configuration
 	Postgres *PostgresTarget `yaml:"postgres" json:"postgres,omitempty"`
+	MongoDB  *MongoTarget    `yaml:"mongodb" json:"mongodb,omitempty"`
 	// MySQL refers to the target MySQL database configuration
 	MySQL *MySQLTarget `yaml:"mysql" json:"mysql,omitempty"`
 	// MariaDB refers to the target MariaDB database configuration

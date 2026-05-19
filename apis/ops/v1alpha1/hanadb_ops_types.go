@@ -63,21 +63,39 @@ type HanaDBTLSSpec struct {
 type HanaDBOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	Type        HanaDBOpsRequestType      `json:"type"`
+	// Specifies information necessary for vertical scaling
+	VerticalScaling *HanaDBVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for custom configuration of HanaDB
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	TLS           *HanaDBTLSSpec       `json:"tls,omitempty"`
+	// Specifies information necessary for configuring authSecret of the database
+	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
-	Restart *RestartSpec     `json:"restart,omitempty"`
-	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	Restart   *RestartSpec          `json:"restart,omitempty"`
+	Migration *StorageMigrationSpec `json:"migration,omitempty"`
+	Timeout   *metav1.Duration      `json:"timeout,omitempty"`
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
 	// +kubebuilder:default=1
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure;ReconfigureTLS
-// ENUM(Restart, Reconfigure, ReconfigureTLS)
+// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// ENUM(VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type HanaDBOpsRequestType string
+
+// HanaDBVerticalScalingSpec contains the vertical scaling information of a HanaDB cluster
+type HanaDBVerticalScalingSpec struct {
+	// Resource spec for nodes
+	Node *PodResources `json:"node,omitempty"`
+}
+
+// HanaDBVolumeExpansionSpec is the spec for HanaDB volume expansion
+type HanaDBVolumeExpansionSpec struct {
+	Mode VolumeExpansionMode `json:"mode"`
+	// volume specification for nodes
+	Node *resource.Quantity `json:"node,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type HanaDBOpsRequestList struct {

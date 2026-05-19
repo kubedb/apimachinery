@@ -120,11 +120,18 @@ type ClickHouseHorizontalScalingSpec struct {
 	Replicas *int32 `json:"replicas,omitempty"`
 }
 
-// ClickHouseMigrationSpec is the spec for migrating storageClass of a ClickHouse database
+// ClickHouseMigrationSpec is the spec for migrating storageClass of a ClickHouse database.
+// Set Standalone for non-topology mode, or Cluster + ClickHouseKeeper for topology mode.
 type ClickHouseMigrationSpec struct {
-	StorageClassName *string `json:"storageClassName"`
+	// Standalone is the migration spec for a ClickHouse instance without cluster topology.
 	// +optional
-	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
+	Standalone *StorageMigrationSpec `json:"standalone,omitempty"`
+	// Cluster is the migration spec for the cluster nodes in topology mode.
+	// +optional
+	Cluster *StorageMigrationSpec `json:"cluster,omitempty"`
+	// ClickHouseKeeper is the migration spec for the embedded ClickHouse Keeper nodes.
+	// +optional
+	ClickHouseKeeper *StorageMigrationSpec `json:"clickHouseKeeper,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

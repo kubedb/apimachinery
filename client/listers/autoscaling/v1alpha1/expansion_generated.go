@@ -34,6 +34,14 @@ type ClickHouseAutoscalerListerExpansion interface{}
 // ClickHouseAutoscalerNamespaceLister.
 type ClickHouseAutoscalerNamespaceListerExpansion interface{}
 
+// DocumentDBAutoscalerListerExpansion allows custom methods to be added to
+// DocumentDBAutoscalerLister.
+type DocumentDBAutoscalerListerExpansion interface{}
+
+// DocumentDBAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// DocumentDBAutoscalerNamespaceLister.
+type DocumentDBAutoscalerNamespaceListerExpansion interface{}
+
 // DruidAutoscalerListerExpansion allows custom methods to be added to
 // DruidAutoscalerLister.
 type DruidAutoscalerListerExpansion interface{}
@@ -65,6 +73,14 @@ type FerretDBAutoscalerListerExpansion interface{}
 // FerretDBAutoscalerNamespaceListerExpansion allows custom methods to be added to
 // FerretDBAutoscalerNamespaceLister.
 type FerretDBAutoscalerNamespaceListerExpansion interface{}
+
+// HanaDBAutoscalerListerExpansion allows custom methods to be added to
+// HanaDBAutoscalerLister.
+type HanaDBAutoscalerListerExpansion interface{}
+
+// HanaDBAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// HanaDBAutoscalerNamespaceLister.
+type HanaDBAutoscalerNamespaceListerExpansion interface{}
 
 // HazelcastAutoscalerListerExpansion allows custom methods to be added to
 // HazelcastAutoscalerLister.
@@ -130,6 +146,14 @@ type MySQLAutoscalerListerExpansion interface{}
 // MySQLAutoscalerNamespaceLister.
 type MySQLAutoscalerNamespaceListerExpansion interface{}
 
+// Neo4jAutoscalerListerExpansion allows custom methods to be added to
+// Neo4jAutoscalerLister.
+type Neo4jAutoscalerListerExpansion interface{}
+
+// Neo4jAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// Neo4jAutoscalerNamespaceLister.
+type Neo4jAutoscalerNamespaceListerExpansion interface{}
+
 // OracleAutoscalerListerExpansion allows custom methods to be added to
 // OracleAutoscalerLister.
 type OracleAutoscalerListerExpansion interface{}
@@ -178,6 +202,14 @@ type ProxySQLAutoscalerListerExpansion interface{}
 // ProxySQLAutoscalerNamespaceLister.
 type ProxySQLAutoscalerNamespaceListerExpansion interface{}
 
+// QdrantAutoscalerListerExpansion allows custom methods to be added to
+// QdrantAutoscalerLister.
+type QdrantAutoscalerListerExpansion interface{}
+
+// QdrantAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// QdrantAutoscalerNamespaceLister.
+type QdrantAutoscalerNamespaceListerExpansion interface{}
+
 // RabbitMQAutoscalerListerExpansion allows custom methods to be added to
 // RabbitMQAutoscalerLister.
 type RabbitMQAutoscalerListerExpansion interface{}
@@ -217,6 +249,14 @@ type SolrAutoscalerListerExpansion interface{}
 // SolrAutoscalerNamespaceListerExpansion allows custom methods to be added to
 // SolrAutoscalerNamespaceLister.
 type SolrAutoscalerNamespaceListerExpansion interface{}
+
+// WeaviateAutoscalerListerExpansion allows custom methods to be added to
+// WeaviateAutoscalerLister.
+type WeaviateAutoscalerListerExpansion interface{}
+
+// WeaviateAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// WeaviateAutoscalerNamespaceLister.
+type WeaviateAutoscalerNamespaceListerExpansion interface{}
 
 // ZooKeeperAutoscalerListerExpansion allows custom methods to be added to
 // ZooKeeperAutoscalerLister.

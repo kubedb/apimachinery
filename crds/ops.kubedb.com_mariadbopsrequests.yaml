@@ -113,6 +113,8 @@ spec:
                 type: integer
               migration:
                 properties:
+                  maxscale:
+                    type: boolean
                   oldPVReclaimPolicy:
                     type: string
                   storageClassName:

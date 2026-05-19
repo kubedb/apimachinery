@@ -123,11 +123,18 @@ type SinglestoreVolumeExpansionSpec struct {
 	Leaf *resource.Quantity `json:"leaf,omitempty"`
 }
 
-// SinglestoreMigrationSpec is the spec for migrating Singlestore storage class or data
+// SinglestoreMigrationSpec is the spec for migrating Singlestore storage class or data.
+// Set Node for standalone mode, or Aggregator + Leaf for topology mode.
 type SinglestoreMigrationSpec struct {
-	StorageClassName *string `json:"storageClassName"`
+	// Node is the migration spec for a standalone Singlestore instance.
 	// +optional
-	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
+	Node *StorageMigrationSpec `json:"node,omitempty"`
+	// Aggregator is the migration spec for aggregator nodes in topology mode.
+	// +optional
+	Aggregator *StorageMigrationSpec `json:"aggregator,omitempty"`
+	// Leaf is the migration spec for leaf nodes in topology mode.
+	// +optional
+	Leaf *StorageMigrationSpec `json:"leaf,omitempty"`
 }
 
 // SinglestoreCustomConfigurationSpec is the spec for Singlestore reconfiguration

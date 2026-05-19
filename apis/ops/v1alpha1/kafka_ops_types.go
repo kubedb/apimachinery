@@ -87,15 +87,17 @@ type KafkaOpsRequestSpec struct {
 type KafkaOpsRequestType string
 
 // KafkaMigrationSpec is the spec for storage migration of a Kafka cluster.
+// Set Node for combined mode, or Controller + Broker for topology mode.
 type KafkaMigrationSpec struct {
-	// StorageClassName is the desired StorageClass to migrate the Kafka PVCs to.
-	StorageClassName *string `json:"storageClassName"`
-	// OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume
-	// after the underlying PVC has been renamed onto the new StorageClass. Defaults to the
-	// reclaim policy that was already configured on the PV when migration started.
-	// Set to "Retain" to keep the previous PV after migration.
+	// Node is the migration spec for a combined-mode Kafka instance.
 	// +optional
-	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
+	Node *StorageMigrationSpec `json:"node,omitempty"`
+	// Controller is the migration spec for controller nodes in topology mode.
+	// +optional
+	Controller *StorageMigrationSpec `json:"controller,omitempty"`
+	// Broker is the migration spec for broker nodes in topology mode.
+	// +optional
+	Broker *StorageMigrationSpec `json:"broker,omitempty"`
 }
 
 // KafkaReplicaReadinessCriteria is the criteria for checking readiness of a Kafka pod

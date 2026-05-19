@@ -29,6 +29,7 @@ import (
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -168,12 +169,84 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.SolrOpsRequestTypeStorageMigration:
+		if err := w.validateSolrStorageMigrationOpsRequest(req, db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "solropsrequests.kubedb.com", Kind: "SolrOpsRequest"}, req.Name, allErr)
+}
+
+func (w *SolrOpsRequestCustomWebhook) validateSolrStorageMigrationOpsRequest(req *opsapi.SolrOpsRequest, db *olddbapi.Solr) error {
+	m := req.Spec.Migration
+	if m == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
+	if m.Node == nil && m.Overseer == nil && m.Data == nil && m.Coordinator == nil {
+		return errors.New("at least one component migration spec is required in spec.migration")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for Storage Migration ops request, adjust timeout according to the size of your database")
+	}
+
+	validateComponent := func(spec *opsapi.StorageMigrationSpec, storage *core.PersistentVolumeClaimSpec) error {
+		if spec == nil {
+			return nil
+		}
+		if spec.StorageClassName == nil {
+			return errors.New("storageClassName is required in migration spec")
+		}
+		if storage == nil || storage.StorageClassName == nil {
+			return nil
+		}
+		var newstorage, oldstorage storagev1.StorageClass
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *spec.StorageClassName}, &newstorage); err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("storage class %s not found: %w", *spec.StorageClassName, err)
+			}
+			return err
+		}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *storage.StorageClassName}, &oldstorage); err != nil {
+			return err
+		}
+		if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+			if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+				return fmt.Errorf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name)
+			}
+		}
+		return nil
+	}
+
+	if db.Spec.Topology != nil {
+		t := db.Spec.Topology
+		if err := validateComponent(m.Overseer, getStorage(t.Overseer)); err != nil {
+			return fmt.Errorf("overseer: %w", err)
+		}
+		if err := validateComponent(m.Data, getStorage(t.Data)); err != nil {
+			return fmt.Errorf("data: %w", err)
+		}
+		if err := validateComponent(m.Coordinator, getStorage(t.Coordinator)); err != nil {
+			return fmt.Errorf("coordinator: %w", err)
+		}
+	} else {
+		if err := validateComponent(m.Node, db.Spec.Storage); err != nil {
+			return fmt.Errorf("node: %w", err)
+		}
+	}
+	return nil
+}
+
+func getStorage(node *olddbapi.SolrNode) *core.PersistentVolumeClaimSpec {
+	if node == nil {
+		return nil
+	}
+	return node.Storage
 }
 
 func (w *SolrOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.SolrOpsRequest) (*olddbapi.Solr, error) {

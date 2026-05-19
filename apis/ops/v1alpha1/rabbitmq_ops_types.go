@@ -72,7 +72,7 @@ type RabbitMQOpsRequestSpec struct {
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for migrating storageClass or data
-	Migration *RabbitMQMigrationSpec `json:"migration,omitempty"`
+	Migration *StorageMigrationSpec `json:"migration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -113,13 +113,6 @@ type RabbitMQVolumeExpansionSpec struct {
 	Mode VolumeExpansionMode `json:"mode"`
 	// volume specification for nodes
 	Node *resource.Quantity `json:"node,omitempty"`
-}
-
-// RabbitMQMigrationSpec is the spec for migrating RabbitMQ storageClass or data
-type RabbitMQMigrationSpec struct {
-	StorageClassName *string `json:"storageClassName"`
-	// +optional
-	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
