@@ -37782,7 +37782,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSpec(ref common.ReferenceCal
 					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TLS contains externally managed TLS secrets used by KubeDB clients and optional SAP HANA server-side material mounted into the database pod.",
+							Description: "TLS configures certificates issued from spec.tls.issuerRef for SAP HANA server-side TLS, KubeDB client connections, and metrics exporter TLS. When TLS is specified, issuerRef must be set.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.HanaDBTLSConfig"),
 						},
 					},

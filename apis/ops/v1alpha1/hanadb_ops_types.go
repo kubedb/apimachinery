@@ -81,8 +81,8 @@ type HanaDBOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
-// ENUM(VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
+// +kubebuilder:validation:Enum=VerticalScaling;Restart;Reconfigure;ReconfigureTLS;RotateAuth;StorageMigration
+// ENUM(VerticalScaling, Restart, Reconfigure, ReconfigureTLS, RotateAuth, StorageMigration)
 type HanaDBOpsRequestType string
 
 // HanaDBVerticalScalingSpec contains the vertical scaling information of a HanaDB cluster
