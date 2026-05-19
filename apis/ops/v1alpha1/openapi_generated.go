@@ -834,6 +834,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVolumeExpansionSpec":                          schema_apimachinery_apis_ops_v1alpha1_SolrVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec":                                          schema_apimachinery_apis_ops_v1alpha1_TLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Topology":                                         schema_apimachinery_apis_ops_v1alpha1_Topology(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateMigrationSpec":                            schema_apimachinery_apis_ops_v1alpha1_WeaviateMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateOpsRequest":                               schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateOpsRequestList":                           schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateOpsRequestSpec":                           schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref),
@@ -44218,6 +44219,33 @@ func schema_apimachinery_apis_ops_v1alpha1_Topology(ref common.ReferenceCallback
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_WeaviateMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storageClassName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"oldPVReclaimPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Delete", "Recycle", "Retain"},
+						},
+					},
+				},
+				Required: []string{"storageClassName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -44347,6 +44375,12 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec"),
 						},
 					},
+					"migration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for migrating storageClass or data",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateMigrationSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -44371,7 +44405,7 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec"},
 	}
 }
 
