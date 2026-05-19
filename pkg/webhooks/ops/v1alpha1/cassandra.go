@@ -24,6 +24,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
@@ -143,9 +144,8 @@ func (w *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ca
 				req.Name,
 				err.Error()))
 		}
-
 	case opsapi.CassandraOpsRequestTypeVolumeExpansion:
-		if err := w.validateCassandraVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateCassandraVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -224,7 +224,7 @@ func (w *CassandraOpsRequestCustomWebhook) validateCassandraHorizontalScalingOps
 	return nil
 }
 
-func (w *CassandraOpsRequestCustomWebhook) validateCassandraVolumeExpansionOpsRequest(req *opsapi.CassandraOpsRequest) error {
+func (w *CassandraOpsRequestCustomWebhook) validateCassandraVolumeExpansionOpsRequest(db *olddbapi.Cassandra, req *opsapi.CassandraOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
@@ -232,6 +232,10 @@ func (w *CassandraOpsRequestCustomWebhook) validateCassandraVolumeExpansionOpsRe
 
 	if volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.Node can't be empty")
+	}
+
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "Cassandra"); err != nil {
+		return err
 	}
 
 	return nil

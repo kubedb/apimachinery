@@ -25,6 +25,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -150,7 +151,7 @@ func (w *HazelcastOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ha
 				err.Error()))
 		}
 	case opsapi.HazelcastOpsRequestTypeVolumeExpansion:
-		if err := w.validateHazelcastVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateHazelcastVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -210,13 +211,17 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastHorizontalScalingOps
 	return nil
 }
 
-func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVolumeExpansionOpsRequest(req *opsapi.HazelcastOpsRequest) error {
+func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastVolumeExpansionOpsRequest(db *olddbapi.Hazelcast, req *opsapi.HazelcastOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
 	if volumeExpansionSpec.Hazelcast == nil {
 		return errors.New("spec.volumeExpansion.Hazelcast can't be empty at the same ops request")
+	}
+
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Hazelcast, req.Status.Phase, "Hazelcast"); err != nil {
+		return err
 	}
 
 	return nil
