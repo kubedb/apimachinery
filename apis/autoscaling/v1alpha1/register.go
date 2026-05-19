@@ -84,6 +84,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MSSQLServerAutoscalerList{},
 		&MySQLAutoscaler{},
 		&MySQLAutoscalerList{},
+		&Neo4jAutoscaler{},
+		&Neo4jAutoscalerList{},
 		&PerconaXtraDBAutoscaler{},
 		&PerconaXtraDBAutoscalerList{},
 		&PgBouncerAutoscaler{},
