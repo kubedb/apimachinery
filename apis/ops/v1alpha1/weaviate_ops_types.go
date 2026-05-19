@@ -60,8 +60,8 @@ type WeaviateOpsRequestSpec struct {
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *WeaviateVerticalScalingSpec `json:"verticalScaling,omitempty"`
 
-	// Specifies information necessary for restarting database
-	Restart *RestartSpec `json:"restart,omitempty"`
+	// Specifies information necessary for configuring authSecret of the database
+	Authentication *AuthSpec `json:"authentication,omitempty"`
 
 	// Specifies information necessary for custom configuration of weaviate
 	Configuration *WeaviateReconfigurationSpec `json:"configuration,omitempty"`
@@ -80,8 +80,8 @@ type WeaviateOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;Restart;Reconfigure
-// ENUM(VerticalScaling,Restart,Reconfigure)
+// +kubebuilder:validation:Enum=Restart;Reconfigure;RotateAuth
+// ENUM(Restart,Reconfigure,RotateAuth)
 type WeaviateOpsRequestType string
 
 // WeaviateVerticalScalingSpec contains the vertical scaling information of a Weaviate cluster

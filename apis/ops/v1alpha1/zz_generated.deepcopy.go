@@ -8457,10 +8457,10 @@ func (in *WeaviateOpsRequestSpec) DeepCopyInto(out *WeaviateOpsRequestSpec) {
 		*out = new(WeaviateVerticalScalingSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Restart != nil {
-		in, out := &in.Restart, &out.Restart
-		*out = new(RestartSpec)
-		**out = **in
+	if in.Authentication != nil {
+		in, out := &in.Authentication, &out.Authentication
+		*out = new(AuthSpec)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
