@@ -63,6 +63,8 @@ type HanaDBTLSSpec struct {
 type HanaDBOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	Type        HanaDBOpsRequestType      `json:"type"`
+	// Specifies information necessary for vertical scaling
+	VerticalScaling *HanaDBVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for custom configuration of HanaDB
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	TLS           *HanaDBTLSSpec       `json:"tls,omitempty"`

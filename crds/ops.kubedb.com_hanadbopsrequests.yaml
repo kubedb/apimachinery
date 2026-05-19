@@ -217,6 +217,7 @@ spec:
                 type: object
               type:
                 enum:
+                - VerticalScaling
                 - Restart
                 - Reconfigure
                 - ReconfigureTLS
