@@ -21,7 +21,6 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	core "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -69,8 +68,8 @@ type HanaDBOpsRequestSpec struct {
 	// Specifies information necessary for custom configuration of HanaDB
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	TLS           *HanaDBTLSSpec       `json:"tls,omitempty"`
-	// Specifies information necessary for volume expansion
-	VolumeExpansion *HanaDBVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
+	// Specifies information necessary for configuring authSecret of the database
+	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec     `json:"restart,omitempty"`
 	Timeout *metav1.Duration `json:"timeout,omitempty"`

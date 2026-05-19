@@ -106,6 +106,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&SinglestoreAutoscalerList{},
 		&SolrAutoscaler{},
 		&SolrAutoscalerList{},
+		&WeaviateAutoscaler{},
+		&WeaviateAutoscalerList{},
 		&ZooKeeperAutoscaler{},
 		&ZooKeeperAutoscalerList{},
 	)

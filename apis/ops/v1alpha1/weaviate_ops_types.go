@@ -19,7 +19,6 @@ package v1alpha1
 
 import (
 	core "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -58,14 +57,17 @@ type WeaviateOpsRequestSpec struct {
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type WeaviateOpsRequestType `json:"type"`
 
-	// Specifies information necessary for restarting database
-	Restart *RestartSpec `json:"restart,omitempty"`
+	// Specifies information necessary for vertical scaling
+	VerticalScaling *WeaviateVerticalScalingSpec `json:"verticalScaling,omitempty"`
+
+	// Specifies information necessary for configuring authSecret of the database
+	Authentication *AuthSpec `json:"authentication,omitempty"`
 
 	// Specifies information necessary for custom configuration of weaviate
 	Configuration *WeaviateReconfigurationSpec `json:"configuration,omitempty"`
 
-	// Specifies information necessary for volume expansion
-	VolumeExpansion *WeaviateVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
+	// Specifies information necessary for migrating storageClass or data
+	Migration *WeaviateMigrationSpec `json:"migration,omitempty"`
 
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
@@ -78,9 +80,15 @@ type WeaviateOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure;VolumeExpansion
-// ENUM(Restart,Reconfigure,VolumeExpansion)
+// +kubebuilder:validation:Enum=Restart;Reconfigure;RotateAuth
+// ENUM(Restart,Reconfigure,RotateAuth)
 type WeaviateOpsRequestType string
+
+// WeaviateVerticalScalingSpec contains the vertical scaling information of a Weaviate cluster
+type WeaviateVerticalScalingSpec struct {
+	// Resource spec for nodes
+	Node *PodResources `json:"node,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
@@ -102,9 +110,7 @@ type WeaviateReconfigurationSpec struct {
 	BackupConfigSecret *core.LocalObjectReference `json:"backupConfigSecret,omitempty"`
 }
 
-// WeaviateVolumeExpansionSpec is the spec for Weaviate volume expansion
-type WeaviateVolumeExpansionSpec struct {
-	Mode VolumeExpansionMode `json:"mode"`
-	// volume specification for nodes
-	Node *resource.Quantity `json:"node,omitempty"`
+type WeaviateMigrationSpec struct {
+	StorageClassName   *string                            `json:"storageClassName"`
+	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
