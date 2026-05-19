@@ -25,6 +25,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -127,6 +128,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 		rabbitmq *olddbapi.RabbitMQ
 		err      error
 	)
+
 	if rabbitmq, err = rv.hasDatabaseRef(req); err != nil {
 		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
 	}
@@ -139,7 +141,7 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ra
 				err.Error()))
 		}
 	case opsapi.RabbitMQOpsRequestTypeVolumeExpansion:
-		if err := rv.validateRabbitMQVolumeExpansionOpsRequest(req); err != nil {
+		if err := rv.validateRabbitMQVolumeExpansionOpsRequest(rabbitmq, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -236,13 +238,17 @@ func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVerticalScalingOpsReq
 	return nil
 }
 
-func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVolumeExpansionOpsRequest(req *opsapi.RabbitMQOpsRequest) error {
+func (rv *RabbitMQOpsRequestCustomWebhook) validateRabbitMQVolumeExpansionOpsRequest(rabbitmq *olddbapi.RabbitMQ, req *opsapi.RabbitMQOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
 	if volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.Node can't be empty")
+	}
+
+	if err := opsutil.ValidateStorageExpansion(rabbitmq.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "RabbitMQ"); err != nil {
+		return err
 	}
 
 	return nil

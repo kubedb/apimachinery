@@ -26,6 +26,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -139,7 +140,7 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.MSSQLServerOpsRequestTypeVolumeExpansion:
-		if err := w.validateMSSQLServerVolumeExpansionOpsRequest(req); err != nil {
+		if err := w.validateMSSQLServerVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -208,10 +209,17 @@ func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVerticalScalingO
 	return nil
 }
 
-func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVolumeExpansionOpsRequest(req *opsapi.MSSQLServerOpsRequest) error {
+func (w *MSSQLServerOpsRequestCustomWebhook) validateMSSQLServerVolumeExpansionOpsRequest(db *olddbapi.MSSQLServer, req *opsapi.MSSQLServerOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return fmt.Errorf("spec.volumeExpansion is nil, not supported in VolumeExpansion type")
+	}
+	if volumeExpansionSpec.MSSQLServer == nil {
+		return fmt.Errorf("spec.volumeExpansion.mssqlserver can not be empty")
+	}
+
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.MSSQLServer, req.Status.Phase, "MSSQLServer"); err != nil {
+		return err
 	}
 
 	return nil
