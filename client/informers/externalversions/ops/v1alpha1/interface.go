@@ -28,6 +28,8 @@ type Interface interface {
 	CassandraOpsRequests() CassandraOpsRequestInformer
 	// ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
 	ClickHouseOpsRequests() ClickHouseOpsRequestInformer
+	// DocumentDBOpsRequests returns a DocumentDBOpsRequestInformer.
+	DocumentDBOpsRequests() DocumentDBOpsRequestInformer
 	// DruidOpsRequests returns a DruidOpsRequestInformer.
 	DruidOpsRequests() DruidOpsRequestInformer
 	// ElasticsearchOpsRequests returns a ElasticsearchOpsRequestInformer.
@@ -103,6 +105,11 @@ func (v *version) CassandraOpsRequests() CassandraOpsRequestInformer {
 // ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
 func (v *version) ClickHouseOpsRequests() ClickHouseOpsRequestInformer {
 	return &clickHouseOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DocumentDBOpsRequests returns a DocumentDBOpsRequestInformer.
+func (v *version) DocumentDBOpsRequests() DocumentDBOpsRequestInformer {
+	return &documentDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // DruidOpsRequests returns a DruidOpsRequestInformer.
