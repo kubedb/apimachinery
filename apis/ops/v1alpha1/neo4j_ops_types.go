@@ -73,6 +73,8 @@ type Neo4jOpsRequestSpec struct {
 	VolumeExpansion *Neo4jVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for upgrading Neo4j
 	UpdateVersion *Neo4jUpdateVersionSpec `json:"updateVersion,omitempty"`
+	// Specifies information necessary for migrating StorageClass
+	Migration *Neo4jMigrationSpec `json:"migration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -93,6 +95,12 @@ type Neo4jVolumeExpansionSpec struct {
 type Neo4jUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
+}
+
+type Neo4jMigrationSpec struct {
+	StorageClassName *string `json:"storageClassName"`
+	// +optional
+	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
 
 // ReallocateStrategy defines how reallocation should be performed
@@ -147,8 +155,8 @@ type Neo4jTLSSpec struct {
 	Remove bool `json:"remove,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;VerticalScaling;HorizontalScaling;VolumeExpansion;UpdateVersion
-// ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling,VerticalScaling,VolumeExpansion,UpdateVersion)
+// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;VerticalScaling;HorizontalScaling;VolumeExpansion;UpdateVersion;StorageMigration
+// ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling,VerticalScaling,VolumeExpansion,UpdateVersion,StorageMigration)
 type Neo4jOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

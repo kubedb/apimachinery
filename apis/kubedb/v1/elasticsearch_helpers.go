@@ -1000,6 +1000,10 @@ func (e *Elasticsearch) GetMatchExpressions() []metav1.LabelSelectorRequirement 
 	}
 }
 
+func (e *Elasticsearch) GetStorageClassName() string {
+	return *e.Spec.Storage.StorageClassName
+}
+
 func (e *Elasticsearch) GetPersistentSecrets() []string {
 	if e == nil {
 		return nil
