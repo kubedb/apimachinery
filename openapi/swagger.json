@@ -27907,6 +27907,28 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchMigrationSpec": {
+      "description": "ElasticsearchMigrationSpec is the spec for storage migration of an Elasticsearch database.",
+      "type": "object",
+      "required": [
+        "storageClassName"
+      ],
+      "properties": {
+        "oldPVReclaimPolicy": {
+          "description": "OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume after the underlying PVC has been renamed onto the new StorageClass. Defaults to the reclaim policy that was already configured on the PV when migration started. Set to \"Retain\" to keep the previous PV after migration.\n\nPossible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+          "type": "string",
+          "enum": [
+            "Delete",
+            "Recycle",
+            "Retain"
+          ]
+        },
+        "storageClassName": {
+          "description": "StorageClassName is the desired StorageClass to migrate the database PVCs to.",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchOpsRequest": {
       "type": "object",
       "properties": {
@@ -28004,6 +28026,10 @@
         "maxRetries": {
           "type": "integer",
           "format": "int32"
+        },
+        "migration": {
+          "description": "Specifies information necessary for migrating storageClass or data",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchMigrationSpec"
         },
         "restart": {
           "description": "Specifies information necessary for restarting database",
