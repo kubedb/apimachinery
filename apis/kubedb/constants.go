@@ -83,7 +83,9 @@ const (
 	ProxySQLKey      = "proxysql" + "." + GroupName
 
 	// Auth related constants
-	AuthActiveFromAnnotation = GroupName + "/auth-active-from"
+	AuthActiveFromAnnotation     = GroupName + "/auth-active-from"
+	HanaDBTLSResetModeAnnotation = GroupName + "/hanadb-tls-reset-mode"
+	HanaDBTLSResetModeClientPKI  = "clientpki"
 
 	// =========================== Elasticsearch Constants ============================
 	ElasticsearchRestPort                        = 9200
@@ -2360,6 +2362,8 @@ const (
 	// Mount paths
 	HanaDBDataDir         = "/hana/mounts"
 	HanaDBSecretMountPath = "/etc/hana-secrets"
+	HanaDBTLSInputPath    = "/etc/hanadb-tls/server"
+	HanaDBExporterTLSPath = "/etc/hanadb_exporter/certs"
 	HanaDBConfigFileName  = "global.ini"
 	HanaDBConfigDir       = "/hana/mounts/system/config"
 	HanaDBConfigMountPath = "/etc/hanadb-config"
@@ -2367,6 +2371,8 @@ const (
 	// Volume names
 	HanaDBDataVolume           = "data"
 	HanaDBVolumePasswordSecret = "password-secret"
+	HanaDBVolumeTLSInput       = "tls-input"
+	HanaDBVolumeExporterTLS    = "exporter-tls-volume"
 	HanaDBConfigVolumeName     = "hanadb-config"
 
 	// User and Group IDs
