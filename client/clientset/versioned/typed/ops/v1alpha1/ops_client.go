@@ -21,20 +21,21 @@ package v1alpha1
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type OpsV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	CassandraOpsRequestsGetter
 	ClickHouseOpsRequestsGetter
+	DocumentDBOpsRequestsGetter
 	DruidOpsRequestsGetter
 	ElasticsearchOpsRequestsGetter
 	EtcdOpsRequestsGetter
 	FerretDBOpsRequestsGetter
+	HanaDBOpsRequestsGetter
 	HazelcastOpsRequestsGetter
 	IgniteOpsRequestsGetter
 	KafkaOpsRequestsGetter
@@ -44,6 +45,7 @@ type OpsV1alpha1Interface interface {
 	MongoDBOpsRequestsGetter
 	MySQLOpsRequestsGetter
 	Neo4jOpsRequestsGetter
+	OracleOpsRequestsGetter
 	PerconaXtraDBOpsRequestsGetter
 	PgBouncerOpsRequestsGetter
 	PgpoolOpsRequestsGetter
@@ -55,6 +57,7 @@ type OpsV1alpha1Interface interface {
 	RedisSentinelOpsRequestsGetter
 	SinglestoreOpsRequestsGetter
 	SolrOpsRequestsGetter
+	WeaviateOpsRequestsGetter
 	ZooKeeperOpsRequestsGetter
 }
 
@@ -71,6 +74,10 @@ func (c *OpsV1alpha1Client) ClickHouseOpsRequests(namespace string) ClickHouseOp
 	return newClickHouseOpsRequests(c, namespace)
 }
 
+func (c *OpsV1alpha1Client) DocumentDBOpsRequests(namespace string) DocumentDBOpsRequestInterface {
+	return newDocumentDBOpsRequests(c, namespace)
+}
+
 func (c *OpsV1alpha1Client) DruidOpsRequests(namespace string) DruidOpsRequestInterface {
 	return newDruidOpsRequests(c, namespace)
 }
@@ -85,6 +92,10 @@ func (c *OpsV1alpha1Client) EtcdOpsRequests(namespace string) EtcdOpsRequestInte
 
 func (c *OpsV1alpha1Client) FerretDBOpsRequests(namespace string) FerretDBOpsRequestInterface {
 	return newFerretDBOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) HanaDBOpsRequests(namespace string) HanaDBOpsRequestInterface {
+	return newHanaDBOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) HazelcastOpsRequests(namespace string) HazelcastOpsRequestInterface {
@@ -121,6 +132,10 @@ func (c *OpsV1alpha1Client) MySQLOpsRequests(namespace string) MySQLOpsRequestIn
 
 func (c *OpsV1alpha1Client) Neo4jOpsRequests(namespace string) Neo4jOpsRequestInterface {
 	return newNeo4jOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) OracleOpsRequests(namespace string) OracleOpsRequestInterface {
+	return newOracleOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) PerconaXtraDBOpsRequests(namespace string) PerconaXtraDBOpsRequestInterface {
@@ -165,6 +180,10 @@ func (c *OpsV1alpha1Client) SinglestoreOpsRequests(namespace string) Singlestore
 
 func (c *OpsV1alpha1Client) SolrOpsRequests(namespace string) SolrOpsRequestInterface {
 	return newSolrOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) WeaviateOpsRequests(namespace string) WeaviateOpsRequestInterface {
+	return newWeaviateOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) ZooKeeperOpsRequests(namespace string) ZooKeeperOpsRequestInterface {

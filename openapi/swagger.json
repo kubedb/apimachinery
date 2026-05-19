@@ -27516,6 +27516,39 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBSource": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the source MariaDB database connection information.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+        },
+        "schema": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema"
+        },
+        "snapshot": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSnapshot"
+        },
+        "streaming": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLStreaming"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBTarget": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the target MariaDB database connection information.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.migrator.v1alpha1.Migrator": {
       "type": "object",
       "required": [
@@ -27638,6 +27671,154 @@
         "progress": {
           "description": "Progress contains the current progress of migration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Progress"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo": {
+      "type": "object",
+      "required": [
+        "address",
+        "user",
+        "password",
+        "dbName"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "default": ""
+        },
+        "dbName": {
+          "type": "string",
+          "default": ""
+        },
+        "maxConnections": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "password": {
+          "type": "string",
+          "default": ""
+        },
+        "user": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema": {
+      "type": "object",
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "database": {
+          "description": "Database is the list of databases to migrate.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "enabled": {
+          "description": "Enabled controls whether the Schema Phase should be executed.",
+          "type": "boolean",
+          "default": false
+        },
+        "excludeDatabase": {
+          "description": "ExcludeDatabase is the list of databases to exclude from migration.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSnapshot": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enabled controls whether the Snapshot Phase should be executed.",
+          "type": "boolean",
+          "default": false
+        },
+        "pipeline": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSnapshotPipeline"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSnapshotPipeline": {
+      "type": "object",
+      "required": [
+        "workers",
+        "sinkers",
+        "buffer",
+        "read_batch_size",
+        "write_batch_size"
+      ],
+      "properties": {
+        "buffer": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "read_batch_size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sinkers": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "workers": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "write_batch_size": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSource": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the source MySQL database connection information.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+        },
+        "schema": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema"
+        },
+        "snapshot": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSnapshot"
+        },
+        "streaming": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLStreaming"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLStreaming": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enabled controls whether the Logical Replication Phase should be executed.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLTarget": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the target MySQL database connection information.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
         }
       }
     },
@@ -27767,6 +27948,14 @@
       "description": "Source defines the source database configuration",
       "type": "object",
       "properties": {
+        "mariadb": {
+          "description": "MariaDB refers to the source MariaDB database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBSource"
+        },
+        "mysql": {
+          "description": "MySQL refers to the source MySQL database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSource"
+        },
         "postgres": {
           "description": "Postgres refers to the source Postgres database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.PostgresSource"
@@ -27786,6 +27975,14 @@
       "description": "Target defines the target database configuration",
       "type": "object",
       "properties": {
+        "mariadb": {
+          "description": "MariaDB refers to the target MariaDB database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBTarget"
+        },
+        "mysql": {
+          "description": "MySQL refers to the target MySQL database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLTarget"
+        },
         "postgres": {
           "description": "Postgres refers to the target Postgres database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.PostgresTarget"
@@ -27923,6 +28120,28 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchMigrationSpec": {
+      "description": "ElasticsearchMigrationSpec is the spec for storage migration of an Elasticsearch database.",
+      "type": "object",
+      "required": [
+        "storageClassName"
+      ],
+      "properties": {
+        "oldPVReclaimPolicy": {
+          "description": "OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume after the underlying PVC has been renamed onto the new StorageClass. Defaults to the reclaim policy that was already configured on the PV when migration started. Set to \"Retain\" to keep the previous PV after migration.\n\nPossible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+          "type": "string",
+          "enum": [
+            "Delete",
+            "Recycle",
+            "Retain"
+          ]
+        },
+        "storageClassName": {
+          "description": "StorageClassName is the desired StorageClass to migrate the database PVCs to.",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchOpsRequest": {
       "type": "object",
       "properties": {
@@ -28020,6 +28239,10 @@
         "maxRetries": {
           "type": "integer",
           "format": "int32"
+        },
+        "migration": {
+          "description": "Specifies information necessary for migrating storageClass or data",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchMigrationSpec"
         },
         "restart": {
           "description": "Specifies information necessary for restarting database",
@@ -28582,6 +28805,28 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBMigrationSpec": {
+      "description": "MongoDBMigrationSpec is the spec for storage migration of a MongoDB database.",
+      "type": "object",
+      "required": [
+        "storageClassName"
+      ],
+      "properties": {
+        "oldPVReclaimPolicy": {
+          "description": "OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume after the underlying PVC has been renamed onto the new StorageClass. Defaults to the reclaim policy that was already configured on the PV when migration started. Set to \"Retain\" to keep the previous PV after migration.\n\nPossible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+          "type": "string",
+          "enum": [
+            "Delete",
+            "Recycle",
+            "Retain"
+          ]
+        },
+        "storageClassName": {
+          "description": "StorageClassName is the desired StorageClass to migrate the database PVCs to.",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBOpsRequest": {
       "type": "object",
       "properties": {
@@ -28687,6 +28932,10 @@
         "maxRetries": {
           "type": "integer",
           "format": "int32"
+        },
+        "migration": {
+          "description": "Specifies information necessary for migrating storageClass or data",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBMigrationSpec"
         },
         "readinessCriteria": {
           "description": "Specifies the Readiness Criteria",
@@ -29215,6 +29464,26 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBMigrationSpec": {
+      "type": "object",
+      "required": [
+        "storageClassName"
+      ],
+      "properties": {
+        "oldPVReclaimPolicy": {
+          "description": "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+          "type": "string",
+          "enum": [
+            "Delete",
+            "Recycle",
+            "Retain"
+          ]
+        },
+        "storageClassName": {
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBOpsRequest": {
       "type": "object",
       "properties": {
@@ -29312,6 +29581,10 @@
         "maxRetries": {
           "type": "integer",
           "format": "int32"
+        },
+        "migration": {
+          "description": "Specifies information necessary for storage migration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBMigrationSpec"
         },
         "restart": {
           "description": "Specifies information necessary for restarting database",
@@ -30138,6 +30411,26 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisMigrationSpec": {
+      "type": "object",
+      "required": [
+        "storageClassName"
+      ],
+      "properties": {
+        "oldPVReclaimPolicy": {
+          "description": "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+          "type": "string",
+          "enum": [
+            "Delete",
+            "Recycle",
+            "Retain"
+          ]
+        },
+        "storageClassName": {
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisOpsRequest": {
       "type": "object",
       "properties": {
@@ -30239,6 +30532,10 @@
         "maxRetries": {
           "type": "integer",
           "format": "int32"
+        },
+        "migration": {
+          "description": "Specifies information necessary for migrating storage",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisMigrationSpec"
         },
         "restart": {
           "description": "Specifies information necessary for restarting database",
