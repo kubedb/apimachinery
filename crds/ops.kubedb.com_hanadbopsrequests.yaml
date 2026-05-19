@@ -221,7 +221,6 @@ spec:
                 - Restart
                 - Reconfigure
                 - ReconfigureTLS
-                - RotateAuth
                 type: string
             required:
             - databaseRef

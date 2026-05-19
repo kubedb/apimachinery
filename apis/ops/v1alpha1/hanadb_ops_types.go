@@ -79,9 +79,22 @@ type HanaDBOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure;ReconfigureTLS;RotateAuth
-// ENUM(Restart, Reconfigure, ReconfigureTLS, RotateAuth)
+// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
+// ENUM(VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
 type HanaDBOpsRequestType string
+
+// HanaDBVerticalScalingSpec contains the vertical scaling information of a HanaDB cluster
+type HanaDBVerticalScalingSpec struct {
+	// Resource spec for nodes
+	Node *PodResources `json:"node,omitempty"`
+}
+
+// HanaDBVolumeExpansionSpec is the spec for HanaDB volume expansion
+type HanaDBVolumeExpansionSpec struct {
+	Mode VolumeExpansionMode `json:"mode"`
+	// volume specification for nodes
+	Node *resource.Quantity `json:"node,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type HanaDBOpsRequestList struct {

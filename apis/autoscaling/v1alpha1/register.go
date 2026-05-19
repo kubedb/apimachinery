@@ -66,6 +66,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&EtcdAutoscalerList{},
 		&FerretDBAutoscaler{},
 		&FerretDBAutoscalerList{},
+		&HanaDBAutoscaler{},
+		&HanaDBAutoscalerList{},
 		&HazelcastAutoscaler{},
 		&HazelcastAutoscalerList{},
 		&IgniteAutoscaler{},
