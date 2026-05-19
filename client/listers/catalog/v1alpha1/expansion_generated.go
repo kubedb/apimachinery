@@ -82,6 +82,10 @@ type MariaDBVersionListerExpansion interface{}
 // MemcachedVersionLister.
 type MemcachedVersionListerExpansion interface{}
 
+// MilvusVersionListerExpansion allows custom methods to be added to
+// MilvusVersionLister.
+type MilvusVersionListerExpansion interface{}
+
 // MongoDBVersionListerExpansion allows custom methods to be added to
 // MongoDBVersionLister.
 type MongoDBVersionListerExpansion interface{}
