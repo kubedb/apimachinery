@@ -58,6 +58,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&CassandraAutoscalerList{},
 		&ClickHouseAutoscaler{},
 		&ClickHouseAutoscalerList{},
+		&DocumentDBAutoscaler{},
+		&DocumentDBAutoscalerList{},
 		&DruidAutoscaler{},
 		&DruidAutoscalerList{},
 		&ElasticsearchAutoscaler{},
