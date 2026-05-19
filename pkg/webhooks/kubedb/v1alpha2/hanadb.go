@@ -227,7 +227,6 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 			string(api.HanaDBClientCert):          {},
 			string(api.HanaDBMetricsExporterCert): {},
 		}
-		hasClientAlias := false
 		for i, cert := range db.Spec.TLS.Certificates {
 			if _, ok := allowedAliases[cert.Alias]; !ok {
 				allErr = append(allErr, field.Invalid(
@@ -236,9 +235,6 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 					fmt.Sprintf("supported aliases are %q, %q and %q", api.HanaDBServerCert, api.HanaDBClientCert, api.HanaDBMetricsExporterCert),
 				))
 				continue
-			}
-			if cert.Alias == string(api.HanaDBClientCert) {
-				hasClientAlias = true
 			}
 			if _, seen := kmapi.GetCertificate(db.Spec.TLS.Certificates[:i], cert.Alias); seen != nil {
 				allErr = append(allErr, field.Duplicate(
@@ -253,14 +249,6 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 				field.NewPath("spec").Child("tls").Child("clientTLS"),
 				db.Spec.TLS.ClientTLS,
 				"spec.tls.clientTLS must be enabled when using client-side TLS options",
-			))
-		}
-
-		if ptr.Deref(db.Spec.TLS.ClientTLS, false) && !hasClientAlias && db.Spec.TLS.IssuerRef == nil {
-			allErr = append(allErr, field.Invalid(
-				field.NewPath("spec").Child("tls").Child("certificates"),
-				nil,
-				fmt.Sprintf("%q certificate alias must be configured when clientTLS is enabled", api.HanaDBClientCert),
 			))
 		}
 	}
