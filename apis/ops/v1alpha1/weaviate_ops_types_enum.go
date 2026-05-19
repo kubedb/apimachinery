@@ -17,6 +17,8 @@ const (
 	WeaviateOpsRequestTypeRestart WeaviateOpsRequestType = "Restart"
 	// WeaviateOpsRequestTypeReconfigure is a WeaviateOpsRequestType of type Reconfigure.
 	WeaviateOpsRequestTypeReconfigure WeaviateOpsRequestType = "Reconfigure"
+	// WeaviateOpsRequestTypeStorageMigration is a WeaviateOpsRequestType of type StorageMigration.
+	WeaviateOpsRequestTypeStorageMigration WeaviateOpsRequestType = "StorageMigration"
 )
 
 var ErrInvalidWeaviateOpsRequestType = fmt.Errorf("not a valid WeaviateOpsRequestType, try [%s]", strings.Join(_WeaviateOpsRequestTypeNames, ", "))
@@ -25,6 +27,7 @@ var _WeaviateOpsRequestTypeNames = []string{
 	string(WeaviateOpsRequestTypeVerticalScaling),
 	string(WeaviateOpsRequestTypeRestart),
 	string(WeaviateOpsRequestTypeReconfigure),
+	string(WeaviateOpsRequestTypeStorageMigration),
 }
 
 // WeaviateOpsRequestTypeNames returns a list of possible string values of WeaviateOpsRequestType.
@@ -40,6 +43,7 @@ func WeaviateOpsRequestTypeValues() []WeaviateOpsRequestType {
 		WeaviateOpsRequestTypeVerticalScaling,
 		WeaviateOpsRequestTypeRestart,
 		WeaviateOpsRequestTypeReconfigure,
+		WeaviateOpsRequestTypeStorageMigration,
 	}
 }
 

@@ -66,6 +66,9 @@ type WeaviateOpsRequestSpec struct {
 	// Specifies information necessary for custom configuration of weaviate
 	Configuration *WeaviateReconfigurationSpec `json:"configuration,omitempty"`
 
+	// Specifies information necessary for migrating storageClass or data
+	Migration *WeaviateMigrationSpec `json:"migration,omitempty"`
+
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 
@@ -105,4 +108,9 @@ type WeaviateReconfigurationSpec struct {
 	// from a Kubernetes Secret for the database container.
 	// +optional
 	BackupConfigSecret *core.LocalObjectReference `json:"backupConfigSecret,omitempty"`
+}
+
+type WeaviateMigrationSpec struct {
+	StorageClassName   *string                            `json:"storageClassName"`
+	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
