@@ -25,6 +25,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -130,7 +131,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.ClickHouseOpsRequestTypeVolumeExpansion:
-		if err := rv.validateClickHouseVolumeExpansionOpsRequest(req); err != nil {
+		if err := rv.validateClickHouseVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -207,7 +208,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseUpdateVersionOpsR
 	return nil
 }
 
-func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVolumeExpansionOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVolumeExpansionOpsRequest(db *olddbapi.ClickHouse, req *opsapi.ClickHouseOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
@@ -215,6 +216,16 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVolumeExpansionOp
 
 	if volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.Node can't be empty")
+	}
+
+	var storage *core.PersistentVolumeClaimSpec
+	if db.Spec.ClusterTopology != nil {
+		storage = db.Spec.ClusterTopology.Cluster.Storage
+	} else {
+		storage = db.Spec.Storage
+	}
+	if err := opsutil.ValidateStorageExpansion(storage, volumeExpansionSpec.Node, req.Status.Phase, "ClickHouse"); err != nil {
+		return err
 	}
 
 	return nil

@@ -122,7 +122,7 @@ const (
 const (
 	Restart              = "Restart"
 	RestartNodes         = "RestartNodes"
-	RestartServer        = "RestartServer"
+	RestartServers       = "RestartServers"
 	RestartPods          = "RestartPods"
 	RestartKeeperPods    = "RestartKeeperPods"
 	RestartPodsSucceeded = "RestartPodsSucceeded"
@@ -145,6 +145,29 @@ const (
 	ReadyStatefulSets           = "ReadyStatefulSets"
 	DeleteStatefulSets          = "DeleteStatefulSets"
 	OrphanStatefulSetPods       = "OrphanStatefulSetPods"
+)
+
+// StorageMigration
+const (
+	StorageMigrationPetSetDeleted    = "PetSetDeleted"
+	StorageMigrationGetPetSet        = "GetPetSet"
+	StorageMigrationGetStorageClass  = "GetStorageClass"
+	StorageMigrationGetPVC           = "GetPVC"
+	StorageMigrationPVCCreated       = "PVCCreated"
+	StorageMigrationGetPod           = "GetPod"
+	StorageMigrationPodCreated       = "PodCreated"
+	StorageMigrationPodDeleted       = "PodDeleted"
+	StorageMigrationCheckPodPhase    = "CheckPodPhase"
+	StorageMigrationAddAnnotation    = "AddAnnotation"
+	StorageMigrationCheckPodDelete   = "CheckPodDelete"
+	StorageMigrationJobCreated       = "JobCreated"
+	StorageMigrationJobDeleted       = "JobDeleted"
+	StorageMigrationPatchPV          = "PatchPV"
+	StorageMigrationPVCDeleted       = "PVCDeleted"
+	StorageMigrationCheckPVCDelete   = "CheckPVCDelete"
+	StorageMigrationRemoveAnnotation = "RemoveAnnotation"
+	StorageMigrationPodReady         = "PodReady"
+	StorageMigrationUpdateStatus     = "UpdateOpsReqStatus"
 )
 
 // PetSets
@@ -406,6 +429,9 @@ const (
 	UpdateMiddleManagersNodePVCs = "UpdateMiddleManagersNodePVCs"
 	UpdateHistoricalsNodePVCs    = "UpdateHistoricalsNodePVCs"
 
+	MigrateMiddleManagersStorage = "MigrateMiddleManagersStorage"
+	MigrateHistoricalsStorage    = "MigrateHistoricalsStorage"
+
 	UpdateCredentialDynamically = "UpdateCredentialDynamically"
 )
 
@@ -430,4 +456,9 @@ const (
 const (
 	RebalanceShards = "RebalanceShards"
 	RemovePeers     = "RemovePeers"
+)
+
+// Neo4j Constanst
+const (
+	UpdateServerPVCs = "UpdateServerPVCs"
 )

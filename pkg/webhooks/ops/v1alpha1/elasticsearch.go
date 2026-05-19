@@ -18,18 +18,21 @@ package v1alpha1
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -175,6 +178,18 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.ElasticsearchOpsRequestTypeStorageMigration:
+		if err := w.validateElasticsearchStorageMigrationOpsRequest(req, db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.ElasticsearchOpsRequestTypeVolumeExpansion:
+		if err := w.validateElasticsearchVolumeExpansionOpsRequest(req, db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
@@ -195,6 +210,117 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchUpdateVersio
 	}
 	if !yes {
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+
+	return nil
+}
+
+func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigrationOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
+	if req.Spec.Migration.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
+	if req.Spec.Timeout == nil {
+		// timeout is required for Storage Migration ops request because it's a long-running operation
+		// default timeout is len(pods) * 5 minute
+		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
+	}
+	// check new storageClass
+	var newstorage, oldstorage storagev1.StorageClass
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: *req.Spec.Migration.StorageClassName,
+	}, &newstorage)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *req.Spec.Migration.StorageClassName))
+		}
+		return err
+	}
+
+	checkStorageClassName := func(name string) error {
+		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name: name,
+		}, &oldstorage)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if db.Spec.Topology != nil {
+		err := checkStorageClassName(*db.Spec.Topology.Ingest.Storage.StorageClassName)
+		if err != nil {
+			return err
+		}
+		err = checkStorageClassName(*db.Spec.Topology.Master.Storage.StorageClassName)
+		if err != nil {
+			return err
+		}
+		if db.Spec.Topology.Data != nil {
+			err := checkStorageClassName(*db.Spec.Topology.Data.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.DataHot != nil {
+			err := checkStorageClassName(*db.Spec.Topology.DataHot.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.DataWarm != nil {
+			err := checkStorageClassName(*db.Spec.Topology.DataWarm.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.DataCold != nil {
+			err := checkStorageClassName(*db.Spec.Topology.DataCold.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.DataFrozen != nil {
+			err := checkStorageClassName(*db.Spec.Topology.DataFrozen.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.ML != nil {
+			err := checkStorageClassName(*db.Spec.Topology.ML.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.DataContent != nil {
+			err := checkStorageClassName(*db.Spec.Topology.DataContent.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.Transform != nil {
+			err := checkStorageClassName(*db.Spec.Topology.Transform.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+		if db.Spec.Topology.Coordinating != nil {
+			err := checkStorageClassName(*db.Spec.Topology.Coordinating.Storage.StorageClassName)
+			if err != nil {
+				return err
+			}
+		}
+
+	} else {
+		err := checkStorageClassName(db.GetStorageClassName())
+		if err != nil {
+			return err
+		}
+	}
+
+	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+		}
 	}
 
 	return nil
@@ -239,6 +365,65 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchReconfigureO
 	configuration := req.Spec.Configuration
 	if configuration == nil {
 		return fmt.Errorf("configuration can not be empty for %s/%s", req.Namespace, req.Name)
+	}
+
+	return nil
+}
+
+func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchVolumeExpansionOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
+	volumeExpansionSpec := req.Spec.VolumeExpansion
+	if volumeExpansionSpec == nil {
+		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
+	}
+
+	// combined mode: db.Spec.Topology == nil
+	if db.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "combined Elasticsearch"); err != nil {
+			return err
+		}
+	}
+
+	checkNodeStorage := func(nodeName string, nodeSpec *dbapi.ElasticsearchNode, desired *resource.Quantity) error {
+		if desired == nil || nodeSpec == nil {
+			return nil
+		}
+		return opsutil.ValidateStorageExpansion(nodeSpec.Storage, desired, req.Status.Phase, nodeName)
+	}
+
+	if db.Spec.Topology != nil {
+		if err := checkNodeStorage("master", &db.Spec.Topology.Master, volumeExpansionSpec.Master); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("ingest", &db.Spec.Topology.Ingest, volumeExpansionSpec.Ingest); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("data", db.Spec.Topology.Data, volumeExpansionSpec.Data); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("dataContent", db.Spec.Topology.DataContent, volumeExpansionSpec.DataContent); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("dataHot", db.Spec.Topology.DataHot, volumeExpansionSpec.DataHot); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("dataWarm", db.Spec.Topology.DataWarm, volumeExpansionSpec.DataWarm); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("dataCold", db.Spec.Topology.DataCold, volumeExpansionSpec.DataCold); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("dataFrozen", db.Spec.Topology.DataFrozen, volumeExpansionSpec.DataFrozen); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("ml", db.Spec.Topology.ML, volumeExpansionSpec.ML); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("transform", db.Spec.Topology.Transform, volumeExpansionSpec.Transform); err != nil {
+			return err
+		}
+		if err := checkNodeStorage("coordinating", db.Spec.Topology.Coordinating, volumeExpansionSpec.Coordinating); err != nil {
+			return err
+		}
 	}
 
 	return nil
