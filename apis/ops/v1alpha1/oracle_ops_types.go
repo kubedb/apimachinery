@@ -58,7 +58,6 @@ type OracleOpsRequestSpec struct {
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *OracleVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
-	VerticalScaling *OracleVerticalScalingSpec `json:"verticalScaling,omitempty"`
 	// Specifies information necessary for volume expansion
 	VolumeExpansion *OracleVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for custom configuration of oracle
@@ -77,12 +76,6 @@ type OracleOpsRequestSpec struct {
 type OracleMigrationSpec struct {
 	StorageClassName   *string                            `json:"storageClassName"`
 	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
-}
-
-// OracleVerticalScalingSpec contains the vertical scaling information of an Oracle cluster
-type OracleVerticalScalingSpec struct {
-	// Resource spec for nodes
-	Node *PodResources `json:"node,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Restart;Reconfigure;StorageMigration;VerticalScaling;VolumeExpansion
