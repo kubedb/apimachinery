@@ -21,10 +21,9 @@ package v1alpha1
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type AutoscalingV1alpha1Interface interface {
@@ -43,6 +42,7 @@ type AutoscalingV1alpha1Interface interface {
 	MemcachedAutoscalersGetter
 	MongoDBAutoscalersGetter
 	MySQLAutoscalersGetter
+	OracleAutoscalersGetter
 	PerconaXtraDBAutoscalersGetter
 	PgBouncerAutoscalersGetter
 	PgpoolAutoscalersGetter
@@ -115,6 +115,10 @@ func (c *AutoscalingV1alpha1Client) MongoDBAutoscalers(namespace string) MongoDB
 
 func (c *AutoscalingV1alpha1Client) MySQLAutoscalers(namespace string) MySQLAutoscalerInterface {
 	return newMySQLAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) OracleAutoscalers(namespace string) OracleAutoscalerInterface {
+	return newOracleAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) PerconaXtraDBAutoscalers(namespace string) PerconaXtraDBAutoscalerInterface {

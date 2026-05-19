@@ -604,6 +604,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase":                           schema_apimachinery_apis_catalog_v1alpha1_DB2VersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionList":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionSpec":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DcdbInitContainer":                            schema_apimachinery_apis_catalog_v1alpha1_DcdbInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBCoordinator":                        schema_apimachinery_apis_catalog_v1alpha1_DocumentDBCoordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersion":                            schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionList(ref),
@@ -654,6 +656,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncBackupRestore":                             schema_apimachinery_apis_catalog_v1alpha1_IncBackupRestore(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersion":                        schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersionList":                    schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersionSpec":                    schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionSpec(ref),
@@ -33591,11 +33594,17 @@ func schema_apimachinery_apis_catalog_v1alpha1_AddonTasks(ref common.ReferenceCa
 							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackupRestore"),
 						},
 					},
+					"incBackupRestore": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncBackupRestore"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackupRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.VolumeSnapshot"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackupRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncBackupRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.VolumeSnapshot"},
 	}
 }
 
@@ -34186,6 +34195,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionSpec(ref common.
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
+					"archiver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Archiver defines the walg & stash-addon related specifications",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec"),
+						},
+					},
 					"ui": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
@@ -34211,7 +34227,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
@@ -34499,6 +34515,46 @@ func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref common.Referen
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_DcdbInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34638,6 +34694,20 @@ func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionSpec(ref common.
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionDatabase"),
 						},
 					},
+					"coordinator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Coordinator Image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBCoordinator"),
+						},
+					},
+					"initContainer": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Init container image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DcdbInitContainer"),
+						},
+					},
 					"deprecated": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
@@ -34684,7 +34754,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DcdbInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
@@ -36441,6 +36511,26 @@ func schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionSpec(ref common.Refe
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_IncBackupRestore(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37773,8 +37863,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MilvusVersion(ref common.Referenc
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Package v1alpha2 contains API Schema definitions for the  v1alpha2 API group.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{

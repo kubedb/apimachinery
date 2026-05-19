@@ -21,10 +21,9 @@ package v1alpha1
 import (
 	"net/http"
 
+	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
-
-	rest "k8s.io/client-go/rest"
 )
 
 type CatalogV1alpha1Interface interface {
@@ -45,6 +44,7 @@ type CatalogV1alpha1Interface interface {
 	MSSQLServerVersionsGetter
 	MariaDBVersionsGetter
 	MemcachedVersionsGetter
+	MilvusVersionsGetter
 	MongoDBVersionsGetter
 	MySQLVersionsGetter
 	Neo4jVersionsGetter
@@ -131,6 +131,10 @@ func (c *CatalogV1alpha1Client) MariaDBVersions() MariaDBVersionInterface {
 
 func (c *CatalogV1alpha1Client) MemcachedVersions() MemcachedVersionInterface {
 	return newMemcachedVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) MilvusVersions() MilvusVersionInterface {
+	return newMilvusVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) MongoDBVersions() MongoDBVersionInterface {

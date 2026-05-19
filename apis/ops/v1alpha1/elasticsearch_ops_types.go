@@ -71,6 +71,8 @@ type ElasticsearchOpsRequestSpec struct {
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
+	// Specifies information necessary for migrating storageClass or data
+	Migration *ElasticsearchMigrationSpec `json:"migration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -80,8 +82,8 @@ type ElasticsearchOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth)
+// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth;StorageMigration
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, StorageMigration)
 type ElasticsearchOpsRequestType string
 
 // ElasticsearchReplicaReadinessCriteria is the criteria for checking readiness of an Elasticsearch database
@@ -197,6 +199,18 @@ type ElasticsearchReconfigurationSpec struct {
 	// +optional
 	// +kubebuilder:default=auto
 	Restart ReconfigureRestartType `json:"restart,omitempty"`
+}
+
+// ElasticsearchMigrationSpec is the spec for storage migration of an Elasticsearch database.
+type ElasticsearchMigrationSpec struct {
+	// StorageClassName is the desired StorageClass to migrate the database PVCs to.
+	StorageClassName *string `json:"storageClassName"`
+	// OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume
+	// after the underlying PVC has been renamed onto the new StorageClass. Defaults to the
+	// reclaim policy that was already configured on the PV when migration started.
+	// Set to "Retain" to keep the previous PV after migration.
+	// +optional
+	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
 
 type ElasticsearchCustomConfiguration struct {
