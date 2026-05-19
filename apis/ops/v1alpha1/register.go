@@ -58,6 +58,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&CassandraOpsRequestList{},
 		&ClickHouseOpsRequest{},
 		&ClickHouseOpsRequestList{},
+		&DocumentDBOpsRequest{},
+		&DocumentDBOpsRequestList{},
 		&DruidOpsRequest{},
 		&DruidOpsRequestList{},
 		&ElasticsearchOpsRequest{},
@@ -86,6 +88,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MySQLOpsRequestList{},
 		&Neo4jOpsRequest{},
 		&Neo4jOpsRequestList{},
+		&OracleOpsRequest{},
+		&OracleOpsRequestList{},
 		&PerconaXtraDBOpsRequest{},
 		&PerconaXtraDBOpsRequestList{},
 		&PgBouncerOpsRequest{},
@@ -110,6 +114,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&SolrOpsRequestList{},
 		&ZooKeeperOpsRequest{},
 		&ZooKeeperOpsRequestList{},
+		&WeaviateOpsRequest{},
+		&WeaviateOpsRequestList{},
 	)
 
 	scheme.AddKnownTypes(SchemeGroupVersion,

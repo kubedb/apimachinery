@@ -85,6 +85,10 @@ func (c *FakeAutoscalingV1alpha1) MySQLAutoscalers(namespace string) v1alpha1.My
 	return &FakeMySQLAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) OracleAutoscalers(namespace string) v1alpha1.OracleAutoscalerInterface {
+	return &FakeOracleAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) PerconaXtraDBAutoscalers(namespace string) v1alpha1.PerconaXtraDBAutoscalerInterface {
 	return &FakePerconaXtraDBAutoscalers{c, namespace}
 }
