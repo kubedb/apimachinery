@@ -114,10 +114,21 @@ type SolrUpdateVersionSpec struct {
 	TargetVersion string `json:"targetVersion,omitempty"`
 }
 
+// SolrMigrationSpec is the spec for storage migration of a Solr cluster.
+// Set Node for combined mode, or Overseer + Data + Coordinator for topology mode.
 type SolrMigrationSpec struct {
-	StorageClassName *string `json:"storageClassName"`
+	// Node is the migration spec for a combined-mode Solr instance.
 	// +optional
-	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
+	Node *StorageMigrationSpec `json:"node,omitempty"`
+	// Overseer is the migration spec for overseer nodes in topology mode.
+	// +optional
+	Overseer *StorageMigrationSpec `json:"overseer,omitempty"`
+	// Data is the migration spec for data nodes in topology mode.
+	// +optional
+	Data *StorageMigrationSpec `json:"data,omitempty"`
+	// Coordinator is the migration spec for coordinator nodes in topology mode.
+	// +optional
+	Coordinator *StorageMigrationSpec `json:"coordinator,omitempty"`
 }
 
 type SolrHorizontalScalingSpec struct {

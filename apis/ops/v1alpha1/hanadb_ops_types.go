@@ -18,6 +18,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"k8s.io/apimachinery/pkg/api/resource"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	core "k8s.io/api/core/v1"
@@ -71,8 +72,9 @@ type HanaDBOpsRequestSpec struct {
 	// Specifies information necessary for configuring authSecret of the database
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
-	Restart *RestartSpec     `json:"restart,omitempty"`
-	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	Restart   *RestartSpec         `json:"restart,omitempty"`
+	Migration *StorageMigrationSpec `json:"migration,omitempty"`
+	Timeout   *metav1.Duration     `json:"timeout,omitempty"`
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
 	// +kubebuilder:default=1

@@ -96,15 +96,24 @@ type MongoDBOpsRequestSpec struct {
 type MongoDBOpsRequestType string
 
 // MongoDBMigrationSpec is the spec for storage migration of a MongoDB database.
+// Exactly one of Standalone, ReplicaSet, or (ConfigServer + Shard) must be set,
+// matching the topology of the target MongoDB instance.
 type MongoDBMigrationSpec struct {
-	// StorageClassName is the desired StorageClass to migrate the database PVCs to.
-	StorageClassName *string `json:"storageClassName"`
-	// OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume
-	// after the underlying PVC has been renamed onto the new StorageClass. Defaults to the
-	// reclaim policy that was already configured on the PV when migration started.
-	// Set to "Retain" to keep the previous PV after migration.
+	// Standalone is the migration spec for a standalone MongoDB instance.
 	// +optional
-	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
+	Standalone *StorageMigrationSpec `json:"standalone,omitempty"`
+	// ReplicaSet is the migration spec for a MongoDB replicaset.
+	// +optional
+	ReplicaSet *StorageMigrationSpec `json:"replicaSet,omitempty"`
+	// ConfigServer is the migration spec for the config server component of a sharded MongoDB.
+	// +optional
+	ConfigServer *StorageMigrationSpec `json:"configServer,omitempty"`
+	// Shard is the migration spec for the shard component of a sharded MongoDB.
+	// +optional
+	Shard *StorageMigrationSpec `json:"shard,omitempty"`
+	// Hidden is the migration spec for the hidden replica of a MongoDB replicaset.
+	// +optional
+	Hidden *StorageMigrationSpec `json:"hidden,omitempty"`
 }
 
 // MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod

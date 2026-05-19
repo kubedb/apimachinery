@@ -74,7 +74,7 @@ type Neo4jOpsRequestSpec struct {
 	// Specifies information necessary for upgrading Neo4j
 	UpdateVersion *Neo4jUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for migrating StorageClass
-	Migration *Neo4jMigrationSpec `json:"migration,omitempty"`
+	Migration *StorageMigrationSpec `json:"migration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -95,12 +95,6 @@ type Neo4jVolumeExpansionSpec struct {
 type Neo4jUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
-}
-
-type Neo4jMigrationSpec struct {
-	StorageClassName *string `json:"storageClassName"`
-	// +optional
-	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
 
 // ReallocateStrategy defines how reallocation should be performed
