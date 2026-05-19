@@ -216,110 +216,92 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchUpdateVersio
 }
 
 func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigrationOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
-	if req.Spec.Migration.StorageClassName == nil {
-		return errors.New("spec.migration.storageClassName is required")
+	m := req.Spec.Migration
+	if m.Node == nil && m.Master == nil && m.Ingest == nil && m.Data == nil &&
+		m.DataContent == nil && m.DataHot == nil && m.DataWarm == nil &&
+		m.DataCold == nil && m.DataFrozen == nil && m.ML == nil && m.Transform == nil {
+		return errors.New("at least one node migration spec is required in spec.migration")
 	}
 	if req.Spec.Timeout == nil {
-		// timeout is required for Storage Migration ops request because it's a long-running operation
-		// default timeout is len(pods) * 5 minute
 		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
 	}
-	// check new storageClass
-	var newstorage, oldstorage storagev1.StorageClass
-	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: *req.Spec.Migration.StorageClassName,
-	}, &newstorage)
-	if err != nil {
-		if apierrors.IsNotFound(err) {
-			return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *req.Spec.Migration.StorageClassName))
-		}
-		return err
-	}
 
-	checkStorageClassName := func(name string) error {
-		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name: name,
-		}, &oldstorage)
-		if err != nil {
+	validateComponent := func(spec *opsapi.StorageMigrationSpec, oldClassName string) error {
+		if spec == nil {
+			return nil
+		}
+		if spec.StorageClassName == nil {
+			return errors.New("storageClassName is required in migration spec")
+		}
+		var newstorage, oldstorage storagev1.StorageClass
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *spec.StorageClassName}, &newstorage); err != nil {
+			if apierrors.IsNotFound(err) {
+				return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *spec.StorageClassName))
+			}
 			return err
+		}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: oldClassName}, &oldstorage); err != nil {
+			return err
+		}
+		if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+			if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+				return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+			}
 		}
 		return nil
 	}
 
 	if db.Spec.Topology != nil {
-		err := checkStorageClassName(*db.Spec.Topology.Ingest.Storage.StorageClassName)
-		if err != nil {
+		t := db.Spec.Topology
+		if err := validateComponent(m.Master, *t.Master.Storage.StorageClassName); err != nil {
 			return err
 		}
-		err = checkStorageClassName(*db.Spec.Topology.Master.Storage.StorageClassName)
-		if err != nil {
+		if err := validateComponent(m.Ingest, *t.Ingest.Storage.StorageClassName); err != nil {
 			return err
 		}
-		if db.Spec.Topology.Data != nil {
-			err := checkStorageClassName(*db.Spec.Topology.Data.Storage.StorageClassName)
-			if err != nil {
+		if m.Data != nil {
+			if err := validateComponent(m.Data, *t.Data.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
-		if db.Spec.Topology.DataHot != nil {
-			err := checkStorageClassName(*db.Spec.Topology.DataHot.Storage.StorageClassName)
-			if err != nil {
+		if m.DataContent != nil {
+			if err := validateComponent(m.DataContent, *t.DataContent.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
-		if db.Spec.Topology.DataWarm != nil {
-			err := checkStorageClassName(*db.Spec.Topology.DataWarm.Storage.StorageClassName)
-			if err != nil {
+		if m.DataHot != nil {
+			if err := validateComponent(m.DataHot, *t.DataHot.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
-		if db.Spec.Topology.DataCold != nil {
-			err := checkStorageClassName(*db.Spec.Topology.DataCold.Storage.StorageClassName)
-			if err != nil {
+		if m.DataWarm != nil {
+			if err := validateComponent(m.DataWarm, *t.DataWarm.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
-		if db.Spec.Topology.DataFrozen != nil {
-			err := checkStorageClassName(*db.Spec.Topology.DataFrozen.Storage.StorageClassName)
-			if err != nil {
+		if m.DataCold != nil {
+			if err := validateComponent(m.DataCold, *t.DataCold.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
-		if db.Spec.Topology.ML != nil {
-			err := checkStorageClassName(*db.Spec.Topology.ML.Storage.StorageClassName)
-			if err != nil {
+		if m.DataFrozen != nil {
+			if err := validateComponent(m.DataFrozen, *t.DataFrozen.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
-		if db.Spec.Topology.DataContent != nil {
-			err := checkStorageClassName(*db.Spec.Topology.DataContent.Storage.StorageClassName)
-			if err != nil {
+		if m.ML != nil {
+			if err := validateComponent(m.ML, *t.ML.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
-		if db.Spec.Topology.Transform != nil {
-			err := checkStorageClassName(*db.Spec.Topology.Transform.Storage.StorageClassName)
-			if err != nil {
+		if m.Transform != nil {
+			if err := validateComponent(m.Transform, *t.Transform.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
-		if db.Spec.Topology.Coordinating != nil {
-			err := checkStorageClassName(*db.Spec.Topology.Coordinating.Storage.StorageClassName)
-			if err != nil {
-				return err
-			}
-		}
-
 	} else {
-		err := checkStorageClassName(db.GetStorageClassName())
-		if err != nil {
+		if err := validateComponent(m.Node, db.GetStorageClassName()); err != nil {
 			return err
-		}
-	}
-
-	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
-		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
-			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
 		}
 	}
 
