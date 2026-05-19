@@ -56,8 +56,6 @@ type WeaviateOpsRequestSpec struct {
 	DatabaseRef core.LocalObjectReference `json:"databaseRef"`
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type WeaviateOpsRequestType `json:"type"`
-	// Specifies information necessary for upgrading Weaviate
-	UpdateVersion *WeaviateUpdateVersionSpec `json:"updateVersion,omitempty"`
 	// Specifies information necessary for horizontal scaling
 	HorizontalScaling *WeaviateHorizontalScalingSpec `json:"horizontalScaling,omitempty"`
 	// Specifies information necessary for vertical scaling
