@@ -46,6 +46,7 @@ type OpsV1alpha1Interface interface {
 	MongoDBOpsRequestsGetter
 	MySQLOpsRequestsGetter
 	Neo4jOpsRequestsGetter
+	OracleOpsRequestsGetter
 	PerconaXtraDBOpsRequestsGetter
 	PgBouncerOpsRequestsGetter
 	PgpoolOpsRequestsGetter
@@ -131,6 +132,10 @@ func (c *OpsV1alpha1Client) MySQLOpsRequests(namespace string) MySQLOpsRequestIn
 
 func (c *OpsV1alpha1Client) Neo4jOpsRequests(namespace string) Neo4jOpsRequestInterface {
 	return newNeo4jOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) OracleOpsRequests(namespace string) OracleOpsRequestInterface {
+	return newOracleOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) PerconaXtraDBOpsRequests(namespace string) PerconaXtraDBOpsRequestInterface {

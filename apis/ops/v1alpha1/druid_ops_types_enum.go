@@ -63,6 +63,7 @@ func DruidOpsRequestTypeValues() []DruidOpsRequestType {
 		DruidOpsRequestTypeReconfigure,
 		DruidOpsRequestTypeReconfigureTLS,
 		DruidOpsRequestTypeRotateAuth,
+		DruidOpsRequestTypeStorageMigration,
 	}
 }
 
@@ -87,6 +88,7 @@ var _DruidOpsRequestTypeValue = map[string]DruidOpsRequestType{
 	"Reconfigure":       DruidOpsRequestTypeReconfigure,
 	"ReconfigureTLS":    DruidOpsRequestTypeReconfigureTLS,
 	"RotateAuth":        DruidOpsRequestTypeRotateAuth,
+	"StorageMigration":  DruidOpsRequestTypeStorageMigration,
 }
 
 // ParseDruidOpsRequestType attempts to convert a string to a DruidOpsRequestType.
