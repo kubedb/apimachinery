@@ -66,6 +66,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&FerretDBOpsRequestList{},
 		&HazelcastOpsRequest{},
 		&HazelcastOpsRequestList{},
+		&HanaDBOpsRequest{},
+		&HanaDBOpsRequestList{},
 		&EtcdOpsRequest{},
 		&EtcdOpsRequestList{},
 		&IgniteOpsRequest{},

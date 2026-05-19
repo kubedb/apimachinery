@@ -77,6 +77,8 @@ type MongoDBOpsRequestSpec struct {
 	Archiver *ArchiverOptions `json:"archiver,omitempty"`
 	// Horizons specifies the information for setting up replicaset horizons.
 	Horizons *Horizons `json:"horizons,omitempty"`
+	// Specifies information necessary for migrating storageClass or data
+	Migration *MongoDBMigrationSpec `json:"migration,omitempty"`
 
 	// Specifies the Readiness Criteria
 	ReadinessCriteria *MongoDBReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
@@ -89,9 +91,21 @@ type MongoDBOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;Reprovision;RotateAuth;Horizons
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, Reprovision, RotateAuth, Horizons)
+// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;Reprovision;RotateAuth;Horizons;StorageMigration
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, Reprovision, RotateAuth, Horizons, StorageMigration)
 type MongoDBOpsRequestType string
+
+// MongoDBMigrationSpec is the spec for storage migration of a MongoDB database.
+type MongoDBMigrationSpec struct {
+	// StorageClassName is the desired StorageClass to migrate the database PVCs to.
+	StorageClassName *string `json:"storageClassName"`
+	// OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume
+	// after the underlying PVC has been renamed onto the new StorageClass. Defaults to the
+	// reclaim policy that was already configured on the PV when migration started.
+	// Set to "Retain" to keep the previous PV after migration.
+	// +optional
+	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
+}
 
 // MongoDBReplicaReadinessCriteria is the criteria for checking readiness of a MongoDB pod
 // after restarting the pod
