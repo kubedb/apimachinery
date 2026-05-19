@@ -21,9 +21,10 @@ package v1alpha1
 import (
 	"net/http"
 
-	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
+
+	rest "k8s.io/client-go/rest"
 )
 
 type ElasticsearchV1alpha1Interface interface {

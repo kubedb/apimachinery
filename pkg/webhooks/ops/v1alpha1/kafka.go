@@ -385,36 +385,49 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaStorageMigrationOpsRequest(r
 		return errors.Wrap(err, fmt.Sprintf("failed to get kafka: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
-	if req.Spec.Migration.StorageClassName == nil {
-		return errors.New("spec.migration.storageClassName is required")
+	m := req.Spec.Migration
+	if m.Node == nil && m.Controller == nil && m.Broker == nil {
+		return errors.New("at least one of spec.migration.node, spec.migration.controller, or spec.migration.broker is required")
 	}
 	if req.Spec.Timeout == nil {
-		// timeout is required for Storage Migration ops request because it's a long-running operation
-		// default timeout is len(pods) * 5 minute
 		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
 	}
-	// check new storageClass
-	var newstorage, oldstorage storagev1.StorageClass
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: *req.Spec.Migration.StorageClassName,
-	}, &newstorage)
-	if err != nil {
-		if apierrors.IsNotFound(err) {
-			return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *req.Spec.Migration.StorageClassName))
+
+	validateComponent := func(spec *opsapi.StorageMigrationSpec, oldClassName string) error {
+		if spec == nil {
+			return nil
 		}
-		return err
+		if spec.StorageClassName == nil {
+			return errors.New("storageClassName is required in migration spec")
+		}
+		var newstorage, oldstorage storagev1.StorageClass
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *spec.StorageClassName}, &newstorage); err != nil {
+			if apierrors.IsNotFound(err) {
+				return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *spec.StorageClassName))
+			}
+			return err
+		}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: oldClassName}, &oldstorage); err != nil {
+			return err
+		}
+		if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+			if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+				return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+			}
+		}
+		return nil
 	}
 
-	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: db.GetStorageClassName(),
-	}, &oldstorage)
-	if err != nil {
-		return err
-	}
-
-	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
-		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
-			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+	if db.Spec.Topology != nil {
+		if err := validateComponent(m.Controller, *db.Spec.Topology.Controller.Storage.StorageClassName); err != nil {
+			return err
+		}
+		if err := validateComponent(m.Broker, *db.Spec.Topology.Broker.Storage.StorageClassName); err != nil {
+			return err
+		}
+	} else {
+		if err := validateComponent(m.Node, db.GetStorageClassName()); err != nil {
+			return err
 		}
 	}
 

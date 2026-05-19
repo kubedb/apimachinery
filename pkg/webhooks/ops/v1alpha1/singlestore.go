@@ -28,6 +28,7 @@ import (
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -164,6 +165,12 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	case opsapi.SinglestoreOpsRequestTypeUpdateVersion:
 		if err := s.validateSinglestoreUpdateVersionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.SinglestoreOpsRequestTypeStorageMigration:
+		if err := s.validateSinglestoreStorageMigrationOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
 				req.Name,
 				err.Error()))
 		}
@@ -355,5 +362,101 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreUpdateVersionOps
 	if nextSinglestoreVersion.Spec.Deprecated {
 		return errors.New(fmt.Sprintf("spec.updateVersion.targetVersion - %s, is depricated!", req.Spec.UpdateVersion.TargetVersion))
 	}
+	return nil
+}
+
+func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreStorageMigrationOpsRequest(db *olddbapi.Singlestore, req *opsapi.SinglestoreOpsRequest) error {
+	migrationSpec := req.Spec.Migration
+	if migrationSpec == nil {
+		return errors.New("spec.migration nil not supported in StorageMigration type")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for StorageMigration ops request, adjust timeout according to the size of your database")
+	}
+
+	// mutual exclusion: node vs aggregator/leaf
+	if migrationSpec.Node != nil && (migrationSpec.Aggregator != nil || migrationSpec.Leaf != nil) {
+		return errors.New("spec.migration.node and topology settings (aggregator/leaf) cannot both be set")
+	}
+	// topology mode checks
+	if db.Spec.Topology != nil && migrationSpec.Aggregator == nil && migrationSpec.Leaf == nil {
+		return errors.New("topology settings (aggregator/leaf) can not be empty as reference database mode is clustering")
+	}
+	// standalone mode checks
+	if db.Spec.Topology == nil && migrationSpec.Node == nil {
+		return errors.New("spec.migration.node can not be empty as reference database mode is standalone")
+	}
+
+	// validate node (standalone)
+	if migrationSpec.Node != nil {
+		if migrationSpec.Node.StorageClassName == nil {
+			return errors.New("spec.migration.node.storageClassName is required")
+		}
+		oldSCName := ""
+		if db.Spec.Storage != nil && db.Spec.Storage.StorageClassName != nil {
+			oldSCName = *db.Spec.Storage.StorageClassName
+		}
+		if err := s.validateStorageMigrationComponent(*migrationSpec.Node.StorageClassName, oldSCName, "node"); err != nil {
+			return err
+		}
+	}
+
+	// validate aggregator (topology)
+	if migrationSpec.Aggregator != nil {
+		if migrationSpec.Aggregator.StorageClassName == nil {
+			return errors.New("spec.migration.aggregator.storageClassName is required")
+		}
+		oldSCName := ""
+		if db.Spec.Topology != nil && db.Spec.Topology.Aggregator != nil &&
+			db.Spec.Topology.Aggregator.Storage != nil && db.Spec.Topology.Aggregator.Storage.StorageClassName != nil {
+			oldSCName = *db.Spec.Topology.Aggregator.Storage.StorageClassName
+		}
+		if err := s.validateStorageMigrationComponent(*migrationSpec.Aggregator.StorageClassName, oldSCName, "aggregator"); err != nil {
+			return err
+		}
+	}
+
+	// validate leaf (topology)
+	if migrationSpec.Leaf != nil {
+		if migrationSpec.Leaf.StorageClassName == nil {
+			return errors.New("spec.migration.leaf.storageClassName is required")
+		}
+		oldSCName := ""
+		if db.Spec.Topology != nil && db.Spec.Topology.Leaf != nil &&
+			db.Spec.Topology.Leaf.Storage != nil && db.Spec.Topology.Leaf.Storage.StorageClassName != nil {
+			oldSCName = *db.Spec.Topology.Leaf.Storage.StorageClassName
+		}
+		if err := s.validateStorageMigrationComponent(*migrationSpec.Leaf.StorageClassName, oldSCName, "leaf"); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *SinglestoreOpsRequestCustomWebhook) validateStorageMigrationComponent(newSCName, oldSCName, component string) error {
+	var newSC storagev1.StorageClass
+	if err := s.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: newSCName}, &newSC); err != nil {
+		if apierrors.IsNotFound(err) {
+			return errors.Wrap(err, fmt.Sprintf("storage class %s not found for %s", newSCName, component))
+		}
+		return err
+	}
+
+	if oldSCName == "" {
+		return nil
+	}
+
+	var oldSC storagev1.StorageClass
+	if err := s.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: oldSCName}, &oldSC); err != nil {
+		return err
+	}
+
+	if *oldSC.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if *newSC.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass (component: %s)", newSCName, component))
+		}
+	}
+
 	return nil
 }
