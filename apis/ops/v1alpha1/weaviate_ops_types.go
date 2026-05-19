@@ -60,11 +60,14 @@ type WeaviateOpsRequestSpec struct {
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 
-	// Specifies information necessary for custom configuration of weaviate
-	Configuration *WeaviateReconfigurationSpec `json:"configuration,omitempty"`
+	// Specifies information necessary for vertical scaling
+	VerticalScaling *WeaviateVerticalScalingSpec `json:"verticalScaling,omitempty"`
 
 	// Specifies information necessary for configuring authSecret of the database
 	Authentication *AuthSpec `json:"authentication,omitempty"`
+
+	// Specifies information necessary for custom configuration of weaviate
+	Configuration *WeaviateReconfigurationSpec `json:"configuration,omitempty"`
 
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
@@ -80,6 +83,19 @@ type WeaviateOpsRequestSpec struct {
 // +kubebuilder:validation:Enum=Restart;Reconfigure;RotateAuth
 // ENUM(Restart,Reconfigure,RotateAuth)
 type WeaviateOpsRequestType string
+
+// WeaviateVerticalScalingSpec contains the vertical scaling information of a Weaviate cluster
+type WeaviateVerticalScalingSpec struct {
+	// Resource spec for nodes
+	Node *PodResources `json:"node,omitempty"`
+}
+
+// WeaviateVolumeExpansionSpec is the spec for Weaviate volume expansion
+type WeaviateVolumeExpansionSpec struct {
+	Mode VolumeExpansionMode `json:"mode"`
+	// volume specification for nodes
+	Node *resource.Quantity `json:"node,omitempty"`
+}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
