@@ -57,9 +57,6 @@ type WeaviateOpsRequestSpec struct {
 	// Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.
 	Type WeaviateOpsRequestType `json:"type"`
 
-	// Specifies information necessary for restarting database
-	Restart *RestartSpec `json:"restart,omitempty"`
-
 	// Specifies information necessary for vertical scaling
 	VerticalScaling *WeaviateVerticalScalingSpec `json:"verticalScaling,omitempty"`
 
@@ -68,6 +65,9 @@ type WeaviateOpsRequestSpec struct {
 
 	// Specifies information necessary for custom configuration of weaviate
 	Configuration *WeaviateReconfigurationSpec `json:"configuration,omitempty"`
+
+	// Specifies information necessary for migrating storageClass or data
+	Migration *WeaviateMigrationSpec `json:"migration,omitempty"`
 
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
@@ -90,13 +90,6 @@ type WeaviateVerticalScalingSpec struct {
 	Node *PodResources `json:"node,omitempty"`
 }
 
-// WeaviateVolumeExpansionSpec is the spec for Weaviate volume expansion
-type WeaviateVolumeExpansionSpec struct {
-	Mode VolumeExpansionMode `json:"mode"`
-	// volume specification for nodes
-	Node *resource.Quantity `json:"node,omitempty"`
-}
-
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // WeaviateOpsRequestList is a list of WeaviateOpsRequests
@@ -115,4 +108,9 @@ type WeaviateReconfigurationSpec struct {
 	// from a Kubernetes Secret for the database container.
 	// +optional
 	BackupConfigSecret *core.LocalObjectReference `json:"backupConfigSecret,omitempty"`
+}
+
+type WeaviateMigrationSpec struct {
+	StorageClassName   *string                            `json:"storageClassName"`
+	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }

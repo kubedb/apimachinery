@@ -107,12 +107,22 @@ spec:
                 default: 1
                 format: int32
                 type: integer
+              migration:
+                properties:
+                  oldPVReclaimPolicy:
+                    type: string
+                  storageClassName:
+                    type: string
+                required:
+                - storageClassName
+                type: object
               restart:
                 type: object
               timeout:
                 type: string
               type:
                 enum:
+                - VerticalScaling
                 - Restart
                 - Reconfigure
                 - RotateAuth
