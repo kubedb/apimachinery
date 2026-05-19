@@ -589,6 +589,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigratorList":                                schema_apimachinery_apis_migrator_v1alpha1_MigratorList(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigratorSpec":                                schema_apimachinery_apis_migrator_v1alpha1_MigratorSpec(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigratorStatus":                              schema_apimachinery_apis_migrator_v1alpha1_MigratorStatus(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoSource":                                 schema_apimachinery_apis_migrator_v1alpha1_MongoSource(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoTarget":                                 schema_apimachinery_apis_migrator_v1alpha1_MongoTarget(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.Mongoshake":                                  schema_apimachinery_apis_migrator_v1alpha1_Mongoshake(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLConnectionInfo":                         schema_apimachinery_apis_migrator_v1alpha1_MySQLConnectionInfo(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLSchema":                                 schema_apimachinery_apis_migrator_v1alpha1_MySQLSchema(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLSnapshot":                               schema_apimachinery_apis_migrator_v1alpha1_MySQLSnapshot(ref),
@@ -33779,6 +33782,184 @@ func schema_apimachinery_apis_migrator_v1alpha1_MigratorStatus(ref common.Refere
 	}
 }
 
+func schema_apimachinery_apis_migrator_v1alpha1_MongoSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.ConnectionInfo"),
+						},
+					},
+					"mongoshake": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.Mongoshake"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.ConnectionInfo", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.Mongoshake"},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_MongoTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.ConnectionInfo"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.ConnectionInfo"},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_Mongoshake(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"syncMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SyncMode controls synchronization mode. Supported values: all, full, incr - all  : full synchronization + incremental synchronization - full : full synchronization only - incr : incremental synchronization only Equivalent behavior: defines replication mode of mongoshake",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"filterOpTypes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FilterOpTypes filters MongoDB oplog operation types to include. Example values: \"i\" (insert), \"u\" (update), \"d\" (delete) Equivalent behavior: acts as oplog.op type filter",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterNamespaceBlack": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FilterNamespaceBlack excludes specified namespaces (db.collection or db). Format: db.collection or db Multiple entries separated by ';' Example: db1.col1;db2 If set, listed namespaces will be filtered out.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterNamespaceWhite": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FilterNamespaceWhite includes only specified namespaces (db.collection or db). Format: db.collection or db Multiple entries separated by ';' Example: db1.col1;db2 If set, only listed namespaces will be allowed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterPassSpecialDb": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FilterPassSpecialDb allows special system databases to be included. Example: admin;local;config;mongoshake Note: collection-level filtering is not supported here.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterDdlEnable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FilterDDLEnable controls whether DDL operations are filtered or passed. When enabled, only oplog operations (i/u/d) are synced. When disabled, DDL operations like create index or drop database are included.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"filterOplogGids": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FilterOplogGids enables filtering of oplog by GID.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"checkpointStartPosition": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CheckpointStartPosition defines initial oplog position (UTC timestamp). Used only when no checkpoint exists. Note: UTC time is 8 hours ahead of CST.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"transformNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TransformNamespace maps source namespaces to destination namespaces. Format:\n  fromDb.fromCollection:toDb.toCollection\n  fromDb:toDb\nMultiple mappings separated by ';' Example: db1.col1:db2.col1;db3:db4",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"extraConfiguration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExtraConfiguration allows additional raw mongoshake configuration. Key-value pairs passed directly without schema validation.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_migrator_v1alpha1_MySQLConnectionInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34329,11 +34510,16 @@ func schema_apimachinery_apis_migrator_v1alpha1_Source(ref common.ReferenceCallb
 							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBSource"),
 						},
 					},
+					"mongodb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoSource"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresSource"},
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresSource"},
 	}
 }
 
@@ -34403,6 +34589,11 @@ func schema_apimachinery_apis_migrator_v1alpha1_Target(ref common.ReferenceCallb
 							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget"),
 						},
 					},
+					"mongodb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoTarget"),
+						},
+					},
 					"mysql": {
 						SchemaProps: spec.SchemaProps{
 							Description: "MySQL refers to the target MySQL database configuration",
@@ -34419,6 +34610,6 @@ func schema_apimachinery_apis_migrator_v1alpha1_Target(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget"},
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget"},
 	}
 }
