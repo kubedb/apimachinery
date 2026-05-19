@@ -35,6 +35,7 @@ type OpsV1alpha1Interface interface {
 	ElasticsearchOpsRequestsGetter
 	EtcdOpsRequestsGetter
 	FerretDBOpsRequestsGetter
+	HanaDBOpsRequestsGetter
 	HazelcastOpsRequestsGetter
 	IgniteOpsRequestsGetter
 	KafkaOpsRequestsGetter
@@ -85,6 +86,10 @@ func (c *OpsV1alpha1Client) EtcdOpsRequests(namespace string) EtcdOpsRequestInte
 
 func (c *OpsV1alpha1Client) FerretDBOpsRequests(namespace string) FerretDBOpsRequestInterface {
 	return newFerretDBOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) HanaDBOpsRequests(namespace string) HanaDBOpsRequestInterface {
+	return newHanaDBOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) HazelcastOpsRequests(namespace string) HazelcastOpsRequestInterface {
