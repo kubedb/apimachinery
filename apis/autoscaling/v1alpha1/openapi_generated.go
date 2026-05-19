@@ -33752,6 +33752,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_CassandraOpsRequestOptions(re
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -34053,6 +34059,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ClickHouseOpsRequestOptions(r
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -34436,6 +34448,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_DruidOpsRequestOptions(ref co
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -34707,6 +34725,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ElasticsearchOpsRequestOption
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -35243,6 +35267,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_FerretDBOpsRequestOptions(ref
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -35445,6 +35475,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_HazelcastOpsrequestOptions(re
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -35693,6 +35729,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_IgniteOpsrequestOptions(ref c
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -35909,6 +35951,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_KafkaOpsRequestOptions(ref co
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -36129,6 +36177,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MSSQLServerOpsRequestOptions(
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -36343,6 +36397,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MariaDBOpsRequestOptions(ref 
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -36555,6 +36615,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedOpsRequestOptions(re
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -36801,6 +36867,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBOpsRequestOptions(ref 
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -37032,6 +37104,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MySQLOpsRequestOptions(ref co
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -37499,6 +37577,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PerconaXtraDBOpsRequestOption
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -37702,6 +37786,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgBouncerOpsRequestOptions(re
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -37903,6 +37993,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PgpoolOpsRequestOptions(ref c
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -38155,6 +38251,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_PostgresOpsRequestOptions(ref
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -38355,6 +38457,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ProxySQLOpsRequestOptions(ref
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -38772,6 +38880,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_RabbitMQOpsRequestOptions(ref
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -39097,6 +39211,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_RedisOpsRequestOptions(ref co
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -39278,6 +39398,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_RedisSentinelOpsRequestOption
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -39506,6 +39632,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_SinglestoreOpsRequestOptions(
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -39739,6 +39871,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_SolrOpsRequestOptions(ref com
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -40181,6 +40319,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperOpsRequestOptions(re
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
