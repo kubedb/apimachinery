@@ -37773,8 +37773,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_MilvusVersion(ref common.Referenc
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Package v1alpha2 contains API Schema definitions for the  v1alpha2 API group.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
