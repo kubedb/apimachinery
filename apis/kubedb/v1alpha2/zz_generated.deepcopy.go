@@ -2678,7 +2678,7 @@ func (in *HanaDBSpec) DeepCopyInto(out *HanaDBSpec) {
 	}
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
-		*out = new(monitoringagentapiapiv1.AgentSpec)
+		*out = new(v1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.PodTemplate != nil {

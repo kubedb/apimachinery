@@ -22877,6 +22877,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionInitContainer"
         },
+        "migrator": {
+          "description": "Migrator defines the migration related CLI/Tools images for this MongoDB version",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImages"
+        },
         "podSecurityPolicies": {
           "description": "PSP names",
           "default": {},
@@ -27674,6 +27679,103 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoSource": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
+        },
+        "mongoshake": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.Mongoshake"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoTarget": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.Mongoshake": {
+      "type": "object",
+      "properties": {
+        "checkpointStartPosition": {
+          "description": "CheckpointStartPosition defines initial oplog position (UTC timestamp). Used only when no checkpoint exists. Note: UTC time is 8 hours ahead of CST.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "extraConfiguration": {
+          "description": "ExtraConfiguration allows additional raw mongoshake configuration. Key-value pairs passed directly without schema validation.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "filterDdlEnable": {
+          "description": "FilterDDLEnable controls whether DDL operations are filtered or passed. When enabled, only oplog operations (i/u/d) are synced. When disabled, DDL operations like create index or drop database are included.",
+          "type": "boolean"
+        },
+        "filterNamespaceBlack": {
+          "description": "FilterNamespaceBlack excludes specified namespaces (db.collection or db). Format: db.collection or db Multiple entries separated by ';' Example: db1.col1;db2 If set, listed namespaces will be filtered out.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "filterNamespaceWhite": {
+          "description": "FilterNamespaceWhite includes only specified namespaces (db.collection or db). Format: db.collection or db Multiple entries separated by ';' Example: db1.col1;db2 If set, only listed namespaces will be allowed.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "filterOpTypes": {
+          "description": "FilterOpTypes filters MongoDB oplog operation types to include. Example values: \"i\" (insert), \"u\" (update), \"d\" (delete) Equivalent behavior: acts as oplog.op type filter",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "filterOplogGids": {
+          "description": "FilterOplogGids enables filtering of oplog by GID.",
+          "type": "boolean"
+        },
+        "filterPassSpecialDb": {
+          "description": "FilterPassSpecialDb allows special system databases to be included. Example: admin;local;config;mongoshake Note: collection-level filtering is not supported here.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "syncMode": {
+          "description": "SyncMode controls synchronization mode. Supported values: all, full, incr - all  : full synchronization + incremental synchronization - full : full synchronization only - incr : incremental synchronization only Equivalent behavior: defines replication mode of mongoshake",
+          "type": "string"
+        },
+        "transformNamespace": {
+          "description": "TransformNamespace maps source namespaces to destination namespaces. Format:\n  fromDb.fromCollection:toDb.toCollection\n  fromDb:toDb\nMultiple mappings separated by ';' Example: db1.col1:db2.col1;db3:db4",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo": {
       "type": "object",
       "required": [
@@ -27952,6 +28054,9 @@
           "description": "MariaDB refers to the source MariaDB database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBSource"
         },
+        "mongodb": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoSource"
+        },
         "mysql": {
           "description": "MySQL refers to the source MySQL database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSource"
@@ -27978,6 +28083,9 @@
         "mariadb": {
           "description": "MariaDB refers to the target MariaDB database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBTarget"
+        },
+        "mongodb": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoTarget"
         },
         "mysql": {
           "description": "MySQL refers to the target MySQL database configuration",
@@ -28121,24 +28229,52 @@
       }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchMigrationSpec": {
-      "description": "ElasticsearchMigrationSpec is the spec for storage migration of an Elasticsearch database.",
+      "description": "ElasticsearchMigrationSpec is the spec for storage migration of an Elasticsearch database. Set Node for combined mode, or per-role fields for topology mode.",
       "type": "object",
-      "required": [
-        "storageClassName"
-      ],
       "properties": {
-        "oldPVReclaimPolicy": {
-          "description": "OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume after the underlying PVC has been renamed onto the new StorageClass. Defaults to the reclaim policy that was already configured on the PV when migration started. Set to \"Retain\" to keep the previous PV after migration.\n\nPossible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
-          "type": "string",
-          "enum": [
-            "Delete",
-            "Recycle",
-            "Retain"
-          ]
+        "data": {
+          "description": "Data is the migration spec for data nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
         },
-        "storageClassName": {
-          "description": "StorageClassName is the desired StorageClass to migrate the database PVCs to.",
-          "type": "string"
+        "dataCold": {
+          "description": "DataCold is the migration spec for data_cold nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "dataContent": {
+          "description": "DataContent is the migration spec for data_content nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "dataFrozen": {
+          "description": "DataFrozen is the migration spec for data_frozen nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "dataHot": {
+          "description": "DataHot is the migration spec for data_hot nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "dataWarm": {
+          "description": "DataWarm is the migration spec for data_warm nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "ingest": {
+          "description": "Ingest is the migration spec for ingest nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "master": {
+          "description": "Master is the migration spec for master nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "ml": {
+          "description": "ML is the migration spec for ml nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "node": {
+          "description": "Node is the migration spec for a combined-mode Elasticsearch instance.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "transform": {
+          "description": "Transform is the migration spec for transform nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
         }
       }
     },
@@ -28806,24 +28942,28 @@
       }
     },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MongoDBMigrationSpec": {
-      "description": "MongoDBMigrationSpec is the spec for storage migration of a MongoDB database.",
+      "description": "MongoDBMigrationSpec is the spec for storage migration of a MongoDB database. Exactly one of Standalone, ReplicaSet, or (ConfigServer + Shard) must be set, matching the topology of the target MongoDB instance.",
       "type": "object",
-      "required": [
-        "storageClassName"
-      ],
       "properties": {
-        "oldPVReclaimPolicy": {
-          "description": "OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume after the underlying PVC has been renamed onto the new StorageClass. Defaults to the reclaim policy that was already configured on the PV when migration started. Set to \"Retain\" to keep the previous PV after migration.\n\nPossible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
-          "type": "string",
-          "enum": [
-            "Delete",
-            "Recycle",
-            "Retain"
-          ]
+        "configServer": {
+          "description": "ConfigServer is the migration spec for the config server component of a sharded MongoDB.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
         },
-        "storageClassName": {
-          "description": "StorageClassName is the desired StorageClass to migrate the database PVCs to.",
-          "type": "string"
+        "hidden": {
+          "description": "Hidden is the migration spec for the hidden replica of a MongoDB replicaset.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "replicaSet": {
+          "description": "ReplicaSet is the migration spec for a MongoDB replicaset.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "shard": {
+          "description": "Shard is the migration spec for the shard component of a sharded MongoDB.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
+        "standalone": {
+          "description": "Standalone is the migration spec for a standalone MongoDB instance.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
         }
       }
     },
@@ -29120,26 +29260,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLMigrationSpec": {
-      "type": "object",
-      "required": [
-        "storageClassName"
-      ],
-      "properties": {
-        "oldPVReclaimPolicy": {
-          "description": "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
-          "type": "string",
-          "enum": [
-            "Delete",
-            "Recycle",
-            "Retain"
-          ]
-        },
-        "storageClassName": {
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLOpsRequest": {
       "type": "object",
       "properties": {
@@ -29240,7 +29360,7 @@
         },
         "migration": {
           "description": "Specifies information necessary for migrating storageClass or data",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLMigrationSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
         },
         "replicationModeTransformation": {
           "description": "Specifies information transform Remote Replica to GroupReplication",
@@ -29464,26 +29584,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBMigrationSpec": {
-      "type": "object",
-      "required": [
-        "storageClassName"
-      ],
-      "properties": {
-        "oldPVReclaimPolicy": {
-          "description": "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
-          "type": "string",
-          "enum": [
-            "Delete",
-            "Recycle",
-            "Retain"
-          ]
-        },
-        "storageClassName": {
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBOpsRequest": {
       "type": "object",
       "properties": {
@@ -29584,7 +29684,7 @@
         },
         "migration": {
           "description": "Specifies information necessary for storage migration",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PerconaXtraDBMigrationSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
         },
         "restart": {
           "description": "Specifies information necessary for restarting database",
@@ -29768,26 +29868,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresMigrationSpec": {
-      "type": "object",
-      "required": [
-        "storageClassName"
-      ],
-      "properties": {
-        "oldPVReclaimPolicy": {
-          "description": "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
-          "type": "string",
-          "enum": [
-            "Delete",
-            "Recycle",
-            "Retain"
-          ]
-        },
-        "storageClassName": {
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresOpsRequest": {
       "type": "object",
       "properties": {
@@ -29892,7 +29972,7 @@
         },
         "migration": {
           "description": "Specifies information necessary for migrating storageClass or data",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresMigrationSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
         },
         "reconnectStandby": {
           "description": "Try to reconnect standby's with primary",
@@ -30411,26 +30491,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisMigrationSpec": {
-      "type": "object",
-      "required": [
-        "storageClassName"
-      ],
-      "properties": {
-        "oldPVReclaimPolicy": {
-          "description": "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
-          "type": "string",
-          "enum": [
-            "Delete",
-            "Recycle",
-            "Retain"
-          ]
-        },
-        "storageClassName": {
-          "type": "string"
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisOpsRequest": {
       "type": "object",
       "properties": {
@@ -30535,7 +30595,7 @@
         },
         "migration": {
           "description": "Specifies information necessary for migrating storage",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RedisMigrationSpec"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
         },
         "restart": {
           "description": "Specifies information necessary for restarting database",
@@ -30692,6 +30752,28 @@
             "type": "string",
             "default": ""
           }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec": {
+      "description": "StorageMigrationSpec holds the target StorageClass and old PV reclaim policy for a single component.",
+      "type": "object",
+      "required": [
+        "storageClassName"
+      ],
+      "properties": {
+        "oldPVReclaimPolicy": {
+          "description": "OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume after the underlying PVC has been renamed onto the new StorageClass. Defaults to the reclaim policy that was already configured on the PV when migration started. Set to \"Retain\" to keep the previous PV after migration.\n\nPossible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+          "type": "string",
+          "enum": [
+            "Delete",
+            "Recycle",
+            "Retain"
+          ]
+        },
+        "storageClassName": {
+          "description": "StorageClassName is the desired StorageClass to migrate the PVCs to.",
+          "type": "string"
         }
       }
     },

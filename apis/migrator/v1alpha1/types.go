@@ -36,7 +36,7 @@ type Source struct {
 	MySQL *MySQLSource `yaml:"mysql" json:"mysql,omitempty"`
 	// MariaDB refers to the source MariaDB database configuration
 	MariaDB *MariaDBSource `yaml:"mariadb" json:"mariadb,omitempty"`
-	MongoDB  *MongoSource    `yaml:"mongodb" json:"mongodb,omitempty"`
+	MongoDB *MongoSource   `yaml:"mongodb" json:"mongodb,omitempty"`
 }
 
 // Target defines the target database configuration
