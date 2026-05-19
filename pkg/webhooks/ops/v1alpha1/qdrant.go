@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"fmt"
 	"strings"
 
@@ -28,9 +27,10 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
-	storagev1 "k8s.io/api/storage/v1"
+	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -160,8 +160,8 @@ func (w *QdrantOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Qdran
 				req.Name,
 				err.Error()))
 		}
-	
-		case opsapi.QdrantOpsRequestTypeStorageMigration:
+
+	case opsapi.QdrantOpsRequestTypeStorageMigration:
 		if err := w.validateQdrantStorageMigrationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
 				req.Name,
@@ -364,7 +364,6 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantStorageMigrationOpsRequest
 
 	return nil
 }
-
 
 func (w *QdrantOpsRequestCustomWebhook) validateQdrantUpdateVersionOpsRequest(db *dbapi.Qdrant, req *opsapi.QdrantOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion

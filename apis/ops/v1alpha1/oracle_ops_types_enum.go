@@ -19,7 +19,6 @@ const (
 	OracleOpsRequestTypeStorageMigration OracleOpsRequestType = "StorageMigration"
 	// OracleOpsRequestTypeVerticalScaling is a OracleOpsRequestType of type VerticalScaling.
 	OracleOpsRequestTypeVerticalScaling OracleOpsRequestType = "VerticalScaling"
-	// OracleOpsRequestTypeVerticalScaling is a OracleOpsRequestType of type VerticalScaling.
 	// OracleOpsRequestTypeVolumeExpansion is a OracleOpsRequestType of type VolumeExpansion.
 	OracleOpsRequestTypeVolumeExpansion OracleOpsRequestType = "VolumeExpansion"
 	// OracleOpsRequestTypeRotateAuth is a OracleOpsRequestType of type RotateAuth.
@@ -31,10 +30,10 @@ var ErrInvalidOracleOpsRequestType = fmt.Errorf("not a valid OracleOpsRequestTyp
 var _OracleOpsRequestTypeNames = []string{
 	string(OracleOpsRequestTypeRestart),
 	string(OracleOpsRequestTypeReconfigure),
-	string(OracleOpsRequestTypeRotateAuth),
 	string(OracleOpsRequestTypeStorageMigration),
 	string(OracleOpsRequestTypeVerticalScaling),
 	string(OracleOpsRequestTypeVolumeExpansion),
+	string(OracleOpsRequestTypeRotateAuth),
 }
 
 // OracleOpsRequestTypeNames returns a list of possible string values of OracleOpsRequestType.
@@ -72,11 +71,9 @@ var _OracleOpsRequestTypeValue = map[string]OracleOpsRequestType{
 	"Restart":          OracleOpsRequestTypeRestart,
 	"Reconfigure":      OracleOpsRequestTypeReconfigure,
 	"StorageMigration": OracleOpsRequestTypeStorageMigration,
-	"VerticalScaling": OracleOpsRequestTypeVerticalScaling,
-	"VolumeExpansion": OracleOpsRequestTypeVolumeExpansion,
-	"RotateAuth":  OracleOpsRequestTypeRotateAuth,
-
-
+	"VerticalScaling":  OracleOpsRequestTypeVerticalScaling,
+	"VolumeExpansion":  OracleOpsRequestTypeVolumeExpansion,
+	"RotateAuth":       OracleOpsRequestTypeRotateAuth,
 }
 
 // ParseOracleOpsRequestType attempts to convert a string to a OracleOpsRequestType.
