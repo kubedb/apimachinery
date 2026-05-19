@@ -37,6 +37,10 @@ func (c *FakeOpsV1alpha1) ClickHouseOpsRequests(namespace string) v1alpha1.Click
 	return &FakeClickHouseOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) DocumentDBOpsRequests(namespace string) v1alpha1.DocumentDBOpsRequestInterface {
+	return &FakeDocumentDBOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) DruidOpsRequests(namespace string) v1alpha1.DruidOpsRequestInterface {
 	return &FakeDruidOpsRequests{c, namespace}
 }
@@ -93,6 +97,10 @@ func (c *FakeOpsV1alpha1) Neo4jOpsRequests(namespace string) v1alpha1.Neo4jOpsRe
 	return &FakeNeo4jOpsRequests{c, namespace}
 }
 
+func (c *FakeOpsV1alpha1) OracleOpsRequests(namespace string) v1alpha1.OracleOpsRequestInterface {
+	return &FakeOracleOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) PerconaXtraDBOpsRequests(namespace string) v1alpha1.PerconaXtraDBOpsRequestInterface {
 	return &FakePerconaXtraDBOpsRequests{c, namespace}
 }
@@ -135,6 +143,10 @@ func (c *FakeOpsV1alpha1) SinglestoreOpsRequests(namespace string) v1alpha1.Sing
 
 func (c *FakeOpsV1alpha1) SolrOpsRequests(namespace string) v1alpha1.SolrOpsRequestInterface {
 	return &FakeSolrOpsRequests{c, namespace}
+}
+
+func (c *FakeOpsV1alpha1) WeaviateOpsRequests(namespace string) v1alpha1.WeaviateOpsRequestInterface {
+	return &FakeWeaviateOpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) ZooKeeperOpsRequests(namespace string) v1alpha1.ZooKeeperOpsRequestInterface {

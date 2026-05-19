@@ -31,6 +31,7 @@ type OpsV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	CassandraOpsRequestsGetter
 	ClickHouseOpsRequestsGetter
+	DocumentDBOpsRequestsGetter
 	DruidOpsRequestsGetter
 	ElasticsearchOpsRequestsGetter
 	EtcdOpsRequestsGetter
@@ -45,6 +46,7 @@ type OpsV1alpha1Interface interface {
 	MongoDBOpsRequestsGetter
 	MySQLOpsRequestsGetter
 	Neo4jOpsRequestsGetter
+	OracleOpsRequestsGetter
 	PerconaXtraDBOpsRequestsGetter
 	PgBouncerOpsRequestsGetter
 	PgpoolOpsRequestsGetter
@@ -56,6 +58,7 @@ type OpsV1alpha1Interface interface {
 	RedisSentinelOpsRequestsGetter
 	SinglestoreOpsRequestsGetter
 	SolrOpsRequestsGetter
+	WeaviateOpsRequestsGetter
 	ZooKeeperOpsRequestsGetter
 }
 
@@ -70,6 +73,10 @@ func (c *OpsV1alpha1Client) CassandraOpsRequests(namespace string) CassandraOpsR
 
 func (c *OpsV1alpha1Client) ClickHouseOpsRequests(namespace string) ClickHouseOpsRequestInterface {
 	return newClickHouseOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) DocumentDBOpsRequests(namespace string) DocumentDBOpsRequestInterface {
+	return newDocumentDBOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) DruidOpsRequests(namespace string) DruidOpsRequestInterface {
@@ -128,6 +135,10 @@ func (c *OpsV1alpha1Client) Neo4jOpsRequests(namespace string) Neo4jOpsRequestIn
 	return newNeo4jOpsRequests(c, namespace)
 }
 
+func (c *OpsV1alpha1Client) OracleOpsRequests(namespace string) OracleOpsRequestInterface {
+	return newOracleOpsRequests(c, namespace)
+}
+
 func (c *OpsV1alpha1Client) PerconaXtraDBOpsRequests(namespace string) PerconaXtraDBOpsRequestInterface {
 	return newPerconaXtraDBOpsRequests(c, namespace)
 }
@@ -170,6 +181,10 @@ func (c *OpsV1alpha1Client) SinglestoreOpsRequests(namespace string) Singlestore
 
 func (c *OpsV1alpha1Client) SolrOpsRequests(namespace string) SolrOpsRequestInterface {
 	return newSolrOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) WeaviateOpsRequests(namespace string) WeaviateOpsRequestInterface {
+	return newWeaviateOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) ZooKeeperOpsRequests(namespace string) ZooKeeperOpsRequestInterface {

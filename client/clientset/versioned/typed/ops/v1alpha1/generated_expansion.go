@@ -22,6 +22,8 @@ type CassandraOpsRequestExpansion interface{}
 
 type ClickHouseOpsRequestExpansion interface{}
 
+type DocumentDBOpsRequestExpansion interface{}
+
 type DruidOpsRequestExpansion interface{}
 
 type ElasticsearchOpsRequestExpansion interface{}
@@ -50,6 +52,8 @@ type MySQLOpsRequestExpansion interface{}
 
 type Neo4jOpsRequestExpansion interface{}
 
+type OracleOpsRequestExpansion interface{}
+
 type PerconaXtraDBOpsRequestExpansion interface{}
 
 type PgBouncerOpsRequestExpansion interface{}
@@ -71,5 +75,7 @@ type RedisSentinelOpsRequestExpansion interface{}
 type SinglestoreOpsRequestExpansion interface{}
 
 type SolrOpsRequestExpansion interface{}
+
+type WeaviateOpsRequestExpansion interface{}
 
 type ZooKeeperOpsRequestExpansion interface{}
