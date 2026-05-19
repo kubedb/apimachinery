@@ -18,7 +18,7 @@ package v1alpha1
 
 import (
 	"context"
-	"errors"
+	"github.com/pkg/errors"
 	"fmt"
 	"strings"
 
@@ -28,6 +28,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
+	storagev1 "k8s.io/api/storage/v1"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -156,6 +157,13 @@ func (w *QdrantOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Qdran
 	case opsapi.QdrantOpsRequestTypeRotateAuth:
 		if err := w.validateQdrantRotateAuthOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
+				req.Name,
+				err.Error()))
+		}
+	
+		case opsapi.QdrantOpsRequestTypeStorageMigration:
+		if err := w.validateQdrantStorageMigrationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
 				req.Name,
 				err.Error()))
 		}
@@ -313,6 +321,50 @@ func (w *QdrantOpsRequestCustomWebhook) validateQdrantRotateAuthOpsRequest(db *d
 	}
 	return nil
 }
+
+func (w *QdrantOpsRequestCustomWebhook) validateQdrantStorageMigrationOpsRequest(req *opsapi.QdrantOpsRequest) error {
+	db := &dbapi.Qdrant{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get Qdrant: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	}
+
+	if req.Spec.Migration.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
+	if req.Spec.Timeout == nil {
+		// timeout is required for Storage Migration ops request because it's a long-running operation
+		// default timeout is len(pods) * 5 minute
+		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
+	}
+	// check new storageClass
+	var newstorage, oldstorage storagev1.StorageClass
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: *req.Spec.Migration.StorageClassName,
+	}, &newstorage)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *req.Spec.Migration.StorageClassName))
+		}
+		return err
+	}
+
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.GetStorageClassName(),
+	}, &oldstorage)
+	if err != nil {
+		return err
+	}
+
+	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+		}
+	}
+
+	return nil
+}
+
 
 func (w *QdrantOpsRequestCustomWebhook) validateQdrantUpdateVersionOpsRequest(db *dbapi.Qdrant, req *opsapi.QdrantOpsRequest) error {
 	updateVersionSpec := req.Spec.UpdateVersion

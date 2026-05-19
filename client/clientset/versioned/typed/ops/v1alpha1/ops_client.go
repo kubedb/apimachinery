@@ -31,10 +31,12 @@ type OpsV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	CassandraOpsRequestsGetter
 	ClickHouseOpsRequestsGetter
+	DocumentDBOpsRequestsGetter
 	DruidOpsRequestsGetter
 	ElasticsearchOpsRequestsGetter
 	EtcdOpsRequestsGetter
 	FerretDBOpsRequestsGetter
+	HanaDBOpsRequestsGetter
 	HazelcastOpsRequestsGetter
 	IgniteOpsRequestsGetter
 	KafkaOpsRequestsGetter
@@ -71,6 +73,10 @@ func (c *OpsV1alpha1Client) ClickHouseOpsRequests(namespace string) ClickHouseOp
 	return newClickHouseOpsRequests(c, namespace)
 }
 
+func (c *OpsV1alpha1Client) DocumentDBOpsRequests(namespace string) DocumentDBOpsRequestInterface {
+	return newDocumentDBOpsRequests(c, namespace)
+}
+
 func (c *OpsV1alpha1Client) DruidOpsRequests(namespace string) DruidOpsRequestInterface {
 	return newDruidOpsRequests(c, namespace)
 }
@@ -85,6 +91,10 @@ func (c *OpsV1alpha1Client) EtcdOpsRequests(namespace string) EtcdOpsRequestInte
 
 func (c *OpsV1alpha1Client) FerretDBOpsRequests(namespace string) FerretDBOpsRequestInterface {
 	return newFerretDBOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) HanaDBOpsRequests(namespace string) HanaDBOpsRequestInterface {
+	return newHanaDBOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) HazelcastOpsRequests(namespace string) HazelcastOpsRequestInterface {

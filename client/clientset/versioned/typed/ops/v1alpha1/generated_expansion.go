@@ -22,6 +22,8 @@ type CassandraOpsRequestExpansion interface{}
 
 type ClickHouseOpsRequestExpansion interface{}
 
+type DocumentDBOpsRequestExpansion interface{}
+
 type DruidOpsRequestExpansion interface{}
 
 type ElasticsearchOpsRequestExpansion interface{}
@@ -29,6 +31,8 @@ type ElasticsearchOpsRequestExpansion interface{}
 type EtcdOpsRequestExpansion interface{}
 
 type FerretDBOpsRequestExpansion interface{}
+
+type HanaDBOpsRequestExpansion interface{}
 
 type HazelcastOpsRequestExpansion interface{}
 

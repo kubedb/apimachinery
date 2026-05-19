@@ -28,6 +28,8 @@ type Interface interface {
 	CassandraOpsRequests() CassandraOpsRequestInformer
 	// ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
 	ClickHouseOpsRequests() ClickHouseOpsRequestInformer
+	// DocumentDBOpsRequests returns a DocumentDBOpsRequestInformer.
+	DocumentDBOpsRequests() DocumentDBOpsRequestInformer
 	// DruidOpsRequests returns a DruidOpsRequestInformer.
 	DruidOpsRequests() DruidOpsRequestInformer
 	// ElasticsearchOpsRequests returns a ElasticsearchOpsRequestInformer.
@@ -36,6 +38,8 @@ type Interface interface {
 	EtcdOpsRequests() EtcdOpsRequestInformer
 	// FerretDBOpsRequests returns a FerretDBOpsRequestInformer.
 	FerretDBOpsRequests() FerretDBOpsRequestInformer
+	// HanaDBOpsRequests returns a HanaDBOpsRequestInformer.
+	HanaDBOpsRequests() HanaDBOpsRequestInformer
 	// HazelcastOpsRequests returns a HazelcastOpsRequestInformer.
 	HazelcastOpsRequests() HazelcastOpsRequestInformer
 	// IgniteOpsRequests returns a IgniteOpsRequestInformer.
@@ -101,6 +105,11 @@ func (v *version) ClickHouseOpsRequests() ClickHouseOpsRequestInformer {
 	return &clickHouseOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// DocumentDBOpsRequests returns a DocumentDBOpsRequestInformer.
+func (v *version) DocumentDBOpsRequests() DocumentDBOpsRequestInformer {
+	return &documentDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // DruidOpsRequests returns a DruidOpsRequestInformer.
 func (v *version) DruidOpsRequests() DruidOpsRequestInformer {
 	return &druidOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -119,6 +128,11 @@ func (v *version) EtcdOpsRequests() EtcdOpsRequestInformer {
 // FerretDBOpsRequests returns a FerretDBOpsRequestInformer.
 func (v *version) FerretDBOpsRequests() FerretDBOpsRequestInformer {
 	return &ferretDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// HanaDBOpsRequests returns a HanaDBOpsRequestInformer.
+func (v *version) HanaDBOpsRequests() HanaDBOpsRequestInformer {
+	return &hanaDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // HazelcastOpsRequests returns a HazelcastOpsRequestInformer.
