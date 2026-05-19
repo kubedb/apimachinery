@@ -252,54 +252,55 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigra
 	}
 
 	if db.Spec.Topology != nil {
-		if err := validateComponent(m.Master, *m.Master.StorageClassName); err != nil {
+		t := db.Spec.Topology
+		if err := validateComponent(m.Master, *t.Master.Storage.StorageClassName); err != nil {
 			return err
 		}
-		if err := validateComponent(m.Ingest, *m.Ingest.StorageClassName); err != nil {
+		if err := validateComponent(m.Ingest, *t.Ingest.Storage.StorageClassName); err != nil {
 			return err
 		}
 		if m.Data != nil {
-			if err := validateComponent(m.Data, *m.Data.StorageClassName); err != nil {
+			if err := validateComponent(m.Data, *t.Data.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
 		if m.DataContent != nil {
-			if err := validateComponent(m.DataContent, *m.DataContent.StorageClassName); err != nil {
+			if err := validateComponent(m.DataContent, *t.DataContent.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
 		if m.DataHot != nil {
-			if err := validateComponent(m.DataHot, *m.DataHot.StorageClassName); err != nil {
+			if err := validateComponent(m.DataHot, *t.DataHot.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
 		if m.DataWarm != nil {
-			if err := validateComponent(m.DataWarm, *m.DataWarm.StorageClassName); err != nil {
+			if err := validateComponent(m.DataWarm, *t.DataWarm.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
 		if m.DataCold != nil {
-			if err := validateComponent(m.DataCold, *m.DataCold.StorageClassName); err != nil {
+			if err := validateComponent(m.DataCold, *t.DataCold.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
 		if m.DataFrozen != nil {
-			if err := validateComponent(m.DataFrozen, *m.DataFrozen.StorageClassName); err != nil {
+			if err := validateComponent(m.DataFrozen, *t.DataFrozen.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
 		if m.ML != nil {
-			if err := validateComponent(m.ML, *m.ML.StorageClassName); err != nil {
+			if err := validateComponent(m.ML, *t.ML.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
 		if m.Transform != nil {
-			if err := validateComponent(m.Transform, *m.Transform.StorageClassName); err != nil {
+			if err := validateComponent(m.Transform, *t.Transform.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}
 	} else {
-		if err := validateComponent(m.Node, *m.Node.StorageClassName); err != nil {
+		if err := validateComponent(m.Node, db.GetStorageClassName()); err != nil {
 			return err
 		}
 	}
