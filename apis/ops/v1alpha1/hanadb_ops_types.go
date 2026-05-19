@@ -68,6 +68,8 @@ type HanaDBOpsRequestSpec struct {
 	// Specifies information necessary for custom configuration of HanaDB
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
 	TLS           *HanaDBTLSSpec       `json:"tls,omitempty"`
+	// Specifies information necessary for configuring authSecret of the database
+	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec     `json:"restart,omitempty"`
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
@@ -77,15 +79,9 @@ type HanaDBOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;Restart;Reconfigure;ReconfigureTLS
-// ENUM(VerticalScaling, Restart, Reconfigure, ReconfigureTLS)
+// +kubebuilder:validation:Enum=Restart;Reconfigure;ReconfigureTLS;RotateAuth
+// ENUM(Restart, Reconfigure, ReconfigureTLS, RotateAuth)
 type HanaDBOpsRequestType string
-
-// HanaDBVerticalScalingSpec contains the vertical scaling information of a HanaDB cluster
-type HanaDBVerticalScalingSpec struct {
-	// Resource spec for nodes
-	Node *PodResources `json:"node,omitempty"`
-}
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type HanaDBOpsRequestList struct {
