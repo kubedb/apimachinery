@@ -11,23 +11,23 @@ import (
 )
 
 const (
+	// WeaviateOpsRequestTypeVerticalScaling is a WeaviateOpsRequestType of type VerticalScaling.
+	WeaviateOpsRequestTypeVerticalScaling WeaviateOpsRequestType = "VerticalScaling"
 	// WeaviateOpsRequestTypeRestart is a WeaviateOpsRequestType of type Restart.
 	WeaviateOpsRequestTypeRestart WeaviateOpsRequestType = "Restart"
 	// WeaviateOpsRequestTypeReconfigure is a WeaviateOpsRequestType of type Reconfigure.
 	WeaviateOpsRequestTypeReconfigure WeaviateOpsRequestType = "Reconfigure"
-	// WeaviateOpsRequestTypeVerticalScaling is a WeaviateOpsRequestType of type VerticalScaling.
-	WeaviateOpsRequestTypeVerticalScaling WeaviateOpsRequestType = "VerticalScaling"
-	// WeaviateOpsRequestTypeVolumeExpansion is a WeaviateOpsRequestType of type VolumeExpansion.
-	WeaviateOpsRequestTypeVolumeExpansion WeaviateOpsRequestType = "VolumeExpansion"
+	// WeaviateOpsRequestTypeStorageMigration is a WeaviateOpsRequestType of type StorageMigration.
+	WeaviateOpsRequestTypeStorageMigration WeaviateOpsRequestType = "StorageMigration"
 )
 
 var ErrInvalidWeaviateOpsRequestType = fmt.Errorf("not a valid WeaviateOpsRequestType, try [%s]", strings.Join(_WeaviateOpsRequestTypeNames, ", "))
 
 var _WeaviateOpsRequestTypeNames = []string{
+	string(WeaviateOpsRequestTypeVerticalScaling),
 	string(WeaviateOpsRequestTypeRestart),
 	string(WeaviateOpsRequestTypeReconfigure),
-	string(WeaviateOpsRequestTypeVerticalScaling),
-	string(WeaviateOpsRequestTypeVolumeExpansion),
+	string(WeaviateOpsRequestTypeStorageMigration),
 }
 
 // WeaviateOpsRequestTypeNames returns a list of possible string values of WeaviateOpsRequestType.
@@ -40,10 +40,10 @@ func WeaviateOpsRequestTypeNames() []string {
 // WeaviateOpsRequestTypeValues returns a list of the values for WeaviateOpsRequestType
 func WeaviateOpsRequestTypeValues() []WeaviateOpsRequestType {
 	return []WeaviateOpsRequestType{
+		WeaviateOpsRequestTypeVerticalScaling,
 		WeaviateOpsRequestTypeRestart,
 		WeaviateOpsRequestTypeReconfigure,
-		WeaviateOpsRequestTypeVerticalScaling,
-		WeaviateOpsRequestTypeVolumeExpansion,
+		WeaviateOpsRequestTypeStorageMigration,
 	}
 }
 
@@ -60,10 +60,9 @@ func (x WeaviateOpsRequestType) IsValid() bool {
 }
 
 var _WeaviateOpsRequestTypeValue = map[string]WeaviateOpsRequestType{
+	"VerticalScaling": WeaviateOpsRequestTypeVerticalScaling,
 	"Restart":         WeaviateOpsRequestTypeRestart,
 	"Reconfigure":     WeaviateOpsRequestTypeReconfigure,
-	"VerticalScaling": WeaviateOpsRequestTypeVerticalScaling,
-	"VolumeExpansion": WeaviateOpsRequestTypeVolumeExpansion,
 }
 
 // ParseWeaviateOpsRequestType attempts to convert a string to a WeaviateOpsRequestType.
