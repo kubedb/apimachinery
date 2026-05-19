@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"slices"
 	"strconv"
@@ -29,8 +28,10 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
+	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -87,7 +88,18 @@ func (w *Neo4jOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err := validateNeo4jOpsRequest(req, oldReq); err != nil {
 		return nil, err
 	}
-	return nil, w.validateCreateOrUpdate(req)
+	if err := w.validateCreateOrUpdate(req); err != nil {
+		return nil, err
+	}
+	if isOpsReqCompleted(req.Status.Phase) && !isOpsReqCompleted(oldReq.Status.Phase) { // just completed
+		var db dbapi.Neo4j
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}, &db)
+		if err != nil {
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
+	return nil, nil
 }
 
 func (w *Neo4jOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -147,6 +159,12 @@ func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jO
 		if err := w.validateNeo4jUpdateVersionOpsRequest(neo4j, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
 		}
+	case opsapi.Neo4jOpsRequestTypeStorageMigration:
+		if err := w.validateNeo4jStorageMigrationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.Neo4jOpsRequestTypeVolumeExpansion:
 		if err := w.validateNeo4jVolumeExpansionOpsRequest(neo4j, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
@@ -157,6 +175,49 @@ func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jO
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "neo4jopsrequests.kubedb.com", Kind: "Neo4jOpsRequest"}, req.Name, allErr)
+}
+
+func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jStorageMigrationOpsRequest(req *opsapi.Neo4jOpsRequest) error {
+	db := &dbapi.Neo4j{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get neo4j: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	}
+
+	if req.Spec.Migration.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
+	if req.Spec.Timeout == nil {
+		// timeout is required for Storage Migration ops request because it's a long-running operation
+		// default timeout is len(pods) * 5 minute
+		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
+	}
+	// check new storageClass
+	var newstorage, oldstorage storagev1.StorageClass
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: *req.Spec.Migration.StorageClassName,
+	}, &newstorage)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *req.Spec.Migration.StorageClassName))
+		}
+		return err
+	}
+
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.GetStorageClassName(),
+	}, &oldstorage)
+	if err != nil {
+		return err
+	}
+
+	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+		}
+	}
+
+	return nil
 }
 
 func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVolumeExpansionOpsRequest(db *dbapi.Neo4j, req *opsapi.Neo4jOpsRequest) error {

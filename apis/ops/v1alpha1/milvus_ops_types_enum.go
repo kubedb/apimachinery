@@ -27,6 +27,8 @@ const (
 	MilvusOpsRequestTypeReconfigureTLS MilvusOpsRequestType = "ReconfigureTLS"
 	// MilvusOpsRequestTypeRotateAuth is a MilvusOpsRequestType of type RotateAuth.
 	MilvusOpsRequestTypeRotateAuth MilvusOpsRequestType = "RotateAuth"
+	// MilvusOpsRequestTypeStorageMigration is a MilvusOpsRequestType of type StorageMigration.
+	MilvusOpsRequestTypeStorageMigration MilvusOpsRequestType = "StorageMigration"
 )
 
 var ErrInvalidMilvusOpsRequestType = fmt.Errorf("not a valid MilvusOpsRequestType, try [%s]", strings.Join(_MilvusOpsRequestTypeNames, ", "))
@@ -40,6 +42,7 @@ var _MilvusOpsRequestTypeNames = []string{
 	string(MilvusOpsRequestTypeReconfigure),
 	string(MilvusOpsRequestTypeReconfigureTLS),
 	string(MilvusOpsRequestTypeRotateAuth),
+	string(MilvusOpsRequestTypeStorageMigration),
 }
 
 // MilvusOpsRequestTypeNames returns a list of possible string values of MilvusOpsRequestType.
@@ -60,6 +63,7 @@ func MilvusOpsRequestTypeValues() []MilvusOpsRequestType {
 		MilvusOpsRequestTypeReconfigure,
 		MilvusOpsRequestTypeReconfigureTLS,
 		MilvusOpsRequestTypeRotateAuth,
+		MilvusOpsRequestTypeStorageMigration,
 	}
 }
 
@@ -84,6 +88,7 @@ var _MilvusOpsRequestTypeValue = map[string]MilvusOpsRequestType{
 	"Reconfigure":       MilvusOpsRequestTypeReconfigure,
 	"ReconfigureTLS":    MilvusOpsRequestTypeReconfigureTLS,
 	"RotateAuth":        MilvusOpsRequestTypeRotateAuth,
+	"StorageMigration":  MilvusOpsRequestTypeStorageMigration,
 }
 
 // ParseMilvusOpsRequestType attempts to convert a string to a MilvusOpsRequestType.
