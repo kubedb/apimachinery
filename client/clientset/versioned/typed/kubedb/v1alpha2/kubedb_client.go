@@ -44,6 +44,7 @@ type KubedbV1alpha2Interface interface {
 	MSSQLServersGetter
 	MariaDBsGetter
 	MemcachedsGetter
+	MilvusesGetter
 	MongoDBsGetter
 	MySQLsGetter
 	Neo4jsGetter
@@ -126,6 +127,10 @@ func (c *KubedbV1alpha2Client) MariaDBs(namespace string) MariaDBInterface {
 
 func (c *KubedbV1alpha2Client) Memcacheds(namespace string) MemcachedInterface {
 	return newMemcacheds(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Milvuses(namespace string) MilvusInterface {
+	return newMilvuses(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) MongoDBs(namespace string) MongoDBInterface {

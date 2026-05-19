@@ -34,6 +34,14 @@ type ClickHouseOpsRequestListerExpansion interface{}
 // ClickHouseOpsRequestNamespaceLister.
 type ClickHouseOpsRequestNamespaceListerExpansion interface{}
 
+// DocumentDBOpsRequestListerExpansion allows custom methods to be added to
+// DocumentDBOpsRequestLister.
+type DocumentDBOpsRequestListerExpansion interface{}
+
+// DocumentDBOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// DocumentDBOpsRequestNamespaceLister.
+type DocumentDBOpsRequestNamespaceListerExpansion interface{}
+
 // DruidOpsRequestListerExpansion allows custom methods to be added to
 // DruidOpsRequestLister.
 type DruidOpsRequestListerExpansion interface{}
@@ -146,6 +154,14 @@ type Neo4jOpsRequestListerExpansion interface{}
 // Neo4jOpsRequestNamespaceLister.
 type Neo4jOpsRequestNamespaceListerExpansion interface{}
 
+// OracleOpsRequestListerExpansion allows custom methods to be added to
+// OracleOpsRequestLister.
+type OracleOpsRequestListerExpansion interface{}
+
+// OracleOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// OracleOpsRequestNamespaceLister.
+type OracleOpsRequestNamespaceListerExpansion interface{}
+
 // PerconaXtraDBOpsRequestListerExpansion allows custom methods to be added to
 // PerconaXtraDBOpsRequestLister.
 type PerconaXtraDBOpsRequestListerExpansion interface{}
@@ -233,6 +249,14 @@ type SolrOpsRequestListerExpansion interface{}
 // SolrOpsRequestNamespaceListerExpansion allows custom methods to be added to
 // SolrOpsRequestNamespaceLister.
 type SolrOpsRequestNamespaceListerExpansion interface{}
+
+// WeaviateOpsRequestListerExpansion allows custom methods to be added to
+// WeaviateOpsRequestLister.
+type WeaviateOpsRequestListerExpansion interface{}
+
+// WeaviateOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// WeaviateOpsRequestNamespaceLister.
+type WeaviateOpsRequestNamespaceListerExpansion interface{}
 
 // ZooKeeperOpsRequestListerExpansion allows custom methods to be added to
 // ZooKeeperOpsRequestLister.
