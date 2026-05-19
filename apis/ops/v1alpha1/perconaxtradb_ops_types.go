@@ -71,6 +71,8 @@ type PerconaXtraDBOpsRequestSpec struct {
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
+	// Specifies information necessary for storage migration
+	Migration *PerconaXtraDBMigrationSpec `json:"migration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -80,8 +82,8 @@ type PerconaXtraDBOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth)
+// +kubebuilder:validation:Enum=Upgrade;UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth;StorageMigration
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, StorageMigration)
 type PerconaXtraDBOpsRequestType string
 
 // PerconaXtraDBReplicaReadinessCriteria is the criteria for checking readiness of an PerconaXtraDB database
@@ -103,6 +105,11 @@ type PerconaXtraDBVerticalScalingSpec struct {
 	PerconaXtraDB *PodResources       `json:"perconaxtradb,omitempty"`
 	Exporter      *ContainerResources `json:"exporter,omitempty"`
 	Coordinator   *ContainerResources `json:"coordinator,omitempty"`
+}
+
+type PerconaXtraDBMigrationSpec struct {
+	StorageClassName   *string                            `json:"storageClassName"`
+	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
 
 // PerconaXtraDBVolumeExpansionSpec is the spec for PerconaXtraDB volume expansion

@@ -46,6 +46,8 @@ type MongoDBAutoscalerExpansion interface{}
 
 type MySQLAutoscalerExpansion interface{}
 
+type OracleAutoscalerExpansion interface{}
+
 type PerconaXtraDBAutoscalerExpansion interface{}
 
 type PgBouncerAutoscalerExpansion interface{}
@@ -55,6 +57,8 @@ type PgpoolAutoscalerExpansion interface{}
 type PostgresAutoscalerExpansion interface{}
 
 type ProxySQLAutoscalerExpansion interface{}
+
+type QdrantAutoscalerExpansion interface{}
 
 type RabbitMQAutoscalerExpansion interface{}
 

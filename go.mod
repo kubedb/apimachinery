@@ -55,10 +55,10 @@ require (
 	kmodules.xyz/offshoot-api v0.34.0
 	kmodules.xyz/resource-metadata v0.42.4
 	kmodules.xyz/webhook-runtime v0.34.0
-	kubeops.dev/csi-driver-cacerts v0.5.0
-	kubeops.dev/operator-shard-manager v0.0.5
-	kubeops.dev/petset v0.0.15
-	kubeops.dev/sidekick v0.0.12
+	kubeops.dev/csi-driver-cacerts v0.5.1-0.20260418091014-4f539f46235c
+	kubeops.dev/operator-shard-manager v0.0.6-0.20260418091213-65daf7da824d
+	kubeops.dev/petset v0.0.17-0.20260418091244-7f666912d240
+	kubeops.dev/sidekick v0.0.15-0.20260418091208-a1cb9f4a3553
 	kubestash.dev/apimachinery v0.27.0
 	open-cluster-management.io/api v1.2.0
 	sigs.k8s.io/controller-runtime v0.22.4

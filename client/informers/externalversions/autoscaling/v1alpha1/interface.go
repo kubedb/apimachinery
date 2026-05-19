@@ -52,6 +52,8 @@ type Interface interface {
 	MongoDBAutoscalers() MongoDBAutoscalerInformer
 	// MySQLAutoscalers returns a MySQLAutoscalerInformer.
 	MySQLAutoscalers() MySQLAutoscalerInformer
+	// OracleAutoscalers returns a OracleAutoscalerInformer.
+	OracleAutoscalers() OracleAutoscalerInformer
 	// PerconaXtraDBAutoscalers returns a PerconaXtraDBAutoscalerInformer.
 	PerconaXtraDBAutoscalers() PerconaXtraDBAutoscalerInformer
 	// PgBouncerAutoscalers returns a PgBouncerAutoscalerInformer.
@@ -62,6 +64,8 @@ type Interface interface {
 	PostgresAutoscalers() PostgresAutoscalerInformer
 	// ProxySQLAutoscalers returns a ProxySQLAutoscalerInformer.
 	ProxySQLAutoscalers() ProxySQLAutoscalerInformer
+	// QdrantAutoscalers returns a QdrantAutoscalerInformer.
+	QdrantAutoscalers() QdrantAutoscalerInformer
 	// RabbitMQAutoscalers returns a RabbitMQAutoscalerInformer.
 	RabbitMQAutoscalers() RabbitMQAutoscalerInformer
 	// RedisAutoscalers returns a RedisAutoscalerInformer.
@@ -157,6 +161,11 @@ func (v *version) MySQLAutoscalers() MySQLAutoscalerInformer {
 	return &mySQLAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// OracleAutoscalers returns a OracleAutoscalerInformer.
+func (v *version) OracleAutoscalers() OracleAutoscalerInformer {
+	return &oracleAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // PerconaXtraDBAutoscalers returns a PerconaXtraDBAutoscalerInformer.
 func (v *version) PerconaXtraDBAutoscalers() PerconaXtraDBAutoscalerInformer {
 	return &perconaXtraDBAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -180,6 +189,11 @@ func (v *version) PostgresAutoscalers() PostgresAutoscalerInformer {
 // ProxySQLAutoscalers returns a ProxySQLAutoscalerInformer.
 func (v *version) ProxySQLAutoscalers() ProxySQLAutoscalerInformer {
 	return &proxySQLAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// QdrantAutoscalers returns a QdrantAutoscalerInformer.
+func (v *version) QdrantAutoscalers() QdrantAutoscalerInformer {
+	return &qdrantAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // RabbitMQAutoscalers returns a RabbitMQAutoscalerInformer.

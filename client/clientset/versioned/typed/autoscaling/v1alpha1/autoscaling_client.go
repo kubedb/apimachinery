@@ -42,11 +42,13 @@ type AutoscalingV1alpha1Interface interface {
 	MemcachedAutoscalersGetter
 	MongoDBAutoscalersGetter
 	MySQLAutoscalersGetter
+	OracleAutoscalersGetter
 	PerconaXtraDBAutoscalersGetter
 	PgBouncerAutoscalersGetter
 	PgpoolAutoscalersGetter
 	PostgresAutoscalersGetter
 	ProxySQLAutoscalersGetter
+	QdrantAutoscalersGetter
 	RabbitMQAutoscalersGetter
 	RedisAutoscalersGetter
 	RedisSentinelAutoscalersGetter
@@ -116,6 +118,10 @@ func (c *AutoscalingV1alpha1Client) MySQLAutoscalers(namespace string) MySQLAuto
 	return newMySQLAutoscalers(c, namespace)
 }
 
+func (c *AutoscalingV1alpha1Client) OracleAutoscalers(namespace string) OracleAutoscalerInterface {
+	return newOracleAutoscalers(c, namespace)
+}
+
 func (c *AutoscalingV1alpha1Client) PerconaXtraDBAutoscalers(namespace string) PerconaXtraDBAutoscalerInterface {
 	return newPerconaXtraDBAutoscalers(c, namespace)
 }
@@ -134,6 +140,10 @@ func (c *AutoscalingV1alpha1Client) PostgresAutoscalers(namespace string) Postgr
 
 func (c *AutoscalingV1alpha1Client) ProxySQLAutoscalers(namespace string) ProxySQLAutoscalerInterface {
 	return newProxySQLAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) QdrantAutoscalers(namespace string) QdrantAutoscalerInterface {
+	return newQdrantAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) RabbitMQAutoscalers(namespace string) RabbitMQAutoscalerInterface {
