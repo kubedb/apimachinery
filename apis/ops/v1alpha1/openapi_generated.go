@@ -777,6 +777,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLUpdateVersionSpec":                        schema_apimachinery_apis_ops_v1alpha1_ProxySQLUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ProxySQLVerticalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_ProxySQLVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantHorizontalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_QdrantHorizontalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantMigrationSpec":                              schema_apimachinery_apis_ops_v1alpha1_QdrantMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_QdrantOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_QdrantOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_QdrantOpsRequestSpec(ref),
@@ -41851,6 +41852,33 @@ func schema_apimachinery_apis_ops_v1alpha1_QdrantHorizontalScalingSpec(ref commo
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_QdrantMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storageClassName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"oldPVReclaimPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Delete", "Recycle", "Retain"},
+						},
+					},
+				},
+				Required: []string{"storageClassName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_QdrantOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -42016,6 +42044,12 @@ func schema_apimachinery_apis_ops_v1alpha1_QdrantOpsRequestSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
+					"migration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for migrating storageClass or data",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantMigrationSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -42040,7 +42074,7 @@ func schema_apimachinery_apis_ops_v1alpha1_QdrantOpsRequestSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.QdrantVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
