@@ -690,6 +690,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedVolumeExpansionSpec":                     schema_apimachinery_apis_ops_v1alpha1_MemcachedVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingTopologySpec":              schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingTopologySpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusMigrationSpec":                              schema_apimachinery_apis_ops_v1alpha1_MilvusMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestSpec(ref),
@@ -38172,6 +38173,33 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingTopologySpec(r
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MilvusMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"storageClassName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"oldPVReclaimPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Possible enum values:\n - `\"Delete\"` means the volume will be deleted from Kubernetes on release from its claim. The volume plugin must support Deletion.\n - `\"Recycle\"` means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim. The volume plugin must support Recycling.\n - `\"Retain\"` means the volume will be left in its current phase (Released) for manual reclamation by the administrator. The default policy is Retain.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Delete", "Recycle", "Retain"},
+						},
+					},
+				},
+				Required: []string{"storageClassName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -38337,6 +38365,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
 						},
 					},
+					"migration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for migrating storage of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusMigrationSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -38361,7 +38395,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
