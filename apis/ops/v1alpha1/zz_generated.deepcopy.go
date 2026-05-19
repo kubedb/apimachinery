@@ -4855,6 +4855,11 @@ func (in *OracleOpsRequestSpec) DeepCopyInto(out *OracleOpsRequestSpec) {
 		*out = new(ReconfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Authentication != nil {
+		in, out := &in.Authentication, &out.Authentication
+		*out = new(AuthSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Restart != nil {
 		in, out := &in.Restart, &out.Restart
 		*out = new(RestartSpec)

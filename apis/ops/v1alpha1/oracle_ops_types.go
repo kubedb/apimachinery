@@ -62,6 +62,8 @@ type OracleOpsRequestSpec struct {
 	VolumeExpansion *OracleVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for custom configuration of oracle
 	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
+	// Specifies information necessary for configuring authSecret of the database
+	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for migrating storage
@@ -78,8 +80,8 @@ type OracleMigrationSpec struct {
 	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;Reconfigure;StorageMigration;VerticalScaling;VolumeExpansion
-// ENUM(Restart, Reconfigure, StorageMigration, VerticalScaling, VolumeExpansion)
+// +kubebuilder:validation:Enum=Restart;Reconfigure;StorageMigration;VerticalScaling;VolumeExpansion;RotateAuth
+// ENUM(Restart, Reconfigure, StorageMigration, VerticalScaling, VolumeExpansion, RotateAuth)
 type OracleOpsRequestType string
 
 // OracleVerticalScalingSpec contains the vertical scaling information of an Oracle cluster
