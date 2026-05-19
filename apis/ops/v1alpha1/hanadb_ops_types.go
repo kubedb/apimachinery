@@ -72,9 +72,9 @@ type HanaDBOpsRequestSpec struct {
 	// Specifies information necessary for configuring authSecret of the database
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
-	Restart   *RestartSpec         `json:"restart,omitempty"`
+	Restart   *RestartSpec          `json:"restart,omitempty"`
 	Migration *StorageMigrationSpec `json:"migration,omitempty"`
-	Timeout   *metav1.Duration     `json:"timeout,omitempty"`
+	Timeout   *metav1.Duration      `json:"timeout,omitempty"`
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
 	// +kubebuilder:default=1

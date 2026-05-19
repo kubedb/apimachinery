@@ -32,59 +32,59 @@ import (
 	v1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
 )
 
-// OracleAutoscalerInformer provides access to a shared informer and lister for
-// OracleAutoscalers.
-type OracleAutoscalerInformer interface {
+// DocumentDBAutoscalerInformer provides access to a shared informer and lister for
+// DocumentDBAutoscalers.
+type DocumentDBAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.OracleAutoscalerLister
+	Lister() v1alpha1.DocumentDBAutoscalerLister
 }
 
-type oracleAutoscalerInformer struct {
+type documentDBAutoscalerInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewOracleAutoscalerInformer constructs a new informer for OracleAutoscaler type.
+// NewDocumentDBAutoscalerInformer constructs a new informer for DocumentDBAutoscaler type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewOracleAutoscalerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredOracleAutoscalerInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewDocumentDBAutoscalerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredDocumentDBAutoscalerInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredOracleAutoscalerInformer constructs a new informer for OracleAutoscaler type.
+// NewFilteredDocumentDBAutoscalerInformer constructs a new informer for DocumentDBAutoscaler type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredOracleAutoscalerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredDocumentDBAutoscalerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().OracleAutoscalers(namespace).List(context.TODO(), options)
+				return client.AutoscalingV1alpha1().DocumentDBAutoscalers(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().OracleAutoscalers(namespace).Watch(context.TODO(), options)
+				return client.AutoscalingV1alpha1().DocumentDBAutoscalers(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&autoscalingv1alpha1.OracleAutoscaler{},
+		&autoscalingv1alpha1.DocumentDBAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *oracleAutoscalerInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredOracleAutoscalerInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *documentDBAutoscalerInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredDocumentDBAutoscalerInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *oracleAutoscalerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&autoscalingv1alpha1.OracleAutoscaler{}, f.defaultInformer)
+func (f *documentDBAutoscalerInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&autoscalingv1alpha1.DocumentDBAutoscaler{}, f.defaultInformer)
 }
 
-func (f *oracleAutoscalerInformer) Lister() v1alpha1.OracleAutoscalerLister {
-	return v1alpha1.NewOracleAutoscalerLister(f.Informer().GetIndexer())
+func (f *documentDBAutoscalerInformer) Lister() v1alpha1.DocumentDBAutoscalerLister {
+	return v1alpha1.NewDocumentDBAutoscalerLister(f.Informer().GetIndexer())
 }

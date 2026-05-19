@@ -26,65 +26,65 @@ import (
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
 	cache "k8s.io/client-go/tools/cache"
-	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ops/v1alpha1"
+	v1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
 )
 
-// HanaDBOpsRequestInformer provides access to a shared informer and lister for
-// HanaDBOpsRequests.
-type HanaDBOpsRequestInformer interface {
+// HanaDBAutoscalerInformer provides access to a shared informer and lister for
+// HanaDBAutoscalers.
+type HanaDBAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.HanaDBOpsRequestLister
+	Lister() v1alpha1.HanaDBAutoscalerLister
 }
 
-type hanaDBOpsRequestInformer struct {
+type hanaDBAutoscalerInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewHanaDBOpsRequestInformer constructs a new informer for HanaDBOpsRequest type.
+// NewHanaDBAutoscalerInformer constructs a new informer for HanaDBAutoscaler type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewHanaDBOpsRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredHanaDBOpsRequestInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewHanaDBAutoscalerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredHanaDBAutoscalerInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredHanaDBOpsRequestInformer constructs a new informer for HanaDBOpsRequest type.
+// NewFilteredHanaDBAutoscalerInformer constructs a new informer for HanaDBAutoscaler type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredHanaDBOpsRequestInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredHanaDBAutoscalerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().HanaDBOpsRequests(namespace).List(context.TODO(), options)
+				return client.AutoscalingV1alpha1().HanaDBAutoscalers(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().HanaDBOpsRequests(namespace).Watch(context.TODO(), options)
+				return client.AutoscalingV1alpha1().HanaDBAutoscalers(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&opsv1alpha1.HanaDBOpsRequest{},
+		&autoscalingv1alpha1.HanaDBAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *hanaDBOpsRequestInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredHanaDBOpsRequestInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *hanaDBAutoscalerInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredHanaDBAutoscalerInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *hanaDBOpsRequestInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&opsv1alpha1.HanaDBOpsRequest{}, f.defaultInformer)
+func (f *hanaDBAutoscalerInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&autoscalingv1alpha1.HanaDBAutoscaler{}, f.defaultInformer)
 }
 
-func (f *hanaDBOpsRequestInformer) Lister() v1alpha1.HanaDBOpsRequestLister {
-	return v1alpha1.NewHanaDBOpsRequestLister(f.Informer().GetIndexer())
+func (f *hanaDBAutoscalerInformer) Lister() v1alpha1.HanaDBAutoscalerLister {
+	return v1alpha1.NewHanaDBAutoscalerLister(f.Informer().GetIndexer())
 }
