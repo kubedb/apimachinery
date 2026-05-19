@@ -43,6 +43,7 @@ type AutoscalingV1alpha1Interface interface {
 	MemcachedAutoscalersGetter
 	MongoDBAutoscalersGetter
 	MySQLAutoscalersGetter
+	OracleAutoscalersGetter
 	PerconaXtraDBAutoscalersGetter
 	PgBouncerAutoscalersGetter
 	PgpoolAutoscalersGetter
@@ -115,6 +116,10 @@ func (c *AutoscalingV1alpha1Client) MongoDBAutoscalers(namespace string) MongoDB
 
 func (c *AutoscalingV1alpha1Client) MySQLAutoscalers(namespace string) MySQLAutoscalerInterface {
 	return newMySQLAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) OracleAutoscalers(namespace string) OracleAutoscalerInterface {
+	return newOracleAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) PerconaXtraDBAutoscalers(namespace string) PerconaXtraDBAutoscalerInterface {

@@ -189,6 +189,10 @@ func (m MySQL) GetAuthSecretName() string {
 	return meta_util.NameWithSuffix(m.OffshootName(), "auth")
 }
 
+func (m MySQL) GetRouterServiceName() string {
+	return meta_util.NameWithSuffix(m.OffshootName(), kubedb.MySQLRouterSuffix)
+}
+
 func (m MySQL) GetStorageClassName() string {
 	return *m.Spec.Storage.StorageClassName
 }
@@ -412,14 +416,18 @@ func (m *MySQL) SetHealthCheckerDefaults() {
 	}
 }
 
-func (m *MySQLSpec) GetPersistentSecrets() []string {
+func (m *MySQL) GetPersistentSecrets() []string {
 	if m == nil {
 		return nil
 	}
 
 	var secrets []string
-	if m.AuthSecret != nil {
-		secrets = append(secrets, m.AuthSecret.Name)
+	if m.Spec.AuthSecret != nil {
+		secrets = append(secrets, m.Spec.AuthSecret.Name)
+	}
+	if m.Spec.Monitor != nil && m.Spec.TLS != nil {
+		name := meta_util.NameWithSuffix(m.Name, kubedb.MySQLMetricsExporterConfigSecretSuffix)
+		secrets = append(secrets, name)
 	}
 	return secrets
 }
@@ -469,7 +477,7 @@ func (m *MySQL) MySQLTLSArgs() []string {
 }
 
 func (m *MySQL) GetRouterName() string {
-	return fmt.Sprintf("%s-router", m.Name)
+	return fmt.Sprintf("%s-%s", m.Name, kubedb.MySQLRouterSuffix)
 }
 
 func (m *MySQL) setDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLVersion, podTemplate *ofstv2.PodTemplateSpec) {

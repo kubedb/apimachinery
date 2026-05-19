@@ -83,7 +83,9 @@ const (
 	ProxySQLKey      = "proxysql" + "." + GroupName
 
 	// Auth related constants
-	AuthActiveFromAnnotation = GroupName + "/auth-active-from"
+	AuthActiveFromAnnotation     = GroupName + "/auth-active-from"
+	HanaDBTLSResetModeAnnotation = GroupName + "/hanadb-tls-reset-mode"
+	HanaDBTLSResetModeClientPKI  = "clientpki"
 
 	// =========================== Elasticsearch Constants ============================
 	ElasticsearchRestPort                        = 9200
@@ -244,11 +246,13 @@ const (
 	MySQLDatabasePortName                  = "db"
 	MySQLRouterReadWritePortName           = "rw"
 	MySQLRouterReadOnlyPortName            = "ro"
+	MySQLRouterReadWriteSplitPortName      = "rwsplit"
 	MySQLPrimaryServicePortName            = "primary"
 	MySQLStandbyServicePortName            = "standby"
 	MySQLDatabasePort                      = 3306
 	MySQLRouterReadWritePort               = 6446
 	MySQLRouterReadOnlyPort                = 6447
+	MySQLRouterReadWriteSplitPort          = 6450
 
 	MySQLCoordinatorClientPort = 2379
 	MySQLCoordinatorPort       = 2380
@@ -269,6 +273,7 @@ const (
 	MySQLTLSConfigTrue       = "true"
 	MySQLTLSConfigFalse      = "false"
 	MySQLTLSConfigPreferred  = "preferred"
+	MySQLRouterSuffix        = "router"
 
 	MySQLContainerName            = "mysql"
 	MySQLRouterContainerName      = "mysql-router"
@@ -915,6 +920,17 @@ const (
 	MilvusPortDataNode      = 21124
 	MilvusPortQueryNode     = 21123
 	MilvusPortStreamingNode = 22222
+
+	MilvusTLSVolName      = "milvus-tls"
+	MilvusTLSVolDir       = "/milvus/tls"
+	MilvusTLSCACert       = "ca.crt"
+	MilvusTLSCAPem        = "ca.pem"
+	MilvusTLSCert         = "tls.crt"
+	MilvusTLSKey          = "tls.key"
+	MilvusTLSServerPem    = "server.pem"
+	MilvusTLSServerKeyPem = "server.key"
+	MilvusTLSClientPem    = "client.pem"
+	MilvusTLSClientKeyPem = "client.key"
 )
 
 const (
@@ -2346,6 +2362,8 @@ const (
 	// Mount paths
 	HanaDBDataDir         = "/hana/mounts"
 	HanaDBSecretMountPath = "/etc/hana-secrets"
+	HanaDBTLSInputPath    = "/etc/hanadb-tls/server"
+	HanaDBExporterTLSPath = "/etc/hanadb_exporter/certs"
 	HanaDBConfigFileName  = "global.ini"
 	HanaDBConfigDir       = "/hana/mounts/system/config"
 	HanaDBConfigMountPath = "/etc/hanadb-config"
@@ -2353,6 +2371,8 @@ const (
 	// Volume names
 	HanaDBDataVolume           = "data"
 	HanaDBVolumePasswordSecret = "password-secret"
+	HanaDBVolumeTLSInput       = "tls-input"
+	HanaDBVolumeExporterTLS    = "exporter-tls-volume"
 	HanaDBConfigVolumeName     = "hanadb-config"
 
 	// User and Group IDs
@@ -2420,6 +2440,7 @@ const (
 	KubeSliceNSMContainerName                  = "cmd-nsc-grpc"
 
 	// Archiver
+	OwnerDatabasesAnnotation                  = "kubedb.com/owner-databases"
 	DistributedArchiverSnapshotInfoAnnotation = "distributedsnapshotinfo"
 	DistributedArchiverCMKeySnapshots         = "snapshots"
 	DistributedArchiverCMKeyRestoreSession    = "restoresession"

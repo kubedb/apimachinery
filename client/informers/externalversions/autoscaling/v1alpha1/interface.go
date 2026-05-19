@@ -52,6 +52,8 @@ type Interface interface {
 	MongoDBAutoscalers() MongoDBAutoscalerInformer
 	// MySQLAutoscalers returns a MySQLAutoscalerInformer.
 	MySQLAutoscalers() MySQLAutoscalerInformer
+	// OracleAutoscalers returns a OracleAutoscalerInformer.
+	OracleAutoscalers() OracleAutoscalerInformer
 	// PerconaXtraDBAutoscalers returns a PerconaXtraDBAutoscalerInformer.
 	PerconaXtraDBAutoscalers() PerconaXtraDBAutoscalerInformer
 	// PgBouncerAutoscalers returns a PgBouncerAutoscalerInformer.
@@ -155,6 +157,11 @@ func (v *version) MongoDBAutoscalers() MongoDBAutoscalerInformer {
 // MySQLAutoscalers returns a MySQLAutoscalerInformer.
 func (v *version) MySQLAutoscalers() MySQLAutoscalerInformer {
 	return &mySQLAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// OracleAutoscalers returns a OracleAutoscalerInformer.
+func (v *version) OracleAutoscalers() OracleAutoscalerInformer {
+	return &oracleAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PerconaXtraDBAutoscalers returns a PerconaXtraDBAutoscalerInformer.

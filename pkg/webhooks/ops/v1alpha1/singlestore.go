@@ -24,6 +24,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
@@ -137,7 +138,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.SinglestoreOpsRequestTypeVolumeExpansion:
-		if err := s.validateSinglestoreVolumeExpansionOpsRequest(req); err != nil {
+		if err := s.validateSinglestoreVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
 				req.Name,
 				err.Error()))
@@ -207,23 +208,39 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreVerticalScalingO
 	return nil
 }
 
-func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreVolumeExpansionOpsRequest(req *opsapi.SinglestoreOpsRequest) error {
+func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreVolumeExpansionOpsRequest(sdb *olddbapi.Singlestore, req *opsapi.SinglestoreOpsRequest) error {
 	volumeExpansionSpec := req.Spec.VolumeExpansion
 	if volumeExpansionSpec == nil {
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
-	sdb, err := s.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
 	if (volumeExpansionSpec.Aggregator != nil || volumeExpansionSpec.Leaf != nil) && volumeExpansionSpec.Node != nil {
-		return errors.New("spec.volumeExpansion.Node && spec.volumeExpansion.Topology both can't be non-empty at the same ops request")
+		return errors.New("spec.volumeExpansion.node and topology settings (aggregator/leaf) cannot both be set")
 	}
 	if sdb.Spec.Topology != nil && volumeExpansionSpec.Aggregator == nil && volumeExpansionSpec.Leaf == nil {
-		return errors.New("spec.volumeExpansion.topology can not be empty as reference database mode is clustering")
+		return errors.New("topology settings (aggregator/leaf) can not be empty as reference database mode is clustering")
 	}
 	if sdb.Spec.Topology == nil && volumeExpansionSpec.Node == nil {
 		return errors.New("spec.volumeExpansion.node can not be empty as reference database mode is standalone")
+	}
+
+	if sdb.Spec.Topology == nil && volumeExpansionSpec.Node != nil {
+		if err := opsutil.ValidateStorageExpansion(sdb.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "Singlestore"); err != nil {
+			return err
+		}
+	}
+
+	if sdb.Spec.Topology != nil {
+		if volumeExpansionSpec.Aggregator != nil {
+			if err := opsutil.ValidateStorageExpansion(sdb.Spec.Topology.Aggregator.Storage, volumeExpansionSpec.Aggregator, req.Status.Phase, "Singlestore Aggregator"); err != nil {
+				return err
+			}
+		}
+
+		if volumeExpansionSpec.Leaf != nil {
+			if err := opsutil.ValidateStorageExpansion(sdb.Spec.Topology.Leaf.Storage, volumeExpansionSpec.Leaf, req.Status.Phase, "Singlestore Leaf"); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
