@@ -1011,6 +1011,10 @@ func (e *Elasticsearch) GetPersistentSecrets() []string {
 		secrets = append(secrets, e.Spec.AuthSecret.Name)
 	}
 
+	if e.Spec.EnableSSL && e.Spec.Monitor != nil {
+		secrets = append(secrets, e.CertificateName(ElasticsearchMetricsExporterCert))
+	}
+
 	// Skip for Admin/Elastic User.
 	// Add other user cred secret names.
 	if e.Spec.InternalUsers != nil {
