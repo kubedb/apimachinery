@@ -58,6 +58,8 @@ type Interface interface {
 	MariaDBVersions() MariaDBVersionInformer
 	// MemcachedVersions returns a MemcachedVersionInformer.
 	MemcachedVersions() MemcachedVersionInformer
+	// MilvusVersions returns a MilvusVersionInformer.
+	MilvusVersions() MilvusVersionInformer
 	// MongoDBVersions returns a MongoDBVersionInformer.
 	MongoDBVersions() MongoDBVersionInformer
 	// MySQLVersions returns a MySQLVersionInformer.
@@ -188,6 +190,11 @@ func (v *version) MariaDBVersions() MariaDBVersionInformer {
 // MemcachedVersions returns a MemcachedVersionInformer.
 func (v *version) MemcachedVersions() MemcachedVersionInformer {
 	return &memcachedVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// MilvusVersions returns a MilvusVersionInformer.
+func (v *version) MilvusVersions() MilvusVersionInformer {
+	return &milvusVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBVersions returns a MongoDBVersionInformer.

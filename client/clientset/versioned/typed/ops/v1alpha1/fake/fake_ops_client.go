@@ -19,10 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
-
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 )
 
 type FakeOpsV1alpha1 struct {
@@ -35,6 +34,10 @@ func (c *FakeOpsV1alpha1) CassandraOpsRequests(namespace string) v1alpha1.Cassan
 
 func (c *FakeOpsV1alpha1) ClickHouseOpsRequests(namespace string) v1alpha1.ClickHouseOpsRequestInterface {
 	return &FakeClickHouseOpsRequests{c, namespace}
+}
+
+func (c *FakeOpsV1alpha1) DocumentDBOpsRequests(namespace string) v1alpha1.DocumentDBOpsRequestInterface {
+	return &FakeDocumentDBOpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) DruidOpsRequests(namespace string) v1alpha1.DruidOpsRequestInterface {
@@ -51,6 +54,10 @@ func (c *FakeOpsV1alpha1) EtcdOpsRequests(namespace string) v1alpha1.EtcdOpsRequ
 
 func (c *FakeOpsV1alpha1) FerretDBOpsRequests(namespace string) v1alpha1.FerretDBOpsRequestInterface {
 	return &FakeFerretDBOpsRequests{c, namespace}
+}
+
+func (c *FakeOpsV1alpha1) HanaDBOpsRequests(namespace string) v1alpha1.HanaDBOpsRequestInterface {
+	return &FakeHanaDBOpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) HazelcastOpsRequests(namespace string) v1alpha1.HazelcastOpsRequestInterface {
@@ -87,6 +94,10 @@ func (c *FakeOpsV1alpha1) MySQLOpsRequests(namespace string) v1alpha1.MySQLOpsRe
 
 func (c *FakeOpsV1alpha1) Neo4jOpsRequests(namespace string) v1alpha1.Neo4jOpsRequestInterface {
 	return &FakeNeo4jOpsRequests{c, namespace}
+}
+
+func (c *FakeOpsV1alpha1) OracleOpsRequests(namespace string) v1alpha1.OracleOpsRequestInterface {
+	return &FakeOracleOpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) PerconaXtraDBOpsRequests(namespace string) v1alpha1.PerconaXtraDBOpsRequestInterface {
@@ -131,6 +142,10 @@ func (c *FakeOpsV1alpha1) SinglestoreOpsRequests(namespace string) v1alpha1.Sing
 
 func (c *FakeOpsV1alpha1) SolrOpsRequests(namespace string) v1alpha1.SolrOpsRequestInterface {
 	return &FakeSolrOpsRequests{c, namespace}
+}
+
+func (c *FakeOpsV1alpha1) WeaviateOpsRequests(namespace string) v1alpha1.WeaviateOpsRequestInterface {
+	return &FakeWeaviateOpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) ZooKeeperOpsRequests(namespace string) v1alpha1.ZooKeeperOpsRequestInterface {
