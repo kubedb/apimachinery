@@ -642,7 +642,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBTLSSpec":                                    schema_apimachinery_apis_ops_v1alpha1_HanaDBTLSSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVolumeExpansionSpec":                        schema_apimachinery_apis_ops_v1alpha1_HanaDBVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVerticalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_HanaDBVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastHorizontalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_HazelcastHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastMigrationSpec":                           schema_apimachinery_apis_ops_v1alpha1_HazelcastMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastOpsRequest":                              schema_apimachinery_apis_ops_v1alpha1_HazelcastOpsRequest(ref),
@@ -36257,6 +36257,12 @@ func schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestSpec(ref common.Refer
 							Format:  "",
 						},
 					},
+					"verticalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for vertical scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVerticalScalingSpec"),
+						},
+					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for custom configuration of HanaDB",
@@ -36266,12 +36272,6 @@ func schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestSpec(ref common.Refer
 					"tls": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBTLSSpec"),
-						},
-					},
-					"volumeExpansion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Specifies information necessary for volume expansion",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVolumeExpansionSpec"),
 						},
 					},
 					"restart": {
@@ -36302,7 +36302,7 @@ func schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
@@ -36375,32 +36375,24 @@ func schema_apimachinery_apis_ops_v1alpha1_HanaDBTLSSpec(ref common.ReferenceCal
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_HanaDBVolumeExpansionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ops_v1alpha1_HanaDBVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "HanaDBVolumeExpansionSpec is the spec for HanaDB volume expansion",
+				Description: "HanaDBVerticalScalingSpec contains the vertical scaling information of a HanaDB cluster",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"mode": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
 					"node": {
 						SchemaProps: spec.SchemaProps{
-							Description: "volume specification for nodes",
-							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+							Description: "Resource spec for nodes",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
 						},
 					},
 				},
-				Required: []string{"mode"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
 	}
 }
 
