@@ -21,6 +21,7 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -80,8 +81,8 @@ type HanaDBOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
-// ENUM(VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
+// +kubebuilder:validation:Enum=VerticalScaling;Restart;Reconfigure;ReconfigureTLS;RotateAuth;StorageMigration
+// ENUM(VerticalScaling, Restart, Reconfigure, ReconfigureTLS, RotateAuth, StorageMigration)
 type HanaDBOpsRequestType string
 
 // HanaDBVerticalScalingSpec contains the vertical scaling information of a HanaDB cluster

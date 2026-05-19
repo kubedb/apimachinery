@@ -149,7 +149,7 @@ type Neo4jTLSSpec struct {
 	Remove bool `json:"remove,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;VerticalScaling;HorizontalScaling;VolumeExpansion;UpdateVersion;StorageMigration
+// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;HorizontalScaling;VerticalScaling;VolumeExpansion;UpdateVersion;StorageMigration
 // ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling,VerticalScaling,VolumeExpansion,UpdateVersion,StorageMigration)
 type Neo4jOpsRequestType string
 

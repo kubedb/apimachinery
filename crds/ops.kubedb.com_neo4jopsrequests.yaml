@@ -301,8 +301,8 @@ spec:
                 - ReconfigureTLS
                 - RotateAuth
                 - Reconfigure
-                - VerticalScaling
                 - HorizontalScaling
+                - VerticalScaling
                 - VolumeExpansion
                 - UpdateVersion
                 - StorageMigration
