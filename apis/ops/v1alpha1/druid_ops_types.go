@@ -72,7 +72,7 @@ type DruidOpsRequestSpec struct {
 	// Specifies information necessary for configuring TLS
 	TLS *TLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for migrating storageClass or data
-	Migration *DruidMigrationSpec `json:"migration,omitempty"`
+	Migration *StorageMigrationSpec `json:"migration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -131,12 +131,6 @@ type DruidVolumeExpansionSpec struct {
 type DruidUpdateVersionSpec struct {
 	// Specifies the target version name from catalog
 	TargetVersion string `json:"targetVersion,omitempty"`
-}
-
-// DruidMigrationSpec contains the storage migration information of a druid cluster
-type DruidMigrationSpec struct {
-	StorageClassName   *string                            `json:"storageClassName"`
-	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -29,6 +29,7 @@ import (
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -160,12 +161,76 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.ClickHouseOpsRequestTypeStorageMigration:
+		if err := rv.validateClickHouseStorageMigrationOpsRequest(req, db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "ClickHouseopsrequests.kubedb.com", Kind: "ClickHouseOpsRequest"}, req.Name, allErr)
+}
+
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseStorageMigrationOpsRequest(req *opsapi.ClickHouseOpsRequest, db *olddbapi.ClickHouse) error {
+	m := req.Spec.Migration
+	if m == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
+	if m.Standalone == nil && m.Cluster == nil && m.ClickHouseKeeper == nil {
+		return errors.New("at least one component migration spec is required in spec.migration")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for Storage Migration ops request, adjust timeout according to the size of your database")
+	}
+
+	validateComponent := func(spec *opsapi.StorageMigrationSpec, storage *core.PersistentVolumeClaimSpec) error {
+		if spec == nil {
+			return nil
+		}
+		if spec.StorageClassName == nil {
+			return errors.New("storageClassName is required in migration spec")
+		}
+		if storage == nil || storage.StorageClassName == nil {
+			return nil
+		}
+		var newstorage, oldstorage storagev1.StorageClass
+		if err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *spec.StorageClassName}, &newstorage); err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("storage class %s not found: %w", *spec.StorageClassName, err)
+			}
+			return err
+		}
+		if err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *storage.StorageClassName}, &oldstorage); err != nil {
+			return err
+		}
+		if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+			if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+				return fmt.Errorf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name)
+			}
+		}
+		return nil
+	}
+
+	if db.Spec.ClusterTopology != nil {
+		t := db.Spec.ClusterTopology
+		if err := validateComponent(m.Cluster, t.Cluster.Storage); err != nil {
+			return fmt.Errorf("cluster: %w", err)
+		}
+		if m.ClickHouseKeeper != nil && t.ClickHouseKeeper != nil && t.ClickHouseKeeper.Spec != nil {
+			if err := validateComponent(m.ClickHouseKeeper, t.ClickHouseKeeper.Spec.Storage); err != nil {
+				return fmt.Errorf("clickHouseKeeper: %w", err)
+			}
+		}
+	} else {
+		if err := validateComponent(m.Standalone, db.Spec.Storage); err != nil {
+			return fmt.Errorf("standalone: %w", err)
+		}
+	}
+	return nil
 }
 
 func (rv *ClickHouseOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ClickHouseOpsRequest) (*olddbapi.ClickHouse, error) {

@@ -88,6 +88,10 @@ type MariaDBOpsRequestType string
 
 // MariaDBMigrationSpec is the spec for storage migration of a MariaDB database.
 type MariaDBMigrationSpec struct {
+	// Specifies whether storage migration is applied to the MaxScale Server.
+	// When set to true, it enables storage migration for the MaxScale Server.
+	MaxScale bool `json:"maxscale,omitempty"`
+
 	// StorageClassName is the desired StorageClass to migrate the database PVCs to.
 	StorageClassName *string `json:"storageClassName"`
 	// OldPVReclaimPolicy controls the reclaim policy applied to the previous PersistentVolume

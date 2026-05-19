@@ -29,6 +29,8 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
+	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -153,6 +155,13 @@ func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mong
 				err.Error()))
 		}
 	}
+	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeStorageMigration {
+		if err = w.validateMongoDBStorageMigrationOpsRequest(&db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
+	}
 
 	if len(allErr) == 0 {
 		return nil
@@ -238,6 +247,79 @@ func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBHorizons(db *dbapi.Mongo
 		}
 		if len(req.Spec.Horizons.Pods) != int(*db.Spec.Replicas) {
 			return errors.New("the length of ops.spec.horizons.pods has to be " + strconv.Itoa(int(*db.Spec.Replicas)))
+		}
+	}
+	return nil
+}
+
+func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBStorageMigrationOpsRequest(db *dbapi.MongoDB, req *opsapi.MongoDBOpsRequest) error {
+	m := req.Spec.Migration
+	if m == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
+	if m.Standalone == nil && m.ReplicaSet == nil && m.ConfigServer == nil && m.Shard == nil && m.Hidden == nil {
+		return errors.New("at least one component migration spec is required in spec.migration")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for Storage Migration ops request, adjust timeout according to the size of your database")
+	}
+
+	validateComponent := func(spec *opsapi.StorageMigrationSpec, storage *core.PersistentVolumeClaimSpec) error {
+		if spec == nil {
+			return nil
+		}
+		if spec.StorageClassName == nil {
+			return errors.New("storageClassName is required in migration spec")
+		}
+		if storage == nil || storage.StorageClassName == nil {
+			return nil
+		}
+		var newstorage, oldstorage storagev1.StorageClass
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *spec.StorageClassName}, &newstorage); err != nil {
+			if apierrors.IsNotFound(err) {
+				return fmt.Errorf("storage class %s not found: %w", *spec.StorageClassName, err)
+			}
+			return err
+		}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *storage.StorageClassName}, &oldstorage); err != nil {
+			return err
+		}
+		if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+			if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+				return fmt.Errorf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name)
+			}
+		}
+		return nil
+	}
+
+	if err := validateComponent(m.Standalone, db.Spec.Storage); err != nil {
+		return fmt.Errorf("standalone: %w", err)
+	}
+	if err := validateComponent(m.ReplicaSet, db.Spec.Storage); err != nil {
+		return fmt.Errorf("replicaSet: %w", err)
+	}
+	if m.ConfigServer != nil {
+		if db.Spec.ShardTopology == nil {
+			return errors.New("shardTopology not configured for this MongoDB")
+		}
+		if err := validateComponent(m.ConfigServer, db.Spec.ShardTopology.ConfigServer.Storage); err != nil {
+			return fmt.Errorf("configServer: %w", err)
+		}
+	}
+	if m.Shard != nil {
+		if db.Spec.ShardTopology == nil {
+			return errors.New("shardTopology not configured for this MongoDB")
+		}
+		if err := validateComponent(m.Shard, db.Spec.ShardTopology.Shard.Storage); err != nil {
+			return fmt.Errorf("shard: %w", err)
+		}
+	}
+	if m.Hidden != nil {
+		if db.Spec.Hidden == nil {
+			return errors.New("hidden not configured for this MongoDB")
+		}
+		if err := validateComponent(m.Hidden, &db.Spec.Hidden.Storage); err != nil {
+			return fmt.Errorf("hidden: %w", err)
 		}
 	}
 	return nil

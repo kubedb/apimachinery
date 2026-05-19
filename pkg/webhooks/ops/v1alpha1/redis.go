@@ -30,6 +30,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -198,11 +199,49 @@ func (w *RedisOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.RedisO
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.RedisOpsRequestTypeStorageMigration:
+		if err := w.validateRedisStorageMigrationOpsRequest(req, db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
 	}
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Redisopsrequests.kubedb.com", Kind: "RedisOpsRequest"}, req.Name, allErr)
+}
+
+func (w *RedisOpsRequestCustomWebhook) validateRedisStorageMigrationOpsRequest(req *opsapi.RedisOpsRequest, db *dbapi.Redis) error {
+	m := req.Spec.Migration
+	if m == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
+	if m.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for Storage Migration ops request, adjust timeout according to the size of your database")
+	}
+	if db.Spec.Storage == nil {
+		return nil
+	}
+	var newstorage, oldstorage storagev1.StorageClass
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *m.StorageClassName}, &newstorage); err != nil {
+		if apierrors.IsNotFound(err) {
+			return fmt.Errorf("storage class %s not found: %w", *m.StorageClassName, err)
+		}
+		return err
+	}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *db.Spec.Storage.StorageClassName}, &oldstorage); err != nil {
+		return err
+	}
+	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return fmt.Errorf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name)
+		}
+	}
+	return nil
 }
 
 func (w *RedisOpsRequestCustomWebhook) validateRedisUpdateVersionOpsRequest(db *dbapi.Redis, req *opsapi.RedisOpsRequest) error {
