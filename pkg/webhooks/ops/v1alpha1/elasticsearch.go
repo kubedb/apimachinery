@@ -219,7 +219,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigra
 	m := req.Spec.Migration
 	if m.Node == nil && m.Master == nil && m.Ingest == nil && m.Data == nil &&
 		m.DataContent == nil && m.DataHot == nil && m.DataWarm == nil &&
-		m.DataCold == nil && m.DataFrozen == nil && m.ML == nil && m.Transform == nil {
+		m.DataCold == nil && m.DataFrozen == nil && m.ML == nil && m.Transform == nil && m.Coordinating == nil {
 		return errors.New("at least one node migration spec is required in spec.migration")
 	}
 	if req.Spec.Timeout == nil {
@@ -296,6 +296,11 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigra
 		}
 		if m.Transform != nil {
 			if err := validateComponent(m.Transform, *t.Transform.Storage.StorageClassName); err != nil {
+				return err
+			}
+		}
+		if m.Coordinating != nil {
+			if err := validateComponent(m.Coordinating, *t.Coordinating.Storage.StorageClassName); err != nil {
 				return err
 			}
 		}

@@ -1610,6 +1610,11 @@ func (in *ElasticsearchMigrationSpec) DeepCopyInto(out *ElasticsearchMigrationSp
 		*out = new(StorageMigrationSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Coordinating != nil {
+		in, out := &in.Coordinating, &out.Coordinating
+		*out = new(StorageMigrationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

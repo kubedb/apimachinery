@@ -35829,6 +35829,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchMigrationSpec(ref common
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"),
 						},
 					},
+					"coordinating": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Coordinating is the migration spec for coordinating nodes in topology mode.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"),
+						},
+					},
 				},
 			},
 		},
