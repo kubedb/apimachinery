@@ -28232,6 +28232,10 @@
       "description": "ElasticsearchMigrationSpec is the spec for storage migration of an Elasticsearch database. Set Node for combined mode, or per-role fields for topology mode.",
       "type": "object",
       "properties": {
+        "coordinating": {
+          "description": "Coordinating is the migration spec for coordinating nodes in topology mode.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
+        },
         "data": {
           "description": "Data is the migration spec for data nodes in topology mode.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.StorageMigrationSpec"
