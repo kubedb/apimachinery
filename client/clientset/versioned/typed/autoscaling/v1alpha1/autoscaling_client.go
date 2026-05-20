@@ -21,19 +21,22 @@ package v1alpha1
 import (
 	"net/http"
 
-	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
+
+	rest "k8s.io/client-go/rest"
 )
 
 type AutoscalingV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	CassandraAutoscalersGetter
 	ClickHouseAutoscalersGetter
+	DocumentDBAutoscalersGetter
 	DruidAutoscalersGetter
 	ElasticsearchAutoscalersGetter
 	EtcdAutoscalersGetter
 	FerretDBAutoscalersGetter
+	HanaDBAutoscalersGetter
 	HazelcastAutoscalersGetter
 	IgniteAutoscalersGetter
 	KafkaAutoscalersGetter
@@ -42,17 +45,20 @@ type AutoscalingV1alpha1Interface interface {
 	MemcachedAutoscalersGetter
 	MongoDBAutoscalersGetter
 	MySQLAutoscalersGetter
+	Neo4jAutoscalersGetter
 	OracleAutoscalersGetter
 	PerconaXtraDBAutoscalersGetter
 	PgBouncerAutoscalersGetter
 	PgpoolAutoscalersGetter
 	PostgresAutoscalersGetter
 	ProxySQLAutoscalersGetter
+	QdrantAutoscalersGetter
 	RabbitMQAutoscalersGetter
 	RedisAutoscalersGetter
 	RedisSentinelAutoscalersGetter
 	SinglestoreAutoscalersGetter
 	SolrAutoscalersGetter
+	WeaviateAutoscalersGetter
 	ZooKeeperAutoscalersGetter
 }
 
@@ -69,6 +75,10 @@ func (c *AutoscalingV1alpha1Client) ClickHouseAutoscalers(namespace string) Clic
 	return newClickHouseAutoscalers(c, namespace)
 }
 
+func (c *AutoscalingV1alpha1Client) DocumentDBAutoscalers(namespace string) DocumentDBAutoscalerInterface {
+	return newDocumentDBAutoscalers(c, namespace)
+}
+
 func (c *AutoscalingV1alpha1Client) DruidAutoscalers(namespace string) DruidAutoscalerInterface {
 	return newDruidAutoscalers(c, namespace)
 }
@@ -83,6 +93,10 @@ func (c *AutoscalingV1alpha1Client) EtcdAutoscalers(namespace string) EtcdAutosc
 
 func (c *AutoscalingV1alpha1Client) FerretDBAutoscalers(namespace string) FerretDBAutoscalerInterface {
 	return newFerretDBAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) HanaDBAutoscalers(namespace string) HanaDBAutoscalerInterface {
+	return newHanaDBAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) HazelcastAutoscalers(namespace string) HazelcastAutoscalerInterface {
@@ -117,6 +131,10 @@ func (c *AutoscalingV1alpha1Client) MySQLAutoscalers(namespace string) MySQLAuto
 	return newMySQLAutoscalers(c, namespace)
 }
 
+func (c *AutoscalingV1alpha1Client) Neo4jAutoscalers(namespace string) Neo4jAutoscalerInterface {
+	return newNeo4jAutoscalers(c, namespace)
+}
+
 func (c *AutoscalingV1alpha1Client) OracleAutoscalers(namespace string) OracleAutoscalerInterface {
 	return newOracleAutoscalers(c, namespace)
 }
@@ -141,6 +159,10 @@ func (c *AutoscalingV1alpha1Client) ProxySQLAutoscalers(namespace string) ProxyS
 	return newProxySQLAutoscalers(c, namespace)
 }
 
+func (c *AutoscalingV1alpha1Client) QdrantAutoscalers(namespace string) QdrantAutoscalerInterface {
+	return newQdrantAutoscalers(c, namespace)
+}
+
 func (c *AutoscalingV1alpha1Client) RabbitMQAutoscalers(namespace string) RabbitMQAutoscalerInterface {
 	return newRabbitMQAutoscalers(c, namespace)
 }
@@ -159,6 +181,10 @@ func (c *AutoscalingV1alpha1Client) SinglestoreAutoscalers(namespace string) Sin
 
 func (c *AutoscalingV1alpha1Client) SolrAutoscalers(namespace string) SolrAutoscalerInterface {
 	return newSolrAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) WeaviateAutoscalers(namespace string) WeaviateAutoscalerInterface {
+	return newWeaviateAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) ZooKeeperAutoscalers(namespace string) ZooKeeperAutoscalerInterface {

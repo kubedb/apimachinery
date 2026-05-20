@@ -19,13 +19,18 @@ limitations under the License.
 package fake
 
 import (
+	v1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
+
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
-	v1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 )
 
 type FakeKubedbV1alpha2 struct {
 	*testing.Fake
+}
+
+func (c *FakeKubedbV1alpha2) Aerospikes(namespace string) v1alpha2.AerospikeInterface {
+	return &FakeAerospikes{c, namespace}
 }
 
 func (c *FakeKubedbV1alpha2) Cassandras(namespace string) v1alpha2.CassandraInterface {

@@ -21,6 +21,7 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	core "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -71,16 +72,17 @@ type HanaDBOpsRequestSpec struct {
 	// Specifies information necessary for configuring authSecret of the database
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
-	Restart *RestartSpec     `json:"restart,omitempty"`
-	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	Restart   *RestartSpec          `json:"restart,omitempty"`
+	Migration *StorageMigrationSpec `json:"migration,omitempty"`
+	Timeout   *metav1.Duration      `json:"timeout,omitempty"`
 	// +kubebuilder:default="IfReady"
 	Apply ApplyOption `json:"apply,omitempty"`
 	// +kubebuilder:default=1
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS
-// ENUM(VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS)
+// +kubebuilder:validation:Enum=VerticalScaling;Restart;Reconfigure;ReconfigureTLS;RotateAuth;StorageMigration
+// ENUM(VerticalScaling, Restart, Reconfigure, ReconfigureTLS, RotateAuth, StorageMigration)
 type HanaDBOpsRequestType string
 
 // HanaDBVerticalScalingSpec contains the vertical scaling information of a HanaDB cluster

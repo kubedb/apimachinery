@@ -19,9 +19,10 @@ limitations under the License.
 package fake
 
 import (
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
+
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
-	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 )
 
 type FakeAutoscalingV1alpha1 struct {
@@ -34,6 +35,10 @@ func (c *FakeAutoscalingV1alpha1) CassandraAutoscalers(namespace string) v1alpha
 
 func (c *FakeAutoscalingV1alpha1) ClickHouseAutoscalers(namespace string) v1alpha1.ClickHouseAutoscalerInterface {
 	return &FakeClickHouseAutoscalers{c, namespace}
+}
+
+func (c *FakeAutoscalingV1alpha1) DocumentDBAutoscalers(namespace string) v1alpha1.DocumentDBAutoscalerInterface {
+	return &FakeDocumentDBAutoscalers{c, namespace}
 }
 
 func (c *FakeAutoscalingV1alpha1) DruidAutoscalers(namespace string) v1alpha1.DruidAutoscalerInterface {
@@ -50,6 +55,10 @@ func (c *FakeAutoscalingV1alpha1) EtcdAutoscalers(namespace string) v1alpha1.Etc
 
 func (c *FakeAutoscalingV1alpha1) FerretDBAutoscalers(namespace string) v1alpha1.FerretDBAutoscalerInterface {
 	return &FakeFerretDBAutoscalers{c, namespace}
+}
+
+func (c *FakeAutoscalingV1alpha1) HanaDBAutoscalers(namespace string) v1alpha1.HanaDBAutoscalerInterface {
+	return &FakeHanaDBAutoscalers{c, namespace}
 }
 
 func (c *FakeAutoscalingV1alpha1) HazelcastAutoscalers(namespace string) v1alpha1.HazelcastAutoscalerInterface {
@@ -84,6 +93,10 @@ func (c *FakeAutoscalingV1alpha1) MySQLAutoscalers(namespace string) v1alpha1.My
 	return &FakeMySQLAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) Neo4jAutoscalers(namespace string) v1alpha1.Neo4jAutoscalerInterface {
+	return &FakeNeo4jAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) OracleAutoscalers(namespace string) v1alpha1.OracleAutoscalerInterface {
 	return &FakeOracleAutoscalers{c, namespace}
 }
@@ -108,6 +121,10 @@ func (c *FakeAutoscalingV1alpha1) ProxySQLAutoscalers(namespace string) v1alpha1
 	return &FakeProxySQLAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) QdrantAutoscalers(namespace string) v1alpha1.QdrantAutoscalerInterface {
+	return &FakeQdrantAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) RabbitMQAutoscalers(namespace string) v1alpha1.RabbitMQAutoscalerInterface {
 	return &FakeRabbitMQAutoscalers{c, namespace}
 }
@@ -126,6 +143,10 @@ func (c *FakeAutoscalingV1alpha1) SinglestoreAutoscalers(namespace string) v1alp
 
 func (c *FakeAutoscalingV1alpha1) SolrAutoscalers(namespace string) v1alpha1.SolrAutoscalerInterface {
 	return &FakeSolrAutoscalers{c, namespace}
+}
+
+func (c *FakeAutoscalingV1alpha1) WeaviateAutoscalers(namespace string) v1alpha1.WeaviateAutoscalerInterface {
+	return &FakeWeaviateAutoscalers{c, namespace}
 }
 
 func (c *FakeAutoscalingV1alpha1) ZooKeeperAutoscalers(namespace string) v1alpha1.ZooKeeperAutoscalerInterface {

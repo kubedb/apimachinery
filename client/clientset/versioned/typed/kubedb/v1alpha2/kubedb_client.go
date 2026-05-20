@@ -21,13 +21,15 @@ package v1alpha2
 import (
 	"net/http"
 
-	rest "k8s.io/client-go/rest"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
+
+	rest "k8s.io/client-go/rest"
 )
 
 type KubedbV1alpha2Interface interface {
 	RESTClient() rest.Interface
+	AerospikesGetter
 	CassandrasGetter
 	ClickHousesGetter
 	DB2sGetter
@@ -66,6 +68,10 @@ type KubedbV1alpha2Interface interface {
 // KubedbV1alpha2Client is used to interact with features provided by the kubedb.com group.
 type KubedbV1alpha2Client struct {
 	restClient rest.Interface
+}
+
+func (c *KubedbV1alpha2Client) Aerospikes(namespace string) AerospikeInterface {
+	return newAerospikes(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Cassandras(namespace string) CassandraInterface {

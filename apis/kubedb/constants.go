@@ -694,6 +694,18 @@ const (
 	PgBouncerInitVolumePath                 = "/init-scripts"
 	PgBouncerInitVolumeName                 = "init-scripts"
 
+	// =========================== Aerospike Constants ============================
+	AerospikeConfigVolumeName      = "config"
+	AerospikeConfigVolumeMountPath = "/opt/aerospike/conf"
+	AerospikeContainerName         = "aerospike"
+	AerospikeDataVolumeName        = "data"
+	AerospikeDataVolumeMountPath   = "/opt/aerospike/data"
+	AerospikeConfigKey             = "aerospike.conf"
+	AerospikeDatabasePortName      = "db"
+	AerospikeDatabasePort          = 3000
+	AerospikeMeshPortName          = "heartbeat"
+	AerospikeMeshPort              = 3002
+
 	// =========================== Pgpool Constants ============================
 	EnvPostgresUsername                = "POSTGRES_USERNAME"
 	EnvPgpoolPcpUser                   = "PGPOOL_PCP_USER"
@@ -1580,7 +1592,7 @@ const (
 	WeaviateClassNameKubeDBSystem = "KubeDBSystem"
 
 	WeaviateVolumeData    = "data"
-	WeaviateDataDir       = "/weaviate/storage"
+	WeaviateDataDir       = "/var/lib/weaviate"
 	WeaviateContainerName = "weaviate"
 	WeaviateAPIKey        = "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
 	WeaviateAPIKeyEnabled = "AUTHENTICATION_APIKEY_ENABLED"

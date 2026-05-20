@@ -19,13 +19,18 @@ limitations under the License.
 package fake
 
 import (
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
+
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
-	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
 )
 
 type FakeArchiverV1alpha1 struct {
 	*testing.Fake
+}
+
+func (c *FakeArchiverV1alpha1) ClickHouseArchivers(namespace string) v1alpha1.ClickHouseArchiverInterface {
+	return &FakeClickHouseArchivers{c, namespace}
 }
 
 func (c *FakeArchiverV1alpha1) MSSQLServerArchivers(namespace string) v1alpha1.MSSQLServerArchiverInterface {

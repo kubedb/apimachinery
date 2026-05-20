@@ -21,13 +21,15 @@ package v1alpha1
 import (
 	"net/http"
 
-	rest "k8s.io/client-go/rest"
 	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
+
+	rest "k8s.io/client-go/rest"
 )
 
 type ArchiverV1alpha1Interface interface {
 	RESTClient() rest.Interface
+	ClickHouseArchiversGetter
 	MSSQLServerArchiversGetter
 	MariaDBArchiversGetter
 	MongoDBArchiversGetter
@@ -38,6 +40,10 @@ type ArchiverV1alpha1Interface interface {
 // ArchiverV1alpha1Client is used to interact with features provided by the archiver.kubedb.com group.
 type ArchiverV1alpha1Client struct {
 	restClient rest.Interface
+}
+
+func (c *ArchiverV1alpha1Client) ClickHouseArchivers(namespace string) ClickHouseArchiverInterface {
+	return newClickHouseArchivers(c, namespace)
 }
 
 func (c *ArchiverV1alpha1Client) MSSQLServerArchivers(namespace string) MSSQLServerArchiverInterface {

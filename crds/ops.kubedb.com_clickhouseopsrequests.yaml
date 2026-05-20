@@ -108,12 +108,33 @@ spec:
                 type: integer
               migration:
                 properties:
-                  oldPVReclaimPolicy:
-                    type: string
-                  storageClassName:
-                    type: string
-                required:
-                - storageClassName
+                  clickHouseKeeper:
+                    properties:
+                      oldPVReclaimPolicy:
+                        type: string
+                      storageClassName:
+                        type: string
+                    required:
+                    - storageClassName
+                    type: object
+                  cluster:
+                    properties:
+                      oldPVReclaimPolicy:
+                        type: string
+                      storageClassName:
+                        type: string
+                    required:
+                    - storageClassName
+                    type: object
+                  standalone:
+                    properties:
+                      oldPVReclaimPolicy:
+                        type: string
+                      storageClassName:
+                        type: string
+                    required:
+                    - storageClassName
+                    type: object
                 type: object
               restart:
                 type: object
