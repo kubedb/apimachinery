@@ -9,8 +9,7 @@ spec:
   group: kubedb.com
   names:
     categories:
-    - datastore
-    - vectordb
+    - vector-db
     - kubedb
     - appscode
     - all
