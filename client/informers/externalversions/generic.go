@@ -108,6 +108,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MariaDBAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("memcachedautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MemcachedAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("milvusautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MilvusAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("mongodbautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MongoDBAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("mysqlautoscalers"):
@@ -400,6 +402,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MariaDBOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("memcachedopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MemcachedOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("milvusopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MilvusOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("mongodbopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MongoDBOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("mysqlopsrequests"):

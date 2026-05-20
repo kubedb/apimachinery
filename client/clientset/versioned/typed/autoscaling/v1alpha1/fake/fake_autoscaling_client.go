@@ -85,6 +85,10 @@ func (c *FakeAutoscalingV1alpha1) MemcachedAutoscalers(namespace string) v1alpha
 	return &FakeMemcachedAutoscalers{c, namespace}
 }
 
+func (c *FakeAutoscalingV1alpha1) MilvusAutoscalers(namespace string) v1alpha1.MilvusAutoscalerInterface {
+	return &FakeMilvusAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) MongoDBAutoscalers(namespace string) v1alpha1.MongoDBAutoscalerInterface {
 	return &FakeMongoDBAutoscalers{c, namespace}
 }

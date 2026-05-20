@@ -46,6 +46,8 @@ type MariaDBAutoscalerExpansion interface{}
 
 type MemcachedAutoscalerExpansion interface{}
 
+type MilvusAutoscalerExpansion interface{}
+
 type MongoDBAutoscalerExpansion interface{}
 
 type MySQLAutoscalerExpansion interface{}
