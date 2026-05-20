@@ -66,9 +66,6 @@ func (w *ZooKeeperAutoscalerCustomWebhook) Default(ctx context.Context, obj runt
 func (w *ZooKeeperAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ZooKeeperAutoscaler) {
 	w.setOpsReqOptsDefaults(scaler)
 
-	if scaler.Spec.Storage != nil {
-		setDefaultStorageValues(scaler.Spec.Storage.ZooKeeper)
-	}
 	if scaler.Spec.Compute != nil {
 		setDefaultComputeValues(scaler.Spec.Compute.ZooKeeper)
 	}

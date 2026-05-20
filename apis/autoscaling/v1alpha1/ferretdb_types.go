@@ -62,7 +62,6 @@ type FerretDBAutoscalerSpec struct {
 	OpsRequestOptions *OpsRequestOptions `json:"opsRequestOptions,omitempty"`
 
 	Compute *FerretDBComputeAutoscalerSpec `json:"compute,omitempty"`
-	Storage *FerretDBStorageAutoscalerSpec `json:"storage,omitempty"`
 }
 
 type FerretDBComputeAutoscalerSpec struct {
@@ -71,10 +70,6 @@ type FerretDBComputeAutoscalerSpec struct {
 
 	Primary   *ComputeAutoscalerSpec `json:"primary,omitempty"`
 	Secondary *ComputeAutoscalerSpec `json:"secondary,omitempty"`
-}
-
-type FerretDBStorageAutoscalerSpec struct {
-	FerretDB *StorageAutoscalerSpec `json:"ferretdb,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
