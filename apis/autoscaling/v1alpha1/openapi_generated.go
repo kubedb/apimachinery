@@ -620,7 +620,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.FerretDBAutoscalerList":                   schema_apimachinery_apis_autoscaling_v1alpha1_FerretDBAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.FerretDBAutoscalerSpec":                   schema_apimachinery_apis_autoscaling_v1alpha1_FerretDBAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.FerretDBComputeAutoscalerSpec":            schema_apimachinery_apis_autoscaling_v1alpha1_FerretDBComputeAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.FerretDBStorageAutoscalerSpec":            schema_apimachinery_apis_autoscaling_v1alpha1_FerretDBStorageAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HanaDBAutoscaler":                         schema_apimachinery_apis_autoscaling_v1alpha1_HanaDBAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HanaDBAutoscalerList":                     schema_apimachinery_apis_autoscaling_v1alpha1_HanaDBAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.HanaDBAutoscalerSpec":                     schema_apimachinery_apis_autoscaling_v1alpha1_HanaDBAutoscalerSpec(ref),
@@ -659,7 +658,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedAutoscalerSpec":                  schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedComputeAutoscalerSpec":           schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedComputeAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedOpsRequestOptions":               schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedOpsRequestOptions(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedStorageAutoscalerSpec":           schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedStorageAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusAutoscaler":                         schema_apimachinery_apis_autoscaling_v1alpha1_MilvusAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusAutoscalerList":                     schema_apimachinery_apis_autoscaling_v1alpha1_MilvusAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusAutoscalerSpec":                     schema_apimachinery_apis_autoscaling_v1alpha1_MilvusAutoscalerSpec(ref),
@@ -765,7 +763,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperAutoscalerList":                  schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperAutoscalerSpec":                  schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperComputeAutoscalerSpec":           schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperComputeAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperStorageAutoscalerSpec":           schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperStorageAutoscalerSpec(ref),
 	}
 }
 
@@ -35326,17 +35323,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_FerretDBAutoscalerSpec(ref co
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.FerretDBComputeAutoscalerSpec"),
 						},
 					},
-					"storage": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.FerretDBStorageAutoscalerSpec"),
-						},
-					},
 				},
 				Required: []string{"databaseRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.FerretDBComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.FerretDBStorageAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.OpsRequestOptions"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.FerretDBComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.OpsRequestOptions"},
 	}
 }
 
@@ -35366,25 +35358,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_FerretDBComputeAutoscalerSpec
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.NodeTopology"},
-	}
-}
-
-func schema_apimachinery_apis_autoscaling_v1alpha1_FerretDBStorageAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"ferretdb": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"},
 	}
 }
 
@@ -36718,17 +36691,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedAutoscalerSpec(ref c
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedComputeAutoscalerSpec"),
 						},
 					},
-					"storage": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedStorageAutoscalerSpec"),
-						},
-					},
 				},
 				Required: []string{"databaseRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedOpsRequestOptions", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedStorageAutoscalerSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MemcachedOpsRequestOptions"},
 	}
 }
 
@@ -36792,25 +36760,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedOpsRequestOptions(re
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MemcachedReplicaReadinessCriteria"},
-	}
-}
-
-func schema_apimachinery_apis_autoscaling_v1alpha1_MemcachedStorageAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"memcached": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"},
 	}
 }
 
@@ -40816,17 +40765,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperAutoscalerSpec(ref c
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperComputeAutoscalerSpec"),
 						},
 					},
-					"storage": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperStorageAutoscalerSpec"),
-						},
-					},
 				},
 				Required: []string{"databaseRef"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.OpsRequestOptions", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperStorageAutoscalerSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.OpsRequestOptions", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ZooKeeperComputeAutoscalerSpec"},
 	}
 }
 
@@ -40851,24 +40795,5 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperComputeAutoscalerSpe
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.NodeTopology"},
-	}
-}
-
-func schema_apimachinery_apis_autoscaling_v1alpha1_ZooKeeperStorageAutoscalerSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"zookeeper": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.StorageAutoscalerSpec"},
 	}
 }

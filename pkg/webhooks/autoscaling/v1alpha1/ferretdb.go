@@ -79,10 +79,6 @@ func (w *FerretDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Fer
 
 	w.setOpsReqOptsDefaults(scaler)
 
-	if scaler.Spec.Storage != nil {
-		setDefaultStorageValues(scaler.Spec.Storage.FerretDB)
-	}
-
 	if scaler.Spec.Compute != nil {
 		setDefaultComputeValues(scaler.Spec.Compute.Primary)
 		setDefaultComputeValues(scaler.Spec.Compute.Secondary)
