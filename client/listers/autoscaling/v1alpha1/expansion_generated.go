@@ -130,6 +130,14 @@ type MemcachedAutoscalerListerExpansion interface{}
 // MemcachedAutoscalerNamespaceLister.
 type MemcachedAutoscalerNamespaceListerExpansion interface{}
 
+// MilvusAutoscalerListerExpansion allows custom methods to be added to
+// MilvusAutoscalerLister.
+type MilvusAutoscalerListerExpansion interface{}
+
+// MilvusAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// MilvusAutoscalerNamespaceLister.
+type MilvusAutoscalerNamespaceListerExpansion interface{}
+
 // MongoDBAutoscalerListerExpansion allows custom methods to be added to
 // MongoDBAutoscalerLister.
 type MongoDBAutoscalerListerExpansion interface{}

@@ -52,6 +52,8 @@ type Interface interface {
 	MariaDBAutoscalers() MariaDBAutoscalerInformer
 	// MemcachedAutoscalers returns a MemcachedAutoscalerInformer.
 	MemcachedAutoscalers() MemcachedAutoscalerInformer
+	// MilvusAutoscalers returns a MilvusAutoscalerInformer.
+	MilvusAutoscalers() MilvusAutoscalerInformer
 	// MongoDBAutoscalers returns a MongoDBAutoscalerInformer.
 	MongoDBAutoscalers() MongoDBAutoscalerInformer
 	// MySQLAutoscalers returns a MySQLAutoscalerInformer.
@@ -167,6 +169,11 @@ func (v *version) MariaDBAutoscalers() MariaDBAutoscalerInformer {
 // MemcachedAutoscalers returns a MemcachedAutoscalerInformer.
 func (v *version) MemcachedAutoscalers() MemcachedAutoscalerInformer {
 	return &memcachedAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MilvusAutoscalers returns a MilvusAutoscalerInformer.
+func (v *version) MilvusAutoscalers() MilvusAutoscalerInformer {
+	return &milvusAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBAutoscalers returns a MongoDBAutoscalerInformer.
