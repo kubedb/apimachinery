@@ -21,10 +21,9 @@ package fake
 import (
 	"context"
 
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
-
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	testing "k8s.io/client-go/testing"
+	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 )
 
 // FakeDatabaseInfos implements DatabaseInfoInterface
