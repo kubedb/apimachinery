@@ -72,12 +72,10 @@ func (w *RedisSentinelAutoscalerCustomWebhook) setDefaults(scaler *autoscalingap
 
 func (w *RedisSentinelAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.RedisSentinelAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.RedisSentinelOpsRequestOptions{}
-	}
-	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
-	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{
+			Apply:      opsapi.ApplyOptionIfReady,
+			MaxRetries: 1,
+		}
 	}
 }
 

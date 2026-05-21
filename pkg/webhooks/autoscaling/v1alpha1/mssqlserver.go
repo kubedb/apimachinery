@@ -76,11 +76,10 @@ func (w *MSSQLServerAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.
 
 func (w *MSSQLServerAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MSSQLServerAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.MSSQLServerOpsRequestOptions{}
-	}
-	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{
+			Apply:      opsapi.ApplyOptionIfReady,
+			MaxRetries: 1,
+		}
 	}
 }
 

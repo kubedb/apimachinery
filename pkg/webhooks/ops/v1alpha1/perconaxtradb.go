@@ -28,6 +28,7 @@ import (
 
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -149,6 +150,12 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	case opsapi.PerconaXtraDBOpsRequestTypeVolumeExpansion:
 		if err := w.validatePerconaXtraDBVolumeExpansionOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.PerconaXtraDBOpsRequestTypeStorageMigration:
+		if err := w.validatePerconaXtraDBStorageMigrationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
 				req.Name,
 				err.Error()))
 		}
@@ -284,5 +291,48 @@ func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBReconfigurat
 	if configCount > 1 {
 		return errors.New("more than 1 field have assigned to reconfigureTLS to your database but at a time you you are allowed to run one operation")
 	}
+	return nil
+}
+
+func (w *PerconaXtraDBOpsRequestCustomWebhook) validatePerconaXtraDBStorageMigrationOpsRequest(req *opsapi.PerconaXtraDBOpsRequest) error {
+	db := &dbapi.PerconaXtraDB{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get percona-xtradb: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	}
+
+	if req.Spec.Migration.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
+	if req.Spec.Timeout == nil {
+		// timeout is required for Storage Migration ops request because it's a long-running operation
+		// default timeout is len(pods) * 5 minute
+		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
+	}
+	// check new storageClass
+	var newstorage, oldstorage storagev1.StorageClass
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: *req.Spec.Migration.StorageClassName,
+	}, &newstorage)
+	if err != nil {
+		if apierrors.IsNotFound(err) {
+			return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *req.Spec.Migration.StorageClassName))
+		}
+		return err
+	}
+
+	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: *db.Spec.Storage.StorageClassName,
+	}, &oldstorage)
+	if err != nil {
+		return err
+	}
+
+	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+		}
+	}
+
 	return nil
 }

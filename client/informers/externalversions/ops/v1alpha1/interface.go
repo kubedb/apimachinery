@@ -28,6 +28,8 @@ type Interface interface {
 	CassandraOpsRequests() CassandraOpsRequestInformer
 	// ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
 	ClickHouseOpsRequests() ClickHouseOpsRequestInformer
+	// DocumentDBOpsRequests returns a DocumentDBOpsRequestInformer.
+	DocumentDBOpsRequests() DocumentDBOpsRequestInformer
 	// DruidOpsRequests returns a DruidOpsRequestInformer.
 	DruidOpsRequests() DruidOpsRequestInformer
 	// ElasticsearchOpsRequests returns a ElasticsearchOpsRequestInformer.
@@ -50,12 +52,16 @@ type Interface interface {
 	MariaDBOpsRequests() MariaDBOpsRequestInformer
 	// MemcachedOpsRequests returns a MemcachedOpsRequestInformer.
 	MemcachedOpsRequests() MemcachedOpsRequestInformer
+	// MilvusOpsRequests returns a MilvusOpsRequestInformer.
+	MilvusOpsRequests() MilvusOpsRequestInformer
 	// MongoDBOpsRequests returns a MongoDBOpsRequestInformer.
 	MongoDBOpsRequests() MongoDBOpsRequestInformer
 	// MySQLOpsRequests returns a MySQLOpsRequestInformer.
 	MySQLOpsRequests() MySQLOpsRequestInformer
 	// Neo4jOpsRequests returns a Neo4jOpsRequestInformer.
 	Neo4jOpsRequests() Neo4jOpsRequestInformer
+	// OracleOpsRequests returns a OracleOpsRequestInformer.
+	OracleOpsRequests() OracleOpsRequestInformer
 	// PerconaXtraDBOpsRequests returns a PerconaXtraDBOpsRequestInformer.
 	PerconaXtraDBOpsRequests() PerconaXtraDBOpsRequestInformer
 	// PgBouncerOpsRequests returns a PgBouncerOpsRequestInformer.
@@ -78,6 +84,8 @@ type Interface interface {
 	SinglestoreOpsRequests() SinglestoreOpsRequestInformer
 	// SolrOpsRequests returns a SolrOpsRequestInformer.
 	SolrOpsRequests() SolrOpsRequestInformer
+	// WeaviateOpsRequests returns a WeaviateOpsRequestInformer.
+	WeaviateOpsRequests() WeaviateOpsRequestInformer
 	// ZooKeeperOpsRequests returns a ZooKeeperOpsRequestInformer.
 	ZooKeeperOpsRequests() ZooKeeperOpsRequestInformer
 }
@@ -101,6 +109,11 @@ func (v *version) CassandraOpsRequests() CassandraOpsRequestInformer {
 // ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
 func (v *version) ClickHouseOpsRequests() ClickHouseOpsRequestInformer {
 	return &clickHouseOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DocumentDBOpsRequests returns a DocumentDBOpsRequestInformer.
+func (v *version) DocumentDBOpsRequests() DocumentDBOpsRequestInformer {
+	return &documentDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // DruidOpsRequests returns a DruidOpsRequestInformer.
@@ -158,6 +171,11 @@ func (v *version) MemcachedOpsRequests() MemcachedOpsRequestInformer {
 	return &memcachedOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// MilvusOpsRequests returns a MilvusOpsRequestInformer.
+func (v *version) MilvusOpsRequests() MilvusOpsRequestInformer {
+	return &milvusOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // MongoDBOpsRequests returns a MongoDBOpsRequestInformer.
 func (v *version) MongoDBOpsRequests() MongoDBOpsRequestInformer {
 	return &mongoDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -171,6 +189,11 @@ func (v *version) MySQLOpsRequests() MySQLOpsRequestInformer {
 // Neo4jOpsRequests returns a Neo4jOpsRequestInformer.
 func (v *version) Neo4jOpsRequests() Neo4jOpsRequestInformer {
 	return &neo4jOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// OracleOpsRequests returns a OracleOpsRequestInformer.
+func (v *version) OracleOpsRequests() OracleOpsRequestInformer {
+	return &oracleOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PerconaXtraDBOpsRequests returns a PerconaXtraDBOpsRequestInformer.
@@ -226,6 +249,11 @@ func (v *version) SinglestoreOpsRequests() SinglestoreOpsRequestInformer {
 // SolrOpsRequests returns a SolrOpsRequestInformer.
 func (v *version) SolrOpsRequests() SolrOpsRequestInformer {
 	return &solrOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// WeaviateOpsRequests returns a WeaviateOpsRequestInformer.
+func (v *version) WeaviateOpsRequests() WeaviateOpsRequestInformer {
+	return &weaviateOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeeperOpsRequests returns a ZooKeeperOpsRequestInformer.

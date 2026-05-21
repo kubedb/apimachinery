@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// AerospikeVersions returns a AerospikeVersionInformer.
+	AerospikeVersions() AerospikeVersionInformer
 	// CassandraVersions returns a CassandraVersionInformer.
 	CassandraVersions() CassandraVersionInformer
 	// ClickHouseVersions returns a ClickHouseVersionInformer.
@@ -56,6 +58,8 @@ type Interface interface {
 	MariaDBVersions() MariaDBVersionInformer
 	// MemcachedVersions returns a MemcachedVersionInformer.
 	MemcachedVersions() MemcachedVersionInformer
+	// MilvusVersions returns a MilvusVersionInformer.
+	MilvusVersions() MilvusVersionInformer
 	// MongoDBVersions returns a MongoDBVersionInformer.
 	MongoDBVersions() MongoDBVersionInformer
 	// MySQLVersions returns a MySQLVersionInformer.
@@ -101,6 +105,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// AerospikeVersions returns a AerospikeVersionInformer.
+func (v *version) AerospikeVersions() AerospikeVersionInformer {
+	return &aerospikeVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // CassandraVersions returns a CassandraVersionInformer.
@@ -181,6 +190,11 @@ func (v *version) MariaDBVersions() MariaDBVersionInformer {
 // MemcachedVersions returns a MemcachedVersionInformer.
 func (v *version) MemcachedVersions() MemcachedVersionInformer {
 	return &memcachedVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// MilvusVersions returns a MilvusVersionInformer.
+func (v *version) MilvusVersions() MilvusVersionInformer {
+	return &milvusVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBVersions returns a MongoDBVersionInformer.

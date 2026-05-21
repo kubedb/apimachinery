@@ -117,20 +117,6 @@ type Neo4jTLSConfig struct {
 	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
 }
 
-type TLSMode string
-
-const (
-	TLSModeDisabled TLSMode = "Disabled"
-	TLSModeTLS      TLSMode = "TLS"
-	TLSModeMTLS     TLSMode = "mTLS"
-)
-
-type ProtocolTLSConfig struct {
-	// +kubebuilder:validation:Enum=Disabled;TLS;mTLS
-	// +optional
-	Mode TLSMode `json:"mode,omitempty"`
-}
-
 // Neo4jStatus defines the observed state of Neo4j.
 type Neo4jStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
@@ -183,4 +169,22 @@ type Neo4jList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []Neo4j `json:"items"`
+}
+
+var _ Accessor = &Neo4j{}
+
+func (m *Neo4j) GetObjectMeta() metav1.ObjectMeta {
+	return m.ObjectMeta
+}
+
+func (m *Neo4j) GetConditions() []kmapi.Condition {
+	return m.Status.Conditions
+}
+
+func (m *Neo4j) SetCondition(cond kmapi.Condition) {
+	m.Status.Conditions = setCondition(m.Status.Conditions, cond)
+}
+
+func (m *Neo4j) RemoveCondition(typ string) {
+	m.Status.Conditions = removeCondition(m.Status.Conditions, typ)
 }

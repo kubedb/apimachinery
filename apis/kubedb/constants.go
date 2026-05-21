@@ -694,6 +694,18 @@ const (
 	PgBouncerInitVolumePath                 = "/init-scripts"
 	PgBouncerInitVolumeName                 = "init-scripts"
 
+	// =========================== Aerospike Constants ============================
+	AerospikeConfigVolumeName      = "config"
+	AerospikeConfigVolumeMountPath = "/opt/aerospike/conf"
+	AerospikeContainerName         = "aerospike"
+	AerospikeDataVolumeName        = "data"
+	AerospikeDataVolumeMountPath   = "/opt/aerospike/data"
+	AerospikeConfigKey             = "aerospike.conf"
+	AerospikeDatabasePortName      = "db"
+	AerospikeDatabasePort          = 3000
+	AerospikeMeshPortName          = "heartbeat"
+	AerospikeMeshPort              = 3002
+
 	// =========================== Pgpool Constants ============================
 	EnvPostgresUsername                = "POSTGRES_USERNAME"
 	EnvPgpoolPcpUser                   = "PGPOOL_PCP_USER"
@@ -920,6 +932,17 @@ const (
 	MilvusPortDataNode      = 21124
 	MilvusPortQueryNode     = 21123
 	MilvusPortStreamingNode = 22222
+
+	MilvusTLSVolName      = "milvus-tls"
+	MilvusTLSVolDir       = "/milvus/tls"
+	MilvusTLSCACert       = "ca.crt"
+	MilvusTLSCAPem        = "ca.pem"
+	MilvusTLSCert         = "tls.crt"
+	MilvusTLSKey          = "tls.key"
+	MilvusTLSServerPem    = "server.pem"
+	MilvusTLSServerKeyPem = "server.key"
+	MilvusTLSClientPem    = "client.pem"
+	MilvusTLSClientKeyPem = "client.key"
 )
 
 const (
@@ -1569,7 +1592,7 @@ const (
 	WeaviateClassNameKubeDBSystem = "KubeDBSystem"
 
 	WeaviateVolumeData    = "data"
-	WeaviateDataDir       = "/weaviate/storage"
+	WeaviateDataDir       = "/var/lib/weaviate"
 	WeaviateContainerName = "weaviate"
 	WeaviateAPIKey        = "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
 	WeaviateAPIKeyEnabled = "AUTHENTICATION_APIKEY_ENABLED"
@@ -1584,8 +1607,6 @@ const (
 const (
 
 	// envs
-	EnvDocumentDBUser      = "DOCUMENTDB_PG_USER"
-	EnvDocumentDBPassword  = "DOCUMENTDB_PG_PASSWORD"
 	EnvDocumentDBHandler   = "DOCUMENTDB_HANDLER"
 	EnvDocumentDBPgURL     = "DOCUMENTDB_POSTGRESQL_URL"
 	EnvDocumentDBTLSPort   = "DOCUMENTDB_LISTEN_TLS"
@@ -1599,6 +1620,19 @@ const (
 	DocumentDBSqlNetPort          = 10260
 	DocumentDBDefaultPort         = 10260
 
+	DocumentDBDatabasePortName = "postgres"
+	DocumentDBDatabasePort     = 9712
+
+	DocumentDBGatewayPortName = "gateway"
+	DocumentDBGatewayPort     = 10260
+
+	DocumentDBCoordinatorPortName       = "coordinator"
+	DocumentDBCoordinatorPort           = 2380
+	DocumentDBCoordinatorClientPortName = "coordinatclient"
+	DocumentDBCoordinatorClientPort     = 2389
+	DocumentDBGRPCServerPortName        = "grpcserver"
+	DocumentDBGRPCServerPort            = 2384
+
 	DocumentDBPrimaryRole = "primary"
 	DocumentDBStandbyRole = "standby"
 
@@ -1606,22 +1640,31 @@ const (
 	DocumentDBDatabaseRoleInstance = "instance"
 
 	DocumentDBDefaultUsername = "default_user"
-	DocumentDBDefaultPassword = "1234"
 
 	DefaultDocumentDBDatabase = "sampledb"
 
 	// volume related constants
-	DocumentDBVolumeScripts = "documentdb-data"
-	DocumentDBDataDir       = "/data"
+	DocumentDBVolumeMountData = "documentdb-data"
+	DocumentDBDataDir         = "/var/pv"
+
+	DocumentDBScripts    = "scripts"
+	DocumentDBScriptsDir = "/scripts"
+
+	DocumentDBInitScripts    = "run-scripts"
+	DocumentDBInitScriptsDir = "/run_scripts"
+
+	DocumentDBBootstrapScripts    = "bootstrap-scripts"
+	DocumentDBBootstrapScriptsDir = "/bootstrap_scripts"
 
 	DocumentDBVolumeNameInitScript      = "init-scripts"
 	DocumentDBVolumeMountPathInitScript = "/scripts"
 
-	DocumentDBContainerName     = "documentdb"
-	DocumentDBInitContainerName = "documentdb-init"
-	DocumentDBMainImage         = "ghcr.io/documentdb/documentdb"
-	DocumentDBUser              = "postgres"
-	DocumentDBLinkedDBName      = "documentdb"
+	DocumentDBContainerName            = "documentdb"
+	DocumentDBInitContainerName        = "documentdb-init"
+	DocumentDBCoordinatorContainerName = "documentdb-coordinator"
+	DocumentDBMainImage                = "ghcr.io/documentdb/documentdb"
+	DocumentDBUser                     = "postgres"
+	DocumentDBLinkedDBName             = "documentdb"
 
 	DocumentDBServerPath = "/etc/certs/server"
 
@@ -1638,6 +1681,40 @@ const (
 	DocumentDBBackendInitShellFile = "data.sh"
 	DocumentDBBackendInitSqlFile   = "data.sql"
 	DocumentDBBackendConfigFile    = "user.conf"
+)
+
+const (
+	EnvPetsetName                          = "PETSET_NAME"
+	EnvDBName                              = "DB_NAME"
+	EnvDBNamespace                         = "DB_NAMESPACE"
+	EnvNamespace                           = "NAMESPACE"
+	EnvPodName                             = "POD_NAME"
+	EnvReplicas                            = "REPLICAS"
+	EnvPGMajorVersion                      = "MAJOR_PG_VERSION"
+	EnvDBVersion                           = "DB_VERSION"
+	EnvGoverningServiceDns                 = "GOVERNING_SERVICE_DNS"
+	EnvPrimaryServiceDns                   = "PRIMARY_SERVICE_DNS"
+	EnvPrimaryHost                         = "PRIMARY_HOST"
+	EnvDocumentDBUser                      = "POSTGRES_USER"
+	EnvDocumentDBPassword                  = "POSTGRES_PASSWORD"
+	EnvSSL                                 = "SSL"
+	EnvSSLMode                             = "SSL_MODE"
+	EnvClientAuthMode                      = "CLIENT_AUTH_MODE"
+	EnvMaxLagBeforeFailover                = "MAX_LAG_BEFORE_FAILOVER"
+	EnvPeriod                              = "PERIOD"
+	EnvElectionTick                        = "ELECTION_TICK"
+	EnvHeartbeatTick                       = "HEARTBEAT_TICK"
+	EnvTransferLeadershipInterval          = "TRANSFER_LEADERSHIP_INTERVAL"
+	EnvTransferLeadershipTimeout           = "TRANSFER_LEADERSHIP_TIMEOUT"
+	EnvIsArbiterEnabled                    = "IS_ARBITER"
+	EnvIsDistributed                       = "IS_DISTRIBUTED"
+	EnvWalLimitPolicy                      = "WAL_LIMIT_POLICY"
+	EnvArchiverEnabled                     = "ARCHIVER_ENABLED"
+	EnvArchivePath                         = "ARCHIVE_PATH"
+	EnvArchiverCompletePath                = "LAST_ARCHIVED_FILE_INFO_DIR"
+	EnvForceFailOverAcceptingDataLossAfter = "FORCE_FAILOVER_ACCEPTING_DATA_LOSS_AFTER"
+	EnvArbiterPod                          = "ARBITER_POD"
+	EnvReadReplica                         = "READ_REPLICA"
 )
 
 // =========================== FerretDB Constants ============================

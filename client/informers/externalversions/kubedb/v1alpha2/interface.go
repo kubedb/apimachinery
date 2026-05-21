@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// Aerospikes returns a AerospikeInformer.
+	Aerospikes() AerospikeInformer
 	// Cassandras returns a CassandraInformer.
 	Cassandras() CassandraInformer
 	// ClickHouses returns a ClickHouseInformer.
@@ -54,6 +56,8 @@ type Interface interface {
 	MariaDBs() MariaDBInformer
 	// Memcacheds returns a MemcachedInformer.
 	Memcacheds() MemcachedInformer
+	// Milvuses returns a MilvusInformer.
+	Milvuses() MilvusInformer
 	// MongoDBs returns a MongoDBInformer.
 	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
@@ -99,6 +103,11 @@ type version struct {
 // New returns a new Interface.
 func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakListOptions internalinterfaces.TweakListOptionsFunc) Interface {
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+}
+
+// Aerospikes returns a AerospikeInformer.
+func (v *version) Aerospikes() AerospikeInformer {
+	return &aerospikeInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Cassandras returns a CassandraInformer.
@@ -174,6 +183,11 @@ func (v *version) MariaDBs() MariaDBInformer {
 // Memcacheds returns a MemcachedInformer.
 func (v *version) Memcacheds() MemcachedInformer {
 	return &memcachedInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Milvuses returns a MilvusInformer.
+func (v *version) Milvuses() MilvusInformer {
+	return &milvusInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBs returns a MongoDBInformer.

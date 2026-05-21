@@ -38,7 +38,7 @@ const (
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:path=weaviates,singular=weaviate,shortName=wv,categories={datastore,vectordb,kubedb,appscode,all}
+// +kubebuilder:resource:path=weaviates,singular=weaviate,shortName=wv,categories={vector-db,kubedb,appscode,all}
 // +kubebuilder:printcolumn:name="Type",type="string",JSONPath=".apiVersion"
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
 // +kubebuilder:printcolumn:name="Status",type="string",JSONPath=".status.phase"
@@ -60,6 +60,11 @@ type WeaviateSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
+	// Replication configuration for the Weaviate cluster.
+	// This controls the data replication factor per collection.
+	// +optional
+	Replication *ReplicationConfig `json:"replication,omitempty"`
+
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
 
@@ -75,11 +80,15 @@ type WeaviateSpec struct {
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
+	// Init is used to initialize database
+	// +optional
+	Init *InitSpec `json:"init,omitempty"`
+
 	// Configuration is an optional field to provide custom configuration file for database (i.e conf.yaml).
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
 	// You can provide custom configurations using Secret or ApplyConfig.
 	// +optional
-	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
+	Configuration *WeaviateConfiguration `json:"configuration,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
@@ -119,4 +128,23 @@ type WeaviateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []Weaviate `json:"items"`
+}
+
+// ReplicationConfig defines replication settings for Weaviate.
+type ReplicationConfig struct {
+	// Factor is the number of replicas for each data object.
+	// Set to 1 for no replication (default), 2-3 for production HA.
+	// +optional
+	// +kubebuilder:minimum=1
+	// +kubebuilder:maximum=5
+	Factor int32 `json:"factor,omitempty"`
+}
+type WeaviateConfiguration struct {
+	ConfigurationSpec `json:",inline,omitempty"`
+
+	// BackupConfigSecret is an optional field to provide environment variables
+	// from a Kubernetes Secret for backup or other purposes.
+	// These env vars will be injected into the database container.
+	// +optional
+	BackupConfigSecret *core.LocalObjectReference `json:"backupConfigSecret,omitempty"`
 }

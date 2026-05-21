@@ -244,13 +244,6 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 			}
 		}
 
-		if (db.Spec.TLS.ServerName != "" || db.Spec.TLS.InsecureSkipVerify) && !ptr.Deref(db.Spec.TLS.ClientTLS, false) {
-			allErr = append(allErr, field.Invalid(
-				field.NewPath("spec").Child("tls").Child("clientTLS"),
-				db.Spec.TLS.ClientTLS,
-				"spec.tls.clientTLS must be enabled when using client-side TLS options",
-			))
-		}
 	}
 
 	if len(allErr) == 0 {

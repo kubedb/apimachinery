@@ -269,7 +269,6 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBReconfigureTLSOpsRequest(d
 	}
 
 	certUpdateRequested := tls.IssuerRef != nil || len(tls.Certificates) > 0
-	clientTLSUpdateRequested := tls.ClientTLS != nil || tls.ServerName != "" || tls.InsecureSkipVerify
 
 	opCount := 0
 	if tls.Remove {
@@ -278,11 +277,11 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBReconfigureTLSOpsRequest(d
 	if tls.RotateCertificates {
 		opCount++
 	}
-	if certUpdateRequested || clientTLSUpdateRequested {
+	if certUpdateRequested {
 		opCount++
 	}
 	if opCount == 0 {
-		return errors.New("at least one of Remove, RotateCertificates, IssuerRef, Certificates, or client TLS settings must be specified")
+		return errors.New("at least one of Remove, RotateCertificates, IssuerRef, or Certificates must be specified")
 	}
 	if opCount > 1 {
 		return errors.New("only one TLS reconfiguration operation is allowed at a time")
@@ -297,10 +296,6 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBReconfigureTLSOpsRequest(d
 			return errors.New("rotateCertificates requires TLS to already be enabled with issuerRef on HanaDB")
 		}
 		return nil
-	}
-
-	if clientTLSUpdateRequested && !certUpdateRequested && db.Spec.TLS == nil {
-		return errors.New("client TLS settings require TLS to already be configured on HanaDB")
 	}
 
 	if certUpdateRequested && tls.IssuerRef == nil && (db.Spec.TLS == nil || db.Spec.TLS.IssuerRef == nil) {

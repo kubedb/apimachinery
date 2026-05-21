@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -27,8 +26,10 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
+	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -176,6 +177,12 @@ func (w *KafkaOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.KafkaO
 	case opsapi.KafkaOpsRequestTypeRotateAuth:
 		if err := w.validateKafkaRotateAuthenticationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.KafkaOpsRequestTypeStorageMigration:
+		if err := w.validateKafkaStorageMigrationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
 				req.Name,
 				err.Error()))
 		}
@@ -364,6 +371,62 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaRotateAuthenticationOpsReque
 			if apierrors.IsNotFound(err) {
 				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
 			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (w *KafkaOpsRequestCustomWebhook) validateKafkaStorageMigrationOpsRequest(req *opsapi.KafkaOpsRequest) error {
+	db := &dbapi.Kafka{}
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
+	if err != nil {
+		return errors.Wrap(err, fmt.Sprintf("failed to get kafka: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
+	}
+
+	m := req.Spec.Migration
+	if m.Node == nil && m.Controller == nil && m.Broker == nil {
+		return errors.New("at least one of spec.migration.node, spec.migration.controller, or spec.migration.broker is required")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
+	}
+
+	validateComponent := func(spec *opsapi.StorageMigrationSpec, oldClassName string) error {
+		if spec == nil {
+			return nil
+		}
+		if spec.StorageClassName == nil {
+			return errors.New("storageClassName is required in migration spec")
+		}
+		var newstorage, oldstorage storagev1.StorageClass
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *spec.StorageClassName}, &newstorage); err != nil {
+			if apierrors.IsNotFound(err) {
+				return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *spec.StorageClassName))
+			}
+			return err
+		}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: oldClassName}, &oldstorage); err != nil {
+			return err
+		}
+		if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+			if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+				return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+			}
+		}
+		return nil
+	}
+
+	if db.Spec.Topology != nil {
+		if err := validateComponent(m.Controller, *db.Spec.Topology.Controller.Storage.StorageClassName); err != nil {
+			return err
+		}
+		if err := validateComponent(m.Broker, *db.Spec.Topology.Broker.Storage.StorageClassName); err != nil {
+			return err
+		}
+	} else {
+		if err := validateComponent(m.Node, db.GetStorageClassName()); err != nil {
 			return err
 		}
 	}

@@ -28,6 +28,8 @@ type Interface interface {
 	CassandraAutoscalers() CassandraAutoscalerInformer
 	// ClickHouseAutoscalers returns a ClickHouseAutoscalerInformer.
 	ClickHouseAutoscalers() ClickHouseAutoscalerInformer
+	// DocumentDBAutoscalers returns a DocumentDBAutoscalerInformer.
+	DocumentDBAutoscalers() DocumentDBAutoscalerInformer
 	// DruidAutoscalers returns a DruidAutoscalerInformer.
 	DruidAutoscalers() DruidAutoscalerInformer
 	// ElasticsearchAutoscalers returns a ElasticsearchAutoscalerInformer.
@@ -36,6 +38,8 @@ type Interface interface {
 	EtcdAutoscalers() EtcdAutoscalerInformer
 	// FerretDBAutoscalers returns a FerretDBAutoscalerInformer.
 	FerretDBAutoscalers() FerretDBAutoscalerInformer
+	// HanaDBAutoscalers returns a HanaDBAutoscalerInformer.
+	HanaDBAutoscalers() HanaDBAutoscalerInformer
 	// HazelcastAutoscalers returns a HazelcastAutoscalerInformer.
 	HazelcastAutoscalers() HazelcastAutoscalerInformer
 	// IgniteAutoscalers returns a IgniteAutoscalerInformer.
@@ -48,10 +52,16 @@ type Interface interface {
 	MariaDBAutoscalers() MariaDBAutoscalerInformer
 	// MemcachedAutoscalers returns a MemcachedAutoscalerInformer.
 	MemcachedAutoscalers() MemcachedAutoscalerInformer
+	// MilvusAutoscalers returns a MilvusAutoscalerInformer.
+	MilvusAutoscalers() MilvusAutoscalerInformer
 	// MongoDBAutoscalers returns a MongoDBAutoscalerInformer.
 	MongoDBAutoscalers() MongoDBAutoscalerInformer
 	// MySQLAutoscalers returns a MySQLAutoscalerInformer.
 	MySQLAutoscalers() MySQLAutoscalerInformer
+	// Neo4jAutoscalers returns a Neo4jAutoscalerInformer.
+	Neo4jAutoscalers() Neo4jAutoscalerInformer
+	// OracleAutoscalers returns a OracleAutoscalerInformer.
+	OracleAutoscalers() OracleAutoscalerInformer
 	// PerconaXtraDBAutoscalers returns a PerconaXtraDBAutoscalerInformer.
 	PerconaXtraDBAutoscalers() PerconaXtraDBAutoscalerInformer
 	// PgBouncerAutoscalers returns a PgBouncerAutoscalerInformer.
@@ -62,6 +72,8 @@ type Interface interface {
 	PostgresAutoscalers() PostgresAutoscalerInformer
 	// ProxySQLAutoscalers returns a ProxySQLAutoscalerInformer.
 	ProxySQLAutoscalers() ProxySQLAutoscalerInformer
+	// QdrantAutoscalers returns a QdrantAutoscalerInformer.
+	QdrantAutoscalers() QdrantAutoscalerInformer
 	// RabbitMQAutoscalers returns a RabbitMQAutoscalerInformer.
 	RabbitMQAutoscalers() RabbitMQAutoscalerInformer
 	// RedisAutoscalers returns a RedisAutoscalerInformer.
@@ -72,6 +84,8 @@ type Interface interface {
 	SinglestoreAutoscalers() SinglestoreAutoscalerInformer
 	// SolrAutoscalers returns a SolrAutoscalerInformer.
 	SolrAutoscalers() SolrAutoscalerInformer
+	// WeaviateAutoscalers returns a WeaviateAutoscalerInformer.
+	WeaviateAutoscalers() WeaviateAutoscalerInformer
 	// ZooKeeperAutoscalers returns a ZooKeeperAutoscalerInformer.
 	ZooKeeperAutoscalers() ZooKeeperAutoscalerInformer
 }
@@ -97,6 +111,11 @@ func (v *version) ClickHouseAutoscalers() ClickHouseAutoscalerInformer {
 	return &clickHouseAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// DocumentDBAutoscalers returns a DocumentDBAutoscalerInformer.
+func (v *version) DocumentDBAutoscalers() DocumentDBAutoscalerInformer {
+	return &documentDBAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // DruidAutoscalers returns a DruidAutoscalerInformer.
 func (v *version) DruidAutoscalers() DruidAutoscalerInformer {
 	return &druidAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -115,6 +134,11 @@ func (v *version) EtcdAutoscalers() EtcdAutoscalerInformer {
 // FerretDBAutoscalers returns a FerretDBAutoscalerInformer.
 func (v *version) FerretDBAutoscalers() FerretDBAutoscalerInformer {
 	return &ferretDBAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// HanaDBAutoscalers returns a HanaDBAutoscalerInformer.
+func (v *version) HanaDBAutoscalers() HanaDBAutoscalerInformer {
+	return &hanaDBAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // HazelcastAutoscalers returns a HazelcastAutoscalerInformer.
@@ -147,6 +171,11 @@ func (v *version) MemcachedAutoscalers() MemcachedAutoscalerInformer {
 	return &memcachedAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// MilvusAutoscalers returns a MilvusAutoscalerInformer.
+func (v *version) MilvusAutoscalers() MilvusAutoscalerInformer {
+	return &milvusAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // MongoDBAutoscalers returns a MongoDBAutoscalerInformer.
 func (v *version) MongoDBAutoscalers() MongoDBAutoscalerInformer {
 	return &mongoDBAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -155,6 +184,16 @@ func (v *version) MongoDBAutoscalers() MongoDBAutoscalerInformer {
 // MySQLAutoscalers returns a MySQLAutoscalerInformer.
 func (v *version) MySQLAutoscalers() MySQLAutoscalerInformer {
 	return &mySQLAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Neo4jAutoscalers returns a Neo4jAutoscalerInformer.
+func (v *version) Neo4jAutoscalers() Neo4jAutoscalerInformer {
+	return &neo4jAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// OracleAutoscalers returns a OracleAutoscalerInformer.
+func (v *version) OracleAutoscalers() OracleAutoscalerInformer {
+	return &oracleAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PerconaXtraDBAutoscalers returns a PerconaXtraDBAutoscalerInformer.
@@ -182,6 +221,11 @@ func (v *version) ProxySQLAutoscalers() ProxySQLAutoscalerInformer {
 	return &proxySQLAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// QdrantAutoscalers returns a QdrantAutoscalerInformer.
+func (v *version) QdrantAutoscalers() QdrantAutoscalerInformer {
+	return &qdrantAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // RabbitMQAutoscalers returns a RabbitMQAutoscalerInformer.
 func (v *version) RabbitMQAutoscalers() RabbitMQAutoscalerInformer {
 	return &rabbitMQAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -205,6 +249,11 @@ func (v *version) SinglestoreAutoscalers() SinglestoreAutoscalerInformer {
 // SolrAutoscalers returns a SolrAutoscalerInformer.
 func (v *version) SolrAutoscalers() SolrAutoscalerInformer {
 	return &solrAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// WeaviateAutoscalers returns a WeaviateAutoscalerInformer.
+func (v *version) WeaviateAutoscalers() WeaviateAutoscalerInformer {
+	return &weaviateAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeeperAutoscalers returns a ZooKeeperAutoscalerInformer.

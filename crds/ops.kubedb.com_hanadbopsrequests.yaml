@@ -100,6 +100,15 @@ spec:
                 default: 1
                 format: int32
                 type: integer
+              migration:
+                properties:
+                  oldPVReclaimPolicy:
+                    type: string
+                  storageClassName:
+                    type: string
+                required:
+                - storageClassName
+                type: object
               restart:
                 type: object
               timeout:
@@ -191,10 +200,6 @@ spec:
                       - alias
                       type: object
                     type: array
-                  clientTLS:
-                    type: boolean
-                  insecureSkipVerify:
-                    type: boolean
                   issuerRef:
                     properties:
                       apiGroup:
@@ -212,17 +217,16 @@ spec:
                     type: boolean
                   rotateCertificates:
                     type: boolean
-                  serverName:
-                    type: string
                 type: object
               type:
                 enum:
-                - Restart
                 - VerticalScaling
                 - VolumeExpansion
+                - Restart
                 - Reconfigure
                 - ReconfigureTLS
                 - RotateAuth
+                - StorageMigration
                 type: string
               verticalScaling:
                 properties:

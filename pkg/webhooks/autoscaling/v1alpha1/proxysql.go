@@ -73,12 +73,10 @@ func (w *ProxySQLAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Pro
 
 func (w *ProxySQLAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ProxySQLAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.ProxySQLOpsRequestOptions{}
-	}
-	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
-	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{
+			Apply:      opsapi.ApplyOptionIfReady,
+			MaxRetries: 1,
+		}
 	}
 }
 
