@@ -715,6 +715,20 @@ func (h *HanaDB) setDefaultContainerSecurityContext(hanadbVersion *catalog.HanaD
 	h.assignDefaultContainerSecurityContext(hanadbVersion, container.SecurityContext)
 
 	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
+
+	if h.IsCluster() {
+		coordinatorContainer := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.HanaDBCoordinatorContainerName)
+		if coordinatorContainer == nil {
+			coordinatorContainer = &core.Container{
+				Name: kubedb.HanaDBCoordinatorContainerName,
+			}
+		}
+		if coordinatorContainer.SecurityContext == nil {
+			coordinatorContainer.SecurityContext = &core.SecurityContext{}
+		}
+		h.assignDefaultContainerSecurityContext(hanadbVersion, coordinatorContainer.SecurityContext)
+		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *coordinatorContainer)
+	}
 }
 
 func (h *HanaDB) assignDefaultContainerSecurityContext(hanadbVersion *catalog.HanaDBVersion, sc *core.SecurityContext) {

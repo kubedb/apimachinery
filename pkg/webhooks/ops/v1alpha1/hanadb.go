@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -138,7 +139,7 @@ func (w *HanaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.HanaD
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"), req.Name, err.Error()))
 		}
 	case opsapi.HanaDBOpsRequestTypeRotateAuth:
-		if err := w.validateHanaDBRotateAuthenticationOpsRequest(db, req); err != nil {
+		if err := w.validateHanaDBRotateAuthenticationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"), req.Name, err.Error()))
 		}
 	}
@@ -189,14 +190,14 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBVolumeExpansionOpsRequest(
 	return nil
 }
 
-func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBRotateAuthenticationOpsRequest(db *olddbapi.HanaDB, req *opsapi.HanaDBOpsRequest) error {
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBRotateAuthenticationOpsRequest(req *opsapi.HanaDBOpsRequest) error {
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
 			return errors.New("spec.authentication.secretRef.name can not be empty")
 		}
 
-		var newAuthSecret, oldAuthSecret core.Secret
+		var newAuthSecret core.Secret
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 			Name:      authSpec.SecretRef.Name,
 			Namespace: req.Namespace,
@@ -207,25 +208,37 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBRotateAuthenticationOpsReq
 			}
 			return err
 		}
-		if password, ok := newAuthSecret.Data[core.BasicAuthPasswordKey]; !ok || len(password) == 0 {
-			return errors.Errorf("referenced secret %s/%s must contain non-empty %q key", req.Namespace, authSpec.SecretRef.Name, core.BasicAuthPasswordKey)
+		if _, err := getHanaDBAuthPassword(newAuthSecret.Data); err != nil {
+			return errors.Errorf("referenced secret %s/%s is invalid: %v", req.Namespace, authSpec.SecretRef.Name, err)
 		}
-
-		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      db.GetAuthSecretName(),
-			Namespace: db.GetNamespace(),
-		}, &oldAuthSecret)
-		if err != nil {
-			return err
-		}
-
-		newUsername := newAuthSecret.Data[core.BasicAuthUsernameKey]
-		if len(newUsername) > 0 && string(oldAuthSecret.Data[core.BasicAuthUsernameKey]) != string(newUsername) {
-			return errors.New("database username cannot be changed")
+		if username := newAuthSecret.Data[core.BasicAuthUsernameKey]; len(username) > 0 && string(username) != kubedb.HanaDBSystemUser {
+			return errors.Errorf("username in referenced secret %s/%s must be %q", req.Namespace, authSpec.SecretRef.Name, kubedb.HanaDBSystemUser)
 		}
 	}
 
 	return nil
+}
+
+func getHanaDBAuthPassword(data map[string][]byte) (string, error) {
+	if password := data[core.BasicAuthPasswordKey]; len(password) > 0 {
+		return string(password), nil
+	}
+
+	passwordJSON := data[kubedb.HanaDBPasswordFileKey]
+	if len(passwordJSON) == 0 {
+		return "", fmt.Errorf("secret must contain non-empty %q or valid %q", core.BasicAuthPasswordKey, kubedb.HanaDBPasswordFileKey)
+	}
+
+	var passwordData struct {
+		MasterPassword string `json:"master_password"`
+	}
+	if err := json.Unmarshal(passwordJSON, &passwordData); err != nil {
+		return "", fmt.Errorf("failed to parse %q: %w", kubedb.HanaDBPasswordFileKey, err)
+	}
+	if passwordData.MasterPassword == "" {
+		return "", fmt.Errorf("%q must contain non-empty %q", kubedb.HanaDBPasswordFileKey, kubedb.HanaDBMasterPasswordKey)
+	}
+	return passwordData.MasterPassword, nil
 }
 
 func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBReconfigureOpsRequest(req *opsapi.HanaDBOpsRequest) error {
