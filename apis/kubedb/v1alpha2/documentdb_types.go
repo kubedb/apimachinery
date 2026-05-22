@@ -63,6 +63,10 @@ type DocumentDBSpec struct {
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 
+	// Leader election configuration
+	// +optional
+	LeaderElection *DocumentDBLeaderElectionConfig `json:"leaderElection,omitempty"`
+
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
@@ -95,6 +99,68 @@ type DocumentDBStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+}
+
+type DocumentDBLeaderElectionConfig struct {
+	// LeaseDuration is the duration in second that non-leader candidates will
+	// wait to force acquire leadership. This is measured against time of
+	// last observed ack. Default 15
+	// Deprecated
+	LeaseDurationSeconds int32 `json:"leaseDurationSeconds,omitempty"`
+	// RenewDeadline is the duration in second that the acting master will retry
+	// refreshing leadership before giving up. Normally, LeaseDuration * 2 / 3.
+	// Default 10
+	// Deprecated
+	RenewDeadlineSeconds int32 `json:"renewDeadlineSeconds,omitempty"`
+	// RetryPeriod is the duration in second the LeaderElector clients should wait
+	// between tries of actions. Normally, LeaseDuration / 3.
+	// Default 2
+	// Deprecated
+	RetryPeriodSeconds int32 `json:"retryPeriodSeconds,omitempty"`
+
+	// MaximumLagBeforeFailover is used as maximum lag tolerance for the cluster.
+	// when ever a replica is lagging more than MaximumLagBeforeFailover
+	// this node need to sync manually with the primary node. default value is 32MB
+	// +default=33554432
+	// +kubebuilder:default=33554432
+	// +optional
+	MaximumLagBeforeFailover uint64 `json:"maximumLagBeforeFailover,omitempty"`
+
+	// Period between Node.Tick invocations
+	// +kubebuilder:default="100ms"
+	// +optional
+	Period metav1.Duration `json:"period,omitempty"`
+
+	// ElectionTick is the number of Node.Tick invocations that must pass between
+	//	elections. That is, if a follower does not receive any message from the
+	//  leader of current term before ElectionTick has elapsed, it will become
+	//	candidate and start an election. ElectionTick must be greater than
+	//  HeartbeatTick. We suggest ElectionTick = 10 * HeartbeatTick to avoid
+	//  unnecessary leader switching. default value is 10.
+	// +default=10
+	// +kubebuilder:default=10
+	// +optional
+	ElectionTick int32 `json:"electionTick,omitempty"`
+
+	// HeartbeatTick is the number of Node.Tick invocations that must pass between
+	// heartbeats. That is, a leader sends heartbeat messages to maintain its
+	// leadership every HeartbeatTick ticks. default value is 1.
+	// +default=1
+	// +kubebuilder:default=1
+	// +optional
+	HeartbeatTick int32 `json:"heartbeatTick,omitempty"`
+
+	// TransferLeadershipInterval retry interval for transfer leadership
+	// to the healthiest node
+	// +kubebuilder:default="1s"
+	// +optional
+	TransferLeadershipInterval *metav1.Duration `json:"transferLeadershipInterval,omitempty"`
+
+	// TransferLeadershipTimeout retry timeout for transfer leadership
+	// to the healthiest node
+	// +kubebuilder:default="60s"
+	// +optional
+	TransferLeadershipTimeout *metav1.Duration `json:"transferLeadershipTimeout,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

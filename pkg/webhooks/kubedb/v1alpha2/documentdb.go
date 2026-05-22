@@ -20,7 +20,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
@@ -86,7 +85,6 @@ func (w *DocumentDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtim
 	if !ok {
 		return nil, fmt.Errorf("expected an DocumentDB object but got %T", obj)
 	}
-
 	documentdblog.Info("validate create", "name", db.Name)
 	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
@@ -187,6 +185,16 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 			`'spec.terminationPolicy' value 'Halt' is not supported yet for DocumentDB`))
 	}
 
+	// leaderElection related
+	if db.Spec.LeaderElection != nil {
+		err := w.validateSpecForDB(db)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
+				db.Name,
+				err.Error()))
+		}
+	}
+
 	return allErr
 }
 
@@ -210,5 +218,25 @@ func (w *DocumentDBCustomWebhook) validateDocumentDBVersion(db *olddbapi.Documen
 	// Older code validated the PostgresVersion referenced by the DocumentDBVersion.
 	// The current DocumentDBVersion spec in this repo does not expose a Postgres field,
 	// so we only verify that the DocumentDBVersion resource exists.
+	return nil
+}
+
+func (w *DocumentDBCustomWebhook) validateSpecForDB(postgres *olddbapi.DocumentDB) error {
+
+	// validate leader election configs
+	// ==============> start
+	lec := postgres.Spec.LeaderElection
+	if lec != nil {
+		if lec.ElectionTick <= lec.HeartbeatTick {
+			return fmt.Errorf("ElectionTick must be greater than HeartbeatTick")
+		}
+		if lec.ElectionTick < 1 {
+			return fmt.Errorf("ElectionTick must be greater than zero")
+		}
+		if lec.HeartbeatTick < 1 {
+			return fmt.Errorf("HeartbeatTick must be greater than zero")
+		}
+	}
+	// end <==============
 	return nil
 }
