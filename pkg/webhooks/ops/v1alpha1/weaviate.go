@@ -153,7 +153,7 @@ func (w *WeaviateOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Wea
 		}
 
 	case opsapi.WeaviateOpsRequestTypeStorageMigration:
-		if err := w.validateWeaviateStorageMigrationOpsRequest(req); err != nil {
+		if err := w.validateWeaviateStorageMigrationOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
 				req.Name,
 				err.Error()))
@@ -290,16 +290,16 @@ func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateRotateAuthOpsRequest(d
 	return nil
 }
 
-func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateStorageMigrationOpsRequest(req *opsapi.WeaviateOpsRequest) error {
-	db := &dbapi.Weaviate{}
+func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateStorageMigrationOpsRequest(db *dbapi.Weaviate, req *opsapi.WeaviateOpsRequest) error {
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get Weaviate: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
-	if req.Spec.Migration.StorageClassName == nil {
+	if req.Spec.Migration == nil {
 		return errors.New("spec.migration.storageClassName is required")
 	}
+
 	if req.Spec.Timeout == nil {
 		// timeout is required for Storage Migration ops request because it's a long-running operation
 		// default timeout is len(pods) * 5 minute
