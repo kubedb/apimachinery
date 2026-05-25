@@ -121,9 +121,17 @@ func (d *DocumentDB) GetAuthSecretName() string {
 	return metautil.NameWithSuffix(d.OffshootName(), "auth")
 }
 
+func (d *DocumentDB) GetAdminAuthSecretName() string {
+	if d.Spec.AdminAuthSecret != nil && d.Spec.AdminAuthSecret.Name != "" {
+		return d.Spec.AdminAuthSecret.Name
+	}
+	return metautil.NameWithSuffix(d.OffshootName(), kubedb.DocumentDBAdminAuthSecretSuffix)
+}
+
 func (d *DocumentDB) GetPersistentSecrets() []string {
 	var secrets []string
 	secrets = append(secrets, d.GetAuthSecretName())
+	secrets = append(secrets, d.GetAdminAuthSecretName())
 	return secrets
 }
 

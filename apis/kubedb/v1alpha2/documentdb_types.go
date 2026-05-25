@@ -70,6 +70,10 @@ type DocumentDBSpec struct {
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
+	// AdminAuthSecret specifies the admin auth secret for "default_user"
+	// +optional
+	AdminAuthSecret *SecretReference `json:"adminAuthSecret,omitempty"`
+
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`

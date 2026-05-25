@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
@@ -178,6 +179,13 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 			`'spec.authSecret.name' need to specify when auth secret is externally managed`))
 	}
 
+	// Admin auth secret related
+	if db.Spec.AdminAuthSecret != nil && db.Spec.AdminAuthSecret.ExternallyManaged && db.Spec.AdminAuthSecret.Name == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("adminAuthSecret"),
+			db.Name,
+			`'spec.adminAuthSecret.name' need to specify when admin auth secret is externally managed`))
+	}
+
 	// Termination policy related
 	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyHalt {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
@@ -222,7 +230,6 @@ func (w *DocumentDBCustomWebhook) validateDocumentDBVersion(db *olddbapi.Documen
 }
 
 func (w *DocumentDBCustomWebhook) validateSpecForDB(postgres *olddbapi.DocumentDB) error {
-
 	// validate leader election configs
 	// ==============> start
 	lec := postgres.Spec.LeaderElection
