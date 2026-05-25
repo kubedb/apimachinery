@@ -60,6 +60,7 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&DatabaseConnection{},
 		&DatabaseConnectionList{},
 		&DatabaseInfo{},
+		&DatabaseSummary{},
 		&ElasticsearchInsight{},
 		&ElasticsearchInsightList{},
 		&ElasticsearchNodesStats{},

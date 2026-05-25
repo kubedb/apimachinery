@@ -26,6 +26,7 @@ import (
 	resourcemetrics "kmodules.xyz/resource-metrics"
 	"kmodules.xyz/resource-metrics/api"
 
+	"github.com/docker/go-units"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -102,8 +103,8 @@ func ToGenericResource(item client.Object, apiType *kmapi.ResourceID, cmeta *kma
 			Replicas:             0,
 			RoleReplicas:         nil,
 			Mode:                 "",
-			TotalResource:        core.ResourceRequirements{},
-			AppResource:          core.ResourceRequirements{},
+			TotalResource:        ResourceRequirements{},
+			AppResource:          ResourceRequirements{},
 			RoleResourceLimits:   nil,
 			RoleResourceRequests: nil,
 
@@ -151,43 +152,78 @@ func ToGenericResource(item client.Object, apiType *kmapi.ResourceID, cmeta *kma
 			if err != nil {
 				return nil, err
 			}
-			genres.Spec.TotalResource.Requests = rv
+			genres.Spec.TotalResource.Requests = ConvertToStringQuantity(rv)
 		}
 		{
 			rv, err := resourcemetrics.TotalResourceLimits(content)
 			if err != nil {
 				return nil, err
 			}
-			genres.Spec.TotalResource.Limits = rv
+			genres.Spec.TotalResource.Limits = ConvertToStringQuantity(rv)
 		}
 		{
 			rv, err := resourcemetrics.AppResourceRequests(content)
 			if err != nil {
 				return nil, err
 			}
-			genres.Spec.AppResource.Requests = rv
+			genres.Spec.AppResource.Requests = ConvertToStringQuantity(rv)
 		}
 		{
 			rv, err := resourcemetrics.AppResourceLimits(content)
 			if err != nil {
 				return nil, err
 			}
-			genres.Spec.AppResource.Limits = rv
+			genres.Spec.AppResource.Limits = ConvertToStringQuantity(rv)
 		}
 		{
 			rv, err := resourcemetrics.RoleResourceRequests(content)
 			if err != nil {
 				return nil, err
 			}
-			genres.Spec.RoleResourceRequests = rv
+			out := make(map[api.PodRole]ResourceList, len(rv))
+			for role, rl := range rv {
+				out[role] = ConvertToStringQuantity(rl)
+			}
+			genres.Spec.RoleResourceRequests = out
 		}
 		{
 			rv, err := resourcemetrics.RoleResourceLimits(content)
 			if err != nil {
 				return nil, err
 			}
-			genres.Spec.RoleResourceLimits = rv
+			out := make(map[api.PodRole]ResourceList, len(rv))
+			for role, rl := range rv {
+				out[role] = ConvertToStringQuantity(rl)
+			}
+			genres.Spec.RoleResourceLimits = out
 		}
 	}
 	return &genres, nil
+}
+
+var binaryAbbrs = []string{"", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei"}
+
+func trimMemorySize(s string) string {
+	for _, abbr := range binaryAbbrs {
+		if abbr != "" && strings.HasSuffix(s, abbr) {
+			num := strings.TrimSuffix(s, abbr)
+			num = strings.TrimRight(num, "0")
+			num = strings.TrimRight(num, ".")
+			return num + abbr
+		}
+	}
+	return s
+}
+
+func ConvertToStringQuantity(initial core.ResourceList) ResourceList {
+	out := make(ResourceList, len(initial))
+	for name, qty := range initial {
+		switch name {
+		case core.ResourceMemory, core.ResourceEphemeralStorage:
+			out[name] = trimMemorySize(units.CustomSize("%.2f%s", qty.AsApproximateFloat64(), 1024.0, binaryAbbrs))
+		default:
+			out[name] = qty.String()
+		}
+	}
+	return out
 }

@@ -221,7 +221,6 @@ func isControlPlaneNode(node *core.Node) bool {
 func skipIP(ip net.IP) bool {
 	return ip.IsLoopback() ||
 		ip.IsMulticast() ||
-		ip.IsGlobalUnicast() ||
 		ip.IsInterfaceLocalMulticast() ||
 		ip.IsLinkLocalMulticast() ||
 		ip.IsLinkLocalUnicast()
