@@ -59,7 +59,7 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
 		&DatabaseConnection{},
 		&DatabaseConnectionList{},
-		&DatabaseInfo{},
+		&DatabaseConfiguration{},
 		&DatabaseSummary{},
 		&ElasticsearchInsight{},
 		&ElasticsearchInsightList{},
