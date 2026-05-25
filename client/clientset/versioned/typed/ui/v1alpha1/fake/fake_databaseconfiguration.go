@@ -27,21 +27,21 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-// FakeDatabaseInfos implements DatabaseInfoInterface
-type FakeDatabaseInfos struct {
+// FakeDatabaseConfigurations implements DatabaseConfigurationInterface
+type FakeDatabaseConfigurations struct {
 	Fake *FakeUiV1alpha1
 }
 
-var databaseinfosResource = v1alpha1.SchemeGroupVersion.WithResource("databaseinfos")
+var databaseconfigurationsResource = v1alpha1.SchemeGroupVersion.WithResource("databaseconfigurations")
 
-var databaseinfosKind = v1alpha1.SchemeGroupVersion.WithKind("DatabaseInfo")
+var databaseconfigurationsKind = v1alpha1.SchemeGroupVersion.WithKind("DatabaseConfiguration")
 
-// Create takes the representation of a databaseInfo and creates it.  Returns the server's representation of the databaseInfo, and an error, if there is any.
-func (c *FakeDatabaseInfos) Create(ctx context.Context, databaseInfo *v1alpha1.DatabaseInfo, opts v1.CreateOptions) (result *v1alpha1.DatabaseInfo, err error) {
+// Create takes the representation of a databaseConfiguration and creates it.  Returns the server's representation of the databaseConfiguration, and an error, if there is any.
+func (c *FakeDatabaseConfigurations) Create(ctx context.Context, databaseConfiguration *v1alpha1.DatabaseConfiguration, opts v1.CreateOptions) (result *v1alpha1.DatabaseConfiguration, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(databaseinfosResource, databaseInfo), &v1alpha1.DatabaseInfo{})
+		Invokes(testing.NewRootCreateAction(databaseconfigurationsResource, databaseConfiguration), &v1alpha1.DatabaseConfiguration{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.DatabaseInfo), err
+	return obj.(*v1alpha1.DatabaseConfiguration), err
 }

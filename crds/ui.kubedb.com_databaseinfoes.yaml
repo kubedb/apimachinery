@@ -4,14 +4,14 @@ metadata:
   creationTimestamp: null
   labels:
     app.kubernetes.io/name: kubedb
-  name: databaseinfoes.ui.kubedb.com
+  name: databaseconfigurationes.ui.kubedb.com
 spec:
   group: ui.kubedb.com
   names:
-    kind: DatabaseInfo
-    listKind: DatabaseInfoList
-    plural: databaseinfoes
-    singular: databaseinfo
+    kind: DatabaseConfiguration
+    listKind: DatabaseConfigurationList
+    plural: databaseconfigurationes
+    singular: databaseconfiguration
   scope: Namespaced
   versions:
   - name: v1alpha1

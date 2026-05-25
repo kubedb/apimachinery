@@ -18,9 +18,9 @@ limitations under the License.
 
 package v1alpha1
 
-type DatabaseConnectionExpansion interface{}
+type DatabaseConfigurationExpansion interface{}
 
-type DatabaseInfoExpansion interface{}
+type DatabaseConnectionExpansion interface{}
 
 type DatabaseSummaryExpansion interface{}
 
