@@ -37,6 +37,10 @@ func (c *FakeUiV1alpha1) DatabaseInfos() v1alpha1.DatabaseInfoInterface {
 	return &FakeDatabaseInfos{c}
 }
 
+func (c *FakeUiV1alpha1) DatabaseSummaries() v1alpha1.DatabaseSummaryInterface {
+	return &FakeDatabaseSummaries{c}
+}
+
 func (c *FakeUiV1alpha1) ElasticsearchInsights(namespace string) v1alpha1.ElasticsearchInsightInterface {
 	return &FakeElasticsearchInsights{c, namespace}
 }
