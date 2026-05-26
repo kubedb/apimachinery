@@ -23,8 +23,8 @@ import (
 
 const (
 	ResourceKindDatabaseConfiguration = "DatabaseConfiguration"
-	ResourceDatabaseConfiguration     = "databaseConfiguration"
-	ResourceDatabaseConfigurations    = "databaseConfigurations"
+	ResourceDatabaseConfiguration     = "databaseconfiguration"
+	ResourceDatabaseConfigurations    = "databaseconfigurations"
 )
 
 // +genclient
@@ -35,7 +35,7 @@ const (
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // +kubebuilder:object:root=true
-// +kubebuilder:resource:path=databaseConfigurations,singular=databaseConfiguration,scope=Cluster
+// +kubebuilder:resource:path=databaseconfigurations,singular=databaseconfiguration,scope=Cluster
 type DatabaseConfiguration struct {
 	metav1.TypeMeta `json:",inline"`
 	// Request describes the attributes for the graph request.
