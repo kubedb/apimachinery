@@ -303,14 +303,37 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformatio
 	refVersion := semver.MustParse("8.4.2")
 
 	if curVersion.LessThan(refVersion) {
-		return errors.New(fmt.Sprintf("MySQL Replication Mode Transformation support only support for %s or upper.", refVersion))
+		return fmt.Errorf("MySQL Replication Mode Transformation is only supported for %s or upper", refVersion)
 	}
 
-	if req.Spec.ReplicationModeTransformation != nil {
-		if req.Spec.ReplicationModeTransformation.RequireSSL != nil && (req.Spec.ReplicationModeTransformation.IssuerRef == nil &&
-			req.Spec.ReplicationModeTransformation.Certificates == nil) {
-			return errors.New("MySQL Replication Mode Transformation requires TLS configuration to be enabled.")
-		}
+	transform := req.Spec.ReplicationModeTransformation
+	if transform == nil {
+		return errors.New("spec.replicationModeTransformation is required for a ReplicationModeTransformation ops request")
+	}
+
+	// Resolve the target topology (defaults to GroupReplication for backward compatibility).
+	targetMode := dbapi.MySQLModeGroupReplication
+	if transform.TargetMode != nil {
+		targetMode = *transform.TargetMode
+	}
+	if targetMode != dbapi.MySQLModeGroupReplication && targetMode != dbapi.MySQLModeInnoDBCluster {
+		return fmt.Errorf("unsupported spec.replicationModeTransformation.targetMode %q; supported values are %q and %q",
+			targetMode, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster)
+	}
+
+	// Reject no-op transformations (database is already in the requested topology).
+	if (targetMode == dbapi.MySQLModeGroupReplication && db.UsesGroupReplication()) ||
+		(targetMode == dbapi.MySQLModeInnoDBCluster && db.IsInnoDBCluster()) {
+		return fmt.Errorf("database %s/%s is already running in %q mode", db.Namespace, db.Name, targetMode)
+	}
+
+	// Multi-Primary group mode is not implemented yet.
+	if transform.Mode != nil && *transform.Mode == dbapi.MySQLGroupModeMultiPrimary {
+		return errors.New(`spec.replicationModeTransformation.mode "Multi-Primary" is not supported yet; use "Single-Primary"`)
+	}
+
+	if transform.RequireSSL != nil && (transform.IssuerRef == nil && transform.Certificates == nil) {
+		return errors.New("MySQL Replication Mode Transformation requires TLS configuration to be enabled")
 	}
 
 	return nil
