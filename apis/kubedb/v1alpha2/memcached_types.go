@@ -111,6 +111,10 @@ type MemcachedSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 1}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+
+	// Init is used to initialize the database from a script or git repo.
+	// +optional
+	Init *InitSpec `json:"init,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;metrics-exporter

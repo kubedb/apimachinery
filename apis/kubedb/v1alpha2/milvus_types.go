@@ -116,6 +116,10 @@ type MilvusSpec struct {
 	// TLS contains tls configurations
 	// +optional
 	TLS *MilvusTLSConfig `json:"tls,omitempty"`
+
+	// Init is used to initialize the database from a script or git repo.
+	// +optional
+	Init *InitSpec `json:"init,omitempty"`
 }
 
 type MilvusTLSConfig struct {

@@ -68,6 +68,8 @@ type QdrantVersionSpec struct {
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
+	// +optional
+	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
 }
 
 // QdrantVersionDatabase is the Qdrant Database image

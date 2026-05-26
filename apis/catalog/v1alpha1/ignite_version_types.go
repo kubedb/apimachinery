@@ -71,6 +71,9 @@ type IgniteVersionSpec struct {
 
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
+
+	// +optional
+	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
 }
 
 // IgniteSecurityContext is for the additional config for the DB container

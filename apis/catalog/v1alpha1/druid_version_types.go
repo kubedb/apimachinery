@@ -73,6 +73,9 @@ type DruidVersionSpec struct {
 
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
+
+	// +optional
+	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
 }
 
 // DruidVersionDatabase is the Druid Database image

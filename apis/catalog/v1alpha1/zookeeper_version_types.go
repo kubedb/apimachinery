@@ -77,6 +77,9 @@ type ZooKeeperVersionSpec struct {
 	// SecurityContext is for the additional config for the DB container
 	// +optional
 	SecurityContext SecurityContext `json:"securityContext"`
+
+	// +optional
+	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
 }
 
 // ZooKeeperVersionInitContainer is the ZooKeeper init container image
