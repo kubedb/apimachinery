@@ -636,6 +636,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.Solr":                                          schema_apimachinery_apis_gitops_v1alpha1_Solr(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.SolrList":                                      schema_apimachinery_apis_gitops_v1alpha1_SolrList(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.SolrStatus":                                    schema_apimachinery_apis_gitops_v1alpha1_SolrStatus(ref),
+		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.Weaviate":                                      schema_apimachinery_apis_gitops_v1alpha1_Weaviate(ref),
+		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.WeaviateList":                                  schema_apimachinery_apis_gitops_v1alpha1_WeaviateList(ref),
+		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.WeaviateStatus":                                schema_apimachinery_apis_gitops_v1alpha1_WeaviateStatus(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.ZooKeeper":                                     schema_apimachinery_apis_gitops_v1alpha1_ZooKeeper(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.ZooKeeperList":                                 schema_apimachinery_apis_gitops_v1alpha1_ZooKeeperList(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.ZooKeeperStatus":                               schema_apimachinery_apis_gitops_v1alpha1_ZooKeeperStatus(ref),
@@ -36140,6 +36143,148 @@ func schema_apimachinery_apis_gitops_v1alpha1_SolrList(ref common.ReferenceCallb
 }
 
 func schema_apimachinery_apis_gitops_v1alpha1_SolrStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the database, such as approval or denial.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"gitops": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus"},
+	}
+}
+
+func schema_apimachinery_apis_gitops_v1alpha1_Weaviate(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/gitops/v1alpha1.WeaviateStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.WeaviateStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_gitops_v1alpha1_WeaviateList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/gitops/v1alpha1.Weaviate"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.Weaviate"},
+	}
+}
+
+func schema_apimachinery_apis_gitops_v1alpha1_WeaviateStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
