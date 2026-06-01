@@ -222,6 +222,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Elasticsearch().V1alpha1().ElasticsearchDashboards().Informer()}, nil
 
 		// Group=gitops.kubedb.com, Version=v1alpha1
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("clickhouses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().ClickHouses().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("druids"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Druids().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("elasticsearches"):

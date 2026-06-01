@@ -29,6 +29,10 @@ type FakeGitopsV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeGitopsV1alpha1) ClickHouses(namespace string) v1alpha1.ClickHouseInterface {
+	return &FakeClickHouses{c, namespace}
+}
+
 func (c *FakeGitopsV1alpha1) Druids(namespace string) v1alpha1.DruidInterface {
 	return &FakeDruids{c, namespace}
 }
