@@ -605,6 +605,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.MySQL":                                         schema_apimachinery_apis_gitops_v1alpha1_MySQL(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.MySQLList":                                     schema_apimachinery_apis_gitops_v1alpha1_MySQLList(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.MySQLStatus":                                   schema_apimachinery_apis_gitops_v1alpha1_MySQLStatus(ref),
+		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.Neo4j":                                         schema_apimachinery_apis_gitops_v1alpha1_Neo4j(ref),
+		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.Neo4jList":                                     schema_apimachinery_apis_gitops_v1alpha1_Neo4jList(ref),
+		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.Neo4jStatus":                                   schema_apimachinery_apis_gitops_v1alpha1_Neo4jStatus(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.Operation":                                     schema_apimachinery_apis_gitops_v1alpha1_Operation(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.PerconaXtraDB":                                 schema_apimachinery_apis_gitops_v1alpha1_PerconaXtraDB(ref),
 		"kubedb.dev/apimachinery/apis/gitops/v1alpha1.PerconaXtraDBList":                             schema_apimachinery_apis_gitops_v1alpha1_PerconaXtraDBList(ref),
@@ -34715,6 +34718,148 @@ func schema_apimachinery_apis_gitops_v1alpha1_MySQLStatus(ref common.ReferenceCa
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1.Age"},
+	}
+}
+
+func schema_apimachinery_apis_gitops_v1alpha1_Neo4j(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/gitops/v1alpha1.Neo4jStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.Neo4jStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jSpec"},
+	}
+}
+
+func schema_apimachinery_apis_gitops_v1alpha1_Neo4jList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/gitops/v1alpha1.Neo4j"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.Neo4j"},
+	}
+}
+
+func schema_apimachinery_apis_gitops_v1alpha1_Neo4jStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the database, such as approval or denial.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"gitops": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus"},
 	}
 }
 
