@@ -30,6 +30,40 @@ const (
 	ResourcePluralDocumentDB   = "documentdbs"
 )
 
+// +kubebuilder:validation:Enum=Hot;Warm
+type DocDBStandbyMode string
+
+const (
+	HotDocDBStandbyMode  DocDBStandbyMode = "Hot"
+	WarmDocDBStandbyMode DocDBStandbyMode = "Warm"
+)
+
+// +kubebuilder:validation:Enum=Synchronous;Asynchronous
+type DocDBStreamingMode string
+
+const (
+	SynchronousDocDBStreamingMode  DocDBStreamingMode = "Synchronous"
+	AsynchronousDocDBStreamingMode DocDBStreamingMode = "Asynchronous"
+)
+
+// DocDBClientAuthMode represents the ClientAuthMode of DocumentDB clusters ( replicaset )
+// +kubebuilder:validation:Enum=scram;cert
+type DocDBClientAuthMode string
+
+const (
+
+	// ClientAuthModeScram performs SCRAM-SHA-256 authentication, as described in RFC 7677.
+	// It is a challenge-response scheme that prevents password sniffing on untrusted connections
+	// and supports storing passwords on the server in a cryptographically hashed form that is thought to be secure.
+	// This is the most secure of the currently provided methods, but it is not supported by older client libraries.
+	DocDBClientAuthModeScram DocDBClientAuthMode = "scram"
+
+	// ClientAuthModeCert represents `cert clientcert=1` auth mode where client need to provide cert and private key for authentication.
+	// When server is config with this auth method. Client can't connect with postgreSQL server with password. They need
+	// to Send the client cert and client key certificate for authentication.
+	DocDBClientAuthModeCert DocDBClientAuthMode = "cert"
+)
+
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -56,6 +90,15 @@ type DocumentDBSpec struct {
 	// Number of instances to deploy for a documentdb database.
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Standby mode
+	StandbyMode *DocDBStandbyMode `json:"standbyMode,omitempty"`
+
+	// Streaming mode
+	StreamingMode *DocDBStreamingMode `json:"streamingMode,omitempty"`
+
+	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
+	ClientAuthMode DocDBClientAuthMode `json:"clientAuthMode,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`

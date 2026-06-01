@@ -148,6 +148,18 @@ func (d *DocumentDB) ServiceAccountName() string {
 }
 
 func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alpha1.DocumentDBVersion) {
+	if d == nil {
+		return
+	}
+	if d.Spec.StandbyMode == nil {
+		d.Spec.StandbyMode = ptr.To(HotDocDBStandbyMode)
+	}
+	if d.Spec.ClientAuthMode == "" {
+		d.Spec.ClientAuthMode = DocDBClientAuthModeScram
+	}
+	if d.Spec.StreamingMode == nil {
+		d.Spec.StreamingMode = ptr.To(AsynchronousDocDBStreamingMode)
+	}
 	if d.Spec.DeletionPolicy == "" {
 		d.Spec.DeletionPolicy = DeletionPolicyDelete
 	}

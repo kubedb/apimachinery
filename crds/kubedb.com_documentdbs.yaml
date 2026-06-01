@@ -94,6 +94,11 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+              clientAuthMode:
+                enum:
+                - scram
+                - cert
+                type: string
               deletionPolicy:
                 enum:
                 - Halt
@@ -3466,6 +3471,11 @@ spec:
                   - alias
                   type: object
                 type: array
+              standbyMode:
+                enum:
+                - Hot
+                - Warm
+                type: string
               storage:
                 properties:
                   accessModes:
@@ -3558,6 +3568,11 @@ spec:
                 enum:
                 - Durable
                 - Ephemeral
+                type: string
+              streamingMode:
+                enum:
+                - Synchronous
+                - Asynchronous
                 type: string
               version:
                 type: string

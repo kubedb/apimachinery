@@ -1614,8 +1614,8 @@ const (
 	DocumentDBDatabaseRoleKey      = "documentdb.db/role"
 	DocumentDBDatabaseRoleInstance = "instance"
 
-	DocumentDBDefaultUsername    = "default_user"
-	DocumentDBAdminUsername      = "documentdb"
+	DocumentDBDefaultUsername       = "default_user"
+	DocumentDBAdminUsername         = "documentdb"
 	DocumentDBAdminAuthSecretSuffix = "admin-auth"
 
 	DefaultDocumentDBDatabase = "sampledb"
