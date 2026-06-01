@@ -21,7 +21,6 @@ import (
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1"
 
-	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	cu "kmodules.xyz/client-go/client"
@@ -79,8 +78,9 @@ func ensureCiliumHealthCheckerPolicy(kbClient client.Client, dbNs string) error 
 				"fromEndpoints": []interface{}{
 					map[string]interface{}{
 						"matchLabels": map[string]interface{}{
-							"k8s:" + corev1.LabelMetadataName:   meta_util.PodNamespace(),
-							"k8s:" + meta_util.InstanceLabelKey: "kubedb",
+							//"k8s:" + corev1.LabelMetadataName:   meta_util.PodNamespace(),
+							"k8s:io.kubernetes.pod.namespace":   meta_util.PodNamespace(),
+							"k8s:" + meta_util.InstanceLabelKey: "kubedb-provisioner",
 						},
 					},
 				},
@@ -100,7 +100,7 @@ func ensureCiliumDBInternalPolicy(kbClient client.Client, dbNs string) error {
 				"fromEndpoints": []interface{}{
 					map[string]interface{}{
 						"matchLabels": map[string]interface{}{
-							"k8s:" + corev1.LabelMetadataName: dbNs,
+							"k8s:io.kubernetes.pod.namespace": dbNs,
 						},
 					},
 				},
@@ -112,7 +112,7 @@ func ensureCiliumDBInternalPolicy(kbClient client.Client, dbNs string) error {
 				"toEndpoints": []interface{}{
 					map[string]interface{}{
 						"matchLabels": map[string]interface{}{
-							"k8s:" + corev1.LabelMetadataName: dbNs,
+							"k8s:io.kubernetes.pod.namespace": dbNs,
 						},
 					},
 				},
@@ -120,6 +120,33 @@ func ensureCiliumDBInternalPolicy(kbClient client.Client, dbNs string) error {
 			// World egress (image pulls, telemetry, etc).
 			map[string]interface{}{
 				"toEntities": []interface{}{"world"},
+			},
+			// DNS egress to kube-dns so pods can resolve cluster-internal names.
+			// Cilium uses k8s:io.kubernetes.pod.namespace (not k8s:kubernetes.io/metadata.name)
+			// as the namespace label in pod identities.
+			map[string]interface{}{
+				"toEndpoints": []interface{}{
+					map[string]interface{}{
+						"matchLabels": map[string]interface{}{
+							"k8s:io.kubernetes.pod.namespace": "kube-system",
+							"k8s:k8s-app":                     "kube-dns",
+						},
+					},
+				},
+				"toPorts": []interface{}{
+					map[string]interface{}{
+						"ports": []interface{}{
+							map[string]interface{}{
+								"port":     "53",
+								"protocol": "UDP",
+							},
+							map[string]interface{}{
+								"port":     "53",
+								"protocol": "TCP",
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -156,7 +183,7 @@ func ensureCiliumBackupPolicy(kbClient client.Client, dbNs string) error {
 				"toEndpoints": []interface{}{
 					map[string]interface{}{
 						"matchLabels": map[string]interface{}{
-							"k8s:" + corev1.LabelMetadataName: dbNs,
+							"k8s:io.kubernetes.pod.namespace": dbNs,
 						},
 					},
 				},
