@@ -29,6 +29,7 @@ import (
 
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -142,6 +143,10 @@ func (w *HanaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.HanaD
 		if err := w.validateHanaDBRotateAuthenticationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"), req.Name, err.Error()))
 		}
+	case opsapi.HanaDBOpsRequestTypeStorageMigration:
+		if err := w.validateHanaDBStorageMigrationOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"), req.Name, err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
@@ -185,6 +190,40 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBVolumeExpansionOpsRequest(
 
 	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.HanaDB, req.Status.Phase, "HanaDB"); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBStorageMigrationOpsRequest(db *olddbapi.HanaDB, req *opsapi.HanaDBOpsRequest) error {
+	migrationSpec := req.Spec.Migration
+	if migrationSpec == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
+	if migrationSpec.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for Storage Migration ops request, adjust timeout according to the size of your database")
+	}
+	if db.Spec.Storage == nil || db.Spec.Storage.StorageClassName == nil {
+		return nil
+	}
+
+	var newStorage, oldStorage storagev1.StorageClass
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *migrationSpec.StorageClassName}, &newStorage); err != nil {
+		if apierrors.IsNotFound(err) {
+			return fmt.Errorf("storage class %s not found: %w", *migrationSpec.StorageClassName, err)
+		}
+		return err
+	}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *db.Spec.Storage.StorageClassName}, &oldStorage); err != nil {
+		return err
+	}
+	if oldStorage.VolumeBindingMode != nil && *oldStorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if newStorage.VolumeBindingMode == nil || *newStorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return fmt.Errorf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newStorage.Name)
+		}
 	}
 
 	return nil
