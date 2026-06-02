@@ -54,7 +54,7 @@ func ensureCiliumPolicies(kbClient client.Client, dbNs string) error {
 // ensureCiliumNetworkPolicy upserts a CiliumNetworkPolicy with the given name,
 // namespace, and spec. The spec is provided as a plain Go map matching the
 // cilium.io/v2 CRD schema; using unstructured avoids vendoring cilium.
-func ensureCiliumNetworkPolicy(kbClient client.Client, namespace, name string, spec map[string]interface{}) error {
+func ensureCiliumNetworkPolicy(kbClient client.Client, namespace, name string, spec map[string]any) error {
 	u := &unstructured.Unstructured{}
 	u.SetGroupVersionKind(ciliumNetworkPolicyGVK)
 	u.SetName(name)
@@ -69,15 +69,15 @@ func ensureCiliumNetworkPolicy(kbClient client.Client, namespace, name string, s
 }
 
 func ensureCiliumHealthCheckerPolicy(kbClient client.Client, dbNs string) error {
-	spec := map[string]interface{}{
-		"endpointSelector": map[string]interface{}{
+	spec := map[string]any{
+		"endpointSelector": map[string]any{
 			"matchLabels": stringMapToInterface(api.GetSelectorForNetworkPolicy()),
 		},
-		"ingress": []interface{}{
-			map[string]interface{}{
-				"fromEndpoints": []interface{}{
-					map[string]interface{}{
-						"matchLabels": map[string]interface{}{
+		"ingress": []any{
+			map[string]any{
+				"fromEndpoints": []any{
+					map[string]any{
+						"matchLabels": map[string]any{
 							//"k8s:" + corev1.LabelMetadataName:   meta_util.PodNamespace(),
 							"k8s:io.kubernetes.pod.namespace":   meta_util.PodNamespace(),
 							"k8s:" + meta_util.InstanceLabelKey: "kubedb-provisioner",
@@ -91,56 +91,56 @@ func ensureCiliumHealthCheckerPolicy(kbClient client.Client, dbNs string) error 
 }
 
 func ensureCiliumDBInternalPolicy(kbClient client.Client, dbNs string) error {
-	spec := map[string]interface{}{
-		"endpointSelector": map[string]interface{}{
+	spec := map[string]any{
+		"endpointSelector": map[string]any{
 			"matchLabels": stringMapToInterface(api.GetSelectorForNetworkPolicy()),
 		},
-		"ingress": []interface{}{
-			map[string]interface{}{
-				"fromEndpoints": []interface{}{
-					map[string]interface{}{
-						"matchLabels": map[string]interface{}{
+		"ingress": []any{
+			map[string]any{
+				"fromEndpoints": []any{
+					map[string]any{
+						"matchLabels": map[string]any{
 							"k8s:io.kubernetes.pod.namespace": dbNs,
 						},
 					},
 				},
 			},
 		},
-		"egress": []interface{}{
+		"egress": []any{
 			// Intra-namespace egress to peer DB pods (replication, gossip, etc).
-			map[string]interface{}{
-				"toEndpoints": []interface{}{
-					map[string]interface{}{
-						"matchLabels": map[string]interface{}{
+			map[string]any{
+				"toEndpoints": []any{
+					map[string]any{
+						"matchLabels": map[string]any{
 							"k8s:io.kubernetes.pod.namespace": dbNs,
 						},
 					},
 				},
 			},
 			// World egress (image pulls, telemetry, etc).
-			map[string]interface{}{
-				"toEntities": []interface{}{"world"},
+			map[string]any{
+				"toEntities": []any{"world"},
 			},
 			// DNS egress to kube-dns so pods can resolve cluster-internal names.
 			// Cilium uses k8s:io.kubernetes.pod.namespace (not k8s:kubernetes.io/metadata.name)
 			// as the namespace label in pod identities.
-			map[string]interface{}{
-				"toEndpoints": []interface{}{
-					map[string]interface{}{
-						"matchLabels": map[string]interface{}{
+			map[string]any{
+				"toEndpoints": []any{
+					map[string]any{
+						"matchLabels": map[string]any{
 							"k8s:io.kubernetes.pod.namespace": "kube-system",
 							"k8s:k8s-app":                     "kube-dns",
 						},
 					},
 				},
-				"toPorts": []interface{}{
-					map[string]interface{}{
-						"ports": []interface{}{
-							map[string]interface{}{
+				"toPorts": []any{
+					map[string]any{
+						"ports": []any{
+							map[string]any{
 								"port":     "53",
 								"protocol": "UDP",
 							},
-							map[string]interface{}{
+							map[string]any{
 								"port":     "53",
 								"protocol": "TCP",
 							},
@@ -157,13 +157,13 @@ func ensureCiliumDBInternalPolicy(kbClient client.Client, dbNs string) error {
 // Cluster databases (>1 replica) need this for leader election and operator
 // SDK interactions; standalone DBs are unaffected by its presence.
 func ensureCiliumKubeAPIPolicy(kbClient client.Client, dbNs string) error {
-	spec := map[string]interface{}{
-		"endpointSelector": map[string]interface{}{
+	spec := map[string]any{
+		"endpointSelector": map[string]any{
 			"matchLabels": stringMapToInterface(api.GetSelectorForNetworkPolicy()),
 		},
-		"egress": []interface{}{
-			map[string]interface{}{
-				"toEntities": []interface{}{"kube-apiserver"},
+		"egress": []any{
+			map[string]any{
+				"toEntities": []any{"kube-apiserver"},
 			},
 		},
 	}
@@ -171,34 +171,34 @@ func ensureCiliumKubeAPIPolicy(kbClient client.Client, dbNs string) error {
 }
 
 func ensureCiliumBackupPolicy(kbClient client.Client, dbNs string) error {
-	spec := map[string]interface{}{
-		"endpointSelector": map[string]interface{}{
-			"matchLabels": map[string]interface{}{
+	spec := map[string]any{
+		"endpointSelector": map[string]any{
+			"matchLabels": map[string]any{
 				"k8s:" + meta_util.ManagedByLabelKey: kubestashapi.KubeStashKey,
 			},
 		},
-		"egress": []interface{}{
+		"egress": []any{
 			// Reach the DB pods in this namespace.
-			map[string]interface{}{
-				"toEndpoints": []interface{}{
-					map[string]interface{}{
-						"matchLabels": map[string]interface{}{
+			map[string]any{
+				"toEndpoints": []any{
+					map[string]any{
+						"matchLabels": map[string]any{
 							"k8s:io.kubernetes.pod.namespace": dbNs,
 						},
 					},
 				},
 			},
 			// Reach object storage / external endpoints.
-			map[string]interface{}{
-				"toEntities": []interface{}{"world"},
+			map[string]any{
+				"toEntities": []any{"world"},
 			},
 		},
 	}
 	return ensureCiliumNetworkPolicy(kbClient, dbNs, NetworkPolicyNameDBBackup, spec)
 }
 
-func stringMapToInterface(in map[string]string) map[string]interface{} {
-	out := make(map[string]interface{}, len(in))
+func stringMapToInterface(in map[string]string) map[string]any {
+	out := make(map[string]any, len(in))
 	for k, v := range in {
 		out[k] = v
 	}
