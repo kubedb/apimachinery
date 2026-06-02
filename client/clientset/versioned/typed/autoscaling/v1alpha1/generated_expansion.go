@@ -22,6 +22,8 @@ type CassandraAutoscalerExpansion interface{}
 
 type ClickHouseAutoscalerExpansion interface{}
 
+type DocumentDBAutoscalerExpansion interface{}
+
 type DruidAutoscalerExpansion interface{}
 
 type ElasticsearchAutoscalerExpansion interface{}
@@ -29,6 +31,8 @@ type ElasticsearchAutoscalerExpansion interface{}
 type EtcdAutoscalerExpansion interface{}
 
 type FerretDBAutoscalerExpansion interface{}
+
+type HanaDBAutoscalerExpansion interface{}
 
 type HazelcastAutoscalerExpansion interface{}
 
@@ -42,9 +46,13 @@ type MariaDBAutoscalerExpansion interface{}
 
 type MemcachedAutoscalerExpansion interface{}
 
+type MilvusAutoscalerExpansion interface{}
+
 type MongoDBAutoscalerExpansion interface{}
 
 type MySQLAutoscalerExpansion interface{}
+
+type Neo4jAutoscalerExpansion interface{}
 
 type OracleAutoscalerExpansion interface{}
 
@@ -58,6 +66,8 @@ type PostgresAutoscalerExpansion interface{}
 
 type ProxySQLAutoscalerExpansion interface{}
 
+type QdrantAutoscalerExpansion interface{}
+
 type RabbitMQAutoscalerExpansion interface{}
 
 type RedisAutoscalerExpansion interface{}
@@ -67,5 +77,7 @@ type RedisSentinelAutoscalerExpansion interface{}
 type SinglestoreAutoscalerExpansion interface{}
 
 type SolrAutoscalerExpansion interface{}
+
+type WeaviateAutoscalerExpansion interface{}
 
 type ZooKeeperAutoscalerExpansion interface{}

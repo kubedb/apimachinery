@@ -117,12 +117,33 @@ spec:
                 type: integer
               migration:
                 properties:
-                  oldPVReclaimPolicy:
-                    type: string
-                  storageClassName:
-                    type: string
-                required:
-                - storageClassName
+                  broker:
+                    properties:
+                      oldPVReclaimPolicy:
+                        type: string
+                      storageClassName:
+                        type: string
+                    required:
+                    - storageClassName
+                    type: object
+                  controller:
+                    properties:
+                      oldPVReclaimPolicy:
+                        type: string
+                      storageClassName:
+                        type: string
+                    required:
+                    - storageClassName
+                    type: object
+                  node:
+                    properties:
+                      oldPVReclaimPolicy:
+                        type: string
+                      storageClassName:
+                        type: string
+                    required:
+                    - storageClassName
+                    type: object
                 type: object
               restart:
                 type: object

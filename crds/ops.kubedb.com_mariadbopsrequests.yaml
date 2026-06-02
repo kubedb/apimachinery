@@ -113,6 +113,8 @@ spec:
                 type: integer
               migration:
                 properties:
+                  maxscale:
+                    type: boolean
                   oldPVReclaimPolicy:
                     type: string
                   storageClassName:
@@ -233,7 +235,6 @@ spec:
                 type: object
               type:
                 enum:
-                - Upgrade
                 - UpdateVersion
                 - HorizontalScaling
                 - VerticalScaling

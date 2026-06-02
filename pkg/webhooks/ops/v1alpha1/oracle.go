@@ -135,6 +135,12 @@ func (w *OracleOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Oracl
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.OracleOpsRequestTypeStorageMigration:
+		if err := w.validateOracleStorageMigrationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.OracleOpsRequestTypeRestart:
 
 	}

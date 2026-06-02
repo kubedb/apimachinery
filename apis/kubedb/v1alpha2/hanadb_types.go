@@ -139,8 +139,9 @@ type HanaDBSpec struct {
 	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
-	// TLS contains externally managed TLS secrets used by KubeDB clients and optional
-	// SAP HANA server-side material mounted into the database pod.
+	// TLS configures certificates issued from spec.tls.issuerRef for SAP HANA
+	// server-side TLS, KubeDB client connections, and metrics exporter TLS.
+	// When TLS is specified, issuerRef must be set.
 	// +optional
 	TLS *HanaDBTLSConfig `json:"tls,omitempty"`
 

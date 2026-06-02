@@ -79,9 +79,6 @@ func (w *HanaDBOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldO
 	if err := validateHanaDBOpsRequest(req, oldReq); err != nil {
 		return nil, err
 	}
-	if err := w.validateCreateOrUpdate(req); err != nil {
-		return nil, err
-	}
 	if isOpsReqCompleted(req.Status.Phase) && !isOpsReqCompleted(oldReq.Status.Phase) { // just completed
 		var db olddbapi.HanaDB
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}, &db)

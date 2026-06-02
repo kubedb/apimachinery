@@ -76,12 +76,12 @@ func (w *MariaDBAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Mari
 
 func (w *MariaDBAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.MariaDBAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.MariaDBOpsRequestOptions{}
-	}
-	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
-	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.MariaDBOpsRequestOptions{
+			OpsRequestOptions: autoscalingapi.OpsRequestOptions{
+				Apply:      opsapi.ApplyOptionIfReady,
+				MaxRetries: 1,
+			},
+		}
 	}
 }
 

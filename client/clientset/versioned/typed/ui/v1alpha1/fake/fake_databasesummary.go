@@ -27,21 +27,21 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-// FakeDatabaseInfos implements DatabaseInfoInterface
-type FakeDatabaseInfos struct {
+// FakeDatabaseSummaries implements DatabaseSummaryInterface
+type FakeDatabaseSummaries struct {
 	Fake *FakeUiV1alpha1
 }
 
-var databaseinfosResource = v1alpha1.SchemeGroupVersion.WithResource("databaseinfos")
+var databasesummariesResource = v1alpha1.SchemeGroupVersion.WithResource("databasesummaries")
 
-var databaseinfosKind = v1alpha1.SchemeGroupVersion.WithKind("DatabaseInfo")
+var databasesummariesKind = v1alpha1.SchemeGroupVersion.WithKind("DatabaseSummary")
 
-// Create takes the representation of a databaseInfo and creates it.  Returns the server's representation of the databaseInfo, and an error, if there is any.
-func (c *FakeDatabaseInfos) Create(ctx context.Context, databaseInfo *v1alpha1.DatabaseInfo, opts v1.CreateOptions) (result *v1alpha1.DatabaseInfo, err error) {
+// Create takes the representation of a databaseSummary and creates it.  Returns the server's representation of the databaseSummary, and an error, if there is any.
+func (c *FakeDatabaseSummaries) Create(ctx context.Context, databaseSummary *v1alpha1.DatabaseSummary, opts v1.CreateOptions) (result *v1alpha1.DatabaseSummary, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(databaseinfosResource, databaseInfo), &v1alpha1.DatabaseInfo{})
+		Invokes(testing.NewRootCreateAction(databasesummariesResource, databaseSummary), &v1alpha1.DatabaseSummary{})
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*v1alpha1.DatabaseInfo), err
+	return obj.(*v1alpha1.DatabaseSummary), err
 }

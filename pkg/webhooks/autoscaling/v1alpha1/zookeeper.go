@@ -66,9 +66,6 @@ func (w *ZooKeeperAutoscalerCustomWebhook) Default(ctx context.Context, obj runt
 func (w *ZooKeeperAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.ZooKeeperAutoscaler) {
 	w.setOpsReqOptsDefaults(scaler)
 
-	if scaler.Spec.Storage != nil {
-		setDefaultStorageValues(scaler.Spec.Storage.ZooKeeper)
-	}
 	if scaler.Spec.Compute != nil {
 		setDefaultComputeValues(scaler.Spec.Compute.ZooKeeper)
 	}
@@ -76,12 +73,10 @@ func (w *ZooKeeperAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Zo
 
 func (w *ZooKeeperAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.ZooKeeperAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.ZooKeeperOpsRequestOptions{}
-	}
-	// Timeout is defaulted to 600s w ops-manager retries.go (to retry 120 times with 5sec pause between each)
-	// OplogMaxLagSeconds & ObjectsCountDiffPercentage are defaults to 0
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{
+			Apply:      opsapi.ApplyOptionIfReady,
+			MaxRetries: 1,
+		}
 	}
 }
 
