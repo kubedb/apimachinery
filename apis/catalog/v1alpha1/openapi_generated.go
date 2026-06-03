@@ -604,8 +604,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase":                           schema_apimachinery_apis_catalog_v1alpha1_DB2VersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionList":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionSpec":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DcdbInitContainer":                            schema_apimachinery_apis_catalog_v1alpha1_DcdbInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBCoordinator":                        schema_apimachinery_apis_catalog_v1alpha1_DocumentDBCoordinator(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBInitContainer":                      schema_apimachinery_apis_catalog_v1alpha1_DocumentDBInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersion":                            schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionList(ref),
@@ -34501,7 +34501,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref common.Referen
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_DcdbInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -34521,7 +34521,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DcdbInitContainer(ref common.Refe
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -34691,7 +34691,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionSpec(ref common.
 						SchemaProps: spec.SchemaProps{
 							Description: "Init container image",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DcdbInitContainer"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBInitContainer"),
 						},
 					},
 					"deprecated": {
@@ -34740,7 +34740,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DcdbInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 

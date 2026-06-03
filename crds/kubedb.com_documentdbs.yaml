@@ -3399,6 +3399,24 @@ spec:
               replicas:
                 format: int32
                 type: integer
+              replication:
+                properties:
+                  forceFailoverAcceptingDataLossAfter:
+                    type: string
+                  maxSlotWALKeepSize:
+                    format: int32
+                    type: integer
+                  walKeepSegment:
+                    format: int32
+                    type: integer
+                  walKeepSize:
+                    format: int32
+                    type: integer
+                  walLimitPolicy:
+                    type: string
+                required:
+                - walLimitPolicy
+                type: object
               serviceTemplates:
                 items:
                   properties:

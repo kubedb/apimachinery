@@ -200,6 +200,27 @@ func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alp
 
 	d.SetDefaultPodSecurityContext(d.Spec.PodTemplate, &documentDBVersion)
 	d.SetDocumentDBContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
+	d.SetDefaultReplicationMode()
+}
+
+// SetDefaultReplicationMode sets the default replication mode.
+// WALKeepSize will be the default policy for DocumentDB.
+func (d *DocumentDB) SetDefaultReplicationMode() {
+	if d.Spec.Replication == nil {
+		d.Spec.Replication = &DocumentDBReplication{}
+	}
+	if d.Spec.Replication.WALLimitPolicy == "" {
+		d.Spec.Replication.WALLimitPolicy = WALKeepSize
+	}
+	if d.Spec.Replication.WALLimitPolicy == WALKeepSegment && d.Spec.Replication.WalKeepSegment == nil {
+		d.Spec.Replication.WalKeepSegment = pointer.Int32P(96)
+	}
+	if d.Spec.Replication.WALLimitPolicy == WALKeepSize && d.Spec.Replication.WalKeepSizeInMegaBytes == nil {
+		d.Spec.Replication.WalKeepSizeInMegaBytes = pointer.Int32P(1536)
+	}
+	if d.Spec.Replication.WALLimitPolicy == ReplicationSlot && d.Spec.Replication.MaxSlotWALKeepSizeInMegaBytes == nil {
+		d.Spec.Replication.MaxSlotWALKeepSizeInMegaBytes = pointer.Int32P(-1)
+	}
 }
 
 func (d *DocumentDB) SetDefaultPodSecurityContext(podTemplate *ofstv2.PodTemplateSpec, documentDBVersion *catalogv1alpha1.DocumentDBVersion) {

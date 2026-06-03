@@ -229,10 +229,10 @@ func (w *DocumentDBCustomWebhook) validateDocumentDBVersion(db *olddbapi.Documen
 	return nil
 }
 
-func (w *DocumentDBCustomWebhook) validateSpecForDB(postgres *olddbapi.DocumentDB) error {
+func (w *DocumentDBCustomWebhook) validateSpecForDB(documentdb *olddbapi.DocumentDB) error {
 	// validate leader election configs
 	// ==============> start
-	lec := postgres.Spec.LeaderElection
+	lec := documentdb.Spec.LeaderElection
 	if lec != nil {
 		if lec.ElectionTick <= lec.HeartbeatTick {
 			return fmt.Errorf("ElectionTick must be greater than HeartbeatTick")

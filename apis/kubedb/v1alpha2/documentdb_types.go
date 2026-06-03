@@ -111,6 +111,9 @@ type DocumentDBSpec struct {
 	LeaderElection *DocumentDBLeaderElectionConfig `json:"leaderElection,omitempty"`
 
 	// +optional
+	Replication *DocumentDBReplication `json:"replication,omitempty"`
+
+	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// AdminAuthSecret specifies the admin auth secret for "default_user"
@@ -146,6 +149,25 @@ type DocumentDBStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+}
+
+type DocumentDBReplication struct {
+	// WALimitPolicy defines which WAL retention policy to use.
+	WALLimitPolicy WALLimitPolicy `json:"walLimitPolicy"`
+
+	// +optional
+	WalKeepSizeInMegaBytes *int32 `json:"walKeepSize,omitempty"`
+	// +optional
+	WalKeepSegment *int32 `json:"walKeepSegment,omitempty"`
+	// +optional
+	MaxSlotWALKeepSizeInMegaBytes *int32 `json:"maxSlotWALKeepSize,omitempty"`
+
+	// ForceFailoverAcceptingDataLossAfter is the maximum time to wait before running a force failover process
+	// This is helpful for a scenario where the old primary is not available and it has the most updated wal lsn
+	// Doing force failover may or may not end up loosing data depending on any wrtie transaction
+	// in the range lagged lsn between the new primary and the old primary
+	// +optional
+	ForceFailoverAcceptingDataLossAfter *metav1.Duration `json:"forceFailoverAcceptingDataLossAfter,omitempty"`
 }
 
 type DocumentDBLeaderElectionConfig struct {
