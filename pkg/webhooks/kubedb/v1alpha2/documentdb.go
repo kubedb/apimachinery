@@ -186,13 +186,6 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 			`'spec.adminAuthSecret.name' need to specify when admin auth secret is externally managed`))
 	}
 
-	// Termination policy related
-	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyHalt {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
-			db.Name,
-			`'spec.terminationPolicy' value 'Halt' is not supported yet for DocumentDB`))
-	}
-
 	// leaderElection related
 	if db.Spec.LeaderElection != nil {
 		err := w.validateSpecForDB(db)
