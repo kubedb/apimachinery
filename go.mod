@@ -19,7 +19,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.87.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.87.1
-	go.bytebuilders.dev/audit v0.0.51
+	go.bytebuilders.dev/audit v0.0.52
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	go.etcd.io/etcd/client/pkg/v3 v3.6.4
 	go.etcd.io/etcd/raft/v3 v3.5.27
