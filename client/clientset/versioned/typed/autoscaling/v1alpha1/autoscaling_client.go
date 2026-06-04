@@ -35,7 +35,6 @@ type AutoscalingV1alpha1Interface interface {
 	DruidAutoscalersGetter
 	ElasticsearchAutoscalersGetter
 	EtcdAutoscalersGetter
-	FerretDBAutoscalersGetter
 	HanaDBAutoscalersGetter
 	HazelcastAutoscalersGetter
 	IgniteAutoscalersGetter
@@ -90,10 +89,6 @@ func (c *AutoscalingV1alpha1Client) ElasticsearchAutoscalers(namespace string) E
 
 func (c *AutoscalingV1alpha1Client) EtcdAutoscalers(namespace string) EtcdAutoscalerInterface {
 	return newEtcdAutoscalers(c, namespace)
-}
-
-func (c *AutoscalingV1alpha1Client) FerretDBAutoscalers(namespace string) FerretDBAutoscalerInterface {
-	return newFerretDBAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) HanaDBAutoscalers(namespace string) HanaDBAutoscalerInterface {

@@ -30,8 +30,6 @@ type ElasticsearchOpsRequestExpansion interface{}
 
 type EtcdOpsRequestExpansion interface{}
 
-type FerretDBOpsRequestExpansion interface{}
-
 type HanaDBOpsRequestExpansion interface{}
 
 type HazelcastOpsRequestExpansion interface{}

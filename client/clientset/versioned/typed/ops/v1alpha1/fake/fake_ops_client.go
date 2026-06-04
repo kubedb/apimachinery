@@ -53,10 +53,6 @@ func (c *FakeOpsV1alpha1) EtcdOpsRequests(namespace string) v1alpha1.EtcdOpsRequ
 	return &FakeEtcdOpsRequests{c, namespace}
 }
 
-func (c *FakeOpsV1alpha1) FerretDBOpsRequests(namespace string) v1alpha1.FerretDBOpsRequestInterface {
-	return &FakeFerretDBOpsRequests{c, namespace}
-}
-
 func (c *FakeOpsV1alpha1) HanaDBOpsRequests(namespace string) v1alpha1.HanaDBOpsRequestInterface {
 	return &FakeHanaDBOpsRequests{c, namespace}
 }
