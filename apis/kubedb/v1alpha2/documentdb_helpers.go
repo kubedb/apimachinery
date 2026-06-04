@@ -29,7 +29,6 @@ import (
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
-	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
 	"kmodules.xyz/client-go/apiextensions"
@@ -74,8 +73,8 @@ func (d *DocumentDB) GoverningServiceName() string {
 }
 
 // Owner returns owner reference to resources
-func (d *DocumentDB) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
+func (d *DocumentDB) Owner() *metav1.OwnerReference {
+	return metav1.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
 }
 
 func (d *DocumentDB) ResourceKind() string {
