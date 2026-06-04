@@ -18,11 +18,12 @@ import (
 	"bytes"
 	"encoding/gob"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"sync"
 
-	"go.etcd.io/etcd/raft/v3/raftpb"
 	"go.etcd.io/etcd/server/v3/etcdserver/api/snap"
+	"go.etcd.io/raft/v3/raftpb"
 	"k8s.io/klog/v2"
 )
 
@@ -92,7 +93,7 @@ func (s *Kvstore) readCommits(commitC <-chan *Commit, errorC <-chan error) {
 			var dataKv kv
 			dec := gob.NewDecoder(bytes.NewBufferString(data))
 			if err := dec.Decode(&dataKv); err != nil {
-				klog.Fatalf("raftexample: could not decode message (%v)", err)
+				klog.Fatalln("raftexample: could not decode message", err.Error())
 			}
 			s.mu.Lock()
 			s.kvStore[dataKv.Key] = dataKv.Val
@@ -113,7 +114,7 @@ func (s *Kvstore) GetSnapshot() ([]byte, error) {
 
 func (s *Kvstore) loadSnapshot() (*raftpb.Snapshot, error) {
 	snapshot, err := s.snapshotter.Load()
-	if err == snap.ErrNoSnapshot {
+	if errors.Is(err, snap.ErrNoSnapshot) {
 		return nil, nil
 	}
 	return snapshot, err

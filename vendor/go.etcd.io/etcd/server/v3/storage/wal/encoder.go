@@ -24,7 +24,7 @@ import (
 
 	"go.etcd.io/etcd/pkg/v3/crc"
 	"go.etcd.io/etcd/pkg/v3/ioutil"
-	"go.etcd.io/etcd/server/v3/wal/walpb"
+	"go.etcd.io/etcd/server/v3/storage/wal/walpb"
 )
 
 // walPageBytes is the alignment for flushing records to the backing Writer.
@@ -102,10 +102,8 @@ func encodeFrameSize(dataBytes int) (lenField uint64, padBytes int) {
 
 func (e *encoder) flush() error {
 	e.mu.Lock()
-	n, err := e.bw.FlushN()
-	e.mu.Unlock()
-	walWriteBytes.Add(float64(n))
-	return err
+	defer e.mu.Unlock()
+	return e.bw.Flush()
 }
 
 func prepareDataWithPadding(data []byte) ([]byte, uint64) {

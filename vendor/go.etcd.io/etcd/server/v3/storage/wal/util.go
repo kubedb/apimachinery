@@ -19,9 +19,9 @@ import (
 	"fmt"
 	"strings"
 
-	"go.etcd.io/etcd/client/pkg/v3/fileutil"
-
 	"go.uber.org/zap"
+
+	"go.etcd.io/etcd/client/pkg/v3/fileutil"
 )
 
 var errBadWALName = errors.New("bad wal name")
@@ -72,16 +72,16 @@ func isValidSeq(lg *zap.Logger, names []string) bool {
 func readWALNames(lg *zap.Logger, dirpath string) ([]string, error) {
 	names, err := fileutil.ReadDir(dirpath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("[readWALNames] fileutil.ReadDir failed: %w", err)
 	}
-	wnames := checkWalNames(lg, names)
+	wnames := checkWALNames(lg, names)
 	if len(wnames) == 0 {
 		return nil, ErrFileNotFound
 	}
 	return wnames, nil
 }
 
-func checkWalNames(lg *zap.Logger, names []string) []string {
+func checkWALNames(lg *zap.Logger, names []string) []string {
 	wnames := make([]string, 0)
 	for _, name := range names {
 		if _, _, err := parseWALName(name); err != nil {

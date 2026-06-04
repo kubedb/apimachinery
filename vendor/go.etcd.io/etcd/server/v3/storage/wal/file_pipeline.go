@@ -19,9 +19,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"go.etcd.io/etcd/client/pkg/v3/fileutil"
-
 	"go.uber.org/zap"
+
+	"go.etcd.io/etcd/client/pkg/v3/fileutil"
 )
 
 // filePipeline pipelines allocating disk space
@@ -58,6 +58,7 @@ func newFilePipeline(lg *zap.Logger, dir string, fileSize int64) *filePipeline {
 
 // Open returns a fresh file for writing. Rename the file before calling
 // Open again or there will be file collisions.
+// it will 'block' if the tmp file lock is already taken.
 func (fp *filePipeline) Open() (f *fileutil.LockedFile, err error) {
 	select {
 	case f = <-fp.filec:
@@ -74,7 +75,7 @@ func (fp *filePipeline) Close() error {
 func (fp *filePipeline) alloc() (f *fileutil.LockedFile, err error) {
 	// count % 2 so this file isn't the same as the one last published
 	fpath := filepath.Join(fp.dir, fmt.Sprintf("%d.tmp", fp.count%2))
-	if f, err = fileutil.LockFile(fpath, os.O_CREATE|os.O_WRONLY, fileutil.PrivateFileMode); err != nil {
+	if f, err = createNewWALFile[*fileutil.LockedFile](fpath, false); err != nil {
 		return nil, err
 	}
 	if err = fileutil.Preallocate(f.File, fp.size, true); err != nil {
