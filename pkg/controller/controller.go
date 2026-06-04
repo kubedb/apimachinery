@@ -105,7 +105,11 @@ type Config struct {
 	MaxNumRequeues         int
 	NumThreads             int
 	NetworkPolicyEnabled   bool
-	ShardConfig            string
+	// NetworkPolicyFlavor selects which NetworkPolicy API the operator emits
+	// per DB namespace. Accepted values: "kubernetes" (default) or "cilium".
+	// Empty defaults to "kubernetes".
+	NetworkPolicyFlavor string
+	ShardConfig         string
 }
 
 type Initializers struct {
