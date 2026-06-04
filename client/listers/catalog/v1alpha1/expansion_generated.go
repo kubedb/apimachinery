@@ -50,10 +50,6 @@ type ElasticsearchVersionListerExpansion interface{}
 // EtcdVersionLister.
 type EtcdVersionListerExpansion interface{}
 
-// FerretDBVersionListerExpansion allows custom methods to be added to
-// FerretDBVersionLister.
-type FerretDBVersionListerExpansion interface{}
-
 // HanaDBVersionListerExpansion allows custom methods to be added to
 // HanaDBVersionLister.
 type HanaDBVersionListerExpansion interface{}

@@ -126,7 +126,7 @@ vendor/                        # `go mod vendor` is required (GOFLAGS=-mod=vendo
 
 ## Key Packages / APIs
 
-- `apis/kubedb/v1alpha2` - storage version for all 35 database kinds (Cassandra, ClickHouse, Druid, Elasticsearch, FerretDB, Kafka, MariaDB, MongoDB, MySQL, Postgres, Redis, etc.). Each database has `<db>_types.go` + `<db>_helpers.go`. `helpers.go` and per-DB helpers expose `SetDefaults`, `OffshootSelectors`, `StatefulSet*Name`, `ServiceName`, etc.
+- `apis/kubedb/v1alpha2` - storage version for all 35 database kinds (Cassandra, ClickHouse, Druid, Elasticsearch, Kafka, MariaDB, MongoDB, MySQL, Postgres, Redis, etc.). Each database has `<db>_types.go` + `<db>_helpers.go`. `helpers.go` and per-DB helpers expose `SetDefaults`, `OffshootSelectors`, `StatefulSet*Name`, `ServiceName`, etc.
 - `apis/kubedb/v1` - newer served version (subset of databases promoted to GA, e.g. `postgres_types.go`, `mongodb_types.go`, `mysql_types.go`, `elasticsearch_types.go`, `redis_types.go`, `kafka_types.go`, etc.). `conversion.go` and generated `zz_generated.conversion.go` bridge to `v1alpha2`.
 - `apis/kubedb/install/install.go` - registers both `v1` and `v1alpha2` and sets version priority (v1 over v1alpha2). Every API group has an analogous `install/` package.
 - `apis/kubedb/constants.go` - canonical constants (labels, annotations, container names, ports, sidekick names). Reused across operators.

@@ -64,8 +64,6 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&ElasticsearchAutoscalerList{},
 		&EtcdAutoscaler{},
 		&EtcdAutoscalerList{},
-		&FerretDBAutoscaler{},
-		&FerretDBAutoscalerList{},
 		&HanaDBAutoscaler{},
 		&HanaDBAutoscalerList{},
 		&HazelcastAutoscaler{},

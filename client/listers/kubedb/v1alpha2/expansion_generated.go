@@ -82,14 +82,6 @@ type EtcdListerExpansion interface{}
 // EtcdNamespaceLister.
 type EtcdNamespaceListerExpansion interface{}
 
-// FerretDBListerExpansion allows custom methods to be added to
-// FerretDBLister.
-type FerretDBListerExpansion interface{}
-
-// FerretDBNamespaceListerExpansion allows custom methods to be added to
-// FerretDBNamespaceLister.
-type FerretDBNamespaceListerExpansion interface{}
-
 // HanaDBListerExpansion allows custom methods to be added to
 // HanaDBLister.
 type HanaDBListerExpansion interface{}

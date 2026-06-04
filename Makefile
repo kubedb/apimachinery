@@ -193,7 +193,6 @@ crd_to_patch := kubedb.com_cassandras.yaml \
 								kubedb.com_druids.yaml \
 								kubedb.com_elasticsearches.yaml \
 								kubedb.com_etcds.yaml \
-								kubedb.com_ferretdbs.yaml \
 								kubedb.com_hanadbs.yaml \
 								kubedb.com_kafkas.yaml \
 								kubedb.com_mariadbs.yaml \
