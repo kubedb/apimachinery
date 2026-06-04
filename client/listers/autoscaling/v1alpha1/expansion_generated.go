@@ -66,14 +66,6 @@ type EtcdAutoscalerListerExpansion interface{}
 // EtcdAutoscalerNamespaceLister.
 type EtcdAutoscalerNamespaceListerExpansion interface{}
 
-// FerretDBAutoscalerListerExpansion allows custom methods to be added to
-// FerretDBAutoscalerLister.
-type FerretDBAutoscalerListerExpansion interface{}
-
-// FerretDBAutoscalerNamespaceListerExpansion allows custom methods to be added to
-// FerretDBAutoscalerNamespaceLister.
-type FerretDBAutoscalerNamespaceListerExpansion interface{}
-
 // HanaDBAutoscalerListerExpansion allows custom methods to be added to
 // HanaDBAutoscalerLister.
 type HanaDBAutoscalerListerExpansion interface{}
