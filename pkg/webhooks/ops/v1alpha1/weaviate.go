@@ -295,11 +295,12 @@ func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateStorageMigrationOpsReq
 	if err != nil {
 		return errors.Wrap(err, fmt.Sprintf("failed to get Weaviate: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
-
 	if req.Spec.Migration == nil {
+		return errors.New("spec.migration is required")
+	}
+	if req.Spec.Migration.StorageClassName == nil {
 		return errors.New("spec.migration.storageClassName is required")
 	}
-
 	if req.Spec.Timeout == nil {
 		// timeout is required for Storage Migration ops request because it's a long-running operation
 		// default timeout is len(pods) * 5 minute
