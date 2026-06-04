@@ -78,9 +78,8 @@ func ensureCiliumHealthCheckerPolicy(kbClient client.Client, dbNs string) error 
 				"fromEndpoints": []any{
 					map[string]any{
 						"matchLabels": map[string]any{
-							//"k8s:" + corev1.LabelMetadataName:   meta_util.PodNamespace(),
-							"k8s:io.kubernetes.pod.namespace":   meta_util.PodNamespace(),
-							"k8s:" + meta_util.InstanceLabelKey: "kubedb-provisioner",
+							"k8s:io.kubernetes.pod.namespace": meta_util.PodNamespace(),
+							"k8s:" + meta_util.NameLabelKey:   "kubedb-provisioner",
 						},
 					},
 				},
