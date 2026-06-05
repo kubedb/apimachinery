@@ -58,14 +58,6 @@ type ElasticsearchAutoscalerListerExpansion interface{}
 // ElasticsearchAutoscalerNamespaceLister.
 type ElasticsearchAutoscalerNamespaceListerExpansion interface{}
 
-// EtcdAutoscalerListerExpansion allows custom methods to be added to
-// EtcdAutoscalerLister.
-type EtcdAutoscalerListerExpansion interface{}
-
-// EtcdAutoscalerNamespaceListerExpansion allows custom methods to be added to
-// EtcdAutoscalerNamespaceLister.
-type EtcdAutoscalerNamespaceListerExpansion interface{}
-
 // HanaDBAutoscalerListerExpansion allows custom methods to be added to
 // HanaDBAutoscalerLister.
 type HanaDBAutoscalerListerExpansion interface{}
