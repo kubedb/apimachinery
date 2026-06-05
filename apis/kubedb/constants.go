@@ -79,7 +79,6 @@ const (
 	MongoDBKey       = "mongodb" + "." + GroupName
 	RedisKey         = "redis" + "." + GroupName
 	MemcachedKey     = "memcached" + "." + GroupName
-	EtcdKey          = "etcd" + "." + GroupName
 	ProxySQLKey      = "proxysql" + "." + GroupName
 
 	// Auth related constants
