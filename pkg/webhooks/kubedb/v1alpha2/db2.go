@@ -20,10 +20,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -191,6 +194,10 @@ func (w *DB2CustomWebhook) validateCreateOrUpdate(db *olddbapi.DB2) field.ErrorL
 		}
 	}
 
+	// Validate that the git-sync clone root path does not collide with any reserved mount path.
+	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), DB2ReservedVolumesMountPaths); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.Name, err.Error()))
+	}
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -212,11 +219,13 @@ func (w *DB2CustomWebhook) DB2ValidateVersion(db *olddbapi.DB2) error {
 var DB2ReservedVolumes = []string{
 	kubedb.DB2DataVolume,
 	kubedb.DB2VolumeScripts,
+	kubedb.GitSecretVolume,
 }
 
 var DB2ReservedVolumesMountPaths = []string{
 	kubedb.DB2DataDir,
 	kubedb.DB2VolumeMountScripts,
+	kubedb.GitSecretMountPath,
 }
 
 func DB2ValidateVolumes(podTemplate *ofst.PodTemplateSpec) error {

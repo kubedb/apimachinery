@@ -127,6 +127,7 @@ var reservedElasticsearchVolumes = []string{
 	kubedb.ElasticsearchVolumeSecureSettings,
 	kubedb.ElasticsearchVolumeCustomConfig,
 	kubedb.ElasticsearchVolumeTempConfig,
+	kubedb.GitSecretVolume,
 }
 
 var reservedElasticsearchMountPaths = []string{
@@ -136,6 +137,7 @@ var reservedElasticsearchMountPaths = []string{
 	kubedb.ElasticsearchOpenSearchConfigDir,
 	kubedb.ElasticsearchOpenSearchSecurityConfigDir,
 	kubedb.ElasticsearchOpendistroSecurityConfigDir,
+	kubedb.GitSecretMountPath,
 }
 
 var _ webhook.CustomValidator = &ElasticsearchCustomWebhook{}
@@ -566,5 +568,9 @@ func (w *ElasticsearchCustomWebhook) validateVolumeMountPaths(db *dbapi.Elastics
 		}
 	}
 
+	// Validate that the git-sync clone root path does not collide with any reserved mount path.
+	if gitErr := amv.ValidateGitInitRootPath(db.Spec.Init, rPaths); gitErr != nil {
+		err = appendError(err, gitErr)
+	}
 	return err
 }
