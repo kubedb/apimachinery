@@ -28,8 +28,6 @@ type Interface interface {
 	Druids() DruidInformer
 	// Elasticsearches returns a ElasticsearchInformer.
 	Elasticsearches() ElasticsearchInformer
-	// FerretDBs returns a FerretDBInformer.
-	FerretDBs() FerretDBInformer
 	// Kafkas returns a KafkaInformer.
 	Kafkas() KafkaInformer
 	// MSSQLServers returns a MSSQLServerInformer.
@@ -85,11 +83,6 @@ func (v *version) Druids() DruidInformer {
 // Elasticsearches returns a ElasticsearchInformer.
 func (v *version) Elasticsearches() ElasticsearchInformer {
 	return &elasticsearchInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// FerretDBs returns a FerretDBInformer.
-func (v *version) FerretDBs() FerretDBInformer {
-	return &ferretDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Kafkas returns a KafkaInformer.

@@ -29,9 +29,6 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 		func(s *v1alpha1.ElasticsearchOpsRequest, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.EtcdOpsRequest, c randfill.Continue) {
-			c.Fill(s) // fuzz self without calling this function again
-		},
 		func(s *v1alpha1.MariaDBOpsRequest, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},

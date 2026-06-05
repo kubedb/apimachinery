@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	kmapi "kmodules.xyz/client-go/api/v1"
 
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/version"
 )
@@ -31,11 +30,11 @@ const (
 )
 
 type ResourceSummarySpec struct {
-	Cluster       kmapi.ClusterMetadata     `json:"cluster,omitempty"`
-	APIType       kmapi.ResourceID          `json:"apiType"`
-	TotalResource core.ResourceRequirements `json:"totalResource,omitempty"`
-	AppResource   core.ResourceRequirements `json:"appResource,omitempty"`
-	Count         int                       `json:"count,omitempty"`
+	Cluster       kmapi.ClusterMetadata `json:"cluster,omitempty"`
+	APIType       kmapi.ResourceID      `json:"apiType"`
+	TotalResource ResourceRequirements  `json:"totalResource,omitempty"`
+	AppResource   ResourceRequirements  `json:"appResource,omitempty"`
+	Count         int                   `json:"count,omitempty"`
 }
 
 type KubernetesInfo struct {

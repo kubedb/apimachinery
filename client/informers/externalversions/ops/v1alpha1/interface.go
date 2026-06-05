@@ -34,10 +34,6 @@ type Interface interface {
 	DruidOpsRequests() DruidOpsRequestInformer
 	// ElasticsearchOpsRequests returns a ElasticsearchOpsRequestInformer.
 	ElasticsearchOpsRequests() ElasticsearchOpsRequestInformer
-	// EtcdOpsRequests returns a EtcdOpsRequestInformer.
-	EtcdOpsRequests() EtcdOpsRequestInformer
-	// FerretDBOpsRequests returns a FerretDBOpsRequestInformer.
-	FerretDBOpsRequests() FerretDBOpsRequestInformer
 	// HanaDBOpsRequests returns a HanaDBOpsRequestInformer.
 	HanaDBOpsRequests() HanaDBOpsRequestInformer
 	// HazelcastOpsRequests returns a HazelcastOpsRequestInformer.
@@ -124,16 +120,6 @@ func (v *version) DruidOpsRequests() DruidOpsRequestInformer {
 // ElasticsearchOpsRequests returns a ElasticsearchOpsRequestInformer.
 func (v *version) ElasticsearchOpsRequests() ElasticsearchOpsRequestInformer {
 	return &elasticsearchOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// EtcdOpsRequests returns a EtcdOpsRequestInformer.
-func (v *version) EtcdOpsRequests() EtcdOpsRequestInformer {
-	return &etcdOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// FerretDBOpsRequests returns a FerretDBOpsRequestInformer.
-func (v *version) FerretDBOpsRequests() FerretDBOpsRequestInformer {
-	return &ferretDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // HanaDBOpsRequests returns a HanaDBOpsRequestInformer.

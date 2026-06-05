@@ -29,12 +29,16 @@ type FakeUiV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeUiV1alpha1) DatabaseConfigurations() v1alpha1.DatabaseConfigurationInterface {
+	return &FakeDatabaseConfigurations{c}
+}
+
 func (c *FakeUiV1alpha1) DatabaseConnections(namespace string) v1alpha1.DatabaseConnectionInterface {
 	return &FakeDatabaseConnections{c, namespace}
 }
 
-func (c *FakeUiV1alpha1) DatabaseInfos() v1alpha1.DatabaseInfoInterface {
-	return &FakeDatabaseInfos{c}
+func (c *FakeUiV1alpha1) DatabaseSummaries() v1alpha1.DatabaseSummaryInterface {
+	return &FakeDatabaseSummaries{c}
 }
 
 func (c *FakeUiV1alpha1) ElasticsearchInsights(namespace string) v1alpha1.ElasticsearchInsightInterface {

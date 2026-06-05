@@ -396,6 +396,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ProjectList":                       schema_resource_metadata_apis_core_v1alpha1_ProjectList(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ProjectMonitoring":                 schema_resource_metadata_apis_core_v1alpha1_ProjectMonitoring(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ProjectSpec":                       schema_resource_metadata_apis_core_v1alpha1_ProjectSpec(ref),
+		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceRequirements":              schema_resource_metadata_apis_core_v1alpha1_ResourceRequirements(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceSummary":                   schema_resource_metadata_apis_core_v1alpha1_ResourceSummary(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceSummaryList":               schema_resource_metadata_apis_core_v1alpha1_ResourceSummaryList(ref),
 		"kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceSummarySpec":               schema_resource_metadata_apis_core_v1alpha1_ResourceSummarySpec(ref),
@@ -20587,13 +20588,13 @@ func schema_resource_metadata_apis_core_v1alpha1_GenericResourceSpec(ref common.
 					"totalResource": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.ResourceRequirements"),
+							Ref:     ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceRequirements"),
 						},
 					},
 					"appResource": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.ResourceRequirements"),
+							Ref:     ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceRequirements"),
 						},
 					},
 					"roleResourceLimits": {
@@ -20608,7 +20609,9 @@ func schema_resource_metadata_apis_core_v1alpha1_GenericResourceSpec(ref common.
 											Allows: true,
 											Schema: &spec.Schema{
 												SchemaProps: spec.SchemaProps{
-													Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+													Default: "",
+													Type:    []string{"string"},
+													Format:  "",
 												},
 											},
 										},
@@ -20629,7 +20632,9 @@ func schema_resource_metadata_apis_core_v1alpha1_GenericResourceSpec(ref common.
 											Allows: true,
 											Schema: &spec.Schema{
 												SchemaProps: spec.SchemaProps{
-													Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+													Default: "",
+													Type:    []string{"string"},
+													Format:  "",
 												},
 											},
 										},
@@ -20680,7 +20685,7 @@ func schema_resource_metadata_apis_core_v1alpha1_GenericResourceSpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/apimachinery/pkg/api/resource.Quantity", "kmodules.xyz/client-go/api/v1.ClusterMetadata", "kmodules.xyz/client-go/api/v1.ResourceID", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.ComputeResource", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.GenericResourceStatus", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.NamespaceInfo", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.StorageResource"},
+			"kmodules.xyz/client-go/api/v1.ClusterMetadata", "kmodules.xyz/client-go/api/v1.ResourceID", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.ComputeResource", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.GenericResourceStatus", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.NamespaceInfo", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceRequirements", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.StorageResource"},
 	}
 }
 
@@ -21126,6 +21131,48 @@ func schema_resource_metadata_apis_core_v1alpha1_ProjectSpec(ref common.Referenc
 	}
 }
 
+func schema_resource_metadata_apis_core_v1alpha1_ResourceRequirements(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"limits": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"requests": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_resource_metadata_apis_core_v1alpha1_ResourceSummary(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -21235,13 +21282,13 @@ func schema_resource_metadata_apis_core_v1alpha1_ResourceSummarySpec(ref common.
 					"totalResource": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.ResourceRequirements"),
+							Ref:     ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceRequirements"),
 						},
 					},
 					"appResource": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/api/core/v1.ResourceRequirements"),
+							Ref:     ref("kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceRequirements"),
 						},
 					},
 					"count": {
@@ -21255,7 +21302,7 @@ func schema_resource_metadata_apis_core_v1alpha1_ResourceSummarySpec(ref common.
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceRequirements", "kmodules.xyz/client-go/api/v1.ClusterMetadata", "kmodules.xyz/client-go/api/v1.ResourceID"},
+			"kmodules.xyz/client-go/api/v1.ClusterMetadata", "kmodules.xyz/client-go/api/v1.ResourceID", "kmodules.xyz/resource-metadata/apis/core/v1alpha1.ResourceRequirements"},
 	}
 }
 
@@ -21274,7 +21321,9 @@ func schema_resource_metadata_apis_core_v1alpha1_ResourceView(ref common.Referen
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
 									},
 								},
 							},
@@ -21288,7 +21337,9 @@ func schema_resource_metadata_apis_core_v1alpha1_ResourceView(ref common.Referen
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
 									},
 								},
 							},
@@ -21302,7 +21353,9 @@ func schema_resource_metadata_apis_core_v1alpha1_ResourceView(ref common.Referen
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
 									},
 								},
 							},
@@ -21311,8 +21364,6 @@ func schema_resource_metadata_apis_core_v1alpha1_ResourceView(ref common.Referen
 				},
 			},
 		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
 	}
 }
 
@@ -22152,6 +22203,14 @@ func schema_kmodulesxyz_resource_metadata_apis_shared_RegistryProxies(ref common
 					"appscode": {
 						SchemaProps: spec.SchemaProps{
 							Description: "r.appscode.com",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"oracle": {
+						SchemaProps: spec.SchemaProps{
+							Description: "container-registry.oracle.com",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",

@@ -49,14 +49,6 @@ func (c *FakeOpsV1alpha1) ElasticsearchOpsRequests(namespace string) v1alpha1.El
 	return &FakeElasticsearchOpsRequests{c, namespace}
 }
 
-func (c *FakeOpsV1alpha1) EtcdOpsRequests(namespace string) v1alpha1.EtcdOpsRequestInterface {
-	return &FakeEtcdOpsRequests{c, namespace}
-}
-
-func (c *FakeOpsV1alpha1) FerretDBOpsRequests(namespace string) v1alpha1.FerretDBOpsRequestInterface {
-	return &FakeFerretDBOpsRequests{c, namespace}
-}
-
 func (c *FakeOpsV1alpha1) HanaDBOpsRequests(namespace string) v1alpha1.HanaDBOpsRequestInterface {
 	return &FakeHanaDBOpsRequests{c, namespace}
 }
