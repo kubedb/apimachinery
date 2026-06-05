@@ -38,8 +38,6 @@ type Interface interface {
 	DruidVersions() DruidVersionInformer
 	// ElasticsearchVersions returns a ElasticsearchVersionInformer.
 	ElasticsearchVersions() ElasticsearchVersionInformer
-	// EtcdVersions returns a EtcdVersionInformer.
-	EtcdVersions() EtcdVersionInformer
 	// HanaDBVersions returns a HanaDBVersionInformer.
 	HanaDBVersions() HanaDBVersionInformer
 	// HazelcastVersions returns a HazelcastVersionInformer.
@@ -138,11 +136,6 @@ func (v *version) DruidVersions() DruidVersionInformer {
 // ElasticsearchVersions returns a ElasticsearchVersionInformer.
 func (v *version) ElasticsearchVersions() ElasticsearchVersionInformer {
 	return &elasticsearchVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
-}
-
-// EtcdVersions returns a EtcdVersionInformer.
-func (v *version) EtcdVersions() EtcdVersionInformer {
-	return &etcdVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // HanaDBVersions returns a HanaDBVersionInformer.
