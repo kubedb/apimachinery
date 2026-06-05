@@ -36,8 +36,6 @@ type Interface interface {
 	ElasticsearchAutoscalers() ElasticsearchAutoscalerInformer
 	// EtcdAutoscalers returns a EtcdAutoscalerInformer.
 	EtcdAutoscalers() EtcdAutoscalerInformer
-	// FerretDBAutoscalers returns a FerretDBAutoscalerInformer.
-	FerretDBAutoscalers() FerretDBAutoscalerInformer
 	// HanaDBAutoscalers returns a HanaDBAutoscalerInformer.
 	HanaDBAutoscalers() HanaDBAutoscalerInformer
 	// HazelcastAutoscalers returns a HazelcastAutoscalerInformer.
@@ -129,11 +127,6 @@ func (v *version) ElasticsearchAutoscalers() ElasticsearchAutoscalerInformer {
 // EtcdAutoscalers returns a EtcdAutoscalerInformer.
 func (v *version) EtcdAutoscalers() EtcdAutoscalerInformer {
 	return &etcdAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// FerretDBAutoscalers returns a FerretDBAutoscalerInformer.
-func (v *version) FerretDBAutoscalers() FerretDBAutoscalerInformer {
-	return &ferretDBAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // HanaDBAutoscalers returns a HanaDBAutoscalerInformer.

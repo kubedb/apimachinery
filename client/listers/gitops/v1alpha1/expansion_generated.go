@@ -34,14 +34,6 @@ type ElasticsearchListerExpansion interface{}
 // ElasticsearchNamespaceLister.
 type ElasticsearchNamespaceListerExpansion interface{}
 
-// FerretDBListerExpansion allows custom methods to be added to
-// FerretDBLister.
-type FerretDBListerExpansion interface{}
-
-// FerretDBNamespaceListerExpansion allows custom methods to be added to
-// FerretDBNamespaceLister.
-type FerretDBNamespaceListerExpansion interface{}
-
 // KafkaListerExpansion allows custom methods to be added to
 // KafkaLister.
 type KafkaListerExpansion interface{}

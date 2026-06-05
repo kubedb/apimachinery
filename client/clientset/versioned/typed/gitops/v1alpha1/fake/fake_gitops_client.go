@@ -37,10 +37,6 @@ func (c *FakeGitopsV1alpha1) Elasticsearches(namespace string) v1alpha1.Elastics
 	return &FakeElasticsearches{c, namespace}
 }
 
-func (c *FakeGitopsV1alpha1) FerretDBs(namespace string) v1alpha1.FerretDBInterface {
-	return &FakeFerretDBs{c, namespace}
-}
-
 func (c *FakeGitopsV1alpha1) Kafkas(namespace string) v1alpha1.KafkaInterface {
 	return &FakeKafkas{c, namespace}
 }

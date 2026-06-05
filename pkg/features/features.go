@@ -55,9 +55,6 @@ const (
 	// Enables Etcd operator.
 	// Etcd featuregate.Feature = "Etcd"
 
-	// Enables FerretDB operator.
-	FerretDB featuregate.Feature = "FerretDB"
-
 	// Enables Flink operator.
 	// Flink featuregate.Feature = "Flink"
 
@@ -167,7 +164,6 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	// Etcd:               {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
 	Druid:         {Default: false, PreRelease: featuregate.Alpha},
 	Elasticsearch: {Default: true, PreRelease: featuregate.GA},
-	FerretDB:      {Default: false, PreRelease: featuregate.Alpha},
 	Hazelcast:     {Default: true, PreRelease: featuregate.Alpha},
 	HanaDB:        {Default: false, PreRelease: featuregate.Alpha},
 	Ignite:        {Default: true, PreRelease: featuregate.Alpha},

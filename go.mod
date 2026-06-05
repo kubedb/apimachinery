@@ -7,7 +7,6 @@ require (
 	github.com/cert-manager/cert-manager v1.19.4
 	github.com/coreos/go-semver v0.3.1
 	github.com/evanphx/json-patch v5.9.11+incompatible
-	github.com/fatih/structs v1.1.0
 	github.com/go-logr/logr v1.4.3
 	github.com/go-logr/zapr v1.3.0
 	github.com/google/go-cmp v0.7.0
@@ -104,6 +103,7 @@ require (
 	github.com/emicklei/go-restful/v3 v3.13.0 // indirect
 	github.com/evanphx/json-patch/v5 v5.9.11 // indirect
 	github.com/fatih/color v1.18.0 // indirect
+	github.com/fatih/structs v1.1.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.9.0 // indirect
