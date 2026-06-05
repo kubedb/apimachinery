@@ -288,8 +288,8 @@ func (w *HazelcastOpsRequestCustomWebhook) validateHazelcastStorageMigrationOpsR
 	if req.Spec.Timeout == nil {
 		return errors.New("spec.timeout is required for Storage Migration ops request, adjust timeout according to the size of your database")
 	}
-	if db.Spec.Storage == nil {
-		return nil
+	if db.Spec.Storage == nil || db.Spec.Storage.StorageClassName == nil {
+		return fmt.Errorf("db.Spec.Storage.StorageClassName can't be nil in the database yaml")
 	}
 	var newstorage, oldstorage storagev1.StorageClass
 	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *m.StorageClassName}, &newstorage); err != nil {
