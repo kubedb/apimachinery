@@ -386,6 +386,9 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaStorageMigrationOpsRequest(r
 	}
 
 	m := req.Spec.Migration
+	if m == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
 	if m.Node == nil && m.Controller == nil && m.Broker == nil {
 		return errors.New("at least one of spec.migration.node, spec.migration.controller, or spec.migration.broker is required")
 	}

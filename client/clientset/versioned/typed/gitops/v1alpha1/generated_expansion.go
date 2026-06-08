@@ -24,8 +24,6 @@ type DruidExpansion interface{}
 
 type ElasticsearchExpansion interface{}
 
-type FerretDBExpansion interface{}
-
 type KafkaExpansion interface{}
 
 type MSSQLServerExpansion interface{}

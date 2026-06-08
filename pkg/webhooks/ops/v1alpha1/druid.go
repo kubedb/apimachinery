@@ -197,6 +197,9 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 
 func (w *DruidOpsRequestCustomWebhook) validateDruidStorageMigrationOpsRequest(req *opsapi.DruidOpsRequest, db *olddbapi.Druid) error {
 	m := req.Spec.Migration
+	if m == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
 	if m.StorageClassName == nil {
 		return errors.New("at least one node migration spec is required in spec.migration")
 	}

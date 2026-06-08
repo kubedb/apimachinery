@@ -73,8 +73,8 @@ type MilvusOpsRequestSpec struct {
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
-	// Specifies information necessary for migrating storage of the database
-	Migration *MilvusMigrationSpec `json:"migration,omitempty"`
+	// Specifies information necessary for migrating storageClass or data
+	Migration *StorageMigrationSpec `json:"migration,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -137,12 +137,6 @@ type MilvusVolumeExpansionSpec struct {
 	Node *resource.Quantity `json:"node,omitempty"`
 	// volume specification for stremingnode
 	StreamingNode *resource.Quantity `json:"streamingnode,omitempty"`
-}
-
-type MilvusMigrationSpec struct {
-	StorageClassName *string `json:"storageClassName"`
-	// +optional
-	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
 
 type MilvusTLSSpec struct {

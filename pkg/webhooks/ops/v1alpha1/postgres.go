@@ -343,6 +343,9 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresStorageMigrationOpsReq
 		return errors.Wrap(err, fmt.Sprintf("failed to get postgres: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
+	if req.Spec.Migration == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
 	if req.Spec.Migration.StorageClassName == nil {
 		return errors.New("spec.migration.storageClassName is required")
 	}
@@ -350,6 +353,9 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresStorageMigrationOpsReq
 		// timeout is required for Storage Migration ops request because it's a long-running operation
 		// default timeout is len(pods) * 5 minute
 		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
+	}
+	if db.Spec.Storage == nil || db.Spec.Storage.StorageClassName == nil {
+		return fmt.Errorf("db.Spec.Storage.StorageClassName can't be nil in the database yaml")
 	}
 	// check new storageClass
 	var newstorage, oldstorage storagev1.StorageClass

@@ -36,8 +36,6 @@ type CatalogV1alpha1Interface interface {
 	DocumentDBVersionsGetter
 	DruidVersionsGetter
 	ElasticsearchVersionsGetter
-	EtcdVersionsGetter
-	FerretDBVersionsGetter
 	HanaDBVersionsGetter
 	HazelcastVersionsGetter
 	IgniteVersionsGetter
@@ -97,14 +95,6 @@ func (c *CatalogV1alpha1Client) DruidVersions() DruidVersionInterface {
 
 func (c *CatalogV1alpha1Client) ElasticsearchVersions() ElasticsearchVersionInterface {
 	return newElasticsearchVersions(c)
-}
-
-func (c *CatalogV1alpha1Client) EtcdVersions() EtcdVersionInterface {
-	return newEtcdVersions(c)
-}
-
-func (c *CatalogV1alpha1Client) FerretDBVersions() FerretDBVersionInterface {
-	return newFerretDBVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) HanaDBVersions() HanaDBVersionInterface {

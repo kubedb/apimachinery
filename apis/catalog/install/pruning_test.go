@@ -29,9 +29,6 @@ func TestPruneTypes(t *testing.T) {
 	// if crd := (v1alpha1.ElasticsearchVersion{}).CustomResourceDefinition(); crd.V1 != nil {
 	// 	crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
 	// }
-	// if crd := (v1alpha1.EtcdVersion{}).CustomResourceDefinition(); crd.V1 != nil {
-	// 	crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
-	// }
 	// if crd := (v1alpha1.MariaDBVersion{}).CustomResourceDefinition(); crd.V1 != nil {
 	// 	crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
 	// }
