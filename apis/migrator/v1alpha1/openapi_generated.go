@@ -33966,6 +33966,12 @@ func schema_apimachinery_apis_migrator_v1alpha1_MySQLConnectionInfo(ref common.R
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"appBinding": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AppBinding refers to the source database AppBinding name, which contains the connection information.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
 					"address": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
@@ -34004,6 +34010,8 @@ func schema_apimachinery_apis_migrator_v1alpha1_MySQLConnectionInfo(ref common.R
 				Required: []string{"address", "user", "password", "dbName"},
 			},
 		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
 	}
 }
 

@@ -2802,6 +2802,15 @@ spec:
                         properties:
                           address:
                             type: string
+                          appBinding:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
                           dbName:
                             type: string
                           maxConnections:
@@ -2929,6 +2938,15 @@ spec:
                         properties:
                           address:
                             type: string
+                          appBinding:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
                           dbName:
                             type: string
                           maxConnections:
@@ -3076,6 +3094,15 @@ spec:
                         properties:
                           address:
                             type: string
+                          appBinding:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
                           dbName:
                             type: string
                           maxConnections:
@@ -3123,6 +3150,15 @@ spec:
                         properties:
                           address:
                             type: string
+                          appBinding:
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - name
+                            type: object
                           dbName:
                             type: string
                           maxConnections:
