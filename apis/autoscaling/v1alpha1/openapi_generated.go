@@ -34355,6 +34355,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_DocumentDBOpsRequestOptions(r
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -35101,6 +35107,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_HanaDBOpsRequestOptions(ref c
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
@@ -36532,6 +36544,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MilvusOpsRequestOptions(ref c
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -37236,6 +37254,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_Neo4jOpsRequestOptions(ref co
 							Format:      "",
 						},
 					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
 				},
 			},
 		},
@@ -37513,6 +37537,12 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_OracleOpsRequestOptions(ref c
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
 						},
 					},
 				},
