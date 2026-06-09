@@ -102,7 +102,6 @@ func (w *DocumentDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtim
 	if !ok {
 		return nil, fmt.Errorf("expected an DocumentDB object but got %T", obj)
 	}
-
 	documentdblog.Info("validate create", "name", db.Name)
 	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
@@ -196,11 +195,21 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 			`'spec.authSecret.name' need to specify when auth secret is externally managed`))
 	}
 
-	// Termination policy related
-	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyHalt {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
+	// Admin auth secret related
+	if db.Spec.AdminAuthSecret != nil && db.Spec.AdminAuthSecret.ExternallyManaged && db.Spec.AdminAuthSecret.Name == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("adminAuthSecret"),
 			db.Name,
-			`'spec.terminationPolicy' value 'Halt' is not supported yet for DocumentDB`))
+			`'spec.adminAuthSecret.name' need to specify when admin auth secret is externally managed`))
+	}
+
+	// leaderElection related
+	if db.Spec.LeaderElection != nil {
+		err := w.validateSpecForDB(db)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
+				db.Name,
+				err.Error()))
+		}
 	}
 
 	return allErr
@@ -226,5 +235,24 @@ func (w *DocumentDBCustomWebhook) validateDocumentDBVersion(db *olddbapi.Documen
 	// Older code validated the PostgresVersion referenced by the DocumentDBVersion.
 	// The current DocumentDBVersion spec in this repo does not expose a Postgres field,
 	// so we only verify that the DocumentDBVersion resource exists.
+	return nil
+}
+
+func (w *DocumentDBCustomWebhook) validateSpecForDB(documentdb *olddbapi.DocumentDB) error {
+	// validate leader election configs
+	// ==============> start
+	lec := documentdb.Spec.LeaderElection
+	if lec != nil {
+		if lec.ElectionTick <= lec.HeartbeatTick {
+			return fmt.Errorf("ElectionTick must be greater than HeartbeatTick")
+		}
+		if lec.ElectionTick < 1 {
+			return fmt.Errorf("ElectionTick must be greater than zero")
+		}
+		if lec.HeartbeatTick < 1 {
+			return fmt.Errorf("HeartbeatTick must be greater than zero")
+		}
+	}
+	// end <==============
 	return nil
 }
