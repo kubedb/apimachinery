@@ -20898,6 +20898,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer"
         },
+        "migrator": {
+          "description": "Migrator defines the migration related CLI/Tools images for this MySQL version",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImages"
+        },
         "podSecurityPolicies": {
           "description": "PSP names",
           "default": {},

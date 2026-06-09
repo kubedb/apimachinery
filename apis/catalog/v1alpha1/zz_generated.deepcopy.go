@@ -2295,6 +2295,7 @@ func (in *MariaDBVersionSpec) DeepCopyInto(out *MariaDBVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	out.Migrator = in.Migrator
 	return
 }
 
@@ -2995,6 +2996,7 @@ func (in *MySQLVersionSpec) DeepCopyInto(out *MySQLVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	out.Migrator = in.Migrator
 	return
 }
 
