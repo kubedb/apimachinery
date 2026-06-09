@@ -1639,9 +1639,6 @@ const (
 	DocumentDBContainerName            = "documentdb"
 	DocumentDBInitContainerName        = "documentdb-init"
 	DocumentDBCoordinatorContainerName = "documentdb-coordinator"
-	DocumentDBMainImage                = "ghcr.io/documentdb/documentdb"
-	DocumentDBUser                     = "postgres"
-	DocumentDBLinkedDBName             = "documentdb"
 
 	DocumentDBServerPath = "/etc/certs/server"
 
