@@ -652,7 +652,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusAutoscalerList":                     schema_apimachinery_apis_autoscaling_v1alpha1_MilvusAutoscalerList(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusAutoscalerSpec":                     schema_apimachinery_apis_autoscaling_v1alpha1_MilvusAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusComputeAutoscalerSpec":              schema_apimachinery_apis_autoscaling_v1alpha1_MilvusComputeAutoscalerSpec(ref),
-		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusOpsRequestOptions":                  schema_apimachinery_apis_autoscaling_v1alpha1_MilvusOpsRequestOptions(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusStorageAutoscalerSpec":              schema_apimachinery_apis_autoscaling_v1alpha1_MilvusStorageAutoscalerSpec(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBAutoscaler":                        schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscaler(ref),
 		"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MongoDBAutoscalerList":                    schema_apimachinery_apis_autoscaling_v1alpha1_MongoDBAutoscalerList(ref),
@@ -34355,12 +34354,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_DocumentDBOpsRequestOptions(r
 							Format:      "",
 						},
 					},
-					"maxRetries": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
 				},
 			},
 		},
@@ -35107,12 +35100,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_HanaDBOpsRequestOptions(ref c
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
-						},
-					},
-					"maxRetries": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
 						},
 					},
 				},
@@ -36452,7 +36439,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MilvusAutoscalerSpec(ref comm
 					"opsRequestOptions": {
 						SchemaProps: spec.SchemaProps{
 							Description: "This field will be used to control the behaviour of ops-manager",
-							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusOpsRequestOptions"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.OpsRequestOptions"),
 						},
 					},
 					"compute": {
@@ -36470,7 +36457,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MilvusAutoscalerSpec(ref comm
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusOpsRequestOptions", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusStorageAutoscalerSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.MilvusStorageAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.OpsRequestOptions"},
 	}
 }
 
@@ -36522,39 +36509,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_MilvusComputeAutoscalerSpec(r
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.NodeTopology"},
-	}
-}
-
-func schema_apimachinery_apis_autoscaling_v1alpha1_MilvusOpsRequestOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"timeout": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
-						},
-					},
-					"apply": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"maxRetries": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -37254,12 +37208,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_Neo4jOpsRequestOptions(ref co
 							Format:      "",
 						},
 					},
-					"maxRetries": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
 				},
 			},
 		},
@@ -37537,12 +37485,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_OracleOpsRequestOptions(ref c
 							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
 							Type:        []string{"string"},
 							Format:      "",
-						},
-					},
-					"maxRetries": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
 						},
 					},
 				},
