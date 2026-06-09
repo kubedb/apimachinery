@@ -80,13 +80,23 @@ func (w *MilvusAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Milvu
 	w.setOpsReqOptsDefaults(scaler)
 
 	if scaler.Spec.Storage != nil {
-		if db.Spec.Topology.Distributed.StreamingNode != nil && scaler.Spec.Storage.StreamingNode != nil {
-			setDefaultStorageValues(scaler.Spec.Storage.StreamingNode)
+		if !db.IsDistributed() {
+			if scaler.Spec.Storage.Node != nil {
+				setDefaultStorageValues(scaler.Spec.Storage.Node)
+			}
+		} else {
+			if db.Spec.Topology.Distributed.StreamingNode != nil && scaler.Spec.Storage.StreamingNode != nil {
+				setDefaultStorageValues(scaler.Spec.Storage.StreamingNode)
+			}
 		}
 	}
 
 	if scaler.Spec.Compute != nil {
-		if db.Spec.Topology != nil {
+		if !db.IsDistributed() {
+			if scaler.Spec.Compute.Node != nil {
+				setDefaultComputeValues(scaler.Spec.Compute.Node)
+			}
+		} else {
 			if db.Spec.Topology.Distributed.Proxy != nil && scaler.Spec.Compute.Proxy != nil {
 				setDefaultComputeValues(scaler.Spec.Compute.Proxy)
 			}
@@ -160,7 +170,11 @@ func (w *MilvusAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MilvusAu
 
 	if scaler.Spec.Compute != nil {
 		cm := scaler.Spec.Compute
-		if dr.Spec.Topology != nil {
+		if !dr.IsDistributed() {
+			if cm.Node == nil {
+				return errors.New("Spec.Compute.Node is empty for Standalone mode")
+			}
+		} else {
 			if cm.Proxy == nil && cm.DataNode == nil && cm.QueryNode == nil && cm.MixCoord == nil && cm.StreamingNode == nil {
 				return errors.New("Spec.Compute.Proxy, Spec.Compute.Datanode, Spec.Compute.Querynode, Spec.Compute.Mixcoord, Spec.Compute.Streamingnode all are empty")
 			}
@@ -168,7 +182,11 @@ func (w *MilvusAutoscalerCustomWebhook) validate(scaler *autoscalingapi.MilvusAu
 	}
 
 	if scaler.Spec.Storage != nil {
-		if dr.Spec.Topology != nil {
+		if !dr.IsDistributed() {
+			if scaler.Spec.Storage.Node == nil {
+				return errors.New("Spec.Storage.Node is empty for Standalone mode")
+			}
+		} else {
 			if scaler.Spec.Storage.StreamingNode == nil {
 				return errors.New("Spec.Storage.Streamingnode is empty")
 			}
