@@ -18,6 +18,10 @@ limitations under the License.
 
 package v1alpha1
 
+// AerospikeVersionListerExpansion allows custom methods to be added to
+// AerospikeVersionLister.
+type AerospikeVersionListerExpansion interface{}
+
 // CassandraVersionListerExpansion allows custom methods to be added to
 // CassandraVersionLister.
 type CassandraVersionListerExpansion interface{}
@@ -41,14 +45,6 @@ type DruidVersionListerExpansion interface{}
 // ElasticsearchVersionListerExpansion allows custom methods to be added to
 // ElasticsearchVersionLister.
 type ElasticsearchVersionListerExpansion interface{}
-
-// EtcdVersionListerExpansion allows custom methods to be added to
-// EtcdVersionLister.
-type EtcdVersionListerExpansion interface{}
-
-// FerretDBVersionListerExpansion allows custom methods to be added to
-// FerretDBVersionLister.
-type FerretDBVersionListerExpansion interface{}
 
 // HanaDBVersionListerExpansion allows custom methods to be added to
 // HanaDBVersionLister.
@@ -81,6 +77,10 @@ type MariaDBVersionListerExpansion interface{}
 // MemcachedVersionListerExpansion allows custom methods to be added to
 // MemcachedVersionLister.
 type MemcachedVersionListerExpansion interface{}
+
+// MilvusVersionListerExpansion allows custom methods to be added to
+// MilvusVersionLister.
+type MilvusVersionListerExpansion interface{}
 
 // MongoDBVersionListerExpansion allows custom methods to be added to
 // MongoDBVersionLister.

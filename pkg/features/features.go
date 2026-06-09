@@ -52,12 +52,6 @@ const (
 	// Enables Elasticsearch operator.
 	Elasticsearch featuregate.Feature = "Elasticsearch"
 
-	// Enables Etcd operator.
-	// Etcd featuregate.Feature = "Etcd"
-
-	// Enables FerretDB operator.
-	FerretDB featuregate.Feature = "FerretDB"
-
 	// Enables Flink operator.
 	// Flink featuregate.Feature = "Flink"
 
@@ -160,14 +154,12 @@ func init() {
 // To add a new feature, define a key for it above and add it here. The features will be
 // available throughout KubeDB binaries.
 var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
-	Cassandra:  {Default: false, PreRelease: featuregate.Alpha},
-	ClickHouse: {Default: false, PreRelease: featuregate.Alpha},
-	DB2:        {Default: false, PreRelease: featuregate.Alpha},
-	DocumentDB: {Default: false, PreRelease: featuregate.Alpha},
-	// Etcd:               {Default: false, PreRelease: featuregate.Alpha, LockToDefault: true},
+	Cassandra:     {Default: false, PreRelease: featuregate.Alpha},
+	ClickHouse:    {Default: false, PreRelease: featuregate.Alpha},
+	DB2:           {Default: false, PreRelease: featuregate.Alpha},
+	DocumentDB:    {Default: false, PreRelease: featuregate.Alpha},
 	Druid:         {Default: false, PreRelease: featuregate.Alpha},
 	Elasticsearch: {Default: true, PreRelease: featuregate.GA},
-	FerretDB:      {Default: false, PreRelease: featuregate.Alpha},
 	Hazelcast:     {Default: true, PreRelease: featuregate.Alpha},
 	HanaDB:        {Default: false, PreRelease: featuregate.Alpha},
 	Ignite:        {Default: true, PreRelease: featuregate.Alpha},

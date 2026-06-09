@@ -30,6 +30,7 @@ import (
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -163,13 +164,50 @@ func (w *MariaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mari
 				req.Name,
 				err.Error()))
 		}
-
+	case opsapi.MariaDBOpsRequestTypeStorageMigration:
+		if err := w.validateMariaDBStorageMigrationOpsRequest(req, db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "MariaDBopsrequests.kubedb.com", Kind: "MariaDBOpsRequest"}, req.Name, allErr)
+}
+
+func (w *MariaDBOpsRequestCustomWebhook) validateMariaDBStorageMigrationOpsRequest(req *opsapi.MariaDBOpsRequest, db *dbapi.MariaDB) error {
+	m := req.Spec.Migration
+	if m == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
+	if m.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for Storage Migration ops request, adjust timeout according to the size of your database")
+	}
+	if db.Spec.Storage == nil || db.Spec.Storage.StorageClassName == nil {
+		return fmt.Errorf("db.Spec.Storage.StorageClassName can't be nil in the database yaml")
+	}
+	var newstorage, oldstorage storagev1.StorageClass
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *m.StorageClassName}, &newstorage); err != nil {
+		if apierrors.IsNotFound(err) {
+			return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *m.StorageClassName))
+		}
+		return err
+	}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *db.Spec.Storage.StorageClassName}, &oldstorage); err != nil {
+		return err
+	}
+	if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return fmt.Errorf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name)
+		}
+	}
+	return nil
 }
 
 func (w *MariaDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.MariaDBOpsRequest) (*dbapi.MariaDB, error) {

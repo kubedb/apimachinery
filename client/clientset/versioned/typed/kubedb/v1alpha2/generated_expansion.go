@@ -18,6 +18,8 @@ limitations under the License.
 
 package v1alpha2
 
+type AerospikeExpansion interface{}
+
 type CassandraExpansion interface{}
 
 type ClickHouseExpansion interface{}
@@ -29,10 +31,6 @@ type DocumentDBExpansion interface{}
 type DruidExpansion interface{}
 
 type ElasticsearchExpansion interface{}
-
-type EtcdExpansion interface{}
-
-type FerretDBExpansion interface{}
 
 type HanaDBExpansion interface{}
 
@@ -47,6 +45,8 @@ type MSSQLServerExpansion interface{}
 type MariaDBExpansion interface{}
 
 type MemcachedExpansion interface{}
+
+type MilvusExpansion interface{}
 
 type MongoDBExpansion interface{}
 

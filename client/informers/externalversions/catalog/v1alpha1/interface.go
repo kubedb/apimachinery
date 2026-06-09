@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// AerospikeVersions returns a AerospikeVersionInformer.
+	AerospikeVersions() AerospikeVersionInformer
 	// CassandraVersions returns a CassandraVersionInformer.
 	CassandraVersions() CassandraVersionInformer
 	// ClickHouseVersions returns a ClickHouseVersionInformer.
@@ -36,10 +38,6 @@ type Interface interface {
 	DruidVersions() DruidVersionInformer
 	// ElasticsearchVersions returns a ElasticsearchVersionInformer.
 	ElasticsearchVersions() ElasticsearchVersionInformer
-	// EtcdVersions returns a EtcdVersionInformer.
-	EtcdVersions() EtcdVersionInformer
-	// FerretDBVersions returns a FerretDBVersionInformer.
-	FerretDBVersions() FerretDBVersionInformer
 	// HanaDBVersions returns a HanaDBVersionInformer.
 	HanaDBVersions() HanaDBVersionInformer
 	// HazelcastVersions returns a HazelcastVersionInformer.
@@ -56,6 +54,8 @@ type Interface interface {
 	MariaDBVersions() MariaDBVersionInformer
 	// MemcachedVersions returns a MemcachedVersionInformer.
 	MemcachedVersions() MemcachedVersionInformer
+	// MilvusVersions returns a MilvusVersionInformer.
+	MilvusVersions() MilvusVersionInformer
 	// MongoDBVersions returns a MongoDBVersionInformer.
 	MongoDBVersions() MongoDBVersionInformer
 	// MySQLVersions returns a MySQLVersionInformer.
@@ -103,6 +103,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
+// AerospikeVersions returns a AerospikeVersionInformer.
+func (v *version) AerospikeVersions() AerospikeVersionInformer {
+	return &aerospikeVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
 // CassandraVersions returns a CassandraVersionInformer.
 func (v *version) CassandraVersions() CassandraVersionInformer {
 	return &cassandraVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
@@ -131,16 +136,6 @@ func (v *version) DruidVersions() DruidVersionInformer {
 // ElasticsearchVersions returns a ElasticsearchVersionInformer.
 func (v *version) ElasticsearchVersions() ElasticsearchVersionInformer {
 	return &elasticsearchVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
-}
-
-// EtcdVersions returns a EtcdVersionInformer.
-func (v *version) EtcdVersions() EtcdVersionInformer {
-	return &etcdVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
-}
-
-// FerretDBVersions returns a FerretDBVersionInformer.
-func (v *version) FerretDBVersions() FerretDBVersionInformer {
-	return &ferretDBVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // HanaDBVersions returns a HanaDBVersionInformer.
@@ -181,6 +176,11 @@ func (v *version) MariaDBVersions() MariaDBVersionInformer {
 // MemcachedVersions returns a MemcachedVersionInformer.
 func (v *version) MemcachedVersions() MemcachedVersionInformer {
 	return &memcachedVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// MilvusVersions returns a MilvusVersionInformer.
+func (v *version) MilvusVersions() MilvusVersionInformer {
+	return &milvusVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBVersions returns a MongoDBVersionInformer.

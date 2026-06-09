@@ -22,6 +22,7 @@ import (
 	"fmt"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
 	"gomodules.xyz/x/arrays"
@@ -31,12 +32,27 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
+
+var forbiddenEnvVars = []string{
+	kubedb.EnvDocumentDBUser, kubedb.EnvDocumentDBPassword, kubedb.EnvDocumentDBHandler, kubedb.EnvDocumentDBPgURL,
+	kubedb.EnvDocumentDBTLSPort, kubedb.EnvDocumentDBCAPath, kubedb.EnvDocumentDBCertPath, kubedb.EnvDocumentDBKeyPath,
+}
+
+func getMainContainerEnvs(podTemplate *ofstv2.PodTemplateSpec) []core.EnvVar {
+	for _, container := range podTemplate.Spec.Containers {
+		if container.Name == kubedb.DocumentDBContainerName {
+			return container.Env
+		}
+	}
+	return []core.EnvVar{}
+}
 
 // SetupDocumentDBWebhookWithManager registers the webhook for DocumentDB in the manager.
 func SetupDocumentDBWebhookWithManager(mgr ctrl.Manager) error {

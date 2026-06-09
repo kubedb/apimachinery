@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -28,8 +27,10 @@ import (
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/Masterminds/semver/v3"
+	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -177,6 +178,12 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.ElasticsearchOpsRequestTypeStorageMigration:
+		if err := w.validateElasticsearchStorageMigrationOpsRequest(req, db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.ElasticsearchOpsRequestTypeVolumeExpansion:
 		if err := w.validateElasticsearchVolumeExpansionOpsRequest(req, db); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
@@ -203,6 +210,107 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchUpdateVersio
 	}
 	if !yes {
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
+	}
+
+	return nil
+}
+
+func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigrationOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
+	m := req.Spec.Migration
+	if m == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
+	if m.Node == nil && m.Master == nil && m.Ingest == nil && m.Data == nil &&
+		m.DataContent == nil && m.DataHot == nil && m.DataWarm == nil &&
+		m.DataCold == nil && m.DataFrozen == nil && m.ML == nil && m.Transform == nil && m.Coordinating == nil {
+		return errors.New("at least one node migration spec is required in spec.migration")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
+	}
+
+	validateComponent := func(spec *opsapi.StorageMigrationSpec, oldClassName string) error {
+		if spec == nil {
+			return nil
+		}
+		if spec.StorageClassName == nil {
+			return errors.New("storageClassName is required in migration spec")
+		}
+		var newstorage, oldstorage storagev1.StorageClass
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *spec.StorageClassName}, &newstorage); err != nil {
+			if apierrors.IsNotFound(err) {
+				return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *spec.StorageClassName))
+			}
+			return err
+		}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: oldClassName}, &oldstorage); err != nil {
+			return err
+		}
+		if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+			if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+				return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+			}
+		}
+		return nil
+	}
+
+	if db.Spec.Topology != nil {
+		t := db.Spec.Topology
+		if err := validateComponent(m.Master, *t.Master.Storage.StorageClassName); err != nil {
+			return err
+		}
+		if err := validateComponent(m.Ingest, *t.Ingest.Storage.StorageClassName); err != nil {
+			return err
+		}
+		if m.Data != nil {
+			if err := validateComponent(m.Data, *t.Data.Storage.StorageClassName); err != nil {
+				return err
+			}
+		}
+		if m.DataContent != nil {
+			if err := validateComponent(m.DataContent, *t.DataContent.Storage.StorageClassName); err != nil {
+				return err
+			}
+		}
+		if m.DataHot != nil {
+			if err := validateComponent(m.DataHot, *t.DataHot.Storage.StorageClassName); err != nil {
+				return err
+			}
+		}
+		if m.DataWarm != nil {
+			if err := validateComponent(m.DataWarm, *t.DataWarm.Storage.StorageClassName); err != nil {
+				return err
+			}
+		}
+		if m.DataCold != nil {
+			if err := validateComponent(m.DataCold, *t.DataCold.Storage.StorageClassName); err != nil {
+				return err
+			}
+		}
+		if m.DataFrozen != nil {
+			if err := validateComponent(m.DataFrozen, *t.DataFrozen.Storage.StorageClassName); err != nil {
+				return err
+			}
+		}
+		if m.ML != nil {
+			if err := validateComponent(m.ML, *t.ML.Storage.StorageClassName); err != nil {
+				return err
+			}
+		}
+		if m.Transform != nil {
+			if err := validateComponent(m.Transform, *t.Transform.Storage.StorageClassName); err != nil {
+				return err
+			}
+		}
+		if m.Coordinating != nil {
+			if err := validateComponent(m.Coordinating, *t.Coordinating.Storage.StorageClassName); err != nil {
+				return err
+			}
+		}
+	} else {
+		if err := validateComponent(m.Node, db.GetStorageClassName()); err != nil {
+			return err
+		}
 	}
 
 	return nil

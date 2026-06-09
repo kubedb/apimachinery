@@ -83,7 +83,9 @@ const (
 	ProxySQLKey      = "proxysql" + "." + GroupName
 
 	// Auth related constants
-	AuthActiveFromAnnotation = GroupName + "/auth-active-from"
+	AuthActiveFromAnnotation     = GroupName + "/auth-active-from"
+	HanaDBTLSResetModeAnnotation = GroupName + "/hanadb-tls-reset-mode"
+	HanaDBTLSResetModeClientPKI  = "clientpki"
 
 	// =========================== Elasticsearch Constants ============================
 	ElasticsearchRestPort                        = 9200
@@ -692,6 +694,18 @@ const (
 	PgBouncerInitVolumePath                 = "/init-scripts"
 	PgBouncerInitVolumeName                 = "init-scripts"
 
+	// =========================== Aerospike Constants ============================
+	AerospikeConfigVolumeName      = "config"
+	AerospikeConfigVolumeMountPath = "/opt/aerospike/conf"
+	AerospikeContainerName         = "aerospike"
+	AerospikeDataVolumeName        = "data"
+	AerospikeDataVolumeMountPath   = "/opt/aerospike/data"
+	AerospikeConfigKey             = "aerospike.conf"
+	AerospikeDatabasePortName      = "db"
+	AerospikeDatabasePort          = 3000
+	AerospikeMeshPortName          = "heartbeat"
+	AerospikeMeshPort              = 3002
+
 	// =========================== Pgpool Constants ============================
 	EnvPostgresUsername                = "POSTGRES_USERNAME"
 	EnvPgpoolPcpUser                   = "PGPOOL_PCP_USER"
@@ -918,6 +932,17 @@ const (
 	MilvusPortDataNode      = 21124
 	MilvusPortQueryNode     = 21123
 	MilvusPortStreamingNode = 22222
+
+	MilvusTLSVolName      = "milvus-tls"
+	MilvusTLSVolDir       = "/milvus/tls"
+	MilvusTLSCACert       = "ca.crt"
+	MilvusTLSCAPem        = "ca.pem"
+	MilvusTLSCert         = "tls.crt"
+	MilvusTLSKey          = "tls.key"
+	MilvusTLSServerPem    = "server.pem"
+	MilvusTLSServerKeyPem = "server.key"
+	MilvusTLSClientPem    = "client.pem"
+	MilvusTLSClientKeyPem = "client.key"
 )
 
 const (
@@ -1567,7 +1592,7 @@ const (
 	WeaviateClassNameKubeDBSystem = "KubeDBSystem"
 
 	WeaviateVolumeData    = "data"
-	WeaviateDataDir       = "/weaviate/storage"
+	WeaviateDataDir       = "/var/lib/weaviate"
 	WeaviateContainerName = "weaviate"
 	WeaviateAPIKey        = "AUTHENTICATION_APIKEY_ALLOWED_KEYS"
 	WeaviateAPIKeyEnabled = "AUTHENTICATION_APIKEY_ENABLED"
@@ -1689,50 +1714,6 @@ const (
 	EnvForceFailOverAcceptingDataLossAfter = "FORCE_FAILOVER_ACCEPTING_DATA_LOSS_AFTER"
 	EnvArbiterPod                          = "ARBITER_POD"
 	EnvReadReplica                         = "READ_REPLICA"
-)
-
-// =========================== FerretDB Constants ============================
-const (
-
-	// envs
-	EnvFerretDBUser      = "FERRETDB_PG_USER"
-	EnvFerretDBPassword  = "FERRETDB_PG_PASSWORD"
-	EnvFerretDBHandler   = "FERRETDB_HANDLER"
-	EnvFerretDBPgURL     = "FERRETDB_POSTGRESQL_URL"
-	EnvFerretDBTLSPort   = "FERRETDB_LISTEN_TLS"
-	EnvFerretDBCAPath    = "FERRETDB_LISTEN_TLS_CA_FILE"
-	EnvFerretDBCertPath  = "FERRETDB_LISTEN_TLS_CERT_FILE"
-	EnvFerretDBKeyPath   = "FERRETDB_LISTEN_TLS_KEY_FILE"
-	EnvFerretDBDebugAddr = "FERRETDB_DEBUG_ADDR"
-
-	FerretDBDatabasePortName       = "db"
-	FerretDBPrimaryServicePortName = "primary"
-
-	FerretDBContainerName = "ferretdb"
-	FerretDBMainImage     = "ghcr.io/ferretdb/ferretdb"
-	FerretDBUser          = "postgres"
-	FerretDBLinkedDBName  = "ferretdb"
-
-	FerretDBServerPath = "/etc/certs/server"
-
-	FerretDBExternalClientPath = "/etc/certs/ext"
-
-	FerretDBDefaultPort = 27017
-	FerretDBMetricsPort = 56790
-	FerretDBTLSPort     = 27018
-
-	FerretDBMetricsPath     = "/debug/metrics"
-	FerretDBMetricsPortName = "metrics"
-
-	FerretDBServerTypePrimary   = "primary"
-	FerretDBServerTypeSecondary = "secondary"
-
-	FerretDBPrimaryLabelKey   = "ferretdb.kubedb.com/server.primary"
-	FerretDBSecondaryLabelKey = "ferretdb.kubedb.com/server.secondary"
-
-	FerretDBBackendInitShellFile = "data.sh"
-	FerretDBBackendInitSqlFile   = "data.sql"
-	FerretDBBackendConfigFile    = "user.conf"
 )
 
 // =========================== Ignite Constants ============================
@@ -2402,6 +2383,8 @@ const (
 	// Mount paths
 	HanaDBDataDir         = "/hana/mounts"
 	HanaDBSecretMountPath = "/etc/hana-secrets"
+	HanaDBTLSInputPath    = "/etc/hanadb-tls/server"
+	HanaDBExporterTLSPath = "/etc/hanadb_exporter/certs"
 	HanaDBConfigFileName  = "global.ini"
 	HanaDBConfigDir       = "/hana/mounts/system/config"
 	HanaDBConfigMountPath = "/etc/hanadb-config"
@@ -2409,6 +2392,8 @@ const (
 	// Volume names
 	HanaDBDataVolume           = "data"
 	HanaDBVolumePasswordSecret = "password-secret"
+	HanaDBVolumeTLSInput       = "tls-input"
+	HanaDBVolumeExporterTLS    = "exporter-tls-volume"
 	HanaDBConfigVolumeName     = "hanadb-config"
 
 	// User and Group IDs

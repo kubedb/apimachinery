@@ -29,6 +29,10 @@ type FakeCatalogV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeCatalogV1alpha1) AerospikeVersions() v1alpha1.AerospikeVersionInterface {
+	return &FakeAerospikeVersions{c}
+}
+
 func (c *FakeCatalogV1alpha1) CassandraVersions() v1alpha1.CassandraVersionInterface {
 	return &FakeCassandraVersions{c}
 }
@@ -51,14 +55,6 @@ func (c *FakeCatalogV1alpha1) DruidVersions() v1alpha1.DruidVersionInterface {
 
 func (c *FakeCatalogV1alpha1) ElasticsearchVersions() v1alpha1.ElasticsearchVersionInterface {
 	return &FakeElasticsearchVersions{c}
-}
-
-func (c *FakeCatalogV1alpha1) EtcdVersions() v1alpha1.EtcdVersionInterface {
-	return &FakeEtcdVersions{c}
-}
-
-func (c *FakeCatalogV1alpha1) FerretDBVersions() v1alpha1.FerretDBVersionInterface {
-	return &FakeFerretDBVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) HanaDBVersions() v1alpha1.HanaDBVersionInterface {
@@ -91,6 +87,10 @@ func (c *FakeCatalogV1alpha1) MariaDBVersions() v1alpha1.MariaDBVersionInterface
 
 func (c *FakeCatalogV1alpha1) MemcachedVersions() v1alpha1.MemcachedVersionInterface {
 	return &FakeMemcachedVersions{c}
+}
+
+func (c *FakeCatalogV1alpha1) MilvusVersions() v1alpha1.MilvusVersionInterface {
+	return &FakeMilvusVersions{c}
 }
 
 func (c *FakeCatalogV1alpha1) MongoDBVersions() v1alpha1.MongoDBVersionInterface {

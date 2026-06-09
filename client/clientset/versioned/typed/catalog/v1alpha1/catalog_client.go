@@ -29,14 +29,13 @@ import (
 
 type CatalogV1alpha1Interface interface {
 	RESTClient() rest.Interface
+	AerospikeVersionsGetter
 	CassandraVersionsGetter
 	ClickHouseVersionsGetter
 	DB2VersionsGetter
 	DocumentDBVersionsGetter
 	DruidVersionsGetter
 	ElasticsearchVersionsGetter
-	EtcdVersionsGetter
-	FerretDBVersionsGetter
 	HanaDBVersionsGetter
 	HazelcastVersionsGetter
 	IgniteVersionsGetter
@@ -45,6 +44,7 @@ type CatalogV1alpha1Interface interface {
 	MSSQLServerVersionsGetter
 	MariaDBVersionsGetter
 	MemcachedVersionsGetter
+	MilvusVersionsGetter
 	MongoDBVersionsGetter
 	MySQLVersionsGetter
 	Neo4jVersionsGetter
@@ -69,6 +69,10 @@ type CatalogV1alpha1Client struct {
 	restClient rest.Interface
 }
 
+func (c *CatalogV1alpha1Client) AerospikeVersions() AerospikeVersionInterface {
+	return newAerospikeVersions(c)
+}
+
 func (c *CatalogV1alpha1Client) CassandraVersions() CassandraVersionInterface {
 	return newCassandraVersions(c)
 }
@@ -91,14 +95,6 @@ func (c *CatalogV1alpha1Client) DruidVersions() DruidVersionInterface {
 
 func (c *CatalogV1alpha1Client) ElasticsearchVersions() ElasticsearchVersionInterface {
 	return newElasticsearchVersions(c)
-}
-
-func (c *CatalogV1alpha1Client) EtcdVersions() EtcdVersionInterface {
-	return newEtcdVersions(c)
-}
-
-func (c *CatalogV1alpha1Client) FerretDBVersions() FerretDBVersionInterface {
-	return newFerretDBVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) HanaDBVersions() HanaDBVersionInterface {
@@ -131,6 +127,10 @@ func (c *CatalogV1alpha1Client) MariaDBVersions() MariaDBVersionInterface {
 
 func (c *CatalogV1alpha1Client) MemcachedVersions() MemcachedVersionInterface {
 	return newMemcachedVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) MilvusVersions() MilvusVersionInterface {
+	return newMilvusVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) MongoDBVersions() MongoDBVersionInterface {

@@ -64,7 +64,6 @@ type MemcachedAutoscalerSpec struct {
 	OpsRequestOptions *MemcachedOpsRequestOptions `json:"opsRequestOptions,omitempty"`
 
 	Compute *MemcachedComputeAutoscalerSpec `json:"compute,omitempty"`
-	Storage *MemcachedStorageAutoscalerSpec `json:"storage,omitempty"`
 }
 
 type MemcachedComputeAutoscalerSpec struct {
@@ -74,20 +73,10 @@ type MemcachedComputeAutoscalerSpec struct {
 	Memcached *ComputeAutoscalerSpec `json:"memcached,omitempty"`
 }
 
-type MemcachedStorageAutoscalerSpec struct {
-	Memcached *StorageAutoscalerSpec `json:"memcached,omitempty"`
-}
-
 type MemcachedOpsRequestOptions struct {
+	OpsRequestOptions `json:",inline"`
 	// Specifies the Readiness Criteria
 	ReadinessCriteria *opsapi.MemcachedReplicaReadinessCriteria `json:"readinessCriteria,omitempty"`
-
-	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
-	Timeout *metav1.Duration `json:"timeout,omitempty"`
-
-	// ApplyOption is to control the execution of OpsRequest depending on the database state.
-	// +kubebuilder:default="IfReady"
-	Apply opsapi.ApplyOption `json:"apply,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

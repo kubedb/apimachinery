@@ -18,7 +18,6 @@ package v1alpha1
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -27,8 +26,10 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
+	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -174,6 +175,12 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.DruidOpsRequestTypeStorageMigration:
+		if err := w.validateDruidStorageMigrationOpsRequest(req, druid); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.DruidOpsRequestTypeRotateAuth:
 		if err := w.validateDruidRotateAuthenticationOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"),
@@ -186,6 +193,53 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Druidopsrequests.kubedb.com", Kind: "DruidOpsRequest"}, req.Name, allErr)
+}
+
+func (w *DruidOpsRequestCustomWebhook) validateDruidStorageMigrationOpsRequest(req *opsapi.DruidOpsRequest, db *olddbapi.Druid) error {
+	m := req.Spec.Migration
+	if m == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
+	if m.StorageClassName == nil {
+		return errors.New("at least one node migration spec is required in spec.migration")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
+	}
+
+	validateComponent := func(spec *opsapi.StorageMigrationSpec, oldClassName string) error {
+		if spec == nil {
+			return nil
+		}
+		if spec.StorageClassName == nil {
+			return errors.New("storageClassName is required in migration spec")
+		}
+		var newstorage, oldstorage storagev1.StorageClass
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *spec.StorageClassName}, &newstorage); err != nil {
+			if apierrors.IsNotFound(err) {
+				return errors.Wrap(err, fmt.Sprintf("storage class %s not found", *spec.StorageClassName))
+			}
+			return err
+		}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: oldClassName}, &oldstorage); err != nil {
+			return err
+		}
+		if *oldstorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+			if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+				return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
+			}
+		}
+		return nil
+	}
+	t := db.Spec.Topology
+	if err := validateComponent(m, *t.MiddleManagers.Storage.StorageClassName); err != nil {
+		return field.Invalid(field.NewPath("spec").Child("migration").Child("middleManagers"), req.Name, err.Error())
+	}
+	if err := validateComponent(m, *t.Historicals.Storage.StorageClassName); err != nil {
+		return field.Invalid(field.NewPath("spec").Child("migration").Child("historicals"), req.Name, err.Error())
+	}
+
+	return nil
 }
 
 func (w *DruidOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.DruidOpsRequest) (*olddbapi.Druid, error) {

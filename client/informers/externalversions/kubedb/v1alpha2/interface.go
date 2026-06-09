@@ -24,6 +24,8 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// Aerospikes returns a AerospikeInformer.
+	Aerospikes() AerospikeInformer
 	// Cassandras returns a CassandraInformer.
 	Cassandras() CassandraInformer
 	// ClickHouses returns a ClickHouseInformer.
@@ -36,10 +38,6 @@ type Interface interface {
 	Druids() DruidInformer
 	// Elasticsearches returns a ElasticsearchInformer.
 	Elasticsearches() ElasticsearchInformer
-	// Etcds returns a EtcdInformer.
-	Etcds() EtcdInformer
-	// FerretDBs returns a FerretDBInformer.
-	FerretDBs() FerretDBInformer
 	// HanaDBs returns a HanaDBInformer.
 	HanaDBs() HanaDBInformer
 	// Hazelcasts returns a HazelcastInformer.
@@ -54,6 +52,8 @@ type Interface interface {
 	MariaDBs() MariaDBInformer
 	// Memcacheds returns a MemcachedInformer.
 	Memcacheds() MemcachedInformer
+	// Milvuses returns a MilvusInformer.
+	Milvuses() MilvusInformer
 	// MongoDBs returns a MongoDBInformer.
 	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
@@ -101,6 +101,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
+// Aerospikes returns a AerospikeInformer.
+func (v *version) Aerospikes() AerospikeInformer {
+	return &aerospikeInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // Cassandras returns a CassandraInformer.
 func (v *version) Cassandras() CassandraInformer {
 	return &cassandraInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -129,16 +134,6 @@ func (v *version) Druids() DruidInformer {
 // Elasticsearches returns a ElasticsearchInformer.
 func (v *version) Elasticsearches() ElasticsearchInformer {
 	return &elasticsearchInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// Etcds returns a EtcdInformer.
-func (v *version) Etcds() EtcdInformer {
-	return &etcdInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// FerretDBs returns a FerretDBInformer.
-func (v *version) FerretDBs() FerretDBInformer {
-	return &ferretDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // HanaDBs returns a HanaDBInformer.
@@ -174,6 +169,11 @@ func (v *version) MariaDBs() MariaDBInformer {
 // Memcacheds returns a MemcachedInformer.
 func (v *version) Memcacheds() MemcachedInformer {
 	return &memcachedInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Milvuses returns a MilvusInformer.
+func (v *version) Milvuses() MilvusInformer {
+	return &milvusInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBs returns a MongoDBInformer.

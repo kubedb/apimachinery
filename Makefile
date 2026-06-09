@@ -26,7 +26,7 @@ API_GROUPS           ?= $(CORE_API_GROUPS) ui:v1alpha1
 
 # This version-strategy uses git tags to set the version string
 git_branch       := $(shell git rev-parse --abbrev-ref HEAD)
-git_tag          := $(shell git describe --exact-match --abbrev=0 2>/dev/null || echo "")
+git_tag          := $(shell git describe --tags --exact-match --abbrev=0 2>/dev/null || echo "")
 commit_hash      := $(shell git rev-parse --verify HEAD)
 commit_timestamp := $(shell date --date="@$$(git show -s --format=%ct)" --utc +%FT%T)
 
@@ -192,8 +192,6 @@ crd_to_patch := kubedb.com_cassandras.yaml \
 								kubedb.com_clickhouses.yaml \
 								kubedb.com_druids.yaml \
 								kubedb.com_elasticsearches.yaml \
-								kubedb.com_etcds.yaml \
-								kubedb.com_ferretdbs.yaml \
 								kubedb.com_hanadbs.yaml \
 								kubedb.com_kafkas.yaml \
 								kubedb.com_mariadbs.yaml \

@@ -29,6 +29,10 @@ type FakeKubedbV1alpha2 struct {
 	*testing.Fake
 }
 
+func (c *FakeKubedbV1alpha2) Aerospikes(namespace string) v1alpha2.AerospikeInterface {
+	return &FakeAerospikes{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) Cassandras(namespace string) v1alpha2.CassandraInterface {
 	return &FakeCassandras{c, namespace}
 }
@@ -51,14 +55,6 @@ func (c *FakeKubedbV1alpha2) Druids(namespace string) v1alpha2.DruidInterface {
 
 func (c *FakeKubedbV1alpha2) Elasticsearches(namespace string) v1alpha2.ElasticsearchInterface {
 	return &FakeElasticsearches{c, namespace}
-}
-
-func (c *FakeKubedbV1alpha2) Etcds(namespace string) v1alpha2.EtcdInterface {
-	return &FakeEtcds{c, namespace}
-}
-
-func (c *FakeKubedbV1alpha2) FerretDBs(namespace string) v1alpha2.FerretDBInterface {
-	return &FakeFerretDBs{c, namespace}
 }
 
 func (c *FakeKubedbV1alpha2) HanaDBs(namespace string) v1alpha2.HanaDBInterface {
@@ -87,6 +83,10 @@ func (c *FakeKubedbV1alpha2) MariaDBs(namespace string) v1alpha2.MariaDBInterfac
 
 func (c *FakeKubedbV1alpha2) Memcacheds(namespace string) v1alpha2.MemcachedInterface {
 	return &FakeMemcacheds{c, namespace}
+}
+
+func (c *FakeKubedbV1alpha2) Milvuses(namespace string) v1alpha2.MilvusInterface {
+	return &FakeMilvuses{c, namespace}
 }
 
 func (c *FakeKubedbV1alpha2) MongoDBs(namespace string) v1alpha2.MongoDBInterface {

@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha2
 
+// AerospikeListerExpansion allows custom methods to be added to
+// AerospikeLister.
+type AerospikeListerExpansion interface{}
+
+// AerospikeNamespaceListerExpansion allows custom methods to be added to
+// AerospikeNamespaceLister.
+type AerospikeNamespaceListerExpansion interface{}
+
 // CassandraListerExpansion allows custom methods to be added to
 // CassandraLister.
 type CassandraListerExpansion interface{}
@@ -65,22 +73,6 @@ type ElasticsearchListerExpansion interface{}
 // ElasticsearchNamespaceListerExpansion allows custom methods to be added to
 // ElasticsearchNamespaceLister.
 type ElasticsearchNamespaceListerExpansion interface{}
-
-// EtcdListerExpansion allows custom methods to be added to
-// EtcdLister.
-type EtcdListerExpansion interface{}
-
-// EtcdNamespaceListerExpansion allows custom methods to be added to
-// EtcdNamespaceLister.
-type EtcdNamespaceListerExpansion interface{}
-
-// FerretDBListerExpansion allows custom methods to be added to
-// FerretDBLister.
-type FerretDBListerExpansion interface{}
-
-// FerretDBNamespaceListerExpansion allows custom methods to be added to
-// FerretDBNamespaceLister.
-type FerretDBNamespaceListerExpansion interface{}
 
 // HanaDBListerExpansion allows custom methods to be added to
 // HanaDBLister.
@@ -137,6 +129,14 @@ type MemcachedListerExpansion interface{}
 // MemcachedNamespaceListerExpansion allows custom methods to be added to
 // MemcachedNamespaceLister.
 type MemcachedNamespaceListerExpansion interface{}
+
+// MilvusListerExpansion allows custom methods to be added to
+// MilvusLister.
+type MilvusListerExpansion interface{}
+
+// MilvusNamespaceListerExpansion allows custom methods to be added to
+// MilvusNamespaceLister.
+type MilvusNamespaceListerExpansion interface{}
 
 // MongoDBListerExpansion allows custom methods to be added to
 // MongoDBLister.

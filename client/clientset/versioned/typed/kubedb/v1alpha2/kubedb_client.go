@@ -29,14 +29,13 @@ import (
 
 type KubedbV1alpha2Interface interface {
 	RESTClient() rest.Interface
+	AerospikesGetter
 	CassandrasGetter
 	ClickHousesGetter
 	DB2sGetter
 	DocumentDBsGetter
 	DruidsGetter
 	ElasticsearchesGetter
-	EtcdsGetter
-	FerretDBsGetter
 	HanaDBsGetter
 	HazelcastsGetter
 	IgnitesGetter
@@ -44,6 +43,7 @@ type KubedbV1alpha2Interface interface {
 	MSSQLServersGetter
 	MariaDBsGetter
 	MemcachedsGetter
+	MilvusesGetter
 	MongoDBsGetter
 	MySQLsGetter
 	Neo4jsGetter
@@ -68,6 +68,10 @@ type KubedbV1alpha2Client struct {
 	restClient rest.Interface
 }
 
+func (c *KubedbV1alpha2Client) Aerospikes(namespace string) AerospikeInterface {
+	return newAerospikes(c, namespace)
+}
+
 func (c *KubedbV1alpha2Client) Cassandras(namespace string) CassandraInterface {
 	return newCassandras(c, namespace)
 }
@@ -90,14 +94,6 @@ func (c *KubedbV1alpha2Client) Druids(namespace string) DruidInterface {
 
 func (c *KubedbV1alpha2Client) Elasticsearches(namespace string) ElasticsearchInterface {
 	return newElasticsearches(c, namespace)
-}
-
-func (c *KubedbV1alpha2Client) Etcds(namespace string) EtcdInterface {
-	return newEtcds(c, namespace)
-}
-
-func (c *KubedbV1alpha2Client) FerretDBs(namespace string) FerretDBInterface {
-	return newFerretDBs(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) HanaDBs(namespace string) HanaDBInterface {
@@ -126,6 +122,10 @@ func (c *KubedbV1alpha2Client) MariaDBs(namespace string) MariaDBInterface {
 
 func (c *KubedbV1alpha2Client) Memcacheds(namespace string) MemcachedInterface {
 	return newMemcacheds(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Milvuses(namespace string) MilvusInterface {
+	return newMilvuses(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) MongoDBs(namespace string) MongoDBInterface {

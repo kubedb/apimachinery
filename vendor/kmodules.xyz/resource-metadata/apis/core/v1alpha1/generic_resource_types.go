@@ -26,6 +26,16 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 )
 
+type (
+	ResourceList         map[core.ResourceName]string
+	ResourceRequirements struct {
+		// +optional
+		Limits ResourceList `json:"limits,omitempty"`
+		// +optional
+		Requests ResourceList `json:"requests,omitempty"`
+	}
+)
+
 const (
 	ResourceKindGenericResource = "GenericResource"
 	ResourceGenericResource     = "genericresource"
@@ -61,13 +71,13 @@ type GenericResourceSpec struct {
 	// +optional
 	Mode string `json:"mode,omitempty"`
 	// +optional
-	TotalResource core.ResourceRequirements `json:"totalResource,omitempty"`
+	TotalResource ResourceRequirements `json:"totalResource,omitempty"`
 	// +optional
-	AppResource core.ResourceRequirements `json:"appResource,omitempty"`
+	AppResource ResourceRequirements `json:"appResource,omitempty"`
 	// +optional
-	RoleResourceLimits map[api.PodRole]core.ResourceList `json:"roleResourceLimits,omitempty"`
+	RoleResourceLimits map[api.PodRole]ResourceList `json:"roleResourceLimits,omitempty"`
 	// +optional
-	RoleResourceRequests map[api.PodRole]core.ResourceList `json:"roleResourceRequests,omitempty"`
+	RoleResourceRequests map[api.PodRole]ResourceList `json:"roleResourceRequests,omitempty"`
 
 	Namespace *NamespaceInfo    `json:"namespace,omitempty"`
 	Pods      []ComputeResource `json:"pods,omitempty"`

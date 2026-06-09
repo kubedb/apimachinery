@@ -199,17 +199,17 @@ type ResourceView struct {
 	// Limits describes the maximum amount of compute resources allowed.
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 	// +optional
-	Limits core.ResourceList `json:"limits,omitempty"`
+	Limits ResourceList `json:"limits,omitempty"`
 	// Requests describes the minimum amount of compute resources required.
 	// If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
 	// otherwise to an implementation-defined value.
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 	// +optional
-	Requests core.ResourceList `json:"requests,omitempty"`
+	Requests ResourceList `json:"requests,omitempty"`
 	// Limits describes the maximum amount of compute resources allowed.
 	// More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 	// +optional
-	Usage core.ResourceList `json:"usage,omitempty"`
+	Usage ResourceList `json:"usage,omitempty"`
 }
 
 // PodView is the Schema for the podviews API

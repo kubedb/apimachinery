@@ -31,28 +31,33 @@ type AutoscalingV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	CassandraAutoscalersGetter
 	ClickHouseAutoscalersGetter
+	DocumentDBAutoscalersGetter
 	DruidAutoscalersGetter
 	ElasticsearchAutoscalersGetter
-	EtcdAutoscalersGetter
-	FerretDBAutoscalersGetter
+	HanaDBAutoscalersGetter
 	HazelcastAutoscalersGetter
 	IgniteAutoscalersGetter
 	KafkaAutoscalersGetter
 	MSSQLServerAutoscalersGetter
 	MariaDBAutoscalersGetter
 	MemcachedAutoscalersGetter
+	MilvusAutoscalersGetter
 	MongoDBAutoscalersGetter
 	MySQLAutoscalersGetter
+	Neo4jAutoscalersGetter
+	OracleAutoscalersGetter
 	PerconaXtraDBAutoscalersGetter
 	PgBouncerAutoscalersGetter
 	PgpoolAutoscalersGetter
 	PostgresAutoscalersGetter
 	ProxySQLAutoscalersGetter
+	QdrantAutoscalersGetter
 	RabbitMQAutoscalersGetter
 	RedisAutoscalersGetter
 	RedisSentinelAutoscalersGetter
 	SinglestoreAutoscalersGetter
 	SolrAutoscalersGetter
+	WeaviateAutoscalersGetter
 	ZooKeeperAutoscalersGetter
 }
 
@@ -69,6 +74,10 @@ func (c *AutoscalingV1alpha1Client) ClickHouseAutoscalers(namespace string) Clic
 	return newClickHouseAutoscalers(c, namespace)
 }
 
+func (c *AutoscalingV1alpha1Client) DocumentDBAutoscalers(namespace string) DocumentDBAutoscalerInterface {
+	return newDocumentDBAutoscalers(c, namespace)
+}
+
 func (c *AutoscalingV1alpha1Client) DruidAutoscalers(namespace string) DruidAutoscalerInterface {
 	return newDruidAutoscalers(c, namespace)
 }
@@ -77,12 +86,8 @@ func (c *AutoscalingV1alpha1Client) ElasticsearchAutoscalers(namespace string) E
 	return newElasticsearchAutoscalers(c, namespace)
 }
 
-func (c *AutoscalingV1alpha1Client) EtcdAutoscalers(namespace string) EtcdAutoscalerInterface {
-	return newEtcdAutoscalers(c, namespace)
-}
-
-func (c *AutoscalingV1alpha1Client) FerretDBAutoscalers(namespace string) FerretDBAutoscalerInterface {
-	return newFerretDBAutoscalers(c, namespace)
+func (c *AutoscalingV1alpha1Client) HanaDBAutoscalers(namespace string) HanaDBAutoscalerInterface {
+	return newHanaDBAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) HazelcastAutoscalers(namespace string) HazelcastAutoscalerInterface {
@@ -109,12 +114,24 @@ func (c *AutoscalingV1alpha1Client) MemcachedAutoscalers(namespace string) Memca
 	return newMemcachedAutoscalers(c, namespace)
 }
 
+func (c *AutoscalingV1alpha1Client) MilvusAutoscalers(namespace string) MilvusAutoscalerInterface {
+	return newMilvusAutoscalers(c, namespace)
+}
+
 func (c *AutoscalingV1alpha1Client) MongoDBAutoscalers(namespace string) MongoDBAutoscalerInterface {
 	return newMongoDBAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) MySQLAutoscalers(namespace string) MySQLAutoscalerInterface {
 	return newMySQLAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) Neo4jAutoscalers(namespace string) Neo4jAutoscalerInterface {
+	return newNeo4jAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) OracleAutoscalers(namespace string) OracleAutoscalerInterface {
+	return newOracleAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) PerconaXtraDBAutoscalers(namespace string) PerconaXtraDBAutoscalerInterface {
@@ -137,6 +154,10 @@ func (c *AutoscalingV1alpha1Client) ProxySQLAutoscalers(namespace string) ProxyS
 	return newProxySQLAutoscalers(c, namespace)
 }
 
+func (c *AutoscalingV1alpha1Client) QdrantAutoscalers(namespace string) QdrantAutoscalerInterface {
+	return newQdrantAutoscalers(c, namespace)
+}
+
 func (c *AutoscalingV1alpha1Client) RabbitMQAutoscalers(namespace string) RabbitMQAutoscalerInterface {
 	return newRabbitMQAutoscalers(c, namespace)
 }
@@ -155,6 +176,10 @@ func (c *AutoscalingV1alpha1Client) SinglestoreAutoscalers(namespace string) Sin
 
 func (c *AutoscalingV1alpha1Client) SolrAutoscalers(namespace string) SolrAutoscalerInterface {
 	return newSolrAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) WeaviateAutoscalers(namespace string) WeaviateAutoscalerInterface {
+	return newWeaviateAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) ZooKeeperAutoscalers(namespace string) ZooKeeperAutoscalerInterface {
