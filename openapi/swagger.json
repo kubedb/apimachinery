@@ -25067,7 +25067,7 @@
       "properties": {
         "connectionInfo": {
           "description": "ConnectionInfo refers to the source MariaDB database connection information.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
         },
         "schema": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema"
@@ -25088,7 +25088,7 @@
       "properties": {
         "connectionInfo": {
           "description": "ConnectionInfo refers to the target MariaDB database connection information.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
         }
       }
     },
@@ -25314,41 +25314,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo": {
-      "type": "object",
-      "required": [
-        "address",
-        "user",
-        "password",
-        "dbName"
-      ],
-      "properties": {
-        "address": {
-          "type": "string",
-          "default": ""
-        },
-        "appBinding": {
-          "description": "AppBinding refers to the source database AppBinding name, which contains the connection information.",
-          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
-        },
-        "dbName": {
-          "type": "string",
-          "default": ""
-        },
-        "maxConnections": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "password": {
-          "type": "string",
-          "default": ""
-        },
-        "user": {
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema": {
       "type": "object",
       "required": [
@@ -25431,7 +25396,7 @@
       "properties": {
         "connectionInfo": {
           "description": "ConnectionInfo refers to the source MySQL database connection information.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
         },
         "schema": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema"
@@ -25462,7 +25427,7 @@
       "properties": {
         "connectionInfo": {
           "description": "ConnectionInfo refers to the target MySQL database connection information.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
         }
       }
     },

@@ -2800,8 +2800,6 @@ spec:
                     properties:
                       connectionInfo:
                         properties:
-                          address:
-                            type: string
                           appBinding:
                             properties:
                               name:
@@ -2814,16 +2812,10 @@ spec:
                           dbName:
                             type: string
                           maxConnections:
+                            format: int32
                             type: integer
-                          password:
+                          url:
                             type: string
-                          user:
-                            type: string
-                        required:
-                        - address
-                        - dbName
-                        - password
-                        - user
                         type: object
                       schema:
                         properties:
@@ -2936,8 +2928,6 @@ spec:
                     properties:
                       connectionInfo:
                         properties:
-                          address:
-                            type: string
                           appBinding:
                             properties:
                               name:
@@ -2950,16 +2940,10 @@ spec:
                           dbName:
                             type: string
                           maxConnections:
+                            format: int32
                             type: integer
-                          password:
+                          url:
                             type: string
-                          user:
-                            type: string
-                        required:
-                        - address
-                        - dbName
-                        - password
-                        - user
                         type: object
                       schema:
                         properties:
@@ -3092,8 +3076,6 @@ spec:
                     properties:
                       connectionInfo:
                         properties:
-                          address:
-                            type: string
                           appBinding:
                             properties:
                               name:
@@ -3106,16 +3088,10 @@ spec:
                           dbName:
                             type: string
                           maxConnections:
+                            format: int32
                             type: integer
-                          password:
+                          url:
                             type: string
-                          user:
-                            type: string
-                        required:
-                        - address
-                        - dbName
-                        - password
-                        - user
                         type: object
                     required:
                     - connectionInfo
@@ -3148,8 +3124,6 @@ spec:
                     properties:
                       connectionInfo:
                         properties:
-                          address:
-                            type: string
                           appBinding:
                             properties:
                               name:
@@ -3162,16 +3136,10 @@ spec:
                           dbName:
                             type: string
                           maxConnections:
+                            format: int32
                             type: integer
-                          password:
+                          url:
                             type: string
-                          user:
-                            type: string
-                        required:
-                        - address
-                        - dbName
-                        - password
-                        - user
                         type: object
                     required:
                     - connectionInfo
