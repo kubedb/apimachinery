@@ -30,12 +30,15 @@ import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/utils/ptr"
 	"kmodules.xyz/client-go/apiextensions"
 	metautil "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
+	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ofst_util "kmodules.xyz/offshoot-api/util"
+	pslister "kubeops.dev/petset/client/listers/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -43,42 +46,20 @@ func (d *DocumentDB) CustomResourceDefinition() *apiextensions.CustomResourceDef
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralDocumentDB))
 }
 
-func (d *DocumentDB) ResourcePlural() string {
-	return ResourcePluralDocumentDB
-}
-
-func (d *DocumentDB) ResourceFQN() string {
-	return fmt.Sprintf("%s.%s", d.ResourcePlural(), SchemeGroupVersion.Group)
-}
-
-func (d *DocumentDB) OffshootName() string {
-	return d.Name
-}
-
-func (d *DocumentDB) ServiceName() string {
-	return d.OffshootName()
-}
-
-func (d *DocumentDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
-	svcTemplate := GetServiceTemplate(d.Spec.ServiceTemplates, ServiceAlias(alias))
-	return d.offshootLabels(metautil.OverwriteKeys(d.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
-}
-
-func (d *DocumentDB) PetSetName() string {
-	return d.OffshootName()
-}
-
-func (d *DocumentDB) GoverningServiceName() string {
-	return metautil.NameWithSuffix(d.ServiceName(), "pods")
-}
-
 // Owner returns owner reference to resources
 func (d *DocumentDB) Owner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
 }
 
-func (d *DocumentDB) ResourceKind() string {
-	return ResourceKindDocumentDB
+// AsOwner returns owner reference to resources
+func (d *DocumentDB) AsOwner() *metav1.OwnerReference {
+	return metav1.NewControllerRef(d, SchemeGroupVersion.WithKind(ResourceKindDocumentDB))
+}
+
+var _ apis.ResourceInfo = &DocumentDB{}
+
+func (d *DocumentDB) OffshootName() string {
+	return d.Name
 }
 
 func (d *DocumentDB) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {
@@ -92,11 +73,6 @@ func (d *DocumentDB) OffshootSelectors(extraSelectors ...map[string]string) map[
 
 func (d *DocumentDB) OffshootLabels() map[string]string {
 	return d.offshootLabels(d.OffshootSelectors(), nil)
-}
-
-func (d *DocumentDB) offshootLabels(selector, override map[string]string) map[string]string {
-	selector[metautil.ComponentLabelKey] = kubedb.ComponentDatabase
-	return metautil.FilterKeys(SchemeGroupVersion.Group, selector, metautil.OverwriteKeys(nil, d.Labels, override))
 }
 
 func (d *DocumentDB) PodLabels(podTemplate *ofstv2.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
@@ -113,6 +89,36 @@ func (d *DocumentDB) PodControllerLabels(podTemplate *ofstv2.PodTemplateSpec, ex
 	return d.offshootLabels(metautil.OverwriteKeys(d.OffshootSelectors(), extraLabels...), nil)
 }
 
+func (d *DocumentDB) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
+	svcTemplate := GetServiceTemplate(d.Spec.ServiceTemplates, ServiceAlias(alias))
+	return d.offshootLabels(metautil.OverwriteKeys(d.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
+
+func (d *DocumentDB) offshootLabels(selector, override map[string]string) map[string]string {
+	selector[metautil.ComponentLabelKey] = kubedb.ComponentDatabase
+	return metautil.FilterKeys(SchemeGroupVersion.Group, selector, metautil.OverwriteKeys(nil, d.Labels, override))
+}
+
+func (d *DocumentDB) ResourceFQN() string {
+	return fmt.Sprintf("%s.%s", d.ResourcePlural(), SchemeGroupVersion.Group)
+}
+
+func (d *DocumentDB) ResourceShortCode() string {
+	return ResourceCodeDocumentDB
+}
+
+func (d *DocumentDB) ResourceKind() string {
+	return ResourceKindDocumentDB
+}
+
+func (d *DocumentDB) ResourceSingular() string {
+	return ResourceSingularDocumentDB
+}
+
+func (d *DocumentDB) ResourcePlural() string {
+	return ResourcePluralDocumentDB
+}
+
 func (d *DocumentDB) GetAuthSecretName() string {
 	if d.Spec.AuthSecret != nil && d.Spec.AuthSecret.Name != "" {
 		return d.Spec.AuthSecret.Name
@@ -127,23 +133,47 @@ func (d *DocumentDB) GetAdminAuthSecretName() string {
 	return metautil.NameWithSuffix(d.OffshootName(), kubedb.DocumentDBAdminAuthSecretSuffix)
 }
 
-func (d *DocumentDB) GetPersistentSecrets() []string {
-	var secrets []string
-	secrets = append(secrets, d.GetAuthSecretName())
-	secrets = append(secrets, d.GetAdminAuthSecretName())
-	return secrets
+func (d *DocumentDB) GetStorageClassName() string {
+	if d.Spec.Storage == nil || d.Spec.Storage.StorageClassName == nil {
+		return ""
+	}
+	return *d.Spec.Storage.StorageClassName
 }
 
-func (d *DocumentDB) Finalizer() string {
-	return fmt.Sprintf("%s/%s", apis.Finalizer, d.ResourceSingular())
+func (d *DocumentDB) ServiceName() string {
+	return d.OffshootName()
 }
 
-func (d *DocumentDB) ResourceSingular() string {
-	return ResourceSingularDocumentDB
+func (d *DocumentDB) StandbyServiceName() string {
+	return metautil.NameWithPrefix(d.ServiceName(), "standby")
+}
+
+func (d *DocumentDB) GoverningServiceName() string {
+	return metautil.NameWithSuffix(d.ServiceName(), "pods")
+}
+
+func (d *DocumentDB) PetSetName() string {
+	return d.OffshootName()
 }
 
 func (d *DocumentDB) ServiceAccountName() string {
 	return d.OffshootName()
+}
+
+type documentDBApp struct {
+	*DocumentDB
+}
+
+func (r documentDBApp) Name() string {
+	return r.DocumentDB.Name
+}
+
+func (r documentDBApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularDocumentDB))
+}
+
+func (d *DocumentDB) AppBindingMeta() appcat.AppBindingMeta {
+	return &documentDBApp{d}
 }
 
 func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alpha1.DocumentDBVersion) {
@@ -153,20 +183,33 @@ func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alp
 	if d.Spec.StandbyMode == nil {
 		d.Spec.StandbyMode = ptr.To(HotDocDBStandbyMode)
 	}
-	if d.Spec.ClientAuthMode == "" {
-		d.Spec.ClientAuthMode = DocDBClientAuthModeScram
-	}
 	if d.Spec.StreamingMode == nil {
 		d.Spec.StreamingMode = ptr.To(AsynchronousDocDBStreamingMode)
 	}
-	if d.Spec.DeletionPolicy == "" {
-		d.Spec.DeletionPolicy = DeletionPolicyDelete
+	if d.Spec.ClientAuthMode == "" {
+		d.Spec.ClientAuthMode = DocDBClientAuthModeScram
 	}
 	if d.Spec.StorageType == "" {
 		d.Spec.StorageType = StorageTypeDurable
 	}
+	if d.Spec.DeletionPolicy == "" {
+		d.Spec.DeletionPolicy = DeletionPolicyDelete
+	}
 	if d.Spec.Replicas == nil {
 		d.Spec.Replicas = ptr.To(int32(1))
+	}
+
+	if d.Spec.AuthSecret == nil {
+		d.Spec.AuthSecret = &SecretReference{}
+	}
+	if d.Spec.AuthSecret.Kind == "" {
+		d.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
+	}
+	if d.Spec.AdminAuthSecret == nil {
+		d.Spec.AdminAuthSecret = &SecretReference{}
+	}
+	if d.Spec.AdminAuthSecret.Kind == "" {
+		d.Spec.AdminAuthSecret.Kind = kubedb.ResourceKindSecret
 	}
 
 	if d.Spec.LeaderElection == nil {
@@ -197,9 +240,16 @@ func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alp
 
 	d.initializePodTemplates()
 
+	if d.Spec.PodTemplate.Spec.ServiceAccountName == "" {
+		d.Spec.PodTemplate.Spec.ServiceAccountName = d.OffshootName()
+	}
+
 	d.SetDefaultPodSecurityContext(d.Spec.PodTemplate, &documentDBVersion)
+	d.SetInitContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
 	d.SetDocumentDBContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
+	d.SetCoordinatorContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
 	d.SetDefaultReplicationMode()
+	d.SetHealthCheckerDefaults()
 }
 
 // SetDefaultReplicationMode sets the default replication mode.
@@ -241,6 +291,15 @@ func (d *DocumentDB) SetDefaultPodSecurityContext(podTemplate *ofstv2.PodTemplat
 	}
 }
 
+func (d *DocumentDB) SetInitContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, documentDBVersion *catalogv1alpha1.DocumentDBVersion) {
+	if podTemplate == nil {
+		return
+	}
+	container := ofst_util.EnsureInitContainerExists(podTemplate, kubedb.DocumentDBInitContainerName)
+	d.setContainerDefaultSecurityContext(container, documentDBVersion)
+	d.setContainerDefaultResources(container, *kubedb.DefaultInitContainerResource.DeepCopy())
+}
+
 func (d *DocumentDB) SetDocumentDBContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, documentDBVersion *catalogv1alpha1.DocumentDBVersion) {
 	if podTemplate == nil {
 		return
@@ -248,6 +307,15 @@ func (d *DocumentDB) SetDocumentDBContainerDefaults(podTemplate *ofstv2.PodTempl
 	container := ofst_util.EnsureContainerExists(podTemplate, kubedb.DocumentDBContainerName)
 	d.setContainerDefaultSecurityContext(container, documentDBVersion)
 	d.setContainerDefaultResources(container, *kubedb.DefaultResources.DeepCopy())
+}
+
+func (d *DocumentDB) SetCoordinatorContainerDefaults(podTemplate *ofstv2.PodTemplateSpec, documentDBVersion *catalogv1alpha1.DocumentDBVersion) {
+	if podTemplate == nil {
+		return
+	}
+	container := ofst_util.EnsureContainerExists(podTemplate, kubedb.DocumentDBCoordinatorContainerName)
+	d.setContainerDefaultSecurityContext(container, documentDBVersion)
+	d.setContainerDefaultResources(container, *kubedb.CoordinatorDefaultResources.DeepCopy())
 }
 
 func (d *DocumentDB) setContainerDefaultSecurityContext(container *core.Container, documentDBVersion *catalogv1alpha1.DocumentDBVersion) {
@@ -292,6 +360,23 @@ func (d *DocumentDB) initializePodTemplates() {
 	}
 }
 
+func (d *DocumentDB) GetPersistentSecrets() []string {
+	var secrets []string
+	secrets = append(secrets, d.GetAuthSecretName())
+	secrets = append(secrets, d.GetAdminAuthSecretName())
+	return secrets
+}
+
+func (d *DocumentDB) Finalizer() string {
+	return fmt.Sprintf("%s/%s", apis.Finalizer, d.ResourceSingular())
+}
+
+func (d *DocumentDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, error) {
+	// Desire number of petSets
+	expectedItems := 1
+	return checkReplicasOfPetSet(lister.PetSets(d.Namespace), labels.SelectorFromSet(d.OffshootLabels()), expectedItems)
+}
+
 func (d *DocumentDB) SetHealthCheckerDefaults() {
 	if d.Spec.HealthChecker.PeriodSeconds == nil {
 		d.Spec.HealthChecker.PeriodSeconds = pointer.Int32P(10)
@@ -300,7 +385,7 @@ func (d *DocumentDB) SetHealthCheckerDefaults() {
 		d.Spec.HealthChecker.TimeoutSeconds = pointer.Int32P(10)
 	}
 	if d.Spec.HealthChecker.FailureThreshold == nil {
-		d.Spec.HealthChecker.FailureThreshold = pointer.Int32P(3)
+		d.Spec.HealthChecker.FailureThreshold = pointer.Int32P(1)
 	}
 }
 
