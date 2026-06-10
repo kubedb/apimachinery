@@ -99,6 +99,15 @@ spec:
                 - scram
                 - cert
                 type: string
+              configuration:
+                properties:
+                  inline:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  secretName:
+                    type: string
+                type: object
               deletionPolicy:
                 enum:
                 - Halt
@@ -106,6 +115,8 @@ spec:
                 - WipeOut
                 - DoNotTerminate
                 type: string
+              halted:
+                type: boolean
               healthChecker:
                 default:
                   failureThreshold: 1
