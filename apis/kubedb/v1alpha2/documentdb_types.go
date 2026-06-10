@@ -120,6 +120,11 @@ type DocumentDBSpec struct {
 	// +optional
 	AdminAuthSecret *SecretReference `json:"adminAuthSecret,omitempty"`
 
+	// Configuration is an optional field to provide custom configuration file for database (i.e. config.properties).
+	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
+	// +optional
+	Configuration *DocumentDBConfiguration `json:"configuration,omitempty"`
+
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
@@ -127,6 +132,10 @@ type DocumentDBSpec struct {
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+
+	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
+	// +optional
+	Halted bool `json:"halted,omitempty"`
 
 	// DeletionPolicy controls the delete operation for database
 	// +optional
@@ -136,6 +145,10 @@ type DocumentDBSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 1}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+}
+
+type DocumentDBConfiguration struct {
+	ConfigurationSpec `json:",inline,omitempty"`
 }
 
 type DocumentDBStatus struct {
