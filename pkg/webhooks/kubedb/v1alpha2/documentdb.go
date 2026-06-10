@@ -83,6 +83,13 @@ func (w *DocumentDBCustomWebhook) Default(ctx context.Context, obj runtime.Objec
 
 	documentdblog.Info("default", "name", db.Name)
 
+	if db.Spec.Halted {
+		if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
+			return errors.New(`can't halt, since deletion policy is 'DoNotTerminate'`)
+		}
+		db.Spec.DeletionPolicy = olddbapi.DeletionPolicyHalt
+	}
+
 	documentDBVersion := catalogapi.DocumentDBVersion{}
 	err := w.DefaultClient.Get(context.Background(), types.NamespacedName{Name: db.Spec.Version}, &documentDBVersion)
 	if err != nil {
@@ -200,6 +207,26 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("adminAuthSecret"),
 			db.Name,
 			`'spec.adminAuthSecret.name' need to specify when admin auth secret is externally managed`))
+	}
+
+	// Halt related
+	if db.Spec.StorageType == olddbapi.StorageTypeEphemeral && db.Spec.DeletionPolicy == olddbapi.DeletionPolicyHalt {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
+			db.Name,
+			`'spec.deletionPolicy: Halt' can not be used for 'Ephemeral' storage`))
+	}
+
+	// Configuration related
+	if db.Spec.Configuration != nil && len(db.Spec.Configuration.Inline) > 0 {
+		if len(db.Spec.Configuration.Inline) > 1 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("inline"),
+				db.Name,
+				fmt.Sprintf(`only one configuration source is allowed in spec.configuration.inline and it should be %q`, kubedb.DocumentDBBackendConfigFile)))
+		} else if _, exists := db.Spec.Configuration.Inline[kubedb.DocumentDBBackendConfigFile]; !exists {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("inline"),
+				db.Name,
+				fmt.Sprintf(`invalid configuration source found in spec.configuration.inline. only %q is allowed`, kubedb.DocumentDBBackendConfigFile)))
+		}
 	}
 
 	// leaderElection related
