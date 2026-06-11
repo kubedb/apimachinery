@@ -1637,7 +1637,7 @@ const (
 	DocumentDBCoordinatorPortName       = "coordinator"
 	DocumentDBCoordinatorPort           = 2380
 	DocumentDBCoordinatorClientPortName = "coordinatclient"
-	DocumentDBCoordinatorClientPort     = 2389
+	DocumentDBCoordinatorClientPort     = 2379
 	DocumentDBGRPCServerPortName        = "grpcserver"
 	DocumentDBGRPCServerPort            = 2384
 

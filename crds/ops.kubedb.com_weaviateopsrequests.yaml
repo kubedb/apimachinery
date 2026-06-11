@@ -233,7 +233,6 @@ spec:
                 type: object
               type:
                 enum:
-                - UpdateVersion
                 - HorizontalScaling
                 - VerticalScaling
                 - VolumeExpansion

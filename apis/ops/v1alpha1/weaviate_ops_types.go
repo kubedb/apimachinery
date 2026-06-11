@@ -69,7 +69,7 @@ type WeaviateOpsRequestSpec struct {
 	// Specifies information necessary for configuring TLS
 	TLS *TLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for migrating storageClass or data
-	Migration *WeaviateMigrationSpec `json:"migration,omitempty"`
+	Migration *StorageMigrationSpec `json:"migration,omitempty"`
 	// Specifies information necessary for configuring authSecret of the database
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -81,8 +81,8 @@ type WeaviateOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth)
+// +kubebuilder:validation:Enum=HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;RotateAuth;StorageMigration
+// ENUM(HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, RotateAuth, StorageMigration)
 type WeaviateOpsRequestType string
 
 // WeaviateUpdateVersionSpec contains the update version information of a Weaviate cluster
@@ -132,9 +132,4 @@ type WeaviateReconfigurationSpec struct {
 	// from a Kubernetes Secret for the database container.
 	// +optional
 	BackupConfigSecret *core.LocalObjectReference `json:"backupConfigSecret,omitempty"`
-}
-
-type WeaviateMigrationSpec struct {
-	StorageClassName   *string                            `json:"storageClassName"`
-	OldPVReclaimPolicy core.PersistentVolumeReclaimPolicy `json:"oldPVReclaimPolicy,omitempty"`
 }
