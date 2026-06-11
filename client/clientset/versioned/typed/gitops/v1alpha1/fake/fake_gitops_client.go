@@ -29,16 +29,16 @@ type FakeGitopsV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeGitopsV1alpha1) ClickHouses(namespace string) v1alpha1.ClickHouseInterface {
+	return &FakeClickHouses{c, namespace}
+}
+
 func (c *FakeGitopsV1alpha1) Druids(namespace string) v1alpha1.DruidInterface {
 	return &FakeDruids{c, namespace}
 }
 
 func (c *FakeGitopsV1alpha1) Elasticsearches(namespace string) v1alpha1.ElasticsearchInterface {
 	return &FakeElasticsearches{c, namespace}
-}
-
-func (c *FakeGitopsV1alpha1) FerretDBs(namespace string) v1alpha1.FerretDBInterface {
-	return &FakeFerretDBs{c, namespace}
 }
 
 func (c *FakeGitopsV1alpha1) Kafkas(namespace string) v1alpha1.KafkaInterface {

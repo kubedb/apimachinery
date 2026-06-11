@@ -49,14 +49,6 @@ func (c *FakeAutoscalingV1alpha1) ElasticsearchAutoscalers(namespace string) v1a
 	return &FakeElasticsearchAutoscalers{c, namespace}
 }
 
-func (c *FakeAutoscalingV1alpha1) EtcdAutoscalers(namespace string) v1alpha1.EtcdAutoscalerInterface {
-	return &FakeEtcdAutoscalers{c, namespace}
-}
-
-func (c *FakeAutoscalingV1alpha1) FerretDBAutoscalers(namespace string) v1alpha1.FerretDBAutoscalerInterface {
-	return &FakeFerretDBAutoscalers{c, namespace}
-}
-
 func (c *FakeAutoscalingV1alpha1) HanaDBAutoscalers(namespace string) v1alpha1.HanaDBAutoscalerInterface {
 	return &FakeHanaDBAutoscalers{c, namespace}
 }

@@ -126,7 +126,7 @@ vendor/                        # `go mod vendor` is required (GOFLAGS=-mod=vendo
 
 ## Key Packages / APIs
 
-- `apis/kubedb/v1alpha2` - storage version for all 35 database kinds (Cassandra, ClickHouse, Druid, Elasticsearch, FerretDB, Kafka, MariaDB, MongoDB, MySQL, Postgres, Redis, etc.). Each database has `<db>_types.go` + `<db>_helpers.go`. `helpers.go` and per-DB helpers expose `SetDefaults`, `OffshootSelectors`, `StatefulSet*Name`, `ServiceName`, etc.
+- `apis/kubedb/v1alpha2` - storage version for all 35 database kinds (Cassandra, ClickHouse, Druid, Elasticsearch, Kafka, MariaDB, MongoDB, MySQL, Postgres, Redis, etc.). Each database has `<db>_types.go` + `<db>_helpers.go`. `helpers.go` and per-DB helpers expose `SetDefaults`, `OffshootSelectors`, `StatefulSet*Name`, `ServiceName`, etc.
 - `apis/kubedb/v1` - newer served version (subset of databases promoted to GA, e.g. `postgres_types.go`, `mongodb_types.go`, `mysql_types.go`, `elasticsearch_types.go`, `redis_types.go`, `kafka_types.go`, etc.). `conversion.go` and generated `zz_generated.conversion.go` bridge to `v1alpha2`.
 - `apis/kubedb/install/install.go` - registers both `v1` and `v1alpha2` and sets version priority (v1 over v1alpha2). Every API group has an analogous `install/` package.
 - `apis/kubedb/constants.go` - canonical constants (labels, annotations, container names, ports, sidekick names). Reused across operators.
@@ -170,7 +170,6 @@ vendor/                        # `go mod vendor` is required (GOFLAGS=-mod=vendo
 - `github.com/cert-manager/cert-manager` v1.19.4 - certificate types
 - `github.com/kubernetes-csi/external-snapshotter/client/v8` v8.4.0 - VolumeSnapshot
 - `open-cluster-management.io/api` v1.2.0 - OCM support via `pkg/controller/ocm`
-- `go.etcd.io/etcd/...` - etcd type imports for embedded etcd database; pinned via `replace` directives (server/pkg at v3.5.27, raft replaced with `kubedb/etcd-io/raft v3.5.0-beta.4`)
 - `github.com/mikefarah/yq/v3` - wrapped under `pkg/yq3` for config rendering
 
 ## Code Conventions
@@ -190,6 +189,5 @@ vendor/                        # `go mod vendor` is required (GOFLAGS=-mod=vendo
 - Don't hand-edit anything under `client/`, `crds/`, `openapi/`, or any `zz_generated.*` / `openapi_generated.go` / `generated.pb.go` file - rerun `make gen`.
 - Don't add a new database without updating all five tiers: `apis/kubedb/v1alpha2`, `apis/catalog/v1alpha1`, `apis/ops/v1alpha1`, `apis/autoscaling/v1alpha1`, and (where applicable) `apis/archiver/v1alpha1` + `apis/gitops/v1alpha1`. Also extend the relevant `pkg/webhooks/` package.
 - Don't bypass `make verify` - generated code drifting from sources will fail CI.
-- Don't bump `go.etcd.io/etcd/...` without checking the `replace` block at the bottom of `go.mod`; pins exist because of the embedded-etcd database type.
 - Don't add CRD YAML files manually - controller-gen reads kubebuilder markers from `apis/...` and writes `crds/*.yaml`; large CRDs are post-processed via `hack/crd-patch.json` (see `crd_to_patch` list in the `Makefile`).
 - Don't run `go build ./...` directly without `-mod=vendor` when verifying changes that other Make targets touch; mismatched module mode can cause spurious errors.

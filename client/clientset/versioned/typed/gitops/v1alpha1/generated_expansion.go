@@ -18,11 +18,11 @@ limitations under the License.
 
 package v1alpha1
 
+type ClickHouseExpansion interface{}
+
 type DruidExpansion interface{}
 
 type ElasticsearchExpansion interface{}
-
-type FerretDBExpansion interface{}
 
 type KafkaExpansion interface{}
 

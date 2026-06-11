@@ -24,12 +24,12 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// ClickHouses returns a ClickHouseInformer.
+	ClickHouses() ClickHouseInformer
 	// Druids returns a DruidInformer.
 	Druids() DruidInformer
 	// Elasticsearches returns a ElasticsearchInformer.
 	Elasticsearches() ElasticsearchInformer
-	// FerretDBs returns a FerretDBInformer.
-	FerretDBs() FerretDBInformer
 	// Kafkas returns a KafkaInformer.
 	Kafkas() KafkaInformer
 	// MSSQLServers returns a MSSQLServerInformer.
@@ -77,6 +77,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
+// ClickHouses returns a ClickHouseInformer.
+func (v *version) ClickHouses() ClickHouseInformer {
+	return &clickHouseInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // Druids returns a DruidInformer.
 func (v *version) Druids() DruidInformer {
 	return &druidInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -85,11 +90,6 @@ func (v *version) Druids() DruidInformer {
 // Elasticsearches returns a ElasticsearchInformer.
 func (v *version) Elasticsearches() ElasticsearchInformer {
 	return &elasticsearchInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// FerretDBs returns a FerretDBInformer.
-func (v *version) FerretDBs() FerretDBInformer {
-	return &ferretDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Kafkas returns a KafkaInformer.
