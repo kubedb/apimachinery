@@ -23,6 +23,8 @@ import (
 	"unsafe"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
