@@ -46678,6 +46678,12 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec"),
 						},
 					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring TLS",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
+						},
+					},
 					"migration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for migrating storageClass or data",
@@ -46714,7 +46720,7 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVolumeExpansionSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVolumeExpansionSpec"},
 	}
 }
 

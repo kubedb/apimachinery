@@ -8419,6 +8419,11 @@ func (in *WeaviateSpec) DeepCopyInto(out *WeaviateSpec) {
 		*out = new(WeaviateConfiguration)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(apiv1.TLSConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	in.PodTemplate.DeepCopyInto(&out.PodTemplate)
 	if in.ServiceTemplates != nil {
 		in, out := &in.ServiceTemplates, &out.ServiceTemplates

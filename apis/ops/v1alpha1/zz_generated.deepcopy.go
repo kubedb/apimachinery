@@ -9267,6 +9267,11 @@ func (in *WeaviateOpsRequestSpec) DeepCopyInto(out *WeaviateOpsRequestSpec) {
 		*out = new(WeaviateReconfigurationSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(TLSSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Migration != nil {
 		in, out := &in.Migration, &out.Migration
 		*out = new(WeaviateMigrationSpec)

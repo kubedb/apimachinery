@@ -90,6 +90,10 @@ type WeaviateSpec struct {
 	// +optional
 	Configuration *WeaviateConfiguration `json:"configuration,omitempty"`
 
+	// TLS contains tls configurations for client and server.
+	// +optional
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
@@ -139,6 +143,15 @@ type ReplicationConfig struct {
 	// +kubebuilder:maximum=5
 	Factor int32 `json:"factor,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=server;client
+type WeaviateCertificateAlias string
+
+const (
+	WeaviateServerCert WeaviateCertificateAlias = "server"
+	WeaviateClientCert WeaviateCertificateAlias = "client"
+)
+
 type WeaviateConfiguration struct {
 	ConfigurationSpec `json:",inline,omitempty"`
 

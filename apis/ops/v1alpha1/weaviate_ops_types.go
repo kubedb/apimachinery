@@ -66,6 +66,8 @@ type WeaviateOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for custom configuration of weaviate
 	Configuration *WeaviateReconfigurationSpec `json:"configuration,omitempty"`
+	// Specifies information necessary for configuring TLS
+	TLS *TLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for migrating storageClass or data
 	Migration *WeaviateMigrationSpec `json:"migration,omitempty"`
 	// Specifies information necessary for configuring authSecret of the database
@@ -79,8 +81,8 @@ type WeaviateOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;RotateAuth
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, RotateAuth)
+// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth)
 type WeaviateOpsRequestType string
 
 // WeaviateUpdateVersionSpec contains the update version information of a Weaviate cluster
