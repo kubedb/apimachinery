@@ -79,6 +79,7 @@ const (
 	MongoDBKey       = "mongodb" + "." + GroupName
 	RedisKey         = "redis" + "." + GroupName
 	MemcachedKey     = "memcached" + "." + GroupName
+	EtcdKey          = "etcd" + "." + GroupName
 	ProxySQLKey      = "proxysql" + "." + GroupName
 
 	// Auth related constants
@@ -1638,7 +1639,9 @@ const (
 	DocumentDBDatabaseRoleKey      = "documentdb.db/role"
 	DocumentDBDatabaseRoleInstance = "instance"
 
-	DocumentDBDefaultUsername = "default_user"
+	DocumentDBDefaultUsername       = "default_user"
+	DocumentDBAdminUsername         = "documentdb"
+	DocumentDBAdminAuthSecretSuffix = "admin-auth"
 
 	DefaultDocumentDBDatabase = "sampledb"
 
@@ -1661,9 +1664,6 @@ const (
 	DocumentDBContainerName            = "documentdb"
 	DocumentDBInitContainerName        = "documentdb-init"
 	DocumentDBCoordinatorContainerName = "documentdb-coordinator"
-	DocumentDBMainImage                = "ghcr.io/documentdb/documentdb"
-	DocumentDBUser                     = "postgres"
-	DocumentDBLinkedDBName             = "documentdb"
 
 	DocumentDBServerPath = "/etc/certs/server"
 

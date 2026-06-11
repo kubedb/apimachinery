@@ -83,6 +83,13 @@ func (w *DocumentDBCustomWebhook) Default(ctx context.Context, obj runtime.Objec
 
 	documentdblog.Info("default", "name", db.Name)
 
+	if db.Spec.Halted {
+		if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
+			return errors.New(`can't halt, since deletion policy is 'DoNotTerminate'`)
+		}
+		db.Spec.DeletionPolicy = olddbapi.DeletionPolicyHalt
+	}
+
 	documentDBVersion := catalogapi.DocumentDBVersion{}
 	err := w.DefaultClient.Get(context.Background(), types.NamespacedName{Name: db.Spec.Version}, &documentDBVersion)
 	if err != nil {
@@ -102,7 +109,6 @@ func (w *DocumentDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtim
 	if !ok {
 		return nil, fmt.Errorf("expected an DocumentDB object but got %T", obj)
 	}
-
 	documentdblog.Info("validate create", "name", db.Name)
 	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
@@ -196,11 +202,41 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 			`'spec.authSecret.name' need to specify when auth secret is externally managed`))
 	}
 
-	// Termination policy related
-	if db.Spec.DeletionPolicy == olddbapi.DeletionPolicyHalt {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("terminationPolicy"),
+	// Admin auth secret related
+	if db.Spec.AdminAuthSecret != nil && db.Spec.AdminAuthSecret.ExternallyManaged && db.Spec.AdminAuthSecret.Name == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("adminAuthSecret"),
 			db.Name,
-			`'spec.terminationPolicy' value 'Halt' is not supported yet for DocumentDB`))
+			`'spec.adminAuthSecret.name' need to specify when admin auth secret is externally managed`))
+	}
+
+	// Halt related
+	if db.Spec.StorageType == olddbapi.StorageTypeEphemeral && db.Spec.DeletionPolicy == olddbapi.DeletionPolicyHalt {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("deletionPolicy"),
+			db.Name,
+			`'spec.deletionPolicy: Halt' can not be used for 'Ephemeral' storage`))
+	}
+
+	// Configuration related
+	if db.Spec.Configuration != nil && len(db.Spec.Configuration.Inline) > 0 {
+		if len(db.Spec.Configuration.Inline) > 1 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("inline"),
+				db.Name,
+				fmt.Sprintf(`only one configuration source is allowed in spec.configuration.inline and it should be %q`, kubedb.DocumentDBBackendConfigFile)))
+		} else if _, exists := db.Spec.Configuration.Inline[kubedb.DocumentDBBackendConfigFile]; !exists {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("inline"),
+				db.Name,
+				fmt.Sprintf(`invalid configuration source found in spec.configuration.inline. only %q is allowed`, kubedb.DocumentDBBackendConfigFile)))
+		}
+	}
+
+	// leaderElection related
+	if db.Spec.LeaderElection != nil {
+		err := w.validateSpecForDB(db)
+		if err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
+				db.Name,
+				err.Error()))
+		}
 	}
 
 	return allErr
@@ -226,5 +262,24 @@ func (w *DocumentDBCustomWebhook) validateDocumentDBVersion(db *olddbapi.Documen
 	// Older code validated the PostgresVersion referenced by the DocumentDBVersion.
 	// The current DocumentDBVersion spec in this repo does not expose a Postgres field,
 	// so we only verify that the DocumentDBVersion resource exists.
+	return nil
+}
+
+func (w *DocumentDBCustomWebhook) validateSpecForDB(documentdb *olddbapi.DocumentDB) error {
+	// validate leader election configs
+	// ==============> start
+	lec := documentdb.Spec.LeaderElection
+	if lec != nil {
+		if lec.ElectionTick <= lec.HeartbeatTick {
+			return fmt.Errorf("ElectionTick must be greater than HeartbeatTick")
+		}
+		if lec.ElectionTick < 1 {
+			return fmt.Errorf("ElectionTick must be greater than zero")
+		}
+		if lec.HeartbeatTick < 1 {
+			return fmt.Errorf("HeartbeatTick must be greater than zero")
+		}
+	}
+	// end <==============
 	return nil
 }
