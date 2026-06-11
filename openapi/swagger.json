@@ -20898,6 +20898,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer"
         },
+        "migrator": {
+          "description": "Migrator defines the migration related CLI/Tools images for this MySQL version",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.DBMigratorImages"
+        },
         "podSecurityPolicies": {
           "description": "PSP names",
           "default": {},
@@ -25259,7 +25264,7 @@
       "properties": {
         "connectionInfo": {
           "description": "ConnectionInfo refers to the source MariaDB database connection information.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
         },
         "schema": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema"
@@ -25280,7 +25285,7 @@
       "properties": {
         "connectionInfo": {
           "description": "ConnectionInfo refers to the target MariaDB database connection information.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
         }
       }
     },
@@ -25506,37 +25511,6 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo": {
-      "type": "object",
-      "required": [
-        "address",
-        "user",
-        "password",
-        "dbName"
-      ],
-      "properties": {
-        "address": {
-          "type": "string",
-          "default": ""
-        },
-        "dbName": {
-          "type": "string",
-          "default": ""
-        },
-        "maxConnections": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "password": {
-          "type": "string",
-          "default": ""
-        },
-        "user": {
-          "type": "string",
-          "default": ""
-        }
-      }
-    },
     "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema": {
       "type": "object",
       "required": [
@@ -25619,7 +25593,7 @@
       "properties": {
         "connectionInfo": {
           "description": "ConnectionInfo refers to the source MySQL database connection information.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
         },
         "schema": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSchema"
@@ -25650,7 +25624,7 @@
       "properties": {
         "connectionInfo": {
           "description": "ConnectionInfo refers to the target MySQL database connection information.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLConnectionInfo"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.ConnectionInfo"
         }
       }
     },
