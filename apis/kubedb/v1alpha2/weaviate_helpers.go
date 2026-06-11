@@ -329,3 +329,7 @@ func (w *Weaviate) SetTLSDefaults() {
 		w.CertificateName(WeaviateClientCert),
 	)
 }
+
+func (w *Weaviate) GetStorageClassName() string {
+	return *w.Spec.Storage.StorageClassName
+}
