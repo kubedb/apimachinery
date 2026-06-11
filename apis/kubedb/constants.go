@@ -1646,7 +1646,7 @@ const (
 	DefaultDocumentDBDatabase = "sampledb"
 
 	// volume related constants
-	DocumentDBVolumeMountData = "documentdb-data"
+	DocumentDBVolumeMountData = "data"
 	DocumentDBDataDir         = "/var/pv"
 
 	DocumentDBScripts    = "scripts"
