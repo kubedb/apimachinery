@@ -241,6 +241,7 @@ spec:
                 - Reconfigure
                 - ReconfigureTLS
                 - RotateAuth
+                - StorageMigration
                 type: string
               verticalScaling:
                 properties:

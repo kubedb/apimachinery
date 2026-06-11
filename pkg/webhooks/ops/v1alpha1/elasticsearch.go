@@ -217,6 +217,9 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchUpdateVersio
 
 func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchStorageMigrationOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
 	m := req.Spec.Migration
+	if m == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
 	if m.Node == nil && m.Master == nil && m.Ingest == nil && m.Data == nil &&
 		m.DataContent == nil && m.DataHot == nil && m.DataWarm == nil &&
 		m.DataCold == nil && m.DataFrozen == nil && m.ML == nil && m.Transform == nil && m.Coordinating == nil {

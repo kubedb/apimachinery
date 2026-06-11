@@ -87,10 +87,10 @@ func (w *Neo4jAutoscalerCustomWebhook) setDefaults(scaler *autoscalingapi.Neo4jA
 
 func (w *Neo4jAutoscalerCustomWebhook) setOpsReqOptsDefaults(scaler *autoscalingapi.Neo4jAutoscaler) {
 	if scaler.Spec.OpsRequestOptions == nil {
-		scaler.Spec.OpsRequestOptions = &autoscalingapi.Neo4jOpsRequestOptions{}
-	}
-	if scaler.Spec.OpsRequestOptions.Apply == "" {
-		scaler.Spec.OpsRequestOptions.Apply = opsapi.ApplyOptionIfReady
+		scaler.Spec.OpsRequestOptions = &autoscalingapi.OpsRequestOptions{
+			Apply:      opsapi.ApplyOptionIfReady,
+			MaxRetries: 1,
+		}
 	}
 }
 
