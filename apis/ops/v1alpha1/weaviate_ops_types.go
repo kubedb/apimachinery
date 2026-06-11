@@ -79,8 +79,8 @@ type WeaviateOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;RotateAuth;StorageMigration
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, RotateAuth, StorageMigration)
+// +kubebuilder:validation:Enum=HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;RotateAuth;StorageMigration
+// ENUM(HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, RotateAuth, StorageMigration)
 type WeaviateOpsRequestType string
 
 // WeaviateUpdateVersionSpec contains the update version information of a Weaviate cluster
