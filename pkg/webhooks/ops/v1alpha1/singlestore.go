@@ -279,16 +279,7 @@ func (s *SinglestoreOpsRequestCustomWebhook) validateSinglestoreReconfigurationT
 	if TLSSpec == nil {
 		return errors.New("spec.TLS nil not supported in ReconfigureTLS type")
 	}
-	sdb, err := s.hasDatabaseRef(req)
-	if err != nil {
-		return err
-	}
-	if sdb.Spec.Topology == nil {
-		return errors.New("standalone mode not supported in ReconfigureTLS type")
-	}
-	if sdb.Spec.TLS == nil && (req.Spec.TLS.Remove || req.Spec.TLS.RotateCertificates) {
-		return errors.New("can't apply remove and rotate certificates operation when db.Spec.TLS is nil.")
-	}
+
 	configCount := 0
 	if req.Spec.TLS.Remove {
 		configCount++
