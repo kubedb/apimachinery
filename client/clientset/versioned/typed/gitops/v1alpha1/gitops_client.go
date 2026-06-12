@@ -29,6 +29,7 @@ import (
 
 type GitopsV1alpha1Interface interface {
 	RESTClient() rest.Interface
+	ClickHousesGetter
 	DruidsGetter
 	ElasticsearchesGetter
 	KafkasGetter
@@ -53,6 +54,10 @@ type GitopsV1alpha1Interface interface {
 // GitopsV1alpha1Client is used to interact with features provided by the gitops.kubedb.com group.
 type GitopsV1alpha1Client struct {
 	restClient rest.Interface
+}
+
+func (c *GitopsV1alpha1Client) ClickHouses(namespace string) ClickHouseInterface {
+	return newClickHouses(c, namespace)
 }
 
 func (c *GitopsV1alpha1Client) Druids(namespace string) DruidInterface {
