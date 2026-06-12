@@ -17,11 +17,9 @@ limitations under the License.
 package lib
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
+	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"strings"
@@ -29,13 +27,15 @@ import (
 	"time"
 
 	"github.com/nats-io/nats.go"
-	"github.com/pkg/errors"
-	verifier "go.bytebuilders.dev/license-verifier"
 	"go.bytebuilders.dev/license-verifier/apis/licenses/v1alpha1"
 	"go.bytebuilders.dev/license-verifier/info"
 	"go.bytebuilders.dev/license-verifier/kubernetes"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/klog/v2"
+	identityapi "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
+	identityclient "kmodules.xyz/resource-metadata/client/clientset/versioned/typed/identity/v1alpha1"
+	identitylib "kmodules.xyz/resource-metadata/pkg/identity"
 )
 
 const (
@@ -155,41 +155,14 @@ func (c *NatsClient) connect() error {
 		return fmt.Errorf("license status is %s", license.Status)
 	}
 
-	opts := verifier.Options{
-		ClusterUID: c.clusterID,
-		Features:   info.ProductName,
-		CACert:     []byte(info.LicenseCA),
-		License:    licenseBytes,
-	}
-	data, err := json.Marshal(opts)
-	if err != nil {
-		return err
-	}
-
-	resp, err := http.Post(info.MustRegistrationAPIEndpoint(), "application/json", bytes.NewReader(data))
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close() // nolint:errcheck
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return errors.New(resp.Status + ", " + string(body))
-	}
-
-	var natscred NatsCredential
-	err = json.Unmarshal(body, &natscred)
+	natscred, err := c.fetchNatsCredential(licenseBytes)
 	if err != nil {
 		return err
 	}
 
 	klog.V(5).InfoS("using event receiver", "address", natscred.Server, "subject", natscred.Subject, "licenseID", license.ID)
 
-	nc, err := NewConnection(license.ID, natscred)
+	nc, err := NewConnection(license.ID, *natscred)
 	if err != nil {
 		return err
 	}
@@ -200,6 +173,86 @@ func (c *NatsClient) connect() error {
 	c.Subject = natscred.Subject
 	c.Server = natscred.Server
 	return nil
+}
+
+// fetchNatsCredential obtains a NATS credential by first calling the public
+// appscode.com Register endpoint. If that call fails because the cluster
+// cannot reach appscode.com (DNS failure, connection refused, timeout, etc.),
+// it falls back to the in-cluster identity.k8s.appscode.com extended API.
+func (c *NatsClient) fetchNatsCredential(licenseBytes []byte) (*NatsCredential, error) {
+	natscred, err := registerWithAppsCode(c.clusterID, licenseBytes)
+	if err == nil {
+		return natscred, nil
+	}
+	if !isNoConnectivityErr(err) {
+		return nil, err
+	}
+	klog.V(5).InfoS("appscode.com unreachable; falling back to extended API",
+		"error", err.Error())
+	return registerViaExtendedAPI(c.cfg, licenseBytes)
+}
+
+func registerWithAppsCode(clusterID string, licenseBytes []byte) (*NatsCredential, error) {
+	resp, err := identitylib.NewDefaultClient().GetAuditTokenForCluster(clusterID, info.ProductName, licenseBytes)
+	if err != nil {
+		return nil, err
+	}
+	return &NatsCredential{
+		NatsConfig: NatsConfig{
+			Subject: resp.Subject,
+			Server:  resp.Server,
+		},
+		Credential: resp.Credential,
+	}, nil
+}
+
+func registerViaExtendedAPI(cfg *rest.Config, licenseBytes []byte) (*NatsCredential, error) {
+	ic, err := identityclient.NewForConfig(cfg)
+	if err != nil {
+		return nil, err
+	}
+	req := &identityapi.AuditTokenRequest{
+		Request: &identityapi.AuditTokenRequestRequest{
+			Features: info.ProductName,
+			License:  licenseBytes,
+		},
+	}
+	result, err := ic.AuditTokenRequests().Create(context.TODO(), req, metav1.CreateOptions{})
+	if err != nil {
+		return nil, err
+	}
+	if result.Response == nil {
+		return nil, errors.New("extended api returned empty AuditTokenRequest response")
+	}
+	return &NatsCredential{
+		NatsConfig: NatsConfig{
+			Subject: result.Response.Subject,
+			Server:  result.Response.Server,
+		},
+		Credential: result.Response.Credential,
+	}, nil
+}
+
+// isNoConnectivityErr reports whether the cluster cannot reach
+// https://appscode.com at all (DNS lookup failure, connection refused,
+// timeout, etc.). It actively probes the host with a short-timeout HEAD
+// request rather than guessing from the registration error, so HTTP error
+// responses from appscode.com (auth failures, 4xx, 5xx) don't accidentally
+// trigger the fallback. The err argument is accepted for future use but
+// currently ignored.
+func isNoConnectivityErr(_ error) bool {
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	req, err := http.NewRequestWithContext(ctx, http.MethodHead, "https://appscode.com", nil)
+	if err != nil {
+		return false
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return true
+	}
+	resp.Body.Close() // nolint:errcheck
+	return false
 }
 
 // NewConnection creates a new NATS connection

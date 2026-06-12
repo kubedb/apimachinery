@@ -58,22 +58,6 @@ type ElasticsearchOpsRequestListerExpansion interface{}
 // ElasticsearchOpsRequestNamespaceLister.
 type ElasticsearchOpsRequestNamespaceListerExpansion interface{}
 
-// EtcdOpsRequestListerExpansion allows custom methods to be added to
-// EtcdOpsRequestLister.
-type EtcdOpsRequestListerExpansion interface{}
-
-// EtcdOpsRequestNamespaceListerExpansion allows custom methods to be added to
-// EtcdOpsRequestNamespaceLister.
-type EtcdOpsRequestNamespaceListerExpansion interface{}
-
-// FerretDBOpsRequestListerExpansion allows custom methods to be added to
-// FerretDBOpsRequestLister.
-type FerretDBOpsRequestListerExpansion interface{}
-
-// FerretDBOpsRequestNamespaceListerExpansion allows custom methods to be added to
-// FerretDBOpsRequestNamespaceLister.
-type FerretDBOpsRequestNamespaceListerExpansion interface{}
-
 // HanaDBOpsRequestListerExpansion allows custom methods to be added to
 // HanaDBOpsRequestLister.
 type HanaDBOpsRequestListerExpansion interface{}

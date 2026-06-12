@@ -111,16 +111,6 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		}
 		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, es.GetLabels())
 
-	case olddbapi.ResourceKindFerretDB:
-		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralFerretDB
-		fr, err := c.DBClient.KubedbV1alpha2().FerretDBs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
-		if err != nil {
-			return nil, err
-		}
-		dbInfo.replicasReady, dbInfo.msg, err = fr.ReplicasAreReady(c.PSLister)
-		if err != nil {
-			return nil, err
-		}
 	case olddbapi.ResourceKindKafka:
 		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralKafka
 		kf, err := c.DBClient.KubedbV1().Kafkas(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})

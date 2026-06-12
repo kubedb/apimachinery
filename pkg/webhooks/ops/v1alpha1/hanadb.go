@@ -18,15 +18,18 @@ package v1alpha1
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -120,6 +123,14 @@ func (w *HanaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.HanaD
 	var allErr field.ErrorList
 	switch req.Spec.Type {
 	case opsapi.HanaDBOpsRequestTypeRestart:
+	case opsapi.HanaDBOpsRequestTypeVerticalScaling:
+		if err := w.validateHanaDBVerticalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"), req.Name, err.Error()))
+		}
+	case opsapi.HanaDBOpsRequestTypeVolumeExpansion:
+		if err := w.validateHanaDBVolumeExpansionOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"), req.Name, err.Error()))
+		}
 	case opsapi.HanaDBOpsRequestTypeReconfigure:
 		if err := w.validateHanaDBReconfigureOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
@@ -127,6 +138,14 @@ func (w *HanaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.HanaD
 	case opsapi.HanaDBOpsRequestTypeReconfigureTLS:
 		if err := w.validateHanaDBReconfigureTLSOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"), req.Name, err.Error()))
+		}
+	case opsapi.HanaDBOpsRequestTypeRotateAuth:
+		if err := w.validateHanaDBRotateAuthenticationOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("authentication"), req.Name, err.Error()))
+		}
+	case opsapi.HanaDBOpsRequestTypeStorageMigration:
+		if err := w.validateHanaDBStorageMigrationOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"), req.Name, err.Error()))
 		}
 	}
 
@@ -145,6 +164,120 @@ func (w *HanaDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.HanaDBOpsRequ
 		return nil, fmt.Errorf("spec.databaseRef %s/%s is invalid or not found", req.Namespace, req.Spec.DatabaseRef.Name)
 	}
 	return db, nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBVerticalScalingOpsRequest(req *opsapi.HanaDBOpsRequest) error {
+	verticalScalingSpec := req.Spec.VerticalScaling
+	if verticalScalingSpec == nil {
+		return errors.New("spec.verticalScaling is nil, not supported in VerticalScaling type")
+	}
+
+	if verticalScalingSpec.HanaDB == nil && verticalScalingSpec.Coordinator == nil && verticalScalingSpec.Exporter == nil {
+		return errors.New("at least one of spec.verticalScaling.hanadb, spec.verticalScaling.coordinator, or spec.verticalScaling.exporter must be specified")
+	}
+
+	return nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBVolumeExpansionOpsRequest(db *olddbapi.HanaDB, req *opsapi.HanaDBOpsRequest) error {
+	volumeExpansionSpec := req.Spec.VolumeExpansion
+	if volumeExpansionSpec == nil {
+		return errors.New("spec.volumeExpansion is nil, not supported in VolumeExpansion type")
+	}
+	if volumeExpansionSpec.HanaDB == nil {
+		return errors.New("spec.volumeExpansion.hanadb can not be empty")
+	}
+
+	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.HanaDB, req.Status.Phase, "HanaDB"); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBStorageMigrationOpsRequest(db *olddbapi.HanaDB, req *opsapi.HanaDBOpsRequest) error {
+	migrationSpec := req.Spec.Migration
+	if migrationSpec == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
+	if migrationSpec.StorageClassName == nil {
+		return errors.New("spec.migration.storageClassName is required")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for Storage Migration ops request, adjust timeout according to the size of your database")
+	}
+	if db.Spec.Storage == nil || db.Spec.Storage.StorageClassName == nil {
+		return nil
+	}
+
+	var newStorage, oldStorage storagev1.StorageClass
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *migrationSpec.StorageClassName}, &newStorage); err != nil {
+		if apierrors.IsNotFound(err) {
+			return fmt.Errorf("storage class %s not found: %w", *migrationSpec.StorageClassName, err)
+		}
+		return err
+	}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: *db.Spec.Storage.StorageClassName}, &oldStorage); err != nil {
+		return err
+	}
+	if oldStorage.VolumeBindingMode != nil && *oldStorage.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer {
+		if newStorage.VolumeBindingMode == nil || *newStorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
+			return fmt.Errorf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newStorage.Name)
+		}
+	}
+
+	return nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBRotateAuthenticationOpsRequest(req *opsapi.HanaDBOpsRequest) error {
+	authSpec := req.Spec.Authentication
+	if authSpec != nil && authSpec.SecretRef != nil {
+		if authSpec.SecretRef.Name == "" {
+			return errors.New("spec.authentication.secretRef.name can not be empty")
+		}
+
+		var newAuthSecret core.Secret
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      authSpec.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &newAuthSecret)
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				return errors.Errorf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name)
+			}
+			return err
+		}
+		if _, err := getHanaDBAuthPassword(newAuthSecret.Data); err != nil {
+			return errors.Errorf("referenced secret %s/%s is invalid: %v", req.Namespace, authSpec.SecretRef.Name, err)
+		}
+		if username := newAuthSecret.Data[core.BasicAuthUsernameKey]; len(username) > 0 && string(username) != kubedb.HanaDBSystemUser {
+			return errors.Errorf("username in referenced secret %s/%s must be %q", req.Namespace, authSpec.SecretRef.Name, kubedb.HanaDBSystemUser)
+		}
+	}
+
+	return nil
+}
+
+func getHanaDBAuthPassword(data map[string][]byte) (string, error) {
+	if password := data[core.BasicAuthPasswordKey]; len(password) > 0 {
+		return string(password), nil
+	}
+
+	passwordJSON := data[kubedb.HanaDBPasswordFileKey]
+	if len(passwordJSON) == 0 {
+		return "", fmt.Errorf("secret must contain non-empty %q or valid %q", core.BasicAuthPasswordKey, kubedb.HanaDBPasswordFileKey)
+	}
+
+	var passwordData struct {
+		MasterPassword string `json:"master_password"`
+	}
+	if err := json.Unmarshal(passwordJSON, &passwordData); err != nil {
+		return "", fmt.Errorf("failed to parse %q: %w", kubedb.HanaDBPasswordFileKey, err)
+	}
+	if passwordData.MasterPassword == "" {
+		return "", fmt.Errorf("%q must contain non-empty %q", kubedb.HanaDBPasswordFileKey, kubedb.HanaDBMasterPasswordKey)
+	}
+	return passwordData.MasterPassword, nil
 }
 
 func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBReconfigureOpsRequest(req *opsapi.HanaDBOpsRequest) error {
@@ -188,7 +321,6 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBReconfigureTLSOpsRequest(d
 	}
 
 	certUpdateRequested := tls.IssuerRef != nil || len(tls.Certificates) > 0
-	clientTLSUpdateRequested := tls.ClientTLS != nil || tls.ServerName != "" || tls.InsecureSkipVerify
 
 	opCount := 0
 	if tls.Remove {
@@ -197,11 +329,11 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBReconfigureTLSOpsRequest(d
 	if tls.RotateCertificates {
 		opCount++
 	}
-	if certUpdateRequested || clientTLSUpdateRequested {
+	if certUpdateRequested {
 		opCount++
 	}
 	if opCount == 0 {
-		return errors.New("at least one of Remove, RotateCertificates, IssuerRef, Certificates, or client TLS settings must be specified")
+		return errors.New("at least one of Remove, RotateCertificates, IssuerRef, or Certificates must be specified")
 	}
 	if opCount > 1 {
 		return errors.New("only one TLS reconfiguration operation is allowed at a time")
@@ -216,10 +348,6 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBReconfigureTLSOpsRequest(d
 			return errors.New("rotateCertificates requires TLS to already be enabled with issuerRef on HanaDB")
 		}
 		return nil
-	}
-
-	if clientTLSUpdateRequested && !certUpdateRequested && db.Spec.TLS == nil {
-		return errors.New("client TLS settings require TLS to already be configured on HanaDB")
 	}
 
 	if certUpdateRequested && tls.IssuerRef == nil && (db.Spec.TLS == nil || db.Spec.TLS.IssuerRef == nil) {

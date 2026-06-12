@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// ClickHouseListerExpansion allows custom methods to be added to
+// ClickHouseLister.
+type ClickHouseListerExpansion interface{}
+
+// ClickHouseNamespaceListerExpansion allows custom methods to be added to
+// ClickHouseNamespaceLister.
+type ClickHouseNamespaceListerExpansion interface{}
+
 // DruidListerExpansion allows custom methods to be added to
 // DruidLister.
 type DruidListerExpansion interface{}
@@ -33,14 +41,6 @@ type ElasticsearchListerExpansion interface{}
 // ElasticsearchNamespaceListerExpansion allows custom methods to be added to
 // ElasticsearchNamespaceLister.
 type ElasticsearchNamespaceListerExpansion interface{}
-
-// FerretDBListerExpansion allows custom methods to be added to
-// FerretDBLister.
-type FerretDBListerExpansion interface{}
-
-// FerretDBNamespaceListerExpansion allows custom methods to be added to
-// FerretDBNamespaceLister.
-type FerretDBNamespaceListerExpansion interface{}
 
 // KafkaListerExpansion allows custom methods to be added to
 // KafkaLister.

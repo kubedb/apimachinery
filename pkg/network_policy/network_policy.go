@@ -18,6 +18,7 @@ package network_policy
 
 import (
 	"context"
+	"fmt"
 
 	api "kubedb.dev/apimachinery/apis/kubedb/v1"
 
@@ -30,19 +31,46 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+// Flavor selects which NetworkPolicy API the operator emits per DB namespace.
+type Flavor string
+
+const (
+	FlavorKubernetes Flavor = "kubernetes"
+	FlavorCilium     Flavor = "cilium"
+)
+
 const (
 	NetworkPolicyNameHealthCheck = "kubedb-healthcheck"
 	NetworkPolicyNameDBInternal  = "kubedb-database-internal"
 	NetworkPolicyNameDBBackup    = "kubedb-database-backup"
 )
 
+// EnsureNetworkPolicy emits the default (FlavorKubernetes) per-DB-namespace
+// network policies. Kept for backward compatibility with the many DB operators
+// that call this function directly; new callers should prefer
+// EnsureNetworkPolicyWithFlavor.
 func EnsureNetworkPolicy(kbClient client.Client, dbNs string) error {
-	err := ensureHealthCheckerNetworkPolicy(kbClient, dbNs)
-	if err != nil {
+	return EnsureNetworkPolicyWithFlavor(kbClient, dbNs, FlavorKubernetes)
+}
+
+// EnsureNetworkPolicyWithFlavor emits the per-DB-namespace network policies in
+// the requested flavor. An empty flavor defaults to FlavorKubernetes.
+func EnsureNetworkPolicyWithFlavor(kbClient client.Client, dbNs string, flavor Flavor) error {
+	switch flavor {
+	case FlavorCilium:
+		return ensureCiliumPolicies(kbClient, dbNs)
+	case FlavorKubernetes, "":
+		return ensureKubernetesPolicies(kbClient, dbNs)
+	default:
+		return fmt.Errorf("unknown network policy flavor %q", flavor)
+	}
+}
+
+func ensureKubernetesPolicies(kbClient client.Client, dbNs string) error {
+	if err := ensureHealthCheckerNetworkPolicy(kbClient, dbNs); err != nil {
 		return err
 	}
-	err = ensureDBInternalNetworkPolicy(kbClient, dbNs)
-	if err != nil {
+	if err := ensureDBInternalNetworkPolicy(kbClient, dbNs); err != nil {
 		return err
 	}
 	return ensureBackupNetworkPolicy(kbClient, dbNs)

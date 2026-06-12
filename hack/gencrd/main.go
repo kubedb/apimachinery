@@ -74,7 +74,6 @@ func generateSwaggerJson() {
 		//nolint:govet
 		Resources: []openapi.TypeInfo{
 			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralElasticsearch, kubedbv1alpha2.ResourceKindElasticsearch, true},
-			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralEtcd, kubedbv1alpha2.ResourceKindEtcd, true},
 			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralMariaDB, kubedbv1alpha2.ResourceKindMariaDB, true},
 			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralMemcached, kubedbv1alpha2.ResourceKindMemcached, true},
 			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralMongoDB, kubedbv1alpha2.ResourceKindMongoDB, true},
@@ -86,7 +85,6 @@ func generateSwaggerJson() {
 			{kubedbv1alpha2.SchemeGroupVersion, kubedbv1alpha2.ResourcePluralRedis, kubedbv1alpha2.ResourceKindRedis, true},
 
 			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralElasticsearchOpsRequest, opsv1alpha1.ResourceKindElasticsearchOpsRequest, true},
-			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralEtcdOpsRequest, opsv1alpha1.ResourceKindEtcdOpsRequest, true},
 			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralMemcachedOpsRequest, opsv1alpha1.ResourceKindMemcachedOpsRequest, true},
 			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralMongoDBOpsRequest, opsv1alpha1.ResourceKindMongoDBOpsRequest, true},
 			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralMySQLOpsRequest, opsv1alpha1.ResourceKindMySQLOpsRequest, true},
@@ -96,7 +94,6 @@ func generateSwaggerJson() {
 			{opsv1alpha1.SchemeGroupVersion, opsv1alpha1.ResourcePluralRedisOpsRequest, opsv1alpha1.ResourceKindRedisOpsRequest, true},
 
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralElasticsearchVersion, catalogv1alpha1.ResourceKindElasticsearchVersion, false},
-			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralEtcdVersion, catalogv1alpha1.ResourceKindEtcdVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralMemcachedVersion, catalogv1alpha1.ResourceKindMemcachedVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralMongoDBVersion, catalogv1alpha1.ResourceKindMongoDBVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralMySQLVersion, catalogv1alpha1.ResourceKindMySQLVersion, false},
