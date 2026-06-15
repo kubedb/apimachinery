@@ -738,6 +738,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_ObjectStorageSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObserverSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_ObserverSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Oracle":                                        schema_apimachinery_apis_kubedb_v1alpha2_Oracle(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleConfiguration":                           schema_apimachinery_apis_kubedb_v1alpha2_OracleConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleList":                                    schema_apimachinery_apis_kubedb_v1alpha2_OracleList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_OracleSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_OracleStatus(ref),
@@ -42124,6 +42125,48 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Oracle(ref common.ReferenceCallbac
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_OracleConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretName is an optional field to provide custom configuration file for the database (i.e. mssql.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). Configurations from this secret will override default configurations. This secret must be created by user.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"inline": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Inline contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"walletConfigSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WalletConfigSecret is an optional field to provide environment variables from a Kubernetes Secret for backup or other purposes. These env vars will be injected into the database container.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_OracleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -42232,7 +42275,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_OracleSpec(ref common.ReferenceCal
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Configuration is an optional field to provide custom configuration file for database (i.e config.properties). If specified, this file will be used as configuration file otherwise default configuration file will be used. You can provide custom configurations using Secret or ApplyConfig.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleConfiguration"),
 						},
 					},
 					"authSecret": {
@@ -42316,7 +42359,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_OracleSpec(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DataGuardSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleTCPSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DataGuardSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.OracleTCPSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
