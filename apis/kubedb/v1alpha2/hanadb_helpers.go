@@ -31,6 +31,7 @@ import (
 	raftutils "kubedb.dev/apimachinery/pkg/utils/raft"
 
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
+	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -282,36 +283,47 @@ func isSystemReplicationMemberHealthy(status, details string) bool {
 
 // GetAuthCredentialsFromSecret reads SYSTEM user/password from the auth secret.
 func GetAuthCredentialsFromSecret(ctx context.Context, kc client.Client, db *HanaDB) (string, string, error) {
-	secret := &core.Secret{}
-	if err := kc.Get(ctx, types.NamespacedName{
+	var data map[string][]byte
+	key := types.NamespacedName{
 		Namespace: db.Namespace,
 		Name:      db.GetAuthSecretName(),
-	}, secret); err != nil {
-		return "", "", err
+	}
+	if IsVirtualAuthSecretReferred(db.Spec.AuthSecret) {
+		secret := &vsecretapi.Secret{}
+		if err := kc.Get(ctx, key, secret); err != nil {
+			return "", "", err
+		}
+		data = secret.Data
+	} else {
+		secret := &core.Secret{}
+		if err := kc.Get(ctx, key, secret); err != nil {
+			return "", "", err
+		}
+		data = secret.Data
 	}
 
 	user := kubedb.HanaDBSystemUser
-	if usernameBytes, ok := secret.Data[core.BasicAuthUsernameKey]; ok && len(usernameBytes) > 0 {
+	if usernameBytes, ok := data[core.BasicAuthUsernameKey]; ok && len(usernameBytes) > 0 {
 		user = string(usernameBytes)
 	}
 
-	if passwordBytes, ok := secret.Data[core.BasicAuthPasswordKey]; ok && len(passwordBytes) > 0 {
+	if passwordBytes, ok := data[core.BasicAuthPasswordKey]; ok && len(passwordBytes) > 0 {
 		return user, string(passwordBytes), nil
 	}
 
-	passwordJSON, ok := secret.Data[kubedb.HanaDBPasswordFileKey]
+	passwordJSON, ok := data[kubedb.HanaDBPasswordFileKey]
 	if !ok {
-		return "", "", fmt.Errorf("secret %s/%s missing %s key", secret.Namespace, secret.Name, kubedb.HanaDBPasswordFileKey)
+		return "", "", fmt.Errorf("secret %s/%s missing %s key", db.Namespace, db.GetAuthSecretName(), kubedb.HanaDBPasswordFileKey)
 	}
 
 	var passwordData struct {
 		MasterPassword string `json:"master_password"`
 	}
 	if err := json.Unmarshal(passwordJSON, &passwordData); err != nil {
-		return "", "", fmt.Errorf("failed to parse %s in secret %s/%s: %v", kubedb.HanaDBPasswordFileKey, secret.Namespace, secret.Name, err)
+		return "", "", fmt.Errorf("failed to parse %s in secret %s/%s: %v", kubedb.HanaDBPasswordFileKey, db.Namespace, db.GetAuthSecretName(), err)
 	}
 	if passwordData.MasterPassword == "" {
-		return "", "", fmt.Errorf("master password not specified in secret %s/%s", secret.Namespace, secret.Name)
+		return "", "", fmt.Errorf("master password not specified in secret %s/%s", db.Namespace, db.GetAuthSecretName())
 	}
 
 	return user, passwordData.MasterPassword, nil
