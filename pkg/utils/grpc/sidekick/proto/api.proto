@@ -1,0 +1,25 @@
+syntax="proto3";
+
+package proto;
+option go_package = "pkg/utils/grpc/sidekick/protogen";
+
+// CommandService provides a method to execute commands in the pod.
+service CommandService {
+  // ExecuteCommand runs a command and returns its output.
+  rpc ExecuteCommand (CommandRequest) returns (CommandResponse);
+}
+
+// CommandRequest defines the command to execute and authentication key.
+message CommandRequest {
+  string command = 1; // The command to run (e.g., "UpdateSnapshot").
+  bytes data = 2;
+}
+
+// CommandResponse contains the command output or error.
+message CommandResponse {
+  string status = 1; // "success" or "error".
+  bytes output = 2;  // Integer output of the command (e.g., UpdateSnapshot).
+  string error = 3;  // Error message, if any.
+}
+
+//    protoc --go_out=. --go-grpc_out=. --proto_path=./pkg/utils/grpc/sidekick/proto ./pkg/utils/grpc/sidekick/proto/api.proto

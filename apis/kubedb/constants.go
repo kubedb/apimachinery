@@ -2436,6 +2436,7 @@ const (
 // =========================== Distributed Constants ============================
 const (
 	DistributedDatabaseLabel                   = GroupName + "/distributed"
+	DistributedGRPCPort                        = "50051"
 	DistributedCustomConfigSecretNameSuffix    = "custom-config"
 	DistributedRBACNameSuffix                  = "rbac"
 	DistributedServiceExportNameSuffix         = "serviceexports"
