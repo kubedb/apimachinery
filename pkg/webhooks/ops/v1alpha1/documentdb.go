@@ -124,7 +124,7 @@ func (w *DocumentDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.D
 	case opsapi.DocumentDBOpsRequestTypeRestart:
 
 	case opsapi.DocumentDBOpsRequestTypeVerticalScaling:
-		if err := w.validateDocumentDBVerticalScalingOpsRequest(db, req); err != nil {
+		if err := w.validateDocumentDBVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
@@ -193,7 +193,7 @@ func (w *DocumentDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.DocumentD
 	return documentdb, nil
 }
 
-func (w *DocumentDBOpsRequestCustomWebhook) validateDocumentDBVerticalScalingOpsRequest(db *dbapi.DocumentDB, req *opsapi.DocumentDBOpsRequest) error {
+func (w *DocumentDBOpsRequestCustomWebhook) validateDocumentDBVerticalScalingOpsRequest(req *opsapi.DocumentDBOpsRequest) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
 		return errors.New("`spec.verticalScaling` nil not supported in VerticalScaling type")
