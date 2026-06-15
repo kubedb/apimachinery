@@ -17,6 +17,7 @@ limitations under the License.
 package identity
 
 import (
+	"bytes"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/pem"
@@ -49,6 +50,17 @@ type Client struct {
 	client  *http.Client
 
 	kc client.Reader
+}
+
+// NewDefaultClient returns a Client wired to the production appscode.com
+// endpoint with no token and no controller-runtime client. It is intended
+// for one-shot callers (e.g. audit) that only need to hit the public
+// register endpoint and supply the cluster UID themselves; methods that
+// touch c.kc will panic on a Client created this way.
+func NewDefaultClient() *Client {
+	return &Client{
+		client: http.DefaultClient,
+	}
 }
 
 func NewClient(baseURL, token string, caCert []byte, kc client.Reader) (*Client, error) {
@@ -198,6 +210,102 @@ func (c *Client) GetToken() (*identityapi.InboxTokenRequestResponse, error) {
 	tokenResponse.CABundle = string(c.caCert)
 
 	return tokenResponse, nil
+}
+
+// auditRegisterOptions mirrors the payload accepted by the appscode register
+// endpoint (api/v1/register). It is duplicated here so that resource-metadata
+// does not need to vendor the full license-verifier package.
+type auditRegisterOptions struct {
+	ClusterUID string `json:"clusterUID"`
+	Features   string `json:"features"`
+	CACert     []byte `json:"caCert,omitempty"`
+	License    []byte `json:"license"`
+}
+
+// GetAuditToken resolves the cluster UID via c.kc and then calls
+// GetAuditTokenForCluster. Use GetAuditTokenForCluster directly when
+// the cluster UID is already known and there is no controller-runtime client
+// available.
+func (c *Client) GetAuditToken(features string, license []byte) (*identityapi.AuditTokenRequestResponse, error) {
+	md, err := clustermeta.ClusterMetadata(c.kc)
+	if err != nil {
+		return nil, err
+	}
+	return c.GetAuditTokenForCluster(md.UID, features, license)
+}
+
+// GetAuditTokenForCluster posts the supplied license to the appscode
+// Register endpoint (api/v1/register) and returns the issued NATS
+// subject/server/credential. It does not touch c.kc, so it is safe to call
+// on a Client constructed without one.
+func (c *Client) GetAuditTokenForCluster(clusterUID, features string, license []byte) (*identityapi.AuditTokenRequestResponse, error) {
+	if features == "" {
+		features = info.ProductName
+	}
+
+	opts := auditRegisterOptions{
+		ClusterUID: clusterUID,
+		Features:   features,
+		CACert:     []byte(info.LicenseCA),
+		License:    license,
+	}
+	data, err := json.Marshal(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	endpoint, err := info.RegistrationAPIEndpoint(c.baseURL)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, endpoint, bytes.NewReader(data))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if c.token != "" {
+		req.Header.Add("Authorization", "Bearer "+c.token)
+	}
+	if klog.V(8).Enabled() {
+		command, _ := http2curl.GetCurlCommand(req)
+		klog.V(8).Infoln(command.String())
+	}
+
+	resp, err := c.client.Do(req)
+	if err != nil {
+		var ce *tls.CertificateVerificationError
+		if errors.As(err, &ce) {
+			klog.ErrorS(err, "UnverifiedCertificates")
+			for _, cert := range ce.UnverifiedCertificates {
+				klog.Errorln(string(encodeCertPEM(cert)))
+			}
+		}
+		return nil, err
+	}
+	defer resp.Body.Close() // nolint:errcheck
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil, apierrors.NewGenericServerResponse(
+			resp.StatusCode,
+			http.MethodPost,
+			schema.GroupResource{Group: identityapi.GroupName, Resource: identityapi.ResourceAuditTokenRequests},
+			"",
+			string(body),
+			0,
+			false,
+		)
+	}
+
+	out := &identityapi.AuditTokenRequestResponse{}
+	if err = json.Unmarshal(body, out); err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 const SelfName = "self"

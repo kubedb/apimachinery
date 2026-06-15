@@ -128,13 +128,13 @@ spec:
                 type: string
               type:
                 enum:
-                - UpdateVersion
                 - HorizontalScaling
                 - VerticalScaling
                 - VolumeExpansion
                 - Restart
                 - Reconfigure
                 - RotateAuth
+                - StorageMigration
                 type: string
               verticalScaling:
                 properties:

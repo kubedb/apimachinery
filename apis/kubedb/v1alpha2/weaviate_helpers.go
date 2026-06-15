@@ -61,7 +61,9 @@ func (w *Weaviate) AppBindingMeta() appcat.AppBindingMeta {
 
 func (w *Weaviate) GetPersistentSecrets() []string {
 	var secrets []string
-	secrets = append(secrets, w.GetAuthSecretName())
+	if !IsVirtualAuthSecretReferred(w.Spec.AuthSecret) && w.Spec.AuthSecret != nil && w.Spec.AuthSecret.Name != "" {
+		secrets = append(secrets, w.GetAuthSecretName())
+	}
 	return secrets
 }
 
@@ -263,4 +265,8 @@ func (w *Weaviate) GetConnectionScheme() string {
 func (w *Weaviate) ConfigSecretName() string {
 	uid := string(w.UID)
 	return meta_util.NameWithSuffix(w.OffshootName(), uid[len(uid)-6:])
+}
+
+func (w *Weaviate) GetStorageClassName() string {
+	return *w.Spec.Storage.StorageClassName
 }

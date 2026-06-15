@@ -29,9 +29,9 @@ import (
 
 type GitopsV1alpha1Interface interface {
 	RESTClient() rest.Interface
+	ClickHousesGetter
 	DruidsGetter
 	ElasticsearchesGetter
-	FerretDBsGetter
 	KafkasGetter
 	MSSQLServersGetter
 	MariaDBsGetter
@@ -56,16 +56,16 @@ type GitopsV1alpha1Client struct {
 	restClient rest.Interface
 }
 
+func (c *GitopsV1alpha1Client) ClickHouses(namespace string) ClickHouseInterface {
+	return newClickHouses(c, namespace)
+}
+
 func (c *GitopsV1alpha1Client) Druids(namespace string) DruidInterface {
 	return newDruids(c, namespace)
 }
 
 func (c *GitopsV1alpha1Client) Elasticsearches(namespace string) ElasticsearchInterface {
 	return newElasticsearches(c, namespace)
-}
-
-func (c *GitopsV1alpha1Client) FerretDBs(namespace string) FerretDBInterface {
-	return newFerretDBs(c, namespace)
 }
 
 func (c *GitopsV1alpha1Client) Kafkas(namespace string) KafkaInterface {

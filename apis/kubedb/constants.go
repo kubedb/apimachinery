@@ -1629,7 +1629,7 @@ const (
 	DocumentDBCoordinatorPortName       = "coordinator"
 	DocumentDBCoordinatorPort           = 2380
 	DocumentDBCoordinatorClientPortName = "coordinatclient"
-	DocumentDBCoordinatorClientPort     = 2389
+	DocumentDBCoordinatorClientPort     = 2379
 	DocumentDBGRPCServerPortName        = "grpcserver"
 	DocumentDBGRPCServerPort            = 2384
 
@@ -1639,12 +1639,14 @@ const (
 	DocumentDBDatabaseRoleKey      = "documentdb.db/role"
 	DocumentDBDatabaseRoleInstance = "instance"
 
-	DocumentDBDefaultUsername = "default_user"
+	DocumentDBDefaultUsername       = "default_user"
+	DocumentDBAdminUsername         = "documentdb"
+	DocumentDBAdminAuthSecretSuffix = "admin-auth"
 
 	DefaultDocumentDBDatabase = "sampledb"
 
 	// volume related constants
-	DocumentDBVolumeMountData = "documentdb-data"
+	DocumentDBVolumeMountData = "data"
 	DocumentDBDataDir         = "/var/pv"
 
 	DocumentDBScripts    = "scripts"
@@ -1662,9 +1664,6 @@ const (
 	DocumentDBContainerName            = "documentdb"
 	DocumentDBInitContainerName        = "documentdb-init"
 	DocumentDBCoordinatorContainerName = "documentdb-coordinator"
-	DocumentDBMainImage                = "ghcr.io/documentdb/documentdb"
-	DocumentDBUser                     = "postgres"
-	DocumentDBLinkedDBName             = "documentdb"
 
 	DocumentDBServerPath = "/etc/certs/server"
 
@@ -1715,50 +1714,6 @@ const (
 	EnvForceFailOverAcceptingDataLossAfter = "FORCE_FAILOVER_ACCEPTING_DATA_LOSS_AFTER"
 	EnvArbiterPod                          = "ARBITER_POD"
 	EnvReadReplica                         = "READ_REPLICA"
-)
-
-// =========================== FerretDB Constants ============================
-const (
-
-	// envs
-	EnvFerretDBUser      = "FERRETDB_PG_USER"
-	EnvFerretDBPassword  = "FERRETDB_PG_PASSWORD"
-	EnvFerretDBHandler   = "FERRETDB_HANDLER"
-	EnvFerretDBPgURL     = "FERRETDB_POSTGRESQL_URL"
-	EnvFerretDBTLSPort   = "FERRETDB_LISTEN_TLS"
-	EnvFerretDBCAPath    = "FERRETDB_LISTEN_TLS_CA_FILE"
-	EnvFerretDBCertPath  = "FERRETDB_LISTEN_TLS_CERT_FILE"
-	EnvFerretDBKeyPath   = "FERRETDB_LISTEN_TLS_KEY_FILE"
-	EnvFerretDBDebugAddr = "FERRETDB_DEBUG_ADDR"
-
-	FerretDBDatabasePortName       = "db"
-	FerretDBPrimaryServicePortName = "primary"
-
-	FerretDBContainerName = "ferretdb"
-	FerretDBMainImage     = "ghcr.io/ferretdb/ferretdb"
-	FerretDBUser          = "postgres"
-	FerretDBLinkedDBName  = "ferretdb"
-
-	FerretDBServerPath = "/etc/certs/server"
-
-	FerretDBExternalClientPath = "/etc/certs/ext"
-
-	FerretDBDefaultPort = 27017
-	FerretDBMetricsPort = 56790
-	FerretDBTLSPort     = 27018
-
-	FerretDBMetricsPath     = "/debug/metrics"
-	FerretDBMetricsPortName = "metrics"
-
-	FerretDBServerTypePrimary   = "primary"
-	FerretDBServerTypeSecondary = "secondary"
-
-	FerretDBPrimaryLabelKey   = "ferretdb.kubedb.com/server.primary"
-	FerretDBSecondaryLabelKey = "ferretdb.kubedb.com/server.secondary"
-
-	FerretDBBackendInitShellFile = "data.sh"
-	FerretDBBackendInitSqlFile   = "data.sql"
-	FerretDBBackendConfigFile    = "user.conf"
 )
 
 // =========================== Ignite Constants ============================
