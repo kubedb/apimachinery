@@ -253,8 +253,6 @@ type DocumentDBList struct {
 	Items           []DocumentDB `json:"items"`
 }
 
-var _ Accessor = &DocumentDB{}
-
 func (m *DocumentDB) GetObjectMeta() metav1.ObjectMeta {
 	return m.ObjectMeta
 }
