@@ -121,7 +121,7 @@ func (w *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 		}
 		if possible {
 			db.Spec.Archiver = &dbapi.Archiver{
-				Ref: kmapi.ObjectReference{
+				Ref: &kmapi.ObjectReference{
 					Namespace: archiver.Namespace,
 					Name:      archiver.Name,
 				},

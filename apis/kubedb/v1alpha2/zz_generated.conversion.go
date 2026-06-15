@@ -1146,7 +1146,7 @@ func Convert_v1_ArbiterSpec_To_v1alpha2_ArbiterSpec(in *v1.ArbiterSpec, out *Arb
 
 func autoConvert_v1alpha2_Archiver_To_v1_Archiver(in *Archiver, out *v1.Archiver, s conversion.Scope) error {
 	out.Pause = in.Pause
-	out.Ref = in.Ref
+	out.Ref = (*clientgoapiv1.ObjectReference)(unsafe.Pointer(in.Ref))
 	return nil
 }
 
@@ -1157,7 +1157,7 @@ func Convert_v1alpha2_Archiver_To_v1_Archiver(in *Archiver, out *v1.Archiver, s 
 
 func autoConvert_v1_Archiver_To_v1alpha2_Archiver(in *v1.Archiver, out *Archiver, s conversion.Scope) error {
 	out.Pause = in.Pause
-	out.Ref = in.Ref
+	out.Ref = (*clientgoapiv1.ObjectReference)(unsafe.Pointer(in.Ref))
 	return nil
 }
 
