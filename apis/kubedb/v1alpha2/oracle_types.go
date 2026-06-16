@@ -184,9 +184,8 @@ type OracleConfiguration struct {
 	// +optional
 	ConfigurationSpec `json:",inline,omitempty"`
 
-	// WalletConfigSecret is an optional field to provide environment variables
-	// from a Kubernetes Secret for backup or other purposes.
-	// These env vars will be injected into the database container.
+	// WalletConfigSecret is an optional field to provide the configuration
+	// details for the db to connect with different online storage provider
 	// +optional
 	WalletConfigSecret string `json:"walletConfigSecret,omitempty"`
 }
