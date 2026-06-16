@@ -120,8 +120,12 @@ type DocumentDBSpec struct {
 	// +optional
 	AdminAuthSecret *SecretReference `json:"adminAuthSecret,omitempty"`
 
-	// Configuration is an optional field to provide custom configuration file for database (i.e. config.properties).
+	// ConfigSecret is an optional field to provide custom configuration file for database (i.e. postgresql.conf).
 	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
+	// +optional
+	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
+
+	// Configuration is an optional field to provide custom configuration and performance tuning for the database.
 	// +optional
 	Configuration *DocumentDBConfiguration `json:"configuration,omitempty"`
 
@@ -149,7 +153,55 @@ type DocumentDBSpec struct {
 
 type DocumentDBConfiguration struct {
 	ConfigurationSpec `json:",inline,omitempty"`
+	// Tuning defines performance tuning options for the database.
+	// +optional
+	Tuning *DocumentDBTuningConfig `json:"tuning,omitempty"`
 }
+
+// DocumentDBTuningConfig defines configuration for DocumentDB (PostgreSQL) performance tuning
+type DocumentDBTuningConfig struct {
+	// Profile defines a predefined tuning profile for different workload types.
+	// If specified, other tuning parameters will be calculated based on this profile.
+	// +optional
+	Profile *DocumentDBProfile `json:"profile,omitempty"`
+
+	// MaxConnections defines the maximum number of concurrent connections.
+	// If not specified, it will be calculated based on available memory and tuning profile.
+	// +optional
+	MaxConnections *int32 `json:"maxConnections,omitempty"`
+
+	// StorageType defines the type of storage for tuning purposes.
+	// If not specified, it will be inferred from StorageClass or default to HDD.
+	// +optional
+	StorageType *DocumentDBStorageType `json:"storageType,omitempty"`
+
+	// DisableAutoTune disables automatic tuning entirely.
+	// If set to true, no tuning will be applied.
+	// +optional
+	DisableAutoTune bool `json:"disableAutoTune,omitempty"`
+}
+
+// DocumentDBProfile defines predefined tuning profiles
+// +kubebuilder:validation:Enum=web;oltp;dw;mixed;desktop
+type DocumentDBProfile string
+
+const (
+	DocumentDBTuningProfileWeb     DocumentDBProfile = "web"
+	DocumentDBTuningProfileOLTP    DocumentDBProfile = "oltp"
+	DocumentDBTuningProfileDW      DocumentDBProfile = "dw"
+	DocumentDBTuningProfileMixed   DocumentDBProfile = "mixed"
+	DocumentDBTuningProfileDesktop DocumentDBProfile = "desktop"
+)
+
+// DocumentDBStorageType defines storage types for tuning purposes
+// +kubebuilder:validation:Enum=ssd;hdd;san
+type DocumentDBStorageType string
+
+const (
+	DocumentDBStorageTypeSSD DocumentDBStorageType = "ssd"
+	DocumentDBStorageTypeHDD DocumentDBStorageType = "hdd"
+	DocumentDBStorageTypeSAN DocumentDBStorageType = "san"
+)
 
 type DocumentDBStatus struct {
 	// Specifies the current phase of the database

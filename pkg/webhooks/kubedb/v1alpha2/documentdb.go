@@ -229,6 +229,15 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 		}
 	}
 
+	// Tuning related
+	if db.Spec.Configuration != nil && db.Spec.Configuration.Tuning != nil {
+		if mc := db.Spec.Configuration.Tuning.MaxConnections; mc != nil && *mc <= 0 {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration").Child("tuning").Child("maxConnections"),
+				db.Name,
+				`'spec.configuration.tuning.maxConnections' must be greater than zero`))
+		}
+	}
+
 	// leaderElection related
 	if db.Spec.LeaderElection != nil {
 		err := w.validateSpecForDB(db)
