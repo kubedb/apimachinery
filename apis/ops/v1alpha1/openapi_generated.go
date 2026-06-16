@@ -40941,9 +40941,9 @@ func schema_apimachinery_apis_ops_v1alpha1_OracleReconfigurationSpec(ref common.
 							Format:      "",
 						},
 					},
-					"WalletConfigSecret": {
+					"walletConfigSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "WalletConfigSecret is an optional field to provide environment variables from a Kubernetes Secret for the database container.",
+							Description: "WalletConfigSecret is an optional field to provide the configuration details for the db to connect with different online storage provider",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
