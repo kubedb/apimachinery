@@ -235,10 +235,6 @@ func validateCluster(db *dbapi.PerconaXtraDB) error {
 		return errors.Errorf(`'spec.px.clusterName' "%s" shouldn't have more than %d characters'`,
 			clusterName, kubedb.PerconaXtraDBMaxClusterNameLength)
 	}
-	if db.Spec.Init != nil && db.Spec.Init.Script != nil {
-		return fmt.Errorf("`.spec.init.scriptSource` is not supported for cluster. For PerconaXtraDB cluster initialization see https://stash.run/docs/latest/addons/percona-xtradb/guides/5.7/clusterd/")
-	}
-
 	return nil
 }
 
