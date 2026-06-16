@@ -33576,10 +33576,12 @@ func schema_apimachinery_apis_kubedb_v1_Archiver(ref common.ReferenceCallback) c
 					"ref": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Ref is the name and namespace reference to the Archiver CR",
+							Default:     map[string]interface{}{},
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
 				},
+				Required: []string{"ref"},
 			},
 		},
 		Dependencies: []string{

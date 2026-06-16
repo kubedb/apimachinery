@@ -19,10 +19,9 @@ limitations under the License.
 package fake
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
-
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
+	v1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
 )
 
 type FakeGitopsV1alpha1 struct {
