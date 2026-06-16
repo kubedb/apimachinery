@@ -17,9 +17,17 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"kubedb.dev/apimachinery/apis"
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 
+	"gomodules.xyz/pointer"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kmodules.xyz/client-go/policy/secomp"
+	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
 
 func (a *Aerospike) ConfigSecretName() string {
@@ -59,4 +67,126 @@ func (a Aerospike) offshootLabels(selector, overrides map[string]string) map[str
 func (a Aerospike) ServiceLabels(alias ServiceAlias, extraLabels ...map[string]string) map[string]string {
 	svcTemplate := GetServiceTemplate(a.Spec.ServiceTemplates, alias)
 	return a.offshootLabels(meta_util.OverwriteKeys(a.OffshootSelectors(), extraLabels...), svcTemplate.Labels)
+}
+
+func (a *Aerospike) SetDefaults(arVersion *catalog.AerospikeVersion) {
+	if a == nil {
+		return
+	}
+
+	// perform defaulting
+	switch a.Spec.Mode {
+	case "":
+		a.Spec.Mode = AerospikeModeStandalone
+	case AerospikeModeCluster:
+		if a.Spec.Cluster == nil {
+			a.Spec.Cluster = &AerospikeClusterSpec{}
+		}
+		if a.Spec.Cluster.Replicas == nil {
+			a.Spec.Cluster.Replicas = pointer.Int32P(3)
+		}
+		if a.Spec.Cluster.ReplicationFactor == nil {
+			a.Spec.Cluster.ReplicationFactor = pointer.Int32P(2)
+		}
+	}
+	if a.Spec.DeletionPolicy == "" {
+		a.Spec.DeletionPolicy = DeletionPolicyDelete
+	}
+
+	if !a.Spec.DisableAuth {
+		if a.Spec.AuthSecret == nil {
+			a.Spec.AuthSecret = &SecretReference{}
+		}
+		if a.Spec.AuthSecret.Kind == "" {
+			a.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
+		}
+	}
+
+	a.setDefaultContainerSecurityContext(arVersion, &a.Spec.PodTemplate)
+	if a.Spec.PodTemplate.Spec.ServiceAccountName == "" {
+		a.Spec.PodTemplate.Spec.ServiceAccountName = a.OffshootName()
+	}
+
+	labels := a.OffshootSelectors()
+	a.setDefaultAffinity(&a.Spec.PodTemplate, labels)
+
+	apis.SetDefaultResourceLimits(&a.Spec.PodTemplate.Spec.Resources, kubedb.DefaultResources)
+}
+
+func (a Aerospike) setDefaultContainerSecurityContext(arVersion *catalog.AerospikeVersion, podTemplate *ofst.PodTemplateSpec) {
+	if podTemplate == nil {
+		return
+	}
+	if podTemplate.Spec.ContainerSecurityContext == nil {
+		podTemplate.Spec.ContainerSecurityContext = &corev1.SecurityContext{}
+	}
+	if podTemplate.Spec.SecurityContext == nil {
+		podTemplate.Spec.SecurityContext = &corev1.PodSecurityContext{}
+	}
+	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+		podTemplate.Spec.SecurityContext.FSGroup = arVersion.Spec.SecurityContext.RunAsUser
+	}
+	a.assignDefaultContainerSecurityContext(arVersion, podTemplate.Spec.ContainerSecurityContext)
+}
+
+func (a *Aerospike) assignDefaultContainerSecurityContext(arVersion *catalog.AerospikeVersion, sc *corev1.SecurityContext) {
+	if sc.AllowPrivilegeEscalation == nil {
+		sc.AllowPrivilegeEscalation = pointer.BoolP(false)
+	}
+	if sc.Capabilities == nil {
+		sc.Capabilities = &corev1.Capabilities{
+			Drop: []corev1.Capability{"ALL"},
+		}
+	}
+	if sc.RunAsNonRoot == nil {
+		sc.RunAsNonRoot = pointer.BoolP(true)
+	}
+	if sc.RunAsUser == nil {
+		sc.RunAsUser = arVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.RunAsGroup == nil {
+		sc.RunAsGroup = arVersion.Spec.SecurityContext.RunAsUser
+	}
+	if sc.SeccompProfile == nil {
+		sc.SeccompProfile = secomp.DefaultSeccompProfile()
+	}
+}
+
+func (a *Aerospike) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string) {
+	if podTemplate == nil {
+		return
+	} else if podTemplate.Spec.Affinity != nil {
+		topology.ConvertAffinity(podTemplate.Spec.Affinity)
+		return
+	}
+
+	podTemplate.Spec.Affinity = &corev1.Affinity{
+		PodAntiAffinity: &corev1.PodAntiAffinity{
+			PreferredDuringSchedulingIgnoredDuringExecution: []corev1.WeightedPodAffinityTerm{
+				// Prefer to not schedule multiple pods on the same node
+				{
+					Weight: 100,
+					PodAffinityTerm: corev1.PodAffinityTerm{
+						Namespaces: []string{a.Namespace},
+						LabelSelector: &metav1.LabelSelector{
+							MatchLabels: labels,
+						},
+
+						TopologyKey: corev1.LabelHostname,
+					},
+				},
+				// Prefer to not schedule multiple pods on the node with same zone
+				{
+					Weight: 50,
+					PodAffinityTerm: corev1.PodAffinityTerm{
+						Namespaces: []string{a.Namespace},
+						LabelSelector: &metav1.LabelSelector{
+							MatchLabels: labels,
+						},
+						TopologyKey: topology.LabelZone,
+					},
+				},
+			},
+		},
+	}
 }

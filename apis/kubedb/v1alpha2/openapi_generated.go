@@ -33726,13 +33726,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_AerospikeSpec(ref common.Reference
 							Format:      "",
 						},
 					},
-					"replicas": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Number of instances to deploy for a Aerospike instance.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 					"mode": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Default is \"Standalone\".",
@@ -33765,7 +33758,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_AerospikeSpec(ref common.Reference
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose Aerospike",
-							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
 						},
 					},
 					"serviceTemplates": {
@@ -33826,7 +33820,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_AerospikeSpec(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AerospikeClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AerospikeClusterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
