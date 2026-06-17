@@ -625,6 +625,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBReplication":                         schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBReplication(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBTuningConfig":                        schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBTuningConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid":                                         schema_apimachinery_apis_kubedb_v1alpha2_Druid(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidApp":                                      schema_apimachinery_apis_kubedb_v1alpha2_DruidApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidBind":                                     schema_apimachinery_apis_kubedb_v1alpha2_DruidBind(ref),
@@ -35590,9 +35591,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBConfiguration(ref common
 							},
 						},
 					},
+					"tuning": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Tuning defines performance tuning options for the database.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBTuningConfig"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBTuningConfig"},
 	}
 }
 
@@ -35845,9 +35854,15 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref common.Referenc
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret is an optional field to provide custom configuration file for database (i.e. postgresql.conf). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Configuration is an optional field to provide custom configuration file for database (i.e. config.properties). If specified, this file will be used as configuration file otherwise default configuration file will be used.",
+							Description: "Configuration is an optional field to provide custom configuration and performance tuning for the database.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBConfiguration"),
 						},
 					},
@@ -35946,6 +35961,47 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBStatus(ref common.Refere
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBTuningConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DocumentDBTuningConfig defines configuration for DocumentDB (PostgreSQL) performance tuning",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"profile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Profile defines a predefined tuning profile for different workload types. If specified, other tuning parameters will be calculated based on this profile.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxConnections": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxConnections defines the maximum number of concurrent connections. If not specified, it will be calculated based on available memory and tuning profile.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType defines the type of storage for tuning purposes. If not specified, it will be inferred from StorageClass or default to HDD.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"disableAutoTune": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisableAutoTune disables automatic tuning entirely. If set to true, no tuning will be applied.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
