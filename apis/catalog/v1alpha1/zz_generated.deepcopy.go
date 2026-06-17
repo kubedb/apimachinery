@@ -1014,7 +1014,6 @@ func (in *DruidVersionSpec) DeepCopyInto(out *DruidVersionSpec) {
 		}
 	}
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -1548,7 +1547,6 @@ func (in *HazelcastVersionSpec) DeepCopyInto(out *HazelcastVersionSpec) {
 	out.InitContainer = in.InitContainer
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -1694,7 +1692,6 @@ func (in *IgniteVersionSpec) DeepCopyInto(out *IgniteVersionSpec) {
 		}
 	}
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -1927,7 +1924,6 @@ func (in *KafkaVersionSpec) DeepCopyInto(out *KafkaVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -2443,7 +2439,6 @@ func (in *MemcachedVersionSpec) DeepCopyInto(out *MemcachedVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -2546,7 +2541,6 @@ func (in *MilvusVersionSpec) DeepCopyInto(out *MilvusVersionSpec) {
 		}
 	}
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -4267,7 +4261,6 @@ func (in *QdrantVersionSpec) DeepCopyInto(out *QdrantVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -4387,7 +4380,6 @@ func (in *RabbitMQVersionSpec) DeepCopyInto(out *RabbitMQVersionSpec) {
 		}
 	}
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -4866,7 +4858,6 @@ func (in *SinglestoreVersionSpec) DeepCopyInto(out *SinglestoreVersionSpec) {
 	in.Stash.DeepCopyInto(&out.Stash)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -4979,7 +4970,6 @@ func (in *SolrVersionSpec) DeepCopyInto(out *SolrVersionSpec) {
 	out.InitContainer = in.InitContainer
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -5139,7 +5129,6 @@ func (in *WeaviateVersionSpec) DeepCopyInto(out *WeaviateVersionSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	out.GitSyncer = in.GitSyncer
 	return
 }
 
@@ -5301,7 +5290,6 @@ func (in *ZooKeeperVersionSpec) DeepCopyInto(out *ZooKeeperVersionSpec) {
 	out.PodSecurityPolicies = in.PodSecurityPolicies
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
-	out.GitSyncer = in.GitSyncer
 	return
 }
 

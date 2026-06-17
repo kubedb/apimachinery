@@ -120,7 +120,6 @@ type DocumentDBSpec struct {
 	// +optional
 	AdminAuthSecret *SecretReference `json:"adminAuthSecret,omitempty"`
 
-
 	// Configuration is an optional field to provide custom configuration and performance tuning for the database.
 	// +optional
 	Configuration *DocumentDBConfiguration `json:"configuration,omitempty"`

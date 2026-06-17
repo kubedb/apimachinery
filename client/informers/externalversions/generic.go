@@ -214,12 +214,20 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Elasticsearch().V1alpha1().ElasticsearchDashboards().Informer()}, nil
 
 		// Group=gitops.kubedb.com, Version=v1alpha1
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("cassandras"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Cassandras().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("clickhouses"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().ClickHouses().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("druids"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Druids().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("elasticsearches"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Elasticsearches().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("hanadbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().HanaDBs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("hazelcasts"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Hazelcasts().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("ignites"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Ignites().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("kafkas"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Kafkas().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("mssqlservers"):
@@ -234,6 +242,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().MongoDBs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("mysqls"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().MySQLs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("neo4js"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Neo4js().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("oracles"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Oracles().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("perconaxtradbs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().PerconaXtraDBs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("pgbouncers"):
@@ -244,6 +256,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Postgreses().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("proxysqls"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().ProxySQLs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("qdrants"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Qdrants().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("rabbitmqs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().RabbitMQs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("redises"):
@@ -254,6 +268,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Singlestores().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("solrs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Solrs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("weaviates"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Weaviates().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("zookeepers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().ZooKeepers().Informer()}, nil
 

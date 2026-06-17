@@ -1070,11 +1070,6 @@ func (in *KafkaSpec) DeepCopyInto(out *KafkaSpec) {
 		*out = new(monitoringagentapiapiv1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		*out = new(InitSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	return
 }
 
