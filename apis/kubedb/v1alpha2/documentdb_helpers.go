@@ -143,22 +143,6 @@ func (d *DocumentDB) ConfigSecretName() string {
 	return metautil.NameWithSuffix(d.OffshootName(), "config")
 }
 
-// updateConfigurationFieldIfNeeded reconciles the legacy ConfigSecret field with the
-// structured Configuration field so that a user-provided config secret name is always
-// reflected in Configuration.SecretName.
-func (d *DocumentDB) updateConfigurationFieldIfNeeded() {
-	if d.Spec.Configuration != nil && d.Spec.ConfigSecret != nil && d.Spec.Configuration.SecretName == d.Spec.ConfigSecret.Name {
-		d.Spec.ConfigSecret = nil
-	}
-	if d.Spec.Configuration == nil && d.Spec.ConfigSecret != nil {
-		d.Spec.Configuration = &DocumentDBConfiguration{
-			ConfigurationSpec: ConfigurationSpec{SecretName: d.Spec.ConfigSecret.Name},
-		}
-	} else if d.Spec.ConfigSecret != nil && d.Spec.Configuration != nil && d.Spec.Configuration.SecretName == "" {
-		d.Spec.Configuration.SecretName = d.Spec.ConfigSecret.Name
-	}
-}
-
 func (d *DocumentDB) GetStorageClassName() string {
 	if d.Spec.Storage == nil || d.Spec.Storage.StorageClassName == nil {
 		return ""
@@ -263,8 +247,6 @@ func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alp
 	if d.Spec.LeaderElection.TransferLeadershipTimeout == nil {
 		d.Spec.LeaderElection.TransferLeadershipTimeout = &metav1.Duration{Duration: 60 * time.Second}
 	}
-
-	d.updateConfigurationFieldIfNeeded()
 
 	d.initializePodTemplates()
 
