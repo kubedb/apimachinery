@@ -1485,11 +1485,6 @@ func (in *DocumentDBSpec) DeepCopyInto(out *DocumentDBSpec) {
 		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
 	if in.Configuration != nil {
 		in, out := &in.Configuration, &out.Configuration
 		*out = new(DocumentDBConfiguration)
@@ -2707,11 +2702,6 @@ func (in *HazelcastSpec) DeepCopyInto(out *HazelcastSpec) {
 		*out = new(v1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		*out = new(InitSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	return
 }
 
@@ -2876,11 +2866,6 @@ func (in *IgniteSpec) DeepCopyInto(out *IgniteSpec) {
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(v1.AgentSpec)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		*out = new(InitSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	return
@@ -3204,11 +3189,6 @@ func (in *KafkaSpec) DeepCopyInto(out *KafkaSpec) {
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(v1.AgentSpec)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		*out = new(InitSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	return
@@ -3931,11 +3911,6 @@ func (in *MemcachedSpec) DeepCopyInto(out *MemcachedSpec) {
 		(*in).DeepCopyInto(*out)
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		*out = new(InitSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	return
 }
 
@@ -4254,11 +4229,6 @@ func (in *MilvusSpec) DeepCopyInto(out *MilvusSpec) {
 	if in.TLS != nil {
 		in, out := &in.TLS, &out.TLS
 		*out = new(MilvusTLSConfig)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		*out = new(InitSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	return
@@ -6636,11 +6606,6 @@ func (in *QdrantSpec) DeepCopyInto(out *QdrantSpec) {
 		*out = new(v1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		*out = new(InitSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	return
 }
 
@@ -6839,11 +6804,6 @@ func (in *RabbitMQSpec) DeepCopyInto(out *RabbitMQSpec) {
 		(*in).DeepCopyInto(*out)
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		*out = new(InitSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	return
 }
 
@@ -7932,11 +7892,6 @@ func (in *SolrSpec) DeepCopyInto(out *SolrSpec) {
 		*out = new(v1.AgentSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		*out = new(InitSpec)
-		(*in).DeepCopyInto(*out)
-	}
 	return
 }
 
@@ -8364,11 +8319,6 @@ func (in *ZooKeeperSpec) DeepCopyInto(out *ZooKeeperSpec) {
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(v1.AgentSpec)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.Init != nil {
-		in, out := &in.Init, &out.Init
-		*out = new(InitSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	return

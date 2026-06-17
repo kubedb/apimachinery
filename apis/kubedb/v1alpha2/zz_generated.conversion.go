@@ -2132,7 +2132,6 @@ func autoConvert_v1alpha2_KafkaSpec_To_v1_KafkaSpec(in *KafkaSpec, out *v1.Kafka
 		out.CruiseControl = nil
 	}
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
-	out.Init = (*v1.InitSpec)(unsafe.Pointer(in.Init))
 	return nil
 }
 
@@ -2182,7 +2181,6 @@ func autoConvert_v1_KafkaSpec_To_v1alpha2_KafkaSpec(in *v1.KafkaSpec, out *Kafka
 		out.CruiseControl = nil
 	}
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
-	out.Init = (*InitSpec)(unsafe.Pointer(in.Init))
 	return nil
 }
 
@@ -2505,7 +2503,6 @@ func autoConvert_v1alpha2_MemcachedSpec_To_v1_MemcachedSpec(in *MemcachedSpec, o
 	out.Halted = in.Halted
 	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
 	out.HealthChecker = in.HealthChecker
-	// WARNING: in.Init requires manual conversion: does not exist in peer-type
 	return nil
 }
 
