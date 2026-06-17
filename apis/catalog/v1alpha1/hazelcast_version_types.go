@@ -67,8 +67,6 @@ type HazelcastVersionSpec struct {
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 	// +optional
 	SecurityContext SecurityContext `json:"securityContext"`
-	// +optional
-	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
 }
 
 // HazelcastVersionDatabase is the Hazelcast Database image

@@ -74,8 +74,6 @@ type SinglestoreVersionSpec struct {
 	// SecurityContext is for the additional config for the DB container
 	// +optional
 	SecurityContext SinglestoreSecurityContext `json:"securityContext"`
-	// +optional
-	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
 }
 
 // SinglestoreSecurityContext is for the additional config for the DB container

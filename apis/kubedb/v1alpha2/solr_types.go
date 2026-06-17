@@ -136,10 +136,6 @@ type SolrSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
-
-	// Init is used to initialize the database from a script or git repo.
-	// +optional
-	Init *InitSpec `json:"init,omitempty"`
 }
 
 type SolrClusterTopology struct {

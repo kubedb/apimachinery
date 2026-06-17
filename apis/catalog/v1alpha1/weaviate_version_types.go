@@ -65,8 +65,6 @@ type WeaviateVersionSpec struct {
 	SecurityContext SecurityContext `json:"securityContext"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
-	// +optional
-	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
 }
 
 type WeaviateVersionDatabase struct {

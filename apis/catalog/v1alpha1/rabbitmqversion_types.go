@@ -70,8 +70,6 @@ type RabbitMQVersionSpec struct {
 	UI []ChartInfo `json:"ui,omitempty"`
 	// update constraints
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
-	// +optional
-	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
 }
 
 // RabbitMQVersionDatabase is the RabbitMQ Database image

@@ -87,9 +87,6 @@ type KafkaVersionSpec struct {
 
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
-
-	// +optional
-	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
 }
 
 // KafkaVersionDatabase is the Kafka Database image

@@ -19,13 +19,10 @@ package v1alpha2
 import (
 	"context"
 	"fmt"
-	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -229,11 +226,6 @@ func (w *SinglestoreCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Singlesto
 		}
 	}
 
-	// Validate that the git-sync clone root path does not collide with any reserved mount path.
-	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), sdbReservedVolumesMountPaths); err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.Name, err.Error()))
-	}
-
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -247,7 +239,6 @@ var sdbReservedVolumes = []string{
 	kubedb.SinglestoreVolmeNameInitScript,
 	kubedb.SinglestoreVolumeNameData,
 	kubedb.SinglestoreVolumeNameTLS,
-	kubedb.GitSecretVolume,
 }
 
 var sdbReservedVolumesMountPaths = []string{
@@ -256,7 +247,6 @@ var sdbReservedVolumesMountPaths = []string{
 	kubedb.SinglestoreVolumeMountPathCustomConfig,
 	kubedb.SinglestoreVolumeMountPathUserInitScript,
 	kubedb.SinglestoreVolumeMountPathTLS,
-	kubedb.GitSecretMountPath,
 }
 
 func (w *SinglestoreCustomWebhook) sdbValidateVersion(db *olddbapi.Singlestore) error {

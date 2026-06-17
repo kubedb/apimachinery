@@ -20,13 +20,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
-	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -113,7 +110,6 @@ func (w *WeaviateCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.
 
 func (w *WeaviateCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Weaviate) error {
 	var allErr field.ErrorList
-
 	// number of replicas can not be 0 or less
 	if db.Spec.Replicas != nil && *db.Spec.Replicas <= 0 {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
@@ -148,11 +144,6 @@ func (w *WeaviateCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Weaviate) er
 			err.Error()))
 	}
 
-	// Validate that the git-sync clone root path does not collide with any reserved mount path.
-	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), weaviateReservedVolumeMountPaths); err != nil {
-		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.GetName(), err.Error()))
-	}
-
 	if db.Spec.StorageType == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storageType"),
 			db.GetName(),
@@ -182,7 +173,6 @@ func (w *WeaviateCustomWebhook) ValidateVersion(db *olddbapi.Weaviate) error {
 
 var weaviateReservedVolumes = []string{
 	kubedb.WeaviateVolumeData,
-	kubedb.GitSecretVolume,
 }
 
 func (w *WeaviateCustomWebhook) validateVolumes(db *olddbapi.Weaviate) error {
@@ -205,7 +195,6 @@ func (w *WeaviateCustomWebhook) validateVolumes(db *olddbapi.Weaviate) error {
 
 var weaviateReservedVolumeMountPaths = []string{
 	kubedb.WeaviateDataDir,
-	kubedb.GitSecretMountPath,
 }
 
 func (w *WeaviateCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
