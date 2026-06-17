@@ -120,10 +120,6 @@ type DocumentDBSpec struct {
 	// +optional
 	AdminAuthSecret *SecretReference `json:"adminAuthSecret,omitempty"`
 
-	// ConfigSecret is an optional field to provide custom configuration file for database (i.e. postgresql.conf).
-	// If specified, this file will be used as configuration file otherwise default configuration file will be used.
-	// +optional
-	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
 
 	// Configuration is an optional field to provide custom configuration and performance tuning for the database.
 	// +optional
