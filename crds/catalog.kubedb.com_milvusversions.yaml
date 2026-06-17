@@ -58,6 +58,13 @@ spec:
                 type: boolean
               etcdVersion:
                 type: string
+              gitSyncer:
+                properties:
+                  image:
+                    type: string
+                required:
+                - image
+                type: object
               securityContext:
                 properties:
                   runAsUser:
