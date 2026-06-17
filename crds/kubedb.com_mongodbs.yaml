@@ -3387,6 +3387,8 @@ spec:
                     required:
                     - name
                     type: object
+                required:
+                - ref
                 type: object
               authSecret:
                 properties:
