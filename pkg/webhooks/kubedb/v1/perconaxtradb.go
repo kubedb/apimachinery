@@ -264,6 +264,7 @@ var reservedXtraDBVolumes = []string{
 	kubedb.PerconaXtraDBCustomConfigVolumeName,
 	kubedb.PerconaXtraDBInitScriptVolumeName,
 	kubedb.PerconaXtraDBRunScriptVolumeName,
+	kubedb.GitSecretVolume,
 }
 
 func getXtraDBTLSReservedVolumes() []string {
@@ -290,6 +291,14 @@ func validateXtraDBVolumeMountsForAllContainers(db *dbapi.PerconaXtraDB) error {
 			}
 		}
 	}
+	// Validate that the git-sync clone root path does not collide with any reserved mount path.
+	if gitErr := amv.ValidateGitInitRootPath(db.Spec.Init, append(reservedXtraDBVolumeMounts, getXtraDBTLSReservedVolumeMounts(db)...)); gitErr != nil {
+		if err == nil {
+			err = gitErr
+		} else {
+			err = errors.Wrap(err, gitErr.Error())
+		}
+	}
 	return err
 }
 
@@ -298,6 +307,7 @@ var reservedXtraDBVolumeMounts = []string{
 	kubedb.PerconaXtraDBClusterCustomConfigMountPath,
 	kubedb.PerconaXtraDBInitScriptVolumeMountPath,
 	kubedb.PerconaXtraDBRunScriptVolumeMountPath,
+	kubedb.GitSecretMountPath,
 }
 
 func getXtraDBTLSReservedVolumeMounts(db *dbapi.PerconaXtraDB) []string {

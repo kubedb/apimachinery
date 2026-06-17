@@ -36,6 +36,7 @@ type GitopsV1alpha1Interface interface {
 	MSSQLServersGetter
 	MariaDBsGetter
 	MemcachedsGetter
+	MilvusesGetter
 	MongoDBsGetter
 	MySQLsGetter
 	PerconaXtraDBsGetter
@@ -82,6 +83,10 @@ func (c *GitopsV1alpha1Client) MariaDBs(namespace string) MariaDBInterface {
 
 func (c *GitopsV1alpha1Client) Memcacheds(namespace string) MemcachedInterface {
 	return newMemcacheds(c, namespace)
+}
+
+func (c *GitopsV1alpha1Client) Milvuses(namespace string) MilvusInterface {
+	return newMilvuses(c, namespace)
 }
 
 func (c *GitopsV1alpha1Client) MongoDBs(namespace string) MongoDBInterface {

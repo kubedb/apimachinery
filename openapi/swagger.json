@@ -20143,6 +20143,10 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ElasticsearchVersionExporter"
         },
+        "gitSyncer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
+        },
         "initContainer": {
           "description": "Init container Image",
           "default": {},
@@ -20383,6 +20387,10 @@
           "description": "Exporter Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MemcachedVersionExporter"
+        },
+        "gitSyncer": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.GitSyncer"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
@@ -22874,6 +22882,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.HealthCheckSpec"
         },
+        "init": {
+          "description": "Init is used to initialize the database from a script or git repo.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.InitSpec"
+        },
         "monitor": {
           "description": "Monitor is used monitor database instance",
           "$ref": "#/definitions/xyz.kmodules.monitoring-agent-api.api.v1.AgentSpec"
@@ -24959,7 +24971,6 @@
       "properties": {
         "appBinding": {
           "description": "AppBinding refers to the source database AppBinding name, Who contains the connection information.",
-          "default": {},
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
         },
         "dbName": {
@@ -24971,6 +24982,10 @@
           "description": "MaxConnections refers to the `MaxConns`,which means the maximum size of the pool. The default is the greater of 4 or runtime.NumCPU().",
           "type": "integer",
           "format": "int32"
+        },
+        "tls": {
+          "description": "TLS holds paths to PEM files for TLS-enabled connections.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.TLSConfig"
         },
         "url": {
           "description": "URL refers to the database connection string.e.g postgres://postgres:password@localhost:5432/postgres",
@@ -25584,6 +25599,31 @@
       "properties": {
         "name": {
           "description": "Name is the identifier of the PostgreSQL subscription. This name will be used when creating or referencing the subscription in logical replication.",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.TLSConfig": {
+      "type": "object",
+      "properties": {
+        "caFile": {
+          "description": "CAFile is the path to the PEM-encoded CA certificate file.",
+          "type": "string"
+        },
+        "certFile": {
+          "description": "CertFile is the path to the PEM-encoded client certificate (mutual TLS).",
+          "type": "string"
+        },
+        "insecureSkipVerify": {
+          "description": "InsecureSkipVerify disables server certificate and hostname verification.",
+          "type": "boolean"
+        },
+        "keyFile": {
+          "description": "KeyFile is the path to the PEM-encoded client private key (mutual TLS).",
+          "type": "string"
+        },
+        "serverName": {
+          "description": "ServerName overrides the hostname used for TLS SNI and certificate verification.",
           "type": "string"
         }
       }
