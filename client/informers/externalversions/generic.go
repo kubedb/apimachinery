@@ -228,6 +228,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().MariaDBs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("memcacheds"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Memcacheds().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("milvuses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Milvuses().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("mongodbs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().MongoDBs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("mysqls"):

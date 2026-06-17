@@ -57,6 +57,10 @@ func (c *FakeGitopsV1alpha1) Memcacheds(namespace string) v1alpha1.MemcachedInte
 	return &FakeMemcacheds{c, namespace}
 }
 
+func (c *FakeGitopsV1alpha1) Milvuses(namespace string) v1alpha1.MilvusInterface {
+	return &FakeMilvuses{c, namespace}
+}
+
 func (c *FakeGitopsV1alpha1) MongoDBs(namespace string) v1alpha1.MongoDBInterface {
 	return &FakeMongoDBs{c, namespace}
 }
