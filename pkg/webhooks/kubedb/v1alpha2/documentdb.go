@@ -20,10 +20,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"unsafe"
 
 	catalogapi "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -109,6 +112,7 @@ func (w *DocumentDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtim
 	if !ok {
 		return nil, fmt.Errorf("expected an DocumentDB object but got %T", obj)
 	}
+
 	documentdblog.Info("validate create", "name", db.Name)
 	allErr := w.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
@@ -149,6 +153,10 @@ func (w *DocumentDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtim
 		return nil, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "DocumentDB"}, db.Name, allErr)
 	}
 	return nil, nil
+}
+
+var documentdbReservedVolumeMountPaths = []string{
+	kubedb.GitSecretMountPath,
 }
 
 func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB) field.ErrorList {
@@ -239,6 +247,10 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 		}
 	}
 
+	// Validate that the git-sync clone root path does not collide with any reserved mount path.
+	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), documentdbReservedVolumeMountPaths); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.Name, err.Error()))
+	}
 	return allErr
 }
 

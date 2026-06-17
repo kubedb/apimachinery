@@ -20,10 +20,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -191,6 +194,10 @@ func (w *Neo4jCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Neo4j) error {
 		}
 	}
 
+	// Validate that the git-sync clone root path does not collide with any reserved mount path.
+	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), Neo4jReservedVolumeMountPaths); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.GetName(), err.Error()))
+	}
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -208,6 +215,7 @@ func (w *Neo4jCustomWebhook) ValidateVersion(db *olddbapi.Neo4j) error {
 
 var Neo4jReservedVolumes = []string{
 	kubedb.Neo4jVolumeData,
+	kubedb.GitSecretVolume,
 }
 
 func (w *Neo4jCustomWebhook) validateVolumes(db *olddbapi.Neo4j) error {
@@ -229,6 +237,7 @@ func (w *Neo4jCustomWebhook) validateVolumes(db *olddbapi.Neo4j) error {
 
 var Neo4jReservedVolumeMountPaths = []string{
 	kubedb.Neo4jDataDir,
+	kubedb.GitSecretMountPath,
 }
 
 func (w *Neo4jCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {

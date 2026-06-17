@@ -20,10 +20,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
@@ -183,7 +186,7 @@ func (w *MSSQLServerCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.MSSQLServ
 			err.Error()))
 	}
 
-	err = mssqlValidateVolumesMountPaths(db.Spec.PodTemplate)
+	err = mssqlValidateVolumesMountPaths(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers"),
 			db.Name,
@@ -219,6 +222,7 @@ var mssqlReservedVolumes = []string{
 	kubedb.MSSQLVolumeNameTLS,
 	kubedb.MSSQLVolumeNameSecurityCACertificates,
 	kubedb.MSSQLVolumeNameCACerts,
+	kubedb.GitSecretVolume,
 }
 
 var mssqlReservedVolumesMountPaths = []string{
@@ -230,6 +234,7 @@ var mssqlReservedVolumesMountPaths = []string{
 	kubedb.MSSQLVolumeMountPathTLS,
 	kubedb.MSSQLVolumeMountPathSecurityCACertificates,
 	kubedb.MSSQLVolumeMountPathCACerts,
+	kubedb.GitSecretMountPath,
 }
 
 func (w *MSSQLServerCustomWebhook) mssqlValidateVersion(db *olddbapi.MSSQLServer) error {
@@ -259,7 +264,8 @@ func mssqlValidateVolumes(podTemplate *ofst.PodTemplateSpec) error {
 	return nil
 }
 
-func mssqlValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
+func mssqlValidateVolumesMountPaths(db *olddbapi.MSSQLServer) error {
+	podTemplate := db.Spec.PodTemplate
 	if podTemplate == nil {
 		return nil
 	}
@@ -292,6 +298,11 @@ func mssqlValidateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {
 				}
 			}
 		}
+	}
+
+	init := (*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init))
+	if err := amv.ValidateGitInitRootPath(init, mssqlReservedVolumesMountPaths); err != nil {
+		return err
 	}
 
 	return nil
