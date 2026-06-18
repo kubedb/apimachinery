@@ -24,10 +24,16 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// Aerospikes returns a AerospikeInformer.
+	Aerospikes() AerospikeInformer
 	// Cassandras returns a CassandraInformer.
 	Cassandras() CassandraInformer
 	// ClickHouses returns a ClickHouseInformer.
 	ClickHouses() ClickHouseInformer
+	// DB2s returns a DB2Informer.
+	DB2s() DB2Informer
+	// DocumentDBs returns a DocumentDBInformer.
+	DocumentDBs() DocumentDBInformer
 	// Druids returns a DruidInformer.
 	Druids() DruidInformer
 	// Elasticsearches returns a ElasticsearchInformer.
@@ -95,6 +101,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
+// Aerospikes returns a AerospikeInformer.
+func (v *version) Aerospikes() AerospikeInformer {
+	return &aerospikeInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // Cassandras returns a CassandraInformer.
 func (v *version) Cassandras() CassandraInformer {
 	return &cassandraInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -103,6 +114,16 @@ func (v *version) Cassandras() CassandraInformer {
 // ClickHouses returns a ClickHouseInformer.
 func (v *version) ClickHouses() ClickHouseInformer {
 	return &clickHouseInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DB2s returns a DB2Informer.
+func (v *version) DB2s() DB2Informer {
+	return &dB2Informer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DocumentDBs returns a DocumentDBInformer.
+func (v *version) DocumentDBs() DocumentDBInformer {
+	return &documentDBInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Druids returns a DruidInformer.

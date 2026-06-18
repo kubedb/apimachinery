@@ -24,10 +24,14 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// AerospikeOpsRequests returns a AerospikeOpsRequestInformer.
+	AerospikeOpsRequests() AerospikeOpsRequestInformer
 	// CassandraOpsRequests returns a CassandraOpsRequestInformer.
 	CassandraOpsRequests() CassandraOpsRequestInformer
 	// ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
 	ClickHouseOpsRequests() ClickHouseOpsRequestInformer
+	// DB2OpsRequests returns a DB2OpsRequestInformer.
+	DB2OpsRequests() DB2OpsRequestInformer
 	// DocumentDBOpsRequests returns a DocumentDBOpsRequestInformer.
 	DocumentDBOpsRequests() DocumentDBOpsRequestInformer
 	// DruidOpsRequests returns a DruidOpsRequestInformer.
@@ -97,6 +101,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
+// AerospikeOpsRequests returns a AerospikeOpsRequestInformer.
+func (v *version) AerospikeOpsRequests() AerospikeOpsRequestInformer {
+	return &aerospikeOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // CassandraOpsRequests returns a CassandraOpsRequestInformer.
 func (v *version) CassandraOpsRequests() CassandraOpsRequestInformer {
 	return &cassandraOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -105,6 +114,11 @@ func (v *version) CassandraOpsRequests() CassandraOpsRequestInformer {
 // ClickHouseOpsRequests returns a ClickHouseOpsRequestInformer.
 func (v *version) ClickHouseOpsRequests() ClickHouseOpsRequestInformer {
 	return &clickHouseOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DB2OpsRequests returns a DB2OpsRequestInformer.
+func (v *version) DB2OpsRequests() DB2OpsRequestInformer {
+	return &dB2OpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // DocumentDBOpsRequests returns a DocumentDBOpsRequestInformer.

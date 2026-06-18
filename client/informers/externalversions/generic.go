@@ -80,10 +80,14 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().PostgresArchivers().Informer()}, nil
 
 		// Group=autoscaling.kubedb.com, Version=v1alpha1
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("aerospikeautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().AerospikeAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("cassandraautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().CassandraAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("clickhouseautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().ClickHouseAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("db2autoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().DB2Autoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("documentdbautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().DocumentDBAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("druidautoscalers"):
@@ -214,10 +218,16 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Elasticsearch().V1alpha1().ElasticsearchDashboards().Informer()}, nil
 
 		// Group=gitops.kubedb.com, Version=v1alpha1
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("aerospikes"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Aerospikes().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("cassandras"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Cassandras().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("clickhouses"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().ClickHouses().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("db2s"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().DB2s().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("documentdbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().DocumentDBs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("druids"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Druids().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("elasticsearches"):
@@ -380,10 +390,14 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Migrator().V1alpha1().Migrators().Informer()}, nil
 
 		// Group=ops.kubedb.com, Version=v1alpha1
+	case opsv1alpha1.SchemeGroupVersion.WithResource("aerospikeopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().AerospikeOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("cassandraopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().CassandraOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("clickhouseopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().ClickHouseOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("db2opsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().DB2OpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("documentdbopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().DocumentDBOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("druidopsrequests"):
