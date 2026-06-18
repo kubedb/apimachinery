@@ -4698,6 +4698,8 @@ spec:
                       - alias
                       type: object
                     type: array
+                  clientAuth:
+                    type: boolean
                   issuerRef:
                     properties:
                       apiGroup:

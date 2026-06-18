@@ -92,7 +92,7 @@ type WeaviateSpec struct {
 
 	// TLS contains tls configurations for client and server.
 	// +optional
-	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+	TLS *WeaviateTLSConfig `json:"tls,omitempty"`
 
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
@@ -142,6 +142,15 @@ type ReplicationConfig struct {
 	// +kubebuilder:minimum=1
 	// +kubebuilder:maximum=5
 	Factor int32 `json:"factor,omitempty"`
+}
+
+type WeaviateTLSConfig struct {
+	kmapi.TLSConfig `json:",inline"`
+
+	// ClientAuth controls whether the REST HTTPS listener requires clients to present a valid certificate.
+	// If unset, client certificate authentication is enabled for backward compatibility.
+	// +optional
+	ClientAuth *bool `json:"clientAuth,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;client

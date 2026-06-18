@@ -314,6 +314,13 @@ func (w *Weaviate) CertSecretVolumeMountPath(alias WeaviateCertificateAlias) str
 	return kubedb.WeaviateTLSServerMountPath
 }
 
+func (w *Weaviate) TLSClientAuthEnabled() bool {
+	if w.Spec.TLS == nil {
+		return false
+	}
+	return w.Spec.TLS.ClientAuth == nil || *w.Spec.TLS.ClientAuth
+}
+
 func (w *Weaviate) SetTLSDefaults() {
 	if w.Spec.TLS == nil || w.Spec.TLS.IssuerRef == nil {
 		return
