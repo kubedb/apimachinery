@@ -29,6 +29,10 @@ type FakeGitopsV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeGitopsV1alpha1) Cassandras(namespace string) v1alpha1.CassandraInterface {
+	return &FakeCassandras{c, namespace}
+}
+
 func (c *FakeGitopsV1alpha1) ClickHouses(namespace string) v1alpha1.ClickHouseInterface {
 	return &FakeClickHouses{c, namespace}
 }
@@ -39,6 +43,18 @@ func (c *FakeGitopsV1alpha1) Druids(namespace string) v1alpha1.DruidInterface {
 
 func (c *FakeGitopsV1alpha1) Elasticsearches(namespace string) v1alpha1.ElasticsearchInterface {
 	return &FakeElasticsearches{c, namespace}
+}
+
+func (c *FakeGitopsV1alpha1) HanaDBs(namespace string) v1alpha1.HanaDBInterface {
+	return &FakeHanaDBs{c, namespace}
+}
+
+func (c *FakeGitopsV1alpha1) Hazelcasts(namespace string) v1alpha1.HazelcastInterface {
+	return &FakeHazelcasts{c, namespace}
+}
+
+func (c *FakeGitopsV1alpha1) Ignites(namespace string) v1alpha1.IgniteInterface {
+	return &FakeIgnites{c, namespace}
 }
 
 func (c *FakeGitopsV1alpha1) Kafkas(namespace string) v1alpha1.KafkaInterface {
@@ -57,12 +73,24 @@ func (c *FakeGitopsV1alpha1) Memcacheds(namespace string) v1alpha1.MemcachedInte
 	return &FakeMemcacheds{c, namespace}
 }
 
+func (c *FakeGitopsV1alpha1) Milvuses(namespace string) v1alpha1.MilvusInterface {
+	return &FakeMilvuses{c, namespace}
+}
+
 func (c *FakeGitopsV1alpha1) MongoDBs(namespace string) v1alpha1.MongoDBInterface {
 	return &FakeMongoDBs{c, namespace}
 }
 
 func (c *FakeGitopsV1alpha1) MySQLs(namespace string) v1alpha1.MySQLInterface {
 	return &FakeMySQLs{c, namespace}
+}
+
+func (c *FakeGitopsV1alpha1) Neo4js(namespace string) v1alpha1.Neo4jInterface {
+	return &FakeNeo4js{c, namespace}
+}
+
+func (c *FakeGitopsV1alpha1) Oracles(namespace string) v1alpha1.OracleInterface {
+	return &FakeOracles{c, namespace}
 }
 
 func (c *FakeGitopsV1alpha1) PerconaXtraDBs(namespace string) v1alpha1.PerconaXtraDBInterface {
@@ -85,6 +113,10 @@ func (c *FakeGitopsV1alpha1) ProxySQLs(namespace string) v1alpha1.ProxySQLInterf
 	return &FakeProxySQLs{c, namespace}
 }
 
+func (c *FakeGitopsV1alpha1) Qdrants(namespace string) v1alpha1.QdrantInterface {
+	return &FakeQdrants{c, namespace}
+}
+
 func (c *FakeGitopsV1alpha1) RabbitMQs(namespace string) v1alpha1.RabbitMQInterface {
 	return &FakeRabbitMQs{c, namespace}
 }
@@ -103,6 +135,10 @@ func (c *FakeGitopsV1alpha1) Singlestores(namespace string) v1alpha1.Singlestore
 
 func (c *FakeGitopsV1alpha1) Solrs(namespace string) v1alpha1.SolrInterface {
 	return &FakeSolrs{c, namespace}
+}
+
+func (c *FakeGitopsV1alpha1) Weaviates(namespace string) v1alpha1.WeaviateInterface {
+	return &FakeWeaviates{c, namespace}
 }
 
 func (c *FakeGitopsV1alpha1) ZooKeepers(namespace string) v1alpha1.ZooKeeperInterface {

@@ -22,9 +22,11 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -251,10 +253,13 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("storage"), db.Name, err.Error()))
 	}
 
+	// Validate that the git-sync clone root path does not collide with any reserved mount path.
+	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), oracleReservedVolumesMountPaths); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.Name, err.Error()))
+	}
 	if len(allErr) == 0 {
 		return nil
 	}
-
 	return allErr
 }
 
@@ -285,11 +290,13 @@ func ValidateConfigContent(content []byte, source string) error {
 var oracleReservedVolumes = []string{
 	kubedb.OracleDataVolume,
 	kubedb.OracleVolumeScripts,
+	kubedb.GitSecretVolume,
 }
 
 var oracleReservedVolumesMountPaths = []string{
 	kubedb.OracleDataDir,
 	kubedb.OracleVolumeMountScripts,
+	kubedb.GitSecretMountPath,
 }
 
 func (w *OracleCustomWebhook) oracleValidateVersion(db *olddbapi.Oracle) error {

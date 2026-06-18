@@ -20,10 +20,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -283,6 +286,10 @@ func (w *ClickHouseCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.ClickHouse
 		allErr = w.validateStandaloneStorageType(db, allErr)
 	}
 
+	// Validate that the git-sync clone root path does not collide with any reserved mount path.
+	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), clickhouseReservedVolumeMountPaths); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.Name, err.Error()))
+	}
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -364,6 +371,7 @@ func (w *ClickHouseCustomWebhook) ValidateVersion(db *olddbapi.ClickHouse) error
 
 var clickhouseReservedVolumes = []string{
 	kubedb.ClickHouseVolumeData,
+	kubedb.GitSecretVolume,
 }
 
 func (w *ClickHouseCustomWebhook) validateVolumes(podTemplate *ofst.PodTemplateSpec) error {
@@ -385,6 +393,7 @@ func (w *ClickHouseCustomWebhook) validateVolumes(podTemplate *ofst.PodTemplateS
 
 var clickhouseReservedVolumeMountPaths = []string{
 	kubedb.ClickHouseDataDir,
+	kubedb.GitSecretMountPath,
 }
 
 func (w *ClickHouseCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {

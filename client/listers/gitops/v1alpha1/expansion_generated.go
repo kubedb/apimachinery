@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// CassandraListerExpansion allows custom methods to be added to
+// CassandraLister.
+type CassandraListerExpansion interface{}
+
+// CassandraNamespaceListerExpansion allows custom methods to be added to
+// CassandraNamespaceLister.
+type CassandraNamespaceListerExpansion interface{}
+
 // ClickHouseListerExpansion allows custom methods to be added to
 // ClickHouseLister.
 type ClickHouseListerExpansion interface{}
@@ -41,6 +49,30 @@ type ElasticsearchListerExpansion interface{}
 // ElasticsearchNamespaceListerExpansion allows custom methods to be added to
 // ElasticsearchNamespaceLister.
 type ElasticsearchNamespaceListerExpansion interface{}
+
+// HanaDBListerExpansion allows custom methods to be added to
+// HanaDBLister.
+type HanaDBListerExpansion interface{}
+
+// HanaDBNamespaceListerExpansion allows custom methods to be added to
+// HanaDBNamespaceLister.
+type HanaDBNamespaceListerExpansion interface{}
+
+// HazelcastListerExpansion allows custom methods to be added to
+// HazelcastLister.
+type HazelcastListerExpansion interface{}
+
+// HazelcastNamespaceListerExpansion allows custom methods to be added to
+// HazelcastNamespaceLister.
+type HazelcastNamespaceListerExpansion interface{}
+
+// IgniteListerExpansion allows custom methods to be added to
+// IgniteLister.
+type IgniteListerExpansion interface{}
+
+// IgniteNamespaceListerExpansion allows custom methods to be added to
+// IgniteNamespaceLister.
+type IgniteNamespaceListerExpansion interface{}
 
 // KafkaListerExpansion allows custom methods to be added to
 // KafkaLister.
@@ -74,6 +106,14 @@ type MemcachedListerExpansion interface{}
 // MemcachedNamespaceLister.
 type MemcachedNamespaceListerExpansion interface{}
 
+// MilvusListerExpansion allows custom methods to be added to
+// MilvusLister.
+type MilvusListerExpansion interface{}
+
+// MilvusNamespaceListerExpansion allows custom methods to be added to
+// MilvusNamespaceLister.
+type MilvusNamespaceListerExpansion interface{}
+
 // MongoDBListerExpansion allows custom methods to be added to
 // MongoDBLister.
 type MongoDBListerExpansion interface{}
@@ -89,6 +129,22 @@ type MySQLListerExpansion interface{}
 // MySQLNamespaceListerExpansion allows custom methods to be added to
 // MySQLNamespaceLister.
 type MySQLNamespaceListerExpansion interface{}
+
+// Neo4jListerExpansion allows custom methods to be added to
+// Neo4jLister.
+type Neo4jListerExpansion interface{}
+
+// Neo4jNamespaceListerExpansion allows custom methods to be added to
+// Neo4jNamespaceLister.
+type Neo4jNamespaceListerExpansion interface{}
+
+// OracleListerExpansion allows custom methods to be added to
+// OracleLister.
+type OracleListerExpansion interface{}
+
+// OracleNamespaceListerExpansion allows custom methods to be added to
+// OracleNamespaceLister.
+type OracleNamespaceListerExpansion interface{}
 
 // PerconaXtraDBListerExpansion allows custom methods to be added to
 // PerconaXtraDBLister.
@@ -130,6 +186,14 @@ type ProxySQLListerExpansion interface{}
 // ProxySQLNamespaceLister.
 type ProxySQLNamespaceListerExpansion interface{}
 
+// QdrantListerExpansion allows custom methods to be added to
+// QdrantLister.
+type QdrantListerExpansion interface{}
+
+// QdrantNamespaceListerExpansion allows custom methods to be added to
+// QdrantNamespaceLister.
+type QdrantNamespaceListerExpansion interface{}
+
 // RabbitMQListerExpansion allows custom methods to be added to
 // RabbitMQLister.
 type RabbitMQListerExpansion interface{}
@@ -169,6 +233,14 @@ type SolrListerExpansion interface{}
 // SolrNamespaceListerExpansion allows custom methods to be added to
 // SolrNamespaceLister.
 type SolrNamespaceListerExpansion interface{}
+
+// WeaviateListerExpansion allows custom methods to be added to
+// WeaviateLister.
+type WeaviateListerExpansion interface{}
+
+// WeaviateNamespaceListerExpansion allows custom methods to be added to
+// WeaviateNamespaceLister.
+type WeaviateNamespaceListerExpansion interface{}
 
 // ZooKeeperListerExpansion allows custom methods to be added to
 // ZooKeeperLister.

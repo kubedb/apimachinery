@@ -744,6 +744,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_OracleOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_OracleOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_OracleOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleReconfigurationSpec":                        schema_apimachinery_apis_ops_v1alpha1_OracleReconfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleVerticalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_OracleVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleVolumeExpansionSpec":                        schema_apimachinery_apis_ops_v1alpha1_OracleVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PerconaXtraDBCustomConfigurationSpec":             schema_apimachinery_apis_ops_v1alpha1_PerconaXtraDBCustomConfigurationSpec(ref),
@@ -40856,7 +40857,7 @@ func schema_apimachinery_apis_ops_v1alpha1_OracleOpsRequestSpec(ref common.Refer
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for custom configuration of oracle",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleReconfigurationSpec"),
 						},
 					},
 					"authentication": {
@@ -40895,7 +40896,63 @@ func schema_apimachinery_apis_ops_v1alpha1_OracleOpsRequestSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OracleVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_OracleReconfigurationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret is an optional field to provide custom configuration file for the database (i.e. mssql.conf, mongod.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). Configurations from this secret will override default configurations.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"applyConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplyConfig contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"removeCustomConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RemoveCustomConfig when set to true, removes any previous custom configuration (config secret and apply configs) and uses only current configurations (if provided) and the default configurations.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Restart controls whether to restart the database during reconfiguration. - auto (default): Operator determines if restart is needed based on configuration changes. - true: Restart the database during reconfiguration. - false: Don't restart the database during reconfiguration.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"walletConfigSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WalletConfigSecret is an optional field to provide the configuration details for the db to connect with different online storage provider",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
