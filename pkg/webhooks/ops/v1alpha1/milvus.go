@@ -449,8 +449,21 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusStorageMigrationOpsRequest
 
 	var oldClassName string
 	if db.IsDistributed() {
+		if db.Spec.Topology.Distributed.StreamingNode == nil ||
+			db.Spec.Topology.Distributed.StreamingNode.Storage == nil {
+			return errors.New("streamingnode storage is not configured for this milvus instance")
+		}
+		if db.Spec.Topology.Distributed.StreamingNode.Storage.StorageClassName == nil {
+			return errors.New("streamingnode storageClassName is empty")
+		}
 		oldClassName = *db.Spec.Topology.Distributed.StreamingNode.Storage.StorageClassName
 	} else {
+		if db.Spec.Storage == nil {
+			return errors.New("storage is not configured for this milvus instance")
+		}
+		if db.Spec.Storage.StorageClassName == nil {
+			return errors.New("storageClassName is empty")
+		}
 		oldClassName = db.GetStorageClassName()
 	}
 
