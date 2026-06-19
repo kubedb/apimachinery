@@ -31,6 +31,9 @@ const (
 	// of code conflicts because changes are more likely to be scattered
 	// across the file.
 
+	// Enables Aerospike operator.
+	Aerospike featuregate.Feature = "Aerospike"
+
 	// Enables Cassandra operator.
 	Cassandra featuregate.Feature = "Cassandra"
 
@@ -154,6 +157,7 @@ func init() {
 // To add a new feature, define a key for it above and add it here. The features will be
 // available throughout KubeDB binaries.
 var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
+	Aerospike:     {Default: false, PreRelease: featuregate.Alpha},
 	Cassandra:     {Default: false, PreRelease: featuregate.Alpha},
 	ClickHouse:    {Default: false, PreRelease: featuregate.Alpha},
 	DB2:           {Default: false, PreRelease: featuregate.Alpha},
