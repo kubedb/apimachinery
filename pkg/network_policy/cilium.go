@@ -212,9 +212,11 @@ func ensureCiliumBackupPolicy(kbClient client.Client, dbNs string) error {
 					},
 				},
 			},
-			// Reach object storage / external endpoints.
+			// Reach object storage: "world" for external endpoints, "cluster"
+			// for in-cluster backends (e.g. an in-cluster MinIO in another
+			// namespace) which "world" does not cover.
 			map[string]any{
-				"toEntities": []any{"world"},
+				"toEntities": []any{"world", "cluster"},
 			},
 			// DNS egress to kube-dns so backup jobs can resolve service names.
 			map[string]any{
