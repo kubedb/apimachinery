@@ -24,10 +24,14 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// AerospikeAutoscalers returns a AerospikeAutoscalerInformer.
+	AerospikeAutoscalers() AerospikeAutoscalerInformer
 	// CassandraAutoscalers returns a CassandraAutoscalerInformer.
 	CassandraAutoscalers() CassandraAutoscalerInformer
 	// ClickHouseAutoscalers returns a ClickHouseAutoscalerInformer.
 	ClickHouseAutoscalers() ClickHouseAutoscalerInformer
+	// DB2Autoscalers returns a DB2AutoscalerInformer.
+	DB2Autoscalers() DB2AutoscalerInformer
 	// DocumentDBAutoscalers returns a DocumentDBAutoscalerInformer.
 	DocumentDBAutoscalers() DocumentDBAutoscalerInformer
 	// DruidAutoscalers returns a DruidAutoscalerInformer.
@@ -97,6 +101,11 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
+// AerospikeAutoscalers returns a AerospikeAutoscalerInformer.
+func (v *version) AerospikeAutoscalers() AerospikeAutoscalerInformer {
+	return &aerospikeAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // CassandraAutoscalers returns a CassandraAutoscalerInformer.
 func (v *version) CassandraAutoscalers() CassandraAutoscalerInformer {
 	return &cassandraAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -105,6 +114,11 @@ func (v *version) CassandraAutoscalers() CassandraAutoscalerInformer {
 // ClickHouseAutoscalers returns a ClickHouseAutoscalerInformer.
 func (v *version) ClickHouseAutoscalers() ClickHouseAutoscalerInformer {
 	return &clickHouseAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DB2Autoscalers returns a DB2AutoscalerInformer.
+func (v *version) DB2Autoscalers() DB2AutoscalerInformer {
+	return &dB2AutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // DocumentDBAutoscalers returns a DocumentDBAutoscalerInformer.

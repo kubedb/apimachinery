@@ -29,12 +29,20 @@ type FakeAutoscalingV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeAutoscalingV1alpha1) AerospikeAutoscalers(namespace string) v1alpha1.AerospikeAutoscalerInterface {
+	return &FakeAerospikeAutoscalers{c, namespace}
+}
+
 func (c *FakeAutoscalingV1alpha1) CassandraAutoscalers(namespace string) v1alpha1.CassandraAutoscalerInterface {
 	return &FakeCassandraAutoscalers{c, namespace}
 }
 
 func (c *FakeAutoscalingV1alpha1) ClickHouseAutoscalers(namespace string) v1alpha1.ClickHouseAutoscalerInterface {
 	return &FakeClickHouseAutoscalers{c, namespace}
+}
+
+func (c *FakeAutoscalingV1alpha1) DB2Autoscalers(namespace string) v1alpha1.DB2AutoscalerInterface {
+	return &FakeDB2Autoscalers{c, namespace}
 }
 
 func (c *FakeAutoscalingV1alpha1) DocumentDBAutoscalers(namespace string) v1alpha1.DocumentDBAutoscalerInterface {

@@ -29,12 +29,20 @@ type FakeOpsV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeOpsV1alpha1) AerospikeOpsRequests(namespace string) v1alpha1.AerospikeOpsRequestInterface {
+	return &FakeAerospikeOpsRequests{c, namespace}
+}
+
 func (c *FakeOpsV1alpha1) CassandraOpsRequests(namespace string) v1alpha1.CassandraOpsRequestInterface {
 	return &FakeCassandraOpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) ClickHouseOpsRequests(namespace string) v1alpha1.ClickHouseOpsRequestInterface {
 	return &FakeClickHouseOpsRequests{c, namespace}
+}
+
+func (c *FakeOpsV1alpha1) DB2OpsRequests(namespace string) v1alpha1.DB2OpsRequestInterface {
+	return &FakeDB2OpsRequests{c, namespace}
 }
 
 func (c *FakeOpsV1alpha1) DocumentDBOpsRequests(namespace string) v1alpha1.DocumentDBOpsRequestInterface {

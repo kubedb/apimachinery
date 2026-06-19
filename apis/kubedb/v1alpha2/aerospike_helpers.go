@@ -20,14 +20,20 @@ import (
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
 	corev1 "k8s.io/api/core/v1"
 	coreutil "kmodules.xyz/client-go/core/v1"
+	"kmodules.xyz/client-go/apiextensions"
 	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
 )
+
+func (a *Aerospike) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralAerospike))
+}
 
 func (a *Aerospike) ConfigSecretName() string {
 	uid := string(a.UID)

@@ -1580,6 +1580,8 @@ const (
 const (
 	WeaviateHTTPPortName   = "http"
 	WeaviateHTTPPort       = 8080
+	WeaviateHTTPSPortName  = "https"
+	WeaviateHTTPSPort      = 8443
 	WeaviateGRPCPortName   = "grpc"
 	WeaviateGRPCPort       = 50051
 	WeaviateRAFTPortName   = "raft"
@@ -1601,6 +1603,12 @@ const (
 	WeaviateConfigFileName  = "conf.yaml"
 	WeaviateCustomConfigDir = "/weaviate-config/conf.yaml"
 	WeaviateConfigVolName   = "config"
+
+	WeaviateTLSServerMountPath = "/weaviate/certs/server"
+	WeaviateTLSClientMountPath = "/weaviate/certs/client"
+	WeaviateTLSCACert          = "ca.crt"
+	WeaviateTLSCert            = "tls.crt"
+	WeaviateTLSKey             = "tls.key"
 )
 
 // =========================== DocumentDB Constants ============================
@@ -1680,6 +1688,18 @@ const (
 	DocumentDBBackendInitShellFile = "data.sh"
 	DocumentDBBackendInitSqlFile   = "data.sql"
 	DocumentDBBackendConfigFile    = "user.conf"
+
+	// DocumentDBCustomConfigVolumeName is the projected volume that carries the user-provided
+	// custom config secret along with the operator-generated tuning/inline config.
+	DocumentDBCustomConfigVolumeName = "custom-config"
+	// DocumentDBCustomConfigDir is the mount path where config files (user.conf, inline.conf,
+	// pgtune.conf) are made available to the database container. The init-docker scripts
+	// reference this path via include_if_exists directives.
+	DocumentDBCustomConfigDir = "/etc/config"
+	// DocumentDBCustomConfigFile is the key/path of the user-provided custom config file.
+	DocumentDBCustomConfigFile = "user.conf"
+	// DocumentDBTuningConfigFile is the key/path of the operator-generated pgtune config file.
+	DocumentDBTuningConfigFile = "pgtune.conf"
 )
 
 const (

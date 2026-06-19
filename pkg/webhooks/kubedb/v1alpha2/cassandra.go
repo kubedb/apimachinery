@@ -20,10 +20,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -216,6 +219,10 @@ func (w *CassandraCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Cassandra) 
 		allErr = w.validateStandaloneStorageType(db, db.Spec.StorageType, db.Spec.Storage, allErr)
 	}
 
+	// Validate that the git-sync clone root path does not collide with any reserved mount path.
+	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), cassandraReservedVolumeMountPaths); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.Name, err.Error()))
+	}
 	if len(allErr) == 0 {
 		return nil
 	}
@@ -275,6 +282,7 @@ func (w *CassandraCustomWebhook) ValidateVersion(db *olddbapi.Cassandra) error {
 
 var cassandraReservedVolumes = []string{
 	kubedb.CassandraVolumeData,
+	kubedb.GitSecretVolume,
 }
 
 func (w *CassandraCustomWebhook) validateVolumes(podTemplate *ofst.PodTemplateSpec) error {
@@ -296,6 +304,7 @@ func (w *CassandraCustomWebhook) validateVolumes(podTemplate *ofst.PodTemplateSp
 
 var cassandraReservedVolumeMountPaths = []string{
 	kubedb.CassandraDataDir,
+	kubedb.GitSecretMountPath,
 }
 
 func (w *CassandraCustomWebhook) validateVolumesMountPaths(podTemplate *ofst.PodTemplateSpec) error {

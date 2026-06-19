@@ -143,6 +143,12 @@ func (w *WeaviateOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Wea
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.WeaviateOpsRequestTypeReconfigureTLS:
+		if err := w.validateWeaviateReconfigureTLSOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tls"),
+				req.Name,
+				err.Error()))
+		}
 	case opsapi.WeaviateOpsRequestTypeRestart:
 
 	case opsapi.WeaviateOpsRequestTypeRotateAuth:
@@ -261,6 +267,26 @@ func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateReconfigurationOpsRequ
 		if !ok {
 			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.WeaviateConfigFileName)
 		}
+	}
+
+	return nil
+}
+
+func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateReconfigureTLSOpsRequest(req *opsapi.WeaviateOpsRequest) error {
+	tlsSpec := req.Spec.TLS
+	if tlsSpec == nil {
+		return errors.New("spec.tls nil not supported in ReconfigureTLS type")
+	}
+
+	if tlsSpec.Remove {
+		if tlsSpec.RotateCertificates || tlsSpec.IssuerRef != nil || tlsSpec.Certificates != nil || tlsSpec.ClientAuth != nil {
+			return errors.New("remove can not be combined with other TLS reconfiguration fields")
+		}
+		return nil
+	}
+
+	if !tlsSpec.RotateCertificates && tlsSpec.IssuerRef == nil && tlsSpec.Certificates == nil && tlsSpec.ClientAuth == nil {
+		return errors.New("no reconfiguration is provided in TLS spec")
 	}
 
 	return nil
