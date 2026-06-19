@@ -40,9 +40,10 @@ const (
 )
 
 const (
-	NetworkPolicyNameHealthCheck = "kubedb-healthcheck"
-	NetworkPolicyNameDBInternal  = "kubedb-database-internal"
-	NetworkPolicyNameDBBackup    = "kubedb-database-backup"
+	NetworkPolicyNameHealthCheck     = "kubedb-healthcheck"
+	NetworkPolicyNameDBInternal      = "kubedb-database-internal"
+	NetworkPolicyNameDBBackup        = "kubedb-database-backup"
+	NetworkPolicyNameDBBackupIngress = "kubedb-database-backup-ingress"
 )
 
 // EnsureNetworkPolicy emits the default (FlavorKubernetes) per-DB-namespace
