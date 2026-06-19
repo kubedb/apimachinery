@@ -48,6 +48,9 @@ func ensureCiliumPolicies(kbClient client.Client, dbNs string) error {
 	if err := ensureCiliumKubeAPIPolicy(kbClient, dbNs); err != nil {
 		return err
 	}
+	if err := ensureCiliumBackupIngressPolicy(kbClient, dbNs); err != nil {
+		return err
+	}
 	return ensureCiliumBackupPolicy(kbClient, dbNs)
 }
 
@@ -169,6 +172,28 @@ func ensureCiliumKubeAPIPolicy(kbClient client.Client, dbNs string) error {
 	return ensureCiliumNetworkPolicy(kbClient, dbNs, "kubedb-kube-apiserver", spec)
 }
 
+// ensureCiliumBackupIngressPolicy allows kubestash-managed pods (backup/restore
+// jobs) to reach the DB pods on the ingress side.
+func ensureCiliumBackupIngressPolicy(kbClient client.Client, dbNs string) error {
+	spec := map[string]any{
+		"endpointSelector": map[string]any{
+			"matchLabels": stringMapToInterface(api.GetSelectorForNetworkPolicy()),
+		},
+		"ingress": []any{
+			map[string]any{
+				"fromEndpoints": []any{
+					map[string]any{
+						"matchLabels": map[string]any{
+							"k8s:" + meta_util.ManagedByLabelKey: kubestashapi.KubeStashKey,
+						},
+					},
+				},
+			},
+		},
+	}
+	return ensureCiliumNetworkPolicy(kbClient, dbNs, NetworkPolicyNameDBBackupIngress, spec)
+}
+
 func ensureCiliumBackupPolicy(kbClient client.Client, dbNs string) error {
 	spec := map[string]any{
 		"endpointSelector": map[string]any{
@@ -190,6 +215,38 @@ func ensureCiliumBackupPolicy(kbClient client.Client, dbNs string) error {
 			// Reach object storage / external endpoints.
 			map[string]any{
 				"toEntities": []any{"world"},
+			},
+			// DNS egress to kube-dns so backup jobs can resolve service names.
+			map[string]any{
+				"toEndpoints": []any{
+					map[string]any{
+						"matchLabels": map[string]any{
+							"k8s:io.kubernetes.pod.namespace": "kube-system",
+							"k8s:k8s-app":                     "kube-dns",
+						},
+					},
+				},
+				"toPorts": []any{
+					map[string]any{
+						"ports": []any{
+							map[string]any{
+								"port":     "53",
+								"protocol": "UDP",
+							},
+							map[string]any{
+								"port":     "53",
+								"protocol": "TCP",
+							},
+						},
+						"rules": map[string]any{
+							"dns": []any{
+								map[string]any{
+									"matchPattern": "*",
+								},
+							},
+						},
+					},
+				},
 			},
 		},
 	}
