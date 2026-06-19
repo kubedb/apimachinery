@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strings"
 
+	storagev1 "k8s.io/api/storage/v1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -28,7 +29,6 @@ import (
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
-	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -437,15 +437,23 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusStorageMigrationOpsRequest
 		return errors.Wrap(err, fmt.Sprintf("failed to get Milvus: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
+	if req.Spec.Migration == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
 	if req.Spec.Migration.StorageClassName == nil {
 		return errors.New("spec.migration.storageClassName is required")
 	}
 	if req.Spec.Timeout == nil {
-		// timeout is required for Storage Migration ops request because it's a long-running operation
-		// default timeout is len(pods) * 5 minute
 		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
 	}
-	// check new storageClass
+
+	var oldClassName string
+	if db.IsDistributed() {
+		oldClassName = *db.Spec.Topology.Distributed.StreamingNode.Storage.StorageClassName
+	} else {
+		oldClassName = db.GetStorageClassName()
+	}
+
 	var newstorage, oldstorage storagev1.StorageClass
 	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: *req.Spec.Migration.StorageClassName,
@@ -458,7 +466,7 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusStorageMigrationOpsRequest
 	}
 
 	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: db.GetStorageClassName(),
+		Name: oldClassName,
 	}, &oldstorage)
 	if err != nil {
 		return err
