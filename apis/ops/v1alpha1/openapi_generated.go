@@ -878,6 +878,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateOpsRequestSpec":                           schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec":                      schema_apimachinery_apis_ops_v1alpha1_WeaviateReconfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReplicaReadinessCriteria":                 schema_apimachinery_apis_ops_v1alpha1_WeaviateReplicaReadinessCriteria(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateTLSSpec":                                  schema_apimachinery_apis_ops_v1alpha1_WeaviateTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateUpdateVersionSpec":                        schema_apimachinery_apis_ops_v1alpha1_WeaviateUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVerticalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_WeaviateVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVolumeExpansionSpec":                      schema_apimachinery_apis_ops_v1alpha1_WeaviateVolumeExpansionSpec(ref),
@@ -46396,6 +46397,12 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec"),
 						},
 					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring TLS",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateTLSSpec"),
+						},
+					},
 					"migration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for migrating storageClass or data",
@@ -46432,7 +46439,7 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateOpsRequestSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVolumeExpansionSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVolumeExpansionSpec"},
 	}
 }
 
@@ -46501,6 +46508,61 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateReplicaReadinessCriteria(ref 
 				Type:        []string{"object"},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_WeaviateTLSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"clientAuth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientAuth controls whether the REST HTTPS listener requires clients to present a valid certificate. If unset, client certificate authentication is enabled for backward compatibility.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"rotateCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RotateCertificates tells operator to initiate certificate rotation",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"remove": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Remove tells operator to remove TLS configuration",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
 	}
 }
 
