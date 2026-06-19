@@ -437,15 +437,36 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusStorageMigrationOpsRequest
 		return errors.Wrap(err, fmt.Sprintf("failed to get Milvus: %s/%s", req.Namespace, req.Spec.DatabaseRef.Name))
 	}
 
+	if req.Spec.Migration == nil {
+		return errors.New("spec.migration is required for StorageMigration type")
+	}
 	if req.Spec.Migration.StorageClassName == nil {
 		return errors.New("spec.migration.storageClassName is required")
 	}
 	if req.Spec.Timeout == nil {
-		// timeout is required for Storage Migration ops request because it's a long-running operation
-		// default timeout is len(pods) * 5 minute
 		return errors.New("spec.timeout is required for Storage Migration ops request,adjust timeout according to the size of your database")
 	}
-	// check new storageClass
+
+	var oldClassName string
+	if db.IsDistributed() {
+		if db.Spec.Topology.Distributed.StreamingNode == nil ||
+			db.Spec.Topology.Distributed.StreamingNode.Storage == nil {
+			return errors.New("streamingnode storage is not configured for this milvus instance")
+		}
+		if db.Spec.Topology.Distributed.StreamingNode.Storage.StorageClassName == nil {
+			return errors.New("streamingnode storageClassName is empty")
+		}
+		oldClassName = *db.Spec.Topology.Distributed.StreamingNode.Storage.StorageClassName
+	} else {
+		if db.Spec.Storage == nil {
+			return errors.New("storage is not configured for this milvus instance")
+		}
+		if db.Spec.Storage.StorageClassName == nil {
+			return errors.New("storageClassName is empty")
+		}
+		oldClassName = db.GetStorageClassName()
+	}
+
 	var newstorage, oldstorage storagev1.StorageClass
 	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: *req.Spec.Migration.StorageClassName,
@@ -458,7 +479,7 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusStorageMigrationOpsRequest
 	}
 
 	err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: db.GetStorageClassName(),
+		Name: oldClassName,
 	}, &oldstorage)
 	if err != nil {
 		return err
