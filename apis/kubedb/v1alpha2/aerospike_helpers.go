@@ -17,6 +17,8 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"fmt"
+
 	"kubedb.dev/apimachinery/apis"
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -33,6 +35,14 @@ import (
 
 func (a *Aerospike) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralAerospike))
+}
+
+func (a *Aerospike) ResourceFQN() string {
+	return fmt.Sprintf("%s.%s", a.ResourcePlural(), kubedb.GroupName)
+}
+
+func (a *Aerospike) ResourcePlural() string {
+	return ResourcePluralAerospike
 }
 
 func (a *Aerospike) ConfigSecretName() string {
