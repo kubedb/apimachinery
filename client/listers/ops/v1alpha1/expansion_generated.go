@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// AerospikeOpsRequestListerExpansion allows custom methods to be added to
+// AerospikeOpsRequestLister.
+type AerospikeOpsRequestListerExpansion interface{}
+
+// AerospikeOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// AerospikeOpsRequestNamespaceLister.
+type AerospikeOpsRequestNamespaceListerExpansion interface{}
+
 // CassandraOpsRequestListerExpansion allows custom methods to be added to
 // CassandraOpsRequestLister.
 type CassandraOpsRequestListerExpansion interface{}
@@ -33,6 +41,14 @@ type ClickHouseOpsRequestListerExpansion interface{}
 // ClickHouseOpsRequestNamespaceListerExpansion allows custom methods to be added to
 // ClickHouseOpsRequestNamespaceLister.
 type ClickHouseOpsRequestNamespaceListerExpansion interface{}
+
+// DB2OpsRequestListerExpansion allows custom methods to be added to
+// DB2OpsRequestLister.
+type DB2OpsRequestListerExpansion interface{}
+
+// DB2OpsRequestNamespaceListerExpansion allows custom methods to be added to
+// DB2OpsRequestNamespaceLister.
+type DB2OpsRequestNamespaceListerExpansion interface{}
 
 // DocumentDBOpsRequestListerExpansion allows custom methods to be added to
 // DocumentDBOpsRequestLister.

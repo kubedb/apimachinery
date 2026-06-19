@@ -29,12 +29,24 @@ type FakeGitopsV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeGitopsV1alpha1) Aerospikes(namespace string) v1alpha1.AerospikeInterface {
+	return &FakeAerospikes{c, namespace}
+}
+
 func (c *FakeGitopsV1alpha1) Cassandras(namespace string) v1alpha1.CassandraInterface {
 	return &FakeCassandras{c, namespace}
 }
 
 func (c *FakeGitopsV1alpha1) ClickHouses(namespace string) v1alpha1.ClickHouseInterface {
 	return &FakeClickHouses{c, namespace}
+}
+
+func (c *FakeGitopsV1alpha1) DB2s(namespace string) v1alpha1.DB2Interface {
+	return &FakeDB2s{c, namespace}
+}
+
+func (c *FakeGitopsV1alpha1) DocumentDBs(namespace string) v1alpha1.DocumentDBInterface {
+	return &FakeDocumentDBs{c, namespace}
 }
 
 func (c *FakeGitopsV1alpha1) Druids(namespace string) v1alpha1.DruidInterface {
