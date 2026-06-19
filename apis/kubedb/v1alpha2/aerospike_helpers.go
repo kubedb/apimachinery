@@ -23,8 +23,7 @@ import (
 
 	"gomodules.xyz/pointer"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	core_util "kmodules.xyz/client-go/core/v1"
+	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
@@ -107,18 +106,19 @@ func (a *Aerospike) SetDefaults(arVersion *catalog.AerospikeVersion) {
 		a.Spec.PodTemplate.Spec.ServiceAccountName = a.OffshootName()
 	}
 
-	labels := a.OffshootSelectors()
-	a.setDefaultAffinity(&a.Spec.PodTemplate, labels)
-
-	apis.SetDefaultResourceLimits(&a.Spec.PodTemplate.Spec.Resources, kubedb.DefaultResources)
+	container := coreutil.GetContainerByName(a.Spec.PodTemplate.Spec.Containers, kubedb.AerospikeContainerName)
+	if container == nil {
+		container = &corev1.Container{
+			Name: kubedb.AerospikeContainerName,
+		}
+	}
+	apis.SetDefaultResourceLimits(&container.Resources, kubedb.DefaultResources)
+	a.Spec.PodTemplate.Spec.Containers = coreutil.UpsertContainer(a.Spec.PodTemplate.Spec.Containers, *container)
 }
 
 func (a Aerospike) setDefaultContainerSecurityContext(arVersion *catalog.AerospikeVersion, podTemplate *ofst.PodTemplateSpec) {
 	if podTemplate == nil {
 		return
-	}
-	if podTemplate.Spec.ContainerSecurityContext == nil {
-		podTemplate.Spec.ContainerSecurityContext = &corev1.SecurityContext{}
 	}
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &corev1.PodSecurityContext{}
@@ -126,7 +126,20 @@ func (a Aerospike) setDefaultContainerSecurityContext(arVersion *catalog.Aerospi
 	if podTemplate.Spec.SecurityContext.FSGroup == nil {
 		podTemplate.Spec.SecurityContext.FSGroup = arVersion.Spec.SecurityContext.RunAsUser
 	}
-	a.assignDefaultContainerSecurityContext(arVersion, podTemplate.Spec.ContainerSecurityContext)
+
+	container := coreutil.GetContainerByName(podTemplate.Spec.Containers, kubedb.AerospikeContainerName)
+	if container == nil {
+		container = &corev1.Container{
+			Name: kubedb.AerospikeContainerName,
+		}
+	}
+	if container.SecurityContext == nil {
+		container.SecurityContext = &corev1.SecurityContext{}
+	}
+
+	a.assignDefaultContainerSecurityContext(arVersion, container.SecurityContext)
+
+	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
 func (a *Aerospike) assignDefaultContainerSecurityContext(arVersion *catalog.AerospikeVersion, sc *corev1.SecurityContext) {
@@ -149,44 +162,5 @@ func (a *Aerospike) assignDefaultContainerSecurityContext(arVersion *catalog.Aer
 	}
 	if sc.SeccompProfile == nil {
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
-	}
-}
-
-func (a *Aerospike) setDefaultAffinity(podTemplate *ofst.PodTemplateSpec, labels map[string]string) {
-	if podTemplate == nil {
-		return
-	} else if podTemplate.Spec.Affinity != nil {
-		topology.ConvertAffinity(podTemplate.Spec.Affinity)
-		return
-	}
-
-	podTemplate.Spec.Affinity = &corev1.Affinity{
-		PodAntiAffinity: &corev1.PodAntiAffinity{
-			PreferredDuringSchedulingIgnoredDuringExecution: []corev1.WeightedPodAffinityTerm{
-				// Prefer to not schedule multiple pods on the same node
-				{
-					Weight: 100,
-					PodAffinityTerm: corev1.PodAffinityTerm{
-						Namespaces: []string{a.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-
-						TopologyKey: corev1.LabelHostname,
-					},
-				},
-				// Prefer to not schedule multiple pods on the node with same zone
-				{
-					Weight: 50,
-					PodAffinityTerm: corev1.PodAffinityTerm{
-						Namespaces: []string{a.Namespace},
-						LabelSelector: &metav1.LabelSelector{
-							MatchLabels: labels,
-						},
-						TopologyKey: topology.LabelZone,
-					},
-				},
-			},
-		},
 	}
 }
