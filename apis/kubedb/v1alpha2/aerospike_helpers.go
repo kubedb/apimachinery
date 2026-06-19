@@ -117,9 +117,6 @@ func (a *Aerospike) SetDefaults(arVersion *catalog.AerospikeVersion) {
 }
 
 func (a Aerospike) setDefaultContainerSecurityContext(arVersion *catalog.AerospikeVersion, podTemplate *ofst.PodTemplateSpec) {
-	if podTemplate == nil {
-		return
-	}
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &corev1.PodSecurityContext{}
 	}
