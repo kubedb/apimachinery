@@ -24,8 +24,8 @@ import (
 
 	"gomodules.xyz/pointer"
 	corev1 "k8s.io/api/core/v1"
-	coreutil "kmodules.xyz/client-go/core/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	ofst "kmodules.xyz/offshoot-api/api/v2"
