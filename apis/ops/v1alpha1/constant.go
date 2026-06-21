@@ -100,9 +100,11 @@ const (
 	AddTLSSucceeded            = "AddTLSSucceeded"
 	AddTLSFailed               = "AddTLSFailed"
 	Issuing                    = "Issuing"
-	IssueCertificatesSucceeded = "IssueCertificatesSucceeded"
-	CertificateSynced          = "CertificateSynced"
-	IssueCertificatesFailed    = "IssueCertificatesFailed"
+	IssueCertificatesSucceeded          = "IssueCertificatesSucceeded"
+	CertificateSynced                   = "CertificateSynced"
+	IssueCertificatesFailed             = "IssueCertificatesFailed"
+	IssueGrpcCertificatesSucceeded      = "IssueGrpcCertificatesSucceeded"
+	GrpcCertificateSynced               = "GrpcCertificateSynced"
 )
 
 // RotateAuth
