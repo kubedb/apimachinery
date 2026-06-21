@@ -433,6 +433,16 @@ type PostgresSynchronousReplicationSpec struct {
 	// Defaults to RemoteWrite.
 	// +optional
 	CommitLevel *PostgresSynchronousCommitLevel `json:"commitLevel,omitempty"`
+
+	// StandbyNames is an explicit ordered list of standby application_names to include in
+	// synchronous_standby_names. When set, only these names participate in synchronous
+	// replication instead of the auto-generated list of all pod names.
+	// For FIRST mode the order determines priority (first entry = highest priority).
+	// Must not contain duplicates or empty strings.
+	// When absent, all standby pods are included in ascending pod-index order.
+	// +optional
+	// +listType=atomic
+	StandbyNames []string `json:"standbyNames,omitempty"`
 }
 
 // ref: https://www.postgresql.org/docs/13/libpq-ssl.html

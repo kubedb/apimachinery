@@ -343,16 +343,40 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 			return nil, fmt.Errorf("spec.synchronousReplicationConfig is only valid when spec.streamingMode is %q", dbapi.SynchronousPostgresStreamingMode)
 		}
 		cfg := postgres.Spec.SynchronousReplicationConfig
-		if cfg.NumSyncReplicas != nil {
-			replicas := int32(1)
-			if postgres.Spec.Replicas != nil {
-				replicas = *postgres.Spec.Replicas
+
+		// Validate StandbyNames: no empty strings, no duplicates
+		if len(cfg.StandbyNames) > 0 {
+			seen := make(map[string]bool, len(cfg.StandbyNames))
+			for _, name := range cfg.StandbyNames {
+				if name == "" {
+					return nil, fmt.Errorf("spec.synchronousReplicationConfig.standbyNames must not contain empty strings")
+				}
+				if seen[name] {
+					return nil, fmt.Errorf("spec.synchronousReplicationConfig.standbyNames contains duplicate entry %q", name)
+				}
+				seen[name] = true
 			}
+		}
+
+		if cfg.NumSyncReplicas != nil {
 			if *cfg.NumSyncReplicas < 1 {
 				return nil, fmt.Errorf("spec.synchronousReplicationConfig.numSyncReplicas must be >= 1, got %d", *cfg.NumSyncReplicas)
 			}
-			if *cfg.NumSyncReplicas >= replicas {
-				return nil, fmt.Errorf("spec.synchronousReplicationConfig.numSyncReplicas (%d) must be less than spec.replicas (%d) to avoid blocking all writes if a standby goes down", *cfg.NumSyncReplicas, replicas)
+			if len(cfg.StandbyNames) > 0 {
+				// Explicit list: numSyncReplicas must not exceed the list length
+				if *cfg.NumSyncReplicas > int32(len(cfg.StandbyNames)) {
+					return nil, fmt.Errorf("spec.synchronousReplicationConfig.numSyncReplicas (%d) exceeds the number of standbyNames (%d)", *cfg.NumSyncReplicas, len(cfg.StandbyNames))
+				}
+			} else {
+				// Auto-generated list: numSyncReplicas must be < total replicas to avoid
+				// blocking all writes when a standby is down
+				replicas := int32(1)
+				if postgres.Spec.Replicas != nil {
+					replicas = *postgres.Spec.Replicas
+				}
+				if *cfg.NumSyncReplicas >= replicas {
+					return nil, fmt.Errorf("spec.synchronousReplicationConfig.numSyncReplicas (%d) must be less than spec.replicas (%d) to avoid blocking all writes if a standby goes down", *cfg.NumSyncReplicas, replicas)
+				}
 			}
 		}
 	}
