@@ -79,6 +79,11 @@ type PostgresSpec struct {
 	// Streaming mode
 	StreamingMode *PostgresStreamingMode `json:"streamingMode,omitempty"`
 
+	// SynchronousReplicationConfig holds fine-grained config for synchronous replication.
+	// Only applicable when StreamingMode is Synchronous.
+	// +optional
+	SynchronousReplicationConfig *PostgresSynchronousReplicationSpec `json:"synchronousReplicationConfig,omitempty"`
+
 	// + optional
 	Mode *PostgreSQLMode `json:"mode,omitempty"`
 	// RemoteReplica implies that the instance will be a MySQL Read Only Replica,
@@ -380,6 +385,55 @@ const (
 	SynchronousPostgresStreamingMode  PostgresStreamingMode = "Synchronous"
 	AsynchronousPostgresStreamingMode PostgresStreamingMode = "Asynchronous"
 )
+
+// PostgresSyncReplicationMode defines how standby replicas are selected for synchronous replication.
+// +kubebuilder:validation:Enum=Any;First
+type PostgresSyncReplicationMode string
+
+const (
+	// PostgresSyncReplicationModeAny uses quorum-based selection: wait for any NumSyncReplicas standbys.
+	PostgresSyncReplicationModeAny PostgresSyncReplicationMode = "Any"
+	// PostgresSyncReplicationModeFirst uses priority-based selection: wait for the first NumSyncReplicas standbys in list order.
+	PostgresSyncReplicationModeFirst PostgresSyncReplicationMode = "First"
+)
+
+// PostgresSynchronousCommitLevel maps to PostgreSQL's synchronous_commit parameter.
+// +kubebuilder:validation:Enum=On;RemoteApply;RemoteWrite;Local;Off
+type PostgresSynchronousCommitLevel string
+
+const (
+	// PostgresSynchronousCommitOn waits until the standby has written and flushed WAL to disk.
+	PostgresSynchronousCommitOn PostgresSynchronousCommitLevel = "On"
+	// PostgresSynchronousCommitRemoteApply waits until the standby has applied the WAL.
+	PostgresSynchronousCommitRemoteApply PostgresSynchronousCommitLevel = "RemoteApply"
+	// PostgresSynchronousCommitRemoteWrite waits until the standby has written WAL to its OS buffer (default).
+	PostgresSynchronousCommitRemoteWrite PostgresSynchronousCommitLevel = "RemoteWrite"
+	// PostgresSynchronousCommitLocal waits for local WAL flush only; standby is not waited on.
+	PostgresSynchronousCommitLocal PostgresSynchronousCommitLevel = "Local"
+	// PostgresSynchronousCommitOff allows commit without waiting for WAL flush.
+	PostgresSynchronousCommitOff PostgresSynchronousCommitLevel = "Off"
+)
+
+// PostgresSynchronousReplicationSpec configures fine-grained synchronous replication behavior.
+// Only applicable when spec.streamingMode is Synchronous.
+type PostgresSynchronousReplicationSpec struct {
+	// Mode controls how standbys are selected: Any (quorum) or First (priority).
+	// Defaults to Any.
+	// +optional
+	Mode *PostgresSyncReplicationMode `json:"mode,omitempty"`
+
+	// NumSyncReplicas is the number of synchronous standby replicas to wait for.
+	// Must be >= 1 and less than spec.replicas.
+	// Defaults to 1.
+	// +optional
+	NumSyncReplicas *int32 `json:"numSyncReplicas,omitempty"`
+
+	// CommitLevel maps to PostgreSQL's synchronous_commit parameter, controlling the
+	// durability vs. performance trade-off for synchronous standbys.
+	// Defaults to RemoteWrite.
+	// +optional
+	CommitLevel *PostgresSynchronousCommitLevel `json:"commitLevel,omitempty"`
+}
 
 // ref: https://www.postgresql.org/docs/13/libpq-ssl.html
 // +kubebuilder:validation:Enum=disable;allow;prefer;require;verify-ca;verify-full

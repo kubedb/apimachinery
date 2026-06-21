@@ -332,10 +332,28 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 
 	if postgres.Spec.StreamingMode != nil {
 		streamingMode := *postgres.Spec.StreamingMode
-		// TODO: synchronous Streaming is unavailable due to lack of support
 		if streamingMode != dbapi.AsynchronousPostgresStreamingMode &&
 			streamingMode != dbapi.SynchronousPostgresStreamingMode {
 			return nil, fmt.Errorf(`spec.streamingMode "%s" invalid`, streamingMode)
+		}
+	}
+
+	if postgres.Spec.SynchronousReplicationConfig != nil {
+		if postgres.Spec.StreamingMode == nil || *postgres.Spec.StreamingMode != dbapi.SynchronousPostgresStreamingMode {
+			return nil, fmt.Errorf("spec.synchronousReplicationConfig is only valid when spec.streamingMode is %q", dbapi.SynchronousPostgresStreamingMode)
+		}
+		cfg := postgres.Spec.SynchronousReplicationConfig
+		if cfg.NumSyncReplicas != nil {
+			replicas := int32(1)
+			if postgres.Spec.Replicas != nil {
+				replicas = *postgres.Spec.Replicas
+			}
+			if *cfg.NumSyncReplicas < 1 {
+				return nil, fmt.Errorf("spec.synchronousReplicationConfig.numSyncReplicas must be >= 1, got %d", *cfg.NumSyncReplicas)
+			}
+			if *cfg.NumSyncReplicas >= replicas {
+				return nil, fmt.Errorf("spec.synchronousReplicationConfig.numSyncReplicas (%d) must be less than spec.replicas (%d) to avoid blocking all writes if a standby goes down", *cfg.NumSyncReplicas, replicas)
+			}
 		}
 	}
 
