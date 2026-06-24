@@ -344,6 +344,11 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 		}
 		cfg := postgres.Spec.SynchronousReplicationConfig
 
+		// UseWildcard and StandbyNames are mutually exclusive
+		if cfg.UseWildcard != nil && *cfg.UseWildcard && len(cfg.StandbyNames) > 0 {
+			return nil, fmt.Errorf("spec.synchronousReplicationConfig.useWildcard and standbyNames are mutually exclusive")
+		}
+
 		// Validate StandbyNames: no empty strings, no duplicates
 		if len(cfg.StandbyNames) > 0 {
 			seen := make(map[string]bool, len(cfg.StandbyNames))
