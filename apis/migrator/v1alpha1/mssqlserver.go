@@ -69,6 +69,11 @@ type MSSQLServerStreaming struct {
 	// automatically when set to true. If false, CDC must be pre-enabled.
 	// +optional
 	AutoEnableCDC bool `yaml:"autoEnableCDC" json:"autoEnableCDC,omitempty"`
+	// BatchSize is the maximum number of CDC changes to apply in a single
+	// target transaction. Larger batches improve throughput but extend the
+	// window of lost work if the migration is cancelled mid-batch.
+	// +optional
+	BatchSize *int `yaml:"batchSize" json:"batchSize,omitempty"`
 }
 
 type MSSQLServerConnectionInfo struct {

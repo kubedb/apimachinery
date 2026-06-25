@@ -27521,6 +27521,198 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerConnectionInfo": {
+      "type": "object",
+      "required": [
+        "address",
+        "user",
+        "password",
+        "database"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "default": ""
+        },
+        "database": {
+          "type": "string",
+          "default": ""
+        },
+        "encrypt": {
+          "type": "boolean"
+        },
+        "maxConnections": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "password": {
+          "type": "string",
+          "default": ""
+        },
+        "trustServerCertificate": {
+          "type": "boolean"
+        },
+        "user": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerSchema": {
+      "type": "object",
+      "required": [
+        "enabled"
+      ],
+      "properties": {
+        "database": {
+          "description": "Database is the list of databases to migrate.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "enabled": {
+          "description": "Enabled controls whether the Schema Phase should be executed.",
+          "type": "boolean",
+          "default": false
+        },
+        "excludeSchema": {
+          "description": "ExcludeSchema is the list of SQL Server schemas to exclude.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "excludeTable": {
+          "description": "ExcludeTable is the list of schema-qualified tables to exclude.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "schema": {
+          "description": "Schema is the list of SQL Server schemas (e.g. \"dbo\") to include.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "table": {
+          "description": "Table is the list of schema-qualified tables (e.g. \"dbo.Users\") to include.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerSnapshot": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Enabled controls whether the Snapshot Phase should be executed.",
+          "type": "boolean",
+          "default": false
+        },
+        "pipeline": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerSnapshotPipeline"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerSnapshotPipeline": {
+      "type": "object",
+      "required": [
+        "workers",
+        "sinkers",
+        "buffer",
+        "read_batch_size",
+        "write_batch_size"
+      ],
+      "properties": {
+        "buffer": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "read_batch_size": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sinkers": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "workers": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "write_batch_size": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerSource": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the source MSSQL Server database connection information.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerConnectionInfo"
+        },
+        "schema": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerSchema"
+        },
+        "snapshot": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerSnapshot"
+        },
+        "streaming": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerStreaming"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerStreaming": {
+      "type": "object",
+      "properties": {
+        "autoEnableCDC": {
+          "description": "AutoEnableCDC enables Change Data Capture on the source database/tables automatically when set to true. If false, CDC must be pre-enabled.",
+          "type": "boolean"
+        },
+        "batchSize": {
+          "description": "BatchSize is the maximum number of CDC changes to apply in a single target transaction. Larger batches improve throughput but extend the window of lost work if the migration is cancelled mid-batch.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "enabled": {
+          "description": "Enabled controls whether the CDC Streaming Phase should be executed.",
+          "type": "boolean",
+          "default": false
+        },
+        "pollInterval": {
+          "description": "PollInterval controls how often CDC changes are polled from the source.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerTarget": {
+      "type": "object",
+      "required": [
+        "connectionInfo"
+      ],
+      "properties": {
+        "connectionInfo": {
+          "description": "ConnectionInfo refers to the target MSSQL Server database connection information.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerConnectionInfo"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.migrator.v1alpha1.MariaDBSource": {
       "type": "object",
       "required": [
@@ -28057,6 +28249,10 @@
         "mongodb": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoSource"
         },
+        "mssqlserver": {
+          "description": "MSSQLServer refers to the source MSSQL Server database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerSource"
+        },
         "mysql": {
           "description": "MySQL refers to the source MySQL database configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MySQLSource"
@@ -28086,6 +28282,10 @@
         },
         "mongodb": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MongoTarget"
+        },
+        "mssqlserver": {
+          "description": "MSSQLServer refers to the target MSSQL Server database configuration",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.migrator.v1alpha1.MSSQLServerTarget"
         },
         "mysql": {
           "description": "MySQL refers to the target MySQL database configuration",
