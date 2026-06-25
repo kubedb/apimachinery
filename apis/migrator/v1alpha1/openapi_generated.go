@@ -582,6 +582,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.DBMigratorStatusReporter":                    schema_apimachinery_apis_migrator_v1alpha1_DBMigratorStatusReporter(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.JobDefaults":                                 schema_apimachinery_apis_migrator_v1alpha1_JobDefaults(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.LogicalReplication":                          schema_apimachinery_apis_migrator_v1alpha1_LogicalReplication(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerConnectionInfo":                   schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerConnectionInfo(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSchema":                           schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerSchema(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSnapshot":                         schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerSnapshot(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSnapshotPipeline":                 schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerSnapshotPipeline(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSource":                           schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerSource(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerStreaming":                        schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerStreaming(ref),
+		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerTarget":                           schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerTarget(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBSource":                               schema_apimachinery_apis_migrator_v1alpha1_MariaDBSource(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBTarget":                               schema_apimachinery_apis_migrator_v1alpha1_MariaDBTarget(ref),
 		"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MigrationConfig":                             schema_apimachinery_apis_migrator_v1alpha1_MigrationConfig(ref),
@@ -33513,6 +33520,329 @@ func schema_apimachinery_apis_migrator_v1alpha1_LogicalReplication(ref common.Re
 	}
 }
 
+func schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerConnectionInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"address": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"user": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"password": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"maxConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"encrypt": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"trustServerCertificate": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"address", "user", "password", "database"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerSchema(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled controls whether the Schema Phase should be executed.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database is the list of databases to migrate.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"schema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Schema is the list of SQL Server schemas (e.g. \"dbo\") to include.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"excludeSchema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExcludeSchema is the list of SQL Server schemas to exclude.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"table": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Table is the list of schema-qualified tables (e.g. \"dbo.Users\") to include.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"excludeTable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExcludeTable is the list of schema-qualified tables to exclude.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"enabled"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerSnapshot(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled controls whether the Snapshot Phase should be executed.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"pipeline": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSnapshotPipeline"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSnapshotPipeline"},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerSnapshotPipeline(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"workers": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"sinkers": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"buffer": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"read_batch_size": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"write_batch_size": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"workers", "sinkers", "buffer", "read_batch_size", "write_batch_size"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionInfo refers to the source MSSQL Server database connection information.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerConnectionInfo"),
+						},
+					},
+					"schema": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSchema"),
+						},
+					},
+					"snapshot": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSnapshot"),
+						},
+					},
+					"streaming": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerStreaming"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerConnectionInfo", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSchema", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSnapshot", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerStreaming"},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerStreaming(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled controls whether the CDC Streaming Phase should be executed.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"pollInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PollInterval controls how often CDC changes are polled from the source.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"autoEnableCDC": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AutoEnableCDC enables Change Data Capture on the source database/tables automatically when set to true. If false, CDC must be pre-enabled.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"batchSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BatchSize is the maximum number of CDC changes to apply in a single target transaction. Larger batches improve throughput but extend the window of lost work if the migration is cancelled mid-batch.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_migrator_v1alpha1_MSSQLServerTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionInfo refers to the target MSSQL Server database connection information.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerConnectionInfo"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerConnectionInfo"},
+	}
+}
+
 func schema_apimachinery_apis_migrator_v1alpha1_MariaDBSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34474,11 +34804,17 @@ func schema_apimachinery_apis_migrator_v1alpha1_Source(ref common.ReferenceCallb
 							Ref: ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoSource"),
 						},
 					},
+					"mssqlserver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MSSQLServer refers to the source MSSQL Server database configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSource"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresSource"},
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLSource", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresSource"},
 	}
 }
 
@@ -34578,10 +34914,16 @@ func schema_apimachinery_apis_migrator_v1alpha1_Target(ref common.ReferenceCallb
 							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBTarget"),
 						},
 					},
+					"mssqlserver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MSSQLServer refers to the target MSSQL Server database configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerTarget"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget"},
+			"kubedb.dev/apimachinery/apis/migrator/v1alpha1.MSSQLServerTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MariaDBTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MongoTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.MySQLTarget", "kubedb.dev/apimachinery/apis/migrator/v1alpha1.PostgresTarget"},
 	}
 }

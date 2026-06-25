@@ -35,6 +35,8 @@ type Source struct {
 	// MariaDB refers to the source MariaDB database configuration
 	MariaDB *MariaDBSource `yaml:"mariadb" json:"mariadb,omitempty"`
 	MongoDB *MongoSource   `yaml:"mongodb" json:"mongodb,omitempty"`
+	// MSSQLServer refers to the source MSSQL Server database configuration
+	MSSQLServer *MSSQLServerSource `yaml:"mssqlserver" json:"mssqlserver,omitempty"`
 }
 
 // Target defines the target database configuration
@@ -46,6 +48,8 @@ type Target struct {
 	MySQL *MySQLTarget `yaml:"mysql" json:"mysql,omitempty"`
 	// MariaDB refers to the target MariaDB database configuration
 	MariaDB *MariaDBTarget `yaml:"mariadb" json:"mariadb,omitempty"`
+	// MSSQLServer refers to the target MSSQL Server database configuration
+	MSSQLServer *MSSQLServerTarget `yaml:"mssqlserver" json:"mssqlserver,omitempty"`
 }
 
 type ConnectionInfo struct {
