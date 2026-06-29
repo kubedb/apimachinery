@@ -347,6 +347,66 @@ type PostgresStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	AuthSecret *Age `json:"authSecret,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed Postgres.
+	// +optional
+	DisasterRecovery *PostgresDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// PostgresDRPhase is the cross data center DR phase of a distributed Postgres.
+type PostgresDRPhase string
+
+const (
+	PostgresDRPhaseSteady      PostgresDRPhase = "Steady"
+	PostgresDRPhaseFailingOver PostgresDRPhase = "FailingOver"
+	PostgresDRPhaseFailingBack PostgresDRPhase = "FailingBack"
+	PostgresDRPhaseDegraded    PostgresDRPhase = "Degraded"
+)
+
+// PostgresDisasterRecoveryStatus reports the per data center DC-DR view of a
+// distributed Postgres. The cross-DC decision is owned by the dr-controlplane
+// primary-DC Lease; this status reflects it on the single Database object.
+type PostgresDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and runs the writable primary.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase PostgresDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []PostgresDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// PostgresDCStatus is one data center's local view inside a distributed Postgres.
+type PostgresDCStatus struct {
+	// Name is the data center (member cluster) name.
+	Name string `json:"name"`
+
+	// Role is Member, Arbiter, or Witness.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Leader is this DC's local raft leader pod.
+	// +optional
+	Leader string `json:"leader,omitempty"`
+
+	// Writable is true when this DC's leader is the cluster's writable primary.
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// LagBytes is this DC's cross-DC replication lag behind the active DC, in bytes.
+	// +optional
+	LagBytes *int64 `json:"lagBytes,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
