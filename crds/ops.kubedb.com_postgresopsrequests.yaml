@@ -127,6 +127,19 @@ spec:
                 type: object
               horizontalScaling:
                 properties:
+                  dataCenters:
+                    items:
+                      properties:
+                        name:
+                          type: string
+                        replicas:
+                          format: int32
+                          type: integer
+                      required:
+                      - name
+                      - replicas
+                      type: object
+                    type: array
                   readReplicas:
                     items:
                       properties:
