@@ -664,6 +664,17 @@ spec:
                             type: object
                         type: object
                     type: object
+                  memoryPolicy:
+                    enum:
+                    - ResizeOnly
+                    - Retune
+                    type: string
+                  mode:
+                    default: Restart
+                    enum:
+                    - Restart
+                    - InPlace
+                    type: string
                   postgres:
                     properties:
                       nodeSelectionPolicy:

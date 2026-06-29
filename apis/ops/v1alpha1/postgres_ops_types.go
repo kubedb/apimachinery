@@ -196,6 +196,14 @@ type PostgresVerticalScalingSpec struct {
 	Coordinator  *ContainerResources    `json:"coordinator,omitempty"`
 	Arbiter      *PodResources          `json:"arbiter,omitempty"`
 	ReadReplicas []ReadReplicaResources `json:"readReplicas,omitempty"`
+	// Mode selects how the vertical scaling is actuated. Defaults to Restart.
+	// +optional
+	// +kubebuilder:default=Restart
+	Mode VerticalScalingMode `json:"mode,omitempty"`
+	// MemoryPolicy controls how a memory change is handled when Mode=InPlace.
+	// Defaults to ResizeOnly when Mode=InPlace.
+	// +optional
+	MemoryPolicy MemoryResizePolicy `json:"memoryPolicy,omitempty"`
 }
 
 type ReadReplicaResources struct {
