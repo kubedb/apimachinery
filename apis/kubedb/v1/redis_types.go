@@ -232,6 +232,77 @@ type RedisStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	AuthSecret *Age `json:"authSecret,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed Redis.
+	// +optional
+	DisasterRecovery *RedisDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// RedisDRPhase is the cross data center DR phase of a distributed Redis.
+type RedisDRPhase string
+
+const (
+	RedisDRPhaseSteady      RedisDRPhase = "Steady"
+	RedisDRPhaseFailingOver RedisDRPhase = "FailingOver"
+	RedisDRPhaseFailingBack RedisDRPhase = "FailingBack"
+	RedisDRPhaseDegraded    RedisDRPhase = "Degraded"
+)
+
+// RedisDisasterRecoveryStatus reports the per data center DC-DR view of a
+// distributed Redis. The cross-DC decision is owned by the dr-controlplane
+// primary-DC Lease; this status reflects it on the single Database object. Each
+// Member DC runs a self-contained Redis (its own gossip ring or Sentinel quorum);
+// the standby DC's master async-replicates from the active DC's master.
+type RedisDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and runs the writable master.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase RedisDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []RedisDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// RedisDCStatus is one data center's local view inside a distributed Redis.
+type RedisDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member or Arbiter. An Arbiter DC holds only the dr-controlplane etcd
+	// member and runs no Redis.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Master is this DC's local Redis master pod.
+	// +optional
+	Master string `json:"master,omitempty"`
+
+	// Writable is true when this DC's master is the cluster's writable primary.
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// LinkStatus is this DC master's cross-DC replication link health
+	// (master_link_status from INFO replication), for example up or down. It is empty
+	// on the active DC, which has no upstream.
+	// +optional
+	LinkStatus string `json:"linkStatus,omitempty"`
+
+	// LagBytes is this DC's cross-DC replication lag behind the active DC, measured as
+	// the active master's master_repl_offset minus this DC master's replicated offset.
+	// +optional
+	LagBytes *int64 `json:"lagBytes,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
