@@ -276,6 +276,19 @@ spec:
                         format: int32
                         type: integer
                     type: object
+                  dataCenters:
+                    items:
+                      properties:
+                        clusterName:
+                          type: string
+                        replicas:
+                          format: int32
+                          type: integer
+                      required:
+                      - clusterName
+                      - replicas
+                      type: object
+                    type: array
                   hidden:
                     properties:
                       replicas:

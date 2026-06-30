@@ -158,6 +158,23 @@ type MongoDBHorizontalScalingSpec struct {
 	Mongos       *MongosNode       `json:"mongos,omitempty"`
 	Hidden       *HiddenNode       `json:"hidden,omitempty"`
 	Replicas     *int32            `json:"replicas,omitempty"`
+
+	// DataCenters scales individual data centers of a distributed DC-DR MongoDB.
+	// Each entry sets that data center's local node count; data centers not listed
+	// are left unchanged. Use this instead of Replicas for a DC-DR cluster, where
+	// each data center has its own intra-DC replica set and is scaled independently.
+	// +optional
+	DataCenters []MongoDBHorizontalScalingDC `json:"dataCenters,omitempty"`
+}
+
+// MongoDBHorizontalScalingDC is a per data center node-count target for scaling a
+// distributed DC-DR MongoDB.
+type MongoDBHorizontalScalingDC struct {
+	// ClusterName is the data center, named by its OCM managed cluster, matching a
+	// Member distributionRule in the MongoDB PlacementPolicy.
+	ClusterName string `json:"clusterName"`
+	// Replicas is the desired local node count for this data center.
+	Replicas int32 `json:"replicas"`
 }
 
 // MongoDBVerticalScalingSpec is the spec for mongodb vertical scaling
