@@ -380,8 +380,9 @@ type PostgresDisasterRecoveryStatus struct {
 
 // PostgresDCStatus is one data center's local view inside a distributed Postgres.
 type PostgresDCStatus struct {
-	// Name is the data center (member cluster) name.
-	Name string `json:"name"`
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
 
 	// Role is Member, Arbiter, or Witness.
 	// +optional
