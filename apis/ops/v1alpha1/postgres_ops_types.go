@@ -169,9 +169,9 @@ type PostgresHorizontalScalingSpec struct {
 // PostgresHorizontalScalingDC is a per data center node-count target for scaling a
 // distributed DC-DR Postgres.
 type PostgresHorizontalScalingDC struct {
-	// Name is the data center (OCM spoke cluster) name, matching a Member or Witness
-	// distributionRule in the Postgres PlacementPolicy.
-	Name string `json:"name"`
+	// ClusterName is the data center, named by its OCM managed cluster, matching a
+	// Member or Witness distributionRule in the Postgres PlacementPolicy.
+	ClusterName string `json:"clusterName"`
 	// Replicas is the desired local node count for this data center.
 	Replicas int32 `json:"replicas"`
 }

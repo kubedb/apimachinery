@@ -130,13 +130,13 @@ spec:
                   dataCenters:
                     items:
                       properties:
-                        name:
+                        clusterName:
                           type: string
                         replicas:
                           format: int32
                           type: integer
                       required:
-                      - name
+                      - clusterName
                       - replicas
                       type: object
                     type: array
