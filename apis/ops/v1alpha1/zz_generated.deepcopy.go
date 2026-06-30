@@ -5485,6 +5485,11 @@ func (in *OracleOpsRequestSpec) DeepCopyInto(out *OracleOpsRequestSpec) {
 		*out = new(OracleMigrationSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(TLSSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Timeout != nil {
 		in, out := &in.Timeout, &out.Timeout
 		*out = new(v1.Duration)
