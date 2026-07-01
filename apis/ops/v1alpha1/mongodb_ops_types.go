@@ -162,7 +162,8 @@ type MongoDBHorizontalScalingSpec struct {
 	// DataCenters scales individual data centers of a distributed DC-DR MongoDB.
 	// Each entry sets that data center's local node count; data centers not listed
 	// are left unchanged. Use this instead of Replicas for a DC-DR cluster, where
-	// each data center has its own intra-DC replica set and is scaled independently.
+	// the one replica set spans the data centers and each data center's members are
+	// scaled independently within that single replica set.
 	// +optional
 	DataCenters []MongoDBHorizontalScalingDC `json:"dataCenters,omitempty"`
 }
