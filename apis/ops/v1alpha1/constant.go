@@ -73,6 +73,13 @@ const (
 	VerticalScaleFailed    = "VerticalScaleFailed"
 )
 
+// In-place Vertical Scaling
+const (
+	InPlaceResizeEligible   = "InPlaceResizeEligible"
+	InPlaceResizeDeferred   = "InPlaceResizeDeferred"
+	InPlaceResizeInfeasible = "InPlaceResizeInfeasible"
+)
+
 // Volume Expansion
 const (
 	VolumeExpansion          = "VolumeExpansion"

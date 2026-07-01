@@ -43131,6 +43131,21 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresVerticalScalingSpec(ref commo
 							},
 						},
 					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
+							Default:     "Restart",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"memoryPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MemoryPolicy controls how a memory change is handled when Mode=InPlace. Defaults to ResizeOnly when Mode=InPlace.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},

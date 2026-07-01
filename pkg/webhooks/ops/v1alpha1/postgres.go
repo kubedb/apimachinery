@@ -50,6 +50,7 @@ import (
 func SetupPostgresOpsRequestWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&opsapi.PostgresOpsRequest{}).
 		WithValidator(&PostgresOpsRequestCustomWebhook{mgr.GetClient()}).
+		WithDefaulter(&PostgresOpsRequestCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
 
@@ -59,6 +60,27 @@ type PostgresOpsRequestCustomWebhook struct {
 
 // log is for logging in this package.
 var postgresLog = logf.Log.WithName("postgres-opsrequest")
+
+var _ webhook.CustomDefaulter = &PostgresOpsRequestCustomWebhook{}
+
+// Default implements webhook.CustomDefaulter so a webhook will be registered for the type
+func (w *PostgresOpsRequestCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+	ops, ok := obj.(*opsapi.PostgresOpsRequest)
+	if !ok {
+		return fmt.Errorf("expected an PostgresOpsRequest object but got %T", obj)
+	}
+	postgresLog.Info("defaulting", "name", ops.Name)
+
+	// When an in-place vertical scaling is requested without an explicit memory
+	// policy, default it to ResizeOnly (grow cgroup, keep shared_buffers). InPlace
+	// is never hard-rejected here; ineligible requests fall back at runtime.
+	if ops.Spec.VerticalScaling != nil &&
+		ops.Spec.VerticalScaling.Mode == opsapi.VerticalScalingModeInPlace &&
+		ops.Spec.VerticalScaling.MemoryPolicy == "" {
+		ops.Spec.VerticalScaling.MemoryPolicy = opsapi.MemoryResizePolicyResizeOnly
+	}
+	return nil
+}
 
 var _ webhook.CustomValidator = &PostgresOpsRequestCustomWebhook{}
 
