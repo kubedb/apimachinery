@@ -283,6 +283,23 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsReques
 	if err != nil {
 		return err
 	}
+
+	sourceVersion := &catalog.PostgresVersion{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.Spec.Version,
+	}, sourceVersion); err != nil {
+		return err
+	}
+
+	if sourceVersion.Spec.DB.BaseOS != "" && postgresTargetVersion.Spec.DB.BaseOS != "" &&
+		sourceVersion.Spec.DB.BaseOS != postgresTargetVersion.Spec.DB.BaseOS {
+		return fmt.Errorf(
+			"upgrading between different base OS variants is not allowed: "+
+				"current version %q uses baseOS %q but target version %q uses baseOS %q",
+			db.Spec.Version, sourceVersion.Spec.DB.BaseOS,
+			updateVersionSpec.TargetVersion, postgresTargetVersion.Spec.DB.BaseOS,
+		)
+	}
 	return nil
 }
 
