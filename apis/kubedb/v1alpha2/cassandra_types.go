@@ -55,6 +55,14 @@ type CassandraSpec struct {
 	// +optional
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
 
+	// Distributed if set true, the operator expands this Cassandra across data centers
+	// (DC-DR) by creating ManifestWork objects instead of raw resources. The single CR
+	// materializes one Cassandra datacenter per Member DC (its racks placed within it) on
+	// a single ring, wires NetworkTopologyStrategy and cross-DC seeds/snitch over
+	// KubeSlice, and routes the single user-facing endpoint via the Lease.
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
 	// Version of Cassandra to be deployed.
 	Version string `json:"version"`
 
@@ -122,6 +130,14 @@ type CassandraSpec struct {
 	// Init is used to initialize the database from a script or git repo.
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy. For a distributed
+	// (DC-DR) Cassandra it selects the PlacementPolicy whose clusterSpreadConstraint
+	// spreads the per-DC datacenters (and, for an even data-DC count, the engine-free
+	// Arbiter DC) across data centers.
+	// +kubebuilder:default={name:"default"}
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
 type Topology struct {
@@ -159,6 +175,91 @@ type CassandraStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed Cassandra.
+	// +optional
+	DisasterRecovery *CassandraDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// CassandraDRPhase is the cross data center DR phase of a distributed Cassandra.
+type CassandraDRPhase string
+
+const (
+	CassandraDRPhaseSteady      CassandraDRPhase = "Steady"
+	CassandraDRPhaseFailingOver CassandraDRPhase = "FailingOver"
+	CassandraDRPhaseFailingBack CassandraDRPhase = "FailingBack"
+	CassandraDRPhaseDegraded    CassandraDRPhase = "Degraded"
+)
+
+// CassandraDisasterRecoveryStatus reports the per data center DC-DR view of a
+// distributed Cassandra. Cassandra is masterless (one Dynamo-style ring spans the
+// Member DCs, each a Cassandra datacenter, with native continuous NetworkTopologyStrategy
+// replication), so there is no primary and no cross-DC election: the cross-DC safety is
+// per-DC LOCAL_QUORUM, not a promotion. The primary-DC Lease only routes the single
+// user-facing write endpoint; this status reflects that routing and the per-DC ring
+// health on the single Database object.
+type CassandraDisasterRecoveryStatus struct {
+	// ActiveDC is the write-routed data center: the DC the primary-DC Lease points at and
+	// where the single user-facing endpoint resolves. Because Cassandra is masterless this
+	// is a routing choice for a stable single-writer posture, not an engine-enforced
+	// primary; writing in multiple DCs at once (active-active) is also legitimate.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase CassandraDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC plus the Arbiter DC.
+	// +optional
+	DataCenters []CassandraDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// CassandraDCStatus is one data center's local view inside a distributed Cassandra.
+type CassandraDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule, and the Cassandra
+	// datacenter name in cassandra-rackdc.properties).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member (a full Cassandra datacenter holding NetworkTopologyStrategy replicas)
+	// or Arbiter (engine-free, holds only the dr-controlplane etcd vote, no Cassandra).
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// ReplicationFactor is this DC's NetworkTopologyStrategy replication factor for the
+	// managed keyspaces.
+	// +optional
+	ReplicationFactor int32 `json:"replicationFactor,omitempty"`
+
+	// Writable is true when this DC is the write-routed active DC.
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// UpNodes is the number of nodes reported Up/Normal (UN) by nodetool status for this DC.
+	// +optional
+	UpNodes int32 `json:"upNodes,omitempty"`
+
+	// TotalNodes is the number of nodes nodetool status lists for this DC.
+	// +optional
+	TotalNodes int32 `json:"totalNodes,omitempty"`
+
+	// HintBacklogBytes is the maximum cross-DC hinted-handoff backlog observed for this DC
+	// (hints queued for delivery to it), a proxy for cross-DC replication delay.
+	// +optional
+	HintBacklogBytes *int64 `json:"hintBacklogBytes,omitempty"`
+
+	// PendingRanges is the number of streaming/pending ranges (nodetool netstats) for this
+	// DC, non-zero while it catches up after a rejoin or repair.
+	// +optional
+	PendingRanges *int32 `json:"pendingRanges,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

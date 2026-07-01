@@ -95,6 +95,8 @@ spec:
                 type: string
               disableSecurity:
                 type: boolean
+              distributed:
+                type: boolean
               enableSSL:
                 type: boolean
               healthChecker:
@@ -1553,6 +1555,15 @@ spec:
                         type: object
                     type: object
                 type: object
+              podPlacementPolicy:
+                default:
+                  name: default
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               podTemplate:
                 properties:
                   controller:
@@ -8432,6 +8443,46 @@ spec:
                   - type
                   type: object
                 type: array
+              disasterRecovery:
+                properties:
+                  activeDC:
+                    type: string
+                  dataCenters:
+                    items:
+                      properties:
+                        clusterName:
+                          type: string
+                        healthy:
+                          type: boolean
+                        hintBacklogBytes:
+                          format: int64
+                          type: integer
+                        pendingRanges:
+                          format: int32
+                          type: integer
+                        replicationFactor:
+                          format: int32
+                          type: integer
+                        role:
+                          type: string
+                        totalNodes:
+                          format: int32
+                          type: integer
+                        upNodes:
+                          format: int32
+                          type: integer
+                        writable:
+                          type: boolean
+                      required:
+                      - clusterName
+                      type: object
+                    type: array
+                  lastTransitionTime:
+                    format: date-time
+                    type: string
+                  phase:
+                    type: string
+                type: object
               observedGeneration:
                 format: int64
                 type: integer
