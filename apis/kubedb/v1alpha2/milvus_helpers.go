@@ -312,6 +312,7 @@ func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any
 
 	m.setDefaultContainerSecurityContext(mvVersion, *podTemplate)
 	m.setDefaultContainerResourceLimits(*podTemplate)
+	apis.SetDefaultResizePolicy((*podTemplate).Spec.Containers, (*podTemplate).Spec.InitContainers)
 }
 
 func (m *Milvus) SetDefaults(kc client.Client) {
@@ -352,6 +353,7 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 	} else {
 		m.setDefaultContainerSecurityContext(&mvVersion, m.Spec.PodTemplate)
 		m.setDefaultContainerResourceLimits(m.Spec.PodTemplate)
+		apis.SetDefaultResizePolicy(m.Spec.PodTemplate.Spec.Containers, m.Spec.PodTemplate.Spec.InitContainers)
 	}
 
 	m.setMetaStorageDefaults()
