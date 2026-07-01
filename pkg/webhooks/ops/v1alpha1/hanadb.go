@@ -122,7 +122,15 @@ func (w *HanaDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.HanaD
 
 	var allErr field.ErrorList
 	switch req.Spec.Type {
+	case opsapi.HanaDBOpsRequestTypeUpdateVersion:
+		if err := w.validateHanaDBUpdateVersionOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"), req.Name, err.Error()))
+		}
 	case opsapi.HanaDBOpsRequestTypeRestart:
+	case opsapi.HanaDBOpsRequestTypeHorizontalScaling:
+		if err := w.validateHanaDBHorizontalScalingOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"), req.Name, err.Error()))
+		}
 	case opsapi.HanaDBOpsRequestTypeVerticalScaling:
 		if err := w.validateHanaDBVerticalScalingOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"), req.Name, err.Error()))
@@ -164,6 +172,34 @@ func (w *HanaDBOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.HanaDBOpsRequ
 		return nil, fmt.Errorf("spec.databaseRef %s/%s is invalid or not found", req.Namespace, req.Spec.DatabaseRef.Name)
 	}
 	return db, nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBUpdateVersionOpsRequest(req *opsapi.HanaDBOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("spec.updateVersion is nil, not supported in UpdateVersion type")
+	}
+	if updateVersionSpec.TargetVersion == "" {
+		return errors.New("spec.updateVersion.targetVersion can not be empty")
+	}
+	return nil
+}
+
+func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBHorizontalScalingOpsRequest(db *olddbapi.HanaDB, req *opsapi.HanaDBOpsRequest) error {
+	horizontalScalingSpec := req.Spec.HorizontalScaling
+	if horizontalScalingSpec == nil {
+		return errors.New("spec.horizontalScaling is nil, not supported in HorizontalScaling type")
+	}
+	if horizontalScalingSpec.Replicas == nil {
+		return errors.New("spec.horizontalScaling.replicas can not be empty")
+	}
+	if !db.IsSystemReplication() {
+		return errors.New("horizontal scaling is only allowed for HanaDB system replication topology")
+	}
+	if *horizontalScalingSpec.Replicas < 2 {
+		return errors.New("spec.horizontalScaling.replicas must be at least 2 for HanaDB system replication topology")
+	}
+	return nil
 }
 
 func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBVerticalScalingOpsRequest(req *opsapi.HanaDBOpsRequest) error {
