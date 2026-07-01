@@ -209,7 +209,9 @@ type CassandraDisasterRecoveryStatus struct {
 	// +optional
 	Phase CassandraDRPhase `json:"phase,omitempty"`
 
-	// DataCenters is the per data center view, one entry per Member DC plus the Arbiter DC.
+	// DataCenters is the per data center view, one entry per Member DC. The Arbiter DC, if
+	// any (present only for an even data-DC count), is engine-free and runs no Cassandra pod,
+	// so it is not listed here; it holds only the dr-controlplane etcd vote.
 	// +optional
 	DataCenters []CassandraDCStatus `json:"dataCenters,omitempty"`
 
