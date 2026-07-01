@@ -40905,6 +40905,11 @@ func schema_apimachinery_apis_ops_v1alpha1_Neo4jTLSSpec(ref common.ReferenceCall
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
 						},
 					},
+					"backup": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProtocolTLSConfig"),
+						},
+					},
 					"keystoreCredSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Keystore encryption secret",
