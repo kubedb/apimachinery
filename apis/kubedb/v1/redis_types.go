@@ -289,14 +289,18 @@ type RedisDCStatus struct {
 	// +optional
 	Writable bool `json:"writable,omitempty"`
 
-	// LinkStatus is this DC master's cross-DC replication link health
-	// (master_link_status from INFO replication), for example up or down. It is empty
-	// on the active DC, which has no upstream.
+	// LinkStatus is this DC master's cross-DC replication link health, for example up or
+	// down. In Sentinel/Standalone it is the master_link_status from INFO replication; in
+	// Cluster mode it reflects the external logical-sync workload health (up while the
+	// inbound sync has a ready pod). It is empty on the active DC, which has no upstream.
 	// +optional
 	LinkStatus string `json:"linkStatus,omitempty"`
 
-	// LagBytes is this DC's cross-DC replication lag behind the active DC, measured as
-	// the active master's master_repl_offset minus this DC master's replicated offset.
+	// LagBytes is this DC's cross-DC replication lag behind the active DC. In
+	// Sentinel/Standalone it is the active master's master_repl_offset minus this DC
+	// master's replicated offset (bytes). In Cluster mode, where replication is a logical
+	// sync with no comparable byte offset, it is the count of heartbeat writes the active
+	// DC has produced that this DC has not yet replayed; zero means fully caught up.
 	// +optional
 	LagBytes *int64 `json:"lagBytes,omitempty"`
 
