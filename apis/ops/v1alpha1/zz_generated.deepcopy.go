@@ -461,6 +461,11 @@ func (in *ClickHouseHorizontalScalingSpec) DeepCopyInto(out *ClickHouseHorizonta
 		*out = new(int32)
 		**out = **in
 	}
+	if in.Shards != nil {
+		in, out := &in.Shards, &out.Shards
+		*out = new(int32)
+		**out = **in
+	}
 	return
 }
 
