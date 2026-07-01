@@ -113,6 +113,8 @@ spec:
                   - web_stomp
                   type: string
                 type: array
+              distributed:
+                type: boolean
               enableSSL:
                 type: boolean
               halted:
@@ -465,6 +467,15 @@ spec:
                         type: object
                     type: object
                 type: object
+              podPlacementPolicy:
+                default:
+                  name: default
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               podTemplate:
                 properties:
                   controller:
