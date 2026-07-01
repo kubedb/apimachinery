@@ -59,6 +59,13 @@ type ClickHouseSpec struct {
 	// +optional
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
 
+	// Distributed if set true, the operator expands this ClickHouse across data centers
+	// (DC-DR) by creating ManifestWork objects instead of raw resources. The single CR
+	// materializes per-DC ReplicatedMergeTree replicas of every shard, a 3-site
+	// ClickHouse Keeper ensemble, and a Lease-routed write endpoint.
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
 	// Version of ClickHouse to be deployed.
 	Version string `json:"version"`
 
@@ -131,6 +138,13 @@ type ClickHouseSpec struct {
 	// Archiver controls database backup using Archiver CR
 	// +optional
 	Archiver *Archiver `json:"archiver,omitempty"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy. For a distributed
+	// (DC-DR) ClickHouse it selects the PlacementPolicy whose clusterSpreadConstraint
+	// spreads the per-DC replicas and the 3-site Keeper ensemble across data centers.
+	// +kubebuilder:default={name:"default"}
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
 type ClusterTopology struct {
@@ -207,6 +221,103 @@ type ClickHouseStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed ClickHouse.
+	// +optional
+	DisasterRecovery *ClickHouseDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// ClickHouseDRPhase is the cross data center DR phase of a distributed ClickHouse.
+type ClickHouseDRPhase string
+
+const (
+	ClickHouseDRPhaseSteady      ClickHouseDRPhase = "Steady"
+	ClickHouseDRPhaseFailingOver ClickHouseDRPhase = "FailingOver"
+	ClickHouseDRPhaseFailingBack ClickHouseDRPhase = "FailingBack"
+	ClickHouseDRPhaseDegraded    ClickHouseDRPhase = "Degraded"
+)
+
+// ClickHouseDisasterRecoveryStatus reports the per data center DC-DR view of a
+// distributed ClickHouse. ClickHouse is multi-master (ReplicatedMergeTree over a
+// shared Keeper ensemble), so the cross-DC safety is the Keeper Raft quorum, not a
+// promotion. The primary-DC Lease only routes the single write endpoint; this status
+// reflects that routing and the per-DC replica health on the single Database object.
+type ClickHouseDisasterRecoveryStatus struct {
+	// ActiveDC is the write-routed data center: the DC the primary-DC Lease points at and
+	// where the single write endpoint resolves. Because ClickHouse is multi-master this is
+	// a routing choice for a stable single writer, not an engine-enforced primary.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase ClickHouseDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC plus the Arbiter DC.
+	// +optional
+	DataCenters []ClickHouseDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// ClickHouseDCStatus is one data center's local view inside a distributed ClickHouse.
+type ClickHouseDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member (holds ReplicatedMergeTree replicas of every shard plus a Keeper
+	// voter) or Arbiter (holds only a data-less Keeper voter and the dr-controlplane
+	// etcd member, no ClickHouse data).
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// KeeperVoter is true when this DC hosts a ClickHouse Keeper voter in the 3-site ensemble.
+	// +optional
+	KeeperVoter bool `json:"keeperVoter,omitempty"`
+
+	// KeeperQuorum is true when this DC observes the Keeper ensemble holding a Raft
+	// quorum. A partitioned minority DC loses quorum and cannot register parts, so it
+	// cannot commit writes: that is the split-brain guarantee.
+	// +optional
+	KeeperQuorum bool `json:"keeperQuorum,omitempty"`
+
+	// Writable is true when this DC is the write-routed active DC.
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// Shards is the per-shard ReplicatedMergeTree replica health inside this DC.
+	// +optional
+	Shards []ClickHouseDCShardStatus `json:"shards,omitempty"`
+
+	// AbsoluteDelaySeconds is the maximum cross-DC ReplicatedMergeTree replication delay
+	// (system.replicas.absolute_delay) across this DC's replicas, in seconds.
+	// +optional
+	AbsoluteDelaySeconds *int64 `json:"absoluteDelaySeconds,omitempty"`
+
+	// QueueSize is the maximum replication queue size (system.replicas.queue_size) across
+	// this DC's replicas.
+	// +optional
+	QueueSize *int32 `json:"queueSize,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
+}
+
+// ClickHouseDCShardStatus is one shard's ReplicatedMergeTree replica health inside a data center.
+type ClickHouseDCShardStatus struct {
+	// Shard is the shard ordinal.
+	Shard int32 `json:"shard"`
+
+	// TotalReplicas mirrors system.replicas.total_replicas for this shard's replica in this DC.
+	// +optional
+	TotalReplicas int32 `json:"totalReplicas,omitempty"`
+
+	// ActiveReplicas mirrors system.replicas.active_replicas for this shard's replica in this DC.
+	// +optional
+	ActiveReplicas int32 `json:"activeReplicas,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
