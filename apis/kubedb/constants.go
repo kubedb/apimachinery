@@ -2397,8 +2397,9 @@ const (
 	HanaDBVolumeMountScripts = "/scripts"
 
 	// Container names
-	HanaDBContainerName            = "hanadb"
-	HanaDBCoordinatorContainerName = "hanadb-coordinator"
+	HanaDBContainerName                     = "hanadb"
+	HanaDBCoordinatorContainerName          = "hanadb-coordinator"
+	HanaDBVolumePermissionInitContainerName = "hanadb-volume-permissions"
 
 	// Mount paths
 	HanaDBDataDir         = "/hana/mounts"
