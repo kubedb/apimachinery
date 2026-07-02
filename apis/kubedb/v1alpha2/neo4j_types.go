@@ -106,6 +106,10 @@ type Neo4jSpec struct {
 	// Init is used to initialize the database from a script or git repo.
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
+
+	// Archiver controls database backup using Archiver CR
+	// +optional
+	Archiver *Archiver `json:"archiver,omitempty"`
 }
 
 type Neo4jTLSConfig struct {

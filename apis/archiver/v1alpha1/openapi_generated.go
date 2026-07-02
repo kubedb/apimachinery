@@ -604,6 +604,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MySQLArchiverList":                           schema_apimachinery_apis_archiver_v1alpha1_MySQLArchiverList(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MySQLArchiverSpec":                           schema_apimachinery_apis_archiver_v1alpha1_MySQLArchiverSpec(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MySQLArchiverStatus":                         schema_apimachinery_apis_archiver_v1alpha1_MySQLArchiverStatus(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiver":                               schema_apimachinery_apis_archiver_v1alpha1_Neo4jArchiver(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiverList":                           schema_apimachinery_apis_archiver_v1alpha1_Neo4jArchiverList(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiverSpec":                           schema_apimachinery_apis_archiver_v1alpha1_Neo4jArchiverSpec(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiverStatus":                         schema_apimachinery_apis_archiver_v1alpha1_Neo4jArchiverStatus(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jDifferentialBackupOptions":              schema_apimachinery_apis_archiver_v1alpha1_Neo4jDifferentialBackupOptions(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jFullBackupOptions":                      schema_apimachinery_apis_archiver_v1alpha1_Neo4jFullBackupOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiver":                            schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiver(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverList":                        schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverList(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.PostgresArchiverSpec":                        schema_apimachinery_apis_archiver_v1alpha1_PostgresArchiverSpec(ref),
@@ -34656,6 +34662,317 @@ func schema_apimachinery_apis_archiver_v1alpha1_MySQLArchiverStatus(ref common.R
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_Neo4jArchiver(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiverSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiverStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiverSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiverStatus"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_Neo4jArchiverList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiver"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jArchiver"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_Neo4jArchiverSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Neo4jArchiverSpec defines the desired state of Neo4jArchiver",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databases": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Databases define which Neo4j databases are allowed to consume this archiver",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"),
+						},
+					},
+					"pause": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Pause defines if the backup process should be paused or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"retentionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionPolicy field is the RetentionPolicy of the backupConfiguration's backend",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"fullBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FullBackup defines the sessionConfig of the fullBackup This options will eventually go to the full-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jFullBackupOptions"),
+						},
+					},
+					"differentialBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DifferentialBackup defines the configuration for differential backup",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jDifferentialBackupOptions"),
+						},
+					},
+					"manifestBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManifestBackup defines the sessionConfig of the manifestBackup This options will eventually go to the manifest-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
+						},
+					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"backupStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackupStorage is the backend storageRef of the BackupConfiguration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy defines the created repository's deletionPolicy",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"databases"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jDifferentialBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Neo4jFullBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_Neo4jArchiverStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Neo4jArchiverStatus defines the observed state of Neo4jArchiver",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRefs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the information of all the databases managed by this archiver",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_Neo4jDifferentialBackupOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"runtimeSettings": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"),
+						},
+					},
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"),
+						},
+					},
+					"retentionPeriod": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionPeriod is the retention policy to be used for Logs (i.e. '60d') means how long logs will be retained before being pruned. The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years. time.RFC3339 We need to parse the time to RFC3339 format",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"retentionSchedule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionSchedule defines the cron expression when the differential backup retention (pruning) task will run. Cron format, e.g. \"0 0 1 * *\" (monthly on the 1st at 12).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"successfulLogHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SuccessfulLogHistoryLimit defines the number of successful differential backup status that the archiver will retain The default value is 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"failedLogHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FailedLogHistoryLimit defines the number of failed differential backup that the archiver will retain for debugging purposes. The default value is 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"logRetentionHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogRetentionHistoryLimit defines the number of retention status the archiver will retain for debugging purposes. The default value is 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_Neo4jFullBackupOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"driver": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"task": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"),
+						},
+					},
+					"scheduler": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions"),
+						},
+					},
+					"containerRuntimeSettings": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+					"retryConfig": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"sessionHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"driver"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task", "kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"},
 	}
 }
 

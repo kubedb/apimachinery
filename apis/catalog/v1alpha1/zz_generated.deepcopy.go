@@ -3107,6 +3107,7 @@ func (in *Neo4jVersionSpec) DeepCopyInto(out *Neo4jVersionSpec) {
 	}
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	out.GitSyncer = in.GitSyncer
+	out.Archiver = in.Archiver
 	return
 }
 

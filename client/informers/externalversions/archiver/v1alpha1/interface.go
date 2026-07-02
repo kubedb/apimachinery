@@ -34,6 +34,8 @@ type Interface interface {
 	MongoDBArchivers() MongoDBArchiverInformer
 	// MySQLArchivers returns a MySQLArchiverInformer.
 	MySQLArchivers() MySQLArchiverInformer
+	// Neo4jArchivers returns a Neo4jArchiverInformer.
+	Neo4jArchivers() Neo4jArchiverInformer
 	// PostgresArchivers returns a PostgresArchiverInformer.
 	PostgresArchivers() PostgresArchiverInformer
 }
@@ -72,6 +74,11 @@ func (v *version) MongoDBArchivers() MongoDBArchiverInformer {
 // MySQLArchivers returns a MySQLArchiverInformer.
 func (v *version) MySQLArchivers() MySQLArchiverInformer {
 	return &mySQLArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Neo4jArchivers returns a Neo4jArchiverInformer.
+func (v *version) Neo4jArchivers() Neo4jArchiverInformer {
+	return &neo4jArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PostgresArchivers returns a PostgresArchiverInformer.

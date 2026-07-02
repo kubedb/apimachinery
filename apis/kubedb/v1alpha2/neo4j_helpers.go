@@ -388,6 +388,14 @@ func (r *Neo4j) CertificateName(alias Neo4jCertificateType) string {
 	return meta_util.NameWithSuffix(r.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
-func (r Neo4j) GetStorageClassName() string {
+func (r *Neo4j) GetStorageClassName() string {
 	return *r.Spec.Storage.StorageClassName
+}
+
+func (c *Neo4j) SidekickLabels(skName string) map[string]string {
+	return meta_util.OverwriteKeys(nil, kubedb.CommonSidekickLabels(), map[string]string{
+		meta_util.InstanceLabelKey: skName,
+		kubedb.SidekickOwnerName:   c.Name,
+		kubedb.SidekickOwnerKind:   c.ResourceFQN(),
+	})
 }
