@@ -37426,6 +37426,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_HanaDBSpec(ref common.ReferenceCal
 							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
 						},
 					},
+					"enforceVolumePermission": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EnforceVolumePermission runs a root init container to make the HanaDB data volume writable by the HanaDB runtime user. This is useful for CSI drivers that provision fresh volumes as root-owned. HanaDB cannot rely on fsGroup because /run_hana rejects SGID on /hana/mounts.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Database authentication secret",
