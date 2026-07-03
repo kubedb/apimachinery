@@ -576,245 +576,54 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.ServiceTemplateSpec":                                       schema_kmodulesxyz_offshoot_api_api_v1_ServiceTemplateSpec(ref),
 		"kmodules.xyz/offshoot-api/api/v1.Volume":                                                    schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonSpec":                                    schema_apimachinery_apis_catalog_v1alpha1_AddonSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonTasks":                                   schema_apimachinery_apis_catalog_v1alpha1_AddonTasks(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeSecurityContext":                     schema_apimachinery_apis_catalog_v1alpha1_AerospikeSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersion":                             schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionAerospike":                    schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionAerospike(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionExporter":                     schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionList":                         schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionPodSecurityPolicy":            schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioInMemory":                             schema_apimachinery_apis_catalog_v1alpha1_ApicurioInMemory(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec":                                 schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraInitContainer":                       schema_apimachinery_apis_catalog_v1alpha1_CassandraInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersion":                             schema_apimachinery_apis_catalog_v1alpha1_CassandraVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionDatabase":                     schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionExporter":                     schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionList":                         schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionMedusa":                       schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionMedusa(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionMedusaInit":                   schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionMedusaInit(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo":                                    schema_apimachinery_apis_catalog_v1alpha1_ChartInfo(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer":                      schema_apimachinery_apis_catalog_v1alpha1_ClickHouseInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer":                    schema_apimachinery_apis_catalog_v1alpha1_ClickHouseKeeperContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersion":                            schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionSpec":                        schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionStatus":                      schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionStatus(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion":                        schema_apimachinery_apis_catalog_v1alpha1_ConnectClusterVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin":                              schema_apimachinery_apis_catalog_v1alpha1_ConnectorPlugin(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase":                 schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Coordinator":                               schema_apimachinery_apis_catalog_v1alpha1_DB2Coordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Version":                                   schema_apimachinery_apis_catalog_v1alpha1_DB2Version(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase":                           schema_apimachinery_apis_catalog_v1alpha1_DB2VersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionList":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionSpec":                               schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBCoordinator":                        schema_apimachinery_apis_catalog_v1alpha1_DocumentDBCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBInitContainer":                      schema_apimachinery_apis_catalog_v1alpha1_DocumentDBInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersion":                            schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionDatabase":                    schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionList":                        schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionSpec":                        schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer":                           schema_apimachinery_apis_catalog_v1alpha1_DruidInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersion":                                 schema_apimachinery_apis_catalog_v1alpha1_DruidVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase":                         schema_apimachinery_apis_catalog_v1alpha1_DruidVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionList":                             schema_apimachinery_apis_catalog_v1alpha1_DruidVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionSpec":                             schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase":        schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchDashboardVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext":                 schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersion":                         schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDashboardInitContainer":   schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionDashboardInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase":                 schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter":                 schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer":            schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionList":                     schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy":        schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionSpec":                     schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackup":                                   schema_apimachinery_apis_catalog_v1alpha1_FullBackup(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackupRestore":                            schema_apimachinery_apis_catalog_v1alpha1_FullBackupRestore(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer":                                    schema_apimachinery_apis_catalog_v1alpha1_GitSyncer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBCoordinator":                            schema_apimachinery_apis_catalog_v1alpha1_HanaDBCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBSecurityContext":                        schema_apimachinery_apis_catalog_v1alpha1_HanaDBSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersion":                                schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionExporter":                        schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDatabase":                                 schema_apimachinery_apis_catalog_v1alpha1_HanaDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastInitContainer":                       schema_apimachinery_apis_catalog_v1alpha1_HazelcastInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastVersion":                             schema_apimachinery_apis_catalog_v1alpha1_HazelcastVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastVersionDatabase":                     schema_apimachinery_apis_catalog_v1alpha1_HazelcastVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastVersionList":                         schema_apimachinery_apis_catalog_v1alpha1_HazelcastVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_HazelcastVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteInitContainer":                          schema_apimachinery_apis_catalog_v1alpha1_IgniteInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteSecurityContext":                        schema_apimachinery_apis_catalog_v1alpha1_IgniteSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersion":                                schema_apimachinery_apis_catalog_v1alpha1_IgniteVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncBackupRestore":                             schema_apimachinery_apis_catalog_v1alpha1_IncBackupRestore(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersion":                        schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersionList":                    schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersionSpec":                    schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaInitContainer":                           schema_apimachinery_apis_catalog_v1alpha1_KafkaInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersion":                                 schema_apimachinery_apis_catalog_v1alpha1_KafkaVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionDatabase":                         schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionList":                             schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionPodSecurityPolicy":                schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionSpec":                             schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerCoordinator":                       schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerDatabase":                          schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerInitContainer":                     schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersion":                           schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionExporter":                   schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionList":                       schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionSpec":                       schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestBackup":                               schema_apimachinery_apis_catalog_v1alpha1_ManifestBackup(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestRestore":                              schema_apimachinery_apis_catalog_v1alpha1_ManifestRestore(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersion":                               schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionCoordinator":                    schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionDatabase":                       schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionExporter":                       schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionInitContainer":                  schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionList":                           schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionMaxscale":                       schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionMaxscale(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersion":                             schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionDatabase":                     schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionExporter":                     schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionList":                         schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionPodSecurityPolicy":            schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusDatabase":                               schema_apimachinery_apis_catalog_v1alpha1_MilvusDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersion":                                schema_apimachinery_apis_catalog_v1alpha1_MilvusVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_MilvusVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_MilvusVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBSecurityContext":                       schema_apimachinery_apis_catalog_v1alpha1_MongoDBSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersion":                               schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionDatabase":                       schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter":                       schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionInitContainer":                  schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionList":                           schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionSpec":                           schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLUpdateConstraints":                       schema_apimachinery_apis_catalog_v1alpha1_MySQLUpdateConstraints(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersion":                                 schema_apimachinery_apis_catalog_v1alpha1_MySQLVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionAllowlist":                        schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionAllowlist(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionCoordinator":                      schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDatabase":                         schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDenylist":                         schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionDenylist(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionExporter":                         schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionInitContainer":                    schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionList":                             schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionPodSecurityPolicy":                schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouter":                           schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionRouter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouterInitContainer":              schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionRouterInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionSpec":                             schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersion":                                 schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionDatabase":                         schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionList":                             schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionSpec":                             schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleDataGuard":                              schema_apimachinery_apis_catalog_v1alpha1_OracleDataGuard(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleSecurityContext":                        schema_apimachinery_apis_catalog_v1alpha1_OracleSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersion":                                schema_apimachinery_apis_catalog_v1alpha1_OracleVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionCoordinator":                     schema_apimachinery_apis_catalog_v1alpha1_OracleVersionCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_OracleVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionExporter":                        schema_apimachinery_apis_catalog_v1alpha1_OracleVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionInitContainer":                   schema_apimachinery_apis_catalog_v1alpha1_OracleVersionInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_OracleVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionPodSecurityPolicy":               schema_apimachinery_apis_catalog_v1alpha1_OracleVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_OracleVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersion":                         schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionCoordinator":              schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionDatabase":                 schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionExporter":                 schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionInitContainer":            schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionList":                     schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionPodSecurityPolicy":        schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionSpec":                     schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerSecurityContext":                     schema_apimachinery_apis_catalog_v1alpha1_PgBouncerSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersion":                             schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionDatabase":                     schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionExporter":                     schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionInitContainer":                schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionList":                         schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolSecurityContext":                        schema_apimachinery_apis_catalog_v1alpha1_PgpoolSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersion":                                schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionExporter":                        schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPgpool":                          schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionPgpool(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPodSecurityPolicy":               schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext":                      schema_apimachinery_apis_catalog_v1alpha1_PostgresSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersion":                              schema_apimachinery_apis_catalog_v1alpha1_PostgresVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionCoordinator":                   schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase":                      schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter":                      schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer":                 schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionList":                          schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy":             schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTLSSpec":                       schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionTLSSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersion":                              schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionExporter":                      schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionList":                          schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionPodSecurityPolicy":             schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionProxysql":                      schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionProxysql(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersion":                                schema_apimachinery_apis_catalog_v1alpha1_QdrantVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionDatabase":                        schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer":                        schema_apimachinery_apis_catalog_v1alpha1_RabbitMQInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion":                              schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase":                      schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionList":                          schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersion":                                 schema_apimachinery_apis_catalog_v1alpha1_RedisVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionCoordinator":                      schema_apimachinery_apis_catalog_v1alpha1_RedisVersionCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionDatabase":                         schema_apimachinery_apis_catalog_v1alpha1_RedisVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionExporter":                         schema_apimachinery_apis_catalog_v1alpha1_RedisVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionInitContainer":                    schema_apimachinery_apis_catalog_v1alpha1_RedisVersionInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionList":                             schema_apimachinery_apis_catalog_v1alpha1_RedisVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionPodSecurityPolicy":                schema_apimachinery_apis_catalog_v1alpha1_RedisVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionSpec":                             schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.RegistryImage":                                schema_apimachinery_apis_catalog_v1alpha1_RegistryImage(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector":                      schema_apimachinery_apis_catalog_v1alpha1_ReplicationModeDetector(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SchemaRegistryVersion":                        schema_apimachinery_apis_catalog_v1alpha1_SchemaRegistryVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SchemaRegistryVersionList":                    schema_apimachinery_apis_catalog_v1alpha1_SchemaRegistryVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SchemaRegistryVersionSpec":                    schema_apimachinery_apis_catalog_v1alpha1_SchemaRegistryVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext":                              schema_apimachinery_apis_catalog_v1alpha1_SecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreCoordinator":                       schema_apimachinery_apis_catalog_v1alpha1_SinglestoreCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreInitContainer":                     schema_apimachinery_apis_catalog_v1alpha1_SinglestoreInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreSecurityContext":                   schema_apimachinery_apis_catalog_v1alpha1_SinglestoreSecurityContext(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreStandaloneVersionDatabase":         schema_apimachinery_apis_catalog_v1alpha1_SinglestoreStandaloneVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersion":                           schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionDatabase":                   schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionList":                       schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionSpec":                       schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer":                            schema_apimachinery_apis_catalog_v1alpha1_SolrInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion":                                  schema_apimachinery_apis_catalog_v1alpha1_SolrVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase":                          schema_apimachinery_apis_catalog_v1alpha1_SolrVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionList":                              schema_apimachinery_apis_catalog_v1alpha1_SolrVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionSpec":                              schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints":                            schema_apimachinery_apis_catalog_v1alpha1_UpdateConstraints(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.VolumeSnapshot":                               schema_apimachinery_apis_catalog_v1alpha1_VolumeSnapshot(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WalgSpec":                                     schema_apimachinery_apis_catalog_v1alpha1_WalgSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersion":                              schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionDatabase":                      schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionList":                          schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionSpec(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersion":                             schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersion(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionCoordinator":                  schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionCoordinator(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionDatabase":                     schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionDatabase(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionExporter":                     schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionExporter(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionInitContainer":                schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionInitContainer(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionList":                         schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionList(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionPodSecurityPolicy":            schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionPodSecurityPolicy(ref),
-		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Branch":                                       schema_apimachinery_apis_courier_v1alpha1_Branch(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchHistoryLimit":                           schema_apimachinery_apis_courier_v1alpha1_BranchHistoryLimit(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchList":                                   schema_apimachinery_apis_courier_v1alpha1_BranchList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchRun":                                    schema_apimachinery_apis_courier_v1alpha1_BranchRun(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSchedule":                               schema_apimachinery_apis_courier_v1alpha1_BranchSchedule(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotRef":                            schema_apimachinery_apis_courier_v1alpha1_BranchSnapshotRef(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSource":                                 schema_apimachinery_apis_courier_v1alpha1_BranchSource(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSpec":                                   schema_apimachinery_apis_courier_v1alpha1_BranchSpec(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchStatus":                                 schema_apimachinery_apis_courier_v1alpha1_BranchStatus(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchTarget":                                 schema_apimachinery_apis_courier_v1alpha1_BranchTarget(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWork":                                   schema_apimachinery_apis_courier_v1alpha1_BranchWork(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkList":                               schema_apimachinery_apis_courier_v1alpha1_BranchWorkList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkManifestCondition":                  schema_apimachinery_apis_courier_v1alpha1_BranchWorkManifestCondition(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkResourceMeta":                       schema_apimachinery_apis_courier_v1alpha1_BranchWorkResourceMeta(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkSpec":                               schema_apimachinery_apis_courier_v1alpha1_BranchWorkSpec(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkStatus":                             schema_apimachinery_apis_courier_v1alpha1_BranchWorkStatus(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo":                               schema_apimachinery_apis_courier_v1alpha1_ConnectionInfo(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorCLI":                                schema_apimachinery_apis_courier_v1alpha1_DBMigratorCLI(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorImages":                             schema_apimachinery_apis_courier_v1alpha1_DBMigratorImages(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorStatusReporter":                     schema_apimachinery_apis_courier_v1alpha1_DBMigratorStatusReporter(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults":                                  schema_apimachinery_apis_courier_v1alpha1_JobDefaults(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.LogicalReplication":                           schema_apimachinery_apis_courier_v1alpha1_LogicalReplication(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource":                                schema_apimachinery_apis_courier_v1alpha1_MariaDBSource(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBTarget":                                schema_apimachinery_apis_courier_v1alpha1_MariaDBTarget(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Migration":                                    schema_apimachinery_apis_courier_v1alpha1_Migration(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationConfig":                              schema_apimachinery_apis_courier_v1alpha1_MigrationConfig(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationList":                                schema_apimachinery_apis_courier_v1alpha1_MigrationList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationSpec":                                schema_apimachinery_apis_courier_v1alpha1_MigrationSpec(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus":                              schema_apimachinery_apis_courier_v1alpha1_MigrationStatus(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoSource":                                  schema_apimachinery_apis_courier_v1alpha1_MongoSource(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoTarget":                                  schema_apimachinery_apis_courier_v1alpha1_MongoTarget(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Mongoshake":                                   schema_apimachinery_apis_courier_v1alpha1_Mongoshake(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLConnectionInfo":                          schema_apimachinery_apis_courier_v1alpha1_MySQLConnectionInfo(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSchema":                                  schema_apimachinery_apis_courier_v1alpha1_MySQLSchema(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSnapshot":                                schema_apimachinery_apis_courier_v1alpha1_MySQLSnapshot(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSnapshotPipeline":                        schema_apimachinery_apis_courier_v1alpha1_MySQLSnapshotPipeline(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSource":                                  schema_apimachinery_apis_courier_v1alpha1_MySQLSource(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLStreaming":                               schema_apimachinery_apis_courier_v1alpha1_MySQLStreaming(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget":                                  schema_apimachinery_apis_courier_v1alpha1_MySQLTarget(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PgDump":                                       schema_apimachinery_apis_courier_v1alpha1_PgDump(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresSource":                               schema_apimachinery_apis_courier_v1alpha1_PostgresSource(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget":                               schema_apimachinery_apis_courier_v1alpha1_PostgresTarget(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Progress":                                     schema_apimachinery_apis_courier_v1alpha1_Progress(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Publication":                                  schema_apimachinery_apis_courier_v1alpha1_Publication(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Source":                                       schema_apimachinery_apis_courier_v1alpha1_Source(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Subscription":                                 schema_apimachinery_apis_courier_v1alpha1_Subscription(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.TLSConfig":                                    schema_apimachinery_apis_courier_v1alpha1_TLSConfig(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Target":                                       schema_apimachinery_apis_courier_v1alpha1_Target(ref),
 	}
 }
 
@@ -33529,110 +33338,7 @@ func schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref common.ReferenceCal
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_AddonSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"tasks": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonTasks"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonTasks"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_AddonTasks(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"volumeSnapshot": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.VolumeSnapshot"),
-						},
-					},
-					"manifestBackup": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestBackup"),
-						},
-					},
-					"manifestRestore": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestRestore"),
-						},
-					},
-					"fullBackup": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackup"),
-						},
-					},
-					"fullBackupRestore": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackupRestore"),
-						},
-					},
-					"incBackupRestore": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncBackupRestore"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.FullBackupRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.IncBackupRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestBackup", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ManifestRestore", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.VolumeSnapshot"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_AerospikeSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AerospikeSecurityContext is the additional features for the Aerospike",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It is by default 70 for postgres user.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"runAsAnyNonRoot": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default db container user to other than postgres user.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_Branch(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -33654,1645 +33360,53 @@ func schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersion(ref common.Refer
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionAerospike(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AerospikeVersionDatabase is the Aerospike Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AerospikeVersionExporter is the image for the Aerospike exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AerospikeVersionList contains a list of AerospikeVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AerospikeVersionPodSecurityPolicy is the Aerospike pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AerospikeVersionSpec defines the desired state of AerospikeVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"aerospike": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Aerospike Image",
+							Description: "spec defines the desired state of Branch",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionAerospike"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionExporter"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for aerospike DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeSecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"version", "aerospike"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionAerospike", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ApicurioInMemory(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ApicurioInMemory is the Apicurio Registry In-Memory image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"walg": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.WalgSpec"),
-						},
-					},
-					"addon": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.WalgSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_CassandraInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CassandraInitContainer is the Cassandra init Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CassandraVersionDatabase is the Cassandra Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CassandraVersionExporter is the image for the Cassandra exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CassandraVersionList contains a list of CassandraVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionMedusa(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CassandraVersionMedusa is the Cassandra-Medusa image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"init": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionMedusaInit"),
-						},
-					},
-				},
-				Required: []string{"image", "init"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionMedusaInit"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionMedusaInit(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CassandraVersionSpec defines the desired state of CassandraVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionDatabase"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionExporter"),
-						},
-					},
-					"medusa": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Cassandra-medusa image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionMedusa"),
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraInitContainer"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "exporter", "medusa", "initContainer"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionMedusa", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ChartInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name specifies the name of the chart",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version specifies the version of the chart.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"disable": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Disable installing this chart",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"values": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Values holds the values for this Helm release.",
-							Ref:         ref("k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.JSON"),
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.JSON"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ClickHouseInitContainer is the ClickHouse init Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseKeeperContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ClickHouseKeeperContainer is the ClickHouse keeper Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionSpec"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionStatus"),
+							Description: "status defines the observed state of Branch",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchStatus"),
 						},
 					},
 				},
+				Required: []string{"spec"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionStatus"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchStatus"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_BranchHistoryLimit(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ClickHouseVersionDatabase is the ClickHouse Database image",
+				Description: "BranchHistoryLimit bounds status.history.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"image": {
+					"success": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ClickHouseVersionList contains a list of ClickHouseVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ClickHouseVersionSpec defines the desired state of ClickHouseVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase"),
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer"),
-						},
-					},
-					"clickHouseKeeper": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ClickHouse Keeper Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"archiver": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Archiver defines the walg & stash-addon related specifications",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "initContainer", "clickHouseKeeper"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseKeeperContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ClickHouseVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ClickHouseVersionStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ClickHouseVersionStatus defines the observed state of ClickHouseVersion",
-				Type:        []string{"object"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ConnectClusterVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ConnectClusterVersion is the Kafka Connect Cluster image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ConnectorPlugin(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ConnectorPlugin is the Kafka connector plugin image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_CruiseControlVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "CruiseControlVersionDatabase is the Kafka Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DB2Coordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DB2Version(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DB2VersionDatabase is the DB2 Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DB2VersionList is a list of DB2Versions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of DB2Version CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Version"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Version"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DB2VersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DB2VersionSpec is the spec for oracle version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Coordinator"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for oracle DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "coordinator"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2Coordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DB2VersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DocumentDBVersionDatabase is the DocumentDB Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DocumentDBVersionList contains a list of DocumentDBVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DocumentDBVersionSpec defines the desired state of DocumentDBVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionDatabase"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBCoordinator"),
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Init container image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBInitContainer"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional security information for the DocumentDB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"postgresVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "which postgres version documnetdb using",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-				},
-				Required: []string{"version", "db"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DocumentDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DruidInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Druid is the Druid Init Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DruidVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DruidVersionDatabase is the Druid Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DruidVersionList contains a list of DruidVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DruidVersionSpec defines the desired state of DruidVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase"),
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Init Container Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional security information for the Druid container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "initContainer"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchDashboardVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchDashboardVersionDatabase is the Elasticsearch Dashboard image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchSecurityContext provides additional securityContext settings for the Elasticsearch Image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It defaults to 1000.",
+							Description: "Success is the number of successful runs to retain (default 3).",
 							Type:        []string{"integer"},
-							Format:      "int64",
+							Format:      "int32",
 						},
 					},
-					"runAsAnyNonRoot": {
+					"failed": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default UID to other than 1000.",
-							Type:        []string{"boolean"},
-							Format:      "",
+							Description: "Failed is the number of failed runs to retain (default 2).",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 				},
@@ -35301,518 +33415,11 @@ func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchSecurityContext(ref 
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_BranchList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionDashboardInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchVersionDashboardInitContainer is the ElasticsearchDashboard Container initializer",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"yqImage": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"yqImage"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchVersionDatabase is the Elasticsearch Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchVersionExporter is the image for the Elasticsearch exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchVersionInitContainer is the Elasticsearch Container initializer",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"yqImage": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image", "yqImage"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchVersionList is a list of ElasticsearchVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of ElasticsearchVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchVersionPodSecurityPolicy is the Elasticsearch pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ElasticsearchVersionSpec is the spec for elasticsearch version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"distribution": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Distribution",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"authPlugin": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Authentication plugin used by Elasticsearch cluster",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase"),
-						},
-					},
-					"dashboard": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Dashboard Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Init container Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer"),
-						},
-					},
-					"dashboardInitContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Init container Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDashboardInitContainer"),
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy"),
-						},
-					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Stash defines backup and restore task definitions.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional security information for the Elasticsearch container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-				},
-				Required: []string{"version", "authPlugin", "db", "exporter", "initContainer", "podSecurityPolicies"},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDashboardInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_FullBackup(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_FullBackupRestore(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_GitSyncer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "GitSyncer is the image for the kubernetes/git-sync https://github.com/kubernetes/git-sync",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_HanaDBCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "HanaDBCoordinator is the HanaDB coordinator Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_HanaDBSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "HanaDBSecurityContext is for the additional config for the DB container",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"runAsGroup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "HanaDBVersion defines a HanaDB database version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "HanaDBVersionExporter is the image for the HanaDB exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "HanaDBVersionList is a list of HanaDBVersions",
-				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -35841,847 +33448,275 @@ func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionList(ref common.Refe
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersion"),
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.Branch"),
 									},
 								},
 							},
 						},
 					},
 				},
+				Required: []string{"metadata", "items"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersion"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Branch"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_BranchRun(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "HanaDBVersionSpec is the spec for  HanaDB version",
+				Description: "BranchRun is one entry in the refresh history.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"version": {
+					"at": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Version",
+							Description: "At is when the run finished.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"result": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Result is the outcome of the run.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"message": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Message is an optional human-readable detail (for a failed run).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_BranchSchedule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BranchSchedule holds the refresh cadence.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cron": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Cron is the refresh schedule in standard cron syntax.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDatabase"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBCoordinator"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionExporter"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but considered as obsolete and best avoided typically superseded",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBSecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
 				},
-				Required: []string{"version", "db", "coordinator", "exporter"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_HanaDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "HanaDBVersionDatabase is the HanaDB Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
+				Required: []string{"cron"},
 			},
 		},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_HazelcastInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_BranchSnapshotRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "HazelcastInitContainer is the Hazelcast init Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_HazelcastVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_HazelcastVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "HazelcastVersionDatabase is the Hazelcast Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_HazelcastVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "HazelcastVersionList contains a list of HazelcastVersion.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_HazelcastVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastVersionDatabase"),
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastInitContainer"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional security information for the Hazelcast container update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "initContainer"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HazelcastVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_IgniteInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "IgniteInitContainer is the Ignite init Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_IgniteSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "IgniteSecurityContext is for the additional config for the DB container",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"runAsGroup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_IgniteVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "IgniteVersionDatabase is the Ignite Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "IgniteVersionList is a list of IgniteVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of IgniteVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_IgniteVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "IgniteVersionSpec is the spec for Ignite version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionDatabase"),
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteInitContainer"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteSecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-				},
-				Required: []string{"version", "db"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.IgniteVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_IncBackupRestore(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KafkaConnectorVersionList is a list of KafkaConnectorVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of KafkaConnectorVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaConnectorVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_KafkaConnectorVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KafkaConnectorVersionSpec is the spec for kafka connector plugin version",
+				Description: "BranchSnapshotRef references the source snapshot.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type of the connector plugins(ex. mongodb, s3, etc.)",
-							Default:     "",
+							Description: "Type is the snapshot kind (VolumeGroupSnapshot preferred, VolumeSnapshot fallback).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"version": {
+					"ref": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Version of the connector plugins",
-							Default:     "",
+							Description: "Ref is the name of the snapshot object.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"endOfLife": {
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_BranchSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BranchSource points at a KubeDB Database.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
+							Description: "DatabaseRef refers to the source KubeDB Database (kind and name).",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Namespace of the source Database. Defaults to the Branch's namespace when empty.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"databaseRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_BranchSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BranchSpec defines the desired state of Branch. One Branch CR is one branch, and it doubles as the session object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source is the KubeDB Database whose storage is cloned. Branch has no external source.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSource"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Target describes only what differs from the source: the target cluster, namespace, name, StorageClass, and cpu/memory. Everything else is copied from the source Database.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchTarget"),
+						},
+					},
+					"resetRootPassword": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ResetRootPassword resets the branch's root password after provisioning, so the source's password does not unlock the branch.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
-					"connectorPlugin": {
+					"dataMassageImage": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
+							Description: "DataMassageImage is an optional user-provided container run as the LAST step to massage or anonymize the branch data.",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"securityContext": {
+					"schedule": {
 						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the init container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
+							Description: "Schedule optionally refreshes the branch on a cron cadence. Omit for a one-shot branch.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSchedule"),
+						},
+					},
+					"historyLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HistoryLimit bounds status.history (default: last 3 successful, last 2 failed).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchHistoryLimit"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy decides the target's fate on Branch deletion.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
-				Required: []string{"type", "version", "connectorPlugin"},
+				Required: []string{"source", "target"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectorPlugin", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchHistoryLimit", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSchedule", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchTarget"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_KafkaInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_BranchStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "KafkaInitContainer is the Kafka Init Container image",
+				Description: "BranchStatus defines the observed state of Branch.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"image": {
+					"phase": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Description: "Phase is the current phase of the branch.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"apiVersion": {
+					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Description: "Mode is how this operator is participating in the branch.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"metadata": {
+					"targetRef": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Description: "TargetRef references the branched Database.",
+							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
 						},
 					},
-					"spec": {
+					"snapshot": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionSpec"),
+							Description: "Snapshot references the source snapshot the current branch was cloned from.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotRef"),
 						},
 					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KafkaVersionDatabase is the Kafka Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
+					"lastRefreshAt": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "LastRefreshAt is the time of the last successful refresh.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KafkaVersionList is a list of KafkaVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
+					"freshnessSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "FreshnessSeconds is the age of the branch data relative to the source at the last refresh.",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
-					"apiVersion": {
+					"history": {
 						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of RedisVersion CRD objects",
+							Description: "History is the bounded refresh history (bounded by spec.historyLimit).",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersion"),
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchRun"),
+									},
+								},
+							},
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "The status of each condition is one of True, False, or Unknown.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
 									},
 								},
 							},
@@ -36691,3656 +33726,367 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionList(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersion"},
+			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchRun", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotRef"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_BranchTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "KafkaVersionPodSecurityPolicy is the Kafka pod security policies",
+				Description: "BranchTarget describes the target Database. spec.target.cluster equal to the source's cluster is a same-cluster branch; a different cluster is a cross-cluster branch.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
+					"cluster": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "KafkaVersionSpec is the spec for kafka version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
+							Description: "Cluster is the target cluster name. The source's own cluster means a same-cluster branch.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"endOfLife": {
+					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Init Container Image From kafka version 4.0.0, we have introduced an init container to handle the database initialization.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaInitContainer"),
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionDatabase"),
-						},
-					},
-					"connectCluster": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Connect Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"cruiseControl": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase"),
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionPodSecurityPolicy"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"version", "db", "connectCluster", "cruiseControl"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ConnectClusterVersion", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.CruiseControlVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLServerCoordinator is the MSSQLServer coordinator Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLServerDatabase is the MSSQLServer Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLServerInitContainer is the MSSQLServer Container initializer",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLServerVersionExporter is the image for the MSSQL Server exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLServerVersionList contains a list of MSSQLServerVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MSSQLServerVersionSpec defines the desired state of MSSQLServer Version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
+							Description: "Namespace of the target Database.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerDatabase"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerCoordinator"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionExporter"),
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Init container Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerInitContainer"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"archiver": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Archiver defines the walg & kube-stash-addon related specifications",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "coordinator", "exporter", "initContainer"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ManifestBackup(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "Name of the target Database.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storageClassName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageClassName is the StorageClass in the TARGET cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resources are the cpu/memory requests and limits in the TARGET cluster.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
 				},
-				Required: []string{"name"},
+				Required: []string{"cluster", "namespace", "name"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ResourceRequirements"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ManifestRestore(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_BranchWork(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BranchWork is a hub-only cross-cluster delivery object, similar to OCM ManifestWork. A source-cluster Branch operator creates it in its own hub namespace to drive a branch into a different cluster; the addon manager translates it into a ManifestWork in the target cluster's namespace and syncs status back. Same-cluster branches never use it.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec defines the desired state of BranchWork",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed state of BranchWork",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkStatus"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_BranchWorkList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWork"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWork"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_BranchWorkManifestCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BranchWorkManifestCondition reports the apply/feedback status of a single delivered manifest, modeled on OCM ManifestWork's ManifestCondition.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ordinal": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ordinal is the index of the manifest in spec.manifests.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"resourceMeta": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ResourceMeta identifies the delivered resource.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkResourceMeta"),
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "The status of each condition is one of True, False, or Unknown.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"ordinal"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkResourceMeta"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_BranchWorkResourceMeta(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BranchWorkResourceMeta identifies a delivered resource.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"resource": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"namespace": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"name": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MariaDBVersionCoordinator is the MariaDB Coordinator image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MariaDBVersionDatabase is the mariadb image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MariaDBVersionExporter is the image for the MariaDB exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MariaDBVersionInitContainer is the MariaDB Container initializer",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MariaDBVersionList is a list of MariaDBVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of MariaDBVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionMaxscale(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MariaDBVersionMaxscale is the mariadb maxscale image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the maxscale container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MariaDBVersionPodSecurityPolicy is the MariaDB pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MariaDBVersionSpec is the spec for MariaDB version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionDatabase"),
-						},
-					},
-					"maxscale": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Maxscale Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionMaxscale"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionExporter"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionCoordinator"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Init container Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionInitContainer"),
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionPodSecurityPolicy"),
-						},
-					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Stash defines backup and restore task definitions.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"archiver": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Archiver defines the walg & stash-addon related specifications",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"migrator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Migrator defines the migration related CLI/Tools images for this MariaDB version",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorImages"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "exporter", "coordinator", "initContainer", "podSecurityPolicies"},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionMaxscale", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorImages"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MemcachedVersionDatabase is the Memcached Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MemcachedVersionExporter is the image for the Memcached exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MemcachedVersionList is a list of MemcachedVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of MemcachedVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MemcachedVersionPodSecurityPolicy is the Memcached pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MemcachedVersionSpec is the spec for memcached version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionDatabase"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionExporter"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionPodSecurityPolicy"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"version", "db", "exporter", "podSecurityPolicies"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MilvusDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MilvusVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MilvusVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MilvusVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"etcdVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Etcd Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusDatabase"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-				},
-				Required: []string{"version", "etcdVersion", "db"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MongoDBSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBSecurityContext provides additional securityContext settings for the MongoDBSecurityContext Image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"runAsGroup": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsGroup is default GID for the DB container.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBVersionDatabase is the MongoDB Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBVersionExporter is the image for the MongoDB exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBVersionInitContainer is the Elasticsearch Container initializer",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBVersionList is a list of MongoDBVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of MongoDBVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBVersionPodSecurityPolicy is the MongoDB pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MongoDBVersionSpec is the spec for mongodb version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"distribution": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Distribution",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionDatabase"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Init container Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionInitContainer"),
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionPodSecurityPolicy"),
-						},
-					},
-					"replicationModeDetector": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ReplicationModeDetector Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector"),
-						},
-					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Stash defines backup and restore task definitions.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBSecurityContext"),
-						},
-					},
-					"archiver": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Archiver defines the walg & kube-stash-addon related specifications",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"migrator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Migrator defines the migration related CLI/Tools images for this MongoDB version",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorImages"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "exporter", "initContainer", "podSecurityPolicies", "replicationModeDetector"},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorImages"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLUpdateConstraints(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"allowlist": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all accepted versions for upgrade request",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionAllowlist"),
-						},
-					},
-					"denylist": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all rejected versions for upgrade request",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDenylist"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionAllowlist", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDenylist"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionAllowlist(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"standalone": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all accepted versions for upgrade request of a Standalone server. empty indicates all accepted",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"groupReplication": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all accepted versions for upgrade request of a GroupReplication cluster. empty indicates all accepted",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLVersionCoordinator is the image for coordinator",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLVersionDatabase is the MySQL Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionDenylist(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"standalone": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all rejected versions for upgrade request of a Standalone server",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-					"groupReplication": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all rejected versions for upgrade request of a GroupReplication cluster",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLVersionExporter is the image for the MySQL exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLVersionInitContainer is the MySQL Container initializer",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLVersionList is a list of MySQLVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of MySQLVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLVersionPodSecurityPolicy is the MySQL pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionRouter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLVersionRouter is the MySQL Router lightweight middleware that provides transparent routing between your application and back-end MySQL Servers",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionRouterInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLVersionRouterInitContainer is mysql router init container",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MySQLVersionSpec is the spec for MySQL version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"distribution": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Distribution",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDatabase"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionExporter"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionCoordinator"),
-						},
-					},
-					"replicationModeDetector": {
-						SchemaProps: spec.SchemaProps{
-							Description: "ReplicationModeDetector Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Init container Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionInitContainer"),
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionPodSecurityPolicy"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLUpdateConstraints"),
-						},
-					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Stash defines backup and restore task definitions.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
-						},
-					},
-					"router": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Router image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouter"),
-						},
-					},
-					"routerInitContainer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouterInitContainer"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"archiver": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Archiver defines the walg & kube-stash-addon related specifications",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"migrator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Migrator defines the migration related CLI/Tools images for this MySQL version",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorImages"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "exporter", "coordinator", "initContainer", "podSecurityPolicies"},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLUpdateConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouterInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorImages"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Neo4jVersionDatabase is the Neo4j Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Neo4jVersionList is a list of Neo4jVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of Neo4jVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Neo4jVersionSpec is the spec for Neo4j version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionDatabase"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-				},
-				Required: []string{"version", "db"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_OracleDataGuard(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionInitContainer"),
-						},
-					},
-					"observer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionDatabase"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionInitContainer"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_OracleSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "OracleSecurityContext is the additional features for the Oracle",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It is by default 999 for debian based image and 70 for alpine based image. oracle UID 999 for debian images https://github.com/docker-library/oracle/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/Dockerfile#L15 oracle UID 70  for alpine images https://github.com/docker-library/oracle/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_OracleVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_OracleVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "OracleVersionCoordinator is the Oracle leader elector image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_OracleVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "OracleVersionDatabase is the Oracle Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"baseOS": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
 							Format: "",
 						},
 					},
 				},
-				Required: []string{"image"},
 			},
 		},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_OracleVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_BranchWorkSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "OracleVersionExporter is the image for the Oracle exporter",
+				Description: "BranchWorkSpec carries the target cluster and the manifests to create there.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"image": {
+					"targetCluster": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_OracleVersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "OracleVersionInitContainer is the Oracle init container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_OracleVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "OracleVersionList is a list of OracleVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of OracleVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_OracleVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "OracleVersionPodSecurityPolicy is the Oracle pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_OracleVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "OracleVersionSpec is the spec for oracle version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
+							Description: "TargetCluster is the cluster the manifests are delivered to.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"endOfLife": {
+					"manifests": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"distribution": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Distribution",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "init container image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionInitContainer"),
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionDatabase"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionExporter"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionCoordinator"),
-						},
-					},
-					"dataGuard": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DataGuard Images",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleDataGuard"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for oracle DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleSecurityContext"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "exporter", "coordinator"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleDataGuard", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBVersionCoordinator is the PerconaXtraDB Coordinator image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBVersionDatabase is the perconaxtradb image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBVersionExporter is the image for the PerconaXtraDB exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBVersionInitContainer is the PerconaXtraDB Container initializer",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBVersionList is a list of PerconaXtraDBVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of PerconaXtraDBVersion CRD objects",
+							Description: "Manifests are the resources to create in the target cluster (the Branch CR, the target Database, the auth and config secrets, the VolumeSnapshot(s), and anything else the target needs).",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersion"),
+										Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 									},
 								},
 							},
 						},
 					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBVersionPodSecurityPolicy is the PerconaXtraDB pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
+					"refreshGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PerconaXtraDBVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PerconaXtraDBVersionSpec is the spec for PerconaXtraDB version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionDatabase"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionExporter"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionCoordinator"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Init container Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionInitContainer"),
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionPodSecurityPolicy"),
-						},
-					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Stash defines backup and restore task definitions.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"version", "db", "exporter", "coordinator", "initContainer", "podSecurityPolicies"},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PerconaXtraDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerSecurityContext is the additional features for the PgBouncer",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It is by default 70 for postgres user.",
+							Description: "RefreshGeneration is bumped by the source each time it re-ships a fresh snapshot; the creator keys its swap off a change here.",
 							Type:        []string{"integer"},
 							Format:      "int64",
 						},
 					},
-					"runAsAnyNonRoot": {
+					"deleteOption": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default db container user to other than postgres user.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Description: "DeleteOption mirrors ManifestWork deletion semantics for the delivered resources.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionSpec"),
-						},
-					},
 				},
+				Required: []string{"targetCluster"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionSpec"},
+			"k8s.io/apimachinery/pkg/runtime.RawExtension"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_BranchWorkStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerVersionDatabase is the PgBouncer Database image",
+				Description: "BranchWorkStatus mirrors the delivered Branch status plus per-manifest apply/feedback conditions, modeled on OCM ManifestWork.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"image": {
+					"observedRefreshGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "ObservedRefreshGeneration is the spec.refreshGeneration the target has acted on.",
+							Type:        []string{"integer"},
+							Format:      "int64",
 						},
 					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerVersionExporter is the image for the PgBouncer exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
+					"branch": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "Branch mirrors the target-side Branch status so the source can copy it into its own Branch.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchStatus"),
 						},
 					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerVersionInitContainer is the PgBouncer init container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
+					"manifests": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerVersionList is a list of PgBouncerVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of PgBouncerVersion CRD objects",
+							Description: "Manifests carries the per-manifest apply/feedback conditions from the target (ManifestWork-style).",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersion"),
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkManifestCondition"),
 									},
 								},
 							},
 						},
 					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgBouncerVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgBouncerVersionSpec is the spec for pgbouncer version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"pgBouncer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionDatabase"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionExporter"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for pgbouncer DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerSecurityContext"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
 								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
-					},
-				},
-				Required: []string{"version", "pgBouncer", "exporter"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgBouncerVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgpoolSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgpoolSecurityContext is the additional features for the Pgpool",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
 						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It is by default 70 for postgres user.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"runAsAnyNonRoot": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default db container user to other than postgres user.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgpoolVersionExporter is the image for the Pgpool exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgpoolVersionList contains a list of PgpoolVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionPgpool(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgpoolVersionDatabase is the Pgpool Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgpoolVersionPodSecurityPolicy is the Pgpool pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PgpoolVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PgpoolVersionSpec defines the desired state of PgpoolVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"pgpool": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Pgpool Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPgpool"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionExporter"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for pgpool DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolSecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"version", "pgpool"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PgpoolVersionPgpool", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PostgresSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PostgresSecurityContext is the additional features for the Postgres",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsUser is default UID for the DB container. It is by default 999 for debian based image and 70 for alpine based image. postgres UID 999 for debian images https://github.com/docker-library/postgres/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/Dockerfile#L15 postgres UID 70  for alpine images https://github.com/docker-library/postgres/blob/14f13e4b399ed1848fa24c2c1f5bd40c25732bdd/13/alpine/Dockerfile#L6",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"runAsAnyNonRoot": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RunAsAnyNonRoot will be true if user can change the default db container user to other than postgres user. It will be always false for alpine images https://hub.docker.com/_/postgres/ # section : Arbitrary --user Notes",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PostgresVersionCoordinator is the Postgres leader elector image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PostgresVersionDatabase is the Postgres Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"baseOS": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PostgresVersionExporter is the image for the Postgres exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PostgresVersionInitContainer is the Postgres init container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PostgresVersionList is a list of PostgresVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of PostgresVersion CRD objects",
+							Description: "The status of each condition is one of True, False, or Unknown.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersion"),
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
 									},
 								},
 							},
@@ -40350,193 +34096,259 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionList(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersion"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchStatus", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkManifestCondition"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_ConnectionInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PostgresVersionPodSecurityPolicy is the Postgres pod security policies",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
+					"appBinding": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "AppBinding refers to the source database AppBinding name, Who contains the connection information.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "PostgresVersionSpec is the spec for postgres version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
+					"dbName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Version",
+							Description: "DBName refers to the database name.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"endOfLife": {
+					"url": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"distribution": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Distribution",
+							Description: "URL refers to the database connection string.e.g postgres://postgres:password@localhost:5432/postgres",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"initContainer": {
+					"maxConnections": {
 						SchemaProps: spec.SchemaProps{
-							Description: "init container image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer"),
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionCoordinator"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy"),
-						},
-					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Stash defines backup and restore task definitions.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for postgres DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext"),
+							Description: "MaxConnections refers to the `MaxConns`,which means the maximum size of the pool. The default is the greater of 4 or runtime.NumCPU().",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"tls": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PostgresVersionTLSSpec is used to set postgres version specific tls settings",
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTLSSpec"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-					"archiver": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Archiver defines the walg & kube-stash-addon related specifications",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"migrator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Migrator defines the migration related CLI/Tools images for this Postgres version",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorImages"),
+							Description: "TLS holds paths to PEM files for TLS-enabled connections.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.TLSConfig"),
 						},
 					},
 				},
-				Required: []string{"version", "db", "exporter", "coordinator", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTLSSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorImages"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/courier/v1alpha1.TLSConfig"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionTLSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_DBMigratorCLI(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "PostgresVersionTLSSpec is used to set postgres version specific tls settings",
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_DBMigratorImages(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cli": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CLI specifies the migrator CLI image",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorCLI"),
+						},
+					},
+					"statusReporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StatusReporter is the sidecar image used to report migration progress",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorStatusReporter"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorCLI", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorStatusReporter"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_DBMigratorStatusReporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_JobDefaults(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "JobDefaults defines default settings for migration jobs",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"disableSSLSessionResumption": {
+					"imagePullPolicy": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DisableSSLSessionResumption determines whether to disable or enable Envoy Session Resumption",
+							Description: "ImagePullPolicy specifies the image pull policy for the migrator Job\n\nPossible enum values:\n - `\"Always\"` means that kubelet always attempts to pull the latest image. Container will fail If the pull fails.\n - `\"IfNotPresent\"` means that kubelet pulls if the image isn't present on disk. Container will fail if the image isn't present and the pull fails.\n - `\"Never\"` means that kubelet never pulls an image, but only uses a local image. Container will fail if the image isn't present",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"Always", "IfNotPresent", "Never"},
+						},
+					},
+					"backoffLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackoffLimit specifies the number of retries before marking the job as failed",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"ttlSecondsAfterFinished": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TTLSecondsAfterFinished specifies the TTL for completed jobs",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"activeDeadlineSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ActiveDeadlineSeconds specifies the duration in seconds relative to the startTime that the job may be active before the system tries to terminate it",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_LogicalReplication(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"copyData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CopyData refers to whether to copy data the initial snapshot when creating the subscription.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
+					"publication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Publication refers to the publication configuration.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.Publication"),
+						},
+					},
+					"subscription": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Subscription refers to the subscription configuration.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.Subscription"),
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.Publication", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Subscription"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_MariaDBSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionInfo refers to the source MariaDB database connection information.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
+						},
+					},
+					"schema": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSchema"),
+						},
+					},
+					"snapshot": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSnapshot"),
+						},
+					},
+					"streaming": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLStreaming"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSchema", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSnapshot", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLStreaming"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MariaDBTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionInfo refers to the target MariaDB database connection information.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_Migration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -40558,51 +34370,67 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersion(ref common.Refere
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionSpec"),
+							Description: "spec defines the desired state of Migration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed state of Migration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"),
 						},
 					},
 				},
+				Required: []string{"spec"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionSpec"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_MigrationConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLVersionExporter is the image for the ProxySQL exporter",
+				Description: "MigrationConfig defines the desired state of Migration",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"image": {
+					"source": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.Source"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.Target"),
 						},
 					},
 				},
-				Required: []string{"image"},
+				Required: []string{"source", "target"},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.Source", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Target"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_MigrationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLVersionList is a list of ProxySQLVersions",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -40626,13 +34454,103 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionList(ref common.Re
 					},
 					"items": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of ProxySQLVersion CRD objects",
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.Migration"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Migration"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MigrationSpec defines the desired state of Migration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source defines the source database configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.Source"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Target defines the target database configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.Target"),
+						},
+					},
+					"jobDefaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobDefaults specifies default settings for migration jobs",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobTemplate specifies runtime configurations for the backup/restore Job",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+				},
+				Required: []string{"source", "target"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Source", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Target"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MigrationStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MigrationStatus defines the observed state of Migration.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase represents the current phase of migration",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"progress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Progress contains the current progress of migration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.Progress"),
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "The status of each condition is one of True, False, or Unknown.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
 										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersion"),
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
 									},
 								},
 							},
@@ -40642,1568 +34560,73 @@ func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionList(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersion"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Progress"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLVersionPodSecurityPolicy is the ProxySQL pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionProxysql(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLVersionProxysql is the proxysql image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ProxySQLVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLVersionSpec is the spec for ProxySQL version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"proxysql": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Proxysql Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionProxysql"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionExporter"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionPodSecurityPolicy"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"version", "proxysql", "podSecurityPolicies"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ProxySQLVersionProxysql", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_QdrantVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_MongoSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
+					"connectionInfo": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
 						},
 					},
-					"spec": {
+					"mongoshake": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionSpec"),
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.Mongoshake"),
 						},
 					},
 				},
+				Required: []string{"connectionInfo"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionSpec"},
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo", "kubedb.dev/apimachinery/apis/courier/v1alpha1.Mongoshake"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "QdrantVersionDatabase is the Qdrant Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "QdrantVersionList is a list of QdrantVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of QdrantVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_QdrantVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "QdrantVersionSpec is the spec for Qdrant version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionDatabase"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"version", "db"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.QdrantVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RabbitMQInitContainer is the RabbitMQ init Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_MongoTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
+					"connectionInfo": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec"),
+							Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
 						},
 					},
 				},
+				Required: []string{"connectionInfo"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionSpec"},
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RabbitMQVersionDatabase is the RabbitMQ Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RabbitMQVersionList is a list of RabbitmqVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of RedisVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RabbitMQVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RabbitMQVersionSpec is the spec for RabbitMQ version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase"),
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "initContainer"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RabbitMQVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RedisVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_Mongoshake(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"kind": {
+					"syncMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Description: "SyncMode controls synchronization mode. Supported values: all, full, incr - all  : full synchronization + incremental synchronization - full : full synchronization only - incr : incremental synchronization only Equivalent behavior: defines replication mode of mongoshake",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"apiVersion": {
+					"filterOpTypes": {
 						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RedisVersionCoordinator is the Redis coordinator image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RedisVersionDatabase is the Redis Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RedisVersionExporter is the image for the Redis exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RedisVersionInitContainer is the Redis init container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RedisVersionList is a list of RedisVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of RedisVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RedisVersionPodSecurityPolicy is the Redis pod security policies",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"databasePolicyName"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RedisVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RedisVersionSpec is the spec for redis version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"distribution": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Distribution determines the type of the database(Valkey or Redis)",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "init container image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionInitContainer"),
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionDatabase"),
-						},
-					},
-					"exporter": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Exporter Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionExporter"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionCoordinator"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionPodSecurityPolicy"),
-						},
-					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Stash defines backup and restore task definitions.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"version", "db", "exporter", "coordinator", "podSecurityPolicies"},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RedisVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_RegistryImage(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "RegistryImage is the SchemaRegistry image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ReplicationModeDetector(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ReplicationModeDetector is the image for the MySQL replication mode detector",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SchemaRegistryVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SchemaRegistryVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SchemaRegistryVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SchemaRegistryVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SchemaRegistryVersionList is a list of SchemaRegistryVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of SchemaRegistryVersion CRD objects",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SchemaRegistryVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SchemaRegistryVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SchemaRegistryVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SchemaRegistryVersionSpec is the spec for SchemaRegistry version",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"distribution": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"registry": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Registry Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.RegistryImage"),
-						},
-					},
-					"inMemory": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Schema Registry In Memory Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioInMemory"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-				},
-				Required: []string{"distribution", "version", "registry"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioInMemory", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.RegistryImage", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SecurityContext is for the additional config for the DB container",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreCoordinator is the Singlestore coordinator Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreInitContainer is the Singlestore init Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreSecurityContext(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreSecurityContext is for the additional config for the DB container",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"runAsUser": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"runAsGroup": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreStandaloneVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreVersionDatabase is the Singlestore Standalone Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreVersionDatabase is the Singlestore Cluster Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreVersionList contains a list of SinglestoreVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SinglestoreVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SinglestoreVersionSpec defines the desired state of SinglestoreVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionDatabase"),
-						},
-					},
-					"coordinator": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Coordinator Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreCoordinator"),
-						},
-					},
-					"standalone": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreStandaloneVersionDatabase"),
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreInitContainer"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"stash": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Stash defines backup and restore task definitions.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreSecurityContext"),
-						},
-					},
-					"gitSyncer": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "coordinator"},
-			},
-		},
-		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreStandaloneVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SinglestoreVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SolrInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SolrInitContainer is the Solr init Container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SolrVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SolrVersionDatabase is the Solr Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_SolrVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SolrVersionSpec defines the desired state of SolrVersion",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase"),
-						},
-					},
-					"initContainer": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional security information for the Solr container update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-				},
-				Required: []string{"version", "db", "initContainer"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SolrVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_UpdateConstraints(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "UpdateConstraints specifies the constraints that need to be considered during version upgrade",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"allowlist": {
-						SchemaProps: spec.SchemaProps{
-							Description: "List of all accepted versions for upgrade request. An empty list indicates all versions are accepted except the denylist.",
+							Description: "FilterOpTypes filters MongoDB oplog operation types to include. Example values: \"i\" (insert), \"u\" (update), \"d\" (delete) Equivalent behavior: acts as oplog.op type filter",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42216,9 +34639,438 @@ func schema_apimachinery_apis_catalog_v1alpha1_UpdateConstraints(ref common.Refe
 							},
 						},
 					},
-					"denylist": {
+					"filterNamespaceBlack": {
 						SchemaProps: spec.SchemaProps{
-							Description: "List of all rejected versions for upgrade request. An empty list indicates no version is rejected.",
+							Description: "FilterNamespaceBlack excludes specified namespaces (db.collection or db). Format: db.collection or db Multiple entries separated by ';' Example: db1.col1;db2 If set, listed namespaces will be filtered out.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterNamespaceWhite": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FilterNamespaceWhite includes only specified namespaces (db.collection or db). Format: db.collection or db Multiple entries separated by ';' Example: db1.col1;db2 If set, only listed namespaces will be allowed.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterPassSpecialDb": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FilterPassSpecialDb allows special system databases to be included. Example: admin;local;config;mongoshake Note: collection-level filtering is not supported here.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"filterDdlEnable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FilterDDLEnable controls whether DDL operations are filtered or passed. When enabled, only oplog operations (i/u/d) are synced. When disabled, DDL operations like create index or drop database are included.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"filterOplogGids": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FilterOplogGids enables filtering of oplog by GID.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"checkpointStartPosition": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CheckpointStartPosition defines initial oplog position (UTC timestamp). Used only when no checkpoint exists. Note: UTC time is 8 hours ahead of CST.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"transformNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TransformNamespace maps source namespaces to destination namespaces. Format:\n  fromDb.fromCollection:toDb.toCollection\n  fromDb:toDb\nMultiple mappings separated by ';' Example: db1.col1:db2.col1;db3:db4",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"extraConfiguration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExtraConfiguration allows additional raw mongoshake configuration. Key-value pairs passed directly without schema validation.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MySQLConnectionInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"appBinding": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AppBinding refers to the source database AppBinding name, which contains the connection information.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"address": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"user": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"password": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"dbName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"maxConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"address", "user", "password", "dbName"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MySQLSchema(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled controls whether the Schema Phase should be executed.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database is the list of databases to migrate.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"excludeDatabase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExcludeDatabase is the list of databases to exclude from migration.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"enabled"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MySQLSnapshot(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled controls whether the Snapshot Phase should be executed.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"pipeline": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSnapshotPipeline"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSnapshotPipeline"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MySQLSnapshotPipeline(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"workers": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"sinkers": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"buffer": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"read_batch_size": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"write_batch_size": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"workers", "sinkers", "buffer", "read_batch_size", "write_batch_size"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MySQLSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionInfo refers to the source MySQL database connection information.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
+						},
+					},
+					"schema": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSchema"),
+						},
+					},
+					"snapshot": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSnapshot"),
+						},
+					},
+					"streaming": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLStreaming"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSchema", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSnapshot", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLStreaming"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MySQLStreaming(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled controls whether the Logical Replication Phase should be executed.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MySQLTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionInfo refers to the target MySQL database connection information.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_PgDump(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"schemaOnly": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SchemaOnly indicates dump only the schema, no data Equivalent to: pg_dump --schema-only",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"schema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Schema specifies dump the specified schema(s) only Equivalent to: pg_dump --schema=<schema>",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"excludeSchema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExcludeSchema specifies PATTERN do NOT dump the specified schema(s) Equivalent to: pg_dump --exclude-schema=<schema>",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"table": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Table specifies dump only the specified table(s) Equivalent to: pg_dump --table=<table>",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"excludeTable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExcludeTable specifies do NOT dump the specified table(s) Equivalent to: pg_dump --exclude-table=<table>",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"extraOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExtraOptions contains additional raw pg_dump command-line flags that are not explicitly modeled by the CRD fields.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -42237,7 +35089,99 @@ func schema_apimachinery_apis_catalog_v1alpha1_UpdateConstraints(ref common.Refe
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_VolumeSnapshot(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_PostgresSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionInfo refers to the source Postgres database connection information.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
+						},
+					},
+					"pgDump": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PgDump refers to the CLI name which will be used to dump the schema or data from the source Postgres database.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.PgDump"),
+						},
+					},
+					"logicalReplication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogicalReplication refers to the logical replication configuration. URL: https://www.postgresql.org/docs/current/logical-replication.html",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.LogicalReplication"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo", "kubedb.dev/apimachinery/apis/courier/v1alpha1.LogicalReplication", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PgDump"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_PostgresTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionInfo refers to the target Postgres database connection information.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_Progress(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Progress contains the current progress of migration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"dbType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DBType indicates the type of database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"info": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Info contains the additional information about the current progress",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_Publication(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -42245,371 +35189,28 @@ func schema_apimachinery_apis_catalog_v1alpha1_VolumeSnapshot(ref common.Referen
 				Properties: map[string]spec.Schema{
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_WalgSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Description: "Name is the identifier of the PostgreSQL publication. This name will be used when creating or referencing the publication in logical replication.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"apiVersion": {
+					"mode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Description: "Mode defines how tables are selected for the publication.\n\nSupported values:\n  - default: Applies filtering behavior similar to pg_dump (manual selection).\n  - table: Publishes only the specified tables (FOR TABLE ...).\n  - allTable: Publishes all tables in the database (FOR ALL TABLES).\n  - tableInSchema: Publishes all tables within specified schemas (FOR TABLES IN SCHEMA ...).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"metadata": {
+					"args": {
 						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "WeaviateVersionList contains a list of WeaviateVersion.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersion"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersion"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_WeaviateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "WeaviateVersionSpec defines the desired state of WeaviateVersion.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"version": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"endOfLife": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionDatabase"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
-						},
-					},
-					"ui": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"version", "db"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.WeaviateVersionDatabase"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionSpec"},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ZooKeeperVersionCoordinator is the ZooKeeper coordinator image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionDatabase(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ZooKeeperVersionDatabase is the ZooKeeper Database image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ZooKeeperVersionExporter is the image for the ZooKeeper exporter",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ZooKeeperVersionInitContainer is the ZooKeeper init container image",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"image": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-				},
-				Required: []string{"image"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ZooKeeperVersionList is a list of ZooKeeperVersions",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Items is a list of ZooKeeperVersion CRD objects",
+							Description: "Args contains additional publication parameters, such as table names or schema names depending on the selected Mode.\n\nFor example:\n  - Mode=table -> Args may include table names\n  - Mode=tableInSchema -> Args may include schema names",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersion"),
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
 									},
 								},
 							},
@@ -42618,102 +35219,147 @@ func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionList(ref common.R
 				},
 			},
 		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersion"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_Source(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ZooKeeperVersionPodSecurityPolicy is the ZooKeeper pod security policies",
+				Description: "Source defines the source database configuration",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databasePolicyName": {
+					"postgres": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "Postgres refers to the source Postgres database configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresSource"),
+						},
+					},
+					"mysql": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MySQL refers to the source MySQL database configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSource"),
+						},
+					},
+					"mariadb": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MariaDB refers to the source MariaDB database configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource"),
+						},
+					},
+					"mongodb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoSource"),
 						},
 					},
 				},
-				Required: []string{"databasePolicyName"},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresSource"},
 	}
 }
 
-func schema_apimachinery_apis_catalog_v1alpha1_ZooKeeperVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_Subscription(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "ZooKeeperVersionSpec is the spec for zookeeper version",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"version": {
+					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Version",
-							Default:     "",
+							Description: "Name is the identifier of the PostgreSQL subscription. This name will be used when creating or referencing the subscription in logical replication.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"endOfLife": {
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_TLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"caFile": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
-							Default:     false,
+							Description: "CAFile is the path to the PEM-encoded CA certificate file.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"certFile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CertFile is the path to the PEM-encoded client certificate (mutual TLS).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"keyFile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "KeyFile is the path to the PEM-encoded client private key (mutual TLS).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"insecureSkipVerify": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InsecureSkipVerify disables server certificate and hostname verification.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
-					"initContainer": {
+					"serverName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "init container image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionInitContainer"),
-						},
-					},
-					"db": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database Image",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionDatabase"),
-						},
-					},
-					"deprecated": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
-							Type:        []string{"boolean"},
+							Description: "ServerName overrides the hostname used for TLS SNI and certificate verification.",
+							Type:        []string{"string"},
 							Format:      "",
-						},
-					},
-					"podSecurityPolicies": {
-						SchemaProps: spec.SchemaProps{
-							Description: "PSP names",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionPodSecurityPolicy"),
-						},
-					},
-					"updateConstraints": {
-						SchemaProps: spec.SchemaProps{
-							Description: "update constraints",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
-						},
-					},
-					"securityContext": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecurityContext is for the additional config for the DB container",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
 						},
 					},
 				},
-				Required: []string{"version", "initContainer", "db"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_Target(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Target defines the target database configuration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"postgres": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Postgres refers to the target Postgres database configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget"),
+						},
+					},
+					"mongodb": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoTarget"),
+						},
+					},
+					"mysql": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MySQL refers to the target MySQL database configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget"),
+						},
+					},
+					"mariadb": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MariaDB refers to the target MariaDB database configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBTarget"),
+						},
+					},
+				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ZooKeeperVersionPodSecurityPolicy"},
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBTarget", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoTarget", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget"},
 	}
 }
