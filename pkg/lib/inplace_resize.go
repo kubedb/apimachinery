@@ -24,14 +24,14 @@ import (
 	apiequality "k8s.io/apimachinery/pkg/api/equality"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	apitypes "k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/kubernetes"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // InPlaceResizePod requests an in-place resize of the running pod's containers through
 // the pods/resize subresource. targets maps a container name to its desired resources.
 // It does not wait for the resize to be enacted; use IsResizeSettled/IsResizeInfeasible
 // against a freshly fetched pod for that.
-func InPlaceResizePod(kc kubernetes.Interface, namespace, podName string, targets map[string]core.ResourceRequirements) error {
+func InPlaceResizePod(ctx context.Context, kc client.Client, namespace, podName string, targets map[string]core.ResourceRequirements) error {
 	type containerPatch struct {
 		Name      string                    `json:"name"`
 		Resources core.ResourceRequirements `json:"resources"`
@@ -49,9 +49,8 @@ func InPlaceResizePod(kc kubernetes.Interface, namespace, podName string, target
 	if err != nil {
 		return err
 	}
-	_, err = kc.CoreV1().Pods(namespace).Patch(
-		context.TODO(), podName, apitypes.StrategicMergePatchType, data, metav1.PatchOptions{}, "resize")
-	return err
+	pod := &core.Pod{ObjectMeta: metav1.ObjectMeta{Name: podName, Namespace: namespace}}
+	return kc.SubResource("resize").Patch(ctx, pod, client.RawPatch(apitypes.StrategicMergePatchType, data))
 }
 
 // ResizeTargets returns the desired resources keyed by container name for the named
