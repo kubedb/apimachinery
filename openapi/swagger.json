@@ -22099,6 +22099,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ArchiverSpec"
         },
+        "courier": {
+          "description": "Courier defines the courier related CLI/Tools images for this MongoDB version",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.DBCourierImages"
+        },
         "db": {
           "description": "Database Image",
           "default": {},
@@ -22130,11 +22135,6 @@
           "description": "Init container Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MongoDBVersionInitContainer"
-        },
-        "migrator": {
-          "description": "Migrator defines the migration related CLI/Tools images for this MongoDB version",
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.DBMigratorImages"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
@@ -22406,6 +22406,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionCoordinator"
         },
+        "courier": {
+          "description": "Courier defines the courier related CLI/Tools images for this MySQL version",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.DBCourierImages"
+        },
         "db": {
           "description": "Database Image",
           "default": {},
@@ -22437,11 +22442,6 @@
           "description": "Init container Image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.MySQLVersionInitContainer"
-        },
-        "migrator": {
-          "description": "Migrator defines the migration related CLI/Tools images for this MySQL version",
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.DBMigratorImages"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
@@ -22861,6 +22861,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionCoordinator"
         },
+        "courier": {
+          "description": "Courier defines the courier related CLI/Tools images for this Postgres version",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.DBCourierImages"
+        },
         "db": {
           "description": "Database Image",
           "default": {},
@@ -22892,11 +22897,6 @@
           "description": "init container image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionInitContainer"
-        },
-        "migrator": {
-          "description": "Migrator defines the migration related CLI/Tools images for this Postgres version",
-          "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.DBMigratorImages"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
@@ -23880,7 +23880,7 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.courier.v1alpha1.DBMigratorCLI": {
+    "dev.kubedb.apimachinery.apis.courier.v1alpha1.DBCourierCLI": {
       "type": "object",
       "required": [
         "image"
@@ -23892,22 +23892,22 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.courier.v1alpha1.DBMigratorImages": {
+    "dev.kubedb.apimachinery.apis.courier.v1alpha1.DBCourierImages": {
       "type": "object",
       "properties": {
         "cli": {
           "description": "CLI specifies the migrator CLI image",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.DBMigratorCLI"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.DBCourierCLI"
         },
         "statusReporter": {
           "description": "StatusReporter is the sidecar image used to report migration progress",
           "default": {},
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.DBMigratorStatusReporter"
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.DBCourierStatusReporter"
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.courier.v1alpha1.DBMigratorStatusReporter": {
+    "dev.kubedb.apimachinery.apis.courier.v1alpha1.DBCourierStatusReporter": {
       "type": "object",
       "required": [
         "image"

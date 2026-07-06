@@ -37480,9 +37480,9 @@ func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionSpec(ref common.Ref
 							},
 						},
 					},
-					"migrator": {
+					"courier": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Migrator defines the migration related CLI/Tools images for this MariaDB version",
+							Description: "Courier defines the courier related CLI/Tools images for this MariaDB version",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"),
 						},
@@ -38242,9 +38242,9 @@ func schema_apimachinery_apis_catalog_v1alpha1_MongoDBVersionSpec(ref common.Ref
 							},
 						},
 					},
-					"migrator": {
+					"courier": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Migrator defines the migration related CLI/Tools images for this MongoDB version",
+							Description: "Courier defines the courier related CLI/Tools images for this MongoDB version",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"),
 						},
@@ -38745,9 +38745,9 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.Refer
 							},
 						},
 					},
-					"migrator": {
+					"courier": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Migrator defines the migration related CLI/Tools images for this MySQL version",
+							Description: "Courier defines the courier related CLI/Tools images for this MySQL version",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"),
 						},
@@ -40500,9 +40500,9 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref common.Re
 							},
 						},
 					},
-					"migrator": {
+					"courier": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Migrator defines the migration related CLI/Tools images for this Postgres version",
+							Description: "Courier defines the courier related CLI/Tools images for this Postgres version",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"),
 						},
