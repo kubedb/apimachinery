@@ -31,12 +31,12 @@ import (
 	archiver "kubedb.dev/apimachinery/client/informers/externalversions/archiver"
 	autoscaling "kubedb.dev/apimachinery/client/informers/externalversions/autoscaling"
 	catalog "kubedb.dev/apimachinery/client/informers/externalversions/catalog"
+	courier "kubedb.dev/apimachinery/client/informers/externalversions/courier"
 	elasticsearch "kubedb.dev/apimachinery/client/informers/externalversions/elasticsearch"
 	gitops "kubedb.dev/apimachinery/client/informers/externalversions/gitops"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
 	kafka "kubedb.dev/apimachinery/client/informers/externalversions/kafka"
 	kubedb "kubedb.dev/apimachinery/client/informers/externalversions/kubedb"
-	migrator "kubedb.dev/apimachinery/client/informers/externalversions/migrator"
 	ops "kubedb.dev/apimachinery/client/informers/externalversions/ops"
 	postgres "kubedb.dev/apimachinery/client/informers/externalversions/postgres"
 	externalversionsschema "kubedb.dev/apimachinery/client/informers/externalversions/schema"
@@ -267,11 +267,11 @@ type SharedInformerFactory interface {
 	Archiver() archiver.Interface
 	Autoscaling() autoscaling.Interface
 	Catalog() catalog.Interface
+	Courier() courier.Interface
 	Elasticsearch() elasticsearch.Interface
 	Gitops() gitops.Interface
 	Kafka() kafka.Interface
 	Kubedb() kubedb.Interface
-	Migrator() migrator.Interface
 	Ops() ops.Interface
 	Postgres() postgres.Interface
 	Schema() externalversionsschema.Interface
@@ -290,6 +290,10 @@ func (f *sharedInformerFactory) Catalog() catalog.Interface {
 	return catalog.New(f, f.namespace, f.tweakListOptions)
 }
 
+func (f *sharedInformerFactory) Courier() courier.Interface {
+	return courier.New(f, f.namespace, f.tweakListOptions)
+}
+
 func (f *sharedInformerFactory) Elasticsearch() elasticsearch.Interface {
 	return elasticsearch.New(f, f.namespace, f.tweakListOptions)
 }
@@ -304,10 +308,6 @@ func (f *sharedInformerFactory) Kafka() kafka.Interface {
 
 func (f *sharedInformerFactory) Kubedb() kubedb.Interface {
 	return kubedb.New(f, f.namespace, f.tweakListOptions)
-}
-
-func (f *sharedInformerFactory) Migrator() migrator.Interface {
-	return migrator.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Ops() ops.Interface {
