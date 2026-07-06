@@ -593,9 +593,9 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkSpec":                               schema_apimachinery_apis_courier_v1alpha1_BranchWorkSpec(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkStatus":                             schema_apimachinery_apis_courier_v1alpha1_BranchWorkStatus(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo":                               schema_apimachinery_apis_courier_v1alpha1_ConnectionInfo(ref),
-		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorCLI":                                schema_apimachinery_apis_courier_v1alpha1_DBMigratorCLI(ref),
-		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorImages":                             schema_apimachinery_apis_courier_v1alpha1_DBMigratorImages(ref),
-		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorStatusReporter":                     schema_apimachinery_apis_courier_v1alpha1_DBMigratorStatusReporter(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierCLI":                                schema_apimachinery_apis_courier_v1alpha1_DBCourierCLI(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages":                             schema_apimachinery_apis_courier_v1alpha1_DBCourierImages(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierStatusReporter":                     schema_apimachinery_apis_courier_v1alpha1_DBCourierStatusReporter(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults":                                  schema_apimachinery_apis_courier_v1alpha1_JobDefaults(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.LogicalReplication":                           schema_apimachinery_apis_courier_v1alpha1_LogicalReplication(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource":                                schema_apimachinery_apis_courier_v1alpha1_MariaDBSource(ref),
@@ -34148,7 +34148,7 @@ func schema_apimachinery_apis_courier_v1alpha1_ConnectionInfo(ref common.Referen
 	}
 }
 
-func schema_apimachinery_apis_courier_v1alpha1_DBMigratorCLI(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_DBCourierCLI(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -34168,7 +34168,7 @@ func schema_apimachinery_apis_courier_v1alpha1_DBMigratorCLI(ref common.Referenc
 	}
 }
 
-func schema_apimachinery_apis_courier_v1alpha1_DBMigratorImages(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_DBCourierImages(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -34178,25 +34178,25 @@ func schema_apimachinery_apis_courier_v1alpha1_DBMigratorImages(ref common.Refer
 						SchemaProps: spec.SchemaProps{
 							Description: "CLI specifies the migrator CLI image",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorCLI"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierCLI"),
 						},
 					},
 					"statusReporter": {
 						SchemaProps: spec.SchemaProps{
 							Description: "StatusReporter is the sidecar image used to report migration progress",
 							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorStatusReporter"),
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierStatusReporter"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorCLI", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBMigratorStatusReporter"},
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierCLI", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierStatusReporter"},
 	}
 }
 
-func schema_apimachinery_apis_courier_v1alpha1_DBMigratorStatusReporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_DBCourierStatusReporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{

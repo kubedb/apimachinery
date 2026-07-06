@@ -88,19 +88,19 @@ type TLSConfig struct {
 	ServerName string `yaml:"serverName" json:"serverName,omitempty"`
 }
 
-type DBMigratorImages struct {
+type DBCourierImages struct {
 	// CLI specifies the migrator CLI image
 	// +optional
-	CLI DBMigratorCLI `json:"cli"`
+	CLI DBCourierCLI `json:"cli"`
 	// StatusReporter is the sidecar image used to report migration progress
 	// +optional
-	StatusReporter DBMigratorStatusReporter `json:"statusReporter"`
+	StatusReporter DBCourierStatusReporter `json:"statusReporter"`
 }
 
-type DBMigratorCLI struct {
+type DBCourierCLI struct {
 	Image string `json:"image"`
 }
 
-type DBMigratorStatusReporter struct {
+type DBCourierStatusReporter struct {
 	Image string `json:"image"`
 }

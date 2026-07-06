@@ -90,9 +90,9 @@ type MariaDBVersionSpec struct {
 	Archiver ArchiverSpec `json:"archiver,omitempty"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
-	// Migrator defines the migration related CLI/Tools images for this MariaDB version
+	// Courier defines the courier related CLI/Tools images for this MariaDB version
 	// +optional
-	Migrator v1alpha1.DBMigratorImages `json:"migrator,omitempty"`
+	Courier v1alpha1.DBCourierImages `json:"courier,omitempty"`
 }
 
 // MariaDBVersionDatabase is the mariadb image
