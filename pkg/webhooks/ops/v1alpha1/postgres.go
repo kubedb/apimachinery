@@ -217,11 +217,31 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRe
 	if horizontalScalingSpec == nil {
 		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
 	}
-	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.ReadReplicas == nil {
-		return errors.New("`spec.horizontalScaling.Replicas or `spec.readReplica` has to be mentioned")
+	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.ReadReplicas == nil && len(horizontalScalingSpec.DataCenters) == 0 {
+		return errors.New("one of `spec.horizontalScaling.replicas`, `spec.horizontalScaling.readReplicas`, or `spec.horizontalScaling.dataCenters` has to be mentioned")
 	}
 	if horizontalScalingSpec.Replicas != nil && len(horizontalScalingSpec.ReadReplicas) > 0 {
 		return errors.New("either `spec.horizontalScaling.Replicas` or `spec.horizontalScaling.readReplicas` can be provided at a time")
+	}
+	if len(horizontalScalingSpec.DataCenters) > 0 {
+		// A distributed DC-DR Postgres is scaled per data center; a single global
+		// replica count is meaningless across independent per-DC rafts.
+		if horizontalScalingSpec.Replicas != nil || len(horizontalScalingSpec.ReadReplicas) > 0 {
+			return errors.New("`spec.horizontalScaling.dataCenters` cannot be combined with `replicas` or `readReplicas`")
+		}
+		seen := map[string]bool{}
+		for _, dc := range horizontalScalingSpec.DataCenters {
+			if dc.ClusterName == "" {
+				return errors.New("`spec.horizontalScaling.dataCenters[].clusterName` is required")
+			}
+			if seen[dc.ClusterName] {
+				return fmt.Errorf("`spec.horizontalScaling.dataCenters` lists data center %q more than once", dc.ClusterName)
+			}
+			seen[dc.ClusterName] = true
+			if dc.Replicas < 1 {
+				return fmt.Errorf("`spec.horizontalScaling.dataCenters[%s].replicas` must be >= 1 (removing a data center is a topology change, not horizontal scaling)", dc.ClusterName)
+			}
+		}
 	}
 	if horizontalScalingSpec.Replicas != nil && *horizontalScalingSpec.Replicas <= 0 {
 		return errors.New("`spec.horizontalScaling.Replicas` can't be less than or equal 0")
