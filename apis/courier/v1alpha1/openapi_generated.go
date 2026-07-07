@@ -33775,12 +33775,18 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchTarget(ref common.Reference
 							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
 						},
 					},
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef references a cert-manager Issuer or ClusterIssuer in the TARGET cluster. TLS secrets are namespace and cluster scoped, so a branch cannot reuse the source's; when the source Database has TLS enabled the operator points the branch's TLS at this issuer and KubeDB mints fresh certificates for the branch. Required for a TLS-enabled source, ignored otherwise.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
 				},
 				Required: []string{"cluster", "namespace", "name"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ResourceRequirements"},
+			"k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.TypedLocalObjectReference"},
 	}
 }
 

@@ -23637,6 +23637,10 @@
           "type": "string",
           "default": ""
         },
+        "issuerRef": {
+          "description": "IssuerRef references a cert-manager Issuer or ClusterIssuer in the TARGET cluster. TLS secrets are namespace and cluster scoped, so a branch cannot reuse the source's; when the source Database has TLS enabled the operator points the branch's TLS at this issuer and KubeDB mints fresh certificates for the branch. Required for a TLS-enabled source, ignored otherwise.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
+        },
         "name": {
           "description": "Name of the target Database.",
           "type": "string",
