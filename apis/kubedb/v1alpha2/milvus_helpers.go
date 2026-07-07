@@ -565,7 +565,7 @@ func (m *MilvusBind) ServiceNames() (string, string) {
 }
 
 func (m *MilvusBind) Ports() (int, int) {
-	return int(kubedb.MilvusGrpcPort), int(kubedb.MilvusGrpcPort)
+	return int(kubedb.MilvusHttpPort), int(kubedb.MilvusHttpPort)
 }
 
 func (m *MilvusBind) SecretName() string {
