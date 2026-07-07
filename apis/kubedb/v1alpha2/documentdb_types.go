@@ -64,6 +64,39 @@ const (
 	DocDBClientAuthModeCert DocDBClientAuthMode = "cert"
 )
 
+// DocumentDBCertificateAlias represents the type of certificate.
+// +kubebuilder:validation:Enum=server;client;gateway
+type DocumentDBCertificateAlias string
+
+const (
+	// DocumentDBServerCert is the Postgres server certificate (Postgres serves TLS).
+	DocumentDBServerCert DocumentDBCertificateAlias = "server"
+	// DocumentDBClientCert is the client certificate used for streaming replication (mutual TLS).
+	DocumentDBClientCert DocumentDBCertificateAlias = "client"
+	// DocumentDBGatewayCert is the MongoDB-wire gateway (edge) certificate served on port 10260.
+	DocumentDBGatewayCert DocumentDBCertificateAlias = "gateway"
+)
+
+// DocumentDBSSLMode mirrors PostgresSSLMode for the DocumentDB Postgres server.
+// ref: https://www.postgresql.org/docs/current/libpq-ssl.html
+// +kubebuilder:validation:Enum=disable;allow;prefer;require;verify-ca;verify-full
+type DocumentDBSSLMode string
+
+const (
+	// DocumentDBSSLModeDisable ensures the server does not use TLS/SSL.
+	DocumentDBSSLModeDisable DocumentDBSSLMode = "disable"
+	// DocumentDBSSLModeAllow uses encryption only if the server insists on it.
+	DocumentDBSSLModeAllow DocumentDBSSLMode = "allow"
+	// DocumentDBSSLModePrefer uses encryption if the server supports it.
+	DocumentDBSSLModePrefer DocumentDBSSLMode = "prefer"
+	// DocumentDBSSLModeRequire encrypts data without server identity verification.
+	DocumentDBSSLModeRequire DocumentDBSSLMode = "require"
+	// DocumentDBSSLModeVerifyCA encrypts data and verifies the server CA.
+	DocumentDBSSLModeVerifyCA DocumentDBSSLMode = "verify-ca"
+	// DocumentDBSSLModeVerifyFull encrypts data and fully verifies the server identity.
+	DocumentDBSSLModeVerifyFull DocumentDBSSLMode = "verify-full"
+)
+
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -99,6 +132,15 @@ type DocumentDBSpec struct {
 
 	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
 	ClientAuthMode DocDBClientAuthMode `json:"clientAuthMode,omitempty"`
+
+	// SSLMode for the DocumentDB Postgres server. [disable;allow;prefer;require;verify-ca;verify-full]
+	// +optional
+	SSLMode DocumentDBSSLMode `json:"sslMode,omitempty"`
+
+	// TLS contains tls configurations for client and server (via cert-manager).
+	// It provisions certs for the Postgres server, the replication client, and the MongoDB gateway.
+	// +optional
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`

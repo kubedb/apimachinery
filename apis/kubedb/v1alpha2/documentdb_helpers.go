@@ -32,6 +32,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/utils/ptr"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	metautil "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
@@ -166,6 +167,33 @@ func (d *DocumentDB) PetSetName() string {
 	return d.OffshootName()
 }
 
+// CertificateName returns the default certificate name / certificate secret name for a certificate alias.
+func (d *DocumentDB) CertificateName(alias DocumentDBCertificateAlias) string {
+	return metautil.NameWithSuffix(d.Name, fmt.Sprintf("%s-cert", string(alias)))
+}
+
+// GetCertSecretName returns the secret name for a certificate alias if provided,
+// otherwise returns the default certificate secret name for the given alias.
+func (d *DocumentDB) GetCertSecretName(alias DocumentDBCertificateAlias) string {
+	if d.Spec.TLS != nil {
+		name, ok := kmapi.GetCertificateSecretName(d.Spec.TLS.Certificates, string(alias))
+		if ok {
+			return name
+		}
+	}
+	return d.CertificateName(alias)
+}
+
+// SetTLSDefaults fills missing secret names for each certificate alias, mirroring postgres.
+func (d *DocumentDB) SetTLSDefaults() {
+	if d.Spec.TLS == nil || d.Spec.TLS.IssuerRef == nil {
+		return
+	}
+	d.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(d.Spec.TLS.Certificates, string(DocumentDBServerCert), d.CertificateName(DocumentDBServerCert))
+	d.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(d.Spec.TLS.Certificates, string(DocumentDBClientCert), d.CertificateName(DocumentDBClientCert))
+	d.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(d.Spec.TLS.Certificates, string(DocumentDBGatewayCert), d.CertificateName(DocumentDBGatewayCert))
+}
+
 func (d *DocumentDB) ServiceAccountName() string {
 	return d.OffshootName()
 }
@@ -199,6 +227,14 @@ func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alp
 	if d.Spec.ClientAuthMode == "" {
 		d.Spec.ClientAuthMode = DocDBClientAuthModeScram
 	}
+	if d.Spec.SSLMode == "" {
+		if d.Spec.TLS != nil {
+			d.Spec.SSLMode = DocumentDBSSLModeVerifyFull
+		} else {
+			d.Spec.SSLMode = DocumentDBSSLModeDisable
+		}
+	}
+	d.SetTLSDefaults()
 	if d.Spec.StorageType == "" {
 		d.Spec.StorageType = StorageTypeDurable
 	}
