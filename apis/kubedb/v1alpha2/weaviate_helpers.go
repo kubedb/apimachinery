@@ -351,11 +351,11 @@ type WeaviateBind struct {
 var _ DBBindInterface = &WeaviateBind{}
 
 func (w *WeaviateBind) ServiceNames() (string, string) {
-	return w.ServiceName(), w.ServiceName()
+	return w.ServiceName(), ""
 }
 
 func (w *WeaviateBind) Ports() (int, int) {
-	return kubedb.WeaviateHTTPPort, kubedb.WeaviateHTTPPort
+	return kubedb.WeaviateHTTPPort, 0
 }
 
 func (w *WeaviateBind) SecretName() string {
