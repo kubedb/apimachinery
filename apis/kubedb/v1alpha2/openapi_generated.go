@@ -700,6 +700,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetadataStorage":                               schema_apimachinery_apis_kubedb_v1alpha2_MetadataStorage(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus":                                        schema_apimachinery_apis_kubedb_v1alpha2_Milvus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusApp":                                     schema_apimachinery_apis_kubedb_v1alpha2_MilvusApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusBind":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDataNode":                                schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDistributedSpec":                         schema_apimachinery_apis_kubedb_v1alpha2_MilvusDistributedSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusList":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusList(ref),
@@ -773,6 +774,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ProxySQLStatus":                                schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Qdrant":                                        schema_apimachinery_apis_kubedb_v1alpha2_Qdrant(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantApp":                                     schema_apimachinery_apis_kubedb_v1alpha2_QdrantApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantBind":                                    schema_apimachinery_apis_kubedb_v1alpha2_QdrantBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantList":                                    schema_apimachinery_apis_kubedb_v1alpha2_QdrantList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_QdrantSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.QdrantStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_QdrantStatus(ref),
@@ -823,6 +825,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Topology":                                      schema_apimachinery_apis_kubedb_v1alpha2_Topology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Weaviate":                                      schema_apimachinery_apis_kubedb_v1alpha2_Weaviate(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateApp":                                   schema_apimachinery_apis_kubedb_v1alpha2_WeaviateApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateBind":                                  schema_apimachinery_apis_kubedb_v1alpha2_WeaviateBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateConfiguration":                         schema_apimachinery_apis_kubedb_v1alpha2_WeaviateConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateList":                                  schema_apimachinery_apis_kubedb_v1alpha2_WeaviateList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_WeaviateSpec(ref),
@@ -40144,6 +40147,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusApp(ref common.ReferenceCall
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Milvus": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus"),
+						},
+					},
+				},
+				Required: []string{"Milvus"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Milvus"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -44316,6 +44339,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_QdrantApp(ref common.ReferenceCall
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_QdrantBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Qdrant": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Qdrant"),
+						},
+					},
+				},
+				Required: []string{"Qdrant"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Qdrant"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_QdrantList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -46977,6 +47020,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Weaviate(ref common.ReferenceCallb
 }
 
 func schema_apimachinery_apis_kubedb_v1alpha2_WeaviateApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Weaviate": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Weaviate"),
+						},
+					},
+				},
+				Required: []string{"Weaviate"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Weaviate"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_WeaviateBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
