@@ -2950,6 +2950,96 @@ spec:
                     required:
                     - connectionInfo
                     type: object
+                  mssqlserver:
+                    properties:
+                      connectionInfo:
+                        properties:
+                          address:
+                            type: string
+                          database:
+                            type: string
+                          encrypt:
+                            type: boolean
+                          maxConnections:
+                            type: integer
+                          password:
+                            type: string
+                          trustServerCertificate:
+                            type: boolean
+                          user:
+                            type: string
+                        required:
+                        - address
+                        - database
+                        - password
+                        - user
+                        type: object
+                      schema:
+                        properties:
+                          database:
+                            items:
+                              type: string
+                            type: array
+                          enabled:
+                            type: boolean
+                          excludeSchema:
+                            items:
+                              type: string
+                            type: array
+                          excludeTable:
+                            items:
+                              type: string
+                            type: array
+                          schema:
+                            items:
+                              type: string
+                            type: array
+                          table:
+                            items:
+                              type: string
+                            type: array
+                        required:
+                        - enabled
+                        type: object
+                      snapshot:
+                        properties:
+                          enabled:
+                            type: boolean
+                          pipeline:
+                            properties:
+                              buffer:
+                                type: integer
+                              read_batch_size:
+                                type: integer
+                              sinkers:
+                                type: integer
+                              workers:
+                                type: integer
+                              write_batch_size:
+                                type: integer
+                            required:
+                            - buffer
+                            - read_batch_size
+                            - sinkers
+                            - workers
+                            - write_batch_size
+                            type: object
+                        type: object
+                      streaming:
+                        properties:
+                          autoEnableCDC:
+                            type: boolean
+                          batchSize:
+                            type: integer
+                          enabled:
+                            type: boolean
+                          pollInterval:
+                            format: int64
+                            type: integer
+                        type: object
+                    required:
+                    - connectionInfo
+                    type: object
                   mysql:
                     properties:
                       connectionInfo:
@@ -3194,6 +3284,33 @@ spec:
                             type: object
                           url:
                             type: string
+                        type: object
+                    required:
+                    - connectionInfo
+                    type: object
+                  mssqlserver:
+                    properties:
+                      connectionInfo:
+                        properties:
+                          address:
+                            type: string
+                          database:
+                            type: string
+                          encrypt:
+                            type: boolean
+                          maxConnections:
+                            type: integer
+                          password:
+                            type: string
+                          trustServerCertificate:
+                            type: boolean
+                          user:
+                            type: string
+                        required:
+                        - address
+                        - database
+                        - password
+                        - user
                         type: object
                     required:
                     - connectionInfo
