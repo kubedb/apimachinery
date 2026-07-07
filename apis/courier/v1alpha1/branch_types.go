@@ -124,6 +124,13 @@ type BranchTarget struct {
 	// Resources are the cpu/memory requests and limits in the TARGET cluster.
 	// +optional
 	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+
+	// IssuerRef references a cert-manager Issuer or ClusterIssuer in the TARGET cluster. TLS secrets are
+	// namespace and cluster scoped, so a branch cannot reuse the source's; when the source Database has
+	// TLS enabled the operator points the branch's TLS at this issuer and KubeDB mints fresh
+	// certificates for the branch. Required for a TLS-enabled source, ignored otherwise.
+	// +optional
+	IssuerRef *corev1.TypedLocalObjectReference `json:"issuerRef,omitempty"`
 }
 
 // BranchSchedule holds the refresh cadence.

@@ -262,6 +262,11 @@ func (in *BranchStatus) DeepCopy() *BranchStatus {
 func (in *BranchTarget) DeepCopyInto(out *BranchTarget) {
 	*out = *in
 	in.Resources.DeepCopyInto(&out.Resources)
+	if in.IssuerRef != nil {
+		in, out := &in.IssuerRef, &out.IssuerRef
+		*out = new(v1.TypedLocalObjectReference)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
