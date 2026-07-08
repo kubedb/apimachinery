@@ -130,3 +130,7 @@ type MigrationList struct {
 	metav1.ListMeta `json:"metadata,omitzero"`
 	Items           []Migration `json:"items"`
 }
+
+func init() {
+	SchemeBuilder.Register(&Migration{}, &MigrationList{})
+}
