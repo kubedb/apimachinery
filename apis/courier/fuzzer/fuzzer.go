@@ -29,5 +29,20 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 		func(s *v1alpha1.Migration, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
+		func(s *v1alpha1.PostgresMigration, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.MySQLMigration, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.MariaDBMigration, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.MongoDBMigration, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.MSSQLServerMigration, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
 	}
 }

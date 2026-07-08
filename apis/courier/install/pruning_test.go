@@ -23,14 +23,27 @@ import (
 	"kubedb.dev/apimachinery/apis/courier/v1alpha1"
 
 	clientsetscheme "k8s.io/client-go/kubernetes/scheme"
+	"kmodules.xyz/client-go/apiextensions"
 	crdfuzz "kmodules.xyz/crd-schema-fuzz"
 )
 
 func TestPruneTypes(t *testing.T) {
 	Install(clientsetscheme.Scheme)
 
+	// Migration is the duck type and is not served as its own CRD; the served
+	// resources are the per-engine {DB}Migration kinds below.
+	crds := []*apiextensions.CustomResourceDefinition{
+		(v1alpha1.PostgresMigration{}).CustomResourceDefinition(),
+		(v1alpha1.MySQLMigration{}).CustomResourceDefinition(),
+		(v1alpha1.MariaDBMigration{}).CustomResourceDefinition(),
+		(v1alpha1.MongoDBMigration{}).CustomResourceDefinition(),
+		(v1alpha1.MSSQLServerMigration{}).CustomResourceDefinition(),
+	}
+
 	// CRD v1
-	if crd := (v1alpha1.Migration{}).CustomResourceDefinition(); crd.V1 != nil {
-		crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+	for _, crd := range crds {
+		if crd.V1 != nil {
+			crdfuzz.SchemaFuzzTestForV1CRD(t, clientsetscheme.Scheme, crd.V1, fuzzer.Funcs)
+		}
 	}
 }

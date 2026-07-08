@@ -33,59 +33,59 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// MigrationInformer provides access to a shared informer and lister for
-// Migrations.
-type MigrationInformer interface {
+// MongoDBMigrationInformer provides access to a shared informer and lister for
+// MongoDBMigrations.
+type MongoDBMigrationInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MigrationLister
+	Lister() v1alpha1.MongoDBMigrationLister
 }
 
-type migrationInformer struct {
+type mongoDBMigrationInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewMigrationInformer constructs a new informer for Migration type.
+// NewMongoDBMigrationInformer constructs a new informer for MongoDBMigration type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewMigrationInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredMigrationInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewMongoDBMigrationInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredMongoDBMigrationInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredMigrationInformer constructs a new informer for Migration type.
+// NewFilteredMongoDBMigrationInformer constructs a new informer for MongoDBMigration type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredMigrationInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredMongoDBMigrationInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().Migrations(namespace).List(context.TODO(), options)
+				return client.CourierV1alpha1().MongoDBMigrations(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().Migrations(namespace).Watch(context.TODO(), options)
+				return client.CourierV1alpha1().MongoDBMigrations(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&courierv1alpha1.Migration{},
+		&courierv1alpha1.MongoDBMigration{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *migrationInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredMigrationInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *mongoDBMigrationInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredMongoDBMigrationInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *migrationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&courierv1alpha1.Migration{}, f.defaultInformer)
+func (f *mongoDBMigrationInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&courierv1alpha1.MongoDBMigration{}, f.defaultInformer)
 }
 
-func (f *migrationInformer) Lister() v1alpha1.MigrationLister {
-	return v1alpha1.NewMigrationLister(f.Informer().GetIndexer())
+func (f *mongoDBMigrationInformer) Lister() v1alpha1.MongoDBMigrationLister {
+	return v1alpha1.NewMongoDBMigrationLister(f.Informer().GetIndexer())
 }
