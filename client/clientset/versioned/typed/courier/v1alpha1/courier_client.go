@@ -31,7 +31,11 @@ type CourierV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	BranchesGetter
 	BranchWorksGetter
-	MigrationsGetter
+	MSSQLServerMigrationsGetter
+	MariaDBMigrationsGetter
+	MongoDBMigrationsGetter
+	MySQLMigrationsGetter
+	PostgresMigrationsGetter
 }
 
 // CourierV1alpha1Client is used to interact with features provided by the courier.kubedb.com group.
@@ -47,8 +51,24 @@ func (c *CourierV1alpha1Client) BranchWorks(namespace string) BranchWorkInterfac
 	return newBranchWorks(c, namespace)
 }
 
-func (c *CourierV1alpha1Client) Migrations(namespace string) MigrationInterface {
-	return newMigrations(c, namespace)
+func (c *CourierV1alpha1Client) MSSQLServerMigrations(namespace string) MSSQLServerMigrationInterface {
+	return newMSSQLServerMigrations(c, namespace)
+}
+
+func (c *CourierV1alpha1Client) MariaDBMigrations(namespace string) MariaDBMigrationInterface {
+	return newMariaDBMigrations(c, namespace)
+}
+
+func (c *CourierV1alpha1Client) MongoDBMigrations(namespace string) MongoDBMigrationInterface {
+	return newMongoDBMigrations(c, namespace)
+}
+
+func (c *CourierV1alpha1Client) MySQLMigrations(namespace string) MySQLMigrationInterface {
+	return newMySQLMigrations(c, namespace)
+}
+
+func (c *CourierV1alpha1Client) PostgresMigrations(namespace string) PostgresMigrationInterface {
+	return newPostgresMigrations(c, namespace)
 }
 
 // NewForConfig creates a new CourierV1alpha1Client for the given config.

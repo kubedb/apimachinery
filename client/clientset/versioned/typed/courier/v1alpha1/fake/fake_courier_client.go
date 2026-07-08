@@ -37,8 +37,24 @@ func (c *FakeCourierV1alpha1) BranchWorks(namespace string) v1alpha1.BranchWorkI
 	return &FakeBranchWorks{c, namespace}
 }
 
-func (c *FakeCourierV1alpha1) Migrations(namespace string) v1alpha1.MigrationInterface {
-	return &FakeMigrations{c, namespace}
+func (c *FakeCourierV1alpha1) MSSQLServerMigrations(namespace string) v1alpha1.MSSQLServerMigrationInterface {
+	return &FakeMSSQLServerMigrations{c, namespace}
+}
+
+func (c *FakeCourierV1alpha1) MariaDBMigrations(namespace string) v1alpha1.MariaDBMigrationInterface {
+	return &FakeMariaDBMigrations{c, namespace}
+}
+
+func (c *FakeCourierV1alpha1) MongoDBMigrations(namespace string) v1alpha1.MongoDBMigrationInterface {
+	return &FakeMongoDBMigrations{c, namespace}
+}
+
+func (c *FakeCourierV1alpha1) MySQLMigrations(namespace string) v1alpha1.MySQLMigrationInterface {
+	return &FakeMySQLMigrations{c, namespace}
+}
+
+func (c *FakeCourierV1alpha1) PostgresMigrations(namespace string) v1alpha1.PostgresMigrationInterface {
+	return &FakePostgresMigrations{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

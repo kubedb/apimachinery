@@ -16,7 +16,76 @@ limitations under the License.
 
 package v1alpha1
 
-import "time"
+import (
+	"time"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	ofst "kmodules.xyz/offshoot-api/api/v1"
+)
+
+const (
+	ResourceKindMSSQLServerMigration     = "MSSQLServerMigration"
+	ResourceSingularMSSQLServerMigration = "mssqlservermigration"
+	ResourcePluralMSSQLServerMigrations  = "mssqlservermigrations"
+)
+
+// +genclient
+// +k8s:openapi-gen=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:path=mssqlservermigrations,singular=mssqlservermigration,shortName=msmig,categories={kubedb,appscode,all}
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:scope=Namespaced
+// +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
+// +kubebuilder:printcolumn:name="Stage",type="string",JSONPath=".status.progress.info.Stage"
+// +kubebuilder:printcolumn:name="Lag",type="string",JSONPath=".status.progress.info.Lag"
+// +kubebuilder:printcolumn:name="Progress",type="string",JSONPath=".status.progress.info.Progress"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+type MSSQLServerMigration struct {
+	metav1.TypeMeta `json:",inline"`
+
+	// metadata is a standard object metadata
+	// +optional
+	metav1.ObjectMeta `json:"metadata,omitzero"`
+
+	// spec defines the desired state of MSSQLServerMigration
+	// +required
+	Spec MSSQLServerMigrationSpec `json:"spec"`
+
+	// status defines the observed state of MSSQLServerMigration.
+	// It reuses the shared MigrationStatus so that the Migration duck type can
+	// project it and the operator's status patches replay onto it unchanged.
+	// +optional
+	Status MigrationStatus `json:"status,omitzero"`
+}
+
+// MSSQLServerMigrationSpec defines the desired state of MSSQLServerMigration
+type MSSQLServerMigrationSpec struct {
+	// Source defines the source MSSQL Server database configuration
+	Source MSSQLServerSource `json:"source"`
+
+	// Target defines the target MSSQL Server database configuration
+	Target MSSQLServerTarget `json:"target"`
+
+	// JobDefaults specifies default settings for migration jobs
+	// +optional
+	JobDefaults *JobDefaults `json:"jobDefaults,omitempty"`
+
+	// JobTemplate specifies runtime configurations for the migration Job
+	// +optional
+	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`
+}
+
+// MSSQLServerMigrationList contains a list of MSSQLServerMigration
+
+// +kubebuilder:object:root=true
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type MSSQLServerMigrationList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitzero"`
+	Items           []MSSQLServerMigration `json:"items"`
+}
 
 type MSSQLServerSource struct {
 	// ConnectionInfo refers to the source MSSQL Server database connection information.
@@ -92,4 +161,8 @@ type MSSQLServerSnapshotPipeline struct {
 	Buffer         *int `yaml:"buffer" json:"buffer"`
 	ReadBatchSize  *int `yaml:"readBatchSize" json:"read_batch_size"`
 	WriteBatchSize *int `yaml:"writeBatchSize" json:"write_batch_size"`
+}
+
+func init() {
+	SchemeBuilder.Register(&MSSQLServerMigration{}, &MSSQLServerMigrationList{})
 }

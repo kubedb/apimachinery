@@ -34,10 +34,42 @@ type BranchWorkListerExpansion interface{}
 // BranchWorkNamespaceLister.
 type BranchWorkNamespaceListerExpansion interface{}
 
-// MigrationListerExpansion allows custom methods to be added to
-// MigrationLister.
-type MigrationListerExpansion interface{}
+// MSSQLServerMigrationListerExpansion allows custom methods to be added to
+// MSSQLServerMigrationLister.
+type MSSQLServerMigrationListerExpansion interface{}
 
-// MigrationNamespaceListerExpansion allows custom methods to be added to
-// MigrationNamespaceLister.
-type MigrationNamespaceListerExpansion interface{}
+// MSSQLServerMigrationNamespaceListerExpansion allows custom methods to be added to
+// MSSQLServerMigrationNamespaceLister.
+type MSSQLServerMigrationNamespaceListerExpansion interface{}
+
+// MariaDBMigrationListerExpansion allows custom methods to be added to
+// MariaDBMigrationLister.
+type MariaDBMigrationListerExpansion interface{}
+
+// MariaDBMigrationNamespaceListerExpansion allows custom methods to be added to
+// MariaDBMigrationNamespaceLister.
+type MariaDBMigrationNamespaceListerExpansion interface{}
+
+// MongoDBMigrationListerExpansion allows custom methods to be added to
+// MongoDBMigrationLister.
+type MongoDBMigrationListerExpansion interface{}
+
+// MongoDBMigrationNamespaceListerExpansion allows custom methods to be added to
+// MongoDBMigrationNamespaceLister.
+type MongoDBMigrationNamespaceListerExpansion interface{}
+
+// MySQLMigrationListerExpansion allows custom methods to be added to
+// MySQLMigrationLister.
+type MySQLMigrationListerExpansion interface{}
+
+// MySQLMigrationNamespaceListerExpansion allows custom methods to be added to
+// MySQLMigrationNamespaceLister.
+type MySQLMigrationNamespaceListerExpansion interface{}
+
+// PostgresMigrationListerExpansion allows custom methods to be added to
+// PostgresMigrationLister.
+type PostgresMigrationListerExpansion interface{}
+
+// PostgresMigrationNamespaceListerExpansion allows custom methods to be added to
+// PostgresMigrationNamespaceLister.
+type PostgresMigrationNamespaceListerExpansion interface{}
