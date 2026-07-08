@@ -1578,18 +1578,20 @@ const (
 )
 
 const (
-	WeaviateHTTPPortName   = "http"
-	WeaviateHTTPPort       = 8080
-	WeaviateHTTPSPortName  = "https"
-	WeaviateHTTPSPort      = 8443
-	WeaviateGRPCPortName   = "grpc"
-	WeaviateGRPCPort       = 50051
-	WeaviateRAFTPortName   = "raft"
-	WeaviateRAFTPort       = 8300
-	WeaviateGOSSIPPortName = "gossip"
-	WeaviateGOSSIPPort     = 7102
-	WeaviateDATAPortName   = "data"
-	WeaviateDATAPort       = 7103
+	WeaviateHTTPPortName    = "http"
+	WeaviateHTTPPort        = 8080
+	WeaviateHTTPSPortName   = "https"
+	WeaviateHTTPSPort       = 8443
+	WeaviateMetricsPortName = "metrics"
+	WeaviateMetricsPort     = 2112
+	WeaviateGRPCPortName    = "grpc"
+	WeaviateGRPCPort        = 50051
+	WeaviateRAFTPortName    = "raft"
+	WeaviateRAFTPort        = 8300
+	WeaviateGOSSIPPortName  = "gossip"
+	WeaviateGOSSIPPort      = 7102
+	WeaviateDATAPortName    = "data"
+	WeaviateDATAPort        = 7103
 
 	WeaviateClassNameKubeDBSystem = "KubeDBSystem"
 

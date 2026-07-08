@@ -8156,6 +8156,11 @@ func (in *WeaviateSpec) DeepCopyInto(out *WeaviateSpec) {
 		}
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	if in.Monitor != nil {
+		in, out := &in.Monitor, &out.Monitor
+		*out = new(v1.AgentSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
