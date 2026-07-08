@@ -104,6 +104,29 @@ func (w *PostgresOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, ol
 }
 
 func (w *PostgresOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	ops, ok := obj.(*opsapi.PostgresOpsRequest)
+	if !ok {
+		return nil, fmt.Errorf("expected an PostgresOpsRequest object but got %T", obj)
+	}
+	postgresLog.Info("validate delete", "name", ops.Name)
+
+	// If an in-flight (not yet completed) ops is deleted, the database is still
+	// Paused and nothing else resumes it, so it stays Paused forever. Resume it
+	// here. Guard on !completed: ops are serialized per database, so an in-flight
+	// ops is the one holding the pause; a completed ops has already resumed via
+	// ValidateUpdate, and un-pausing then could clobber a different in-flight ops.
+	if !isOpsReqCompleted(ops.Status.Phase) {
+		var db dbapi.Postgres
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				// The database is gone (for example a concurrent WipeOut); nothing to resume.
+				return nil, nil
+			}
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
 	return nil, nil
 }
 
