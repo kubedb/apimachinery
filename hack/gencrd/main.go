@@ -102,7 +102,11 @@ func generateSwaggerJson() {
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralProxySQLVersion, catalogv1alpha1.ResourceKindProxySQLVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralRedisVersion, catalogv1alpha1.ResourceKindRedisVersion, false},
 
-			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMigrations, courierv1alpha1.ResourceKindMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralPostgresMigrations, courierv1alpha1.ResourceKindPostgresMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMySQLMigrations, courierv1alpha1.ResourceKindMySQLMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMariaDBMigrations, courierv1alpha1.ResourceKindMariaDBMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMongoDBMigrations, courierv1alpha1.ResourceKindMongoDBMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMSSQLServerMigrations, courierv1alpha1.ResourceKindMSSQLServerMigration, true},
 			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralBranches, courierv1alpha1.ResourceKindBranch, true},
 			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralBranchWorks, courierv1alpha1.ResourceKindBranchWork, true},
 		},

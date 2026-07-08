@@ -218,8 +218,16 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().Branches().Informer()}, nil
 	case courierv1alpha1.SchemeGroupVersion.WithResource("branchworks"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().BranchWorks().Informer()}, nil
-	case courierv1alpha1.SchemeGroupVersion.WithResource("migrations"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().Migrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("mssqlservermigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MSSQLServerMigrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("mariadbmigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MariaDBMigrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("mongodbmigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MongoDBMigrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("mysqlmigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MySQLMigrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("postgresmigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().PostgresMigrations().Informer()}, nil
 
 		// Group=elasticsearch.kubedb.com, Version=v1alpha1
 	case elasticsearchv1alpha1.SchemeGroupVersion.WithResource("elasticsearchdashboards"):

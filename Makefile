@@ -171,6 +171,12 @@ openapi-%:
 			--output-package "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*)" \
 			--report-filename .config/api-rules/violation_exceptions.list
 
+# Duck-type kinds that embed TypeMeta+ObjectMeta and so are picked up by
+# controller-gen, but are projections (never served as their own CRD).
+# controller-gen has no per-type "skip CRD" marker, so we delete the emitted
+# manifests right after generation.
+duck_crds := courier.kubedb.com_migrations.yaml
+
 # Generate CRD manifests
 .PHONY: gen-crds
 gen-crds:
@@ -187,6 +193,8 @@ gen-crds:
 			$(CRD_OPTIONS)                  \
 			paths="./apis/..."              \
 			output:crd:artifacts:config=crds
+	@echo "Removing duck-type CRDs (projected, never served)"
+	@rm -f $(addprefix crds/, $(duck_crds))
 
 crd_to_patch := kubedb.com_cassandras.yaml \
 								kubedb.com_clickhouses.yaml \

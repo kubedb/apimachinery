@@ -28,8 +28,16 @@ type Interface interface {
 	Branches() BranchInformer
 	// BranchWorks returns a BranchWorkInformer.
 	BranchWorks() BranchWorkInformer
-	// Migrations returns a MigrationInformer.
-	Migrations() MigrationInformer
+	// MSSQLServerMigrations returns a MSSQLServerMigrationInformer.
+	MSSQLServerMigrations() MSSQLServerMigrationInformer
+	// MariaDBMigrations returns a MariaDBMigrationInformer.
+	MariaDBMigrations() MariaDBMigrationInformer
+	// MongoDBMigrations returns a MongoDBMigrationInformer.
+	MongoDBMigrations() MongoDBMigrationInformer
+	// MySQLMigrations returns a MySQLMigrationInformer.
+	MySQLMigrations() MySQLMigrationInformer
+	// PostgresMigrations returns a PostgresMigrationInformer.
+	PostgresMigrations() PostgresMigrationInformer
 }
 
 type version struct {
@@ -53,7 +61,27 @@ func (v *version) BranchWorks() BranchWorkInformer {
 	return &branchWorkInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// Migrations returns a MigrationInformer.
-func (v *version) Migrations() MigrationInformer {
-	return &migrationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// MSSQLServerMigrations returns a MSSQLServerMigrationInformer.
+func (v *version) MSSQLServerMigrations() MSSQLServerMigrationInformer {
+	return &mSSQLServerMigrationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MariaDBMigrations returns a MariaDBMigrationInformer.
+func (v *version) MariaDBMigrations() MariaDBMigrationInformer {
+	return &mariaDBMigrationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MongoDBMigrations returns a MongoDBMigrationInformer.
+func (v *version) MongoDBMigrations() MongoDBMigrationInformer {
+	return &mongoDBMigrationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MySQLMigrations returns a MySQLMigrationInformer.
+func (v *version) MySQLMigrations() MySQLMigrationInformer {
+	return &mySQLMigrationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PostgresMigrations returns a PostgresMigrationInformer.
+func (v *version) PostgresMigrations() PostgresMigrationInformer {
+	return &postgresMigrationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

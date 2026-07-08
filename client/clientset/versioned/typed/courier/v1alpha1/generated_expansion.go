@@ -22,4 +22,12 @@ type BranchExpansion interface{}
 
 type BranchWorkExpansion interface{}
 
-type MigrationExpansion interface{}
+type MSSQLServerMigrationExpansion interface{}
+
+type MariaDBMigrationExpansion interface{}
+
+type MongoDBMigrationExpansion interface{}
+
+type MySQLMigrationExpansion interface{}
+
+type PostgresMigrationExpansion interface{}

@@ -599,23 +599,34 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults":                                  schema_apimachinery_apis_courier_v1alpha1_JobDefaults(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.LogicalReplication":                           schema_apimachinery_apis_courier_v1alpha1_LogicalReplication(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerConnectionInfo":                    schema_apimachinery_apis_courier_v1alpha1_MSSQLServerConnectionInfo(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerMigration":                         schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigration(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerMigrationList":                     schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigrationList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerMigrationSpec":                     schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerSchema":                            schema_apimachinery_apis_courier_v1alpha1_MSSQLServerSchema(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerSnapshot":                          schema_apimachinery_apis_courier_v1alpha1_MSSQLServerSnapshot(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerSnapshotPipeline":                  schema_apimachinery_apis_courier_v1alpha1_MSSQLServerSnapshotPipeline(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerSource":                            schema_apimachinery_apis_courier_v1alpha1_MSSQLServerSource(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerStreaming":                         schema_apimachinery_apis_courier_v1alpha1_MSSQLServerStreaming(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerTarget":                            schema_apimachinery_apis_courier_v1alpha1_MSSQLServerTarget(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBMigration":                             schema_apimachinery_apis_courier_v1alpha1_MariaDBMigration(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBMigrationList":                         schema_apimachinery_apis_courier_v1alpha1_MariaDBMigrationList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBMigrationSpec":                         schema_apimachinery_apis_courier_v1alpha1_MariaDBMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource":                                schema_apimachinery_apis_courier_v1alpha1_MariaDBSource(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBTarget":                                schema_apimachinery_apis_courier_v1alpha1_MariaDBTarget(ref),
-		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Migration":                                    schema_apimachinery_apis_courier_v1alpha1_Migration(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationConfig":                              schema_apimachinery_apis_courier_v1alpha1_MigrationConfig(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationList":                                schema_apimachinery_apis_courier_v1alpha1_MigrationList(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationSpec":                                schema_apimachinery_apis_courier_v1alpha1_MigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus":                              schema_apimachinery_apis_courier_v1alpha1_MigrationStatus(ref),
-		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoSource":                                  schema_apimachinery_apis_courier_v1alpha1_MongoSource(ref),
-		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoTarget":                                  schema_apimachinery_apis_courier_v1alpha1_MongoTarget(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBMigration":                             schema_apimachinery_apis_courier_v1alpha1_MongoDBMigration(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBMigrationList":                         schema_apimachinery_apis_courier_v1alpha1_MongoDBMigrationList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBMigrationSpec":                         schema_apimachinery_apis_courier_v1alpha1_MongoDBMigrationSpec(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBSource":                                schema_apimachinery_apis_courier_v1alpha1_MongoDBSource(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBTarget":                                schema_apimachinery_apis_courier_v1alpha1_MongoDBTarget(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Mongoshake":                                   schema_apimachinery_apis_courier_v1alpha1_Mongoshake(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLConnectionInfo":                          schema_apimachinery_apis_courier_v1alpha1_MySQLConnectionInfo(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLMigration":                               schema_apimachinery_apis_courier_v1alpha1_MySQLMigration(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLMigrationList":                           schema_apimachinery_apis_courier_v1alpha1_MySQLMigrationList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLMigrationSpec":                           schema_apimachinery_apis_courier_v1alpha1_MySQLMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSchema":                                  schema_apimachinery_apis_courier_v1alpha1_MySQLSchema(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSnapshot":                                schema_apimachinery_apis_courier_v1alpha1_MySQLSnapshot(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSnapshotPipeline":                        schema_apimachinery_apis_courier_v1alpha1_MySQLSnapshotPipeline(ref),
@@ -623,14 +634,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLStreaming":                               schema_apimachinery_apis_courier_v1alpha1_MySQLStreaming(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget":                                  schema_apimachinery_apis_courier_v1alpha1_MySQLTarget(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PgDump":                                       schema_apimachinery_apis_courier_v1alpha1_PgDump(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresMigration":                            schema_apimachinery_apis_courier_v1alpha1_PostgresMigration(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresMigrationList":                        schema_apimachinery_apis_courier_v1alpha1_PostgresMigrationList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresMigrationSpec":                        schema_apimachinery_apis_courier_v1alpha1_PostgresMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresSource":                               schema_apimachinery_apis_courier_v1alpha1_PostgresSource(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget":                               schema_apimachinery_apis_courier_v1alpha1_PostgresTarget(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Progress":                                     schema_apimachinery_apis_courier_v1alpha1_Progress(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Publication":                                  schema_apimachinery_apis_courier_v1alpha1_Publication(ref),
-		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Source":                                       schema_apimachinery_apis_courier_v1alpha1_Source(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Subscription":                                 schema_apimachinery_apis_courier_v1alpha1_Subscription(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.TLSConfig":                                    schema_apimachinery_apis_courier_v1alpha1_TLSConfig(ref),
-		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Target":                                       schema_apimachinery_apis_courier_v1alpha1_Target(ref),
 	}
 }
 
@@ -34363,6 +34375,146 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerConnectionInfo(ref com
 	}
 }
 
+func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec defines the desired state of MSSQLServerMigration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerMigrationSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed state of MSSQLServerMigration. It reuses the shared MigrationStatus so that the Migration duck type can project it and the operator's status patches replay onto it unchanged.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerMigrationSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigrationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerMigration"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerMigration"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLServerMigrationSpec defines the desired state of MSSQLServerMigration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source defines the source MSSQL Server database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerSource"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Target defines the target MSSQL Server database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerTarget"),
+						},
+					},
+					"jobDefaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobDefaults specifies default settings for migration jobs",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobTemplate specifies runtime configurations for the migration Job",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+				},
+				Required: []string{"source", "target"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerTarget"},
+	}
+}
+
 func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerSchema(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34627,6 +34779,146 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerTarget(ref common.Refe
 	}
 }
 
+func schema_apimachinery_apis_courier_v1alpha1_MariaDBMigration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec defines the desired state of MariaDBMigration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBMigrationSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed state of MariaDBMigration. It reuses the shared MigrationStatus so that the Migration duck type can project it and the operator's status patches replay onto it unchanged.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBMigrationSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MariaDBMigrationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBMigration"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBMigration"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MariaDBMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MariaDBMigrationSpec defines the desired state of MariaDBMigration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source defines the source MariaDB database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Target defines the target MariaDB database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBTarget"),
+						},
+					},
+					"jobDefaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobDefaults specifies default settings for migration jobs",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobTemplate specifies runtime configurations for the migration Job",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+				},
+				Required: []string{"source", "target"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBTarget"},
+	}
+}
+
 func schema_apimachinery_apis_courier_v1alpha1_MariaDBSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34681,56 +34973,6 @@ func schema_apimachinery_apis_courier_v1alpha1_MariaDBTarget(ref common.Referenc
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"},
-	}
-}
-
-func schema_apimachinery_apis_courier_v1alpha1_Migration(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Description: "metadata is a standard object metadata",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Description: "spec defines the desired state of Migration",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationSpec"),
-						},
-					},
-					"status": {
-						SchemaProps: spec.SchemaProps{
-							Description: "status defines the observed state of Migration",
-							Default:     map[string]interface{}{},
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"),
-						},
-					},
-				},
-				Required: []string{"spec"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"},
 	}
 }
 
@@ -34900,7 +35142,147 @@ func schema_apimachinery_apis_courier_v1alpha1_MigrationStatus(ref common.Refere
 	}
 }
 
-func schema_apimachinery_apis_courier_v1alpha1_MongoSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_MongoDBMigration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec defines the desired state of MongoDBMigration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBMigrationSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed state of MongoDBMigration. It reuses the shared MigrationStatus so that the Migration duck type can project it and the operator's status patches replay onto it unchanged.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBMigrationSpec"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MongoDBMigrationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBMigration"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBMigration"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MongoDBMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MongoDBMigrationSpec defines the desired state of MongoDBMigration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source defines the source MongoDB database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBSource"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Target defines the target MongoDB database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBTarget"),
+						},
+					},
+					"jobDefaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobDefaults specifies default settings for migration jobs",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobTemplate specifies runtime configurations for the migration Job",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+				},
+				Required: []string{"source", "target"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoDBTarget"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MongoDBSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -34926,7 +35308,7 @@ func schema_apimachinery_apis_courier_v1alpha1_MongoSource(ref common.ReferenceC
 	}
 }
 
-func schema_apimachinery_apis_courier_v1alpha1_MongoTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_MongoDBTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -35130,6 +35512,146 @@ func schema_apimachinery_apis_courier_v1alpha1_MySQLConnectionInfo(ref common.Re
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.ObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MySQLMigration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec defines the desired state of MySQLMigration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLMigrationSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed state of MySQLMigration. It reuses the shared MigrationStatus so that the Migration duck type can project it and the operator's status patches replay onto it unchanged.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLMigrationSpec"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MySQLMigrationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLMigration"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLMigration"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_MySQLMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLMigrationSpec defines the desired state of MySQLMigration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source defines the source MySQL database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSource"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Target defines the target MySQL database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget"),
+						},
+					},
+					"jobDefaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobDefaults specifies default settings for migration jobs",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobTemplate specifies runtime configurations for the migration Job",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+				},
+				Required: []string{"source", "target"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget"},
 	}
 }
 
@@ -35425,6 +35947,146 @@ func schema_apimachinery_apis_courier_v1alpha1_PgDump(ref common.ReferenceCallba
 	}
 }
 
+func schema_apimachinery_apis_courier_v1alpha1_PostgresMigration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec defines the desired state of PostgresMigration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresMigrationSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed state of PostgresMigration. It reuses the shared MigrationStatus so that the Migration duck type can project it and the operator's status patches replay onto it unchanged.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresMigrationSpec"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_PostgresMigrationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresMigration"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresMigration"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_PostgresMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PostgresMigrationSpec defines the desired state of PostgresMigration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source defines the source Postgres database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresSource"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Target defines the target Postgres database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget"),
+						},
+					},
+					"jobDefaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobDefaults specifies default settings for migration jobs",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobTemplate specifies runtime configurations for the migration Job",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+				},
+				Required: []string{"source", "target"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget"},
+	}
+}
+
 func schema_apimachinery_apis_courier_v1alpha1_PostgresSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -35558,50 +36220,6 @@ func schema_apimachinery_apis_courier_v1alpha1_Publication(ref common.ReferenceC
 	}
 }
 
-func schema_apimachinery_apis_courier_v1alpha1_Source(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Source defines the source database configuration",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"postgres": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Postgres refers to the source Postgres database configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresSource"),
-						},
-					},
-					"mysql": {
-						SchemaProps: spec.SchemaProps{
-							Description: "MySQL refers to the source MySQL database configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSource"),
-						},
-					},
-					"mariadb": {
-						SchemaProps: spec.SchemaProps{
-							Description: "MariaDB refers to the source MariaDB database configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource"),
-						},
-					},
-					"mongodb": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoSource"),
-						},
-					},
-					"mssqlserver": {
-						SchemaProps: spec.SchemaProps{
-							Description: "MSSQLServer refers to the source MSSQL Server database configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerSource"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresSource"},
-	}
-}
-
 func schema_apimachinery_apis_courier_v1alpha1_Subscription(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -35665,49 +36283,5 @@ func schema_apimachinery_apis_courier_v1alpha1_TLSConfig(ref common.ReferenceCal
 				},
 			},
 		},
-	}
-}
-
-func schema_apimachinery_apis_courier_v1alpha1_Target(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "Target defines the target database configuration",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"postgres": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Postgres refers to the target Postgres database configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget"),
-						},
-					},
-					"mongodb": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoTarget"),
-						},
-					},
-					"mysql": {
-						SchemaProps: spec.SchemaProps{
-							Description: "MySQL refers to the target MySQL database configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget"),
-						},
-					},
-					"mariadb": {
-						SchemaProps: spec.SchemaProps{
-							Description: "MariaDB refers to the target MariaDB database configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBTarget"),
-						},
-					},
-					"mssqlserver": {
-						SchemaProps: spec.SchemaProps{
-							Description: "MSSQLServer refers to the target MSSQL Server database configuration",
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerTarget"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerTarget", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MariaDBTarget", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MongoTarget", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget", "kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresTarget"},
 	}
 }
