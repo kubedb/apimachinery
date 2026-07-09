@@ -2784,6 +2784,11 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		*out = new(PostgresStreamingMode)
 		**out = **in
 	}
+	if in.SynchronousReplicationConfig != nil {
+		in, out := &in.SynchronousReplicationConfig, &out.SynchronousReplicationConfig
+		*out = new(PostgresSynchronousReplicationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Mode != nil {
 		in, out := &in.Mode, &out.Mode
 		*out = new(PostgreSQLMode)

@@ -28,6 +28,8 @@ import (
 	fakecatalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1/fake"
 	configv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/config/v1alpha1"
 	fakeconfigv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/config/v1alpha1/fake"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/courier/v1alpha1"
+	fakecourierv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/courier/v1alpha1/fake"
 	elasticsearchv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/elasticsearch/v1alpha1"
 	fakeelasticsearchv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/elasticsearch/v1alpha1/fake"
 	gitopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
@@ -40,8 +42,6 @@ import (
 	fakekubedbv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha1/fake"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 	fakekubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2/fake"
-	migratorv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/migrator/v1alpha1"
-	fakemigratorv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/migrator/v1alpha1/fake"
 	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 	fakeopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1/fake"
 	postgresv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/postgres/v1alpha1"
@@ -128,6 +128,11 @@ func (c *Clientset) ConfigV1alpha1() configv1alpha1.ConfigV1alpha1Interface {
 	return &fakeconfigv1alpha1.FakeConfigV1alpha1{Fake: &c.Fake}
 }
 
+// CourierV1alpha1 retrieves the CourierV1alpha1Client
+func (c *Clientset) CourierV1alpha1() courierv1alpha1.CourierV1alpha1Interface {
+	return &fakecourierv1alpha1.FakeCourierV1alpha1{Fake: &c.Fake}
+}
+
 // ElasticsearchV1alpha1 retrieves the ElasticsearchV1alpha1Client
 func (c *Clientset) ElasticsearchV1alpha1() elasticsearchv1alpha1.ElasticsearchV1alpha1Interface {
 	return &fakeelasticsearchv1alpha1.FakeElasticsearchV1alpha1{Fake: &c.Fake}
@@ -156,11 +161,6 @@ func (c *Clientset) KubedbV1alpha2() kubedbv1alpha2.KubedbV1alpha2Interface {
 // KubedbV1 retrieves the KubedbV1Client
 func (c *Clientset) KubedbV1() kubedbv1.KubedbV1Interface {
 	return &fakekubedbv1.FakeKubedbV1{Fake: &c.Fake}
-}
-
-// MigratorV1alpha1 retrieves the MigratorV1alpha1Client
-func (c *Clientset) MigratorV1alpha1() migratorv1alpha1.MigratorV1alpha1Interface {
-	return &fakemigratorv1alpha1.FakeMigratorV1alpha1{Fake: &c.Fake}
 }
 
 // OpsV1alpha1 retrieves the OpsV1alpha1Client
