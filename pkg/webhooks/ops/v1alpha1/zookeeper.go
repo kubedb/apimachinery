@@ -185,8 +185,8 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVerticalScalingOpsRe
 	if verticalScalingSpec == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
-	if verticalScalingSpec.Node != nil {
-		return errors.New("spec.verticalScaling.Node && spec.verticalScaling.Topology both can't be non-empty at the same ops request")
+	if verticalScalingSpec.Node == nil {
+		return errors.New("spec.verticalScaling.Node can not be empty")
 	}
 
 	return nil
