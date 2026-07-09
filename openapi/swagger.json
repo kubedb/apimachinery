@@ -26711,8 +26711,8 @@
         "name"
       ],
       "properties": {
-        "cluster": {
-          "description": "Cluster is the target cluster name. Empty (or equal to the source's own cluster) means a same-cluster (Local) branch; a different cluster selects cross-cluster (OCM).",
+        "clusterName": {
+          "description": "ClusterName is the target cluster name. Empty (or equal to the source's own cluster) means a same-cluster (Local) branch; a different ClusterName selects cross-cluster (OCM).",
           "type": "string"
         },
         "issuerRef": {

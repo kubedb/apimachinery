@@ -33770,9 +33770,9 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchTarget(ref common.Reference
 				Description: "BranchTarget describes the target Database. spec.target.cluster equal to the source's cluster is a same-cluster branch; a different cluster is a cross-cluster branch. Omit cluster for a same-cluster (Local) branch.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"cluster": {
+					"clusterName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Cluster is the target cluster name. Empty (or equal to the source's own cluster) means a same-cluster (Local) branch; a different cluster selects cross-cluster (OCM).",
+							Description: "ClusterName is the target cluster name. Empty (or equal to the source's own cluster) means a same-cluster (Local) branch; a different ClusterName selects cross-cluster (OCM).",
 							Type:        []string{"string"},
 							Format:      "",
 						},

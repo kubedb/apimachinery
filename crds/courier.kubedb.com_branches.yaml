@@ -92,7 +92,7 @@ spec:
                 type: object
               target:
                 properties:
-                  cluster:
+                  clusterName:
                     type: string
                   issuerRef:
                     properties:

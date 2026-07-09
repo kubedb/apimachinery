@@ -116,10 +116,10 @@ type BranchSource struct {
 // same-cluster branch; a different cluster is a cross-cluster branch. Omit cluster for a same-cluster
 // (Local) branch.
 type BranchTarget struct {
-	// Cluster is the target cluster name. Empty (or equal to the source's own cluster) means a
-	// same-cluster (Local) branch; a different cluster selects cross-cluster (OCM).
+	// ClusterName is the target cluster name. Empty (or equal to the source's own cluster) means a
+	// same-cluster (Local) branch; a different ClusterName selects cross-cluster (OCM).
 	// +optional
-	Cluster string `json:"cluster,omitempty"`
+	ClusterName string `json:"clusterName,omitempty"`
 
 	// Namespace of the target Database.
 	Namespace string `json:"namespace"`
