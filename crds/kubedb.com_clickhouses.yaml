@@ -6802,6 +6802,8 @@ spec:
                 type: string
               disableSecurity:
                 type: boolean
+              distributed:
+                type: boolean
               halted:
                 type: boolean
               healthChecker:
@@ -8236,6 +8238,15 @@ spec:
                         type: object
                     type: object
                 type: object
+              podPlacementPolicy:
+                default:
+                  name: default
+                properties:
+                  name:
+                    default: ""
+                    type: string
+                type: object
+                x-kubernetes-map-type: atomic
               podTemplate:
                 properties:
                   controller:
@@ -11795,6 +11806,57 @@ spec:
                   - type
                   type: object
                 type: array
+              disasterRecovery:
+                properties:
+                  activeDC:
+                    type: string
+                  dataCenters:
+                    items:
+                      properties:
+                        absoluteDelaySeconds:
+                          format: int64
+                          type: integer
+                        clusterName:
+                          type: string
+                        healthy:
+                          type: boolean
+                        keeperQuorum:
+                          type: boolean
+                        keeperVoter:
+                          type: boolean
+                        queueSize:
+                          format: int32
+                          type: integer
+                        role:
+                          type: string
+                        shards:
+                          items:
+                            properties:
+                              activeReplicas:
+                                format: int32
+                                type: integer
+                              shard:
+                                format: int32
+                                type: integer
+                              totalReplicas:
+                                format: int32
+                                type: integer
+                            required:
+                            - shard
+                            type: object
+                          type: array
+                        writable:
+                          type: boolean
+                      required:
+                      - clusterName
+                      type: object
+                    type: array
+                  lastTransitionTime:
+                    format: date-time
+                    type: string
+                  phase:
+                    type: string
+                type: object
               observedGeneration:
                 format: int64
                 type: integer

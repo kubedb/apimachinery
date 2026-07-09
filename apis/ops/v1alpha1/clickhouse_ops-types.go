@@ -118,6 +118,24 @@ type ClickHouseVerticalScalingSpec struct {
 type ClickHouseHorizontalScalingSpec struct {
 	// Number of node
 	Replicas *int32 `json:"replicas,omitempty"`
+
+	// DataCenters scales individual data centers of a distributed DC-DR ClickHouse. Each
+	// entry sets that data center's per-shard replica count; data centers not listed are
+	// left unchanged. Use this instead of Replicas for a DC-DR cluster, where each data
+	// center holds its own ReplicatedMergeTree replica of every shard and is scaled
+	// independently.
+	// +optional
+	DataCenters []ClickHouseHorizontalScalingDC `json:"dataCenters,omitempty"`
+}
+
+// ClickHouseHorizontalScalingDC is a per data center replica-count target for scaling a
+// distributed DC-DR ClickHouse.
+type ClickHouseHorizontalScalingDC struct {
+	// ClusterName is the data center, named by its OCM managed cluster, matching a Member
+	// distributionRule in the ClickHouse PlacementPolicy.
+	ClusterName string `json:"clusterName"`
+	// Replicas is the desired per-shard replica count for this data center.
+	Replicas int32 `json:"replicas"`
 }
 
 // ClickHouseMigrationSpec is the spec for migrating storageClass of a ClickHouse database.
