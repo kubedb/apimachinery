@@ -44,7 +44,7 @@ import (
 )
 
 const (
-	DefaultCertRenewBefore = time.Minute * 10
+	DefaultCertRenewBefore = time.Minute * 5
 	DefaultAuthRenewBefore = time.Minute * 10
 )
 
