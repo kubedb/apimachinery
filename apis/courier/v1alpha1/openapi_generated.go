@@ -33705,18 +33705,10 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchStatus(ref common.Reference
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
-					"freshnessSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Description: "FreshnessSeconds is the age of the branch data relative to the source at the last refresh, in seconds.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
 					"freshness": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Freshness is the human-readable age of the branch data since the last refresh (e.g. \"3m\", \"1h2m\"). Derived from freshnessSeconds for display.",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "Freshness is the human-readable age of the branch data since the last refresh (e.g. \"3m\", \"1h2m\").",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"history": {
@@ -33759,7 +33751,7 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchRun", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotRef"},
+			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchRun", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotRef"},
 	}
 }
 

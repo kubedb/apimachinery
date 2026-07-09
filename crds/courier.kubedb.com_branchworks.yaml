@@ -88,9 +88,6 @@ spec:
                     x-kubernetes-list-type: map
                   freshness:
                     type: string
-                  freshnessSeconds:
-                    format: int64
-                    type: integer
                   history:
                     items:
                       properties:

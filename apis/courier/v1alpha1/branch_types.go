@@ -195,14 +195,9 @@ type BranchStatus struct {
 	// +optional
 	LastRefreshAt *metav1.Time `json:"lastRefreshAt,omitempty"`
 
-	// FreshnessSeconds is the age of the branch data relative to the source at the last refresh, in seconds.
+	// Freshness is the human-readable age of the branch data since the last refresh (e.g. "3m", "1h2m").
 	// +optional
-	FreshnessSeconds *int64 `json:"freshnessSeconds,omitempty"`
-
-	// Freshness is the human-readable age of the branch data since the last refresh
-	// (e.g. "3m", "1h2m"). Derived from freshnessSeconds for display.
-	// +optional
-	Freshness string `json:"freshness,omitempty"`
+	Freshness metav1.Duration `json:"freshness,omitempty"`
 
 	// History is the bounded refresh history (bounded by spec.historyLimit).
 	// +optional

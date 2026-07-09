@@ -26665,13 +26665,8 @@
           "x-kubernetes-list-type": "map"
         },
         "freshness": {
-          "description": "Freshness is the human-readable age of the branch data since the last refresh (e.g. \"3m\", \"1h2m\"). Derived from freshnessSeconds for display.",
-          "type": "string"
-        },
-        "freshnessSeconds": {
-          "description": "FreshnessSeconds is the age of the branch data relative to the source at the last refresh, in seconds.",
-          "type": "integer",
-          "format": "int64"
+          "description": "Freshness is the human-readable age of the branch data since the last refresh (e.g. \"3m\", \"1h2m\").",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "history": {
           "description": "History is the bounded refresh history (bounded by spec.historyLimit).",
