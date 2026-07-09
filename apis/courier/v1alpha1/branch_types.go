@@ -89,6 +89,13 @@ type BranchSpec struct {
 	// +optional
 	HistoryLimit *BranchHistoryLimit `json:"historyLimit,omitempty"`
 
+	// VolumeSnapshotClassName is the VolumeSnapshotClass used wherever courier creates a
+	// VolumeSnapshot — snapshotting the source PVCs and, for cross-namespace/cross-cluster
+	// branches, the importing snapshot in the target. It must match the CSI driver backing the
+	// volumes. When empty, courier auto-resolves the default class for the driver.
+	// +optional
+	VolumeSnapshotClassName string `json:"volumeSnapshotClassName,omitempty"`
+
 	// DeletionPolicy decides the target's fate on Branch deletion.
 	// +kubebuilder:default=Delete
 	// +optional

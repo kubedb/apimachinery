@@ -150,6 +150,8 @@ spec:
                 - name
                 - namespace
                 type: object
+              volumeSnapshotClassName:
+                type: string
             required:
             - source
             - target
