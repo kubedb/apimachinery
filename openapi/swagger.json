@@ -26641,6 +26641,10 @@
           "description": "Target describes only what differs from the source: the target cluster, namespace, name, StorageClass, and cpu/memory. Everything else is copied from the source Database.",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchTarget"
+        },
+        "volumeSnapshotClassName": {
+          "description": "VolumeSnapshotClassName is the VolumeSnapshotClass used wherever courier creates a VolumeSnapshot — snapshotting the source PVCs and, for cross-namespace/cross-cluster branches, the importing snapshot in the target. It must match the CSI driver backing the volumes. When empty, courier auto-resolves the default class for the driver.",
+          "type": "string"
         }
       }
     },
@@ -26660,10 +26664,9 @@
           ],
           "x-kubernetes-list-type": "map"
         },
-        "freshnessSeconds": {
-          "description": "FreshnessSeconds is the age of the branch data relative to the source at the last refresh.",
-          "type": "integer",
-          "format": "int64"
+        "freshness": {
+          "description": "Freshness is the human-readable age of the branch data since the last refresh (e.g. \"3m\", \"1h2m\").",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "history": {
           "description": "History is the bounded refresh history (bounded by spec.historyLimit).",
@@ -26696,18 +26699,16 @@
       }
     },
     "dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchTarget": {
-      "description": "BranchTarget describes the target Database. spec.target.cluster equal to the source's cluster is a same-cluster branch; a different cluster is a cross-cluster branch.",
+      "description": "BranchTarget describes the target Database. spec.target.cluster equal to the source's cluster is a same-cluster branch; a different cluster is a cross-cluster branch. Omit cluster for a same-cluster (Local) branch.",
       "type": "object",
       "required": [
-        "cluster",
         "namespace",
         "name"
       ],
       "properties": {
-        "cluster": {
-          "description": "Cluster is the target cluster name. The source's own cluster means a same-cluster branch.",
-          "type": "string",
-          "default": ""
+        "clusterName": {
+          "description": "ClusterName is the target cluster name. Empty (or equal to the source's own cluster) means a same-cluster (Local) branch; a different ClusterName selects cross-cluster (OCM).",
+          "type": "string"
         },
         "issuerRef": {
           "description": "IssuerRef references a cert-manager Issuer or ClusterIssuer in the TARGET cluster. TLS secrets are namespace and cluster scoped, so a branch cannot reuse the source's; when the source Database has TLS enabled the operator points the branch's TLS at this issuer and KubeDB mints fresh certificates for the branch. Required for a TLS-enabled source, ignored otherwise.",
