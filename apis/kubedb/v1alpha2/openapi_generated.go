@@ -873,6 +873,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.singlestoreApp":                                schema_apimachinery_apis_kubedb_v1alpha2_singlestoreApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.singlestoreStatsService":                       schema_apimachinery_apis_kubedb_v1alpha2_singlestoreStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.solrStatsService":                              schema_apimachinery_apis_kubedb_v1alpha2_solrStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.weaviateStatsService":                          schema_apimachinery_apis_kubedb_v1alpha2_weaviateStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.zookeeperStatsService":                         schema_apimachinery_apis_kubedb_v1alpha2_zookeeperStatsService(ref),
 	}
 }
@@ -47195,12 +47196,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_WeaviateSpec(ref common.ReferenceC
 							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
 						},
 					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used to monitor database instance",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ReplicationConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateTLSConfig"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ReplicationConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateTLSConfig"},
 	}
 }
 
@@ -48405,6 +48412,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_solrStatsService(ref common.Refere
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Solr"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_weaviateStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Weaviate": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Weaviate"),
+						},
+					},
+				},
+				Required: []string{"Weaviate"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Weaviate"},
 	}
 }
 
