@@ -116,8 +116,8 @@ type PgpoolBackendConfigurationSpec struct {
 }
 
 type PgpoolCustomConfigurationSpec struct {
-	*ReconfigurationSpec `json:",inline,omitempty"`
-	Backend              *PgpoolBackendConfigurationSpec `json:"backend,omitempty"`
+	ReconfigurationSpec `json:",inline,omitempty"`
+	Backend             *PgpoolBackendConfigurationSpec `json:"backend,omitempty"`
 }
 
 // PgpoolVerticalScalingSpec contains the vertical scaling information of a Pgpool cluster
