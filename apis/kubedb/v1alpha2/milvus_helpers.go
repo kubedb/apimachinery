@@ -561,11 +561,11 @@ type MilvusBind struct {
 var _ DBBindInterface = &MilvusBind{}
 
 func (m *MilvusBind) ServiceNames() (string, string) {
-	return m.ServiceName(), m.ServiceName()
+	return m.ServiceName(), ""
 }
 
 func (m *MilvusBind) Ports() (int, int) {
-	return int(kubedb.MilvusHttpPort), int(kubedb.MilvusMetricsPort)
+	return int(kubedb.MilvusHttpPort), 0
 }
 
 func (m *MilvusBind) SecretName() string {
