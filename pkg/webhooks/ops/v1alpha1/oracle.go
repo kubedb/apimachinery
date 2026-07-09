@@ -177,7 +177,6 @@ func (w *OracleOpsRequestCustomWebhook) validateOracleReconfigureTLSOpsRequest(r
 	return nil
 }
 
-
 func (w *OracleOpsRequestCustomWebhook) validateOracleStorageMigrationOpsRequest(req *opsapi.OracleOpsRequest) error {
 	db := &dbapi.Oracle{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.GetDBRefName(), Namespace: req.GetNamespace()}, db)
