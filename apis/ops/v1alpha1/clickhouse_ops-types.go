@@ -112,6 +112,10 @@ type ClickHouseTLSSpec struct {
 // ClickHouseVerticalScalingSpec contains the vertical scaling information of a clickhouse cluster
 type ClickHouseVerticalScalingSpec struct {
 	Node *PodResources `json:"node,omitempty"`
+	// Mode selects how the vertical scaling is actuated. Defaults to Restart.
+	// +optional
+	// +kubebuilder:default=Restart
+	Mode VerticalScalingMode `json:"mode,omitempty"`
 }
 
 // ClickHouseHorizontalScalingSpec contains the horizontal scaling information of a clickhouse cluster

@@ -96,6 +96,10 @@ type OracleOpsRequestType string
 type OracleVerticalScalingSpec struct {
 	// Resource spec for nodes
 	Node *PodResources `json:"node,omitempty"`
+	// Mode selects how the vertical scaling is actuated. Defaults to Restart.
+	// +optional
+	// +kubebuilder:default=Restart
+	Mode VerticalScalingMode `json:"mode,omitempty"`
 }
 
 // OracleVolumeExpansionSpec is the spec for Oracle volume expansion

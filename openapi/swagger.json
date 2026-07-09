@@ -31683,6 +31683,10 @@
         "ml": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
+        "mode": {
+          "description": "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
+          "type": "string"
+        },
         "node": {
           "description": "Resource spec for combined nodes",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
@@ -31939,6 +31943,10 @@
         },
         "memcached": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "mode": {
+          "description": "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
+          "type": "string"
         },
         "readinessCriteria": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MemcachedReplicaReadinessCriteria"
@@ -32227,6 +32235,10 @@
         },
         "hidden": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
+        },
+        "mode": {
+          "description": "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
+          "type": "string"
         },
         "mongos": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
@@ -32548,6 +32560,10 @@
         "exporter": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
+        "mode": {
+          "description": "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
+          "type": "string"
+        },
         "mysql": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         }
@@ -32794,6 +32810,10 @@
         },
         "exporter": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
+        },
+        "mode": {
+          "description": "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
+          "type": "string"
         },
         "perconaxtradb": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
@@ -33142,6 +33162,10 @@
         "exporter": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
         },
+        "mode": {
+          "description": "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
+          "type": "string"
+        },
         "postgres": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         },
@@ -33347,6 +33371,10 @@
       "description": "ProxySQLVerticalScalingSpec is the spec for ProxySQL vertical scaling",
       "type": "object",
       "properties": {
+        "mode": {
+          "description": "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
+          "type": "string"
+        },
         "proxysql": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
         }
@@ -33744,6 +33772,10 @@
         },
         "exporter": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ContainerResources"
+        },
+        "mode": {
+          "description": "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
+          "type": "string"
         },
         "redis": {
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PodResources"
