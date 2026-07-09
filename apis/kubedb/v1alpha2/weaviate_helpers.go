@@ -214,6 +214,8 @@ func (w *Weaviate) SetDefaults(kc client.Client) {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
 
+	apis.SetDefaultResizePolicy(w.Spec.PodTemplate.Spec.Containers, w.Spec.PodTemplate.Spec.InitContainers)
+
 	w.SetHealthCheckerDefaults()
 	w.SetTLSDefaults()
 

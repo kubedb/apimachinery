@@ -429,4 +429,6 @@ func (q *Qdrant) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplate
 	if dbContainer != nil {
 		apis.SetDefaultResourceLimits(&dbContainer.Resources, kubedb.DefaultResources)
 	}
+
+	apis.SetDefaultResizePolicy(podTemplate.Spec.Containers, podTemplate.Spec.InitContainers)
 }
