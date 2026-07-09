@@ -355,6 +355,9 @@ func (w *WeaviateBind) ServiceNames() (string, string) {
 }
 
 func (w *WeaviateBind) Ports() (int, int) {
+	if w.Spec.TLS != nil {
+		return kubedb.WeaviateHTTPSPort, 0
+	}
 	return kubedb.WeaviateHTTPPort, 0
 }
 
