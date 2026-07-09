@@ -555,3 +555,25 @@ func (m *Milvus) CertificateName(alias MilvusCertificateType) string {
 func (m *Milvus) GetStorageClassName() string {
 	return *m.Spec.Storage.StorageClassName
 }
+
+type MilvusBind struct {
+	*Milvus
+}
+
+var _ DBBindInterface = &MilvusBind{}
+
+func (m *MilvusBind) ServiceNames() (string, string) {
+	return m.ServiceName(), ""
+}
+
+func (m *MilvusBind) Ports() (int, int) {
+	return int(kubedb.MilvusHttpPort), 0
+}
+
+func (m *MilvusBind) SecretName() string {
+	return m.GetAuthSecretName()
+}
+
+func (m *MilvusBind) CertSecretName() string {
+	return m.GetCertSecretName(MilvusCertificateTypeClient)
+}

@@ -904,6 +904,8 @@ const (
 
 	MilvusGrpcPortName    = "grpc"
 	MilvusMetricsPortName = "metrics"
+	MilvusHttpPortName    = "http"
+	MilvusUIPortName      = "ui"
 	MilvusGrpcPort        = int32(19530)
 
 	MilvusVolumeNameData = "data"
@@ -929,6 +931,8 @@ const (
 	MinioSecretKey     = "secretkey"
 
 	MilvusMetricsPort       = 9091
+	MilvusUIPort            = 9091
+	MilvusHttpPort          = 8080
 	MilvusPortDataNode      = 21124
 	MilvusPortQueryNode     = 21123
 	MilvusPortStreamingNode = 22222

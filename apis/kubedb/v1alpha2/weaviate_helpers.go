@@ -403,3 +403,28 @@ func (w *Weaviate) SetTLSDefaults() {
 func (w *Weaviate) GetStorageClassName() string {
 	return *w.Spec.Storage.StorageClassName
 }
+
+type WeaviateBind struct {
+	*Weaviate
+}
+
+var _ DBBindInterface = &WeaviateBind{}
+
+func (w *WeaviateBind) ServiceNames() (string, string) {
+	return w.ServiceName(), ""
+}
+
+func (w *WeaviateBind) Ports() (int, int) {
+	if w.Spec.TLS != nil {
+		return kubedb.WeaviateHTTPSPort, 0
+	}
+	return kubedb.WeaviateHTTPPort, 0
+}
+
+func (w *WeaviateBind) SecretName() string {
+	return w.GetAuthSecretName()
+}
+
+func (w *WeaviateBind) CertSecretName() string {
+	return w.GetCertSecretName(WeaviateClientCert)
+}
