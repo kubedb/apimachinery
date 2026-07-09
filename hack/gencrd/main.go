@@ -22,10 +22,10 @@ import (
 
 	cataloginstall "kubedb.dev/apimachinery/apis/catalog/install"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	courierinstall "kubedb.dev/apimachinery/apis/courier/install"
+	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	migratorinstall "kubedb.dev/apimachinery/apis/migrator/install"
-	migratorv1alpha1 "kubedb.dev/apimachinery/apis/migrator/v1alpha1"
 	opsinstall "kubedb.dev/apimachinery/apis/ops/install"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -47,7 +47,7 @@ func generateSwaggerJson() {
 	kubedbinstall.Install(Scheme)
 	cataloginstall.Install(Scheme)
 	opsinstall.Install(Scheme)
-	migratorinstall.Install(Scheme)
+	courierinstall.Install(Scheme)
 
 	apispec, err := openapi.RenderOpenAPISpec(openapi.Config{
 		Scheme: Scheme,
@@ -69,7 +69,7 @@ func generateSwaggerJson() {
 			kubedbv1alpha2.GetOpenAPIDefinitions,
 			catalogv1alpha1.GetOpenAPIDefinitions,
 			opsv1alpha1.GetOpenAPIDefinitions,
-			migratorv1alpha1.GetOpenAPIDefinitions,
+			courierv1alpha1.GetOpenAPIDefinitions,
 		},
 		//nolint:govet
 		Resources: []openapi.TypeInfo{
@@ -102,7 +102,13 @@ func generateSwaggerJson() {
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralProxySQLVersion, catalogv1alpha1.ResourceKindProxySQLVersion, false},
 			{catalogv1alpha1.SchemeGroupVersion, catalogv1alpha1.ResourcePluralRedisVersion, catalogv1alpha1.ResourceKindRedisVersion, false},
 
-			{migratorv1alpha1.SchemeGroupVersion, migratorv1alpha1.ResourcePluralMigrator, migratorv1alpha1.ResourceKindMigrator, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralPostgresMigrations, courierv1alpha1.ResourceKindPostgresMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMySQLMigrations, courierv1alpha1.ResourceKindMySQLMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMariaDBMigrations, courierv1alpha1.ResourceKindMariaDBMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMongoDBMigrations, courierv1alpha1.ResourceKindMongoDBMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralMSSQLServerMigrations, courierv1alpha1.ResourceKindMSSQLServerMigration, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralBranches, courierv1alpha1.ResourceKindBranch, true},
+			{courierv1alpha1.SchemeGroupVersion, courierv1alpha1.ResourcePluralBranchWorks, courierv1alpha1.ResourceKindBranchWork, true},
 		},
 	})
 	if err != nil {
