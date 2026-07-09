@@ -21,7 +21,7 @@ BIN      := apimachinery
 CRD_OPTIONS          ?= "crd:maxDescLen=0,generateEmbeddedObjectMeta=true,allowDangerousTypes=true"
 # https://github.com/appscodelabs/gengo-builder
 CODE_GENERATOR_IMAGE ?= ghcr.io/appscode/gengo:release-1.32
-CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 kubedb:v1 gitops:v1alpha1 postgres:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1 elasticsearch:v1alpha1 schema:v1alpha1 archiver:v1alpha1 kafka:v1alpha1 migrator:v1alpha1
+CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 kubedb:v1 gitops:v1alpha1 postgres:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1 elasticsearch:v1alpha1 schema:v1alpha1 archiver:v1alpha1 kafka:v1alpha1 courier:v1alpha1
 API_GROUPS           ?= $(CORE_API_GROUPS) ui:v1alpha1
 
 # This version-strategy uses git tags to set the version string
@@ -171,6 +171,12 @@ openapi-%:
 			--output-package "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*)" \
 			--report-filename .config/api-rules/violation_exceptions.list
 
+# Duck-type kinds that embed TypeMeta+ObjectMeta and so are picked up by
+# controller-gen, but are projections (never served as their own CRD).
+# controller-gen has no per-type "skip CRD" marker, so we delete the emitted
+# manifests right after generation.
+duck_crds := courier.kubedb.com_migrations.yaml
+
 # Generate CRD manifests
 .PHONY: gen-crds
 gen-crds:
@@ -187,6 +193,8 @@ gen-crds:
 			$(CRD_OPTIONS)                  \
 			paths="./apis/..."              \
 			output:crd:artifacts:config=crds
+	@echo "Removing duck-type CRDs (projected, never served)"
+	@rm -f $(addprefix crds/, $(duck_crds))
 
 crd_to_patch := kubedb.com_cassandras.yaml \
 								kubedb.com_clickhouses.yaml \

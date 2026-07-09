@@ -241,8 +241,16 @@ func (w *CassandraOpsRequestCustomWebhook) validateCassandraVolumeExpansionOpsRe
 		return errors.New("spec.volumeExpansion.Node can't be empty")
 	}
 
-	if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "Cassandra"); err != nil {
-		return err
+	if db.Spec.Topology == nil {
+		if err := opsutil.ValidateStorageExpansion(db.Spec.Storage, volumeExpansionSpec.Node, req.Status.Phase, "Cassandra"); err != nil {
+			return err
+		}
+	} else {
+		for _, rack := range db.Spec.Topology.Rack {
+			if err := opsutil.ValidateStorageExpansion(rack.Storage, volumeExpansionSpec.Node, req.Status.Phase, fmt.Sprintf("Cassandra rack %q", rack.Name)); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
