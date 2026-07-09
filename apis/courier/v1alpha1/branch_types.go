@@ -43,7 +43,7 @@ const (
 // +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase"
 // +kubebuilder:printcolumn:name="Mode",type="string",JSONPath=".status.mode"
 // +kubebuilder:printcolumn:name="Target",type="string",JSONPath=".status.targetRef.name"
-// +kubebuilder:printcolumn:name="Freshness",type="integer",JSONPath=".status.freshnessSeconds"
+// +kubebuilder:printcolumn:name="Freshness",type="string",JSONPath=".status.freshness"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type Branch struct {
 	metav1.TypeMeta `json:",inline"`
@@ -106,10 +106,13 @@ type BranchSource struct {
 }
 
 // BranchTarget describes the target Database. spec.target.cluster equal to the source's cluster is a
-// same-cluster branch; a different cluster is a cross-cluster branch.
+// same-cluster branch; a different cluster is a cross-cluster branch. Omit cluster for a same-cluster
+// (Local) branch.
 type BranchTarget struct {
-	// Cluster is the target cluster name. The source's own cluster means a same-cluster branch.
-	Cluster string `json:"cluster"`
+	// Cluster is the target cluster name. Empty (or equal to the source's own cluster) means a
+	// same-cluster (Local) branch; a different cluster selects cross-cluster (OCM).
+	// +optional
+	Cluster string `json:"cluster,omitempty"`
 
 	// Namespace of the target Database.
 	Namespace string `json:"namespace"`
@@ -185,9 +188,14 @@ type BranchStatus struct {
 	// +optional
 	LastRefreshAt *metav1.Time `json:"lastRefreshAt,omitempty"`
 
-	// FreshnessSeconds is the age of the branch data relative to the source at the last refresh.
+	// FreshnessSeconds is the age of the branch data relative to the source at the last refresh, in seconds.
 	// +optional
 	FreshnessSeconds *int64 `json:"freshnessSeconds,omitempty"`
+
+	// Freshness is the human-readable age of the branch data since the last refresh
+	// (e.g. "3m", "1h2m"). Derived from freshnessSeconds for display.
+	// +optional
+	Freshness string `json:"freshness,omitempty"`
 
 	// History is the bounded refresh history (bounded by spec.historyLimit).
 	// +optional
