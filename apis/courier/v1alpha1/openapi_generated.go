@@ -33643,6 +33643,13 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchSpec(ref common.ReferenceCa
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchHistoryLimit"),
 						},
 					},
+					"volumeSnapshotClassName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VolumeSnapshotClassName is the VolumeSnapshotClass used wherever courier creates a VolumeSnapshot — snapshotting the source PVCs and, for cross-namespace/cross-cluster branches, the importing snapshot in the target. It must match the CSI driver backing the volumes. When empty, courier auto-resolves the default class for the driver.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"deletionPolicy": {
 						SchemaProps: spec.SchemaProps{
 							Description: "DeletionPolicy decides the target's fate on Branch deletion.",
@@ -33700,9 +33707,16 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchStatus(ref common.Reference
 					},
 					"freshnessSeconds": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FreshnessSeconds is the age of the branch data relative to the source at the last refresh.",
+							Description: "FreshnessSeconds is the age of the branch data relative to the source at the last refresh, in seconds.",
 							Type:        []string{"integer"},
 							Format:      "int64",
+						},
+					},
+					"freshness": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Freshness is the human-readable age of the branch data since the last refresh (e.g. \"3m\", \"1h2m\"). Derived from freshnessSeconds for display.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"history": {
@@ -33753,13 +33767,12 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchTarget(ref common.Reference
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "BranchTarget describes the target Database. spec.target.cluster equal to the source's cluster is a same-cluster branch; a different cluster is a cross-cluster branch.",
+				Description: "BranchTarget describes the target Database. spec.target.cluster equal to the source's cluster is a same-cluster branch; a different cluster is a cross-cluster branch. Omit cluster for a same-cluster (Local) branch.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"cluster": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Cluster is the target cluster name. The source's own cluster means a same-cluster branch.",
-							Default:     "",
+							Description: "Cluster is the target cluster name. Empty (or equal to the source's own cluster) means a same-cluster (Local) branch; a different cluster selects cross-cluster (OCM).",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -33801,7 +33814,7 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchTarget(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"cluster", "namespace", "name"},
+				Required: []string{"namespace", "name"},
 			},
 		},
 		Dependencies: []string{
