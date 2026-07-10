@@ -300,6 +300,15 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsReques
 			updateVersionSpec.TargetVersion, postgresTargetVersion.Spec.DB.BaseOS,
 		)
 	}
+	if sourceVersion.Spec.Distribution != "" && postgresTargetVersion.Spec.Distribution != "" &&
+		sourceVersion.Spec.Distribution != postgresTargetVersion.Spec.Distribution {
+		return fmt.Errorf(
+			"upgrading between different distributions is not allowed: "+
+				"current version %q uses distribution %q but target version %q uses distribution %q",
+			db.Spec.Version, sourceVersion.Spec.Distribution,
+			updateVersionSpec.TargetVersion, postgresTargetVersion.Spec.Distribution,
+		)
+	}
 	return nil
 }
 
