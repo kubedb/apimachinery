@@ -33099,6 +33099,10 @@
           "description": "RotateCertificates tells operator to initiate certificate rotation",
           "type": "boolean"
         },
+        "rotateGrpcCertificates": {
+          "description": "RotateGrpcCertificates tells operator to rotate the gRPC TLS certificates used by pg-coordinator. This is independent of RotateCertificates (DB-level certs). Both can be set together.",
+          "type": "boolean"
+        },
         "sslMode": {
           "description": "SSLMode for both standalone and clusters. [disable;allow;prefer;require;verify-ca;verify-full]",
           "type": "string"

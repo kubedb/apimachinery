@@ -43195,6 +43195,13 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresTLSSpec(ref common.ReferenceC
 							Format:      "",
 						},
 					},
+					"rotateGrpcCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RotateGrpcCertificates tells operator to rotate the gRPC TLS certificates used by pg-coordinator. This is independent of RotateCertificates (DB-level certs). Both can be set together.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
