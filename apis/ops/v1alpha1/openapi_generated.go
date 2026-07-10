@@ -34229,6 +34229,13 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseHorizontalScalingSpec(ref c
 							Format:      "int32",
 						},
 					},
+					"shards": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of shards to scale up to. Scale-up only; the new shards start empty (no data is rebalanced from existing shards).",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},

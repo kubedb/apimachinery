@@ -220,7 +220,7 @@ func (m *Milvus) SetHealthCheckerDefaults() {
 }
 
 func (m *Milvus) EtcdServiceName() string {
-	return fmt.Sprintf("%s-%s", m.Namespace, kubedb.EtcdName)
+	return fmt.Sprintf("%s-%s", m.Name, kubedb.EtcdName)
 }
 
 func (m *Milvus) MetaStorageEndpoints() []string {
