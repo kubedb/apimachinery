@@ -210,6 +210,9 @@ func (w *CassandraOpsRequestCustomWebhook) validateCassandraVerticalScalingOpsRe
 	if verticalScalingSpec.Node == nil {
 		return errors.New("spec.verticalScaling.Node can't be empty")
 	}
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		return errors.New("in-place vertical scaling is not supported for Cassandra: JVM heap is derived from container resources and requires a pod restart to take effect")
+	}
 
 	return nil
 }

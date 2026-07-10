@@ -269,6 +269,9 @@ func (w *KafkaOpsRequestCustomWebhook) validateKafkaVerticalScalingOpsRequest(ka
 	if kafka.Spec.Topology == nil && verticalScalingSpec.Node == nil {
 		return errors.New("spec.verticalScaling.node can not be empty as reference database mode is combined")
 	}
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		return errors.New("in-place vertical scaling is not supported for Kafka: JVM heap is derived from container resources and requires a pod restart to take effect")
+	}
 
 	return nil
 }

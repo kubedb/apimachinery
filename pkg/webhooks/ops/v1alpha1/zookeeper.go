@@ -188,6 +188,9 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVerticalScalingOpsRe
 	if verticalScalingSpec.Node == nil {
 		return errors.New("spec.verticalScaling.Node can not be empty")
 	}
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		return errors.New("in-place vertical scaling is not supported for ZooKeeper: JVM heap is derived from container resources and requires a pod restart to take effect")
+	}
 
 	return nil
 }

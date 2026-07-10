@@ -271,6 +271,9 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrVerticalScalingOpsRequest(req 
 	if verticalScalingSpec.Node != nil && (verticalScalingSpec.Data != nil || verticalScalingSpec.Overseer != nil || verticalScalingSpec.Coordinator != nil) {
 		return errors.New("spec.verticalScaling.Node && spec.verticalScaling.Topology both can't be non-empty at the same ops request")
 	}
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		return errors.New("in-place vertical scaling is not supported for Solr: JVM heap is derived from container resources and requires a pod restart to take effect")
+	}
 
 	return nil
 }

@@ -333,6 +333,9 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidVerticalScalingOpsRequest(re
 	if verticalScalingSpec.Routers != nil && topology.Routers == nil {
 		return errors.New("spec.verticalScaling.Routers can not be set as Routers does not exist in the database instance")
 	}
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		return errors.New("in-place vertical scaling is not supported for Druid: JVM heap is derived from container resources and requires a pod restart to take effect")
+	}
 	return nil
 }
 

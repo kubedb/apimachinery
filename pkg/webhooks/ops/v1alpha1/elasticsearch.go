@@ -190,12 +190,30 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				req.Name,
 				err.Error()))
 		}
+	case opsapi.ElasticsearchOpsRequestTypeVerticalScaling:
+		if err := w.validateElasticsearchVerticalScalingOpsRequest(req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
+				req.Name,
+				err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "elasticsearchopsrequests.kubedb.com", Kind: "ElasticsearchOpsRequest"}, req.Name, allErr)
+}
+
+func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchVerticalScalingOpsRequest(req *opsapi.ElasticsearchOpsRequest) error {
+	verticalScalingSpec := req.Spec.VerticalScaling
+	if verticalScalingSpec == nil {
+		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
+	}
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		return errors.New("in-place vertical scaling is not supported for Elasticsearch: JVM heap (ES_JAVA_OPTS -Xms/-Xmx) is derived from container resources and requires a pod restart to take effect")
+	}
+
+	return nil
 }
 
 func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchUpdateVersionOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
