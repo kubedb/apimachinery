@@ -226,11 +226,7 @@ func (in *BranchStatus) DeepCopyInto(out *BranchStatus) {
 		in, out := &in.LastRefreshAt, &out.LastRefreshAt
 		*out = (*in).DeepCopy()
 	}
-	if in.FreshnessSeconds != nil {
-		in, out := &in.FreshnessSeconds, &out.FreshnessSeconds
-		*out = new(int64)
-		**out = **in
-	}
+	out.Freshness = in.Freshness
 	if in.History != nil {
 		in, out := &in.History, &out.History
 		*out = make([]BranchRun, len(*in))
