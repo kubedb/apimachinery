@@ -217,4 +217,3 @@ func TestValidatePostgresUpdateVersionOpsRequest_BaseOSCheck(t *testing.T) {
 		})
 	}
 }
-
