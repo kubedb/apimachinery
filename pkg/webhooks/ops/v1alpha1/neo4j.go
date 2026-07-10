@@ -470,6 +470,9 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVerticalScalingOpsRequest(re
 	if verticalScalingSpec.Server == nil {
 		return errors.New("`spec.verticalScaling.Server`,should be present in vertical scaling ops request")
 	}
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		return errors.New("in-place vertical scaling is not supported for Neo4j: memory settings (server.memory.heap.*, server.memory.pagecache.size) require a pod restart to take effect")
+	}
 
 	return nil
 }
