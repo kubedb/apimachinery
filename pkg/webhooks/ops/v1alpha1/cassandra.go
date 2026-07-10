@@ -67,7 +67,7 @@ func (w *CassandraOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, o
 		return nil, fmt.Errorf("expected an CassandraOpsRequest object but got %T", obj)
 	}
 	cassandraLog.Info("validate create", "name", ops.Name)
-	return nil, w.validateCreateOrUpdate(ops)
+	return w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -87,19 +87,20 @@ func (w *CassandraOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, o
 		return nil, err
 	}
 
-	if err := w.validateCreateOrUpdate(ops); err != nil {
-		return nil, err
+	warnings, err := w.validateCreateOrUpdate(ops)
+	if err != nil {
+		return warnings, err
 	}
 
 	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
 		var db olddbapi.Cassandra
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
 		if err != nil {
-			return nil, err
+			return warnings, err
 		}
-		return nil, resumeDatabase(w.DefaultClient, &db)
+		return warnings, resumeDatabase(w.DefaultClient, &db)
 	}
-	return nil, nil
+	return warnings, nil
 }
 
 func validateCassandraOpsRequest(req *opsapi.CassandraOpsRequest, oldReq *opsapi.CassandraOpsRequest) error {
@@ -118,16 +119,17 @@ func (w *CassandraOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, o
 	return nil, nil
 }
 
-func (w *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.CassandraOpsRequest) error {
+func (w *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.CassandraOpsRequest) (admission.Warnings, error) {
 	if validType, _ := arrays.Contains(opsapi.CassandraOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+		return nil, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Cassandra are %s", req.Spec.Type, strings.Join(opsapi.CassandraOpsRequestTypeNames(), ", ")))
 	}
 	db, err := w.hasDatabaseRef(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	var allErr field.ErrorList
+	var warnings admission.Warnings
 
 	switch opsapi.CassandraOpsRequestType(req.GetRequestType()) {
 	case opsapi.CassandraOpsRequestTypeRestart:
@@ -139,7 +141,9 @@ func (w *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ca
 				err.Error()))
 		}
 	case opsapi.CassandraOpsRequestTypeVerticalScaling:
-		if err := w.validateCassandraVerticalScalingOpsRequest(req); err != nil {
+		warns, err := w.validateCassandraVerticalScalingOpsRequest(req)
+		warnings = append(warnings, warns...)
+		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
@@ -184,9 +188,9 @@ func (w *CassandraOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Ca
 	}
 
 	if len(allErr) == 0 {
-		return nil
+		return warnings, nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "Cassandraopsrequests.kubedb.com", Kind: "CassandraOpsRequest"}, req.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: "Cassandraopsrequests.kubedb.com", Kind: "CassandraOpsRequest"}, req.Name, allErr)
 }
 
 func (w *CassandraOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.CassandraOpsRequest) (*olddbapi.Cassandra, error) {
@@ -200,17 +204,22 @@ func (w *CassandraOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.CassandraO
 	return cassandra, nil
 }
 
-func (w *CassandraOpsRequestCustomWebhook) validateCassandraVerticalScalingOpsRequest(req *opsapi.CassandraOpsRequest) error {
+func (w *CassandraOpsRequestCustomWebhook) validateCassandraVerticalScalingOpsRequest(req *opsapi.CassandraOpsRequest) (admission.Warnings, error) {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
-		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
+		return nil, errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
 
 	if verticalScalingSpec.Node == nil {
-		return errors.New("spec.verticalScaling.Node can't be empty")
+		return nil, errors.New("spec.verticalScaling.Node can't be empty")
 	}
 
-	return nil
+	var warnings admission.Warnings
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		warnings = append(warnings, "in-place vertical scaling is not recommended for Cassandra: JVM heap is derived from container resources and requires a pod restart to take effect")
+	}
+
+	return warnings, nil
 }
 
 func (w *CassandraOpsRequestCustomWebhook) validateCassandraHorizontalScalingOpsRequest(req *opsapi.CassandraOpsRequest) error {
