@@ -147,7 +147,8 @@ func (c *Controller) handleTerminateEvent(ri *restoreInfo) error {
 		if dbCond.Status != metav1.ConditionFalse {
 			dbCond.Status = metav1.ConditionFalse
 			dbCond.Reason = kubedb.DataRestoreInterrupted
-			dbCond.Message = fmt.Sprintf("Data initializer %s %s/%s with UID %s has been deleted",
+			dbCond.Message = fmt.Sprintf(
+				"Data initializer %s %s/%s with UID %s has been deleted",
 				ri.invoker.Kind,
 				ri.do.Namespace,
 				ri.invoker.Name,
@@ -181,7 +182,8 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 		if (ri.stash != nil && ri.stash.phase == v1beta1.RestoreSucceeded) || (ri.kubestash != nil && ri.kubestash.phase == coreapi.RestoreSucceeded) {
 			dbCond.Status = metav1.ConditionTrue
 			dbCond.Reason = kubedb.DatabaseSuccessfullyRestored
-			dbCond.Message = fmt.Sprintf("Successfully restored data by initializer %s %s/%s with UID %s",
+			dbCond.Message = fmt.Sprintf(
+				"Successfully restored data by initializer %s %s/%s with UID %s",
 				ri.invoker.Kind,
 				ri.do.Namespace,
 				ri.invoker.Name,
@@ -190,8 +192,9 @@ func (c *Controller) handleRestoreInvokerEvent(ri *restoreInfo) error {
 		} else {
 			dbCond.Status = metav1.ConditionFalse
 			dbCond.Reason = kubedb.FailedToRestoreData
-			dbCond.Message = fmt.Sprintf("Failed to restore data by initializer %s %s/%s with UID %s."+
-				"\nRun 'kubectl describe %s %s -n %s' for more details.",
+			dbCond.Message = fmt.Sprintf(
+				"Failed to restore data by initializer %s %s/%s with UID %s."+
+					"\nRun 'kubectl describe %s %s -n %s' for more details.",
 				ri.invoker.Kind,
 				ri.do.Namespace,
 				ri.invoker.Name,
@@ -291,7 +294,8 @@ func getTargetPhase(status v1beta1.RestoreBatchStatus, target *v1beta1.RestoreTa
 func (c *Controller) waitUntilStashInstalled(stopCh <-chan struct{}) error {
 	klog.Infoln("Looking for the Stash operator.......")
 	return wait.PollUntilContextCancel(wait.ContextForChannel(stopCh), time.Second*10, true, func(ctx context.Context) (bool, error) {
-		return discovery.ExistsGroupKinds(c.Client.Discovery(),
+		return discovery.ExistsGroupKinds(
+			c.Client.Discovery(),
 			schema.GroupKind{Group: stash.GroupName, Kind: v1alpha1.ResourceKindRepository},
 			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindBackupConfiguration},
 			schema.GroupKind{Group: stash.GroupName, Kind: v1beta1.ResourceKindBackupSession},
@@ -310,7 +314,8 @@ func (c *Controller) waitUntilKubeStashInstalled(stopCh <-chan struct{}) error {
 	klog.Infoln("Looking for the KubeStash operator.......")
 
 	return wait.PollUntilContextCancel(wait.ContextForChannel(stopCh), time.Second*10, true, func(ctx context.Context) (bool, error) {
-		return discovery.ExistsGroupKinds(c.Client.Discovery(),
+		return discovery.ExistsGroupKinds(
+			c.Client.Discovery(),
 			schema.GroupKind{Group: storageapi.GroupVersion.Group, Kind: storageapi.ResourceKindBackupStorage},
 			schema.GroupKind{Group: storageapi.GroupVersion.Group, Kind: storageapi.ResourceKindRepository},
 			schema.GroupKind{Group: storageapi.GroupVersion.Group, Kind: storageapi.ResourceKindSnapshot},

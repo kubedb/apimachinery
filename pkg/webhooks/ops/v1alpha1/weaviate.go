@@ -252,7 +252,8 @@ func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateReconfigurationOpsRequ
 		}, &secret)
 		if err != nil {
 			if apierrors.IsNotFound(err) {
-				return fmt.Errorf("referenced backup config secret %s/%s not found",
+				return fmt.Errorf(
+					"referenced backup config secret %s/%s not found",
 					req.Namespace,
 					reconfigureSpec.BackupConfigSecret.Name,
 				)

@@ -92,7 +92,8 @@ func (m *ReconfigureMerger) populateList() error {
 		Kind:    m.kind + "List",
 	})
 
-	err := m.kbClient.List(context.TODO(), unsList,
+	err := m.kbClient.List(
+		context.TODO(), unsList,
 		client.InNamespace(m.currentOps.GetNamespace()),
 	)
 	if err != nil {

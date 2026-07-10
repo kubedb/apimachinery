@@ -163,7 +163,8 @@ func (w *QdrantCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Qdrant) field.
 
 	if db.Spec.TLS != nil && db.Spec.TLS.P2P != nil && *db.Spec.TLS.P2P {
 		if db.Spec.Mode == "" || db.Spec.Mode == olddbapi.QdrantStandalone {
-			allErr = append(allErr,
+			allErr = append(
+				allErr,
 				field.Invalid(
 					field.NewPath("spec").Child("tls").Child("p2p"),
 					db.Spec.TLS.P2P,
