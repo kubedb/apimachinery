@@ -32893,10 +32893,39 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingDC": {
+      "description": "PostgresHorizontalScalingDC is a per data center node-count target for scaling a distributed DC-DR Postgres.",
+      "type": "object",
+      "required": [
+        "clusterName",
+        "replicas"
+      ],
+      "properties": {
+        "clusterName": {
+          "description": "ClusterName is the data center, named by its OCM managed cluster, matching a Member or Witness distributionRule in the Postgres PlacementPolicy.",
+          "type": "string",
+          "default": ""
+        },
+        "replicas": {
+          "description": "Replicas is the desired local node count for this data center.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for Postgres horizontal scaling",
       "type": "object",
       "properties": {
+        "dataCenters": {
+          "description": "DataCenters scales individual data centers of a distributed DC-DR Postgres. Each entry sets that data center's local node count; data centers not listed are left unchanged. Use this instead of Replicas for a DC-DR cluster, where each data center has its own intra-DC raft and is scaled independently.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingDC"
+          }
+        },
         "readReplicas": {
           "type": "array",
           "items": {

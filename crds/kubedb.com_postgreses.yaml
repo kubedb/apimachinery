@@ -5600,8 +5600,6 @@ spec:
                   type: object
                 type: array
               disasterRecovery:
-                description: DisasterRecovery reports the cross data center (DC-DR)
-                  state for a distributed Postgres.
                 properties:
                   activeDC:
                     type: string
