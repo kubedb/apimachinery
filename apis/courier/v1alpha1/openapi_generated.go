@@ -34327,25 +34327,9 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerConnectionInfo(ref com
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"address": {
+					"appBinding": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"user": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"password": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
 					"database": {
@@ -34374,9 +34358,11 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerConnectionInfo(ref com
 						},
 					},
 				},
-				Required: []string{"address", "user", "password", "database"},
+				Required: []string{"database"},
 			},
 		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
 	}
 }
 
