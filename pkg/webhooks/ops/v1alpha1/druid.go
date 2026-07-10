@@ -68,7 +68,7 @@ func (w *DruidOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj r
 		return nil, fmt.Errorf("expected an DruidOpsRequest object but got %T", obj)
 	}
 	druidLog.Info("validate create", "name", ops.Name)
-	return nil, w.validateCreateOrUpdate(ops)
+	return w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -87,19 +87,20 @@ func (w *DruidOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err := validateDruidOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	if err := w.validateCreateOrUpdate(ops); err != nil {
-		return nil, err
+	warnings, err := w.validateCreateOrUpdate(ops)
+	if err != nil {
+		return warnings, err
 	}
 
 	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
 		var db olddbapi.Druid
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
 		if err != nil {
-			return nil, err
+			return warnings, err
 		}
-		return nil, resumeDatabase(w.DefaultClient, &db)
+		return warnings, resumeDatabase(w.DefaultClient, &db)
 	}
-	return nil, nil
+	return warnings, nil
 }
 
 func (w *DruidOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -122,17 +123,18 @@ func validateDruidOpsRequest(req *opsapi.DruidOpsRequest, oldReq *opsapi.DruidOp
 	return nil
 }
 
-func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidOpsRequest) error {
+func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidOpsRequest) (admission.Warnings, error) {
 	if validType, _ := arrays.Contains(opsapi.DruidOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+		return nil, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Druid are %s", req.Spec.Type, strings.Join(opsapi.DruidOpsRequestTypeNames(), ", ")))
 	}
 	druid, err := w.hasDatabaseRef(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var allErr field.ErrorList
+	var warnings admission.Warnings
 
 	opsType := opsapi.DruidOpsRequestType(req.GetRequestType())
 
@@ -152,7 +154,9 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 				err.Error()))
 		}
 	case opsapi.DruidOpsRequestTypeVerticalScaling:
-		if err := w.validateDruidVerticalScalingOpsRequest(req, druid); err != nil {
+		warns, err := w.validateDruidVerticalScalingOpsRequest(req, druid)
+		warnings = append(warnings, warns...)
+		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
@@ -190,9 +194,9 @@ func (w *DruidOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.DruidO
 	}
 
 	if len(allErr) == 0 {
-		return nil
+		return warnings, nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "Druidopsrequests.kubedb.com", Kind: "DruidOpsRequest"}, req.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: "Druidopsrequests.kubedb.com", Kind: "DruidOpsRequest"}, req.Name, allErr)
 }
 
 func (w *DruidOpsRequestCustomWebhook) validateDruidStorageMigrationOpsRequest(req *opsapi.DruidOpsRequest, db *olddbapi.Druid) error {
@@ -304,39 +308,41 @@ func (w *DruidOpsRequestCustomWebhook) validateDruidHorizontalScalingOpsRequest(
 	return nil
 }
 
-func (w *DruidOpsRequestCustomWebhook) validateDruidVerticalScalingOpsRequest(req *opsapi.DruidOpsRequest, druid *olddbapi.Druid) error {
+func (w *DruidOpsRequestCustomWebhook) validateDruidVerticalScalingOpsRequest(req *opsapi.DruidOpsRequest, druid *olddbapi.Druid) (admission.Warnings, error) {
 	verticalScalingSpec := req.Spec.VerticalScaling
 
 	if verticalScalingSpec == nil {
-		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
+		return nil, errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
 	if verticalScalingSpec.Coordinators == nil && verticalScalingSpec.Overlords == nil && verticalScalingSpec.MiddleManagers == nil && verticalScalingSpec.Historicals == nil && verticalScalingSpec.Brokers == nil && verticalScalingSpec.Routers == nil {
-		return errors.New("spec.verticalScaling.topology can not be empty")
+		return nil, errors.New("spec.verticalScaling.topology can not be empty")
 	}
 
 	topology := druid.Spec.Topology
 	if verticalScalingSpec.Coordinators != nil && topology.Coordinators == nil {
-		return errors.New("spec.verticalScaling.Coordinators can not be set as Coordinators does not exist in the database instance")
+		return nil, errors.New("spec.verticalScaling.Coordinators can not be set as Coordinators does not exist in the database instance")
 	}
 	if verticalScalingSpec.Overlords != nil && topology.Overlords == nil {
-		return errors.New("spec.verticalScaling.Overlords can not be set as Overlords does not exist in the database instance")
+		return nil, errors.New("spec.verticalScaling.Overlords can not be set as Overlords does not exist in the database instance")
 	}
 	if verticalScalingSpec.MiddleManagers != nil && topology.MiddleManagers == nil {
-		return errors.New("spec.verticalScaling.MiddleManagers can not be set as MiddleManagers does not exist in the database instance")
+		return nil, errors.New("spec.verticalScaling.MiddleManagers can not be set as MiddleManagers does not exist in the database instance")
 	}
 	if verticalScalingSpec.Historicals != nil && topology.Historicals == nil {
-		return errors.New("spec.verticalScaling.Historicals can not be set as Historicals does not exist in the database instance")
+		return nil, errors.New("spec.verticalScaling.Historicals can not be set as Historicals does not exist in the database instance")
 	}
 	if verticalScalingSpec.Brokers != nil && topology.Brokers == nil {
-		return errors.New("spec.verticalScaling.Brokers can not be set as Brokers does not exist in the database instance")
+		return nil, errors.New("spec.verticalScaling.Brokers can not be set as Brokers does not exist in the database instance")
 	}
 	if verticalScalingSpec.Routers != nil && topology.Routers == nil {
-		return errors.New("spec.verticalScaling.Routers can not be set as Routers does not exist in the database instance")
+		return nil, errors.New("spec.verticalScaling.Routers can not be set as Routers does not exist in the database instance")
 	}
+
+	var warnings admission.Warnings
 	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
-		return errors.New("in-place vertical scaling is not supported for Druid: JVM heap is derived from container resources and requires a pod restart to take effect")
+		warnings = append(warnings, "in-place vertical scaling is not recommended for Druid: JVM heap is derived from container resources and requires a pod restart to take effect")
 	}
-	return nil
+	return warnings, nil
 }
 
 func (w *DruidOpsRequestCustomWebhook) validateDruidVolumeExpansionOpsRequest(req *opsapi.DruidOpsRequest, druid *olddbapi.Druid) error {

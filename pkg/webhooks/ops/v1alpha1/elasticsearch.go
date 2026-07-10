@@ -70,7 +70,7 @@ func (w *ElasticsearchOpsRequestCustomWebhook) ValidateCreate(ctx context.Contex
 		return nil, fmt.Errorf("expected an ElasticsearchOpsRequest object but got %T", obj)
 	}
 	esLog.Info("validate create", "name", ops.Name)
-	return nil, w.validateCreateOrUpdate(ops)
+	return w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -90,19 +90,20 @@ func (w *ElasticsearchOpsRequestCustomWebhook) ValidateUpdate(ctx context.Contex
 		return nil, err
 	}
 
-	if err := w.validateCreateOrUpdate(ops); err != nil {
-		return nil, err
+	warnings, err := w.validateCreateOrUpdate(ops)
+	if err != nil {
+		return warnings, err
 	}
 
 	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
 		var db dbapi.Elasticsearch
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
 		if err != nil {
-			return nil, err
+			return warnings, err
 		}
-		return nil, resumeDatabase(w.DefaultClient, &db)
+		return warnings, resumeDatabase(w.DefaultClient, &db)
 	}
-	return nil, nil
+	return warnings, nil
 }
 
 func (w *ElasticsearchOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -144,12 +145,13 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateOpensearchVersionCompatib
 	return false, nil
 }
 
-func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ElasticsearchOpsRequest) error {
+func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ElasticsearchOpsRequest) (admission.Warnings, error) {
 	if validType, _ := arrays.Contains(opsapi.ElasticsearchOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+		return nil, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Elasticsearch are %s", req.Spec.Type, strings.Join(opsapi.ElasticsearchOpsRequestTypeNames(), ", ")))
 	}
 	var allErr field.ErrorList
+	var warnings admission.Warnings
 	db := &dbapi.Elasticsearch{}
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name:      req.GetDBRefName(),
@@ -191,7 +193,9 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 				err.Error()))
 		}
 	case opsapi.ElasticsearchOpsRequestTypeVerticalScaling:
-		if err := w.validateElasticsearchVerticalScalingOpsRequest(req); err != nil {
+		warns, err := w.validateElasticsearchVerticalScalingOpsRequest(req)
+		warnings = append(warnings, warns...)
+		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
@@ -199,21 +203,23 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 	}
 
 	if len(allErr) == 0 {
-		return nil
+		return warnings, nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "elasticsearchopsrequests.kubedb.com", Kind: "ElasticsearchOpsRequest"}, req.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: "elasticsearchopsrequests.kubedb.com", Kind: "ElasticsearchOpsRequest"}, req.Name, allErr)
 }
 
-func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchVerticalScalingOpsRequest(req *opsapi.ElasticsearchOpsRequest) error {
+func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchVerticalScalingOpsRequest(req *opsapi.ElasticsearchOpsRequest) (admission.Warnings, error) {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
-		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
-	}
-	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
-		return errors.New("in-place vertical scaling is not supported for Elasticsearch: JVM heap (ES_JAVA_OPTS -Xms/-Xmx) is derived from container resources and requires a pod restart to take effect")
+		return nil, errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
 
-	return nil
+	var warnings admission.Warnings
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		warnings = append(warnings, "in-place vertical scaling is not recommended for Elasticsearch: JVM heap (ES_JAVA_OPTS -Xms/-Xmx) is derived from container resources and requires a pod restart to take effect")
+	}
+
+	return warnings, nil
 }
 
 func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchUpdateVersionOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
