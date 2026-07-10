@@ -384,17 +384,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseRotateAuthenticat
 	}
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &core.Secret{})
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
-			}
+		if err := validateAuthSecretRef(context.TODO(), rv.DefaultClient, req.Namespace, authSpec.SecretRef); err != nil {
 			return err
 		}
 	}
