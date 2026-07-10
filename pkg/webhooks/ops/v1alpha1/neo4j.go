@@ -29,6 +29,7 @@ import (
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
+	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
@@ -42,6 +43,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/klog/v2"
 	meta_util "kmodules.xyz/client-go/meta"
+	secret_lib "kubedb.dev/apimachinery/pkg/secret"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -581,15 +583,12 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jReconfigurationTLSOpsRequest
 
 func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jRotateAuthenticationOpsRequest(req *opsapi.Neo4jOpsRequest) error {
 	authSpec := req.Spec.Authentication
-	var newAuthsecret core.Secret
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
 			return errors.New("spec.authentication.secretRef.name can not be empty")
 		}
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &newAuthsecret)
+		isVirtual := authSpec.SecretRef.APIGroup == vsecretapi.GroupName
+		newData, err := secret_lib.GetData(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef.Name, isVirtual)
 		if err != nil {
 			if apierrors.IsNotFound(err) {
 				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
@@ -597,10 +596,10 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jRotateAuthenticationOpsReque
 			return err
 		}
 
-		if newAuthsecret.Data == nil {
+		if newData == nil {
 			return errors.New("spec.authentication.secretRef.name is a valid secret but it does not contain any data")
 		}
-		if newAuthsecret.Data[core.BasicAuthUsernameKey] == nil || newAuthsecret.Data[core.BasicAuthPasswordKey] == nil {
+		if newData[core.BasicAuthUsernameKey] == nil || newData[core.BasicAuthPasswordKey] == nil {
 			return errors.New("spec.authentication.secretRef.name is a valid secret but it does not contain username or password")
 		}
 	}
