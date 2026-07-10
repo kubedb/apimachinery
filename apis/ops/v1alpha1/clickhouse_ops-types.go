@@ -122,6 +122,9 @@ type ClickHouseVerticalScalingSpec struct {
 type ClickHouseHorizontalScalingSpec struct {
 	// Number of node
 	Replicas *int32 `json:"replicas,omitempty"`
+	// Number of shards to scale up to. Scale-up only; the new shards start empty
+	// (no data is rebalanced from existing shards).
+	Shards *int32 `json:"shards,omitempty"`
 }
 
 // ClickHouseMigrationSpec is the spec for migrating storageClass of a ClickHouse database.
