@@ -321,7 +321,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScaling
 		// scale-up only — validate at creation time to avoid re-validation failures
 		if req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "" {
 			currentShards := int(*db.Spec.ClusterTopology.Cluster.Shards)
-			if int(*horizontalScalingSpec.Shards) <= currentShards {
+			if int(*horizontalScalingSpec.Shards) < currentShards {
 				return fmt.Errorf("shard scale-up only: `spec.horizontalScaling.shards` (%d) must be greater than current shard count (%d)", *horizontalScalingSpec.Shards, currentShards)
 			}
 		}
