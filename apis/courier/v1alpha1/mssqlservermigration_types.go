@@ -20,6 +20,7 @@ import (
 	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 )
 
@@ -146,13 +147,15 @@ type MSSQLServerStreaming struct {
 }
 
 type MSSQLServerConnectionInfo struct {
-	Address                string `yaml:"address" json:"address"`
-	User                   string `yaml:"user" json:"user"`
-	Password               string `yaml:"password" json:"password"`
-	Database               string `yaml:"database" json:"database"`
-	MaxConnections         int    `yaml:"maxConnections" json:"maxConnections,omitempty"`
-	Encrypt                bool   `yaml:"encrypt" json:"encrypt,omitempty"`
-	TrustServerCertificate bool   `yaml:"trustServerCertificate" json:"trustServerCertificate,omitempty"`
+	AppBinding             *kmapi.ObjectReference `json:"appBinding,omitempty"`
+	Database               string                 `json:"database"`
+	MaxConnections         int                    `json:"maxConnections,omitempty"`
+	Encrypt                bool                   `json:"encrypt,omitempty"`
+	TrustServerCertificate bool                   `json:"trustServerCertificate,omitempty"`
+
+	Address  string `json:"-"`
+	User     string `json:"-"`
+	Password string `json:"-"`
 }
 
 type MSSQLServerSnapshotPipeline struct {
