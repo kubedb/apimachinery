@@ -226,8 +226,10 @@ spec:
                 type: string
               snapshot:
                 properties:
-                  ref:
-                    type: string
+                  refs:
+                    items:
+                      type: string
+                    type: array
                   type:
                     enum:
                     - VolumeGroupSnapshot

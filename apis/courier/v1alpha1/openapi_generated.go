@@ -33543,7 +33543,7 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchSnapshotRef(ref common.Refe
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "BranchSnapshotRef references the source snapshot.",
+				Description: "BranchSnapshotRef references the source snapshot(s).",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"type": {
@@ -33553,11 +33553,19 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchSnapshotRef(ref common.Refe
 							Format:      "",
 						},
 					},
-					"ref": {
+					"refs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Ref is the name of the snapshot object.",
-							Type:        []string{"string"},
-							Format:      "",
+							Description: "Refs are the snapshot object names backing the current branch data:\n  - VolumeGroupSnapshot: a single-element list (the VolumeGroupSnapshot name)\n  - VolumeSnapshot fallback: one per source PVC, ordered by ordinal and aligned\n    to the cloned PVCs",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
 						},
 					},
 				},

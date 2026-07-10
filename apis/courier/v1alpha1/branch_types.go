@@ -248,12 +248,16 @@ const (
 	BranchSnapshotTypeVolumeSnapshot      BranchSnapshotType = "VolumeSnapshot"
 )
 
-// BranchSnapshotRef references the source snapshot.
+// BranchSnapshotRef references the source snapshot(s).
 type BranchSnapshotRef struct {
 	// Type is the snapshot kind (VolumeGroupSnapshot preferred, VolumeSnapshot fallback).
 	Type BranchSnapshotType `json:"type,omitempty"`
-	// Ref is the name of the snapshot object.
-	Ref string `json:"ref,omitempty"`
+	// Refs are the snapshot object names backing the current branch data:
+	//   - VolumeGroupSnapshot: a single-element list (the VolumeGroupSnapshot name)
+	//   - VolumeSnapshot fallback: one per source PVC, ordered by ordinal and aligned
+	//     to the cloned PVCs
+	// +optional
+	Refs []string `json:"refs,omitempty"`
 }
 
 // BranchRunResult is the outcome of a refresh run.
