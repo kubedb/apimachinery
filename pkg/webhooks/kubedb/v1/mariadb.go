@@ -262,7 +262,7 @@ var mariaDBreservedVolumes = []string{
 }
 
 func getTLSReservedVolumes() []string {
-	var volumes []string
+	volumes := make([]string, 0, 4)
 	volumes = append(volumes, kubedb.MariaDBServerTLSVolumeName)
 	volumes = append(volumes, kubedb.MariaDBClientTLSVolumeName)
 	volumes = append(volumes, kubedb.MariaDBExporterTLSVolumeName)
@@ -285,7 +285,7 @@ var reservedVolumeMounts = []string{
 }
 
 func getTLSReservedVolumeMounts(db *dbapi.MariaDB) []string {
-	var volumes []string
+	volumes := make([]string, 0, 4)
 	volumes = append(volumes, db.CertMountPath(dbapi.MariaDBServerCert))
 	volumes = append(volumes, db.CertMountPath(dbapi.MariaDBClientCert))
 	volumes = append(volumes, db.CertMountPath(dbapi.MariaDBExporterCert))
