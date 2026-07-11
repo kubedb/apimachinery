@@ -821,10 +821,10 @@ kubeops.dev/csi-driver-cacerts v0.5.1-0.20260418091014-4f539f46235c h1:ZKmBV3fFf
 kubeops.dev/csi-driver-cacerts v0.5.1-0.20260418091014-4f539f46235c/go.mod h1:VNbwC3gTWfmdQCVxd8mkVx+n1+0F1lOA5X3usyZN1rk=
 kubeops.dev/operator-shard-manager v0.0.6-0.20260418091213-65daf7da824d h1:/nZYflp2w1x+wQmxDtHR0Sbzl39fcuaJ66oqgVXBBwQ=
 kubeops.dev/operator-shard-manager v0.0.6-0.20260418091213-65daf7da824d/go.mod h1:NE6GzlhwLRiwiUUpqi4Uf+J7e/gniITM0uJnE5r1mzY=
-kubeops.dev/petset v0.0.17-0.20260418091244-7f666912d240 h1:6FyI0dCC/1aaJqdCqEtyRjownOCH2PP2KWpU1i0mgv4=
-kubeops.dev/petset v0.0.17-0.20260418091244-7f666912d240/go.mod h1:zb++ZwjAon+cueexxhRSSxzJnNX1J/scqvDrGgeRHcQ=
-kubeops.dev/sidekick v0.0.15-0.20260418091208-a1cb9f4a3553 h1:metVCjSnZJmPcON1wUuedyve0lV8IPNXxuGt6FgDMi4=
-kubeops.dev/sidekick v0.0.15-0.20260418091208-a1cb9f4a3553/go.mod h1:JelNzrL+K2S3BvkxDi2bE9lxaP5Y+HeDQooXIlKBorM=
+kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab h1:0aouI9IIIoHDwIOmLjgr0YXMab9f833ei8neEBPuG48=
+kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab/go.mod h1:zb++ZwjAon+cueexxhRSSxzJnNX1J/scqvDrGgeRHcQ=
+kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447 h1:Oz4yTzNyx5vFgoC11QWc5zMaxR8EK/kxxxNnH75PxPc=
+kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447/go.mod h1:tTu9iMs4awf/cuHRA8XcDxyEz+AfTGcc3IOAg9kclmE=
 kubestash.dev/apimachinery v0.29.0 h1:yNurTDPthRm6Z5f+DboT5jdjfm9VkE0oMuTemLF0s24=
 kubestash.dev/apimachinery v0.29.0/go.mod h1:Gp3D0Ah1meSf+KAB+Nwh3sKTOO5lhswqk9KDNhBM0Eg=
 moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 h1:NykkTlRB+X40z86cLHdEmuoTxhNKhQebLT379b1EumA=
