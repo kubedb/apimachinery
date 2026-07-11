@@ -268,7 +268,7 @@ var reservedXtraDBVolumes = []string{
 }
 
 func getXtraDBTLSReservedVolumes() []string {
-	var volumes []string
+	volumes := make([]string, 0, 4)
 	volumes = append(volumes, kubedb.PerconaXtraDBServerTLSVolumeName)
 	volumes = append(volumes, kubedb.PerconaXtraDBClientTLSVolumeName)
 	volumes = append(volumes, kubedb.PerconaXtraDBExporterTLSVolumeName)
@@ -311,7 +311,7 @@ var reservedXtraDBVolumeMounts = []string{
 }
 
 func getXtraDBTLSReservedVolumeMounts(db *dbapi.PerconaXtraDB) []string {
-	var volumes []string
+	volumes := make([]string, 0, 4)
 	volumes = append(volumes, db.CertMountPath(dbapi.PerconaXtraDBServerCert))
 	volumes = append(volumes, db.CertMountPath(dbapi.PerconaXtraDBClientCert))
 	volumes = append(volumes, db.CertMountPath(dbapi.PerconaXtraDBExporterCert))
