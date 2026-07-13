@@ -809,7 +809,9 @@ go.uber.org/zap/zapcore
 go.uber.org/zap/zapgrpc
 # go.virtual-secrets.dev/apimachinery v0.0.1
 ## explicit; go 1.23.0
+go.virtual-secrets.dev/apimachinery/apis/config/v1alpha1
 go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1
+go.virtual-secrets.dev/apimachinery/client/clientset/versioned/scheme
 go.virtual-secrets.dev/apimachinery/crds
 # go.yaml.in/yaml/v2 v2.4.3
 ## explicit; go 1.15
