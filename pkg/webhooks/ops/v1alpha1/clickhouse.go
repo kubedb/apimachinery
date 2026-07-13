@@ -120,7 +120,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 	case opsapi.ClickHouseOpsRequestTypeRestart:
 
 	case opsapi.ClickHouseOpsRequestTypeVerticalScaling:
-		if err := rv.validateClickHouseVerticalScalingOpsRequest(req); err != nil {
+		if err := rv.validateClickHouseVerticalScalingOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
 				req.Name,
 				err.Error()))
@@ -244,13 +244,18 @@ func (rv *ClickHouseOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ClickHou
 	return clickhouse, nil
 }
 
-func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVerticalScalingOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVerticalScalingOpsRequest(db *olddbapi.ClickHouse, req *opsapi.ClickHouseOpsRequest) error {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
-	if verticalScalingSpec.Node == nil {
-		return errors.New("spec.verticalScaling.node nil not supported in VerticalScaling type")
+	if verticalScalingSpec.Node == nil && verticalScalingSpec.ClickHouseKeeper == nil {
+		return errors.New("at least one of `spec.verticalScaling.node` or `spec.verticalScaling.clickHouseKeeper` must be provided")
+	}
+	if verticalScalingSpec.ClickHouseKeeper != nil {
+		if err := rv.validateClickHouseKeeperOpsRequest(db); err != nil {
+			return fmt.Errorf("clickHouseKeeper: %w", err)
+		}
 	}
 
 	return nil
@@ -279,18 +284,31 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVolumeExpansionOp
 		return errors.New("spec.volumeExpansion nil not supported in VolumeExpansion type")
 	}
 
-	if volumeExpansionSpec.Node == nil {
-		return errors.New("spec.volumeExpansion.Node can't be empty")
+	if volumeExpansionSpec.Node == nil && volumeExpansionSpec.ClickHouseKeeper == nil {
+		return errors.New("at least one of `spec.volumeExpansion.node` or `spec.volumeExpansion.clickHouseKeeper` must be provided")
 	}
 
-	var storage *core.PersistentVolumeClaimSpec
-	if db.Spec.ClusterTopology != nil {
-		storage = db.Spec.ClusterTopology.Cluster.Storage
-	} else {
-		storage = db.Spec.Storage
+	if volumeExpansionSpec.Node != nil {
+		var storage *core.PersistentVolumeClaimSpec
+		if db.Spec.ClusterTopology != nil {
+			storage = db.Spec.ClusterTopology.Cluster.Storage
+		} else {
+			storage = db.Spec.Storage
+		}
+		if err := opsutil.ValidateStorageExpansion(storage, volumeExpansionSpec.Node, req.Status.Phase, "ClickHouse"); err != nil {
+			return err
+		}
 	}
-	if err := opsutil.ValidateStorageExpansion(storage, volumeExpansionSpec.Node, req.Status.Phase, "ClickHouse"); err != nil {
-		return err
+
+	if volumeExpansionSpec.ClickHouseKeeper != nil {
+		if err := rv.validateClickHouseKeeperOpsRequest(db); err != nil {
+			return fmt.Errorf("clickHouseKeeper: %w", err)
+		}
+		if db.Spec.ClusterTopology != nil && db.Spec.ClusterTopology.ClickHouseKeeper != nil && !db.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged && db.Spec.ClusterTopology.ClickHouseKeeper.Spec != nil {
+			if err := opsutil.ValidateStorageExpansion(db.Spec.ClusterTopology.ClickHouseKeeper.Spec.Storage, volumeExpansionSpec.ClickHouseKeeper, req.Status.Phase, "ClickHouseKeeper"); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
@@ -302,12 +320,21 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScaling
 		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
 	}
 
-	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.Shards == nil {
-		return errors.New("at least one of `spec.horizontalScaling.replicas` or `spec.horizontalScaling.shards` must be provided")
+	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.Shards == nil && horizontalScalingSpec.ClickHouseKeeper == nil {
+		return errors.New("at least one of `spec.horizontalScaling.replicas`, `spec.horizontalScaling.shards`, or `spec.horizontalScaling.clickHouseKeeper` must be provided")
 	}
 
 	if horizontalScalingSpec.Replicas != nil && *horizontalScalingSpec.Replicas <= 0 {
 		return errors.New("`spec.horizontalScaling.replicas` must be greater than 0")
+	}
+
+	if horizontalScalingSpec.ClickHouseKeeper != nil {
+		if *horizontalScalingSpec.ClickHouseKeeper <= 0 {
+			return errors.New("`spec.horizontalScaling.clickHouseKeeper` must be greater than 0")
+		}
+		if err := rv.validateClickHouseKeeperOpsRequest(db); err != nil {
+			return fmt.Errorf("clickHouseKeeper: %w", err)
+		}
 	}
 
 	if horizontalScalingSpec.Shards != nil {
@@ -387,6 +414,19 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseRotateAuthenticat
 		if err := validateAuthSecretRef(context.TODO(), rv.DefaultClient, req.Namespace, authSpec.SecretRef); err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseKeeperOpsRequest(db *olddbapi.ClickHouse) error {
+	if db.Spec.ClusterTopology == nil {
+		return errors.New("clusterTopology is not set; clickHouseKeeper ops are only supported for topology mode")
+	}
+	if db.Spec.ClusterTopology.ClickHouseKeeper == nil {
+		return errors.New("clickHouseKeeper is not configured in spec.clusterTopology")
+	}
+	if db.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged {
+		return errors.New("clickHouseKeeper is externally managed; ops are not supported")
 	}
 	return nil
 }
