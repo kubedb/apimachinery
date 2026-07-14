@@ -91,6 +91,12 @@ func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) 
 
 	db.SetDefaults(&postgresVersion)
 
+	if db.Spec.TDE != nil {
+		if db.Spec.TDE.Cipher == "" {
+			db.Spec.TDE.Cipher = "aes_128"
+		}
+	}
+
 	return nil
 }
 
@@ -160,6 +166,11 @@ func (wh *PostgresCustomWebhook) validateUpdate(obj, oldObj *dbapi.Postgres) err
 	// Once the database has been initialized, don't let update the "spec.init" section
 	if oldObj.Spec.Init != nil && oldObj.Spec.Init.Initialized {
 		preconditions.Insert("spec.init")
+	}
+	// TDE is immutable once set. Enabling WAL encryption and rotating the
+	// principal key are done through an OpsRequest, not a raw spec edit.
+	if oldObj.Spec.TDE != nil {
+		preconditions.Insert("spec.tde")
 	}
 
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)
@@ -245,6 +256,59 @@ func (wh *PostgresCustomWebhook) validateSpecForDB(postgres *dbapi.Postgres, pgV
 		}
 	}
 	// end <==============
+	if err := wh.validateTDE(postgres, pgVersion); err != nil {
+		return err
+	}
+	return nil
+}
+
+// validateTDE enforces the Transparent Data Encryption (pg_tde) invariants.
+func (wh *PostgresCustomWebhook) validateTDE(postgres *dbapi.Postgres, pgVersion *catalogapi.PostgresVersion) error {
+	tde := postgres.Spec.TDE
+	if tde == nil {
+		return nil
+	}
+	// The referenced version must be a Percona build that bundles pg_tde.
+	if pgVersion.Spec.TDE == nil || !pgVersion.Spec.TDE.Supported {
+		return fmt.Errorf("spec.tde is set but PostgresVersion %q does not support TDE (requires a Percona distribution with pg_tde)", pgVersion.Name)
+	}
+	// Exactly one key provider must be configured.
+	kp := tde.KeyProvider
+	providers := 0
+	if kp.Vault != nil {
+		providers++
+	}
+	if kp.KMIP != nil {
+		providers++
+	}
+	if kp.File != nil {
+		providers++
+	}
+	if providers != 1 {
+		return fmt.Errorf("spec.tde.keyProvider must set exactly one of vault, kmip or file, got %d", providers)
+	}
+	// The file (local keyring) provider cannot back replication or WAL encryption.
+	if kp.File != nil {
+		if ptr.Deref(postgres.Spec.Replicas, 1) > 1 {
+			return fmt.Errorf("spec.tde.keyProvider.file is only valid for a single replica (standalone); use vault or kmip for replicated clusters")
+		}
+		if postgres.Spec.Mode != nil && *postgres.Spec.Mode == dbapi.PostgreSQLModeRemoteReplica {
+			return fmt.Errorf("spec.tde.keyProvider.file is not valid for a RemoteReplica; use a global vault or kmip provider")
+		}
+		if tde.EncryptWAL {
+			return fmt.Errorf("spec.tde.encryptWAL requires a global vault or kmip provider, not a file keyring")
+		}
+	}
+	// WAL encryption requires a global provider.
+	if tde.EncryptWAL && kp.Vault == nil && kp.KMIP == nil {
+		return fmt.Errorf("spec.tde.encryptWAL requires a global vault or kmip key provider")
+	}
+	// Cipher must be one of the supported algorithms.
+	switch tde.Cipher {
+	case "", "aes_128", "aes_256":
+	default:
+		return fmt.Errorf("spec.tde.cipher %q invalid, supported values are aes_128 and aes_256", tde.Cipher)
+	}
 	return nil
 }
 
