@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 // Package deletion holds the DB deletion logic shared by every kubedb operator:
-// the DeletionPolicy owner-reference sync (Halt/Delete/WipeOut) and the spec.Halted
+// the DeletionPolicy owner reference sync (Halt/Delete/WipeOut) and the spec.Halted
 // Halt mode. Callers pass the DB object and its list type; everything else is derived.
 package deletion
 
@@ -66,7 +66,7 @@ type DBInterface interface {
 	GetDeletionPolicy() string
 }
 
-// Options carries everything Do needs. The DB supplies only DB + PeerList; namespace, name,
+// Options carries what Do needs. The DB supplies only DB + PeerList; namespace, name,
 // selectors, secrets, policy and owner are all derived. Virtual auth secrets are handled
 // automatically (see virtualAuthSecretNames), so there is nothing extra to pass.
 type Options struct {
@@ -99,19 +99,19 @@ func virtualAuthSecretNames(db DBInterface) []string {
 	return nil
 }
 
-// Do runs the DeletionPolicy owner-reference sync. Call it from the operator's terminate path.
+// Do runs the DeletionPolicy owner reference sync. Call it from the operator's terminate path.
 //
 //	Halt    -> keep PVCs and secrets (remove owner reference).
 //	Delete  -> delete PVCs (add owner reference), keep secrets.
 //	WipeOut -> delete PVCs and unused kubedb-owned secrets.
 func Do(ctx context.Context, opts Options) error {
 	if opts.DB.GetDeletionPolicy() == DeletionPolicyHalt {
-		return removeOwnerReferenceFromOffshoots(ctx, opts)
+		return removeOwnerRefsFromOffshoots(ctx, opts)
 	}
-	return setOwnerReferenceToOffshoots(ctx, opts)
+	return ensureOwnerRefsOnOffshoots(ctx, opts)
 }
 
-func removeOwnerReferenceFromOffshoots(ctx context.Context, opts Options) error {
+func removeOwnerRefsFromOffshoots(ctx context.Context, opts Options) error {
 	ns := opts.DB.GetNamespace()
 	selector := labels.SelectorFromSet(opts.Selectors)
 
@@ -124,8 +124,8 @@ func removeOwnerReferenceFromOffshoots(ctx context.Context, opts Options) error 
 	return dynamic_util.RemoveOwnerReferenceForItems(ctx, opts.DynamicClient, virtualSecretGVR, ns, virtualAuthSecretNames(opts.DB), opts.DB)
 }
 
-func setOwnerReferenceToOffshoots(ctx context.Context, opts Options) error {
-	owner, err := ownerRef(opts)
+func ensureOwnerRefsOnOffshoots(ctx context.Context, opts Options) error {
+	owner, err := buildOwnerRef(opts)
 	if err != nil {
 		return err
 	}
@@ -211,8 +211,8 @@ func secretsUsedByPeers(ctx context.Context, opts Options) (sets.Set[string], er
 	return used, nil
 }
 
-// ownerRef builds a controller owner reference for the DB using its registered GVK.
-func ownerRef(opts Options) (*metav1.OwnerReference, error) {
+// buildOwnerRef builds a controller owner reference for the DB using its registered GVK.
+func buildOwnerRef(opts Options) (*metav1.OwnerReference, error) {
 	gvks, _, err := opts.KBClient.Scheme().ObjectKinds(opts.DB)
 	if err != nil {
 		return nil, err
