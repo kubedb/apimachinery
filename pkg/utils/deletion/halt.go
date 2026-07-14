@@ -34,6 +34,8 @@ import (
 type HaltOptions struct {
 	KBClient client.Client
 	DB       DBInterface
+	// Selectors is the DB's offshoot selector map (db.OffshootSelectors()).
+	Selectors map[string]string
 	// DeletePDB removes PodDisruptionBudgets; set true for clustered/replicaset topologies
 	// (standalone DBs have none).
 	DeletePDB bool
@@ -45,7 +47,7 @@ type HaltOptions struct {
 // secrets intact. Call it from the operator's halt path when spec.Halted is true.
 func Halt(ctx context.Context, opts HaltOptions) error {
 	inNS := client.InNamespace(opts.DB.GetNamespace())
-	sel := client.MatchingLabels(opts.DB.OffshootSelectors())
+	sel := client.MatchingLabels(opts.Selectors)
 
 	// Order mirrors the per-operator halt logic: dependents first, then owning resources.
 	generated := []client.Object{
