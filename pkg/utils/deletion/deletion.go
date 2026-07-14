@@ -26,12 +26,12 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 
 	"github.com/pkg/errors"
+	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/client-go/dynamic"
@@ -49,8 +49,9 @@ const (
 )
 
 var (
-	secretGVR = core.SchemeGroupVersion.WithResource("secrets")
-	pvcGVR    = core.SchemeGroupVersion.WithResource("persistentvolumeclaims")
+	secretGVR        = core.SchemeGroupVersion.WithResource("secrets")
+	pvcGVR           = core.SchemeGroupVersion.WithResource("persistentvolumeclaims")
+	virtualSecretGVR = vsecretapi.SchemeGroupVersion.WithResource(vsecretapi.ResourceSecrets)
 )
 
 // DBInterface is the minimal contract every kubedb DB type satisfies. All accessors
@@ -65,15 +66,9 @@ type DBInterface interface {
 	GetDeletionPolicy() string
 }
 
-// ExtraSecrets lets a DB apply the same owner-reference handling to secrets living in a
-// non-core resource (e.g. virtual-secrets). Optional; nil for most DBs.
-type ExtraSecrets struct {
-	GVR   schema.GroupVersionResource
-	Names []string
-}
-
-// Options carries everything Do needs. The DB supplies only DB + PeerList (+ optional
-// ExtraSecrets); namespace, name, selectors, secrets, policy and owner are all derived.
+// Options carries everything Do needs. The DB supplies only DB + PeerList; namespace, name,
+// selectors, secrets, policy and owner are all derived. Virtual auth secrets are handled
+// automatically (see virtualAuthSecretNames), so there is nothing extra to pass.
 type Options struct {
 	KBClient      client.Client
 	DynamicClient dynamic.Interface
@@ -83,8 +78,25 @@ type Options struct {
 	Selectors map[string]string
 	// PeerList is an empty typed list of the same kind (e.g. &api.MongoDBList{}); used to
 	// find which secrets are still referenced by sibling DBs before wiping them.
-	PeerList     client.ObjectList
-	ExtraSecrets []ExtraSecrets
+	PeerList client.ObjectList
+}
+
+// authSecretReferrer is satisfied by DB types that expose an auth secret name. Most DBs do.
+type authSecretReferrer interface {
+	GetAuthSecretName() string
+}
+
+// virtualAuthSecretNames returns the DB's auth secret name so the owner-reference helpers can
+// be applied to the virtual-secrets GVR as well. When the auth secret is an ordinary core
+// secret (or the DB has none), the virtual-secrets object won't exist and the helpers skip it,
+// so this is safe to run unconditionally.
+func virtualAuthSecretNames(db DBInterface) []string {
+	if r, ok := db.(authSecretReferrer); ok {
+		if name := r.GetAuthSecretName(); name != "" {
+			return []string{name}
+		}
+	}
+	return nil
 }
 
 // Do runs the DeletionPolicy owner-reference sync. Call it from the operator's terminate path.
@@ -109,12 +121,7 @@ func removeOwnerReferenceFromOffshoots(ctx context.Context, opts Options) error 
 	if err := dynamic_util.RemoveOwnerReferenceForItems(ctx, opts.DynamicClient, secretGVR, ns, opts.DB.GetPersistentSecrets(), opts.DB); err != nil {
 		return err
 	}
-	for _, es := range opts.ExtraSecrets {
-		if err := dynamic_util.RemoveOwnerReferenceForItems(ctx, opts.DynamicClient, es.GVR, ns, es.Names, opts.DB); err != nil {
-			return err
-		}
-	}
-	return nil
+	return dynamic_util.RemoveOwnerReferenceForItems(ctx, opts.DynamicClient, virtualSecretGVR, ns, virtualAuthSecretNames(opts.DB), opts.DB)
 }
 
 func setOwnerReferenceToOffshoots(ctx context.Context, opts Options) error {
@@ -134,10 +141,8 @@ func setOwnerReferenceToOffshoots(ctx context.Context, opts Options) error {
 		if err := dynamic_util.RemoveOwnerReferenceForItems(ctx, opts.DynamicClient, secretGVR, ns, opts.DB.GetPersistentSecrets(), opts.DB); err != nil {
 			return err
 		}
-		for _, es := range opts.ExtraSecrets {
-			if err := dynamic_util.RemoveOwnerReferenceForItems(ctx, opts.DynamicClient, es.GVR, ns, es.Names, opts.DB); err != nil {
-				return err
-			}
+		if err := dynamic_util.RemoveOwnerReferenceForItems(ctx, opts.DynamicClient, virtualSecretGVR, ns, virtualAuthSecretNames(opts.DB), opts.DB); err != nil {
+			return err
 		}
 	}
 	// Delete PVCs for both WipeOut and Delete by making the DB their owner.
@@ -174,12 +179,9 @@ func wipeOut(ctx context.Context, opts Options, owner *metav1.OwnerReference) er
 	if err := dynamic_util.EnsureOwnerReferenceForItems(ctx, opts.DynamicClient, secretGVR, ns, sets.List[string](unused), owner); err != nil {
 		return err
 	}
-	for _, es := range opts.ExtraSecrets {
-		if err := dynamic_util.EnsureOwnerReferenceForItems(ctx, opts.DynamicClient, es.GVR, ns, es.Names, owner); err != nil {
-			return err
-		}
-	}
-	return nil
+	// The auth secret may be a virtual-secret; make the DB its owner too. Harmless when the
+	// auth secret is an ordinary core secret (the virtual-secrets object won't exist).
+	return dynamic_util.EnsureOwnerReferenceForItems(ctx, opts.DynamicClient, virtualSecretGVR, ns, virtualAuthSecretNames(opts.DB), owner)
 }
 
 // secretsUsedByPeers returns the set of secrets referenced by other DBs of the same kind
