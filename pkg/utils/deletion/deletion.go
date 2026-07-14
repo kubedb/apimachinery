@@ -55,9 +55,12 @@ var (
 
 // DBInterface is the minimal contract every kubedb DB type satisfies. All accessors
 // are type-level on every DB (see apis/kubedb/*/*_helpers.go).
+//
+// OffshootSelectors is intentionally NOT part of this interface: its signature differs
+// across API versions (v1 is non-variadic, v1alpha2 is variadic), so callers pass the
+// selector map via Options.Selectors instead.
 type DBInterface interface {
 	client.Object
-	OffshootSelectors(extraSelectors ...map[string]string) map[string]string
 	GetPersistentSecrets() []string
 	GetDeletionPolicy() string
 }
@@ -75,6 +78,9 @@ type Options struct {
 	KBClient      client.Client
 	DynamicClient dynamic.Interface
 	DB            DBInterface
+	// Selectors is the DB's offshoot selector map (db.OffshootSelectors()); passed in
+	// because OffshootSelectors has an incompatible signature across API versions.
+	Selectors map[string]string
 	// PeerList is an empty typed list of the same kind (e.g. &api.MongoDBList{}); used to
 	// find which secrets are still referenced by sibling DBs before wiping them.
 	PeerList     client.ObjectList
@@ -95,7 +101,7 @@ func Do(ctx context.Context, opts Options) error {
 
 func removeOwnerReferenceFromOffshoots(ctx context.Context, opts Options) error {
 	ns := opts.DB.GetNamespace()
-	selector := labels.SelectorFromSet(opts.DB.OffshootSelectors())
+	selector := labels.SelectorFromSet(opts.Selectors)
 
 	if err := dynamic_util.RemoveOwnerReferenceForSelector(ctx, opts.DynamicClient, pvcGVR, ns, selector, opts.DB); err != nil {
 		return err
@@ -117,7 +123,7 @@ func setOwnerReferenceToOffshoots(ctx context.Context, opts Options) error {
 		return err
 	}
 	ns := opts.DB.GetNamespace()
-	selector := labels.SelectorFromSet(opts.DB.OffshootSelectors())
+	selector := labels.SelectorFromSet(opts.Selectors)
 
 	if opts.DB.GetDeletionPolicy() == DeletionPolicyWipeOut {
 		if err := wipeOut(ctx, opts, owner); err != nil {
