@@ -167,10 +167,14 @@ func (wh *PostgresCustomWebhook) validateUpdate(obj, oldObj *dbapi.Postgres) err
 	if oldObj.Spec.Init != nil && oldObj.Spec.Init.Initialized {
 		preconditions.Insert("spec.init")
 	}
-	// TDE is immutable once set. Enabling WAL encryption and rotating the
-	// principal key are done through an OpsRequest, not a raw spec edit.
+	// The TDE key provider and cipher are immutable once set: changing where the
+	// principal key lives, or the algorithm, would orphan the existing keys and
+	// leave already encrypted data unreadable. The mutable knobs (encryptWAL,
+	// enforceEncryption, defaultEncryptedTables) are reconfigured through an
+	// OpsRequest, which also performs the prerequisite key setup and restart.
 	if oldObj.Spec.TDE != nil {
-		preconditions.Insert("spec.tde")
+		preconditions.Insert("spec.tde.keyProvider")
+		preconditions.Insert("spec.tde.cipher")
 	}
 
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)
