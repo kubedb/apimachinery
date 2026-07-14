@@ -23,6 +23,7 @@ import (
 	core "k8s.io/api/core/v1"
 	policy "k8s.io/api/policy/v1"
 	rbac "k8s.io/api/rbac/v1"
+	kerr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/meta"
 	appcatalog "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	petset "kubeops.dev/petset/apis/apps/v1"
@@ -57,7 +58,6 @@ func Halt(ctx context.Context, opts HaltOptions) error {
 		&rbac.RoleBinding{},
 		&rbac.Role{},
 		&core.ServiceAccount{},
-		&core.Service{},
 	}
 	if opts.DeletePDB {
 		generated = append(generated, &policy.PodDisruptionBudget{})
@@ -65,6 +65,18 @@ func Halt(ctx context.Context, opts HaltOptions) error {
 
 	for _, obj := range generated {
 		if err := opts.KBClient.DeleteAllOf(ctx, obj, inNS, sel); err != nil && !meta.IsNoMatchError(err) {
+			return err
+		}
+	}
+
+	// The core Service resource does not support the deletecollection verb, so delete
+	// the matching services one by one.
+	svcs := &core.ServiceList{}
+	if err := opts.KBClient.List(ctx, svcs, inNS, client.MatchingLabels(opts.Selectors)); err != nil {
+		return err
+	}
+	for i := range svcs.Items {
+		if err := opts.KBClient.Delete(ctx, &svcs.Items[i]); err != nil && !kerr.IsNotFound(err) {
 			return err
 		}
 	}
