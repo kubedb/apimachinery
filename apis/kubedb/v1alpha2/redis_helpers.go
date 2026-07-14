@@ -399,3 +399,11 @@ func (r *Redis) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, str
 	}
 	return checkReplicas(lister.StatefulSets(r.Namespace), labels.SelectorFromSet(r.OffshootLabels()), expectedItems)
 }
+
+func (r *Redis) GetDeletionPolicy() string {
+	return string(r.Spec.TerminationPolicy)
+}
+
+func (r *Redis) GetPersistentSecrets() []string {
+	return r.Spec.GetPersistentSecrets()
+}

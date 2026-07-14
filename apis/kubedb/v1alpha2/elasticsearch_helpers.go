@@ -1055,3 +1055,7 @@ func (esTopology *ElasticsearchClusterTopology) ToMap() map[ElasticsearchNodeRol
 	}
 	return topology
 }
+
+func (e *Elasticsearch) GetDeletionPolicy() string {
+	return string(e.Spec.TerminationPolicy)
+}

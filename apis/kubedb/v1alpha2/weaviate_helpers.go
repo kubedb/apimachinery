@@ -428,3 +428,7 @@ func (w *WeaviateBind) SecretName() string {
 func (w *WeaviateBind) CertSecretName() string {
 	return w.GetCertSecretName(WeaviateClientCert)
 }
+
+func (w *Weaviate) GetDeletionPolicy() string {
+	return string(w.Spec.DeletionPolicy)
+}

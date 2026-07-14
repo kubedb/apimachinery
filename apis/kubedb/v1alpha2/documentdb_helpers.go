@@ -428,3 +428,7 @@ func GetSharedBufferSizeForDocumentdb(resource *resource.Quantity) string {
 
 	return sharedBuffer
 }
+
+func (d *DocumentDB) GetDeletionPolicy() string {
+	return string(d.Spec.DeletionPolicy)
+}

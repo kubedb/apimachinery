@@ -1102,3 +1102,11 @@ func (m *MongoDB) ConfigSecretName(nodeType string) string {
 	}
 	return m.Name + nodeType + "-config"
 }
+
+func (m *MongoDB) GetDeletionPolicy() string {
+	return string(m.Spec.TerminationPolicy)
+}
+
+func (m *MongoDB) GetPersistentSecrets() []string {
+	return m.Spec.GetPersistentSecrets()
+}

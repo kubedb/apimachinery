@@ -254,3 +254,11 @@ func (m *ProxySQL) IsCluster() bool {
 	r := m.Spec.Replicas
 	return *r > 1
 }
+
+func (p *ProxySQL) GetDeletionPolicy() string {
+	return string(p.Spec.TerminationPolicy)
+}
+
+func (p *ProxySQL) GetPersistentSecrets() []string {
+	return p.Spec.GetPersistentSecrets()
+}

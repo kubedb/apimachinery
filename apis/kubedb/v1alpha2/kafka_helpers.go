@@ -483,3 +483,7 @@ func (k *Kafka) ReplicasAreReady(lister appslister.StatefulSetLister) (bool, str
 	}
 	return checkReplicas(lister.StatefulSets(k.Namespace), labels.SelectorFromSet(k.OffshootLabels()), expectedItems)
 }
+
+func (k *Kafka) GetDeletionPolicy() string {
+	return string(k.Spec.DeletionPolicy)
+}

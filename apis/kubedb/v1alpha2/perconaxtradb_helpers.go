@@ -395,3 +395,11 @@ func (p *PerconaXtraDB) CertMountPath(alias PerconaXtraDBCertificateAlias) strin
 func (p *PerconaXtraDB) CertFilePath(certAlias PerconaXtraDBCertificateAlias, certFileName string) string {
 	return filepath.Join(p.CertMountPath(certAlias), certFileName)
 }
+
+func (p *PerconaXtraDB) GetDeletionPolicy() string {
+	return string(p.Spec.TerminationPolicy)
+}
+
+func (p *PerconaXtraDB) GetPersistentSecrets() []string {
+	return p.Spec.GetPersistentSecrets()
+}

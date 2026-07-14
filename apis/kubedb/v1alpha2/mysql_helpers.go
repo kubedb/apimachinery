@@ -486,3 +486,11 @@ func (m *MySQL) assignDefaultContainerSecurityContext(myVersion *v1alpha1.MySQLV
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
+
+func (m *MySQL) GetDeletionPolicy() string {
+	return string(m.Spec.TerminationPolicy)
+}
+
+func (m *MySQL) GetPersistentSecrets() []string {
+	return m.Spec.GetPersistentSecrets()
+}

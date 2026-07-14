@@ -362,3 +362,7 @@ func (p *PgBouncer) SetSecurityContext(pgBouncerVersion *catalog.PgBouncerVersio
 	// Otherwise, We will get write permission denied.
 	p.Spec.PodTemplate.Spec.SecurityContext.FSGroup = p.Spec.PodTemplate.Spec.ContainerSecurityContext.RunAsGroup
 }
+
+func (p *PgBouncer) GetDeletionPolicy() string {
+	return string(p.Spec.TerminationPolicy)
+}

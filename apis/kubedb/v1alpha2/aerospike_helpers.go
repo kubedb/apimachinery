@@ -178,3 +178,7 @@ func (a *Aerospike) assignDefaultContainerSecurityContext(arVersion *catalog.Aer
 		sc.SeccompProfile = secomp.DefaultSeccompProfile()
 	}
 }
+
+func (a *Aerospike) GetDeletionPolicy() string {
+	return string(a.Spec.DeletionPolicy)
+}

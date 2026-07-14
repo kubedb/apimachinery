@@ -530,3 +530,11 @@ func (m *Postgres) SetHealthCheckerDefaults() {
 func (m *Postgres) IsRemoteReplica() bool {
 	return m.Spec.RemoteReplica != nil
 }
+
+func (p *Postgres) GetDeletionPolicy() string {
+	return string(p.Spec.TerminationPolicy)
+}
+
+func (p *Postgres) GetPersistentSecrets() []string {
+	return p.Spec.GetPersistentSecrets()
+}

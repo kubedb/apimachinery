@@ -507,3 +507,7 @@ func (c *Cassandra) CertSecretVolumeName(alias CassandraCertificateAlias) string
 func (c *Cassandra) CertSecretVolumeMountPath(configDir string, cert string) string {
 	return filepath.Join(configDir, cert)
 }
+
+func (r *Cassandra) GetDeletionPolicy() string {
+	return string(r.Spec.DeletionPolicy)
+}

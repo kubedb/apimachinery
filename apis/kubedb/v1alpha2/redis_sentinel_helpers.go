@@ -346,3 +346,7 @@ func (rs *RedisSentinel) ReplicasAreReady(lister appslister.StatefulSetLister) (
 	expectedItems := 1
 	return checkReplicas(lister.StatefulSets(rs.Namespace), labels.SelectorFromSet(rs.OffshootLabels()), expectedItems)
 }
+
+func (rs *RedisSentinel) GetDeletionPolicy() string {
+	return string(rs.Spec.TerminationPolicy)
+}

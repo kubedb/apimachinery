@@ -382,3 +382,11 @@ func (m *MariaDB) CertMountPath(alias MariaDBCertificateAlias) string {
 func (m *MariaDB) CertFilePath(certAlias MariaDBCertificateAlias, certFileName string) string {
 	return filepath.Join(m.CertMountPath(certAlias), certFileName)
 }
+
+func (m *MariaDB) GetDeletionPolicy() string {
+	return string(m.Spec.TerminationPolicy)
+}
+
+func (m *MariaDB) GetPersistentSecrets() []string {
+	return m.Spec.GetPersistentSecrets()
+}

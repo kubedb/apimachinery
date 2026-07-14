@@ -606,3 +606,7 @@ func (m *MySQL) ConfigSecretName() string {
 	uid := string(m.UID)
 	return meta_util.NameWithSuffix(m.OffshootName(), uid[len(uid)-6:])
 }
+
+func (m *MySQL) GetDeletionPolicy() string {
+	return string(m.Spec.DeletionPolicy)
+}

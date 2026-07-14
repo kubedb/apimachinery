@@ -1103,3 +1103,11 @@ func (m *MongoDB) ConfigSecretName(nodeType string) string {
 	uid := string(m.UID)
 	return meta_util.NameWithSuffix(m.OffshootName()+nodeType, uid[len(uid)-6:])
 }
+
+func (m *MongoDB) GetDeletionPolicy() string {
+	return string(m.Spec.DeletionPolicy)
+}
+
+func (m *MongoDB) GetPersistentSecrets() []string {
+	return m.Spec.GetPersistentSecrets()
+}

@@ -580,3 +580,7 @@ func (c *ClickHouse) ReplicasAreReady(lister pslister.PetSetLister) (bool, strin
 func (c *ClickHouse) ClickHouseInlineConfigSecretKey(key string) string {
 	return fmt.Sprintf("%s-%s", kubedb.InlineConfigKeyPrefix, key)
 }
+
+func (c *ClickHouse) GetDeletionPolicy() string {
+	return string(c.Spec.DeletionPolicy)
+}
