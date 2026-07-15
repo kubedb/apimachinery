@@ -335,6 +335,25 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScaling
 		if err := rv.validateClickHouseKeeperOpsRequest(db); err != nil {
 			return fmt.Errorf("clickHouseKeeper: %w", err)
 		}
+		// Scale-down is not supported for internally-managed keeper.
+		// nuraft persists the server list in the raft changelog on disk.
+		// Removing keeper pods breaks quorum because the persisted state
+		// still expects the old, larger membership. The remove_srv operation
+		// cannot be committed without quorum.
+		if db.Spec.ClusterTopology != nil &&
+			db.Spec.ClusterTopology.ClickHouseKeeper != nil &&
+			!db.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged &&
+			db.Spec.ClusterTopology.ClickHouseKeeper.Spec != nil &&
+			db.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas != nil {
+			currentKeeper := *db.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas
+			if *horizontalScalingSpec.ClickHouseKeeper < currentKeeper {
+				return fmt.Errorf(
+					"scale-down of internally-managed ClickHouseKeeper is not supported: "+
+						"current replicas = %d, requested = %d",
+					currentKeeper, *horizontalScalingSpec.ClickHouseKeeper,
+				)
+			}
+		}
 	}
 
 	if horizontalScalingSpec.Shards != nil {

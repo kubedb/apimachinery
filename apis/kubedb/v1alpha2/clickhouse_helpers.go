@@ -190,6 +190,10 @@ func (c *ClickHouse) GoverningServiceDNS(podName string) string {
 	return fmt.Sprintf("%s.%s.%s.svc", podName, c.GoverningServiceName(), c.GetNamespace())
 }
 
+func (c *ClickHouse) KeeperGoverningServiceDNS(podName string) string {
+	return fmt.Sprintf("%s.%s.%s.svc", podName, c.KeeperGoverningServiceName(), c.GetNamespace())
+}
+
 func (c *ClickHouse) GetAuthSecretName() string {
 	if c.Spec.AuthSecret != nil && c.Spec.AuthSecret.Name != "" {
 		return c.Spec.AuthSecret.Name
