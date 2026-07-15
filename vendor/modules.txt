@@ -308,6 +308,9 @@ github.com/go-openapi/swag/yamlutils
 # github.com/go-sql-driver/mysql v1.9.3
 ## explicit; go 1.21.0
 github.com/go-sql-driver/mysql
+# github.com/gobuffalo/flect v1.0.3
+## explicit; go 1.16
+github.com/gobuffalo/flect
 # github.com/goccy/go-yaml v1.18.0
 ## explicit; go 1.21.0
 github.com/goccy/go-yaml/ast
@@ -574,7 +577,9 @@ github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1alpha1
 github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1beta1
 # github.com/prometheus-operator/prometheus-operator/pkg/client v0.87.1
 ## explicit; go 1.24.0
+github.com/prometheus-operator/prometheus-operator/pkg/client/applyconfiguration/monitoring/v1
 github.com/prometheus-operator/prometheus-operator/pkg/client/versioned/scheme
+github.com/prometheus-operator/prometheus-operator/pkg/client/versioned/typed/monitoring/v1
 # github.com/prometheus/client_golang v1.23.2
 ## explicit; go 1.23.0
 github.com/prometheus/client_golang/internal/github.com/golang/gddo/httputil
@@ -1913,7 +1918,12 @@ kmodules.xyz/custom-resources/crds
 kmodules.xyz/go-containerregistry/name
 # kmodules.xyz/monitoring-agent-api v0.34.1
 ## explicit; go 1.24.0
+kmodules.xyz/monitoring-agent-api/agents
+kmodules.xyz/monitoring-agent-api/agents/prometheus
+kmodules.xyz/monitoring-agent-api/agents/prometheusbuiltin
+kmodules.xyz/monitoring-agent-api/agents/prometheusoperator
 kmodules.xyz/monitoring-agent-api/api/v1
+kmodules.xyz/monitoring-agent-api/prometheus/v1
 # kmodules.xyz/objectstore-api v0.34.0
 ## explicit; go 1.25
 kmodules.xyz/objectstore-api/api/v1
