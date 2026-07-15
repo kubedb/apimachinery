@@ -342,7 +342,7 @@ func (m *MariaDBSpec) GetPersistentSecrets() []string {
 	}
 
 	var secrets []string
-	if m.AuthSecret != nil {
+	if !IsVirtualAuthSecretReferred(m.AuthSecret) && m.AuthSecret != nil && m.AuthSecret.Name != "" {
 		secrets = append(secrets, m.AuthSecret.Name)
 	}
 	return secrets
