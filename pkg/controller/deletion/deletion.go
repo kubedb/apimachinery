@@ -43,9 +43,10 @@ import (
 // DeletionPolicy values. Kept as untyped string consts so this package stays decoupled
 // from the v1/v1alpha2 DeletionPolicy types (both are `type DeletionPolicy string`).
 const (
-	DeletionPolicyHalt    = "Halt"
-	DeletionPolicyDelete  = "Delete"
-	DeletionPolicyWipeOut = "WipeOut"
+	DeletionPolicyHalt           = "Halt"
+	DeletionPolicyDelete         = "Delete"
+	DeletionPolicyWipeOut        = "WipeOut"
+	DeletionPolicyDoNotTerminate = "DoNotTerminate"
 )
 
 var (
@@ -101,11 +102,15 @@ func virtualAuthSecretNames(db DBInterface) []string {
 
 // Do runs the DeletionPolicy owner reference sync. Call it from the operator's terminate path.
 //
-//	Halt    -> keep PVCs and secrets (remove owner reference).
-//	Delete  -> delete PVCs (add owner reference), keep secrets.
-//	WipeOut -> delete PVCs and unused kubedb-owned secrets.
+//	Halt           -> keep PVCs and secrets (remove owner reference).
+//	DoNotTerminate -> treated like Halt here as a safety net: the admission webhook
+//	                  normally blocks deletion outright, but if it's bypassed or down,
+//	                  this keeps PVCs/secrets from being cascade-deleted anyway.
+//	Delete         -> delete PVCs (add owner reference), keep secrets.
+//	WipeOut        -> delete PVCs and unused kubedb-owned secrets.
 func Do(ctx context.Context, opts Options) error {
-	if opts.DB.GetDeletionPolicy() == DeletionPolicyHalt {
+	policy := opts.DB.GetDeletionPolicy()
+	if policy == DeletionPolicyHalt || policy == DeletionPolicyDoNotTerminate {
 		return removeOwnerRefsFromOffshoots(ctx, opts)
 	}
 	return ensureOwnerRefsOnOffshoots(ctx, opts)
