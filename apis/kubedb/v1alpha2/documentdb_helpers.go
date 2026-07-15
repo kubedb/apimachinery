@@ -172,6 +172,16 @@ func (d *DocumentDB) CertificateName(alias DocumentDBCertificateAlias) string {
 	return metautil.NameWithSuffix(d.Name, fmt.Sprintf("%s-cert", string(alias)))
 }
 
+// GetGRPCIssuerName is the cert-manager CA Issuer that signs the coordinator's gRPC leaf certs.
+func (d *DocumentDB) GetGRPCIssuerName() string {
+	return metautil.NameWithSuffix(d.OffshootName(), "grpc-issuer")
+}
+
+// GetGRPCSelfSignedIssuerName is the self-signed bootstrap Issuer that signs the grpc-ca certificate.
+func (d *DocumentDB) GetGRPCSelfSignedIssuerName() string {
+	return metautil.NameWithSuffix(d.OffshootName(), "grpc-selfsigned")
+}
+
 // GetCertSecretName returns the secret name for a certificate alias if provided,
 // otherwise returns the default certificate secret name for the given alias.
 func (d *DocumentDB) GetCertSecretName(alias DocumentDBCertificateAlias) string {

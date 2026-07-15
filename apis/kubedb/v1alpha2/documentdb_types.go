@@ -65,7 +65,7 @@ const (
 )
 
 // DocumentDBCertificateAlias represents the type of certificate.
-// +kubebuilder:validation:Enum=server;client;gateway
+// +kubebuilder:validation:Enum=server;client;gateway;grpc-ca;grpc-server;grpc-client
 type DocumentDBCertificateAlias string
 
 const (
@@ -75,6 +75,12 @@ const (
 	DocumentDBClientCert DocumentDBCertificateAlias = "client"
 	// DocumentDBGatewayCert is the MongoDB-wire gateway (edge) certificate served on port 10260.
 	DocumentDBGatewayCert DocumentDBCertificateAlias = "gateway"
+	// DocumentDBGRPCCaCert is the self-signed CA that isolates the coordinator's internal raft gRPC.
+	DocumentDBGRPCCaCert DocumentDBCertificateAlias = "grpc-ca"
+	// DocumentDBGRPCServerCert is the coordinator gRPC server certificate (served on /grpc/server).
+	DocumentDBGRPCServerCert DocumentDBCertificateAlias = "grpc-server"
+	// DocumentDBGRPCClientCert is the coordinator gRPC client certificate (mounted at /grpc/client).
+	DocumentDBGRPCClientCert DocumentDBCertificateAlias = "grpc-client"
 )
 
 // DocumentDBSSLMode mirrors PostgresSSLMode for the DocumentDB Postgres server.
