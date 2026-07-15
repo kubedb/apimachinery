@@ -22,6 +22,7 @@ import (
 	"kubedb.dev/apimachinery/apis"
 
 	"github.com/pkg/errors"
+	kerr "k8s.io/apimachinery/pkg/api/errors"
 	clientutil "kmodules.xyz/client-go/client"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -37,6 +38,9 @@ func EnsureFinalizer(ctx context.Context, kbClient client.Client, db client.Obje
 		controllerutil.AddFinalizer(obj, apis.Finalizer)
 		return obj
 	})
+	if kerr.IsNotFound(err) {
+		return nil
+	}
 	return errors.Wrap(err, "failed to add finalizer")
 }
 
@@ -50,5 +54,8 @@ func RemoveFinalizer(ctx context.Context, kbClient client.Client, db client.Obje
 		controllerutil.RemoveFinalizer(obj, apis.Finalizer)
 		return obj
 	})
+	if kerr.IsNotFound(err) {
+		return nil
+	}
 	return errors.Wrap(err, "failed to remove finalizer")
 }

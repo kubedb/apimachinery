@@ -19,6 +19,8 @@ package deletion
 import (
 	"context"
 
+	"kubedb.dev/apimachinery/apis"
+
 	apps "k8s.io/api/apps/v1"
 	core "k8s.io/api/core/v1"
 	policy "k8s.io/api/policy/v1"
@@ -76,6 +78,9 @@ func Halt(ctx context.Context, opts HaltOptions) error {
 		return err
 	}
 	for i := range svcs.Items {
+		if IsPreservedOnHalt(&svcs.Items[i]) {
+			continue
+		}
 		if err := opts.KBClient.Delete(ctx, &svcs.Items[i]); err != nil && !kerr.IsNotFound(err) {
 			return err
 		}
@@ -87,4 +92,13 @@ func Halt(ctx context.Context, opts HaltOptions) error {
 		}
 	}
 	return nil
+}
+
+// IsPreservedOnHalt reports whether obj carries the
+// kubedb.com/resource-policy-keep-on: halt annotation, meaning it must survive
+// the halt path. Operators can reuse this in their own halt-completion polling
+// (e.g. waiting for offshoot Services to disappear) to avoid waiting forever
+// on a Service that Halt intentionally keeps.
+func IsPreservedOnHalt(obj client.Object) bool {
+	return obj.GetAnnotations()[apis.ResourcePolicyKeepOnAnnotation] == apis.ResourcePolicyKeepOnHalt
 }
