@@ -67,10 +67,6 @@ func (w *Weaviate) GetPersistentSecrets() []string {
 	if !w.Spec.DisableSecurity && !IsVirtualAuthSecretReferred(w.Spec.AuthSecret) && w.Spec.AuthSecret != nil && w.Spec.AuthSecret.Name != "" {
 		secrets = append(secrets, w.GetAuthSecretName())
 	}
-	if w.Spec.TLS != nil {
-		secrets = append(secrets, w.GetCertSecretName(WeaviateServerCert))
-		secrets = append(secrets, w.GetCertSecretName(WeaviateClientCert))
-	}
 	return secrets
 }
 

@@ -508,6 +508,14 @@ func (c *Cassandra) CertSecretVolumeMountPath(configDir string, cert string) str
 	return filepath.Join(configDir, cert)
 }
 
+func (c *Cassandra) GetPersistentSecrets() []string {
+	var secrets []string
+	if !c.Spec.DisableSecurity && !IsVirtualAuthSecretReferred(c.Spec.AuthSecret) && c.Spec.AuthSecret != nil && c.Spec.AuthSecret.Name != "" {
+		secrets = append(secrets, c.GetAuthSecretName())
+	}
+	return secrets
+}
+
 func (r *Cassandra) GetDeletionPolicy() string {
 	return string(r.Spec.DeletionPolicy)
 }
