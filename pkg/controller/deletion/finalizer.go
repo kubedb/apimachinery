@@ -39,9 +39,7 @@ func EnsureFinalizer(ctx context.Context, kbClient client.Client, db client.Obje
 		return obj
 	})
 	if kerr.IsNotFound(err) {
-		// The DB was deleted between the caller's check and this patch; nothing to add a
-		// finalizer to.
-		return err
+		return nil
 	}
 	return errors.Wrap(err, "failed to add finalizer")
 }
@@ -57,7 +55,6 @@ func RemoveFinalizer(ctx context.Context, kbClient client.Client, db client.Obje
 		return obj
 	})
 	if kerr.IsNotFound(err) {
-		// Already gone; the finalizer's job of unblocking deletion is done.
 		return nil
 	}
 	return errors.Wrap(err, "failed to remove finalizer")
