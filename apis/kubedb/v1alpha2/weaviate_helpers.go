@@ -245,12 +245,12 @@ func (w *Weaviate) setDefaultContainerSecurityContext(wvVersion *catalog.Weaviat
 		container = &core.Container{
 			Name: kubedb.WeaviateContainerName,
 		}
-		podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 	}
 	if container.SecurityContext == nil {
 		container.SecurityContext = &core.SecurityContext{}
 	}
 	w.assignDefaultContainerSecurityContext(wvVersion, container.SecurityContext)
+	podTemplate.Spec.Containers = coreutil.UpsertContainer(podTemplate.Spec.Containers, *container)
 }
 
 func (w *Weaviate) assignDefaultContainerSecurityContext(wvVersion *catalog.WeaviateVersion, rc *core.SecurityContext) {
@@ -267,6 +267,9 @@ func (w *Weaviate) assignDefaultContainerSecurityContext(wvVersion *catalog.Weav
 	}
 	if rc.RunAsUser == nil {
 		rc.RunAsUser = wvVersion.Spec.SecurityContext.RunAsUser
+	}
+	if rc.RunAsGroup == nil {
+		rc.RunAsGroup = wvVersion.Spec.SecurityContext.RunAsUser
 	}
 	if rc.SeccompProfile == nil {
 		rc.SeccompProfile = secomp.DefaultSeccompProfile()
