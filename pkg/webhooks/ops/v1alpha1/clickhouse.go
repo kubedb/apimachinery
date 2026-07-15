@@ -138,7 +138,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.
 				err.Error()))
 		}
 	case opsapi.ClickHouseOpsRequestTypeHorizontalScaling:
-		if err := rv.validateClickHouseHorizontalScalingOpsRequest(req); err != nil {
+		if err := rv.validateClickHouseHorizontalScalingOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("horizontalScaling"),
 				req.Name,
 				err.Error()))
@@ -296,18 +296,35 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseVolumeExpansionOp
 	return nil
 }
 
-func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScalingOpsRequest(req *opsapi.ClickHouseOpsRequest) error {
+func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScalingOpsRequest(db *olddbapi.ClickHouse, req *opsapi.ClickHouseOpsRequest) error {
 	horizontalScalingSpec := req.Spec.HorizontalScaling
 	if horizontalScalingSpec == nil {
-		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
+		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
 	}
 
-	if horizontalScalingSpec.Replicas == nil {
-		return errors.New("spec.horizontalScaling.replicas can not be empty")
+	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.Shards == nil {
+		return errors.New("at least one of `spec.horizontalScaling.replicas` or `spec.horizontalScaling.shards` must be provided")
 	}
 
-	if *horizontalScalingSpec.Replicas <= 0 {
-		return errors.New("spec.horizontalScaling.replicas must be positive")
+	if horizontalScalingSpec.Replicas != nil && *horizontalScalingSpec.Replicas <= 0 {
+		return errors.New("`spec.horizontalScaling.replicas` must be greater than 0")
+	}
+
+	if horizontalScalingSpec.Shards != nil {
+		if *horizontalScalingSpec.Shards <= 0 {
+			return errors.New("`spec.horizontalScaling.shards` must be greater than 0")
+		}
+		// shard scaling only applies to sharded (topology) clusters
+		if db.Spec.ClusterTopology == nil {
+			return errors.New("`spec.horizontalScaling.shards` is only supported for a sharded cluster (spec.clusterTopology)")
+		}
+		// scale-up only — validate at creation time to avoid re-validation failures
+		if req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "" {
+			currentShards := int(*db.Spec.ClusterTopology.Cluster.Shards)
+			if int(*horizontalScalingSpec.Shards) < currentShards {
+				return fmt.Errorf("shard scale-up only: `spec.horizontalScaling.shards` (%d) must be greater than current shard count (%d)", *horizontalScalingSpec.Shards, currentShards)
+			}
+		}
 	}
 
 	return nil
@@ -367,17 +384,7 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseRotateAuthenticat
 	}
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		err := rv.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &core.Secret{})
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
-			}
+		if err := validateAuthSecretRef(context.TODO(), rv.DefaultClient, req.Namespace, authSpec.SecretRef); err != nil {
 			return err
 		}
 	}

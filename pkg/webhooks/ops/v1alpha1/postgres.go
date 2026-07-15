@@ -283,6 +283,32 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresUpdateVersionOpsReques
 	if err != nil {
 		return err
 	}
+
+	sourceVersion := &catalog.PostgresVersion{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name: db.Spec.Version,
+	}, sourceVersion); err != nil {
+		return err
+	}
+
+	if sourceVersion.Spec.DB.BaseOS != "" && postgresTargetVersion.Spec.DB.BaseOS != "" &&
+		sourceVersion.Spec.DB.BaseOS != postgresTargetVersion.Spec.DB.BaseOS {
+		return fmt.Errorf(
+			"upgrading between different base OS variants is not allowed: "+
+				"current version %q uses baseOS %q but target version %q uses baseOS %q",
+			db.Spec.Version, sourceVersion.Spec.DB.BaseOS,
+			updateVersionSpec.TargetVersion, postgresTargetVersion.Spec.DB.BaseOS,
+		)
+	}
+	if sourceVersion.Spec.Distribution != "" && postgresTargetVersion.Spec.Distribution != "" &&
+		sourceVersion.Spec.Distribution != postgresTargetVersion.Spec.Distribution {
+		return fmt.Errorf(
+			"upgrading between different distributions is not allowed: "+
+				"current version %q uses distribution %q but target version %q uses distribution %q",
+			db.Spec.Version, sourceVersion.Spec.Distribution,
+			updateVersionSpec.TargetVersion, postgresTargetVersion.Spec.Distribution,
+		)
+	}
 	return nil
 }
 
@@ -304,33 +330,9 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresRotateAuthenticationOp
 
 	authSpec := req.Spec.Authentication
 	if authSpec != nil && authSpec.SecretRef != nil {
-		if authSpec.SecretRef.Name == "" {
-			return errors.New("spec.authentication.secretRef.name can not be empty")
-		}
-		var newAuthSecret, oldAuthSecret core.Secret
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &newAuthSecret)
-		if err != nil {
-			if apierrors.IsNotFound(err) {
-				return errors.Wrap(err, fmt.Sprintf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name))
-			}
+		if err := validateRotateAuthSecretRef(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef, db.GetAuthSecretName(), dbapi.IsVirtualAuthSecretReferred(db.Spec.AuthSecret)); err != nil {
 			return err
 		}
-
-		err = w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      db.GetAuthSecretName(),
-			Namespace: db.GetNamespace(),
-		}, &oldAuthSecret)
-		if err != nil {
-			return err
-		}
-
-		if string(oldAuthSecret.Data[core.BasicAuthUsernameKey]) != string(newAuthSecret.Data[core.BasicAuthUsernameKey]) {
-			return errors.New("database username cannot be changed")
-		}
-
 	}
 
 	return nil

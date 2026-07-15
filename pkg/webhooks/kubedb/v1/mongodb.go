@@ -625,7 +625,7 @@ func validateVolumesAndMounts(db *dbapi.MongoDB) error {
 }
 
 func getVolumesMountsForAllContainers(podTemplate *ofstv2.PodTemplateSpec) []core.VolumeMount {
-	mounts := make([]core.VolumeMount, 0)
+	mounts := make([]core.VolumeMount, 0, len(podTemplate.Spec.Containers))
 	for _, container := range podTemplate.Spec.Containers {
 		mounts = append(mounts, container.VolumeMounts...)
 	}

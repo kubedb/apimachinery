@@ -24,12 +24,12 @@ import (
 	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 	elasticsearchv1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	migratorv1alpha1 "kubedb.dev/apimachinery/apis/migrator/v1alpha1"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
@@ -215,6 +215,22 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("zookeeperversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ZooKeeperVersions().Informer()}, nil
 
+		// Group=courier.kubedb.com, Version=v1alpha1
+	case courierv1alpha1.SchemeGroupVersion.WithResource("branches"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().Branches().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("branchworks"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().BranchWorks().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("mssqlservermigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MSSQLServerMigrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("mariadbmigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MariaDBMigrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("mongodbmigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MongoDBMigrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("mysqlmigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MySQLMigrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("postgresmigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().PostgresMigrations().Informer()}, nil
+
 		// Group=elasticsearch.kubedb.com, Version=v1alpha1
 	case elasticsearchv1alpha1.SchemeGroupVersion.WithResource("elasticsearchdashboards"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Elasticsearch().V1alpha1().ElasticsearchDashboards().Informer()}, nil
@@ -386,10 +402,6 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Weaviates().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("zookeepers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ZooKeepers().Informer()}, nil
-
-		// Group=migrator.kubedb.com, Version=v1alpha1
-	case migratorv1alpha1.SchemeGroupVersion.WithResource("migrators"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Migrator().V1alpha1().Migrators().Informer()}, nil
 
 		// Group=ops.kubedb.com, Version=v1alpha1
 	case opsv1alpha1.SchemeGroupVersion.WithResource("aerospikeopsrequests"):

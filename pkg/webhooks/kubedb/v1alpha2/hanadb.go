@@ -99,12 +99,8 @@ func (w *HanaDBCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 	if !ok {
 		return nil, fmt.Errorf("expected a HanaDB object, got a %T", newObj)
 	}
-	olddb, ok := old.(*api.HanaDB)
-	if !ok {
+	if _, ok := old.(*api.HanaDB); !ok {
 		return nil, fmt.Errorf("expected a HanaDB object, got a %T", old)
-	}
-	if ptr.Deref(olddb.Spec.Replicas, 0) > 1 && ptr.Deref(db.Spec.Replicas, 0) == 1 {
-		return nil, fmt.Errorf("can't scale down to 1 replica")
 	}
 	hanaLog.Info("validate update", "name", db.Name)
 
@@ -188,6 +184,12 @@ func (w *HanaDBCustomWebhook) ValidateCreateOrUpdate(db *api.HanaDB) field.Error
 				db.Name,
 				"StorageType should be either durable or ephemeral"))
 		}
+	}
+
+	if db.Spec.EnforceVolumePermission && db.Spec.StorageType == api.StorageTypeEphemeral {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enforceVolumePermission"),
+			db.Spec.EnforceVolumePermission,
+			"enforceVolumePermission can only be used with durable storage"))
 	}
 
 	if err := amv.ValidateStorage(w.DefaultClient, db.Spec.StorageType, db.Spec.Storage); err != nil {

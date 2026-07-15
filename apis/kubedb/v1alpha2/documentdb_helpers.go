@@ -258,6 +258,7 @@ func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alp
 	d.SetInitContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
 	d.SetDocumentDBContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
 	d.SetCoordinatorContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
+	apis.SetDefaultResizePolicy(d.Spec.PodTemplate.Spec.Containers, d.Spec.PodTemplate.Spec.InitContainers)
 	d.SetDefaultReplicationMode()
 	d.SetHealthCheckerDefaults()
 }
@@ -371,7 +372,7 @@ func (d *DocumentDB) initializePodTemplates() {
 }
 
 func (d *DocumentDB) GetPersistentSecrets() []string {
-	var secrets []string
+	secrets := make([]string, 0, 2)
 	secrets = append(secrets, d.GetAuthSecretName())
 	secrets = append(secrets, d.GetAdminAuthSecretName())
 	return secrets
