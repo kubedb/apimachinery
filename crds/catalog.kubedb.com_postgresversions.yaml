@@ -248,6 +248,7 @@ spec:
               tde:
                 properties:
                   extensionName:
+                    default: pg_tde
                     type: string
                   supported:
                     type: boolean

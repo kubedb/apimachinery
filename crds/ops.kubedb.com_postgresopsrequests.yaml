@@ -121,6 +121,7 @@ spec:
               enableWALEncryption:
                 properties:
                   keyName:
+                    pattern: ^[A-Za-z0-9_-]{1,128}$
                     type: string
                 type: object
               forceFailOver:
@@ -401,6 +402,7 @@ spec:
               rotatePrincipalKey:
                 properties:
                   keyName:
+                    pattern: ^[A-Za-z0-9_-]{1,128}$
                     type: string
                 type: object
               setRaftKeyPair:

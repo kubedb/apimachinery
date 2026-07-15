@@ -167,6 +167,17 @@ func (wh *PostgresCustomWebhook) validateUpdate(obj, oldObj *dbapi.Postgres) err
 	if oldObj.Spec.Init != nil && oldObj.Spec.Init.Initialized {
 		preconditions.Insert("spec.init")
 	}
+	// Enabling or disabling TDE after creation is not supported: the principal-key
+	// bootstrap and shared_preload_libraries composition only happen at
+	// initialization, and dropping the provider would orphan the existing keys and
+	// leave encrypted data unreadable. Reject the nil<->non-nil transition with a
+	// clear message (this also avoids a nil-traversal in the strategic-patch
+	// precondition when spec.tde becomes JSON null). Modifying the mutable knobs
+	// (encryptWAL, enforceEncryption, defaultEncryptedTables) of an existing
+	// spec.tde stays allowed and flows through an OpsRequest.
+	if (oldObj.Spec.TDE == nil) != (obj.Spec.TDE == nil) {
+		return fmt.Errorf("spec.tde cannot be added or removed after creation; it is a create-time setting")
+	}
 	// The TDE key provider and cipher are immutable once set: changing where the
 	// principal key lives, or the algorithm, would orphan the existing keys and
 	// leave already encrypted data unreadable. The mutable knobs (encryptWAL,
@@ -290,6 +301,24 @@ func (wh *PostgresCustomWebhook) validateTDE(postgres *dbapi.Postgres, pgVersion
 	}
 	if providers != 1 {
 		return fmt.Errorf("spec.tde.keyProvider must set exactly one of vault, kmip or file, got %d", providers)
+	}
+	// The CRD guarantees the sub-struct is present, not that its required fields
+	// are non-empty. Catch empty required fields here so the operator fails fast at
+	// admission instead of opaquely at pod bootstrap (a missing vault address or
+	// token secret only surfaces as a keyless boot / crash-loop otherwise).
+	switch {
+	case kp.Vault != nil:
+		if kp.Vault.Address == "" || kp.Vault.MountPath == "" || kp.Vault.TokenSecretRef.Name == "" {
+			return fmt.Errorf("spec.tde.keyProvider.vault requires address, mountPath and tokenSecretRef.name to be set")
+		}
+	case kp.KMIP != nil:
+		if kp.KMIP.Address == "" || kp.KMIP.Port <= 0 || kp.KMIP.CredentialSecretRef.Name == "" {
+			return fmt.Errorf("spec.tde.keyProvider.kmip requires address, a valid port and credentialSecretRef.name to be set")
+		}
+	case kp.File != nil:
+		if kp.File.Path == "" {
+			return fmt.Errorf("spec.tde.keyProvider.file requires path to be set")
+		}
 	}
 	// The file (local keyring) provider cannot back replication or WAL encryption.
 	if kp.File != nil {

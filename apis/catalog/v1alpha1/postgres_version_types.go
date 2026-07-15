@@ -110,6 +110,7 @@ type PostgresVersionTDE struct {
 	Supported bool `json:"supported"`
 	// ExtensionName is the extension to preload and CREATE. Defaults to "pg_tde".
 	// +optional
+	// +kubebuilder:default="pg_tde"
 	ExtensionName string `json:"extensionName,omitempty"`
 }
 

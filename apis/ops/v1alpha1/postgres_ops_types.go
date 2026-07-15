@@ -131,8 +131,11 @@ type PostgresOpsRequestType string
 type PostgresRotatePrincipalKeySpec struct {
 	// KeyName is the new principal key name to set with the configured key provider.
 	// When empty the operator derives a new name from the database name and a
-	// monotonic suffix.
+	// monotonic suffix. It is interpolated into pg_tde SQL run as the Postgres
+	// superuser, so it is constrained to a safe identifier charset to keep it from
+	// being used for SQL injection.
 	// +optional
+	// +kubebuilder:validation:Pattern="^[A-Za-z0-9_-]{1,128}$"
 	KeyName string `json:"keyName,omitempty"`
 }
 
@@ -140,8 +143,11 @@ type PostgresRotatePrincipalKeySpec struct {
 // (pg_tde.wal_encrypt=on). It sets the server key and performs a rolling restart.
 type PostgresEnableWALEncryptionSpec struct {
 	// KeyName is the server key name for WAL encryption. When empty the operator
-	// derives it from the principal key name.
+	// derives it from the principal key name. It is interpolated into pg_tde SQL
+	// run as the Postgres superuser, so it is constrained to a safe identifier
+	// charset to keep it from being used for SQL injection.
 	// +optional
+	// +kubebuilder:validation:Pattern="^[A-Za-z0-9_-]{1,128}$"
 	KeyName string `json:"keyName,omitempty"`
 }
 

@@ -257,6 +257,8 @@ type TDEKMIPProvider struct {
 	Address string `json:"address"`
 
 	// Port is the KMIP server port.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
 	Port int32 `json:"port"`
 
 	// CredentialSecretRef references a Secret holding the KMIP client credentials
