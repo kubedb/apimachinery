@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
@@ -44,6 +45,7 @@ const (
 // +kubebuilder:printcolumn:name="Mode",type="string",JSONPath=".status.mode"
 // +kubebuilder:printcolumn:name="Target",type="string",JSONPath=".status.targetRef.name"
 // +kubebuilder:printcolumn:name="Freshness",type="string",JSONPath=".status.freshness"
+// +kubebuilder:printcolumn:name="Next-Refresh",type="string",priority=1,JSONPath=".status.nextRefreshTime"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type Branch struct {
 	metav1.TypeMeta `json:",inline"`
@@ -183,19 +185,45 @@ type BranchStatus struct {
 	// +optional
 	Mode BranchMode `json:"mode,omitempty"`
 
-	// TargetRef references the branched Database.
+	// --- target ---
+
+	// TargetRef references the branched Database. UID is populated so consumers can detect a
+	// target that was deleted and recreated out from under the branch.
 	// +optional
 	TargetRef *corev1.ObjectReference `json:"targetRef,omitempty"`
 
-	// Snapshot references the source snapshot the current branch was cloned from.
+	// Resources lists the objects this branch owns, for audit and cleanup visibility.
 	// +optional
-	Snapshot *BranchSnapshotRef `json:"snapshot,omitempty"`
+	Resources *BranchOwnedResources `json:"resources,omitempty"`
 
-	// LastRefreshAt is the time of the last successful refresh.
+	// --- snapshot provenance (current generation) ---
+
+	// Snapshot describes the source snapshot set backing the current branch generation.
 	// +optional
-	LastRefreshAt *metav1.Time `json:"lastRefreshAt,omitempty"`
+	Snapshot *BranchSnapshotStatus `json:"snapshot,omitempty"`
 
-	// Freshness is the human-readable age of the branch data since the last refresh (e.g. "3m", "1h2m").
+	// --- refresh / freshness ---
+
+	// RefreshGeneration is the current refresh generation; it bumps on each scheduled refresh.
+	// +optional
+	RefreshGeneration int64 `json:"refreshGeneration,omitempty"`
+
+	// LastRefreshTime is the time of the last refresh ATTEMPT, regardless of outcome.
+	// +optional
+	LastRefreshTime *metav1.Time `json:"lastRefreshTime,omitempty"`
+
+	// LastSuccessfulRefreshTime is the time of the last SUCCESSFUL refresh; it is the anchor
+	// for Freshness. A failed tick updates LastRefreshTime but not this field.
+	// +optional
+	LastSuccessfulRefreshTime *metav1.Time `json:"lastSuccessfulRefreshTime,omitempty"`
+
+	// NextRefreshTime is the next scheduled refresh, computed from spec.schedule.cron. Nil for
+	// a one-shot branch.
+	// +optional
+	NextRefreshTime *metav1.Time `json:"nextRefreshTime,omitempty"`
+
+	// Freshness is the human-readable age of the branch data since the last successful refresh
+	// (e.g. "3m", "1h2m").
 	// +optional
 	Freshness metav1.Duration `json:"freshness,omitempty"`
 
@@ -208,6 +236,25 @@ type BranchStatus struct {
 	// +listMapKey=type
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+}
+
+// BranchOwnedResources references the objects created and owned by a branch.
+type BranchOwnedResources struct {
+	// ClonedPVCs are the target PVCs cloned from the source snapshots, ordered by ordinal.
+	// +optional
+	ClonedPVCs []string `json:"clonedPVCs,omitempty"`
+
+	// AuthSecret is the branch's auth Secret (the credential matching the cloned data).
+	// +optional
+	AuthSecret string `json:"authSecret,omitempty"`
+
+	// ConfigSecret is the branch's config Secret, when the engine uses one.
+	// +optional
+	ConfigSecret string `json:"configSecret,omitempty"`
+
+	// MassageJob is the data-massage Job name, set only when spec.dataMassageImage is used.
+	// +optional
+	MassageJob string `json:"massageJob,omitempty"`
 }
 
 // BranchPhase is the lifecycle phase of a Branch.
@@ -248,16 +295,53 @@ const (
 	BranchSnapshotTypeVolumeSnapshot      BranchSnapshotType = "VolumeSnapshot"
 )
 
-// BranchSnapshotRef references the source snapshot(s).
-type BranchSnapshotRef struct {
-	// Type is the snapshot kind (VolumeGroupSnapshot preferred, VolumeSnapshot fallback).
-	Type BranchSnapshotType `json:"type,omitempty"`
-	// Refs are the snapshot object names backing the current branch data:
-	//   - VolumeGroupSnapshot: a single-element list (the VolumeGroupSnapshot name)
-	//   - VolumeSnapshot fallback: one per source PVC, ordered by ordinal and aligned
-	//     to the cloned PVCs
+// BranchSnapshotStatus describes the source snapshot set backing the current branch generation.
+type BranchSnapshotStatus struct {
+	// Strategy is how the source was snapshotted: VolumeGroupSnapshot (group-consistent) or
+	// VolumeSnapshot (per-PVC fallback, used when the driver has no VolumeGroupSnapshotClass).
 	// +optional
-	Refs []string `json:"refs,omitempty"`
+	Strategy BranchSnapshotType `json:"strategy,omitempty"`
+
+	// Generation is the refresh generation these snapshots belong to.
+	// +optional
+	Generation int64 `json:"generation,omitempty"`
+
+	// GroupRef is the VolumeGroupSnapshot object name, set only when Strategy is
+	// VolumeGroupSnapshot.
+	// +optional
+	GroupRef string `json:"groupRef,omitempty"`
+
+	// Ready is true when every member snapshot is readyToUse.
+	// +optional
+	Ready bool `json:"ready,omitempty"`
+
+	// Members is one entry per source data PVC, ordered by ordinal and aligned to the cloned
+	// target PVCs.
+	// +optional
+	Members []BranchSnapshotMember `json:"members,omitempty"`
+}
+
+// BranchSnapshotMember is one source VolumeSnapshot backing a single data PVC of the branch.
+type BranchSnapshotMember struct {
+	// Name is the VolumeSnapshot object name.
+	Name string `json:"name"`
+
+	// SourcePVC is the source PVC this snapshot was taken from (its ordinal maps to the cloned
+	// target PVC).
+	// +optional
+	SourcePVC string `json:"sourcePVC,omitempty"`
+
+	// ReadyToUse mirrors the VolumeSnapshot's readyToUse status.
+	// +optional
+	ReadyToUse bool `json:"readyToUse,omitempty"`
+
+	// RestoreSize is the snapshot's restore size, when reported by the CSI driver.
+	// +optional
+	RestoreSize *resource.Quantity `json:"restoreSize,omitempty"`
+
+	// CreationTime is when the snapshot was taken, when reported by the CSI driver.
+	// +optional
+	CreationTime *metav1.Time `json:"creationTime,omitempty"`
 }
 
 // BranchRunResult is the outcome of a refresh run.

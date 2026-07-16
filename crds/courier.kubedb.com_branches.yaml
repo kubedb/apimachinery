@@ -27,6 +27,10 @@ spec:
     - jsonPath: .status.freshness
       name: Freshness
       type: string
+    - jsonPath: .status.nextRefreshTime
+      name: Next-Refresh
+      priority: 1
+      type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date
@@ -203,7 +207,10 @@ spec:
                       type: string
                   type: object
                 type: array
-              lastRefreshAt:
+              lastRefreshTime:
+                format: date-time
+                type: string
+              lastSuccessfulRefreshTime:
                 format: date-time
                 type: string
               mode:
@@ -211,6 +218,9 @@ spec:
                 - Local
                 - Initiator
                 - Creator
+                type: string
+              nextRefreshTime:
+                format: date-time
                 type: string
               phase:
                 enum:
@@ -224,13 +234,54 @@ spec:
                 - Deleting
                 - Failed
                 type: string
-              snapshot:
+              refreshGeneration:
+                format: int64
+                type: integer
+              resources:
                 properties:
-                  refs:
+                  authSecret:
+                    type: string
+                  clonedPVCs:
                     items:
                       type: string
                     type: array
-                  type:
+                  configSecret:
+                    type: string
+                  massageJob:
+                    type: string
+                type: object
+              snapshot:
+                properties:
+                  generation:
+                    format: int64
+                    type: integer
+                  groupRef:
+                    type: string
+                  members:
+                    items:
+                      properties:
+                        creationTime:
+                          format: date-time
+                          type: string
+                        name:
+                          type: string
+                        readyToUse:
+                          type: boolean
+                        restoreSize:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                          x-kubernetes-int-or-string: true
+                        sourcePVC:
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  ready:
+                    type: boolean
+                  strategy:
                     enum:
                     - VolumeGroupSnapshot
                     - VolumeSnapshot
