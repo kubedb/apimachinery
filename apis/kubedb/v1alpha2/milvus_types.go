@@ -215,6 +215,10 @@ type MetaStorageSpec struct {
 	// Storage to specify how storage shall be used.
 	// +optional
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+
+	// TLS contains tls configurations
+	// +optional
+	TLS *MilvusTLSConfig `json:"tls,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
