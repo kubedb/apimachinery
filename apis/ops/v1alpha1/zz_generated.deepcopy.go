@@ -9031,6 +9031,11 @@ func (in *WeaviateOpsRequestList) DeepCopyObject() runtime.Object {
 func (in *WeaviateOpsRequestSpec) DeepCopyInto(out *WeaviateOpsRequestSpec) {
 	*out = *in
 	out.DatabaseRef = in.DatabaseRef
+	if in.UpdateVersion != nil {
+		in, out := &in.UpdateVersion, &out.UpdateVersion
+		*out = new(WeaviateUpdateVersionSpec)
+		**out = **in
+	}
 	if in.HorizontalScaling != nil {
 		in, out := &in.HorizontalScaling, &out.HorizontalScaling
 		*out = new(WeaviateHorizontalScalingSpec)
