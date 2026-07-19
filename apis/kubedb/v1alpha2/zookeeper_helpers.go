@@ -49,11 +49,6 @@ func (z *ZooKeeper) CustomResourceDefinition() *apiextensions.CustomResourceDefi
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralZooKeeper))
 }
 
-// Owner returns owner reference to resources
-func (z *ZooKeeper) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(z, SchemeGroupVersion.WithKind(z.ResourceKind()))
-}
-
 func (z *ZooKeeper) OffshootName() string {
 	return z.Name
 }
@@ -431,5 +426,5 @@ func (z *ZooKeeper) GetDeletionPolicy() string {
 }
 
 func (z *ZooKeeper) AsOwner() *meta.OwnerReference {
-	return z.Owner()
+	return meta.NewControllerRef(z, SchemeGroupVersion.WithKind(z.ResourceKind()))
 }

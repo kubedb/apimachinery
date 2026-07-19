@@ -48,11 +48,6 @@ func (d *DocumentDB) CustomResourceDefinition() *apiextensions.CustomResourceDef
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralDocumentDB))
 }
 
-// Owner returns owner reference to resources
-func (d *DocumentDB) Owner() *metav1.OwnerReference {
-	return metav1.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
-}
-
 // AsOwner returns owner reference to resources
 func (d *DocumentDB) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(d, SchemeGroupVersion.WithKind(ResourceKindDocumentDB))

@@ -72,11 +72,6 @@ func (d *DB2) GoverningServiceName() string {
 	return metautil.NameWithSuffix(d.ServiceName(), "pods")
 }
 
-// Owner returns owner reference to resources
-func (d *DB2) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
-}
-
 func (d *DB2) ResourceKind() string {
 	return ResourceKindDB2
 }
@@ -236,5 +231,5 @@ func (d *DB2) GetDeletionPolicy() string {
 }
 
 func (d *DB2) AsOwner() *meta.OwnerReference {
-	return d.Owner()
+	return meta.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
 }

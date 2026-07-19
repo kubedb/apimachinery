@@ -70,11 +70,6 @@ func (c ClickhouseApp) Type() appcat.AppType {
 	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularClickHouse))
 }
 
-// Owner returns owner reference to resources
-func (c *ClickHouse) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(c, SchemeGroupVersion.WithKind(c.ResourceKind()))
-}
-
 func (c *ClickHouse) ResourceKind() string {
 	return ResourceKindClickHouse
 }
@@ -594,5 +589,5 @@ func (c *ClickHouse) GetDeletionPolicy() string {
 }
 
 func (c *ClickHouse) AsOwner() *meta.OwnerReference {
-	return c.Owner()
+	return meta.NewControllerRef(c, SchemeGroupVersion.WithKind(c.ResourceKind()))
 }

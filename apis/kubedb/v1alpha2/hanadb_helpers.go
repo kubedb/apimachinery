@@ -367,11 +367,6 @@ func (h *HanaDB) ServiceAccountName() string {
 	return h.OffshootName()
 }
 
-// Owner returns owner reference to resources
-func (h *HanaDB) Owner() *metav1.OwnerReference {
-	return metav1.NewControllerRef(h, SchemeGroupVersion.WithKind(h.ResourceKind()))
-}
-
 func (h *HanaDB) GetAuthSecretName() string {
 	if h.Spec.AuthSecret != nil && h.Spec.AuthSecret.Name != "" {
 		return h.Spec.AuthSecret.Name
@@ -784,5 +779,5 @@ func (h *HanaDB) GetDeletionPolicy() string {
 }
 
 func (h *HanaDB) AsOwner() *metav1.OwnerReference {
-	return h.Owner()
+	return metav1.NewControllerRef(h, SchemeGroupVersion.WithKind(h.ResourceKind()))
 }

@@ -76,11 +76,6 @@ func (m *MSSQLServer) ResourceFQN() string {
 	return fmt.Sprintf("%s.%s", m.ResourcePlural(), kubedb.GroupName)
 }
 
-// Owner returns owner reference to resources
-func (m *MSSQLServer) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(m, SchemeGroupVersion.WithKind(m.ResourceKind()))
-}
-
 func (m *MSSQLServer) OffshootName() string {
 	return m.Name
 }
@@ -675,5 +670,5 @@ func (m *MSSQLServer) GetDeletionPolicy() string {
 }
 
 func (m *MSSQLServer) AsOwner() *meta.OwnerReference {
-	return m.Owner()
+	return meta.NewControllerRef(m, SchemeGroupVersion.WithKind(m.ResourceKind()))
 }

@@ -103,11 +103,6 @@ func (r *Neo4j) GetPersistentSecrets() []string {
 	return secrets
 }
 
-// Owner returns owner reference to resources
-func (r *Neo4j) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(r, SchemeGroupVersion.WithKind(r.ResourceKind()))
-}
-
 func (r *Neo4j) ResourceKind() string {
 	return ResourceKindNeo4j
 }
@@ -404,5 +399,5 @@ func (r *Neo4j) GetDeletionPolicy() string {
 }
 
 func (r *Neo4j) AsOwner() *meta.OwnerReference {
-	return r.Owner()
+	return meta.NewControllerRef(r, SchemeGroupVersion.WithKind(r.ResourceKind()))
 }

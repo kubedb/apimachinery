@@ -106,11 +106,6 @@ func (p *Pgpool) ServiceName() string {
 	return p.OffshootName()
 }
 
-// Owner returns owner reference to resources
-func (p *Pgpool) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(p, SchemeGroupVersion.WithKind(p.ResourceKind()))
-}
-
 func (p *Pgpool) PodLabels(extraLabels ...map[string]string) map[string]string {
 	var labels map[string]string
 	if p.Spec.PodTemplate != nil {
@@ -432,5 +427,5 @@ func (p *Pgpool) GetDeletionPolicy() string {
 }
 
 func (p *Pgpool) AsOwner() *meta.OwnerReference {
-	return p.Owner()
+	return meta.NewControllerRef(p, SchemeGroupVersion.WithKind(p.ResourceKind()))
 }

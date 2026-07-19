@@ -54,10 +54,6 @@ func (d *Druid) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralDruid))
 }
 
-func (d *Druid) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
-}
-
 func (d *Druid) ResourceKind() string {
 	return ResourceKindDruid
 }
@@ -864,5 +860,5 @@ func (d *Druid) GetDeletionPolicy() string {
 }
 
 func (d *Druid) AsOwner() *meta.OwnerReference {
-	return d.Owner()
+	return meta.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
 }
