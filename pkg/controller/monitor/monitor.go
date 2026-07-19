@@ -14,15 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package monitor holds the Prometheus monitoring logic shared by every kubedb operator:
-// managing the monitoring agent (ServiceMonitor create/update/delete) and reconciling the
-// stats Service that the agent scrapes.
-//
-// The monitoring-agent-api framework (agents.New) is built on the typed kubernetes.Interface
-// and the Prometheus operator client, not controller-runtime's client.Client. Agent management
-// therefore keeps those clients (Options) — the documented exception to the KBClient rule. The
-// stats Service, which is a plain core/v1 Service, is written through KBClient
-// (StatsServiceOptions).
 package monitor
 
 import (
@@ -42,23 +33,18 @@ import (
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 )
 
-// DB is the minimal contract a database exposes for agent management. Every kubedb DB type
-// satisfies it (StatsService is a type-level helper; GetNamespace comes from metav1.Object).
 type DB interface {
 	StatsService() mona.StatsAccessor
 	GetNamespace() string
 }
 
-// Options carries the clients the monitoring-agent-api framework needs. Unlike the rest of the
-// shared code, the agent framework cannot run on KBClient: agents.New requires the typed
-// kubernetes.Interface and the Prometheus operator client. This is the one documented exception
-// to the "write through KBClient" rule.
+// Options carries the typed clients agents.New requires. The agent framework cannot run on
+// KBClient, so this is the one exception to the "write through KBClient" rule.
 type Options struct {
 	Client     kubernetes.Interface
 	PromClient pcm.MonitoringV1Interface
 }
 
-// newAgent builds the monitoring agent described by spec. Only the Prometheus agent is supported.
 func (o Options) newAgent(spec *mona.AgentSpec) (mona.Agent, error) {
 	if spec == nil {
 		return nil, errors.New("MonitorSpec not found")
@@ -69,7 +55,6 @@ func (o Options) newAgent(spec *mona.AgentSpec) (mona.Agent, error) {
 	return nil, fmt.Errorf("monitoring controller not found for %v", spec)
 }
 
-// addOrUpdate creates or updates the monitoring agent's resources (e.g. the ServiceMonitor).
 func (o Options) addOrUpdate(db DB, spec *mona.AgentSpec) (kutil.VerbType, error) {
 	agent, err := o.newAgent(spec)
 	if err != nil {
@@ -78,7 +63,6 @@ func (o Options) addOrUpdate(db DB, spec *mona.AgentSpec) (kutil.VerbType, error
 	return agent.CreateOrUpdate(db.StatsService(), spec)
 }
 
-// Delete removes the monitoring agent's resources for db.
 func (o Options) Delete(db DB, spec *mona.AgentSpec) error {
 	agent, err := o.newAgent(spec)
 	if err != nil {
@@ -88,8 +72,8 @@ func (o Options) Delete(db DB, spec *mona.AgentSpec) error {
 	return err
 }
 
-// getOldAgent returns the agent recorded on the stats Service via the mona.KeyAgent annotation,
-// or nil if the Service is missing. It lets manageMonitor clean up after an agent-type switch.
+// getOldAgent returns the agent recorded on the stats Service's KeyAgent annotation, letting
+// Manage clean up after an agent-type switch. Returns nil if the Service is missing.
 func (o Options) getOldAgent(ctx context.Context, db DB) mona.Agent {
 	service, err := o.Client.CoreV1().Services(db.GetNamespace()).Get(ctx, db.StatsService().ServiceName(), metav1.GetOptions{})
 	if err != nil {
@@ -100,8 +84,6 @@ func (o Options) getOldAgent(ctx context.Context, db DB) mona.Agent {
 	return agent
 }
 
-// setNewAgent records the currently configured agent type on the stats Service annotation so a
-// later reconcile can detect an agent-type switch.
 func (o Options) setNewAgent(ctx context.Context, db DB, spec *mona.AgentSpec) error {
 	service, err := o.Client.CoreV1().Services(db.GetNamespace()).Get(ctx, db.StatsService().ServiceName(), metav1.GetOptions{})
 	if err != nil {

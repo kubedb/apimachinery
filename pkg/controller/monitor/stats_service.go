@@ -32,38 +32,26 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// StatsServiceDB is the minimal contract needed to reconcile the stats Service. Every kubedb DB
-// type satisfies it: StatsService and StatsServiceLabels are type-level helpers, and the
-// metav1.Object / runtime.Object accessors come from client.Object.
 type StatsServiceDB interface {
 	client.Object
 	StatsService() mona.StatsAccessor
 	StatsServiceLabels() map[string]string
 }
 
-// StatsServiceOptions reconciles the Prometheus stats Service through KBClient. Values whose
-// accessor signatures differ across API versions (the offshoot selector map, the resolved stats
-// ServiceTemplate) are passed in explicitly rather than derived through the interface.
 type StatsServiceOptions struct {
 	KBClient client.Client
 	DB       StatsServiceDB
-	// Monitor is db.Spec.Monitor; the reconcile is a no-op unless it selects a Prometheus agent.
-	Monitor *mona.AgentSpec
-	// Selectors is db.OffshootSelectors(); passed in because OffshootSelectors has an
-	// incompatible signature across API versions (v1 non-variadic, v1alpha2 variadic).
-	Selectors map[string]string
-	// ServiceTemplate is the resolved stats-alias ServiceTemplate (GetServiceTemplate(..., Stats)).
+	Monitor  *mona.AgentSpec
+	// Selectors is passed in because OffshootSelectors has an incompatible signature across API
+	// versions (v1 non-variadic, v1alpha2 variadic).
+	Selectors       map[string]string
 	ServiceTemplate ofst.ServiceTemplateSpec
-	// Owner is the controller owner reference for the DB.
-	Owner *metav1.OwnerReference
+	Owner           *metav1.OwnerReference
 	// ExtraPorts are appended to the exporter port before templating (e.g. postgres raft metrics).
 	ExtraPorts []core.ServicePort
-	// Recorder, when set, emits a Normal event on the DB after a create/patch.
-	Recorder record.EventRecorder
+	Recorder   record.EventRecorder
 }
 
-// Ensure creates or patches the stats Service that Prometheus scrapes. It is a no-op unless
-// monitoring is enabled with a Prometheus agent.
 func (o StatsServiceOptions) Ensure(ctx context.Context) (kutil.VerbType, error) {
 	if o.Monitor == nil || o.Monitor.Agent.Vendor() != mona.VendorPrometheus {
 		return kutil.VerbUnchanged, nil

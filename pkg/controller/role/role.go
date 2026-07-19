@@ -14,9 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package role holds the per-database RBAC logic shared by every kubedb operator: the
-// ServiceAccount -> Role -> RoleBinding trio a database's pods run under. Only the PolicyRule set
-// differs per DB, so callers supply Rules; everything else is reconciled here through KBClient.
 package role
 
 import (
@@ -35,30 +32,22 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// DB is the minimal contract needed to reconcile RBAC. Every kubedb DB type satisfies it:
-// OffshootLabels is a type-level helper and the metav1.Object accessors come from client.Object.
 type DB interface {
 	client.Object
 	OffshootLabels() map[string]string
 }
 
-// Options reconciles the ServiceAccount + Role + RoleBinding for a database through KBClient.
-// Names, rules and owner are supplied by the caller because they differ across API versions
-// (e.g. rabbitmq uses DefaultPodRoleName/DefaultPodRoleBindingName, postgres uses OffshootName).
 type Options struct {
 	KBClient client.Client
 	DB       DB
 	Owner    *metav1.OwnerReference
 
-	// ServiceAccountName is the SA the pods run as. When ManageServiceAccount is true it is
-	// created/patched by this package; otherwise it must already exist (it is only verified).
 	ServiceAccountName string
-	// ManageServiceAccount reports whether this package owns the ServiceAccount's lifecycle.
-	// Set it to false when the user supplied spec.PodTemplate.Spec.ServiceAccountName.
+	// ManageServiceAccount is false when the user supplied their own ServiceAccountName; the SA is
+	// then only verified to exist, never mutated.
 	ManageServiceAccount bool
-	// SkipIfUnmanaged, when true, aborts the whole reconcile (SA, Role, RoleBinding) if the
-	// ServiceAccount already exists and is not labelled managed-by kubedb — i.e. a user brought
-	// their own SA under the default name. Only consulted when ManageServiceAccount is true.
+	// SkipIfUnmanaged aborts the whole reconcile if the SA exists under our default name but is not
+	// labelled managed-by kubedb (a user brought their own). Only consulted when ManageServiceAccount.
 	SkipIfUnmanaged bool
 
 	RoleName        string
@@ -66,8 +55,6 @@ type Options struct {
 	Rules           []rbac.PolicyRule
 }
 
-// Ensure reconciles the ServiceAccount, Role and RoleBinding. See the field docs on Options for
-// how the ServiceAccount is handled. It is idempotent and safe to call every reconcile.
 func (o Options) Ensure(ctx context.Context) error {
 	proceed, err := o.ensureServiceAccount(ctx)
 	if err != nil {
@@ -83,8 +70,7 @@ func (o Options) Ensure(ctx context.Context) error {
 	return o.ensureRoleBinding(ctx)
 }
 
-// ensureServiceAccount reconciles the ServiceAccount and reports whether the caller should go on
-// to reconcile the Role and RoleBinding.
+// ensureServiceAccount reports whether the caller should proceed to reconcile Role and RoleBinding.
 func (o Options) ensureServiceAccount(ctx context.Context) (bool, error) {
 	key := types.NamespacedName{Namespace: o.DB.GetNamespace(), Name: o.ServiceAccountName}
 
