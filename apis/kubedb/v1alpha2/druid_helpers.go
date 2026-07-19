@@ -862,3 +862,7 @@ func (d *DruidBind) CertSecretName() string {
 func (d *Druid) GetDeletionPolicy() string {
 	return string(d.Spec.DeletionPolicy)
 }
+
+func (d *Druid) AsOwner() *meta.OwnerReference {
+	return d.Owner()
+}

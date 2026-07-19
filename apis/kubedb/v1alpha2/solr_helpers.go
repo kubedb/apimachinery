@@ -599,3 +599,7 @@ func (d *SolrBind) CertSecretName() string {
 func (s *Solr) GetDeletionPolicy() string {
 	return string(s.Spec.DeletionPolicy)
 }
+
+func (s *Solr) AsOwner() *meta.OwnerReference {
+	return s.Owner()
+}

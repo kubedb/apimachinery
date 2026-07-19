@@ -27,6 +27,7 @@ import (
 	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"kmodules.xyz/client-go/apiextensions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -55,6 +56,10 @@ func (a *Aerospike) ConfigSecretName() string {
 
 func (a *Aerospike) OffshootName() string {
 	return a.Name
+}
+
+func (a *Aerospike) AsOwner() *metav1.OwnerReference {
+	return metav1.NewControllerRef(a, SchemeGroupVersion.WithKind(ResourceKindAerospike))
 }
 
 func (a *Aerospike) OffshootSelectors(extraSelectors ...map[string]string) map[string]string {

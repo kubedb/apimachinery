@@ -548,3 +548,7 @@ func (p *Oracle) GetCertSecretName(alias OracleCertificateAlias) string {
 func (o *Oracle) GetDeletionPolicy() string {
 	return string(o.Spec.DeletionPolicy)
 }
+
+func (o *Oracle) AsOwner() *meta.OwnerReference {
+	return o.Owner()
+}

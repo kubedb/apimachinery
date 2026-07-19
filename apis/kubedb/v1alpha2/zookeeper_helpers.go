@@ -429,3 +429,7 @@ func (k *ZooKeeper) CertSecretVolumeName(alias ZooKeeperCertificateAlias) string
 func (z *ZooKeeper) GetDeletionPolicy() string {
 	return string(z.Spec.DeletionPolicy)
 }
+
+func (z *ZooKeeper) AsOwner() *meta.OwnerReference {
+	return z.Owner()
+}

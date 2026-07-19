@@ -430,3 +430,7 @@ func (p *Pgpool) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, e
 func (p *Pgpool) GetDeletionPolicy() string {
 	return string(p.Spec.DeletionPolicy)
 }
+
+func (p *Pgpool) AsOwner() *meta.OwnerReference {
+	return p.Owner()
+}

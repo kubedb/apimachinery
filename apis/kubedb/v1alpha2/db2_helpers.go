@@ -234,3 +234,7 @@ func (d *DB2) SetHealthCheckerDefaults() {
 func (d *DB2) GetDeletionPolicy() string {
 	return string(d.Spec.DeletionPolicy)
 }
+
+func (d *DB2) AsOwner() *meta.OwnerReference {
+	return d.Owner()
+}

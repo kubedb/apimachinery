@@ -472,3 +472,7 @@ func (d *HazelcastBind) CertSecretName() string {
 func (h *Hazelcast) GetDeletionPolicy() string {
 	return string(h.Spec.DeletionPolicy)
 }
+
+func (h *Hazelcast) AsOwner() *meta.OwnerReference {
+	return h.Owner()
+}

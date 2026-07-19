@@ -581,3 +581,7 @@ func (m *MilvusBind) CertSecretName() string {
 func (m *Milvus) GetDeletionPolicy() string {
 	return string(m.Spec.DeletionPolicy)
 }
+
+func (m *Milvus) AsOwner() *metav1.OwnerReference {
+	return m.Owner()
+}

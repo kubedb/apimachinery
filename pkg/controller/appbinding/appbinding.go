@@ -21,9 +21,7 @@ import (
 
 	"kubedb.dev/apimachinery/apis/kubedb"
 
-	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/tools/record"
 	kutil "kmodules.xyz/client-go"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	clientutil "kmodules.xyz/client-go/client"
@@ -37,23 +35,24 @@ type DB interface {
 	client.Object
 	AppBindingMeta() appcat.AppBindingMeta
 	OffshootLabels() map[string]string
+	AsOwner() *metav1.OwnerReference
 }
 
 type Options struct {
 	KBClient client.Client
 	DB       DB
-	Owner    *metav1.OwnerReference
-
-	Kind    string
-	Version string
-	Secret  *appcat.TypedLocalObjectReference
-	// Customize runs inside the CreateOrPatch mutate function to layer on DB-specific fields
-	// (ClientConfig, TLSSecret, Parameters).
+	Version  string
+	// Customize runs inside the CreateOrPatch mutate function to layer on everything DB-specific:
+	// ClientConfig, Secret, TLSSecret, Parameters.
 	Customize func(in *appcat.AppBinding)
-	Recorder  record.EventRecorder
 }
 
 func (o Options) Ensure(ctx context.Context) (kutil.VerbType, error) {
+	gvks, _, err := o.KBClient.Scheme().ObjectKinds(o.DB)
+	if err != nil {
+		return kutil.VerbUnchanged, err
+	}
+
 	appmeta := o.DB.AppBindingMeta()
 	ab := &appcat.AppBinding{
 		ObjectMeta: metav1.ObjectMeta{
@@ -62,34 +61,24 @@ func (o Options) Ensure(ctx context.Context) (kutil.VerbType, error) {
 		},
 	}
 
-	vt, err := clientutil.CreateOrPatch(ctx, o.KBClient, ab, func(obj client.Object, createOp bool) client.Object {
+	return clientutil.CreateOrPatch(ctx, o.KBClient, ab, func(obj client.Object, createOp bool) client.Object {
 		in := obj.(*appcat.AppBinding)
-		core_util.EnsureOwnerReference(&in.ObjectMeta, o.Owner)
+		core_util.EnsureOwnerReference(&in.ObjectMeta, o.DB.AsOwner())
 		in.Labels = o.DB.OffshootLabels()
 		in.Annotations = meta_util.FilterKeys(kubedb.GroupName, nil, o.DB.GetAnnotations())
 
 		in.Spec.Type = appmeta.Type()
 		in.Spec.AppRef = &kmapi.TypedObjectReference{
 			APIGroup:  kubedb.GroupName,
-			Kind:      o.Kind,
+			Kind:      gvks[0].Kind,
 			Namespace: o.DB.GetNamespace(),
 			Name:      o.DB.GetName(),
 		}
 		in.Spec.Version = o.Version
-		if o.Secret != nil {
-			in.Spec.Secret = o.Secret
-		}
 
 		if o.Customize != nil {
 			o.Customize(in)
 		}
 		return in
 	})
-	if err != nil {
-		return kutil.VerbUnchanged, err
-	}
-	if vt != kutil.VerbUnchanged && o.Recorder != nil {
-		o.Recorder.Eventf(o.DB, core.EventTypeNormal, "Successful", "Successfully %s appbinding", vt)
-	}
-	return vt, nil
 }

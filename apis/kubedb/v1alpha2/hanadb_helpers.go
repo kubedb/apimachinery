@@ -782,3 +782,7 @@ func (h *HanaDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, string, e
 func (h *HanaDB) GetDeletionPolicy() string {
 	return string(h.Spec.DeletionPolicy)
 }
+
+func (h *HanaDB) AsOwner() *metav1.OwnerReference {
+	return h.Owner()
+}

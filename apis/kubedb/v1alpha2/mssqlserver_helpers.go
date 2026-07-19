@@ -673,3 +673,7 @@ func SecondaryAccessSQL(mode SecondaryAccessMode) string {
 func (m *MSSQLServer) GetDeletionPolicy() string {
 	return string(m.Spec.DeletionPolicy)
 }
+
+func (m *MSSQLServer) AsOwner() *meta.OwnerReference {
+	return m.Owner()
+}

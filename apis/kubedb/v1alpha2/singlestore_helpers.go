@@ -571,3 +571,7 @@ func (d *SinglestoreBind) CertSecretName() string {
 func (s *Singlestore) GetDeletionPolicy() string {
 	return string(s.Spec.DeletionPolicy)
 }
+
+func (s *Singlestore) AsOwner() *meta.OwnerReference {
+	return s.Owner()
+}

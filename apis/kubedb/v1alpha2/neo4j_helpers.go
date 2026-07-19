@@ -402,3 +402,7 @@ func (r Neo4j) GetStorageClassName() string {
 func (r *Neo4j) GetDeletionPolicy() string {
 	return string(r.Spec.DeletionPolicy)
 }
+
+func (r *Neo4j) AsOwner() *meta.OwnerReference {
+	return r.Owner()
+}

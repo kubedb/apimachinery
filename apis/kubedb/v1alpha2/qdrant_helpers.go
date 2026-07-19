@@ -459,3 +459,7 @@ func (q *QdrantBind) CertSecretName() string {
 func (q *Qdrant) GetDeletionPolicy() string {
 	return string(q.Spec.DeletionPolicy)
 }
+
+func (q *Qdrant) AsOwner() *meta.OwnerReference {
+	return q.Owner()
+}

@@ -519,3 +519,7 @@ func (c *Cassandra) GetPersistentSecrets() []string {
 func (r *Cassandra) GetDeletionPolicy() string {
 	return string(r.Spec.DeletionPolicy)
 }
+
+func (r *Cassandra) AsOwner() *meta.OwnerReference {
+	return r.Owner()
+}

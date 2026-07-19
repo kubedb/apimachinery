@@ -592,3 +592,7 @@ func (c *ClickHouse) ClickHouseInlineConfigSecretKey(key string) string {
 func (c *ClickHouse) GetDeletionPolicy() string {
 	return string(c.Spec.DeletionPolicy)
 }
+
+func (c *ClickHouse) AsOwner() *meta.OwnerReference {
+	return c.Owner()
+}
