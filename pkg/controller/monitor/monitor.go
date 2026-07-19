@@ -35,7 +35,6 @@ import (
 
 type DB interface {
 	StatsService() mona.StatsAccessor
-	GetNamespace() string
 }
 
 // Options carries the typed clients agents.New requires. The agent framework cannot run on
@@ -75,7 +74,7 @@ func (o Options) Delete(db DB, spec *mona.AgentSpec) error {
 // getOldAgent returns the agent recorded on the stats Service's KeyAgent annotation, letting
 // Manage clean up after an agent-type switch. Returns nil if the Service is missing.
 func (o Options) getOldAgent(ctx context.Context, db DB) mona.Agent {
-	service, err := o.Client.CoreV1().Services(db.GetNamespace()).Get(ctx, db.StatsService().ServiceName(), metav1.GetOptions{})
+	service, err := o.Client.CoreV1().Services(db.StatsService().GetNamespace()).Get(ctx, db.StatsService().ServiceName(), metav1.GetOptions{})
 	if err != nil {
 		return nil
 	}
@@ -85,7 +84,7 @@ func (o Options) getOldAgent(ctx context.Context, db DB) mona.Agent {
 }
 
 func (o Options) setNewAgent(ctx context.Context, db DB, spec *mona.AgentSpec) error {
-	service, err := o.Client.CoreV1().Services(db.GetNamespace()).Get(ctx, db.StatsService().ServiceName(), metav1.GetOptions{})
+	service, err := o.Client.CoreV1().Services(db.StatsService().GetNamespace()).Get(ctx, db.StatsService().ServiceName(), metav1.GetOptions{})
 	if err != nil {
 		return err
 	}

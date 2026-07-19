@@ -22,7 +22,6 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/client-go/tools/record"
 	kutil "kmodules.xyz/client-go"
 	clientutil "kmodules.xyz/client-go/client"
 	core_util "kmodules.xyz/client-go/core/v1"
@@ -36,6 +35,7 @@ type StatsServiceDB interface {
 	client.Object
 	StatsService() mona.StatsAccessor
 	StatsServiceLabels() map[string]string
+	AsOwner() *metav1.OwnerReference
 }
 
 type StatsServiceOptions struct {
@@ -46,10 +46,8 @@ type StatsServiceOptions struct {
 	// versions (v1 non-variadic, v1alpha2 variadic).
 	Selectors       map[string]string
 	ServiceTemplate ofst.ServiceTemplateSpec
-	Owner           *metav1.OwnerReference
 	// ExtraPorts are appended to the exporter port before templating (e.g. postgres raft metrics).
 	ExtraPorts []core.ServicePort
-	Recorder   record.EventRecorder
 }
 
 func (o StatsServiceOptions) Ensure(ctx context.Context) (kutil.VerbType, error) {
@@ -74,7 +72,7 @@ func (o StatsServiceOptions) Ensure(ctx context.Context) (kutil.VerbType, error)
 
 	vt, err := clientutil.CreateOrPatch(ctx, o.KBClient, svc, func(obj client.Object, createOp bool) client.Object {
 		in := obj.(*core.Service)
-		core_util.EnsureOwnerReference(&in.ObjectMeta, o.Owner)
+		core_util.EnsureOwnerReference(&in.ObjectMeta, o.DB.AsOwner())
 		in.Labels = o.DB.StatsServiceLabels()
 		in.Annotations = meta_util.OverwriteKeys(in.Annotations, o.ServiceTemplate.Annotations)
 
@@ -101,9 +99,6 @@ func (o StatsServiceOptions) Ensure(ctx context.Context) (kutil.VerbType, error)
 	})
 	if err != nil {
 		return kutil.VerbUnchanged, err
-	}
-	if vt != kutil.VerbUnchanged && o.Recorder != nil {
-		o.Recorder.Eventf(o.DB, core.EventTypeNormal, "Successful", "Successfully %s stats service", vt)
 	}
 	return vt, nil
 }
