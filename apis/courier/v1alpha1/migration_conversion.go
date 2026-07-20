@@ -89,6 +89,16 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			JobDefaults: t.Spec.JobDefaults,
 			JobTemplate: t.Spec.JobTemplate,
 		}
+	case *OracleMigration:
+		m.Kind = ResourceKindOracleMigration
+		m.ObjectMeta = t.ObjectMeta
+		m.Status = t.Status
+		m.Spec = MigrationSpec{
+			Source:      &Source{OracleSource: &t.Spec.Source},
+			Target:      &Target{OracleTarget: &t.Spec.Target},
+			JobDefaults: t.Spec.JobDefaults,
+			JobTemplate: t.Spec.JobTemplate,
+		}
 	default:
 		return fmt.Errorf("courier: cannot Duckify %T", srcRaw)
 	}

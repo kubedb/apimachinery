@@ -633,6 +633,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLSource":                                  schema_apimachinery_apis_courier_v1alpha1_MySQLSource(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLStreaming":                               schema_apimachinery_apis_courier_v1alpha1_MySQLStreaming(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MySQLTarget":                                  schema_apimachinery_apis_courier_v1alpha1_MySQLTarget(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleMigration":                              schema_apimachinery_apis_courier_v1alpha1_OracleMigration(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleMigrationList":                          schema_apimachinery_apis_courier_v1alpha1_OracleMigrationList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleMigrationSpec":                          schema_apimachinery_apis_courier_v1alpha1_OracleMigrationSpec(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSchema":                                 schema_apimachinery_apis_courier_v1alpha1_OracleSchema(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSnapshot":                               schema_apimachinery_apis_courier_v1alpha1_OracleSnapshot(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSnapshotPipeline":                       schema_apimachinery_apis_courier_v1alpha1_OracleSnapshotPipeline(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSource":                                 schema_apimachinery_apis_courier_v1alpha1_OracleSource(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleStreaming":                              schema_apimachinery_apis_courier_v1alpha1_OracleStreaming(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleTarget":                                 schema_apimachinery_apis_courier_v1alpha1_OracleTarget(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PgDump":                                       schema_apimachinery_apis_courier_v1alpha1_PgDump(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresMigration":                            schema_apimachinery_apis_courier_v1alpha1_PostgresMigration(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.PostgresMigrationList":                        schema_apimachinery_apis_courier_v1alpha1_PostgresMigrationList(ref),
@@ -35832,6 +35841,425 @@ func schema_apimachinery_apis_courier_v1alpha1_MySQLTarget(ref common.ReferenceC
 					"connectionInfo": {
 						SchemaProps: spec.SchemaProps{
 							Description: "ConnectionInfo refers to the target MySQL database connection information.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_OracleMigration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec defines the desired state of OracleMigration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleMigrationSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed state of OracleMigration. It reuses the shared MigrationStatus so that the Migration duck type can project it and the operator's status patches replay onto it unchanged.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.MigrationStatus", "kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleMigrationSpec"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_OracleMigrationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleMigration"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleMigration"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_OracleMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "OracleMigrationSpec defines the desired state of OracleMigration",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source defines the source Oracle database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSource"),
+						},
+					},
+					"target": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Target defines the target Oracle database configuration",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleTarget"),
+						},
+					},
+					"jobDefaults": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobDefaults specifies default settings for migration jobs",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults"),
+						},
+					},
+					"jobTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JobTemplate specifies runtime configurations for the migration Job",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+						},
+					},
+				},
+				Required: []string{"source", "target"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults", "kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSource", "kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleTarget"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_OracleSchema(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled controls whether the Schema Phase should be executed.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"schema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Schema is the list of Oracle owners (a schema is a user) to migrate.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"excludeSchema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExcludeSchema is the list of Oracle owners to exclude.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"table": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Table is the list of OWNER.TABLE qualified tables to include.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"excludeTable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExcludeTable is the list of OWNER.TABLE qualified tables to exclude.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tablespaceMap": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TablespaceMap optionally rewrites source tablespace names to target ones. When empty, physical (tablespace) attributes are stripped and objects land in the target user's default tablespace.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"enabled"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_OracleSnapshot(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled controls whether the Snapshot Phase should be executed.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"pipeline": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSnapshotPipeline"),
+						},
+					},
+					"lobBatchSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LOBBatchSize overrides the pipeline ReadBatchSize for tables that carry LOB columns, which go-ora materializes fully in memory.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSnapshotPipeline"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_OracleSnapshotPipeline(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"workers": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"sinkers": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"buffer": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"read_batch_size": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"write_batch_size": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"workers", "sinkers", "buffer", "read_batch_size", "write_batch_size"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_OracleSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionInfo refers to the source Oracle database connection information. Oracle reuses the shared ConnectionInfo because the go-ora driver is URL-based (URL + PDB dbName + TCPS TLS fit directly).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
+						},
+					},
+					"schema": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSchema"),
+						},
+					},
+					"snapshot": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSnapshot"),
+						},
+					},
+					"streaming": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleStreaming"),
+						},
+					},
+				},
+				Required: []string{"connectionInfo"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo", "kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSchema", "kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleSnapshot", "kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleStreaming"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_OracleStreaming(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled controls whether the CDC (LogMiner) Streaming Phase should be executed.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"pollInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PollInterval is the idle sleep between LogMiner mining windows.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"scnWindowSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SCNWindowSize is the number of SCNs mined per LogMiner window.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"autoEnablePrereqs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AutoEnablePrereqs, when true, lets the CLI enable supplemental logging on the source (needs privileges). ARCHIVELOG is never auto-enabled (it needs a MOUNT-state restart).",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"largeTxSpillMB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LargeTxSpillMB is the per-XID client-side buffer spill-to-disk threshold.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_OracleTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionInfo refers to the target Oracle database connection information.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo"),
 						},
 					},
