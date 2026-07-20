@@ -46,8 +46,8 @@ type StatsServiceOptions struct {
 	// versions (v1 non-variadic, v1alpha2 variadic).
 	Selectors       map[string]string
 	ServiceTemplate ofst.ServiceTemplateSpec
-	// ExtraPorts are appended to the exporter port before templating (e.g. postgres raft metrics).
-	ExtraPorts []core.ServicePort
+	// Ports, if set, replaces the default exporter port list
+	Ports []core.ServicePort
 }
 
 func (o StatsServiceOptions) Ensure(ctx context.Context) (kutil.VerbType, error) {
@@ -62,13 +62,16 @@ func (o StatsServiceOptions) Ensure(ctx context.Context) (kutil.VerbType, error)
 		},
 	}
 
-	ports := append([]core.ServicePort{
-		{
-			Name:       mona.PrometheusExporterPortName,
-			Port:       o.Monitor.Prometheus.Exporter.Port,
-			TargetPort: intstr.FromString(mona.PrometheusExporterPortName),
-		},
-	}, o.ExtraPorts...)
+	ports := o.Ports
+	if ports == nil {
+		ports = []core.ServicePort{
+			{
+				Name:       mona.PrometheusExporterPortName,
+				Port:       o.Monitor.Prometheus.Exporter.Port,
+				TargetPort: intstr.FromString(mona.PrometheusExporterPortName),
+			},
+		}
+	}
 
 	vt, err := clientutil.CreateOrPatch(ctx, o.KBClient, svc, func(obj client.Object, createOp bool) client.Object {
 		in := obj.(*core.Service)
