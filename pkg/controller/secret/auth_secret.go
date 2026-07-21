@@ -47,10 +47,13 @@ type DB interface {
 type Options struct {
 	KBClient client.Client
 	DB       DB
-	// DefaultUsername doubles as the username policy: when set, a user-supplied
-	// secret whose username differs is rejected; when empty, only the presence
-	// of username/password keys is checked.
+	// DefaultUsername is the username stamped into a kubedb-generated auth secret.
 	DefaultUsername string
+	// EnforceUsername gates the username policy for user-supplied (externally
+	// managed) secrets: when true, a secret whose username differs from
+	// DefaultUsername is rejected; when false, only the presence of the
+	// username/password keys is checked.
+	EnforceUsername bool
 }
 
 func (o Options) EnsureAuthSecret(ctx context.Context) error {
@@ -201,7 +204,7 @@ func (o Options) validateAuthData(data map[string][]byte) error {
 	if len(data[core.BasicAuthUsernameKey]) == 0 || len(data[core.BasicAuthPasswordKey]) == 0 {
 		return fmt.Errorf("auth secret must contain non-empty %q and %q keys", core.BasicAuthUsernameKey, core.BasicAuthPasswordKey)
 	}
-	if o.DefaultUsername != "" && string(data[core.BasicAuthUsernameKey]) != o.DefaultUsername {
+	if o.EnforceUsername && string(data[core.BasicAuthUsernameKey]) != o.DefaultUsername {
 		return fmt.Errorf("auth secret username must be %q", o.DefaultUsername)
 	}
 	return nil
