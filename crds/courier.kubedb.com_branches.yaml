@@ -27,10 +27,6 @@ spec:
     - jsonPath: .status.freshness
       name: Freshness
       type: string
-    - jsonPath: .status.nextRefreshTime
-      name: Next-Refresh
-      priority: 1
-      type: string
     - jsonPath: .metadata.creationTimestamp
       name: Age
       type: date

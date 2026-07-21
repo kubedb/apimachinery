@@ -45,7 +45,6 @@ const (
 // +kubebuilder:printcolumn:name="Mode",type="string",JSONPath=".status.mode"
 // +kubebuilder:printcolumn:name="Target",type="string",JSONPath=".status.targetRef.name"
 // +kubebuilder:printcolumn:name="Freshness",type="string",JSONPath=".status.freshness"
-// +kubebuilder:printcolumn:name="Next-Refresh",type="string",priority=1,JSONPath=".status.nextRefreshTime"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type Branch struct {
 	metav1.TypeMeta `json:",inline"`

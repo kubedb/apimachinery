@@ -594,6 +594,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkResourceMeta":                       schema_apimachinery_apis_courier_v1alpha1_BranchWorkResourceMeta(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkSpec":                               schema_apimachinery_apis_courier_v1alpha1_BranchWorkSpec(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkStatus":                             schema_apimachinery_apis_courier_v1alpha1_BranchWorkStatus(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchedFrom":                                 schema_apimachinery_apis_courier_v1alpha1_BranchedFrom(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo":                               schema_apimachinery_apis_courier_v1alpha1_ConnectionInfo(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierCLI":                                 schema_apimachinery_apis_courier_v1alpha1_DBCourierCLI(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages":                              schema_apimachinery_apis_courier_v1alpha1_DBCourierImages(ref),
@@ -34283,6 +34284,33 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchWorkStatus(ref common.Refer
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchStatus", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkManifestCondition"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_BranchedFrom(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BranchedFrom is the parsed value of BranchedFromAnnotation. It records the provenance of a branch: the source cluster and the source Database (as \"namespace/name\").",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cluster": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Cluster is the source cluster name (empty for a same-cluster/Local branch).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source is the source Database as \"namespace/name\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
