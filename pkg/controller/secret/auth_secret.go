@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -100,6 +101,12 @@ func (o Options) ensureInternalAuthSecret(ctx context.Context, name string, isVi
 		}
 	}
 
+	if isVirtual {
+		if err := o.mountVirtualSecret(ctx, name); err != nil {
+			return err
+		}
+	}
+
 	activeFrom, err := o.manageActiveFrom(ctx, name, isVirtual)
 	if err != nil {
 		return err
@@ -136,6 +143,21 @@ func (o Options) createAuthSecret(ctx context.Context, name string, isVirtual bo
 		return s
 	})
 	return err
+}
+
+// mountVirtualSecret triggers the virtual-secrets operator to materialize the
+// virtual secret into a real Kubernetes Secret via the "mount" subresource. An
+// "already exists" error is treated as success (the mount is idempotent).
+func (o Options) mountVirtualSecret(ctx context.Context, name string) error {
+	vSecret := &vsecretapi.Secret{
+		ObjectMeta: metav1.ObjectMeta{Name: name, Namespace: o.DB.GetNamespace()},
+	}
+	mount := &vsecretapi.SecretMount{Spec: vsecretapi.SecretMountSpec{Name: name}}
+	err := o.KBClient.SubResource("mount").Create(ctx, vSecret, mount)
+	if err != nil && !strings.Contains(err.Error(), "already exists") {
+		return err
+	}
+	return nil
 }
 
 func (o Options) syncOwnedLabels(ctx context.Context, name string, isVirtual bool) error {
