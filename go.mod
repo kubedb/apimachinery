@@ -56,9 +56,9 @@ require (
 	kmodules.xyz/webhook-runtime v0.34.0
 	kubeops.dev/csi-driver-cacerts v0.5.1-0.20260418091014-4f539f46235c
 	kubeops.dev/operator-shard-manager v0.0.6-0.20260418091213-65daf7da824d
-	kubeops.dev/petset v0.0.17-0.20260418091244-7f666912d240
-	kubeops.dev/sidekick v0.0.15-0.20260418091208-a1cb9f4a3553
-	kubestash.dev/apimachinery v0.28.0
+	kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab
+	kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447
+	kubestash.dev/apimachinery v0.29.0
 	open-cluster-management.io/api v1.2.0
 	sigs.k8s.io/controller-runtime v0.22.4
 	sigs.k8s.io/randfill v1.0.0
@@ -124,6 +124,7 @@ require (
 	github.com/go-openapi/swag/typeutils v0.25.1 // indirect
 	github.com/go-openapi/swag/yamlutils v0.25.1 // indirect
 	github.com/go-sql-driver/mysql v1.9.3 // indirect
+	github.com/gobuffalo/flect v1.0.3 // indirect
 	github.com/goccy/go-yaml v1.18.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect

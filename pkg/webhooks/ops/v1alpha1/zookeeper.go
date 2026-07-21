@@ -66,7 +66,7 @@ func (w *ZooKeeperOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, o
 		return nil, fmt.Errorf("expected an ZooKeeperOpsRequest object but got %T", obj)
 	}
 	zookeeperLog.Info("validate create", "name", ops.Name)
-	return nil, w.validateCreateOrUpdate(ops)
+	return w.validateCreateOrUpdate(ops)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -86,18 +86,19 @@ func (w *ZooKeeperOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, o
 		return nil, err
 	}
 
-	if err := w.validateCreateOrUpdate(ops); err != nil {
-		return nil, err
+	warnings, err := w.validateCreateOrUpdate(ops)
+	if err != nil {
+		return warnings, err
 	}
 	if isOpsReqCompleted(ops.Status.Phase) && !isOpsReqCompleted(oldOps.Status.Phase) { // just completed
 		var db olddbapi.ZooKeeper
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
 		if err != nil {
-			return nil, err
+			return warnings, err
 		}
-		return nil, resumeDatabase(w.DefaultClient, &db)
+		return warnings, resumeDatabase(w.DefaultClient, &db)
 	}
-	return nil, nil
+	return warnings, nil
 }
 
 func (w *ZooKeeperOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -116,9 +117,9 @@ func validateZooKeeperOpsRequest(req *opsapi.ZooKeeperOpsRequest, oldReq *opsapi
 	return nil
 }
 
-func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ZooKeeperOpsRequest) error {
+func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.ZooKeeperOpsRequest) (admission.Warnings, error) {
 	if validType, _ := arrays.Contains(opsapi.ZooKeeperOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+		return nil, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for ZooKeeper are %s", req.Spec.Type, strings.Join(opsapi.ZooKeeperOpsRequestTypeNames(), ", ")))
 	}
 	var (
@@ -126,10 +127,11 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 		err       error
 	)
 	if zookeeper, err = z.hasDatabaseRef(req); err != nil {
-		return field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
+		return nil, field.Invalid(field.NewPath("spec").Child("databaseRef"), req.Name, err.Error())
 	}
 
 	var allErr field.ErrorList
+	var warnings admission.Warnings
 	switch opsapi.ZooKeeperOpsRequestType(req.GetRequestType()) {
 	case opsapi.ZooKeeperOpsRequestTypeUpdateVersion:
 		if err := z.validateZooKeeperUpdateVersionOpsRequest(zookeeper, req); err != nil {
@@ -138,7 +140,9 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 				err.Error()))
 		}
 	case opsapi.ZooKeeperOpsRequestTypeVerticalScaling:
-		if err := z.validateZooKeeperVerticalScalingOpsRequest(req); err != nil {
+		warns, err := z.validateZooKeeperVerticalScalingOpsRequest(req)
+		warnings = append(warnings, warns...)
+		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("type").Child("VerticalScaling"),
 				req.Name,
 				err.Error()))
@@ -164,9 +168,9 @@ func (z *ZooKeeperOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Zo
 	}
 
 	if len(allErr) == 0 {
-		return nil
+		return warnings, nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "ZooKeeperopsrequests.kubedb.com", Kind: "ZooKeeperOpsRequest"}, req.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: "ZooKeeperopsrequests.kubedb.com", Kind: "ZooKeeperOpsRequest"}, req.Name, allErr)
 }
 
 func (z *ZooKeeperOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ZooKeeperOpsRequest) (*olddbapi.ZooKeeper, error) {
@@ -180,16 +184,21 @@ func (z *ZooKeeperOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.ZooKeeperO
 	return &zk, nil
 }
 
-func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVerticalScalingOpsRequest(req *opsapi.ZooKeeperOpsRequest) error {
+func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperVerticalScalingOpsRequest(req *opsapi.ZooKeeperOpsRequest) (admission.Warnings, error) {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
-		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
+		return nil, errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
-	if verticalScalingSpec.Node != nil {
-		return errors.New("spec.verticalScaling.Node && spec.verticalScaling.Topology both can't be non-empty at the same ops request")
+	if verticalScalingSpec.Node == nil {
+		return nil, errors.New("spec.verticalScaling.Node can not be empty")
 	}
 
-	return nil
+	var warnings admission.Warnings
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		warnings = append(warnings, "in-place vertical scaling is not recommended for ZooKeeper: JVM heap is derived from container resources and requires a pod restart to take effect")
+	}
+
+	return warnings, nil
 }
 
 func (z *ZooKeeperOpsRequestCustomWebhook) validateZooKeeperUpdateVersionOpsRequest(db *olddbapi.ZooKeeper, req *opsapi.ZooKeeperOpsRequest) error {

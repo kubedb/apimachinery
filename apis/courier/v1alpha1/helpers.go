@@ -86,6 +86,16 @@ func (m Migration) GetConnectionInfos() (*ConnectionInfo, *ConnectionInfo) {
 		return m.Spec.Source.MySQLSource.ConnectionInfo, m.Spec.Target.MySQLTarget.ConnectionInfo
 	case m.Spec.Source.MariaDBSource != nil && m.Spec.Target.MariaDBTarget != nil:
 		return m.Spec.Source.MariaDBSource.ConnectionInfo, m.Spec.Target.MariaDBTarget.ConnectionInfo
+	case m.Spec.Source.MSSQLServerSource != nil && m.Spec.Target.MSSQLServerTarget != nil:
+		src := &ConnectionInfo{
+			AppBinding: m.Spec.Source.MSSQLServerSource.ConnectionInfo.AppBinding,
+			DBName:     m.Spec.Source.MSSQLServerSource.ConnectionInfo.Database,
+		}
+		tgt := &ConnectionInfo{
+			AppBinding: m.Spec.Target.MSSQLServerTarget.ConnectionInfo.AppBinding,
+			DBName:     m.Spec.Target.MSSQLServerTarget.ConnectionInfo.Database,
+		}
+		return src, tgt
 	}
 	return nil, nil
 }

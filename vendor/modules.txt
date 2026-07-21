@@ -308,6 +308,9 @@ github.com/go-openapi/swag/yamlutils
 # github.com/go-sql-driver/mysql v1.9.3
 ## explicit; go 1.21.0
 github.com/go-sql-driver/mysql
+# github.com/gobuffalo/flect v1.0.3
+## explicit; go 1.16
+github.com/gobuffalo/flect
 # github.com/goccy/go-yaml v1.18.0
 ## explicit; go 1.21.0
 github.com/goccy/go-yaml/ast
@@ -574,7 +577,9 @@ github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1alpha1
 github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1beta1
 # github.com/prometheus-operator/prometheus-operator/pkg/client v0.87.1
 ## explicit; go 1.24.0
+github.com/prometheus-operator/prometheus-operator/pkg/client/applyconfiguration/monitoring/v1
 github.com/prometheus-operator/prometheus-operator/pkg/client/versioned/scheme
+github.com/prometheus-operator/prometheus-operator/pkg/client/versioned/typed/monitoring/v1
 # github.com/prometheus/client_golang v1.23.2
 ## explicit; go 1.23.0
 github.com/prometheus/client_golang/internal/github.com/golang/gddo/httputil
@@ -809,7 +814,9 @@ go.uber.org/zap/zapcore
 go.uber.org/zap/zapgrpc
 # go.virtual-secrets.dev/apimachinery v0.0.1
 ## explicit; go 1.23.0
+go.virtual-secrets.dev/apimachinery/apis/config/v1alpha1
 go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1
+go.virtual-secrets.dev/apimachinery/client/clientset/versioned/scheme
 go.virtual-secrets.dev/apimachinery/crds
 # go.yaml.in/yaml/v2 v2.4.3
 ## explicit; go 1.15
@@ -1911,7 +1918,12 @@ kmodules.xyz/custom-resources/crds
 kmodules.xyz/go-containerregistry/name
 # kmodules.xyz/monitoring-agent-api v0.34.1
 ## explicit; go 1.24.0
+kmodules.xyz/monitoring-agent-api/agents
+kmodules.xyz/monitoring-agent-api/agents/prometheus
+kmodules.xyz/monitoring-agent-api/agents/prometheusbuiltin
+kmodules.xyz/monitoring-agent-api/agents/prometheusoperator
 kmodules.xyz/monitoring-agent-api/api/v1
+kmodules.xyz/monitoring-agent-api/prometheus/v1
 # kmodules.xyz/objectstore-api v0.34.0
 ## explicit; go 1.25
 kmodules.xyz/objectstore-api/api/v1
@@ -1966,7 +1978,7 @@ kubeops.dev/csi-driver-cacerts/crds
 ## explicit; go 1.25
 kubeops.dev/operator-shard-manager/api/v1alpha1
 kubeops.dev/operator-shard-manager/crds
-# kubeops.dev/petset v0.0.17-0.20260418091244-7f666912d240
+# kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab
 ## explicit; go 1.24.0
 kubeops.dev/petset/apis/apps/v1
 kubeops.dev/petset/client/clientset/versioned
@@ -1978,12 +1990,12 @@ kubeops.dev/petset/client/informers/externalversions/apps/v1
 kubeops.dev/petset/client/informers/externalversions/internalinterfaces
 kubeops.dev/petset/client/listers/apps/v1
 kubeops.dev/petset/crds
-# kubeops.dev/sidekick v0.0.15-0.20260418091208-a1cb9f4a3553
+# kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447
 ## explicit; go 1.25.0
 kubeops.dev/sidekick/apis/apps
 kubeops.dev/sidekick/apis/apps/v1alpha1
 kubeops.dev/sidekick/crds
-# kubestash.dev/apimachinery v0.28.0
+# kubestash.dev/apimachinery v0.29.0
 ## explicit; go 1.25.0
 kubestash.dev/apimachinery/apis
 kubestash.dev/apimachinery/apis/addons/v1alpha1

@@ -178,7 +178,8 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 
 	if db.Spec.Configuration != nil && db.Spec.Configuration.Inline != nil {
 		if len(db.Spec.Configuration.Inline) != 1 {
-			allErr = append(allErr,
+			allErr = append(
+				allErr,
 				field.Invalid(
 					field.NewPath("spec").Child("configuration").Child("inline"),
 					db.Spec.Configuration.Inline,
@@ -188,7 +189,8 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 		}
 		_, exist := db.Spec.Configuration.Inline[kubedb.OracleCustomConfigFileName]
 		if !exist {
-			allErr = append(allErr,
+			allErr = append(
+				allErr,
 				field.Invalid(
 					field.NewPath("spec").Child("configuration").Child("inline"),
 					db.Spec.Configuration.Inline,
@@ -198,7 +200,8 @@ func (w *OracleCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Oracle) field.
 		}
 		value := db.Spec.Configuration.Inline[kubedb.OracleCustomConfigFileName]
 		if err := ValidateConfigContent([]byte(value), fmt.Sprintf("inline config %q", kubedb.OracleCustomConfigFileName)); err != nil {
-			allErr = append(allErr,
+			allErr = append(
+				allErr,
 				field.Invalid(
 					field.NewPath("spec").Child("configuration").Child("inline").Key(kubedb.OracleCustomConfigFileName),
 					value,

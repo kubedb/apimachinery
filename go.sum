@@ -199,6 +199,8 @@ github.com/go-sql-driver/mysql v1.9.3/go.mod h1:qn46aNg1333BRMNU69Lq93t8du/dwxI6
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
 github.com/go-task/slim-sprig/v3 v3.0.0 h1:sUs3vkvUymDpBKi3qH1YSqBQk9+9D/8M2mN1vB6EwHI=
 github.com/go-task/slim-sprig/v3 v3.0.0/go.mod h1:W848ghGpv3Qj3dhTPRyJypKRiqCdHZiAzKg9hl15HA8=
+github.com/gobuffalo/flect v1.0.3 h1:xeWBM2nui+qnVvNM4S3foBhCAL2XgPU+a7FdpelbTq4=
+github.com/gobuffalo/flect v1.0.3/go.mod h1:A5msMlrHtLqh9umBSnvabjsMrCcCpAyzglnDvkbYKHs=
 github.com/goccy/go-yaml v1.8.1/go.mod h1:wS4gNoLalDSJxo/SpngzPQ2BN4uuZVLCmbM4S3vd4+Y=
 github.com/goccy/go-yaml v1.18.0 h1:8W7wMFS12Pcas7KU+VVkaiCng+kG8QiFeFwzFb+rwuw=
 github.com/goccy/go-yaml v1.18.0/go.mod h1:XBurs7gK8ATbW4ZPGKgcbrY1Br56PdM69F7LkFRi1kA=
@@ -821,12 +823,12 @@ kubeops.dev/csi-driver-cacerts v0.5.1-0.20260418091014-4f539f46235c h1:ZKmBV3fFf
 kubeops.dev/csi-driver-cacerts v0.5.1-0.20260418091014-4f539f46235c/go.mod h1:VNbwC3gTWfmdQCVxd8mkVx+n1+0F1lOA5X3usyZN1rk=
 kubeops.dev/operator-shard-manager v0.0.6-0.20260418091213-65daf7da824d h1:/nZYflp2w1x+wQmxDtHR0Sbzl39fcuaJ66oqgVXBBwQ=
 kubeops.dev/operator-shard-manager v0.0.6-0.20260418091213-65daf7da824d/go.mod h1:NE6GzlhwLRiwiUUpqi4Uf+J7e/gniITM0uJnE5r1mzY=
-kubeops.dev/petset v0.0.17-0.20260418091244-7f666912d240 h1:6FyI0dCC/1aaJqdCqEtyRjownOCH2PP2KWpU1i0mgv4=
-kubeops.dev/petset v0.0.17-0.20260418091244-7f666912d240/go.mod h1:zb++ZwjAon+cueexxhRSSxzJnNX1J/scqvDrGgeRHcQ=
-kubeops.dev/sidekick v0.0.15-0.20260418091208-a1cb9f4a3553 h1:metVCjSnZJmPcON1wUuedyve0lV8IPNXxuGt6FgDMi4=
-kubeops.dev/sidekick v0.0.15-0.20260418091208-a1cb9f4a3553/go.mod h1:JelNzrL+K2S3BvkxDi2bE9lxaP5Y+HeDQooXIlKBorM=
-kubestash.dev/apimachinery v0.28.0 h1:0JwpV9AA4VcfxyoUTfrvJDcXAWBUg/CXCcdAGMx6IYI=
-kubestash.dev/apimachinery v0.28.0/go.mod h1:zzvfyJ0ACaxAzk1to1cERIrIacHACASWcPbDkel9lyE=
+kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab h1:0aouI9IIIoHDwIOmLjgr0YXMab9f833ei8neEBPuG48=
+kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab/go.mod h1:zb++ZwjAon+cueexxhRSSxzJnNX1J/scqvDrGgeRHcQ=
+kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447 h1:Oz4yTzNyx5vFgoC11QWc5zMaxR8EK/kxxxNnH75PxPc=
+kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447/go.mod h1:tTu9iMs4awf/cuHRA8XcDxyEz+AfTGcc3IOAg9kclmE=
+kubestash.dev/apimachinery v0.29.0 h1:yNurTDPthRm6Z5f+DboT5jdjfm9VkE0oMuTemLF0s24=
+kubestash.dev/apimachinery v0.29.0/go.mod h1:Gp3D0Ah1meSf+KAB+Nwh3sKTOO5lhswqk9KDNhBM0Eg=
 moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 h1:NykkTlRB+X40z86cLHdEmuoTxhNKhQebLT379b1EumA=
 moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7/go.mod h1:RW4hyBjTWSYDOxapodpNEtX0g5Eb16sxklBqmd2RHcE=
 open-cluster-management.io/api v1.2.0 h1:+yeQgJiErrur5S4s205UM37EcZ2XbC9pFSm0xgV5/hU=

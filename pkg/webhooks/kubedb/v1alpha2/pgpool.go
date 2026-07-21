@@ -133,7 +133,8 @@ func (w *PgpoolCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Ob
 func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.ErrorList {
 	var errorList field.ErrorList
 	if pp.Spec.Version == "" {
-		errorList = append(errorList, field.Required(field.NewPath("spec").Child("version"),
+		errorList = append(errorList, field.Required(
+			field.NewPath("spec").Child("version"),
 			"`spec.version` is missing",
 		))
 	} else {
@@ -146,7 +147,8 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 	}
 
 	if pp.Spec.PostgresRef == nil {
-		errorList = append(errorList, field.Required(field.NewPath("spec").Child("postgresRef"),
+		errorList = append(errorList, field.Required(
+			field.NewPath("spec").Child("postgresRef"),
 			"`spec.postgresRef` is missing",
 		))
 	}
@@ -158,7 +160,8 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 			Namespace: pp.Spec.PostgresRef.Namespace,
 		}, &apb)
 		if err != nil {
-			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("postgresRef"),
+			errorList = append(errorList, field.Invalid(
+				field.NewPath("spec").Child("postgresRef"),
 				pp.Name,
 				err.Error(),
 			))
@@ -166,14 +169,16 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 
 		backendSSL, err := pp.IsBackendTLSEnabled(w.DefaultClient)
 		if err != nil {
-			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("postgresRef"),
+			errorList = append(errorList, field.Invalid(
+				field.NewPath("spec").Child("postgresRef"),
 				pp.Name,
 				err.Error(),
 			))
 		}
 
 		if pp.Spec.TLS == nil && backendSSL {
-			errorList = append(errorList, field.Required(field.NewPath("spec").Child("tls"),
+			errorList = append(errorList, field.Required(
+				field.NewPath("spec").Child("tls"),
 				"`spec.tls` must be set because backend postgres is tls enabled",
 			))
 		}
@@ -181,14 +186,16 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 
 	if pp.Spec.TLS == nil {
 		if pp.Spec.SSLMode != "disable" {
-			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("sslMode"),
+			errorList = append(errorList, field.Invalid(
+				field.NewPath("spec").Child("sslMode"),
 				pp.Name,
 				"Tls is not enabled, enable it to use this sslMode",
 			))
 		}
 
 		if pp.Spec.ClientAuthMode == "cert" {
-			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("clientAuthMode"),
+			errorList = append(errorList, field.Invalid(
+				field.NewPath("spec").Child("clientAuthMode"),
 				pp.Name,
 				"Tls is not enabled, enable it to use this clientAuthMode",
 			))
@@ -197,12 +204,14 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 
 	if pp.Spec.Replicas != nil {
 		if *pp.Spec.Replicas <= 0 {
-			errorList = append(errorList, field.Required(field.NewPath("spec").Child("replicas"),
+			errorList = append(errorList, field.Required(
+				field.NewPath("spec").Child("replicas"),
 				"`spec.replica` must be greater than 0",
 			))
 		}
 		if *pp.Spec.Replicas > 9 {
-			errorList = append(errorList, field.Required(field.NewPath("spec").Child("replicas"),
+			errorList = append(errorList, field.Required(
+				field.NewPath("spec").Child("replicas"),
 				"`spec.replica` must be less than 10",
 			))
 		}
@@ -210,14 +219,16 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 
 	if pp.Spec.PodTemplate != nil {
 		if err := w.ValidateEnvVar(PgpoolGetMainContainerEnvs(pp), PgpoolForbiddenEnvVars, pp.ResourceKind()); err != nil {
-			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Child("env"),
+			errorList = append(errorList, field.Invalid(
+				field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Child("env"),
 				pp.Name,
 				err.Error(),
 			))
 		}
 		err := PgpoolValidateVolumes(pp)
 		if err != nil {
-			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
+			errorList = append(errorList, field.Invalid(
+				field.NewPath("spec").Child("podTemplate").Child("spec").Child("volumes"),
 				pp.Name,
 				err.Error(),
 			))
@@ -232,7 +243,8 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 	}
 
 	if err := w.ValidateHealth(&pp.Spec.HealthChecker); err != nil {
-		errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("healthChecker"),
+		errorList = append(errorList, field.Invalid(
+			field.NewPath("spec").Child("healthChecker"),
 			pp.Name,
 			err.Error(),
 		))
@@ -240,7 +252,8 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 
 	if pp.Spec.Configuration != nil {
 		if err := PgpoolValidateLoadBalancingSpec(pp.Spec.Configuration.Backends); err != nil {
-			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("configuration").Child("backends"),
+			errorList = append(errorList, field.Invalid(
+				field.NewPath("spec").Child("configuration").Child("backends"),
 				pp.Name,
 				err.Error(),
 			))

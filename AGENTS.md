@@ -14,7 +14,7 @@ All build/codegen targets run inside Docker images (`ghcr.io/appscode/golang-dev
 # Compile all packages (no top-level binary; produces no useful artifact)
 make build
 
-# Format Go sources
+# Format Go sources - ALWAYS run this before opening a PR
 make fmt
 
 # Run unit tests
@@ -183,6 +183,7 @@ vendor/                        # `go mod vendor` is required (GOFLAGS=-mod=vendo
 - The linter (`.golangci.yml`) rewrites `interface{}` to `any` on format.
 - `make verify` must pass: `go mod tidy && go mod vendor` cleanly, and `make gen && make fmt` produces no diff.
 - Build/test scripts hard-code `GOFLAGS=-mod=vendor` - run `go mod vendor` after touching `go.mod`.
+- Always run `make fmt` before opening a PR - unformatted code will fail CI.
 
 ## Common Mistakes to Avoid
 
@@ -191,3 +192,4 @@ vendor/                        # `go mod vendor` is required (GOFLAGS=-mod=vendo
 - Don't bypass `make verify` - generated code drifting from sources will fail CI.
 - Don't add CRD YAML files manually - controller-gen reads kubebuilder markers from `apis/...` and writes `crds/*.yaml`; large CRDs are post-processed via `hack/crd-patch.json` (see `crd_to_patch` list in the `Makefile`).
 - Don't run `go build ./...` directly without `-mod=vendor` when verifying changes that other Make targets touch; mismatched module mode can cause spurious errors.
+- Don't open a PR without running `make fmt` first - always format your changes before pushing.

@@ -26,6 +26,7 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	"kubedb.dev/apimachinery/crds"
 
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gomodules.xyz/pointer"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -36,6 +37,7 @@ import (
 	metautil "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ofst_util "kmodules.xyz/offshoot-api/util"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
@@ -44,11 +46,6 @@ import (
 
 func (d *DocumentDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralDocumentDB))
-}
-
-// Owner returns owner reference to resources
-func (d *DocumentDB) Owner() *metav1.OwnerReference {
-	return metav1.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
 }
 
 // AsOwner returns owner reference to resources
@@ -186,6 +183,47 @@ func (d *DocumentDB) AppBindingMeta() appcat.AppBindingMeta {
 	return &documentDBApp{d}
 }
 
+type documentDBStatsService struct {
+	*DocumentDB
+}
+
+func (d documentDBStatsService) GetNamespace() string {
+	return d.DocumentDB.GetNamespace()
+}
+
+func (d documentDBStatsService) ServiceName() string {
+	return d.OffshootName() + "-stats"
+}
+
+func (d documentDBStatsService) ServiceMonitorName() string {
+	return d.ServiceName()
+}
+
+func (d documentDBStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return d.OffshootLabels()
+}
+
+func (d documentDBStatsService) Path() string {
+	return kubedb.DefaultStatsPath
+}
+
+func (d documentDBStatsService) Scheme() string {
+	sc := promapi.SchemeHTTP
+	return sc.String()
+}
+
+func (d documentDBStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
+}
+
+func (d *DocumentDB) StatsService() mona.StatsAccessor {
+	return &documentDBStatsService{d}
+}
+
+func (d *DocumentDB) StatsServiceLabels() map[string]string {
+	return d.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
+}
+
 func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alpha1.DocumentDBVersion) {
 	if d == nil {
 		return
@@ -258,6 +296,7 @@ func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alp
 	d.SetInitContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
 	d.SetDocumentDBContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
 	d.SetCoordinatorContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
+	apis.SetDefaultResizePolicy(d.Spec.PodTemplate.Spec.Containers, d.Spec.PodTemplate.Spec.InitContainers)
 	d.SetDefaultReplicationMode()
 	d.SetHealthCheckerDefaults()
 }
@@ -371,8 +410,10 @@ func (d *DocumentDB) initializePodTemplates() {
 }
 
 func (d *DocumentDB) GetPersistentSecrets() []string {
-	var secrets []string
-	secrets = append(secrets, d.GetAuthSecretName())
+	secrets := make([]string, 0, 2)
+	if !IsVirtualAuthSecretReferred(d.Spec.AuthSecret) && d.Spec.AuthSecret != nil && d.Spec.AuthSecret.Name != "" {
+		secrets = append(secrets, d.GetAuthSecretName())
+	}
 	secrets = append(secrets, d.GetAdminAuthSecretName())
 	return secrets
 }
@@ -426,4 +467,8 @@ func GetSharedBufferSizeForDocumentdb(resource *resource.Quantity) string {
 	}
 
 	return sharedBuffer
+}
+
+func (d *DocumentDB) GetDeletionPolicy() string {
+	return string(d.Spec.DeletionPolicy)
 }

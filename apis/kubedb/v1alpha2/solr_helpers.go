@@ -63,11 +63,6 @@ func (s *Solr) PetSetName(suffix string) string {
 	return strings.Join(sts, "-")
 }
 
-// Owner returns owner reference to resources
-func (s *Solr) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(s, SchemeGroupVersion.WithKind(s.ResourceKind()))
-}
-
 func (s *Solr) ResourceKind() string {
 	return ResourceKindSolr
 }
@@ -133,7 +128,7 @@ func (s *Solr) Merge(opt map[string]string) map[string]string {
 }
 
 func (s *Solr) Append(opt map[string]string) string {
-	key := make([]string, 0)
+	key := make([]string, 0, len(opt))
 	for x := range opt {
 		key = append(key, x)
 	}
@@ -490,6 +485,8 @@ func (s *Solr) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateSp
 	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&initContainer.Resources, kubedb.DefaultInitContainerResource)
 	}
+
+	apis.SetDefaultResizePolicy(podTemplate.Spec.Containers, podTemplate.Spec.InitContainers)
 }
 
 func (s *Solr) SetHealthCheckerDefaults() {
@@ -592,4 +589,12 @@ func (d *SolrBind) SecretName() string {
 
 func (d *SolrBind) CertSecretName() string {
 	return d.GetCertSecretName(SolrClientCert)
+}
+
+func (s *Solr) GetDeletionPolicy() string {
+	return string(s.Spec.DeletionPolicy)
+}
+
+func (s *Solr) AsOwner() *meta.OwnerReference {
+	return meta.NewControllerRef(s, SchemeGroupVersion.WithKind(s.ResourceKind()))
 }

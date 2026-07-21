@@ -26,9 +26,11 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	secret_lib "kubedb.dev/apimachinery/pkg/secret"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
+	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
@@ -70,7 +72,7 @@ func (w *Neo4jOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj r
 		return nil, fmt.Errorf("expected an Neo4jOpsRequest object but got %T", obj)
 	}
 	neo4jLog.Info("validate create", "name", req.Name)
-	return nil, w.validateCreateOrUpdate(req)
+	return w.validateCreateOrUpdate(req)
 }
 
 func (w *Neo4jOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
@@ -88,18 +90,19 @@ func (w *Neo4jOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err := validateNeo4jOpsRequest(req, oldReq); err != nil {
 		return nil, err
 	}
-	if err := w.validateCreateOrUpdate(req); err != nil {
-		return nil, err
+	warnings, err := w.validateCreateOrUpdate(req)
+	if err != nil {
+		return warnings, err
 	}
 	if isOpsReqCompleted(req.Status.Phase) && !isOpsReqCompleted(oldReq.Status.Phase) { // just completed
 		var db dbapi.Neo4j
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: req.Spec.DatabaseRef.Name, Namespace: req.Namespace}, &db)
 		if err != nil {
-			return nil, err
+			return warnings, err
 		}
-		return nil, resumeDatabase(w.DefaultClient, &db)
+		return warnings, resumeDatabase(w.DefaultClient, &db)
 	}
-	return nil, nil
+	return warnings, nil
 }
 
 func (w *Neo4jOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
@@ -122,18 +125,19 @@ func validateNeo4jOpsRequest(req *opsapi.Neo4jOpsRequest, oldReq *opsapi.Neo4jOp
 	return nil
 }
 
-func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jOpsRequest) error {
+func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jOpsRequest) (admission.Warnings, error) {
 	if validType, _ := arrays.Contains(opsapi.Neo4jOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
-		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
+		return nil, field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for Neo4j are %s", req.Spec.Type, strings.Join(opsapi.Neo4jOpsRequestTypeNames(), ", ")))
 	}
 
 	neo4j, err := w.hasDatabaseRef(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var allErr field.ErrorList
+	var warnings admission.Warnings
 	switch opsapi.Neo4jOpsRequestType(req.GetRequestType()) {
 	case opsapi.Neo4jOpsRequestTypeHorizontalScaling:
 		if err := w.validateNeo4jHorizontalScalingOpsRequest(neo4j, req); err != nil {
@@ -152,7 +156,9 @@ func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jO
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
 		}
 	case opsapi.Neo4jOpsRequestTypeVerticalScaling:
-		if err := w.validateNeo4jVerticalScalingOpsRequest(req); err != nil {
+		warns, err := w.validateNeo4jVerticalScalingOpsRequest(req)
+		warnings = append(warnings, warns...)
+		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"), req.Name, err.Error()))
 		}
 	case opsapi.Neo4jOpsRequestTypeUpdateVersion:
@@ -172,9 +178,9 @@ func (w *Neo4jOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Neo4jO
 	}
 
 	if len(allErr) == 0 {
-		return nil
+		return warnings, nil
 	}
-	return apierrors.NewInvalid(schema.GroupKind{Group: "neo4jopsrequests.kubedb.com", Kind: "Neo4jOpsRequest"}, req.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: "neo4jopsrequests.kubedb.com", Kind: "Neo4jOpsRequest"}, req.Name, allErr)
 }
 
 func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jStorageMigrationOpsRequest(req *opsapi.Neo4jOpsRequest) error {
@@ -462,16 +468,21 @@ func compareVersion(current, target *CalVersionInfo) int {
 	return 0
 }
 
-func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVerticalScalingOpsRequest(req *opsapi.Neo4jOpsRequest) error {
+func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jVerticalScalingOpsRequest(req *opsapi.Neo4jOpsRequest) (admission.Warnings, error) {
 	verticalScalingSpec := req.Spec.VerticalScaling
 	if verticalScalingSpec == nil {
-		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
+		return nil, errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
 	if verticalScalingSpec.Server == nil {
-		return errors.New("`spec.verticalScaling.Server`,should be present in vertical scaling ops request")
+		return nil, errors.New("`spec.verticalScaling.Server`,should be present in vertical scaling ops request")
 	}
 
-	return nil
+	var warnings admission.Warnings
+	if verticalScalingSpec.Mode == opsapi.VerticalScalingModeInPlace {
+		warnings = append(warnings, "in-place vertical scaling is not recommended for Neo4j: memory settings (server.memory.heap.*, server.memory.pagecache.size) require a pod restart to take effect")
+	}
+
+	return warnings, nil
 }
 
 func (w *Neo4jOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.Neo4jOpsRequest) (*dbapi.Neo4j, error) {
@@ -581,15 +592,12 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jReconfigurationTLSOpsRequest
 
 func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jRotateAuthenticationOpsRequest(req *opsapi.Neo4jOpsRequest) error {
 	authSpec := req.Spec.Authentication
-	var newAuthsecret core.Secret
 	if authSpec != nil && authSpec.SecretRef != nil {
 		if authSpec.SecretRef.Name == "" {
 			return errors.New("spec.authentication.secretRef.name can not be empty")
 		}
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &newAuthsecret)
+		isVirtual := authSpec.SecretRef.APIGroup == vsecretapi.GroupName
+		newData, err := secret_lib.GetData(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef.Name, isVirtual)
 		if err != nil {
 			if apierrors.IsNotFound(err) {
 				return fmt.Errorf("referenced secret %s not found", authSpec.SecretRef.Name)
@@ -597,10 +605,10 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jRotateAuthenticationOpsReque
 			return err
 		}
 
-		if newAuthsecret.Data == nil {
+		if newData == nil {
 			return errors.New("spec.authentication.secretRef.name is a valid secret but it does not contain any data")
 		}
-		if newAuthsecret.Data[core.BasicAuthUsernameKey] == nil || newAuthsecret.Data[core.BasicAuthPasswordKey] == nil {
+		if newData[core.BasicAuthUsernameKey] == nil || newData[core.BasicAuthPasswordKey] == nil {
 			return errors.New("spec.authentication.secretRef.name is a valid secret but it does not contain username or password")
 		}
 	}

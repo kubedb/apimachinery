@@ -36,11 +36,11 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 	// APIVersion is shared by all underlying kinds; Kind is set per case below so
 	// the projected Migration retains the provenance of the concrete CRD it was
 	// duckified from.
-	m.TypeMeta.APIVersion = SchemeGroupVersion.String()
+	m.APIVersion = SchemeGroupVersion.String()
 
 	switch t := srcRaw.(type) {
 	case *PostgresMigration:
-		m.TypeMeta.Kind = ResourceKindPostgresMigration
+		m.Kind = ResourceKindPostgresMigration
 		m.ObjectMeta = t.ObjectMeta
 		m.Status = t.Status
 		m.Spec = MigrationSpec{
@@ -50,7 +50,7 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			JobTemplate: t.Spec.JobTemplate,
 		}
 	case *MySQLMigration:
-		m.TypeMeta.Kind = ResourceKindMySQLMigration
+		m.Kind = ResourceKindMySQLMigration
 		m.ObjectMeta = t.ObjectMeta
 		m.Status = t.Status
 		m.Spec = MigrationSpec{
@@ -60,7 +60,7 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			JobTemplate: t.Spec.JobTemplate,
 		}
 	case *MariaDBMigration:
-		m.TypeMeta.Kind = ResourceKindMariaDBMigration
+		m.Kind = ResourceKindMariaDBMigration
 		m.ObjectMeta = t.ObjectMeta
 		m.Status = t.Status
 		m.Spec = MigrationSpec{
@@ -70,7 +70,7 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			JobTemplate: t.Spec.JobTemplate,
 		}
 	case *MongoDBMigration:
-		m.TypeMeta.Kind = ResourceKindMongoDBMigration
+		m.Kind = ResourceKindMongoDBMigration
 		m.ObjectMeta = t.ObjectMeta
 		m.Status = t.Status
 		m.Spec = MigrationSpec{
@@ -80,7 +80,7 @@ func (m *Migration) Duckify(srcRaw runtime.Object) error {
 			JobTemplate: t.Spec.JobTemplate,
 		}
 	case *MSSQLServerMigration:
-		m.TypeMeta.Kind = ResourceKindMSSQLServerMigration
+		m.Kind = ResourceKindMSSQLServerMigration
 		m.ObjectMeta = t.ObjectMeta
 		m.Status = t.Status
 		m.Spec = MigrationSpec{

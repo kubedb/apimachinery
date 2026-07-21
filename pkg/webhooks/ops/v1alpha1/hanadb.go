@@ -25,9 +25,11 @@ import (
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	secret_lib "kubedb.dev/apimachinery/pkg/secret"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"github.com/pkg/errors"
+	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -236,21 +238,18 @@ func (w *HanaDBOpsRequestCustomWebhook) validateHanaDBRotateAuthenticationOpsReq
 			return errors.New("spec.authentication.secretRef.name can not be empty")
 		}
 
-		var newAuthSecret core.Secret
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      authSpec.SecretRef.Name,
-			Namespace: req.Namespace,
-		}, &newAuthSecret)
+		isVirtual := authSpec.SecretRef.APIGroup == vsecretapi.GroupName
+		newData, err := secret_lib.GetData(context.TODO(), w.DefaultClient, req.Namespace, authSpec.SecretRef.Name, isVirtual)
 		if err != nil {
 			if apierrors.IsNotFound(err) {
 				return errors.Errorf("referenced secret %s/%s not found", req.Namespace, authSpec.SecretRef.Name)
 			}
 			return err
 		}
-		if _, err := getHanaDBAuthPassword(newAuthSecret.Data); err != nil {
+		if _, err := getHanaDBAuthPassword(newData); err != nil {
 			return errors.Errorf("referenced secret %s/%s is invalid: %v", req.Namespace, authSpec.SecretRef.Name, err)
 		}
-		if username := newAuthSecret.Data[core.BasicAuthUsernameKey]; len(username) > 0 && string(username) != kubedb.HanaDBSystemUser {
+		if username := newData[core.BasicAuthUsernameKey]; len(username) > 0 && string(username) != kubedb.HanaDBSystemUser {
 			return errors.Errorf("username in referenced secret %s/%s must be %q", req.Namespace, authSpec.SecretRef.Name, kubedb.HanaDBSystemUser)
 		}
 	}

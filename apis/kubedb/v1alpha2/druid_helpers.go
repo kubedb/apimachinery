@@ -54,10 +54,6 @@ func (d *Druid) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourcePluralDruid))
 }
 
-func (d *Druid) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
-}
-
 func (d *Druid) ResourceKind() string {
 	return ResourceKindDruid
 }
@@ -739,6 +735,8 @@ func (d *Druid) setDefaultContainerResourceLimits(podTemplate *ofst.PodTemplateS
 	if initContainer != nil && (initContainer.Resources.Requests == nil && initContainer.Resources.Limits == nil) {
 		apis.SetDefaultResourceLimits(&initContainer.Resources, kubedb.DefaultInitContainerResource)
 	}
+
+	apis.SetDefaultResizePolicy(podTemplate.Spec.Containers, podTemplate.Spec.InitContainers)
 }
 
 func (d *Druid) GetPersistentSecrets() []string {
@@ -855,4 +853,12 @@ func (d *DruidBind) SecretName() string {
 
 func (d *DruidBind) CertSecretName() string {
 	return d.GetCertSecretName(DruidClientCert)
+}
+
+func (d *Druid) GetDeletionPolicy() string {
+	return string(d.Spec.DeletionPolicy)
+}
+
+func (d *Druid) AsOwner() *meta.OwnerReference {
+	return meta.NewControllerRef(d, SchemeGroupVersion.WithKind(d.ResourceKind()))
 }
