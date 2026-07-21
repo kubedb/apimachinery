@@ -235,8 +235,42 @@ func (o Options) validateAuthData(data map[string][]byte) error {
 func (o Options) generatedData() map[string][]byte {
 	return map[string][]byte{
 		core.BasicAuthUsernameKey: []byte(o.DefaultUsername),
-		core.BasicAuthPasswordKey: []byte(rand.String(kubedb.DefaultPasswordLength)),
+		core.BasicAuthPasswordKey: []byte(generatePassword(kubedb.DefaultPasswordLength)),
 	}
+}
+
+const (
+	pwUpper  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	pwLower  = "abcdefghijklmnopqrstuvwxyz"
+	pwDigits = "0123456789"
+	pwAll    = pwUpper + pwLower + pwDigits
+)
+
+// generatePassword returns an n-character password drawn from uppercase
+// letters, lowercase letters, and digits only (no symbols), guaranteeing at
+// least one character from each of those three classes. The three-class
+// guarantee satisfies common "N of 3/4 character classes" complexity
+// policies (e.g. SQL Server's SA password requirement) that rand.String's
+// lowercase-consonants-and-digits-only alphabet cannot. Symbols are
+// deliberately excluded because several DB configs render the password into
+// delimiter-based formats (e.g. ProxySQL's "user:pass;user:pass"
+// admin_variables line) that punctuation could corrupt.
+func generatePassword(n int) string {
+	if n < 3 {
+		return rand.String(n)
+	}
+	b := make([]byte, n)
+	b[0] = pwUpper[rand.Intn(len(pwUpper))]
+	b[1] = pwLower[rand.Intn(len(pwLower))]
+	b[2] = pwDigits[rand.Intn(len(pwDigits))]
+	for i := 3; i < n; i++ {
+		b[i] = pwAll[rand.Intn(len(pwAll))]
+	}
+	shuffled := make([]byte, n)
+	for i, p := range rand.Perm(n) {
+		shuffled[p] = b[i]
+	}
+	return string(shuffled)
 }
 
 func activationTime(annotations map[string]string) (*metav1.Time, error) {
