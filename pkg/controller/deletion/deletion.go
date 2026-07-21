@@ -14,9 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package deletion holds the DB deletion logic shared by every kubedb operator:
-// the DeletionPolicy owner reference sync (Halt/Delete/WipeOut) and the spec.Halted
-// Halt mode. Callers pass the DB object and its list type; everything else is derived.
 package deletion
 
 import (
@@ -40,8 +37,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// DeletionPolicy values. Kept as untyped string consts so this package stays decoupled
-// from the v1/v1alpha2 DeletionPolicy types (both are `type DeletionPolicy string`).
+// Untyped string consts so this package stays decoupled from the v1/v1alpha2 DeletionPolicy types.
 const (
 	DeletionPolicyHalt           = "Halt"
 	DeletionPolicyDelete         = "Delete"
@@ -55,42 +51,31 @@ var (
 	virtualSecretGVR = vsecretapi.SchemeGroupVersion.WithResource(vsecretapi.ResourceSecrets)
 )
 
-// DBInterface is the minimal contract every kubedb DB type satisfies. All accessors
-// are type-level on every DB (see apis/kubedb/*/*_helpers.go).
-//
-// OffshootSelectors is intentionally NOT part of this interface: its signature differs
-// across API versions (v1 is non-variadic, v1alpha2 is variadic), so callers pass the
-// selector map via Options.Selectors instead.
+// OffshootSelectors is intentionally not part of this interface: its signature differs across
+// API versions (v1 non-variadic, v1alpha2 variadic), so callers pass the map via Options.Selectors.
 type DBInterface interface {
 	client.Object
 	GetPersistentSecrets() []string
 	GetDeletionPolicy() string
 }
 
-// Options carries what Do needs. The DB supplies only DB + PeerList; namespace, name,
-// selectors, secrets, policy and owner are all derived. Virtual auth secrets are handled
-// automatically (see virtualAuthSecretNames), so there is nothing extra to pass.
 type Options struct {
 	KBClient      client.Client
 	DynamicClient dynamic.Interface
 	DB            DBInterface
-	// Selectors is the DB's offshoot selector map (db.OffshootSelectors()); passed in
-	// because OffshootSelectors has an incompatible signature across API versions.
+	// Selectors is passed in because OffshootSelectors has an incompatible signature across API versions.
 	Selectors map[string]string
-	// PeerList is an empty typed list of the same kind (e.g. &api.MongoDBList{}); used to
-	// find which secrets are still referenced by sibling DBs before wiping them.
+	// PeerList is an empty typed list of the same kind (e.g. &api.MongoDBList{}); used to find
+	// which secrets are still referenced by sibling DBs before wiping them.
 	PeerList client.ObjectList
 }
 
-// authSecretReferrer is satisfied by DB types that expose an auth secret name. Most DBs do.
 type authSecretReferrer interface {
 	GetAuthSecretName() string
 }
 
-// virtualAuthSecretNames returns the DB's auth secret name so the owner-reference helpers can
-// be applied to the virtual-secrets GVR as well. When the auth secret is an ordinary core
-// secret (or the DB has none), the virtual-secrets object won't exist and the helpers skip it,
-// so this is safe to run unconditionally.
+// Safe to run unconditionally: when the auth secret is an ordinary core secret (or the DB has
+// none), the virtual-secrets object won't exist and the owner-reference helpers skip it.
 func virtualAuthSecretNames(db DBInterface) []string {
 	if r, ok := db.(authSecretReferrer); ok {
 		if name := r.GetAuthSecretName(); name != "" {
@@ -100,12 +85,11 @@ func virtualAuthSecretNames(db DBInterface) []string {
 	return nil
 }
 
-// Do runs the DeletionPolicy owner reference sync. Call it from the operator's terminate path.
+// Do runs the DeletionPolicy owner reference sync from the operator's terminate path.
 //
 //	Halt           -> keep PVCs and secrets (remove owner reference).
-//	DoNotTerminate -> treated like Halt here as a safety net: the admission webhook
-//	                  normally blocks deletion outright, but if it's bypassed or down,
-//	                  this keeps PVCs/secrets from being cascade-deleted anyway.
+//	DoNotTerminate -> treated like Halt as a safety net: the webhook normally blocks deletion,
+//	                  but if it's bypassed or down, this still keeps PVCs/secrets.
 //	Delete         -> delete PVCs (add owner reference), keep secrets.
 //	WipeOut        -> delete PVCs and unused kubedb-owned secrets.
 func Do(ctx context.Context, opts Options) error {
@@ -154,9 +138,8 @@ func ensureOwnerRefsOnOffshoots(ctx context.Context, opts Options) error {
 	return dynamic_util.EnsureOwnerReferenceForSelector(ctx, opts.DynamicClient, pvcGVR, ns, selector, owner)
 }
 
-// wipeOut makes the DB the owner of every persistent secret that is not shared with a peer
-// DB and is managed by kubedb, so garbage collection removes them. ExtraSecrets are always
-// wiped (they belong solely to this DB).
+// wipeOut makes the DB the owner of every persistent secret not shared with a peer DB and
+// managed by kubedb, so garbage collection removes them.
 func wipeOut(ctx context.Context, opts Options, owner *metav1.OwnerReference) error {
 	used, err := secretsUsedByPeers(ctx, opts)
 	if err != nil {
@@ -189,8 +172,6 @@ func wipeOut(ctx context.Context, opts Options, owner *metav1.OwnerReference) er
 	return dynamic_util.EnsureOwnerReferenceForItems(ctx, opts.DynamicClient, virtualSecretGVR, ns, virtualAuthSecretNames(opts.DB), owner)
 }
 
-// secretsUsedByPeers returns the set of secrets referenced by other DBs of the same kind
-// in this namespace.
 func secretsUsedByPeers(ctx context.Context, opts Options) (sets.Set[string], error) {
 	used := sets.New[string]()
 	if opts.PeerList == nil {
@@ -216,7 +197,6 @@ func secretsUsedByPeers(ctx context.Context, opts Options) (sets.Set[string], er
 	return used, nil
 }
 
-// buildOwnerRef builds a controller owner reference for the DB using its registered GVK.
 func buildOwnerRef(opts Options) (*metav1.OwnerReference, error) {
 	gvks, _, err := opts.KBClient.Scheme().ObjectKinds(opts.DB)
 	if err != nil {
