@@ -113,6 +113,52 @@ func (s *Solr) SolrInlineConfigSecretKey(key string) string {
 	return fmt.Sprintf("%s-%s", kubedb.InlineConfigKeyPrefix, key)
 }
 
+// S3BackupCredential returns the configured S3 backup credential, or nil.
+func (s *Solr) S3BackupCredential() *SolrS3Credential {
+	if s.Spec.BackupCredentials == nil {
+		return nil
+	}
+	return s.Spec.BackupCredentials.S3
+}
+
+// GCSBackupCredential returns the configured GCS backup credential, or nil.
+func (s *Solr) GCSBackupCredential() *SolrGCSCredential {
+	if s.Spec.BackupCredentials == nil {
+		return nil
+	}
+	return s.Spec.BackupCredentials.GCS
+}
+
+// ResolvedEnvToSecretKey returns the environment variable to secret key mapping,
+// falling back to the AWS SDK's own variable names when none is configured. Those
+// names are what KubeStash writes into an S3 BackupStorage secret, so the default
+// covers the common case without any explicit mapping.
+func (c *SolrS3Credential) ResolvedEnvToSecretKey() map[string]string {
+	if len(c.EnvToSecretKey) > 0 {
+		return c.EnvToSecretKey
+	}
+	return map[string]string{
+		"AWS_ACCESS_KEY_ID":     "AWS_ACCESS_KEY_ID",
+		"AWS_SECRET_ACCESS_KEY": "AWS_SECRET_ACCESS_KEY",
+	}
+}
+
+// ResolvedCredentialKey returns the secret key holding the GCS service account json.
+func (c *SolrGCSCredential) ResolvedCredentialKey() string {
+	if c.CredentialKey != "" {
+		return c.CredentialKey
+	}
+	return kubedb.SolrGCSCredentialSecretKey
+}
+
+// GCSCredentialPath is the in-container path the GCS service account key is
+// mounted at. Solr's GCSBackupRepository is pointed at it through the
+// gcsCredentialPath property, so config writers and the operator that performs
+// the mount stay in agreement.
+func GCSCredentialPath() string {
+	return filepath.Join(kubedb.SolrBackupCredentialsDir, kubedb.SolrGCSCredentialFileName)
+}
+
 func (s *Solr) Merge(opt map[string]string) map[string]string {
 	if len(s.Spec.SolrOpts) == 0 {
 		return opt

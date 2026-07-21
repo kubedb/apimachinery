@@ -813,10 +813,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SinglestoreTopology":                           schema_apimachinery_apis_kubedb_v1alpha2_SinglestoreTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Solr":                                          schema_apimachinery_apis_kubedb_v1alpha2_Solr(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrApp":                                       schema_apimachinery_apis_kubedb_v1alpha2_SolrApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials":                         schema_apimachinery_apis_kubedb_v1alpha2_SolrBackupCredentials(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBind":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology":                           schema_apimachinery_apis_kubedb_v1alpha2_SolrClusterTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrGCSCredential":                             schema_apimachinery_apis_kubedb_v1alpha2_SolrGCSCredential(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrList":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrNode":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrS3Credential":                              schema_apimachinery_apis_kubedb_v1alpha2_SolrS3Credential(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrSpec":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrStatus":                                    schema_apimachinery_apis_kubedb_v1alpha2_SolrStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemReplicationHealthSummary":                schema_apimachinery_apis_kubedb_v1alpha2_SystemReplicationHealthSummary(ref),
@@ -46479,6 +46482,33 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrApp(ref common.ReferenceCallba
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_SolrBackupCredentials(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrBackupCredentials holds object storage credentials for Solr backup repositories.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"s3": {
+						SchemaProps: spec.SchemaProps{
+							Description: "S3 credentials, injected into the Solr containers as environment variables.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrS3Credential"),
+						},
+					},
+					"gcs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GCS credentials, mounted into the Solr containers as a file.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrGCSCredential"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrGCSCredential", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrS3Credential"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_SolrBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -46525,6 +46555,35 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrClusterTopology(ref common.Ref
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrNode"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_SolrGCSCredential(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrGCSCredential references a Secret in the database namespace holding a GCS service account key.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretName is the Secret containing the GCS service account key.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"credentialKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CredentialKey is the Secret key holding the service account JSON.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"secretName"},
+			},
+		},
 	}
 }
 
@@ -46615,6 +46674,44 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrNode(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_SolrS3Credential(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrS3Credential references a Secret in the database namespace holding S3 credentials.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretName is the Secret containing the S3 credentials.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"envToSecretKey": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EnvToSecretKey maps a container environment variable name to the key that holds its value in the Secret. When empty, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are read from identically named keys.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"secretName"},
+			},
+		},
 	}
 }
 
@@ -46732,6 +46829,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
 						},
 					},
+					"backupCredentials": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackupCredentials holds the object storage credentials that Solr's backup repositories authenticate with. The referenced Secrets are always in this database's namespace; the operator copies them there when the ops request points at a Secret living elsewhere.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials"),
+						},
+					},
 					"keystoreSecret": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/api/core/v1.LocalObjectReference"),
@@ -46803,7 +46906,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef"},
 	}
 }
 
