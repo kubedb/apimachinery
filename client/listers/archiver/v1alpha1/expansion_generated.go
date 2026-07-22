@@ -58,6 +58,14 @@ type MySQLArchiverListerExpansion interface{}
 // MySQLArchiverNamespaceLister.
 type MySQLArchiverNamespaceListerExpansion interface{}
 
+// Neo4jArchiverListerExpansion allows custom methods to be added to
+// Neo4jArchiverLister.
+type Neo4jArchiverListerExpansion interface{}
+
+// Neo4jArchiverNamespaceListerExpansion allows custom methods to be added to
+// Neo4jArchiverNamespaceLister.
+type Neo4jArchiverNamespaceListerExpansion interface{}
+
 // PostgresArchiverListerExpansion allows custom methods to be added to
 // PostgresArchiverLister.
 type PostgresArchiverListerExpansion interface{}
