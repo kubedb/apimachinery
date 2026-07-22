@@ -26540,6 +26540,32 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchOwnedResources": {
+      "description": "BranchOwnedResources references the objects created and owned by a branch.",
+      "type": "object",
+      "properties": {
+        "authSecret": {
+          "description": "AuthSecret is the branch's auth Secret (the credential matching the cloned data).",
+          "type": "string"
+        },
+        "clonedPVCs": {
+          "description": "ClonedPVCs are the target PVCs cloned from the source snapshots, ordered by ordinal.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "configSecret": {
+          "description": "ConfigSecret is the branch's config Secret, when the engine uses one.",
+          "type": "string"
+        },
+        "massageJob": {
+          "description": "MassageJob is the data-massage Job name, set only when spec.dataMassageImage is used.",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchRun": {
       "description": "BranchRun is one entry in the refresh history.",
       "type": "object",
@@ -26572,16 +26598,63 @@
         }
       }
     },
-    "dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchSnapshotRef": {
-      "description": "BranchSnapshotRef references the source snapshot.",
+    "dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchSnapshotMember": {
+      "description": "BranchSnapshotMember is one source VolumeSnapshot backing a single data PVC of the branch.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "creationTime": {
+          "description": "CreationTime is when the snapshot was taken, when reported by the CSI driver.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "name": {
+          "description": "Name is the VolumeSnapshot object name.",
+          "type": "string",
+          "default": ""
+        },
+        "readyToUse": {
+          "description": "ReadyToUse mirrors the VolumeSnapshot's readyToUse status.",
+          "type": "boolean"
+        },
+        "restoreSize": {
+          "description": "RestoreSize is the snapshot's restore size, when reported by the CSI driver.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.api.resource.Quantity"
+        },
+        "sourcePVC": {
+          "description": "SourcePVC is the source PVC this snapshot was taken from (its ordinal maps to the cloned target PVC).",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchSnapshotStatus": {
+      "description": "BranchSnapshotStatus describes the source snapshot set backing the current branch generation.",
       "type": "object",
       "properties": {
-        "ref": {
-          "description": "Ref is the name of the snapshot object.",
+        "generation": {
+          "description": "Generation is the refresh generation these snapshots belong to.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "groupRef": {
+          "description": "GroupRef is the VolumeGroupSnapshot object name, set only when Strategy is VolumeGroupSnapshot.",
           "type": "string"
         },
-        "type": {
-          "description": "Type is the snapshot kind (VolumeGroupSnapshot preferred, VolumeSnapshot fallback).",
+        "members": {
+          "description": "Members is one entry per source data PVC, ordered by ordinal and aligned to the cloned target PVCs.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchSnapshotMember"
+          }
+        },
+        "ready": {
+          "description": "Ready is true when every member snapshot is readyToUse.",
+          "type": "boolean"
+        },
+        "strategy": {
+          "description": "Strategy is how the source was snapshotted: VolumeGroupSnapshot (group-consistent) or VolumeSnapshot (per-PVC fallback, used when the driver has no VolumeGroupSnapshotClass).",
           "type": "string"
         }
       }
@@ -26665,7 +26738,7 @@
           "x-kubernetes-list-type": "map"
         },
         "freshness": {
-          "description": "Freshness is the human-readable age of the branch data since the last refresh (e.g. \"3m\", \"1h2m\").",
+          "description": "Freshness is the human-readable age of the branch data since the last successful refresh (e.g. \"3m\", \"1h2m\").",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
         },
         "history": {
@@ -26676,24 +26749,41 @@
             "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchRun"
           }
         },
-        "lastRefreshAt": {
-          "description": "LastRefreshAt is the time of the last successful refresh.",
+        "lastRefreshTime": {
+          "description": "LastRefreshTime is the time of the last refresh ATTEMPT, regardless of outcome.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "lastSuccessfulRefreshTime": {
+          "description": "LastSuccessfulRefreshTime is the time of the last SUCCESSFUL refresh; it is the anchor for Freshness. A failed tick updates LastRefreshTime but not this field.",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
         },
         "mode": {
           "description": "Mode is how this operator is participating in the branch.",
           "type": "string"
         },
+        "nextRefreshTime": {
+          "description": "NextRefreshTime is the next scheduled refresh, computed from spec.schedule.cron. Nil for a one-shot branch.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
         "phase": {
           "description": "Phase is the current phase of the branch.",
           "type": "string"
         },
+        "refreshGeneration": {
+          "description": "RefreshGeneration is the current refresh generation; it bumps on each scheduled refresh.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "resources": {
+          "description": "Resources lists the objects this branch owns, for audit and cleanup visibility.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchOwnedResources"
+        },
         "snapshot": {
-          "description": "Snapshot references the source snapshot the current branch was cloned from.",
-          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchSnapshotRef"
+          "description": "Snapshot describes the source snapshot set backing the current branch generation.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.BranchSnapshotStatus"
         },
         "targetRef": {
-          "description": "TargetRef references the branched Database.",
+          "description": "TargetRef references the branched Database. UID is populated so consumers can detect a target that was deleted and recreated out from under the branch.",
           "$ref": "#/definitions/io.k8s.api.core.v1.ObjectReference"
         }
       }

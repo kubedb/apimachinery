@@ -579,9 +579,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.Branch":                                       schema_apimachinery_apis_courier_v1alpha1_Branch(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchHistoryLimit":                           schema_apimachinery_apis_courier_v1alpha1_BranchHistoryLimit(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchList":                                   schema_apimachinery_apis_courier_v1alpha1_BranchList(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchOwnedResources":                         schema_apimachinery_apis_courier_v1alpha1_BranchOwnedResources(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchRun":                                    schema_apimachinery_apis_courier_v1alpha1_BranchRun(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSchedule":                               schema_apimachinery_apis_courier_v1alpha1_BranchSchedule(ref),
-		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotRef":                            schema_apimachinery_apis_courier_v1alpha1_BranchSnapshotRef(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotMember":                         schema_apimachinery_apis_courier_v1alpha1_BranchSnapshotMember(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotStatus":                         schema_apimachinery_apis_courier_v1alpha1_BranchSnapshotStatus(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSource":                                 schema_apimachinery_apis_courier_v1alpha1_BranchSource(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSpec":                                   schema_apimachinery_apis_courier_v1alpha1_BranchSpec(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchStatus":                                 schema_apimachinery_apis_courier_v1alpha1_BranchStatus(ref),
@@ -592,6 +594,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkResourceMeta":                       schema_apimachinery_apis_courier_v1alpha1_BranchWorkResourceMeta(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkSpec":                               schema_apimachinery_apis_courier_v1alpha1_BranchWorkSpec(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkStatus":                             schema_apimachinery_apis_courier_v1alpha1_BranchWorkStatus(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchedFrom":                                 schema_apimachinery_apis_courier_v1alpha1_BranchedFrom(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.ConnectionInfo":                               schema_apimachinery_apis_courier_v1alpha1_ConnectionInfo(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierCLI":                                 schema_apimachinery_apis_courier_v1alpha1_DBCourierCLI(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages":                              schema_apimachinery_apis_courier_v1alpha1_DBCourierImages(ref),
@@ -33482,6 +33485,55 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchList(ref common.ReferenceCa
 	}
 }
 
+func schema_apimachinery_apis_courier_v1alpha1_BranchOwnedResources(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BranchOwnedResources references the objects created and owned by a branch.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clonedPVCs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClonedPVCs are the target PVCs cloned from the source snapshots, ordered by ordinal.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"authSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AuthSecret is the branch's auth Secret (the credential matching the cloned data).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret is the branch's config Secret, when the engine uses one.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"massageJob": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MassageJob is the data-massage Job name, set only when spec.dataMassageImage is used.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_courier_v1alpha1_BranchRun(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -33539,30 +33591,110 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchSchedule(ref common.Referen
 	}
 }
 
-func schema_apimachinery_apis_courier_v1alpha1_BranchSnapshotRef(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_courier_v1alpha1_BranchSnapshotMember(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "BranchSnapshotRef references the source snapshot.",
+				Description: "BranchSnapshotMember is one source VolumeSnapshot backing a single data PVC of the branch.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"type": {
+					"name": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Type is the snapshot kind (VolumeGroupSnapshot preferred, VolumeSnapshot fallback).",
+							Description: "Name is the VolumeSnapshot object name.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
-					"ref": {
+					"sourcePVC": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Ref is the name of the snapshot object.",
+							Description: "SourcePVC is the source PVC this snapshot was taken from (its ordinal maps to the cloned target PVC).",
 							Type:        []string{"string"},
 							Format:      "",
+						},
+					},
+					"readyToUse": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReadyToUse mirrors the VolumeSnapshot's readyToUse status.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"restoreSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RestoreSize is the snapshot's restore size, when reported by the CSI driver.",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"creationTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CreationTime is when the snapshot was taken, when reported by the CSI driver.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_BranchSnapshotStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BranchSnapshotStatus describes the source snapshot set backing the current branch generation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"strategy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Strategy is how the source was snapshotted: VolumeGroupSnapshot (group-consistent) or VolumeSnapshot (per-PVC fallback, used when the driver has no VolumeGroupSnapshotClass).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"generation": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Generation is the refresh generation these snapshots belong to.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"groupRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GroupRef is the VolumeGroupSnapshot object name, set only when Strategy is VolumeGroupSnapshot.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ready": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ready is true when every member snapshot is readyToUse.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"members": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Members is one entry per source data PVC, ordered by ordinal and aligned to the cloned target PVCs.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotMember"),
+									},
+								},
+							},
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotMember"},
 	}
 }
 
@@ -33689,25 +33821,50 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchStatus(ref common.Reference
 					},
 					"targetRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TargetRef references the branched Database.",
+							Description: "TargetRef references the branched Database. UID is populated so consumers can detect a target that was deleted and recreated out from under the branch.",
 							Ref:         ref("k8s.io/api/core/v1.ObjectReference"),
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resources lists the objects this branch owns, for audit and cleanup visibility.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchOwnedResources"),
 						},
 					},
 					"snapshot": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Snapshot references the source snapshot the current branch was cloned from.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotRef"),
+							Description: "Snapshot describes the source snapshot set backing the current branch generation.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotStatus"),
 						},
 					},
-					"lastRefreshAt": {
+					"refreshGeneration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LastRefreshAt is the time of the last successful refresh.",
+							Description: "RefreshGeneration is the current refresh generation; it bumps on each scheduled refresh.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"lastRefreshTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastRefreshTime is the time of the last refresh ATTEMPT, regardless of outcome.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"lastSuccessfulRefreshTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSuccessfulRefreshTime is the time of the last SUCCESSFUL refresh; it is the anchor for Freshness. A failed tick updates LastRefreshTime but not this field.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"nextRefreshTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NextRefreshTime is the next scheduled refresh, computed from spec.schedule.cron. Nil for a one-shot branch.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"freshness": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Freshness is the human-readable age of the branch data since the last refresh (e.g. \"3m\", \"1h2m\").",
+							Description: "Freshness is the human-readable age of the branch data since the last successful refresh (e.g. \"3m\", \"1h2m\").",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
@@ -33751,7 +33908,7 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchStatus(ref common.Reference
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchRun", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotRef"},
+			"k8s.io/api/core/v1.ObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchOwnedResources", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchRun", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchSnapshotStatus"},
 	}
 }
 
@@ -34127,6 +34284,33 @@ func schema_apimachinery_apis_courier_v1alpha1_BranchWorkStatus(ref common.Refer
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchStatus", "kubedb.dev/apimachinery/apis/courier/v1alpha1.BranchWorkManifestCondition"},
+	}
+}
+
+func schema_apimachinery_apis_courier_v1alpha1_BranchedFrom(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BranchedFrom is the parsed value of BranchedFromAnnotation. It records the provenance of a branch: the source cluster and the source Database (as \"namespace/name\").",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cluster": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Cluster is the source cluster name (empty for a same-cluster/Local branch).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source is the source Database as \"namespace/name\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
