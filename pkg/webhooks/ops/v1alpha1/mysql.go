@@ -70,7 +70,7 @@ func (w *MySQLOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj r
 		return nil, fmt.Errorf("expected an MySQLOpsRequest object but got %T", obj)
 	}
 	myLog.Info("validate create", "name", ops.Name)
-	return nil, w.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops, true)
 }
 
 // ValidateUpdate implements webhooin.Validator so a webhook will be registered for the type
@@ -89,7 +89,7 @@ func (w *MySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err := w.validateMySQLOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	if err := w.validateCreateOrUpdate(ops); err != nil {
+	if err := w.validateCreateOrUpdate(ops, false); err != nil {
 		return nil, err
 	}
 
@@ -108,7 +108,7 @@ func (w *MySQLOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj r
 	return nil, nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLOpsRequest, isCreate bool) error {
 	if validType, _ := arrays.Contains(opsapi.MySQLOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MySQL are %s", req.Spec.Type, strings.Join(opsapi.MySQLOpsRequestTypeNames(), ", ")))
@@ -161,10 +161,17 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeReplicationModeTransformation:
-		if err := w.validateMySQLReplicationModeTransformation(db, req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicationModeTransformation"),
-				req.Name,
-				err.Error()))
+		// This is a create-time check only. The transform intentionally mutates the
+		// database topology while the ops request runs, so re-validating on every
+		// (status) update would reject the controller's own progress writes once the
+		// database has moved into the requested mode. The ops spec is immutable on
+		// update (enforced by validateMySQLOpsRequest), so skipping this on update is safe.
+		if isCreate {
+			if err := w.validateMySQLReplicationModeTransformation(db, req); err != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicationModeTransformation"),
+					req.Name,
+					err.Error()))
+			}
 		}
 	case opsapi.MySQLOpsRequestTypeRotateAuth:
 		if err := w.validateMySQLRotateAuthenticationOpsRequest(db, req); err != nil {
@@ -315,14 +322,16 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformatio
 	if transform.TargetMode != nil {
 		targetMode = *transform.TargetMode
 	}
-	if targetMode != dbapi.MySQLModeGroupReplication && targetMode != dbapi.MySQLModeInnoDBCluster {
-		return fmt.Errorf("unsupported spec.replicationModeTransformation.targetMode %q; supported values are %q and %q",
-			targetMode, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster)
+	if targetMode != dbapi.MySQLModeGroupReplication && targetMode != dbapi.MySQLModeInnoDBCluster &&
+		targetMode != dbapi.MySQLModeSemiSync {
+		return fmt.Errorf("unsupported spec.replicationModeTransformation.targetMode %q; supported values are %q, %q and %q",
+			targetMode, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster, dbapi.MySQLModeSemiSync)
 	}
 
 	// Reject no-op transformations (database is already in the requested topology).
 	if (targetMode == dbapi.MySQLModeGroupReplication && db.UsesGroupReplication()) ||
-		(targetMode == dbapi.MySQLModeInnoDBCluster && db.IsInnoDBCluster()) {
+		(targetMode == dbapi.MySQLModeInnoDBCluster && db.IsInnoDBCluster()) ||
+		(targetMode == dbapi.MySQLModeSemiSync && db.IsSemiSync()) {
 		return fmt.Errorf("database %s/%s is already running in %q mode", db.Namespace, db.Name, targetMode)
 	}
 
