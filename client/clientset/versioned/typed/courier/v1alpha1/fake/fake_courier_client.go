@@ -53,6 +53,10 @@ func (c *FakeCourierV1alpha1) MySQLMigrations(namespace string) v1alpha1.MySQLMi
 	return &FakeMySQLMigrations{c, namespace}
 }
 
+func (c *FakeCourierV1alpha1) OracleMigrations(namespace string) v1alpha1.OracleMigrationInterface {
+	return &FakeOracleMigrations{c, namespace}
+}
+
 func (c *FakeCourierV1alpha1) PostgresMigrations(namespace string) v1alpha1.PostgresMigrationInterface {
 	return &FakePostgresMigrations{c, namespace}
 }

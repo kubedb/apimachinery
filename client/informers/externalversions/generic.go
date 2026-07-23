@@ -226,6 +226,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MongoDBMigrations().Informer()}, nil
 	case courierv1alpha1.SchemeGroupVersion.WithResource("mysqlmigrations"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().MySQLMigrations().Informer()}, nil
+	case courierv1alpha1.SchemeGroupVersion.WithResource("oraclemigrations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().OracleMigrations().Informer()}, nil
 	case courierv1alpha1.SchemeGroupVersion.WithResource("postgresmigrations"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Courier().V1alpha1().PostgresMigrations().Informer()}, nil
 
