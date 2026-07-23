@@ -2492,6 +2492,10 @@ const (
 	// empty. Its value records the branch provenance, e.g. {"cluster": "prod-east", "source": "demo/prod-pg"}.
 	BranchedFromAnnotation = "kubedb.com/branched-from"
 
+	// SkipBackupPauseAnnotation, when set to "true" on an OpsRequest, prevents the
+	// ops-manager from pausing the BackupConfiguration before executing the operation.
+	SkipBackupPauseAnnotation = "kubedb.com/skip-backup-pause"
+
 	// Archiver
 	OwnerDatabasesAnnotation                  = "kubedb.com/owner-databases"
 	DistributedArchiverSnapshotInfoAnnotation = "distributedsnapshotinfo"
