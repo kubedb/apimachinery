@@ -1499,6 +1499,11 @@ func (in *DocumentDBSpec) DeepCopyInto(out *DocumentDBSpec) {
 		*out = new(InitSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(apiv1.TLSConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
