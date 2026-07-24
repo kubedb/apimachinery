@@ -98,6 +98,19 @@ spec:
                 x-kubernetes-map-type: atomic
               horizontalScaling:
                 properties:
+                  dataCenters:
+                    items:
+                      properties:
+                        clusterName:
+                          type: string
+                        node:
+                          format: int32
+                          type: integer
+                      required:
+                      - clusterName
+                      - node
+                      type: object
+                    type: array
                   node:
                     format: int32
                     type: integer
