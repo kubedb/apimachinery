@@ -66,6 +66,17 @@ type KafkaSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
+	// Distributed if set true, manifestwork objects will be created instead of raw resources.
+	// A distributed Kafka is expanded by the operator into one self-contained Kafka cluster per
+	// Member data center for cross data center disaster recovery (DC-DR).
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy that spreads the per data
+	// center Kafka clusters across data centers for DC-DR.
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
+
 	// Kafka topology for node specification
 	// +optional
 	Topology *KafkaClusterTopology `json:"topology,omitempty"`
@@ -184,6 +195,70 @@ type KafkaStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed Kafka.
+	// +optional
+	DisasterRecovery *KafkaDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// KafkaDRPhase is the cross data center DR phase of a distributed Kafka.
+type KafkaDRPhase string
+
+const (
+	KafkaDRPhaseSteady      KafkaDRPhase = "Steady"
+	KafkaDRPhaseFailingOver KafkaDRPhase = "FailingOver"
+	KafkaDRPhaseFailingBack KafkaDRPhase = "FailingBack"
+	KafkaDRPhaseDegraded    KafkaDRPhase = "Degraded"
+)
+
+// KafkaDisasterRecoveryStatus reports the per data center DC-DR view of a distributed Kafka.
+// Kafka DC-DR is active/passive: exactly one data center is the write cluster, chosen by the
+// dr-controlplane primary-DC Lease, and MirrorMaker 2 asynchronously mirrors it to the standby.
+// This status reflects that decision on the single Kafka object.
+type KafkaDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and takes producer writes.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase KafkaDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []KafkaDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// KafkaDCStatus is one data center's local view inside a distributed Kafka.
+type KafkaDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member or Arbiter. An Arbiter DC holds only the dr-controlplane etcd member and no Kafka.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Writable is true when this DC is the active write cluster (its produce fence is open).
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// BrokersReady is the number of ready brokers in this DC's local Kafka cluster.
+	// +optional
+	BrokersReady *int32 `json:"brokersReady,omitempty"`
+
+	// MirrorLagMillis is this DC's cross-DC MirrorMaker 2 replication lag behind the active DC,
+	// in milliseconds (the replication-latency-ms / record-age-ms metric, or the offset gap
+	// expressed as age). Nil when this DC is the active write cluster.
+	// +optional
+	MirrorLagMillis *int64 `json:"mirrorLagMillis,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 type KafkaTieredStorage struct {
