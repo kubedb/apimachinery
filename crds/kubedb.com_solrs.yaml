@@ -84,6 +84,29 @@ spec:
                   disabled:
                     type: boolean
                 type: object
+              backupCredentials:
+                properties:
+                  gcs:
+                    properties:
+                      credentialKey:
+                        type: string
+                      secretName:
+                        type: string
+                    required:
+                    - secretName
+                    type: object
+                  s3:
+                    properties:
+                      envToSecretKey:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      secretName:
+                        type: string
+                    required:
+                    - secretName
+                    type: object
+                type: object
               clientAuthSSL:
                 type: string
               configuration:

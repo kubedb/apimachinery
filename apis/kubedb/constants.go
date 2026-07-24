@@ -1125,11 +1125,12 @@ const (
 	SolrZkDigest          = "zk-digest"
 	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
-	SolrVolumeDefaultConfig = "default-config"
-	SolrVolumeCustomConfig  = "custom-config"
-	SolrVolumeAuthConfig    = "auth-config"
-	SolrVolumeData          = "data"
-	SolrVolumeConfig        = "slconfig"
+	SolrVolumeDefaultConfig     = "default-config"
+	SolrVolumeCustomConfig      = "custom-config"
+	SolrVolumeAuthConfig        = "auth-config"
+	SolrVolumeData              = "data"
+	SolrVolumeConfig            = "slconfig"
+	SolrVolumeBackupCredentials = "backup-credentials"
 
 	DistLibs              = "/opt/solr/dist"
 	ContribLibs           = "/opt/solr/contrib/%s/lib"
@@ -1141,6 +1142,20 @@ const (
 	SolrSecurityConfigDir = "/var/security"
 	SolrZkReadyCondition  = "SolrZkReady"
 	SolrZkReady           = "ZookeeperReady"
+
+	// SolrBackupCredentialsDir is where object storage credentials referenced by
+	// Solr backup repositories are mounted. It must stay under SolrHomeDir: Solr
+	// runs with a Java SecurityManager whose policy only grants read access to
+	// "${solr.solr.home}${/}-" and a few other roots, so a credential mounted
+	// anywhere else fails with java.io.FilePermission access denied.
+	SolrBackupCredentialsDir = "/var/solr/backup-credentials"
+	// SolrGCSCredentialFileName is the file name the GCS service account key is
+	// projected to inside SolrBackupCredentialsDir. Solr's GCSBackupRepository is
+	// pointed at it through the gcsCredentialPath property.
+	SolrGCSCredentialFileName = "cred.json"
+	// SolrGCSCredentialSecretKey is the default key holding the service account
+	// JSON in a KubeStash GCS BackupStorage secret.
+	SolrGCSCredentialSecretKey = "GOOGLE_SERVICE_ACCOUNT_JSON_KEY"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""

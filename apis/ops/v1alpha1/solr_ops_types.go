@@ -70,7 +70,7 @@ type SolrOpsRequestSpec struct {
 	// Specifies information necessary for restarting database
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for custom configuration of solr
-	Configuration *ReconfigurationSpec `json:"configuration,omitempty"`
+	Configuration *SolrReconfigurationSpec `json:"configuration,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *TLSSpec `json:"tls,omitempty"`
 	// Specifies information necessary for configuring authSecret of the database
@@ -84,6 +84,54 @@ type SolrOpsRequestSpec struct {
 	Apply ApplyOption `json:"apply,omitempty"`
 	// +kubebuilder:default=1
 	MaxRetries int32 `json:"maxRetries,omitempty"`
+}
+
+// SolrReconfigurationSpec is the Solr-specific reconfiguration spec.
+// It embeds the generic ReconfigurationSpec and adds the object storage
+// credentials Solr needs in order to authenticate with a backup repository.
+type SolrReconfigurationSpec struct {
+	ReconfigurationSpec `json:",inline,omitempty"`
+	// S3 provides the credentials for an S3 backup repository. They are injected
+	// into the Solr containers as environment variables, which the AWS SDK
+	// default credential chain picks up.
+	// +optional
+	S3 *SolrS3CredentialSpec `json:"s3,omitempty"`
+	// GCS provides the credentials for a GCS backup repository. The service
+	// account key is mounted into the Solr containers as a file, since Solr's
+	// GCSBackupRepository only accepts a path to a credential file.
+	// +optional
+	GCS *SolrGCSCredentialSpec `json:"gcs,omitempty"`
+}
+
+// SolrS3CredentialSpec references a Secret holding S3 credentials.
+type SolrS3CredentialSpec struct {
+	// SecretRef is the Secret containing the S3 credentials.
+	SecretRef core.LocalObjectReference `json:"secretRef"`
+	// Namespace of the referenced Secret. Defaults to the database namespace.
+	// When it differs, the operator copies the Secret into the database
+	// namespace, because a pod can only mount Secrets from its own namespace.
+	// +optional
+	Namespace string `json:"namespace,omitempty"`
+	// EnvToSecretKey maps a container environment variable name to the key that
+	// holds its value in the Secret. When empty, AWS_ACCESS_KEY_ID and
+	// AWS_SECRET_ACCESS_KEY are read from identically named keys.
+	// +optional
+	EnvToSecretKey map[string]string `json:"envToSecretKey,omitempty"`
+}
+
+// SolrGCSCredentialSpec references a Secret holding a GCS service account key.
+type SolrGCSCredentialSpec struct {
+	// SecretRef is the Secret containing the GCS service account key.
+	SecretRef core.LocalObjectReference `json:"secretRef"`
+	// Namespace of the referenced Secret. Defaults to the database namespace.
+	// When it differs, the operator copies the Secret into the database
+	// namespace, because a pod can only mount Secrets from its own namespace.
+	// +optional
+	Namespace string `json:"namespace,omitempty"`
+	// CredentialKey is the Secret key holding the service account JSON.
+	// +kubebuilder:default="GOOGLE_SERVICE_ACCOUNT_JSON_KEY"
+	// +optional
+	CredentialKey string `json:"credentialKey,omitempty"`
 }
 
 type SolrVerticalScalingSpec struct {

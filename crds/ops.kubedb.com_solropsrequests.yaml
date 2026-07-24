@@ -79,6 +79,23 @@ spec:
                         type: string
                     type: object
                     x-kubernetes-map-type: atomic
+                  gcs:
+                    properties:
+                      credentialKey:
+                        default: GOOGLE_SERVICE_ACCOUNT_JSON_KEY
+                        type: string
+                      namespace:
+                        type: string
+                      secretRef:
+                        properties:
+                          name:
+                            default: ""
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
+                    required:
+                    - secretRef
+                    type: object
                   removeCustomConfig:
                     type: boolean
                   restart:
@@ -88,6 +105,24 @@ spec:
                     - "true"
                     - "false"
                     type: string
+                  s3:
+                    properties:
+                      envToSecretKey:
+                        additionalProperties:
+                          type: string
+                        type: object
+                      namespace:
+                        type: string
+                      secretRef:
+                        properties:
+                          name:
+                            default: ""
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
+                    required:
+                    - secretRef
+                    type: object
                 type: object
               databaseRef:
                 properties:

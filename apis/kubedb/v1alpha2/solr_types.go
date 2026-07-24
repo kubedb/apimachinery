@@ -101,6 +101,13 @@ type SolrSpec struct {
 	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
+	// BackupCredentials holds the object storage credentials that Solr's backup
+	// repositories authenticate with. The referenced Secrets are always in this
+	// database's namespace; the operator copies them there when the ops request
+	// points at a Secret living elsewhere.
+	// +optional
+	BackupCredentials *SolrBackupCredentials `json:"backupCredentials,omitempty"`
+
 	// +optional
 	KeystoreSecret *core.LocalObjectReference `json:"keystoreSecret,omitempty"`
 
@@ -136,6 +143,37 @@ type SolrSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+}
+
+// SolrBackupCredentials holds object storage credentials for Solr backup repositories.
+type SolrBackupCredentials struct {
+	// S3 credentials, injected into the Solr containers as environment variables.
+	// +optional
+	S3 *SolrS3Credential `json:"s3,omitempty"`
+	// GCS credentials, mounted into the Solr containers as a file.
+	// +optional
+	GCS *SolrGCSCredential `json:"gcs,omitempty"`
+}
+
+// SolrS3Credential references a Secret in the database namespace holding S3 credentials.
+type SolrS3Credential struct {
+	// SecretName is the Secret containing the S3 credentials.
+	SecretName string `json:"secretName"`
+	// EnvToSecretKey maps a container environment variable name to the key that
+	// holds its value in the Secret. When empty, AWS_ACCESS_KEY_ID and
+	// AWS_SECRET_ACCESS_KEY are read from identically named keys.
+	// +optional
+	EnvToSecretKey map[string]string `json:"envToSecretKey,omitempty"`
+}
+
+// SolrGCSCredential references a Secret in the database namespace holding a
+// GCS service account key.
+type SolrGCSCredential struct {
+	// SecretName is the Secret containing the GCS service account key.
+	SecretName string `json:"secretName"`
+	// CredentialKey is the Secret key holding the service account JSON.
+	// +optional
+	CredentialKey string `json:"credentialKey,omitempty"`
 }
 
 type SolrClusterTopology struct {
