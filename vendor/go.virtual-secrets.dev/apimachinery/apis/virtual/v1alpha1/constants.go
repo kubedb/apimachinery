@@ -16,12 +16,21 @@ limitations under the License.
 
 package v1alpha1
 
-import (
-	"go.virtual-secrets.dev/apimachinery/crds"
+const (
+	AWSAccessKeyID     = "AWS_ACCESS_KEY_ID"
+	AWSSecretAccessKey = "AWS_SECRET_ACCESS_KEY"
+	AWSSessionToken    = "AWS_SESSION_TOKEN"
+	AWSRegion          = "AWS_REGION"
 
-	"kmodules.xyz/client-go/apiextensions"
+	AnnotationDataLenKey           = "virtual-secrets.dev/data-len"
+	AnnotationCreationTimestampKey = "virtual-secrets.dev/creation-timestamp"
+
+	AzureTenantID     = "AZURE_TENANT_ID"
+	AzureClientID     = "AZURE_CLIENT_ID"
+	AzureClientSecret = "AZURE_CLIENT_SECRET"
+
+	AccessModeWorkloadIdentity = "WorkloadIdentity"
+	AccessModeServicePrincipal = "ServicePrincipal"
+
+	GCPServiceAccountJSONKey = "credentials.json"
 )
-
-func (Secret) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
-	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceSecrets))
-}
