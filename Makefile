@@ -24,6 +24,14 @@ CODE_GENERATOR_IMAGE ?= ghcr.io/appscode/gengo:release-1.32
 CORE_API_GROUPS      ?= kubedb:v1alpha1 kubedb:v1alpha2 kubedb:v1 gitops:v1alpha1 postgres:v1alpha1 catalog:v1alpha1 config:v1alpha1 ops:v1alpha1 autoscaling:v1alpha1 elasticsearch:v1alpha1 schema:v1alpha1 archiver:v1alpha1 kafka:v1alpha1 courier:v1alpha1
 API_GROUPS           ?= $(CORE_API_GROUPS) ui:v1alpha1
 
+# Number of parallel jobs used to fan out per-group code generation.
+NPROC                ?= $(shell nproc 2>/dev/null || echo 2)
+# openapi-gen writes its API-rule violations to a single shared report file.
+# Generating groups serially, the last group in API_GROUPS "wins" that file.
+# To keep output identical when generating in parallel, only the last group
+# writes the canonical report; every other group writes a throwaway report.
+OPENAPI_LAST_GROUP   := $(subst :,_,$(lastword $(API_GROUPS)))
+
 # This version-strategy uses git tags to set the version string
 git_branch       := $(shell git rev-parse --abbrev-ref HEAD)
 git_tag          := $(shell git describe --tags --exact-match --abbrev=0 2>/dev/null || echo "")
@@ -106,10 +114,10 @@ DOCKER_REPO_ROOT := /go/src/$(GO_PKG)/$(REPO)
 
 # Generate a typed clientset
 .PHONY: clientset
-clientset:
+clientset: $(BUILD_DIRS)
 	@docker run --rm	                                 \
 		-u $$(id -u):$$(id -g)                           \
-		-v /tmp:/.cache                                  \
+		-v $$(pwd)/.go/cache:/.cache                     \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
@@ -123,10 +131,10 @@ clientset:
 			--go-header-file "./hack/license/go.txt"
 
 .PHONY: gen-conversion
-gen-conversion:
+gen-conversion: $(BUILD_DIRS)
 	@docker run --rm                                   \
 		-u $$(id -u):$$(id -g)                           \
-		-v /tmp:/.cache                                  \
+		-v $$(pwd)/.go/cache:/.cache                     \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
@@ -139,11 +147,12 @@ gen-conversion:
 
 # Generate openapi schema
 .PHONY: openapi
-openapi: $(addprefix openapi-, $(subst :,_, $(API_GROUPS)))
+openapi: $(BUILD_DIRS)
+	@$(MAKE) --no-print-directory -j$(NPROC) $(addprefix openapi-, $(subst :,_, $(API_GROUPS)))
 	@echo "Generating openapi/swagger.json"
 	@docker run --rm	                                 \
 		-u $$(id -u):$$(id -g)                           \
-		-v /tmp:/.cache                                  \
+		-v $$(pwd)/.go/cache:/.cache                     \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
@@ -153,12 +162,12 @@ openapi: $(addprefix openapi-, $(subst :,_, $(API_GROUPS)))
 		$(BUILD_IMAGE)                                   \
 		go run hack/gencrd/main.go
 
-openapi-%:
+openapi-%: $(BUILD_DIRS)
 	@echo "Generating openapi schema for $(subst _,/,$*)"
-	@mkdir -p .config/api-rules
+	@mkdir -p .config/api-rules bin
 	@docker run --rm	                                 \
 		-u $$(id -u):$$(id -g)                           \
-		-v /tmp:/.cache                                  \
+		-v $$(pwd)/.go/cache:/.cache                     \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
@@ -169,7 +178,7 @@ openapi-%:
 			--go-header-file "./hack/license/go.txt" \
 			--input-dirs "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*),k8s.io/apimachinery/pkg/apis/meta/v1,k8s.io/apimachinery/pkg/api/resource,k8s.io/apimachinery/pkg/runtime,k8s.io/apimachinery/pkg/util/intstr,k8s.io/apimachinery/pkg/version,k8s.io/api/core/v1,k8s.io/api/apps/v1,kmodules.xyz/offshoot-api/api/v1,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,kmodules.xyz/monitoring-agent-api/api/v1,k8s.io/api/rbac/v1,k8s.io/api/autoscaling/v2beta2,kmodules.xyz/objectstore-api/api/v1,kmodules.xyz/client-go/api/v1,k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1,github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1" \
 			--output-package "$(GO_PKG)/$(REPO)/apis/$(subst _,/,$*)" \
-			--report-filename .config/api-rules/violation_exceptions.list
+			--report-filename $(if $(filter $(OPENAPI_LAST_GROUP),$*),.config/api-rules/violation_exceptions.list,bin/violation_exceptions.$*.list)
 
 # Duck-type kinds that embed TypeMeta+ObjectMeta and so are picked up by
 # controller-gen, but are projections (never served as their own CRD).
@@ -179,11 +188,11 @@ duck_crds := courier.kubedb.com_migrations.yaml
 
 # Generate CRD manifests
 .PHONY: gen-crds
-gen-crds:
+gen-crds: $(BUILD_DIRS)
 	@echo "Generating CRD manifests"
 	@docker run --rm	                    \
 		-u $$(id -u):$$(id -g)              \
-		-v /tmp:/.cache                     \
+		-v $$(pwd)/.go/cache:/.cache                     \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)      \
 		-w $(DOCKER_REPO_ROOT)              \
 	    --env HTTP_PROXY=$(HTTP_PROXY)      \
@@ -241,11 +250,11 @@ gen-crd-protos: $(addprefix gen-crd-protos-, $(subst :,_, $(CORE_API_GROUPS))) g
 	@rm -rf vendor/sigs.k8s.io/controller-runtime/pkg/scheme/generated.pb.go
 	@rm -rf vendor/sigs.k8s.io/controller-runtime/pkg/scheme/generated.proto
 
-gen-crd-protos-%:
+gen-crd-protos-%: $(BUILD_DIRS)
 	@echo "Generating protobuf for $(subst _,/,$*)"
 	@docker run --rm                                     \
 		-u $$(id -u):$$(id -g)                           \
-		-v /tmp:/.cache                                  \
+		-v $$(pwd)/.go/cache:/.cache                     \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
@@ -259,11 +268,11 @@ gen-crd-protos-%:
 			--packages=+sigs.k8s.io/controller-runtime/pkg/scheme,-k8s.io/api/core/v1,-k8s.io/api/apps/v1,-k8s.io/api/autoscaling/v2beta2,-kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,-kmodules.xyz/monitoring-agent-api/api/v1,-kmodules.xyz/objectstore-api/api/v1,-kmodules.xyz/offshoot-api/api/v1,-kmodules.xyz/client-go/api/v1,kubedb.dev/apimachinery/apis/$(subst _,/,$*)
 
 .PHONY: gen-crd-protos-ui-v1alpha1
-gen-crd-protos-ui-v1alpha1:
+gen-crd-protos-ui-v1alpha1: $(BUILD_DIRS)
 	@echo "Generating protobuf for ui/v1alpha1"
 	@docker run --rm                                     \
 		-u $$(id -u):$$(id -g)                           \
-		-v /tmp:/.cache                                  \
+		-v $$(pwd)/.go/cache:/.cache                     \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
@@ -414,11 +423,11 @@ verify-gen: gen fmt
 	fi
 
 .PHONY: add-license
-add-license:
+add-license: $(BUILD_DIRS)
 	@echo "Adding license header"
 	@docker run --rm 	                                 \
 		-u $$(id -u):$$(id -g)                           \
-		-v /tmp:/.cache                                  \
+		-v $$(pwd)/.go/cache:/.cache                     \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
@@ -427,11 +436,11 @@ add-license:
 		ltag -t "./hack/license" --excludes ".go vendor contrib libbuild" -v
 
 .PHONY: check-license
-check-license:
+check-license: $(BUILD_DIRS)
 	@echo "Checking files for license header"
 	@docker run --rm 	                                 \
 		-u $$(id -u):$$(id -g)                           \
-		-v /tmp:/.cache                                  \
+		-v $$(pwd)/.go/cache:/.cache                     \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
