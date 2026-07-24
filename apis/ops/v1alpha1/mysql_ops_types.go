@@ -104,6 +104,24 @@ type MySQLUpdateVersionSpec struct {
 type MySQLHorizontalScalingSpec struct {
 	// Number of nodes/members of the group
 	Member *int32 `json:"member,omitempty"`
+
+	// DataCenters scales individual data centers of a distributed DC-DR MySQL.
+	// Each entry sets that data center's local Group Replication node count; data
+	// centers not listed are left unchanged. Use this instead of Member for a DC-DR
+	// cluster, where each data center has its own intra-DC GR group and is scaled
+	// independently.
+	// +optional
+	DataCenters []MySQLHorizontalScalingDC `json:"dataCenters,omitempty"`
+}
+
+// MySQLHorizontalScalingDC is a per data center node-count target for scaling a
+// distributed DC-DR MySQL.
+type MySQLHorizontalScalingDC struct {
+	// ClusterName is the data center, named by its OCM managed cluster, matching a
+	// Member distributionRule in the MySQL PlacementPolicy.
+	ClusterName string `json:"clusterName"`
+	// Replicas is the desired local Group Replication node count for this data center.
+	Replicas int32 `json:"replicas"`
 }
 
 type MySQLReplicationModeTransformSpec struct {
