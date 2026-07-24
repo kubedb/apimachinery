@@ -335,9 +335,15 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformatio
 		return fmt.Errorf("database %s/%s is already running in %q mode", db.Namespace, db.Name, targetMode)
 	}
 
-	// Multi-Primary group mode is not implemented yet.
-	if transform.Mode != nil && *transform.Mode == dbapi.MySQLGroupModeMultiPrimary {
-		return errors.New(`spec.replicationModeTransformation.mode "Multi-Primary" is not supported yet; use "Single-Primary"`)
+	// spec.replicationModeTransformation.mode is the Group Replication primary mode.
+	// Multi-Primary is supported: the coordinator disambiguates the primary/donor by
+	// preferring the data-bearing member (every member reports MEMBER_ROLE='PRIMARY'
+	// in Multi-Primary, so an arbitrary pick could otherwise seed from an empty pod).
+	// The field is ignored when targetMode is SemiSync, which has no group.
+	if transform.Mode != nil && *transform.Mode != dbapi.MySQLGroupModeSinglePrimary &&
+		*transform.Mode != dbapi.MySQLGroupModeMultiPrimary {
+		return fmt.Errorf("unsupported spec.replicationModeTransformation.mode %q; supported values are %q and %q",
+			*transform.Mode, dbapi.MySQLGroupModeSinglePrimary, dbapi.MySQLGroupModeMultiPrimary)
 	}
 
 	if transform.RequireSSL != nil && (transform.IssuerRef == nil && transform.Certificates == nil) {
