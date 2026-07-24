@@ -643,10 +643,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchUpdateVersionSpec":                   schema_apimachinery_apis_ops_v1alpha1_ElasticsearchUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec":                 schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec":                 schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBHorizontalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_HanaDBHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBTLSSpec":                                    schema_apimachinery_apis_ops_v1alpha1_HanaDBTLSSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBUpdateVersionSpec":                          schema_apimachinery_apis_ops_v1alpha1_HanaDBUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVerticalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_HanaDBVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVolumeExpansionSpec":                        schema_apimachinery_apis_ops_v1alpha1_HanaDBVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HazelcastHorizontalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_HazelcastHorizontalScalingSpec(ref),
@@ -36703,6 +36705,26 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchVolumeExpansionSpec(ref 
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_HanaDBHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HanaDBHorizontalScalingSpec contains the horizontal scaling information of a HanaDB cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of replicas of HanaDB system replication cluster.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -36816,6 +36838,18 @@ func schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestSpec(ref common.Refer
 							Format:  "",
 						},
 					},
+					"updateVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for updating HanaDB version",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBUpdateVersionSpec"),
+						},
+					},
+					"horizontalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for horizontal scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBHorizontalScalingSpec"),
+						},
+					},
 					"verticalScaling": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for vertical scaling",
@@ -36879,7 +36913,7 @@ func schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestSpec(ref common.Refer
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"},
 	}
 }
 
@@ -36928,6 +36962,26 @@ func schema_apimachinery_apis_ops_v1alpha1_HanaDBTLSSpec(ref common.ReferenceCal
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_HanaDBUpdateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "HanaDBUpdateVersionSpec contains the update version information of a HanaDB cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the target version name from catalog",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
