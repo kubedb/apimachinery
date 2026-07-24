@@ -87,6 +87,9 @@ type DocumentDBSpec struct {
 	// Version of DocumentDB to be deployed.
 	Version string `json:"version"`
 
+	// Distributed if set true, manifestwork objects will be created instead of raw resources
+	Distributed bool `json:"distributed,omitempty"`
+
 	// Number of instances to deploy for a documentdb database.
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
@@ -105,6 +108,11 @@ type DocumentDBSpec struct {
 
 	// Storage to specify how storage shall be used.
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy
+	// +kubebuilder:default={name:"default"}
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 
 	// Leader election configuration
 	// +optional
@@ -213,6 +221,67 @@ type DocumentDBStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed DocumentDB.
+	// +optional
+	DisasterRecovery *DocumentDBDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// DocumentDBDRPhase is the cross data center DR phase of a distributed DocumentDB.
+type DocumentDBDRPhase string
+
+const (
+	DocumentDBDRPhaseSteady      DocumentDBDRPhase = "Steady"
+	DocumentDBDRPhaseFailingOver DocumentDBDRPhase = "FailingOver"
+	DocumentDBDRPhaseFailingBack DocumentDBDRPhase = "FailingBack"
+	DocumentDBDRPhaseDegraded    DocumentDBDRPhase = "Degraded"
+)
+
+// DocumentDBDisasterRecoveryStatus reports the per data center DC-DR view of a
+// distributed DocumentDB. The cross-DC decision is owned by the dr-controlplane
+// primary-DC Lease; this status reflects it on the single Database object.
+type DocumentDBDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and runs the writable primary.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase DocumentDBDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []DocumentDBDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// DocumentDBDCStatus is one data center's local view inside a distributed DocumentDB.
+type DocumentDBDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member, Arbiter, or Witness.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Leader is this DC's local raft leader pod.
+	// +optional
+	Leader string `json:"leader,omitempty"`
+
+	// Writable is true when this DC's leader is the cluster's writable primary.
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// LagBytes is this DC's cross-DC replication lag behind the active DC, in bytes.
+	// +optional
+	LagBytes *int64 `json:"lagBytes,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 type DocumentDBReplication struct {
