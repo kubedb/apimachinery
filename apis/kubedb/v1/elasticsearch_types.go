@@ -64,6 +64,19 @@ type ElasticsearchSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
+	// Distributed if set true, manifestwork objects will be created instead of raw resources.
+	// A distributed Elasticsearch is expanded by the operator into one self-contained Elasticsearch
+	// cluster per Member data center for cross data center disaster recovery (DC-DR). The active
+	// cluster holds the leader indices and takes writes; every standby cluster follows it with
+	// Cross-Cluster Replication (CCR).
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy that spreads the per data
+	// center Elasticsearch clusters across data centers for DC-DR.
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
+
 	// Elasticsearch topology for node specification
 	// +optional
 	Topology *ElasticsearchClusterTopology `json:"topology,omitempty"`
@@ -370,6 +383,73 @@ type ElasticsearchStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	AuthSecret *Age `json:"authSecret,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed Elasticsearch.
+	// +optional
+	DisasterRecovery *ElasticsearchDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// ElasticsearchDRPhase is the cross data center DR phase of a distributed Elasticsearch.
+type ElasticsearchDRPhase string
+
+const (
+	ElasticsearchDRPhaseSteady      ElasticsearchDRPhase = "Steady"
+	ElasticsearchDRPhaseFailingOver ElasticsearchDRPhase = "FailingOver"
+	ElasticsearchDRPhaseFailingBack ElasticsearchDRPhase = "FailingBack"
+	ElasticsearchDRPhaseDegraded    ElasticsearchDRPhase = "Degraded"
+)
+
+// ElasticsearchDisasterRecoveryStatus reports the per data center DC-DR view of a distributed
+// Elasticsearch. Elasticsearch DC-DR is active/passive: exactly one data center is the write
+// cluster, chosen by the dr-controlplane primary-DC Lease, and Cross-Cluster Replication (CCR)
+// asynchronously follows its leader indices from the standby. This status reflects that decision
+// on the single Elasticsearch object.
+type ElasticsearchDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and takes client writes.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase ElasticsearchDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []ElasticsearchDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// ElasticsearchDCStatus is one data center's local view inside a distributed Elasticsearch.
+type ElasticsearchDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member or Arbiter. An Arbiter DC holds only the dr-controlplane etcd member
+	// and no Elasticsearch.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Writable is true when this DC is the active write cluster (it holds the leader indices).
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// NodesReady is the number of ready nodes in this DC's local Elasticsearch cluster.
+	// +optional
+	NodesReady *int32 `json:"nodesReady,omitempty"`
+
+	// FollowLagOps is this DC's cross-DC CCR follow lag behind the active DC, in operations
+	// (the leader_global_checkpoint minus follower_global_checkpoint gap from the CCR follow
+	// stats, taken as the max across this DC's follower indices). Nil when this DC is the active
+	// write cluster.
+	// +optional
+	FollowLagOps *int64 `json:"followLagOps,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
