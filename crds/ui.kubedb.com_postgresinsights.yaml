@@ -111,6 +111,36 @@ spec:
                   - type
                   type: object
                 type: array
+              disasterRecovery:
+                properties:
+                  activeDC:
+                    type: string
+                  dataCenters:
+                    items:
+                      properties:
+                        clusterName:
+                          type: string
+                        healthy:
+                          type: boolean
+                        lagBytes:
+                          format: int64
+                          type: integer
+                        leader:
+                          type: string
+                        role:
+                          type: string
+                        writable:
+                          type: boolean
+                      required:
+                      - clusterName
+                      type: object
+                    type: array
+                  lastTransitionTime:
+                    format: date-time
+                    type: string
+                  phase:
+                    type: string
+                type: object
               observedGeneration:
                 format: int64
                 type: integer

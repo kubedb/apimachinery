@@ -654,6 +654,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgreLeaderElectionConfig":                         schema_apimachinery_apis_kubedb_v1_PostgreLeaderElectionConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Postgres":                                            schema_apimachinery_apis_kubedb_v1_Postgres(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresConfiguration":                               schema_apimachinery_apis_kubedb_v1_PostgresConfiguration(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresDCStatus":                                    schema_apimachinery_apis_kubedb_v1_PostgresDCStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresDisasterRecoveryStatus":                      schema_apimachinery_apis_kubedb_v1_PostgresDisasterRecoveryStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresList":                                        schema_apimachinery_apis_kubedb_v1_PostgresList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresReplication":                                 schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresSpec":                                        schema_apimachinery_apis_kubedb_v1_PostgresSpec(ref),
@@ -37892,6 +37894,112 @@ func schema_apimachinery_apis_kubedb_v1_PostgresConfiguration(ref common.Referen
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_PostgresDCStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PostgresDCStatus is one data center's local view inside a distributed Postgres.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the data center, named by its OCM managed cluster (the same clusterName used in the PlacementPolicy distributionRule).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"role": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Role is Member, Arbiter, or Witness.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"leader": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Leader is this DC's local raft leader pod.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"writable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Writable is true when this DC's leader is the cluster's writable primary.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"lagBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LagBytes is this DC's cross-DC replication lag behind the active DC, in bytes.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"healthy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Healthy reflects whether this DC's health Lease is fresh.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"clusterName"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1_PostgresDisasterRecoveryStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PostgresDisasterRecoveryStatus reports the per data center DC-DR view of a distributed Postgres. The cross-DC decision is owned by the dr-controlplane primary-DC Lease; this status reflects it on the single Database object.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"activeDC": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ActiveDC is the data center that currently holds the primary DC Lease and runs the writable primary.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase is the DC-DR phase.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dataCenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataCenters is the per data center view, one entry per Member DC.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1.PostgresDCStatus"),
+									},
+								},
+							},
+						},
+					},
+					"lastTransitionTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastTransitionTime is when ActiveDC last changed.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgresDCStatus"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_PostgresList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -38255,11 +38363,17 @@ func schema_apimachinery_apis_kubedb_v1_PostgresStatus(ref common.ReferenceCallb
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.Age"),
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state for a distributed Postgres.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.PostgresDisasterRecoveryStatus"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1.Age"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1.Age", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgresDisasterRecoveryStatus"},
 	}
 }
 

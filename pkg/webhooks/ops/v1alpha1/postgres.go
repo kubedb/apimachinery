@@ -104,6 +104,29 @@ func (w *PostgresOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, ol
 }
 
 func (w *PostgresOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	ops, ok := obj.(*opsapi.PostgresOpsRequest)
+	if !ok {
+		return nil, fmt.Errorf("expected an PostgresOpsRequest object but got %T", obj)
+	}
+	postgresLog.Info("validate delete", "name", ops.Name)
+
+	// If an in-flight (not yet completed) ops is deleted, the database is still
+	// Paused and nothing else resumes it, so it stays Paused forever. Resume it
+	// here. Guard on !completed: ops are serialized per database, so an in-flight
+	// ops is the one holding the pause; a completed ops has already resumed via
+	// ValidateUpdate, and un-pausing then could clobber a different in-flight ops.
+	if !isOpsReqCompleted(ops.Status.Phase) {
+		var db dbapi.Postgres
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
+		if err != nil {
+			if apierrors.IsNotFound(err) {
+				// The database is gone (for example a concurrent WipeOut); nothing to resume.
+				return nil, nil
+			}
+			return nil, err
+		}
+		return nil, resumeDatabase(w.DefaultClient, &db)
+	}
 	return nil, nil
 }
 
@@ -217,11 +240,31 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresHorizontalScalingOpsRe
 	if horizontalScalingSpec == nil {
 		return errors.New("`spec.horizontalScaling` nil not supported in HorizontalScaling type")
 	}
-	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.ReadReplicas == nil {
-		return errors.New("`spec.horizontalScaling.Replicas or `spec.readReplica` has to be mentioned")
+	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.ReadReplicas == nil && len(horizontalScalingSpec.DataCenters) == 0 {
+		return errors.New("one of `spec.horizontalScaling.replicas`, `spec.horizontalScaling.readReplicas`, or `spec.horizontalScaling.dataCenters` has to be mentioned")
 	}
 	if horizontalScalingSpec.Replicas != nil && len(horizontalScalingSpec.ReadReplicas) > 0 {
 		return errors.New("either `spec.horizontalScaling.Replicas` or `spec.horizontalScaling.readReplicas` can be provided at a time")
+	}
+	if len(horizontalScalingSpec.DataCenters) > 0 {
+		// A distributed DC-DR Postgres is scaled per data center; a single global
+		// replica count is meaningless across independent per-DC rafts.
+		if horizontalScalingSpec.Replicas != nil || len(horizontalScalingSpec.ReadReplicas) > 0 {
+			return errors.New("`spec.horizontalScaling.dataCenters` cannot be combined with `replicas` or `readReplicas`")
+		}
+		seen := map[string]bool{}
+		for _, dc := range horizontalScalingSpec.DataCenters {
+			if dc.ClusterName == "" {
+				return errors.New("`spec.horizontalScaling.dataCenters[].clusterName` is required")
+			}
+			if seen[dc.ClusterName] {
+				return fmt.Errorf("`spec.horizontalScaling.dataCenters` lists data center %q more than once", dc.ClusterName)
+			}
+			seen[dc.ClusterName] = true
+			if dc.Replicas < 1 {
+				return fmt.Errorf("`spec.horizontalScaling.dataCenters[%s].replicas` must be >= 1 (removing a data center is a topology change, not horizontal scaling)", dc.ClusterName)
+			}
+		}
 	}
 	if horizontalScalingSpec.Replicas != nil && *horizontalScalingSpec.Replicas <= 0 {
 		return errors.New("`spec.horizontalScaling.Replicas` can't be less than or equal 0")
