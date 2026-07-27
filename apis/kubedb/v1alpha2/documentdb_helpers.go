@@ -27,6 +27,7 @@ import (
 	"kubedb.dev/apimachinery/crds"
 
 	"gomodules.xyz/pointer"
+	promapi "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -37,6 +38,7 @@ import (
 	metautil "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ofst_util "kmodules.xyz/offshoot-api/util"
 	pslister "kubeops.dev/petset/client/listers/apps/v1"
@@ -306,6 +308,13 @@ func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alp
 	d.SetCoordinatorContainerDefaults(d.Spec.PodTemplate, &documentDBVersion)
 	d.SetDefaultReplicationMode()
 	d.SetHealthCheckerDefaults()
+
+	if d.Spec.Monitor != nil {
+		d.Spec.Monitor.SetDefaults()
+		if d.Spec.Monitor.Prometheus != nil && d.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+			d.Spec.Monitor.Prometheus.Exporter.Port = kubedb.DocumentDBMetricsPort
+		}
+	}
 }
 
 // SetDefaultReplicationMode sets the default replication mode.
@@ -431,6 +440,47 @@ func (d *DocumentDB) ReplicasAreReady(lister pslister.PetSetLister) (bool, strin
 	// Desire number of petSets
 	expectedItems := 1
 	return checkReplicasOfPetSet(lister.PetSets(d.Namespace), labels.SelectorFromSet(d.OffshootLabels()), expectedItems)
+}
+
+// StatsService returns a StatsAccessor for the monitoring agent.
+func (d DocumentDB) StatsService() mona.StatsAccessor {
+	return &documentDBStatsService{&d}
+}
+
+type documentDBStatsService struct {
+	*DocumentDB
+}
+
+func (s documentDBStatsService) GetNamespace() string {
+	return s.DocumentDB.GetNamespace()
+}
+
+func (s documentDBStatsService) ServiceName() string {
+	return s.OffshootName() + "-stats"
+}
+
+func (s documentDBStatsService) ServiceMonitorName() string {
+	return s.ServiceName()
+}
+
+func (s documentDBStatsService) ServiceMonitorAdditionalLabels() map[string]string {
+	return nil
+}
+
+func (s documentDBStatsService) Path() string {
+	return kubedb.DefaultStatsPath
+}
+
+func (s documentDBStatsService) Scheme() string {
+	return "http"
+}
+
+func (s documentDBStatsService) TLSConfig() *promapi.TLSConfig {
+	return nil
+}
+
+func (d DocumentDB) StatsServiceLabels() map[string]string {
+	return d.ServiceLabels(StatsServiceAlias, map[string]string{kubedb.LabelRole: kubedb.RoleStats})
 }
 
 func (d *DocumentDB) SetHealthCheckerDefaults() {

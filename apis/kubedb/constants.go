@@ -1680,6 +1680,9 @@ const (
 	DocumentDBMetricsPort = 56790
 	DocumentDBTLSPort     = 27018
 
+	DocumentDBOTelMetricsPort     = 8888
+	DocumentDBOTelMetricsPortName = "otel-metrics"
+
 	DocumentDBMetricsPath     = "/debug/metrics"
 	DocumentDBMetricsPortName = "metrics"
 

@@ -20,6 +20,7 @@ import (
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 )
 
@@ -179,6 +180,10 @@ type DocumentDBSpec struct {
 	// ServiceTemplates is an optional configuration for services used to expose database
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+
+	// Monitor specifies the monitoring configuration for DocumentDB
+	// +optional
+	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional

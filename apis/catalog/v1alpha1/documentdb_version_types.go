@@ -63,6 +63,10 @@ type DocumentDBVersionSpec struct {
 	//+ optional
 	InitContainer DocumentDBInitContainer `json:"initContainer,omitempty"`
 
+	// Exporter image for the postgres_exporter sidecar
+	// +optional
+	PostgresExporter DocumentDBVersionExporter `json:"postgresExporter,omitempty"`
+
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
@@ -96,6 +100,11 @@ type DocumentDBInitContainer struct {
 }
 
 type DocumentDBCoordinator struct {
+	Image string `json:"image"`
+}
+
+// DocumentDBVersionExporter is the image for the postgres_exporter sidecar
+type DocumentDBVersionExporter struct {
 	Image string `json:"image"`
 }
 
