@@ -139,6 +139,10 @@ type OracleStreaming struct {
 	// Enabled controls whether the CDC (LogMiner) Streaming Phase should be executed.
 	// +optional
 	Enabled bool `yaml:"enabled" json:"enabled"`
+	// CDBServiceName is the CDB root service used for LogMiner. Schema and snapshot
+	// continue to use source.connectionInfo's PDB service.
+	// +optional
+	CDBServiceName string `yaml:"cdbServiceName" json:"cdbServiceName,omitempty"`
 	// PollInterval is the idle sleep between LogMiner mining windows.
 	// +optional
 	PollInterval time.Duration `yaml:"pollInterval" json:"pollInterval,omitempty"`

@@ -36217,6 +36217,13 @@ func schema_apimachinery_apis_courier_v1alpha1_OracleStreaming(ref common.Refere
 							Format:      "",
 						},
 					},
+					"cdbServiceName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CDBServiceName is the CDB root service used for LogMiner. Schema and snapshot continue to use source.connectionInfo's PDB service.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"pollInterval": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PollInterval is the idle sleep between LogMiner mining windows.",

@@ -2882,6 +2882,8 @@ spec:
                     properties:
                       autoEnablePrereqs:
                         type: boolean
+                      cdbServiceName:
+                        type: string
                       enabled:
                         type: boolean
                       largeTxSpillMB:
