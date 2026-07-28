@@ -311,8 +311,21 @@ func (d *DocumentDB) SetDefaults(_ client.Client, documentDBVersion catalogv1alp
 
 	if d.Spec.Monitor != nil {
 		d.Spec.Monitor.SetDefaults()
-		if d.Spec.Monitor.Prometheus != nil && d.Spec.Monitor.Prometheus.Exporter.Port == 0 {
-			d.Spec.Monitor.Prometheus.Exporter.Port = kubedb.DocumentDBMetricsPort
+		if d.Spec.Monitor.Prometheus != nil {
+			if d.Spec.Monitor.Prometheus.Exporter.Port == 0 {
+				d.Spec.Monitor.Prometheus.Exporter.Port = kubedb.DocumentDBMetricsPort
+			}
+			if d.Spec.Monitor.Prometheus.ServiceMonitor == nil {
+				d.Spec.Monitor.Prometheus.ServiceMonitor = &mona.ServiceMonitorSpec{}
+			}
+			if d.Spec.Monitor.Prometheus.ServiceMonitor.Interval == "" {
+				d.Spec.Monitor.Prometheus.ServiceMonitor.Interval = "30s"
+			}
+			if d.Spec.Monitor.Prometheus.ServiceMonitor.Labels == nil {
+				d.Spec.Monitor.Prometheus.ServiceMonitor.Labels = map[string]string{
+					"release": "monitoring",
+				}
+			}
 		}
 	}
 }
