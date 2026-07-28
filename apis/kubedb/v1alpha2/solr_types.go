@@ -99,14 +99,7 @@ type SolrSpec struct {
 	DisableSecurity bool `json:"disableSecurity,omitempty"`
 
 	// +optional
-	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
-
-	// BackupCredentials holds the object storage credentials that Solr's backup
-	// repositories authenticate with. The referenced Secrets are always in this
-	// database's namespace; the operator copies them there when the ops request
-	// points at a Secret living elsewhere.
-	// +optional
-	BackupCredentials *SolrBackupCredentials `json:"backupCredentials,omitempty"`
+	Configuration *SolrConfiguration `json:"configuration,omitempty"`
 
 	// +optional
 	KeystoreSecret *core.LocalObjectReference `json:"keystoreSecret,omitempty"`
@@ -143,6 +136,19 @@ type SolrSpec struct {
 	// Monitor is used monitor database instance
 	// +optional
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
+}
+
+// SolrConfiguration holds the custom configuration for a Solr database along
+// with the settings that only make sense for Solr.
+type SolrConfiguration struct {
+	ConfigurationSpec `json:",inline,omitempty"`
+
+	// BackupCredentials holds the object storage credentials that Solr's backup
+	// repositories authenticate with. The referenced Secrets are always in this
+	// database's namespace; the operator copies them there when the ops request
+	// points at a Secret living elsewhere.
+	// +optional
+	BackupCredentials *SolrBackupCredentials `json:"backupCredentials,omitempty"`
 }
 
 // SolrBackupCredentials holds object storage credentials for Solr backup repositories.

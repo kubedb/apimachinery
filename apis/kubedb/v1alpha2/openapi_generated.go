@@ -816,6 +816,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials":                         schema_apimachinery_apis_kubedb_v1alpha2_SolrBackupCredentials(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBind":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology":                           schema_apimachinery_apis_kubedb_v1alpha2_SolrClusterTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrConfiguration":                             schema_apimachinery_apis_kubedb_v1alpha2_SolrConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrGCSCredential":                             schema_apimachinery_apis_kubedb_v1alpha2_SolrGCSCredential(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrList":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrNode":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrNode(ref),
@@ -46558,6 +46559,50 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrClusterTopology(ref common.Ref
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_SolrConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SolrConfiguration holds the custom configuration for a Solr database along with the settings that only make sense for Solr.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretName is an optional field to provide custom configuration file for the database (i.e. mssql.conf). If specified, these configurations will be used with default configurations (if any) and applyConfig configurations (if any). Configurations from this secret will override default configurations. This secret must be created by user.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"inline": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Inline contains key-value pairs of configurations to be applied to the database. These configurations will override both default configurations and configurations from the config secret (if any).",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"backupCredentials": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackupCredentials holds the object storage credentials that Solr's backup repositories authenticate with. The referenced Secrets are always in this database's namespace; the operator copies them there when the ops request points at a Secret living elsewhere.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_SolrGCSCredential(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -46826,13 +46871,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
-						},
-					},
-					"backupCredentials": {
-						SchemaProps: spec.SchemaProps{
-							Description: "BackupCredentials holds the object storage credentials that Solr's backup repositories authenticate with. The referenced Secrets are always in this database's namespace; the operator copies them there when the ops request points at a Secret living elsewhere.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrConfiguration"),
 						},
 					},
 					"keystoreSecret": {
@@ -46906,7 +46945,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref common.ReferenceCallb
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef"},
 	}
 }
 

@@ -115,18 +115,18 @@ func (s *Solr) SolrInlineConfigSecretKey(key string) string {
 
 // S3BackupCredential returns the configured S3 backup credential, or nil.
 func (s *Solr) S3BackupCredential() *SolrS3Credential {
-	if s.Spec.BackupCredentials == nil {
+	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupCredentials == nil {
 		return nil
 	}
-	return s.Spec.BackupCredentials.S3
+	return s.Spec.Configuration.BackupCredentials.S3
 }
 
 // GCSBackupCredential returns the configured GCS backup credential, or nil.
 func (s *Solr) GCSBackupCredential() *SolrGCSCredential {
-	if s.Spec.BackupCredentials == nil {
+	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupCredentials == nil {
 		return nil
 	}
-	return s.Spec.BackupCredentials.GCS
+	return s.Spec.Configuration.BackupCredentials.GCS
 }
 
 // ResolvedEnvToSecretKey returns the environment variable to secret key mapping,
