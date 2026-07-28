@@ -40540,6 +40540,13 @@ func schema_apimachinery_apis_ops_v1alpha1_MySQLReplicationModeTransformSpec(ref
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"targetMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TargetMode is the clustered topology to transform the database into. Supported values are \"GroupReplication\", \"InnoDBCluster\" and \"SemiSync\". This enables promoting a standalone MySQL (or transforming a remote replica) into a clustered topology.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"mode": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Group Replication can be deployed in either \"Single-Primary\" or \"Multi-Primary\" mode",
