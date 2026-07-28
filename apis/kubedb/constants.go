@@ -929,6 +929,8 @@ const (
 	MinioAccessKey     = "accesskey"
 	MinioSecretKeyName = "MINIO_SECRET_KEY"
 	MinioSecretKey     = "secretkey"
+	MinioPortName      = "MINIO_PORT"
+	MinioPortKey       = "port"
 
 	MilvusMetricsPort       = 9091
 	MilvusUIPort            = 9091
