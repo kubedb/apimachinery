@@ -5618,6 +5618,9 @@ spec:
                         lagBytes:
                           format: int64
                           type: integer
+                        lagObservedAt:
+                          format: date-time
+                          type: string
                         leader:
                           type: string
                         role:
@@ -5628,10 +5631,19 @@ spec:
                       - clusterName
                       type: object
                     type: array
+                  lastKnownPrimaryLSN:
+                    type: string
+                  lastKnownPrimaryLSNObservedAt:
+                    format: date-time
+                    type: string
                   lastTransitionTime:
                     format: date-time
                     type: string
                   phase:
+                    type: string
+                  protected:
+                    type: boolean
+                  protectionMessage:
                     type: string
                 type: object
               observedGeneration:

@@ -2930,6 +2930,15 @@ func (in *PostgresDisasterRecoveryStatus) DeepCopyInto(out *PostgresDisasterReco
 		in, out := &in.LastTransitionTime, &out.LastTransitionTime
 		*out = (*in).DeepCopy()
 	}
+	if in.Protected != nil {
+		in, out := &in.Protected, &out.Protected
+		*out = new(bool)
+		**out = **in
+	}
+	if in.LastKnownPrimaryLSNObservedAt != nil {
+		in, out := &in.LastKnownPrimaryLSNObservedAt, &out.LastKnownPrimaryLSNObservedAt
+		*out = (*in).DeepCopy()
+	}
 	return
 }
 
@@ -2950,6 +2959,10 @@ func (in *PostgresDCStatus) DeepCopyInto(out *PostgresDCStatus) {
 		in, out := &in.LagBytes, &out.LagBytes
 		*out = new(int64)
 		**out = **in
+	}
+	if in.LagObservedAt != nil {
+		in, out := &in.LagObservedAt, &out.LagObservedAt
+		*out = (*in).DeepCopy()
 	}
 	return
 }

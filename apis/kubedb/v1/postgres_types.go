@@ -403,6 +403,50 @@ type PostgresDisasterRecoveryStatus struct {
 	// LastTransitionTime is when ActiveDC last changed.
 	// +optional
 	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+
+	// Protected reports whether the database currently has cross data center DR protection: at
+	// least one Member data center other than the active one is confirmed to be streaming within
+	// the lag budget, as of a fresh observation.
+	//
+	// This is deliberately separate from Phase and from the per-DC Healthy flags. After every
+	// promotion there is a window in which the new primary is up and serving while the demoted
+	// data center has not finished re-cascading, so the database is running with no surviving
+	// copy of its writes anywhere else. A second fault landing in that window is roughly twice
+	// as expensive as the first. Protected is the field that answers "is it safe to do this
+	// again yet" without having to infer it from lag and health.
+	//
+	// nil means unknown, which is NOT the same as false: the hub could not establish the
+	// protection state this cycle. Treat unknown as unprotected when deciding whether to
+	// proceed with a planned operation.
+	// +optional
+	Protected *bool `json:"protected,omitempty"`
+
+	// ProtectionMessage explains the current value of Protected in operator-facing terms, for
+	// example which data center is not streaming yet, or why protection could not be established.
+	// +optional
+	ProtectionMessage string `json:"protectionMessage,omitempty"`
+
+	// LastKnownPrimaryLSN is the most recent write ahead log position observed on the active
+	// data center's primary, in the Postgres X/Y hex form.
+	//
+	// It exists so that the amount of un-replicated data can still be bounded AFTER the active
+	// data center is gone. Cross-DC lag is normally read from the active primary's
+	// pg_stat_replication, but in an unplanned failover that primary is exactly what was lost, so
+	// that source is unavailable at the only moment it matters. Holding the last position the
+	// primary was known to have reached lets a surviving standby's own received position be
+	// subtracted from it to estimate what never crossed the link.
+	//
+	// It is only as good as its age, so it is meaningless without LastKnownPrimaryLSNObservedAt.
+	// +optional
+	LastKnownPrimaryLSN string `json:"lastKnownPrimaryLSN,omitempty"`
+
+	// LastKnownPrimaryLSNObservedAt is when LastKnownPrimaryLSN was read from the active primary.
+	//
+	// A stale mark understates the loss, because the primary kept accepting writes after it was
+	// taken, so any RPO decision made from it must also bound its age and fail closed when the
+	// mark is too old to trust.
+	// +optional
+	LastKnownPrimaryLSNObservedAt *metav1.Time `json:"lastKnownPrimaryLSNObservedAt,omitempty"`
 }
 
 // PostgresDCStatus is one data center's local view inside a distributed Postgres.
@@ -427,7 +471,20 @@ type PostgresDCStatus struct {
 	// +optional
 	LagBytes *int64 `json:"lagBytes,omitempty"`
 
+	// LagObservedAt is when LagBytes was last successfully measured.
+	//
+	// LagBytes alone cannot be acted on, because a stale value and a current value look
+	// identical, and the difference matters most during exactly the events where the
+	// measurement stops being refreshed. A nil LagBytes with a recent LagObservedAt means "we
+	// looked and this DC was not streaming"; a nil LagObservedAt means "we could not look".
+	// +optional
+	LagObservedAt *metav1.Time `json:"lagObservedAt,omitempty"`
+
 	// Healthy reflects whether this DC's health Lease is fresh.
+	//
+	// Note that this is a liveness signal about the DC's agent, not a statement that the DC
+	// holds a usable copy of the data. A Member standby can be Healthy and still not be
+	// streaming. Use Protected on the parent status for the second question.
 	// +optional
 	Healthy bool `json:"healthy,omitempty"`
 }
