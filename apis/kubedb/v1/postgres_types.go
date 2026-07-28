@@ -467,6 +467,18 @@ type PostgresDCStatus struct {
 	// +optional
 	Writable bool `json:"writable,omitempty"`
 
+	// CrossDCStreamer is the pod in this data center that streams directly from the ACTIVE data
+	// center's primary, and from which this DC's own replicas cascade. It is the head of this
+	// DC's copy of the data, so it is the node holding the most write ahead log here, and the
+	// only correct promotion target if this DC has to take over.
+	//
+	// It is recorded because it can only be observed while this DC is still a standby: it is read
+	// from the active primary's pg_stat_replication, which stops being available the moment that
+	// primary is lost, which is precisely when the promotion target has to be chosen. Once
+	// recorded it is carried forward until a fresh observation replaces it.
+	// +optional
+	CrossDCStreamer string `json:"crossDCStreamer,omitempty"`
+
 	// LagBytes is this DC's cross-DC replication lag behind the active DC, in bytes.
 	// +optional
 	LagBytes *int64 `json:"lagBytes,omitempty"`

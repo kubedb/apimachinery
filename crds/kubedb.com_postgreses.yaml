@@ -5613,6 +5613,8 @@ spec:
                       properties:
                         clusterName:
                           type: string
+                        crossDCStreamer:
+                          type: string
                         healthy:
                           type: boolean
                         lagBytes:
