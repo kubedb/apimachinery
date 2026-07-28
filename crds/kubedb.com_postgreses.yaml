@@ -5238,6 +5238,9 @@ spec:
                 properties:
                   forceFailoverAcceptingDataLossAfter:
                     type: string
+                  maxCrossDCLagBytesForFailover:
+                    format: int64
+                    type: integer
                   maxSlotWALKeepSize:
                     format: int32
                     type: integer
@@ -10199,6 +10202,9 @@ spec:
                 properties:
                   forceFailoverAcceptingDataLossAfter:
                     type: string
+                  maxCrossDCLagBytesForFailover:
+                    format: int64
+                    type: integer
                   maxSlotWALKeepSize:
                     format: int32
                     type: integer

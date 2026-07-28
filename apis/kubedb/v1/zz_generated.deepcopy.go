@@ -2752,6 +2752,11 @@ func (in *PostgresReplication) DeepCopyInto(out *PostgresReplication) {
 		*out = new(metav1.Duration)
 		**out = **in
 	}
+	if in.MaxCrossDCLagBytesForFailover != nil {
+		in, out := &in.MaxCrossDCLagBytesForFailover, &out.MaxCrossDCLagBytesForFailover
+		*out = new(uint64)
+		**out = **in
+	}
 	return
 }
 
