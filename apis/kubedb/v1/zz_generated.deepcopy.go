@@ -2752,8 +2752,8 @@ func (in *PostgresReplication) DeepCopyInto(out *PostgresReplication) {
 		*out = new(metav1.Duration)
 		**out = **in
 	}
-	if in.MaxCrossDCLagBytesForFailover != nil {
-		in, out := &in.MaxCrossDCLagBytesForFailover, &out.MaxCrossDCLagBytesForFailover
+	if in.BestEffortCrossDCLagBytesForFailover != nil {
+		in, out := &in.BestEffortCrossDCLagBytesForFailover, &out.BestEffortCrossDCLagBytesForFailover
 		*out = new(uint64)
 		**out = **in
 	}
@@ -2934,10 +2934,6 @@ func (in *PostgresDisasterRecoveryStatus) DeepCopyInto(out *PostgresDisasterReco
 		in, out := &in.Protected, &out.Protected
 		*out = new(bool)
 		**out = **in
-	}
-	if in.LastKnownPrimaryLSNObservedAt != nil {
-		in, out := &in.LastKnownPrimaryLSNObservedAt, &out.LastKnownPrimaryLSNObservedAt
-		*out = (*in).DeepCopy()
 	}
 	return
 }

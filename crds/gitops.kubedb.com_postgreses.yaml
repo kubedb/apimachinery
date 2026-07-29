@@ -5214,11 +5214,11 @@ spec:
                 type: integer
               replication:
                 properties:
-                  forceFailoverAcceptingDataLossAfter:
-                    type: string
-                  maxCrossDCLagBytesForFailover:
+                  bestEffortCrossDCLagBytesForFailover:
                     format: int64
                     type: integer
+                  forceFailoverAcceptingDataLossAfter:
+                    type: string
                   maxSlotWALKeepSize:
                     format: int32
                     type: integer

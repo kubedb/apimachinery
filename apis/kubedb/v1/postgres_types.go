@@ -212,27 +212,45 @@ type PostgresReplication struct {
 	// +optional
 	ForceFailoverAcceptingDataLossAfter *metav1.Duration `json:"forceFailoverAcceptingDataLossAfter,omitempty"`
 
-	// MaxCrossDCLagBytesForFailover is the RPO budget, in bytes, for an UNPLANNED cross data
-	// center failover. It is the most un-replicated WAL the operator may destroy by promoting a
-	// surviving data center whose standby is behind the lost primary.
+	// BestEffortCrossDCLagBytesForFailover bounds how much un-replicated write ahead log an
+	// UNPLANNED cross data center failover may destroy. A surviving data center that is further
+	// behind the lost primary than this refuses to promote itself, and the database stays down
+	// until a human accepts the loss.
 	//
-	// This is NOT the same knob as spec.leaderElection.maximumLagBeforeFailover, which bounds the
-	// INTRA-DC raft election. This one bounds cross-DC disaster recovery, where the data at risk is
+	// It is BEST EFFORT, and the name says so because the distinction decides whether it can be
+	// relied upon:
+	//
+	//   - When a data center is genuinely LOST, the figure is near exact. The primary stopped
+	//     writing at the same instant the survivor stopped hearing from it, so the last write
+	//     position the survivor received IS the primary's final position. The error is bounded by
+	//     one replication message, which is sub-second while a primary is actually writing.
+	//
+	//   - During a NETWORK PARTITION where the primary keeps running, it is understated, and
+	//     without bound. The survivor's view of the primary froze when the link broke while the
+	//     primary kept writing, so the two positions sit still together and the computed lag reads
+	//     near zero however far apart they really are. In that state the failover Lease does not
+	//     move and no promotion happens, so the gap only matters if the primary's data center then
+	//     also loses its control plane connection. That compound case is out of scope: this field
+	//     will not catch it.
+	//
+	// It is therefore a budget, not a guarantee. Do not represent it to auditors as a bound on
+	// data loss; a bound requires synchronous replication, which this is not.
+	//
+	// This is NOT spec.leaderElection.maximumLagBeforeFailover, which governs the INTRA-DC raft
+	// election. This one governs cross data center disaster recovery, where the data at risk is
 	// whatever never crossed the link.
 	//
-	// When set, the operator refuses to create the ForceFailOver OpsRequest if the surviving data
-	// center's lag exceeds this many bytes, or if its lag cannot be established at all. Refusing is
-	// deliberate and it is fail closed: once the active data center is gone its remaining WAL can
-	// never be recovered, so the choice is between an outage and a data loss larger than the budget
-	// the operator asked for. The database therefore stays down until a human resolves it by
-	// annotating the Postgres object with dr.kubedb.com/accept-failover-data-loss=true, which
-	// records an explicit decision to accept the loss and lets the failover proceed.
+	// Enforcement is fail closed and lives in the data plane, because that is the only place that
+	// can actually stop a promotion: the surviving data center's coordinator compares the last
+	// primary write position it received against its own flushed position and refuses to promote
+	// when the difference is over budget. Refusing leaves the database down, which is the correct
+	// trade only because a human can override it by annotating the Postgres object with
+	// dr.kubedb.com/accept-failover-data-loss=true, an explicit decision to accept the loss.
 	//
-	// When unset, no cross-DC RPO budget is enforced and failover behaves as before, so existing
-	// deployments are unaffected. Setting it to 0 demands a fully caught up survivor and will refuse
-	// any failover that would lose even a single byte.
+	// When unset nothing is enforced and failover behaves exactly as before, so existing
+	// deployments are unaffected. Setting it to 0 demands a fully caught up survivor.
 	// +optional
-	MaxCrossDCLagBytesForFailover *uint64 `json:"maxCrossDCLagBytesForFailover,omitempty"`
+	BestEffortCrossDCLagBytesForFailover *uint64 `json:"bestEffortCrossDCLagBytesForFailover,omitempty"`
 }
 
 type ArbiterSpec struct {
@@ -425,28 +443,6 @@ type PostgresDisasterRecoveryStatus struct {
 	// example which data center is not streaming yet, or why protection could not be established.
 	// +optional
 	ProtectionMessage string `json:"protectionMessage,omitempty"`
-
-	// LastKnownPrimaryLSN is the most recent write ahead log position observed on the active
-	// data center's primary, in the Postgres X/Y hex form.
-	//
-	// It exists so that the amount of un-replicated data can still be bounded AFTER the active
-	// data center is gone. Cross-DC lag is normally read from the active primary's
-	// pg_stat_replication, but in an unplanned failover that primary is exactly what was lost, so
-	// that source is unavailable at the only moment it matters. Holding the last position the
-	// primary was known to have reached lets a surviving standby's own received position be
-	// subtracted from it to estimate what never crossed the link.
-	//
-	// It is only as good as its age, so it is meaningless without LastKnownPrimaryLSNObservedAt.
-	// +optional
-	LastKnownPrimaryLSN string `json:"lastKnownPrimaryLSN,omitempty"`
-
-	// LastKnownPrimaryLSNObservedAt is when LastKnownPrimaryLSN was read from the active primary.
-	//
-	// A stale mark understates the loss, because the primary kept accepting writes after it was
-	// taken, so any RPO decision made from it must also bound its age and fail closed when the
-	// mark is too old to trust.
-	// +optional
-	LastKnownPrimaryLSNObservedAt *metav1.Time `json:"lastKnownPrimaryLSNObservedAt,omitempty"`
 }
 
 // PostgresDCStatus is one data center's local view inside a distributed Postgres.
