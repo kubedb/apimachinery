@@ -926,11 +926,13 @@ const (
 	MinioAddressName   = "MINIO_ADDRESS"
 	MinioAddressKey    = "address"
 	MinioAccessKeyName = "MINIO_ACCESS_KEY"
-	MinioAccessKey     = "accesskey"
+	MinioAccessKey     = "accessKeyID"
 	MinioSecretKeyName = "MINIO_SECRET_KEY"
-	MinioSecretKey     = "secretkey"
+	MinioSecretKey     = "secretAccessKey"
 	MinioPortName      = "MINIO_PORT"
 	MinioPortKey       = "port"
+	MinioBucketName    = "MINIO_BUCKET_NAME"
+	MinioBucketKey     = "bucketName"
 
 	MilvusMetricsPort       = 9091
 	MilvusUIPort            = 9091
