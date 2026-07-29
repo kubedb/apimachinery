@@ -113,7 +113,6 @@ func (s *Solr) SolrInlineConfigSecretKey(key string) string {
 	return fmt.Sprintf("%s-%s", kubedb.InlineConfigKeyPrefix, key)
 }
 
-// S3BackupCredential returns the configured S3 backup credential, or nil.
 func (s *Solr) S3BackupCredential() *SolrS3Credential {
 	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupCredentials == nil {
 		return nil
@@ -121,7 +120,6 @@ func (s *Solr) S3BackupCredential() *SolrS3Credential {
 	return s.Spec.Configuration.BackupCredentials.S3
 }
 
-// GCSBackupCredential returns the configured GCS backup credential, or nil.
 func (s *Solr) GCSBackupCredential() *SolrGCSCredential {
 	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupCredentials == nil {
 		return nil
@@ -129,10 +127,7 @@ func (s *Solr) GCSBackupCredential() *SolrGCSCredential {
 	return s.Spec.Configuration.BackupCredentials.GCS
 }
 
-// ResolvedEnvToSecretKey returns the environment variable to secret key mapping,
-// falling back to the AWS SDK's own variable names when none is configured. Those
-// names are what KubeStash writes into an S3 BackupStorage secret, so the default
-// covers the common case without any explicit mapping.
+// ResolvedEnvToSecretKey defaults to the AWS SDK variable names.
 func (c *SolrS3Credential) ResolvedEnvToSecretKey() map[string]string {
 	if len(c.EnvToSecretKey) > 0 {
 		return c.EnvToSecretKey
@@ -143,7 +138,6 @@ func (c *SolrS3Credential) ResolvedEnvToSecretKey() map[string]string {
 	}
 }
 
-// ResolvedCredentialKey returns the secret key holding the GCS service account json.
 func (c *SolrGCSCredential) ResolvedCredentialKey() string {
 	if c.CredentialKey != "" {
 		return c.CredentialKey
@@ -151,10 +145,7 @@ func (c *SolrGCSCredential) ResolvedCredentialKey() string {
 	return kubedb.SolrGCSCredentialSecretKey
 }
 
-// GCSCredentialPath is the in-container path the GCS service account key is
-// mounted at. Solr's GCSBackupRepository is pointed at it through the
-// gcsCredentialPath property, so config writers and the operator that performs
-// the mount stay in agreement.
+// GCSCredentialPath is the in-container path of the mounted GCS service account key.
 func GCSCredentialPath() string {
 	return filepath.Join(kubedb.SolrBackupCredentialsDir, kubedb.SolrGCSCredentialFileName)
 }

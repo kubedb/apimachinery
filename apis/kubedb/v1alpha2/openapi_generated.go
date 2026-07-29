@@ -46487,18 +46487,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrBackupCredentials(ref common.R
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "SolrBackupCredentials holds object storage credentials for Solr backup repositories.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"s3": {
 						SchemaProps: spec.SchemaProps{
-							Description: "S3 credentials, injected into the Solr containers as environment variables.",
+							Description: "S3 credentials, injected as environment variables.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrS3Credential"),
 						},
 					},
 					"gcs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GCS credentials, mounted into the Solr containers as a file.",
+							Description: "GCS credentials, mounted as a file.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrGCSCredential"),
 						},
 					},
@@ -46563,7 +46562,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrConfiguration(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "SolrConfiguration holds the custom configuration for a Solr database along with the settings that only make sense for Solr.",
+				Description: "SolrConfiguration holds the custom configuration along with the Solr specific settings.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"secretName": {
@@ -46591,7 +46590,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrConfiguration(ref common.Refer
 					},
 					"backupCredentials": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BackupCredentials holds the object storage credentials that Solr's backup repositories authenticate with. The referenced Secrets are always in this database's namespace; the operator copies them there when the ops request points at a Secret living elsewhere.",
+							Description: "BackupCredentials holds the object storage credentials for Solr backup repositories.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials"),
 						},
 					},
@@ -46607,8 +46606,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrGCSCredential(ref common.Refer
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "SolrGCSCredential references a Secret in the database namespace holding a GCS service account key.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"secretName": {
 						SchemaProps: spec.SchemaProps{
@@ -46726,8 +46724,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrS3Credential(ref common.Refere
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "SolrS3Credential references a Secret in the database namespace holding S3 credentials.",
-				Type:        []string{"object"},
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"secretName": {
 						SchemaProps: spec.SchemaProps{
@@ -46739,7 +46736,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrS3Credential(ref common.Refere
 					},
 					"envToSecretKey": {
 						SchemaProps: spec.SchemaProps{
-							Description: "EnvToSecretKey maps a container environment variable name to the key that holds its value in the Secret. When empty, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are read from identically named keys.",
+							Description: "EnvToSecretKey maps an environment variable name to its Secret key. Defaults to AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
