@@ -103,6 +103,21 @@ const (
 	DocumentDBSSLModeVerifyFull DocumentDBSSLMode = "verify-full"
 )
 
+// DocumentDBTLSConfig contains tls configurations for client and server (via cert-manager),
+// plus a toggle for whether the MongoDB-wire gateway listener enforces mutual TLS.
+type DocumentDBTLSConfig struct {
+	// TLS contains tls configurations for client and server (via cert-manager).
+	// It provisions certs for the Postgres server, the replication client, and the MongoDB gateway.
+	// +optional
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+
+	// GatewayMutualTLSEnabled controls whether the MongoDB-wire gateway listener requires
+	// clients to present a valid certificate (mutual TLS), independent of the general TLS config.
+	// If unset, mutual TLS is enabled for the gateway for backward compatibility.
+	// +optional
+	GatewayMutualTLSEnabled *bool `json:"gatewayMutualTLSEnabled,omitempty"`
+}
+
 // +genclient
 // +k8s:openapi-gen=true
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -143,10 +158,9 @@ type DocumentDBSpec struct {
 	// +optional
 	SSLMode DocumentDBSSLMode `json:"sslMode,omitempty"`
 
-	// TLS contains tls configurations for client and server (via cert-manager).
-	// It provisions certs for the Postgres server, the replication client, and the MongoDB gateway.
+	// TLS contains tls configurations for client and server (via cert-manager), and gateway mTLS settings.
 	// +optional
-	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+	TLS *DocumentDBTLSConfig `json:"tls,omitempty"`
 
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
