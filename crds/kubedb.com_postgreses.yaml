@@ -5630,6 +5630,10 @@ spec:
                           type: string
                         leader:
                           type: string
+                        notReadyPods:
+                          items:
+                            type: string
+                          type: array
                         role:
                           type: string
                         writable:

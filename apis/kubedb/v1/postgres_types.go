@@ -523,6 +523,14 @@ type PostgresDCStatus struct {
 	// +optional
 	CrossDCStreamer string `json:"crossDCStreamer,omitempty"`
 
+	// NotReadyPods names the pods in this data center that are not currently participating:
+	// not streaming from the data center's leader, not attached cross data center, or not
+	// running at all. It exists so a non Ready phase can say WHICH pod is holding the
+	// database back instead of only that something is, which otherwise has to be rediscovered
+	// by hand across several clusters at the exact moment that is most expensive.
+	// +optional
+	NotReadyPods []string `json:"notReadyPods,omitempty"`
+
 	// LagBytes is this DC's cross-DC replication lag behind the active DC, in bytes.
 	// +optional
 	LagBytes *int64 `json:"lagBytes,omitempty"`
