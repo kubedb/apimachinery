@@ -145,31 +145,6 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 		}
 	}
 
-	if pp.Spec.PostgresRef == nil {
-		errorList = append(errorList, field.Required(
-			field.NewPath("spec").Child("postgresRef"),
-			"`spec.postgresRef` is missing",
-		))
-	}
-
-	if pp.DeletionTimestamp == nil {
-		backendSSL, err := pp.IsBackendTLSEnabled(w.DefaultClient)
-		if err != nil {
-			errorList = append(errorList, field.Invalid(
-				field.NewPath("spec").Child("postgresRef"),
-				pp.Name,
-				err.Error(),
-			))
-		}
-
-		if pp.Spec.TLS == nil && backendSSL {
-			errorList = append(errorList, field.Required(
-				field.NewPath("spec").Child("tls"),
-				"`spec.tls` must be set because backend postgres is tls enabled",
-			))
-		}
-	}
-
 	if pp.Spec.TLS == nil {
 		if pp.Spec.SSLMode != "disable" {
 			errorList = append(errorList, field.Invalid(
