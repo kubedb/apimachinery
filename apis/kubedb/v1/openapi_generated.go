@@ -37985,6 +37985,14 @@ func schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref common.Reference
 							Format:      "int64",
 						},
 					},
+					"crossDCFailoverPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CrossDCFailoverPolicy decides whether an UNPLANNED cross data center failover may happen at all for this database. BestEffort (the default) promotes a surviving data center within the lag budget, overridable by the accept-data-loss annotation. Never forbids any unplanned promotion whatever the measured lag says, and the annotation does not override it; a planned switchover is unaffected.",
+							Type:        []string{"string"},
+							Format:      "",
+							Enum:        []interface{}{"BestEffort", "Never"},
+						},
+					},
 				},
 				Required: []string{"walLimitPolicy"},
 			},

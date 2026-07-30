@@ -361,6 +361,30 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 		p.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
 	}
 
+	if p.Spec.LeaderElection == nil && p.isDCDRDistributed() {
+		// A raft election timeout of Period * ElectionTick = 3s (the plain HA default below)
+		// is tuned for pods sharing a data center switch. Under DC-DR the same raft runs
+		// inside one DC but on a cluster whose API server and coordination control plane are
+		// shared with the cross data center machinery, and a control plane brownout that
+		// stalls the coordinator's reconcile goroutine for a few seconds is enough to lose
+		// leadership. Measured live: a hub etcd slowdown produced leadership churn
+		// (1 -> 2 -> 1 -> 3) DURING a cross-DC heal, which serialized three separate
+		// cross-DC rewinds and turned one fork into three, costing 841s of availability
+		// while every safety invariant held.
+		//
+		// 1s * 15 = 15s of election timeout rides out that class of brownout without
+		// changing what raft guarantees. The cost is a slower INTRA-DC failover detection
+		// (up to ~15s rather than ~3s) which is the right trade here: a DC-DR deployment
+		// already tolerates tens of seconds for the cross-DC path (30s marker TTL alone),
+		// and a spurious election is far more expensive than a slightly later real one
+		// because it can fork a timeline.
+		p.Spec.LeaderElection = &PostgreLeaderElectionConfig{
+			Period:                   metav1.Duration{Duration: 1 * time.Second},
+			ElectionTick:             15,
+			HeartbeatTick:            1,
+			MaximumLagBeforeFailover: 64 * 1024 * 1024,
+		}
+	}
 	if p.Spec.LeaderElection == nil {
 		p.Spec.LeaderElection = &PostgreLeaderElectionConfig{
 			// The upper limit of election timeout is 50000ms (50s), which should only be used when deploying a
@@ -715,3 +739,17 @@ func (p *Postgres) GetDeletionPolicy() string {
 func (p *Postgres) GetPersistentSecrets() []string {
 	return p.Spec.GetPersistentSecrets()
 }
+
+// isDCDRDistributed reports whether this Postgres is a cross data center disaster recovery
+// deployment, which is a distributed database explicitly opted in with the DC-DR annotation.
+// It mirrors the operator's own detection (isDCDRDistributed in pkg/controller) so defaults
+// applied here and behaviour applied there can never disagree about what a DC-DR database is.
+func (p Postgres) isDCDRDistributed() bool {
+	return p.Spec.Distributed && p.Annotations[DCDREnabledAnnotation] == "true"
+}
+
+// DCDREnabledAnnotation opts a distributed Postgres into cross data center disaster
+// recovery. It is the same key the operator reads (pkg/controller and pkg/ops both
+// define it locally as dcdrEnabledAnnotation); the constant lives here so defaulting
+// and behaviour cannot drift apart.
+const DCDREnabledAnnotation = "dr.kubedb.com/enabled"
