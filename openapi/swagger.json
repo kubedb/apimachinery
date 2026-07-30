@@ -32491,15 +32491,15 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "mode": {
-          "description": "Group Replication can be deployed in either \"Single-Primary\" or \"Multi-Primary\" mode",
+          "description": "Mode is the Group Replication primary mode, i.e. the primary mode *within* the group: either \"Single-Primary\" or \"Multi-Primary\". It applies only when targetTopologyMode is \"GroupReplication\" or \"InnoDBCluster\"; it is ignored for \"SemiSync\", which has no group.",
           "type": "string"
         },
         "requireSSL": {
           "description": "Indicates that the database server need to be encrypted connections(ssl)",
           "type": "boolean"
         },
-        "targetMode": {
-          "description": "TargetMode is the clustered topology to transform the database into. Supported values are \"GroupReplication\", \"InnoDBCluster\" and \"SemiSync\". This enables promoting a standalone MySQL (or transforming a remote replica) into a clustered topology.",
+        "targetTopologyMode": {
+          "description": "TargetTopologyMode is the clustered topology to transform the database into, i.e. the value that ends up in the database's spec.topology.mode. Supported values are \"GroupReplication\", \"InnoDBCluster\" and \"SemiSync\". This enables promoting a standalone MySQL (or transforming a remote replica) into a clustered topology.",
           "type": "string"
         }
       }

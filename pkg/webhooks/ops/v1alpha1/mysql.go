@@ -318,28 +318,28 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformatio
 	}
 
 	// Resolve the target topology (defaults to GroupReplication for backward compatibility).
-	targetMode := dbapi.MySQLModeGroupReplication
-	if transform.TargetMode != nil {
-		targetMode = *transform.TargetMode
+	targetTopologyMode := dbapi.MySQLModeGroupReplication
+	if transform.TargetTopologyMode != nil {
+		targetTopologyMode = *transform.TargetTopologyMode
 	}
-	if targetMode != dbapi.MySQLModeGroupReplication && targetMode != dbapi.MySQLModeInnoDBCluster &&
-		targetMode != dbapi.MySQLModeSemiSync {
-		return fmt.Errorf("unsupported spec.replicationModeTransformation.targetMode %q; supported values are %q, %q and %q",
-			targetMode, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster, dbapi.MySQLModeSemiSync)
+	if targetTopologyMode != dbapi.MySQLModeGroupReplication && targetTopologyMode != dbapi.MySQLModeInnoDBCluster &&
+		targetTopologyMode != dbapi.MySQLModeSemiSync {
+		return fmt.Errorf("unsupported spec.replicationModeTransformation.targetTopologyMode %q; supported values are %q, %q and %q",
+			targetTopologyMode, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster, dbapi.MySQLModeSemiSync)
 	}
 
 	// Reject no-op transformations (database is already in the requested topology).
-	if (targetMode == dbapi.MySQLModeGroupReplication && db.UsesGroupReplication()) ||
-		(targetMode == dbapi.MySQLModeInnoDBCluster && db.IsInnoDBCluster()) ||
-		(targetMode == dbapi.MySQLModeSemiSync && db.IsSemiSync()) {
-		return fmt.Errorf("database %s/%s is already running in %q mode", db.Namespace, db.Name, targetMode)
+	if (targetTopologyMode == dbapi.MySQLModeGroupReplication && db.UsesGroupReplication()) ||
+		(targetTopologyMode == dbapi.MySQLModeInnoDBCluster && db.IsInnoDBCluster()) ||
+		(targetTopologyMode == dbapi.MySQLModeSemiSync && db.IsSemiSync()) {
+		return fmt.Errorf("database %s/%s is already running in %q mode", db.Namespace, db.Name, targetTopologyMode)
 	}
 
 	// spec.replicationModeTransformation.mode is the Group Replication primary mode.
 	// Multi-Primary is supported: the coordinator disambiguates the primary/donor by
 	// preferring the data-bearing member (every member reports MEMBER_ROLE='PRIMARY'
 	// in Multi-Primary, so an arbitrary pick could otherwise seed from an empty pod).
-	// The field is ignored when targetMode is SemiSync, which has no group.
+	// The field is ignored when targetTopologyMode is SemiSync, which has no group.
 	if transform.Mode != nil && *transform.Mode != dbapi.MySQLGroupModeSinglePrimary &&
 		*transform.Mode != dbapi.MySQLGroupModeMultiPrimary {
 		return fmt.Errorf("unsupported spec.replicationModeTransformation.mode %q; supported values are %q and %q",

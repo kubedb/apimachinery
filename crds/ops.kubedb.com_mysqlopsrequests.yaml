@@ -223,7 +223,7 @@ spec:
                     type: string
                   requireSSL:
                     type: boolean
-                  targetMode:
+                  targetTopologyMode:
                     allOf:
                     - enum:
                       - GroupReplication
