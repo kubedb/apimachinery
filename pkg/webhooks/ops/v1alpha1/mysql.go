@@ -305,16 +305,21 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest
 }
 
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformation(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
-	curVersion := semver.MustParse(db.Spec.Version)
-	refVersion := semver.MustParse("8.4.2")
-
-	if curVersion.LessThan(refVersion) {
-		return fmt.Errorf("MySQL Replication Mode Transformation is only supported for %s or upper", refVersion)
-	}
-
 	transform := req.Spec.ReplicationModeTransformation
 	if transform == nil {
 		return errors.New("spec.replicationModeTransformation is required for a ReplicationModeTransformation ops request")
+	}
+
+	// Replication mode transformation itself carries no minimum MySQL version — every
+	// supported version can be transformed. Only Multi-Primary (multi-master) group
+	// replication is version-limited: it requires MySQL 8.4 or newer.
+	if transform.Mode != nil && *transform.Mode == dbapi.MySQLGroupModeMultiPrimary {
+		curVersion := semver.MustParse(db.Spec.Version)
+		multiPrimaryMinVersion := semver.MustParse("8.4.0")
+		if curVersion.LessThan(multiPrimaryMinVersion) {
+			return fmt.Errorf("spec.replicationModeTransformation.mode %q requires MySQL %s or newer, but database %s/%s runs %s",
+				dbapi.MySQLGroupModeMultiPrimary, multiPrimaryMinVersion, db.Namespace, db.Name, db.Spec.Version)
+		}
 	}
 
 	// Resolve the target topology (defaults to GroupReplication for backward compatibility).
@@ -333,6 +338,22 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformatio
 		(targetTopologyMode == dbapi.MySQLModeInnoDBCluster && db.IsInnoDBCluster()) ||
 		(targetTopologyMode == dbapi.MySQLModeSemiSync && db.IsSemiSync()) {
 		return fmt.Errorf("database %s/%s is already running in %q mode", db.Namespace, db.Name, targetTopologyMode)
+	}
+
+	// Only a Standalone or a RemoteReplica may be transformed. Cluster-to-cluster
+	// transformation is not supported: a database that already runs a clustered
+	// topology cannot be converted into a different one.
+	//
+	// Rejecting it here matters because the ops request would otherwise appear to
+	// work — the topology is patched and the request can report Successful while the
+	// group is never actually converted, leaving the database unreachable.
+	if db.Spec.Topology != nil && !db.IsRemoteReplica() {
+		sourceMode := "clustered"
+		if db.Spec.Topology.Mode != nil {
+			sourceMode = string(*db.Spec.Topology.Mode)
+		}
+		return fmt.Errorf("database %s/%s is running in %q mode: replication mode transformation is only supported for a standalone or a remote replica source, cluster-to-cluster transformation is not supported",
+			db.Namespace, db.Name, sourceMode)
 	}
 
 	// spec.replicationModeTransformation.mode is the Group Replication primary mode.
