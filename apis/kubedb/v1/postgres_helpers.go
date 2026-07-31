@@ -753,3 +753,35 @@ func (p Postgres) isDCDRDistributed() bool {
 // define it locally as dcdrEnabledAnnotation); the constant lives here so defaulting
 // and behaviour cannot drift apart.
 const DCDREnabledAnnotation = "dr.kubedb.com/enabled"
+
+// WritableObservationTTL is how long a PostgresDCStatus.WritableObservedAt stamp stays
+// usable as evidence. The hub re-observes every DC on its resync (2 minutes), so this
+// tolerates two consecutive missed passes before a writable claim expires; past that the
+// database is treated as having no confirmed writable primary, which is the fail-closed
+// answer.
+const WritableObservationTTL = 5 * time.Minute
+
+// WritablePrimaryConfirmed reports whether this data center is POSITIVELY OBSERVED to hold a
+// writable primary right now.
+//
+// It exists because PostgresDCStatus.Writable fails open: it is seeded true for the active DC
+// from the placement and is only ever lowered by a probe that SUCCEEDED, so a dial failure, a
+// query failure, or a hub that stopped observing altogether all persist a true that looks
+// exactly like a healthy one. Every consumer that reads Writable as evidence - rather than as
+// the "keep waiting" default the planned switchover gate wants - has to require that the
+// observation actually happened, and recently. Two already got this wrong in ways that only
+// show up during an outage: the standing accept-data-loss re-drive stood down against a stale
+// true and left the coordinator holding, and the health check reported a wholly unreachable
+// DC-DR database as Critical/AcceptingConnection=True instead of NotReady.
+//
+// Leader is required too: a writable claim with no named leader pod names nothing that could
+// be serving.
+func (d *PostgresDCStatus) WritablePrimaryConfirmed(now time.Time) bool {
+	if d == nil || !d.Writable || d.Leader == "" {
+		return false
+	}
+	if d.WritableObservedAt == nil {
+		return false // never probed: the true is the placement default, not an observation
+	}
+	return now.Sub(d.WritableObservedAt.Time) <= WritableObservationTTL
+}

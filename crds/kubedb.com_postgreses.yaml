@@ -5638,6 +5638,9 @@ spec:
                           type: string
                         writable:
                           type: boolean
+                        writableObservedAt:
+                          format: date-time
+                          type: string
                       required:
                       - clusterName
                       type: object

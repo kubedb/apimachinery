@@ -508,8 +508,30 @@ type PostgresDCStatus struct {
 	Leader string `json:"leader,omitempty"`
 
 	// Writable is true when this DC's leader is the cluster's writable primary.
+	//
+	// It is seeded from the placement (the active DC is expected to be writable) and is only
+	// overridden by an actual probe of the leader. That default is deliberate for the planned
+	// switchover gate, which waits for Writable to go false before handing off and must not be
+	// released by a failed probe. It also means a true here can be nothing more than the
+	// expectation: read WritableObservedAt before treating it as evidence.
 	// +optional
 	Writable bool `json:"writable,omitempty"`
+
+	// WritableObservedAt is when Writable was last established by actually probing this DC's
+	// leader, as opposed to assumed from the placement.
+	//
+	// Writable on its own fails open: it starts true for the active DC and is only ever lowered
+	// by a SUCCESSFUL probe, so every failure to reach the leader leaves a true behind that is
+	// indistinguishable from a healthy one. Anything that reads Writable as positive EVIDENCE -
+	// that the database is serving writes, or that an accepted failover has landed and no longer
+	// needs re-driving - must pair it with a fresh stamp here, or it will stand down in exactly
+	// the outage it exists to handle.
+	//
+	// nil means this pass never determined the DC's writability. It is set on a successful probe
+	// whichever way the answer came out, so a recent stamp with Writable false is a real
+	// observation of a read-only leader, not a missing one.
+	// +optional
+	WritableObservedAt *metav1.Time `json:"writableObservedAt,omitempty"`
 
 	// CrossDCStreamer is the pod in this data center that streams directly from the ACTIVE data
 	// center's primary, and from which this DC's own replicas cascade. It is the head of this
