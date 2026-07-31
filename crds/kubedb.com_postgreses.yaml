@@ -10218,14 +10218,6 @@ spec:
                 type: integer
               replication:
                 properties:
-                  bestEffortCrossDCLagBytesForFailover:
-                    format: int64
-                    type: integer
-                  crossDCFailoverPolicy:
-                    enum:
-                    - BestEffort
-                    - Never
-                    type: string
                   forceFailoverAcceptingDataLossAfter:
                     type: string
                   maxSlotWALKeepSize:
