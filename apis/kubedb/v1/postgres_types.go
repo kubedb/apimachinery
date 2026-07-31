@@ -251,55 +251,7 @@ type PostgresReplication struct {
 	// deployments are unaffected. Setting it to 0 demands a fully caught up survivor.
 	// +optional
 	BestEffortCrossDCLagBytesForFailover *uint64 `json:"bestEffortCrossDCLagBytesForFailover,omitempty"`
-
-	// CrossDCFailoverPolicy decides whether an UNPLANNED cross data center failover may happen
-	// at all for this database.
-	//
-	// BestEffort, the default, is the behaviour described above: when the failover Lease moves,
-	// the surviving data center promotes itself if it is within
-	// BestEffortCrossDCLagBytesForFailover, and a human can accept a larger loss with the
-	// dr.kubedb.com/accept-failover-data-loss annotation.
-	//
-	// Never means exactly that: no unplanned promotion, ever, whatever the measured lag says and
-	// whoever moves the Lease. The database stays read only in every data center until either the
-	// original primary comes back or an operator edits this field. It exists for databases whose
-	// owners would rather be down than serve from a copy that might be missing writes, a decision
-	// no lag number can make for them.
-	//
-	// Never does NOT block a PLANNED switchover (dr.kubedb.com/switchover-to). A switchover
-	// quiesces writes and waits for the target to catch up before handing over, so it is zero
-	// RPO by construction and is the supported way to move the primary deliberately.
-	//
-	// The accept-data-loss annotation deliberately does NOT override Never. Under BestEffort the
-	// annotation is a judgement call about how much loss is tolerable; under Never the owner has
-	// already declared that no unplanned promotion is tolerable, so overriding it must be a spec
-	// change, which is auditable and reversible, rather than an annotation that is easy to add in
-	// a hurry during an incident.
-	//
-	// Enforced in both places that could otherwise act: the hub orchestrator never creates a
-	// failover ops request for such a database, and the surviving data center's coordinator
-	// refuses the promotion at the same choke point the lag budget uses, so the guarantee holds
-	// even when the hub is unreachable.
-	//
-	// +kubebuilder:validation:Enum=BestEffort;Never
-	// +optional
-	CrossDCFailoverPolicy CrossDCFailoverPolicy `json:"crossDCFailoverPolicy,omitempty"`
 }
-
-// CrossDCFailoverPolicy is the set of values for PostgresReplication.CrossDCFailoverPolicy.
-// +kubebuilder:validation:Enum=BestEffort;Never
-type CrossDCFailoverPolicy string
-
-const (
-	// CrossDCFailoverBestEffort allows an unplanned cross data center promotion, bounded by
-	// BestEffortCrossDCLagBytesForFailover and overridable by the accept-data-loss annotation.
-	// This is the behaviour when the field is unset.
-	CrossDCFailoverBestEffort CrossDCFailoverPolicy = "BestEffort"
-
-	// CrossDCFailoverNever forbids any unplanned cross data center promotion. Planned
-	// switchover is unaffected.
-	CrossDCFailoverNever CrossDCFailoverPolicy = "Never"
-)
 
 type ArbiterSpec struct {
 	// Compute Resources required by the sidecar container.
