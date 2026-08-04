@@ -29,8 +29,8 @@ type FakeUiV1alpha1 struct {
 	*testing.Fake
 }
 
-func (c *FakeUiV1alpha1) DatabaseConfigurations() v1alpha1.DatabaseConfigurationInterface {
-	return &FakeDatabaseConfigurations{c}
+func (c *FakeUiV1alpha1) DatabaseConfigurations(namespace string) v1alpha1.DatabaseConfigurationInterface {
+	return &FakeDatabaseConfigurations{c, namespace}
 }
 
 func (c *FakeUiV1alpha1) DatabaseConnections(namespace string) v1alpha1.DatabaseConnectionInterface {

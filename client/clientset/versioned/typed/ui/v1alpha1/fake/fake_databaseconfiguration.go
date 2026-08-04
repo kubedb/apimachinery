@@ -24,22 +24,78 @@ import (
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	labels "k8s.io/apimachinery/pkg/labels"
+	types "k8s.io/apimachinery/pkg/types"
 	testing "k8s.io/client-go/testing"
 )
 
 // FakeDatabaseConfigurations implements DatabaseConfigurationInterface
 type FakeDatabaseConfigurations struct {
 	Fake *FakeUiV1alpha1
+	ns   string
 }
 
 var databaseconfigurationsResource = v1alpha1.SchemeGroupVersion.WithResource("databaseconfigurations")
 
 var databaseconfigurationsKind = v1alpha1.SchemeGroupVersion.WithKind("DatabaseConfiguration")
 
+// Get takes name of the databaseConfiguration, and returns the corresponding databaseConfiguration object, and an error if there is any.
+func (c *FakeDatabaseConfigurations) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DatabaseConfiguration, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewGetAction(databaseconfigurationsResource, c.ns, name), &v1alpha1.DatabaseConfiguration{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.DatabaseConfiguration), err
+}
+
+// List takes label and field selectors, and returns the list of DatabaseConfigurations that match those selectors.
+func (c *FakeDatabaseConfigurations) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DatabaseConfigurationList, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewListAction(databaseconfigurationsResource, databaseconfigurationsKind, c.ns, opts), &v1alpha1.DatabaseConfigurationList{})
+
+	if obj == nil {
+		return nil, err
+	}
+
+	label, _, _ := testing.ExtractFromListOptions(opts)
+	if label == nil {
+		label = labels.Everything()
+	}
+	list := &v1alpha1.DatabaseConfigurationList{ListMeta: obj.(*v1alpha1.DatabaseConfigurationList).ListMeta}
+	for _, item := range obj.(*v1alpha1.DatabaseConfigurationList).Items {
+		if label.Matches(labels.Set(item.Labels)) {
+			list.Items = append(list.Items, item)
+		}
+	}
+	return list, err
+}
+
 // Create takes the representation of a databaseConfiguration and creates it.  Returns the server's representation of the databaseConfiguration, and an error, if there is any.
 func (c *FakeDatabaseConfigurations) Create(ctx context.Context, databaseConfiguration *v1alpha1.DatabaseConfiguration, opts v1.CreateOptions) (result *v1alpha1.DatabaseConfiguration, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(databaseconfigurationsResource, databaseConfiguration), &v1alpha1.DatabaseConfiguration{})
+		Invokes(testing.NewCreateAction(databaseconfigurationsResource, c.ns, databaseConfiguration), &v1alpha1.DatabaseConfiguration{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*v1alpha1.DatabaseConfiguration), err
+}
+
+// DeleteCollection deletes a collection of objects.
+func (c *FakeDatabaseConfigurations) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+	action := testing.NewDeleteCollectionAction(databaseconfigurationsResource, c.ns, listOpts)
+
+	_, err := c.Fake.Invokes(action, &v1alpha1.DatabaseConfigurationList{})
+	return err
+}
+
+// Patch applies the patch and returns the patched databaseConfiguration.
+func (c *FakeDatabaseConfigurations) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DatabaseConfiguration, err error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewPatchSubresourceAction(databaseconfigurationsResource, c.ns, name, pt, data, subresources...), &v1alpha1.DatabaseConfiguration{})
+
 	if obj == nil {
 		return nil, err
 	}
