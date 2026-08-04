@@ -46616,13 +46616,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrGCSCredential(ref common.Refer
 							Format:      "",
 						},
 					},
-					"credentialKey": {
-						SchemaProps: spec.SchemaProps{
-							Description: "CredentialKey is the Secret key holding the service account JSON.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 				},
 				Required: []string{"secretName"},
 			},
@@ -46732,22 +46725,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrS3Credential(ref common.Refere
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
-						},
-					},
-					"envToSecretKey": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EnvToSecretKey maps an environment variable name to its Secret key. Defaults to AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.",
-							Type:        []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
 						},
 					},
 				},

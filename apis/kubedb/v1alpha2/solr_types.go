@@ -159,18 +159,11 @@ type SolrBackupCredentials struct {
 type SolrS3Credential struct {
 	// SecretName is the Secret containing the S3 credentials.
 	SecretName string `json:"secretName"`
-	// EnvToSecretKey maps an environment variable name to its Secret key.
-	// Defaults to AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY.
-	// +optional
-	EnvToSecretKey map[string]string `json:"envToSecretKey,omitempty"`
 }
 
 type SolrGCSCredential struct {
 	// SecretName is the Secret containing the GCS service account key.
 	SecretName string `json:"secretName"`
-	// CredentialKey is the Secret key holding the service account JSON.
-	// +optional
-	CredentialKey string `json:"credentialKey,omitempty"`
 }
 
 type SolrClusterTopology struct {

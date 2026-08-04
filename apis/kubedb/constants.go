@@ -1157,9 +1157,21 @@ const (
 	// projected to inside SolrBackupCredentialsDir. Solr's GCSBackupRepository is
 	// pointed at it through the gcsCredentialPath property.
 	SolrGCSCredentialFileName = "cred.json"
+	// The three keys below are the ones KubeStash writes into a BackupStorage
+	// secret. They are duplicated here rather than imported: KubeStash declares them
+	// in kubestash.dev/apimachinery/pkg/blob, which pulls in the Azure SDK, AWS SDK
+	// v2, gocloud.dev and its blob drivers, and the GCS one is unexported there
+	// anyway. Keep them in sync with that package.
+
 	// SolrGCSCredentialSecretKey is the default key holding the service account
 	// JSON in a KubeStash GCS BackupStorage secret.
 	SolrGCSCredentialSecretKey = "GOOGLE_SERVICE_ACCOUNT_JSON_KEY"
+	// SolrS3AccessKeyIDKey and SolrS3SecretAccessKeyKey hold the S3 credentials in a
+	// KubeStash S3 BackupStorage secret. They double as the environment variable
+	// names the AWS SDK's default credential chain reads, so exposing them under
+	// these names is enough for S3BackupRepository to authenticate.
+	SolrS3AccessKeyIDKey     = "AWS_ACCESS_KEY_ID"
+	SolrS3SecretAccessKeyKey = "AWS_SECRET_ACCESS_KEY"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""

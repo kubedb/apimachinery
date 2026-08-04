@@ -8921,7 +8921,7 @@ func (in *SolrReconfigurationSpec) DeepCopyInto(out *SolrReconfigurationSpec) {
 	if in.S3 != nil {
 		in, out := &in.S3, &out.S3
 		*out = new(SolrS3CredentialSpec)
-		(*in).DeepCopyInto(*out)
+		**out = **in
 	}
 	if in.GCS != nil {
 		in, out := &in.GCS, &out.GCS
@@ -8945,13 +8945,6 @@ func (in *SolrReconfigurationSpec) DeepCopy() *SolrReconfigurationSpec {
 func (in *SolrS3CredentialSpec) DeepCopyInto(out *SolrS3CredentialSpec) {
 	*out = *in
 	out.SecretRef = in.SecretRef
-	if in.EnvToSecretKey != nil {
-		in, out := &in.EnvToSecretKey, &out.EnvToSecretKey
-		*out = make(map[string]string, len(*in))
-		for key, val := range *in {
-			(*out)[key] = val
-		}
-	}
 	return
 }
 

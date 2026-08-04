@@ -112,11 +112,6 @@ type SolrS3CredentialSpec struct {
 	// namespace, because a pod can only mount Secrets from its own namespace.
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
-	// EnvToSecretKey maps a container environment variable name to the key that
-	// holds its value in the Secret. When empty, AWS_ACCESS_KEY_ID and
-	// AWS_SECRET_ACCESS_KEY are read from identically named keys.
-	// +optional
-	EnvToSecretKey map[string]string `json:"envToSecretKey,omitempty"`
 }
 
 // SolrGCSCredentialSpec references a Secret holding a GCS service account key.
@@ -128,10 +123,6 @@ type SolrGCSCredentialSpec struct {
 	// namespace, because a pod can only mount Secrets from its own namespace.
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
-	// CredentialKey is the Secret key holding the service account JSON.
-	// +kubebuilder:default="GOOGLE_SERVICE_ACCOUNT_JSON_KEY"
-	// +optional
-	CredentialKey string `json:"credentialKey,omitempty"`
 }
 
 type SolrVerticalScalingSpec struct {

@@ -92,8 +92,6 @@ spec:
                     properties:
                       gcs:
                         properties:
-                          credentialKey:
-                            type: string
                           secretName:
                             type: string
                         required:
@@ -101,10 +99,6 @@ spec:
                         type: object
                       s3:
                         properties:
-                          envToSecretKey:
-                            additionalProperties:
-                              type: string
-                            type: object
                           secretName:
                             type: string
                         required:

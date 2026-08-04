@@ -375,15 +375,8 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		if ns == "" {
 			ns = req.Namespace
 		}
-		secret, err := w.getReferencedSecret(ns, cfg.S3.SecretRef.Name, "s3")
-		if err != nil {
+		if _, err := w.getReferencedSecret(ns, cfg.S3.SecretRef.Name, "s3"); err != nil {
 			return err
-		}
-		// An empty map means the operator falls back to the default AWS key names.
-		for env, key := range cfg.S3.EnvToSecretKey {
-			if _, ok := secret.Data[key]; !ok {
-				return fmt.Errorf("s3 secret %s/%s has no key %q (mapped to env %q)", ns, secret.Name, key, env)
-			}
 		}
 	}
 
@@ -399,12 +392,8 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		if err != nil {
 			return err
 		}
-		credKey := cfg.GCS.CredentialKey
-		if credKey == "" {
-			credKey = kubedb.SolrGCSCredentialSecretKey
-		}
-		if _, ok := secret.Data[credKey]; !ok {
-			return fmt.Errorf("gcs secret %s/%s has no key %q holding the service account json", ns, secret.Name, credKey)
+		if _, ok := secret.Data[kubedb.SolrGCSCredentialSecretKey]; !ok {
+			return fmt.Errorf("gcs secret %s/%s has no key %q holding the service account json", ns, secret.Name, kubedb.SolrGCSCredentialSecretKey)
 		}
 	}
 

@@ -127,24 +127,6 @@ func (s *Solr) GCSBackupCredential() *SolrGCSCredential {
 	return s.Spec.Configuration.BackupCredentials.GCS
 }
 
-// ResolvedEnvToSecretKey defaults to the AWS SDK variable names.
-func (c *SolrS3Credential) ResolvedEnvToSecretKey() map[string]string {
-	if len(c.EnvToSecretKey) > 0 {
-		return c.EnvToSecretKey
-	}
-	return map[string]string{
-		"AWS_ACCESS_KEY_ID":     "AWS_ACCESS_KEY_ID",
-		"AWS_SECRET_ACCESS_KEY": "AWS_SECRET_ACCESS_KEY",
-	}
-}
-
-func (c *SolrGCSCredential) ResolvedCredentialKey() string {
-	if c.CredentialKey != "" {
-		return c.CredentialKey
-	}
-	return kubedb.SolrGCSCredentialSecretKey
-}
-
 // GCSCredentialPath is the in-container path of the mounted GCS service account key.
 func GCSCredentialPath() string {
 	return filepath.Join(kubedb.SolrBackupCredentialsDir, kubedb.SolrGCSCredentialFileName)

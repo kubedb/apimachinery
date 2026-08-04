@@ -46111,13 +46111,6 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrGCSCredentialSpec(ref common.Refe
 							Format:      "",
 						},
 					},
-					"credentialKey": {
-						SchemaProps: spec.SchemaProps{
-							Description: "CredentialKey is the Secret key holding the service account JSON.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 				},
 				Required: []string{"secretRef"},
 			},
@@ -46487,22 +46480,6 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrS3CredentialSpec(ref common.Refer
 							Description: "Namespace of the referenced Secret. Defaults to the database namespace. When it differs, the operator copies the Secret into the database namespace, because a pod can only mount Secrets from its own namespace.",
 							Type:        []string{"string"},
 							Format:      "",
-						},
-					},
-					"envToSecretKey": {
-						SchemaProps: spec.SchemaProps{
-							Description: "EnvToSecretKey maps a container environment variable name to the key that holds its value in the Secret. When empty, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are read from identically named keys.",
-							Type:        []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
 						},
 					},
 				},
