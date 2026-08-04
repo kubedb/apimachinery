@@ -269,6 +269,10 @@ var forbiddenMilvusEnvVars = []string{
 	kubedb.MinioAccessKey,
 	kubedb.MinioSecretKeyName,
 	kubedb.MinioSecretKey,
+	kubedb.MinioBucketName,
+	kubedb.MinioBucketKey,
+	kubedb.MinioPortKey,
+	kubedb.MinioPortName,
 	kubedb.EtcdEndpointsName,
 }
 
