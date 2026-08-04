@@ -127,7 +127,6 @@ func (s *Solr) GCSBackupCredential() *SolrGCSCredential {
 	return s.Spec.Configuration.BackupCredentials.GCS
 }
 
-// GCSCredentialPath is the in-container path of the mounted GCS service account key.
 func GCSCredentialPath() string {
 	return filepath.Join(kubedb.SolrBackupCredentialsDir, kubedb.SolrGCSCredentialFileName)
 }

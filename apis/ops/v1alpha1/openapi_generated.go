@@ -46106,7 +46106,7 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrGCSCredentialSpec(ref common.Refe
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace of the referenced Secret. Defaults to the database namespace. When it differs, the operator copies the Secret into the database namespace, because a pod can only mount Secrets from its own namespace.",
+							Description: "Namespace of the referenced Secret. Defaults to the database namespace; a Secret elsewhere is copied in, since a pod can only mount its own namespace.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -46443,13 +46443,13 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrReconfigurationSpec(ref common.Re
 					},
 					"s3": {
 						SchemaProps: spec.SchemaProps{
-							Description: "S3 provides the credentials for an S3 backup repository. They are injected into the Solr containers as environment variables, which the AWS SDK default credential chain picks up.",
+							Description: "S3 credentials for an S3 backup repository, injected as environment variables.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrS3CredentialSpec"),
 						},
 					},
 					"gcs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GCS provides the credentials for a GCS backup repository. The service account key is mounted into the Solr containers as a file, since Solr's GCSBackupRepository only accepts a path to a credential file.",
+							Description: "GCS credentials for a GCS backup repository, mounted as a file.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrGCSCredentialSpec"),
 						},
 					},
@@ -46477,7 +46477,7 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrS3CredentialSpec(ref common.Refer
 					},
 					"namespace": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Namespace of the referenced Secret. Defaults to the database namespace. When it differs, the operator copies the Secret into the database namespace, because a pod can only mount Secrets from its own namespace.",
+							Description: "Namespace of the referenced Secret. Defaults to the database namespace; a Secret elsewhere is copied in, since a pod can only mount its own namespace.",
 							Type:        []string{"string"},
 							Format:      "",
 						},

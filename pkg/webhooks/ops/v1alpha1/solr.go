@@ -23,12 +23,13 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
+	"kubestash.dev/apimachinery/pkg/blob"
+
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -392,8 +393,8 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		if err != nil {
 			return err
 		}
-		if _, ok := secret.Data[kubedb.SolrGCSCredentialSecretKey]; !ok {
-			return fmt.Errorf("gcs secret %s/%s has no key %q holding the service account json", ns, secret.Name, kubedb.SolrGCSCredentialSecretKey)
+		if _, ok := secret.Data[blob.GoogleServiceAccountJSONKey]; !ok {
+			return fmt.Errorf("gcs secret %s/%s has no key %q holding the service account json", ns, secret.Name, blob.GoogleServiceAccountJSONKey)
 		}
 	}
 

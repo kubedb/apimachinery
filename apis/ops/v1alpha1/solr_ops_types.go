@@ -91,14 +91,10 @@ type SolrOpsRequestSpec struct {
 // credentials Solr needs in order to authenticate with a backup repository.
 type SolrReconfigurationSpec struct {
 	ReconfigurationSpec `json:",inline,omitempty"`
-	// S3 provides the credentials for an S3 backup repository. They are injected
-	// into the Solr containers as environment variables, which the AWS SDK
-	// default credential chain picks up.
+	// S3 credentials for an S3 backup repository, injected as environment variables.
 	// +optional
 	S3 *SolrS3CredentialSpec `json:"s3,omitempty"`
-	// GCS provides the credentials for a GCS backup repository. The service
-	// account key is mounted into the Solr containers as a file, since Solr's
-	// GCSBackupRepository only accepts a path to a credential file.
+	// GCS credentials for a GCS backup repository, mounted as a file.
 	// +optional
 	GCS *SolrGCSCredentialSpec `json:"gcs,omitempty"`
 }
@@ -107,9 +103,8 @@ type SolrReconfigurationSpec struct {
 type SolrS3CredentialSpec struct {
 	// SecretRef is the Secret containing the S3 credentials.
 	SecretRef core.LocalObjectReference `json:"secretRef"`
-	// Namespace of the referenced Secret. Defaults to the database namespace.
-	// When it differs, the operator copies the Secret into the database
-	// namespace, because a pod can only mount Secrets from its own namespace.
+	// Namespace of the referenced Secret. Defaults to the database namespace;
+	// a Secret elsewhere is copied in, since a pod can only mount its own namespace.
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
 }
@@ -118,9 +113,8 @@ type SolrS3CredentialSpec struct {
 type SolrGCSCredentialSpec struct {
 	// SecretRef is the Secret containing the GCS service account key.
 	SecretRef core.LocalObjectReference `json:"secretRef"`
-	// Namespace of the referenced Secret. Defaults to the database namespace.
-	// When it differs, the operator copies the Secret into the database
-	// namespace, because a pod can only mount Secrets from its own namespace.
+	// Namespace of the referenced Secret. Defaults to the database namespace;
+	// a Secret elsewhere is copied in, since a pod can only mount its own namespace.
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
 }
