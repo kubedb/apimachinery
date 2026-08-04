@@ -24,7 +24,7 @@ require (
 	go.etcd.io/etcd/raft/v3 v3.5.27
 	go.etcd.io/etcd/server/v3 v3.6.4
 	go.uber.org/zap v1.27.0
-	go.virtual-secrets.dev/apimachinery v0.0.1
+	go.virtual-secrets.dev/apimachinery v0.1.0
 	gomodules.xyz/encoding v0.0.8
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0
@@ -124,6 +124,7 @@ require (
 	github.com/go-openapi/swag/typeutils v0.25.1 // indirect
 	github.com/go-openapi/swag/yamlutils v0.25.1 // indirect
 	github.com/go-sql-driver/mysql v1.9.3 // indirect
+	github.com/gobuffalo/flect v1.0.3 // indirect
 	github.com/goccy/go-yaml v1.18.0 // indirect
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect

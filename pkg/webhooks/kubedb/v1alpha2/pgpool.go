@@ -37,7 +37,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -143,44 +142,6 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("version"),
 				pp.Name,
 				err.Error()))
-		}
-	}
-
-	if pp.Spec.PostgresRef == nil {
-		errorList = append(errorList, field.Required(
-			field.NewPath("spec").Child("postgresRef"),
-			"`spec.postgresRef` is missing",
-		))
-	}
-
-	if pp.DeletionTimestamp == nil {
-		apb := appcat.AppBinding{}
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      pp.Spec.PostgresRef.Name,
-			Namespace: pp.Spec.PostgresRef.Namespace,
-		}, &apb)
-		if err != nil {
-			errorList = append(errorList, field.Invalid(
-				field.NewPath("spec").Child("postgresRef"),
-				pp.Name,
-				err.Error(),
-			))
-		}
-
-		backendSSL, err := pp.IsBackendTLSEnabled(w.DefaultClient)
-		if err != nil {
-			errorList = append(errorList, field.Invalid(
-				field.NewPath("spec").Child("postgresRef"),
-				pp.Name,
-				err.Error(),
-			))
-		}
-
-		if pp.Spec.TLS == nil && backendSSL {
-			errorList = append(errorList, field.Required(
-				field.NewPath("spec").Child("tls"),
-				"`spec.tls` must be set because backend postgres is tls enabled",
-			))
 		}
 	}
 

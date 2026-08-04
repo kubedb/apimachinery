@@ -22,10 +22,10 @@ import (
 	"kmodules.xyz/client-go/apiextensions"
 )
 
-func (_ SecretMetadata) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (SecretMetadata) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceSecretMetadatas))
 }
 
-func (_ SecretStore) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+func (SecretStore) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(ResourceSecretStores))
 }

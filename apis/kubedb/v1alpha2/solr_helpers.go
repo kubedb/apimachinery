@@ -63,11 +63,6 @@ func (s *Solr) PetSetName(suffix string) string {
 	return strings.Join(sts, "-")
 }
 
-// Owner returns owner reference to resources
-func (s *Solr) Owner() *meta.OwnerReference {
-	return meta.NewControllerRef(s, SchemeGroupVersion.WithKind(s.ResourceKind()))
-}
-
 func (s *Solr) ResourceKind() string {
 	return ResourceKindSolr
 }
@@ -598,4 +593,8 @@ func (d *SolrBind) CertSecretName() string {
 
 func (s *Solr) GetDeletionPolicy() string {
 	return string(s.Spec.DeletionPolicy)
+}
+
+func (s *Solr) AsOwner() *meta.OwnerReference {
+	return meta.NewControllerRef(s, SchemeGroupVersion.WithKind(s.ResourceKind()))
 }

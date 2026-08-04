@@ -837,7 +837,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperStatus":                               schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZookeeperRef":                                  schema_apimachinery_apis_kubedb_v1alpha2_ZookeeperRef(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.aerospikeApp":                                  schema_apimachinery_apis_kubedb_v1alpha2_aerospikeApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.aerospikeStatsService":                         schema_apimachinery_apis_kubedb_v1alpha2_aerospikeStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.db2App":                                        schema_apimachinery_apis_kubedb_v1alpha2_db2App(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.db2StatsService":                               schema_apimachinery_apis_kubedb_v1alpha2_db2StatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBApp":                                 schema_apimachinery_apis_kubedb_v1alpha2_documentDBApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBStatsService":                        schema_apimachinery_apis_kubedb_v1alpha2_documentDBStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchApp":                              schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchStatsService":                     schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.hanaRaftProvider":                              schema_apimachinery_apis_kubedb_v1alpha2_hanaRaftProvider(ref),
@@ -47698,7 +47703,107 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ZookeeperRef(ref common.ReferenceC
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_aerospikeApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Aerospike": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Aerospike"),
+						},
+					},
+				},
+				Required: []string{"Aerospike"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Aerospike"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_aerospikeStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Aerospike": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Aerospike"),
+						},
+					},
+				},
+				Required: []string{"Aerospike"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Aerospike"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_db2App(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"DB2": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2"),
+						},
+					},
+				},
+				Required: []string{"DB2"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_db2StatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"DB2": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2"),
+						},
+					},
+				},
+				Required: []string{"DB2"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_documentDBApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"DocumentDB": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"),
+						},
+					},
+				},
+				Required: []string{"DocumentDB"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_documentDBStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{

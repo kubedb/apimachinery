@@ -58,6 +58,14 @@ type SecretMetadataSpec struct {
 	// Defaulted to nil.
 	// +optional
 	Immutable *bool `json:"immutable,omitempty"`
+
+	// DataLength specifies the count of data stored in the Virtual Secret
+	// +optional
+	DataLength int `json:"dataLength,omitempty"`
+
+	// DataHash specifies the hash value of the data stored in the Virtual Secret
+	// +optional
+	DataHash string `json:"dataHash,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

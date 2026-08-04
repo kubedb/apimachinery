@@ -926,9 +926,13 @@ const (
 	MinioAddressName   = "MINIO_ADDRESS"
 	MinioAddressKey    = "address"
 	MinioAccessKeyName = "MINIO_ACCESS_KEY"
-	MinioAccessKey     = "accesskey"
+	MinioAccessKey     = "accessKeyID"
 	MinioSecretKeyName = "MINIO_SECRET_KEY"
-	MinioSecretKey     = "secretkey"
+	MinioSecretKey     = "secretAccessKey"
+	MinioPortName      = "MINIO_PORT"
+	MinioPortKey       = "port"
+	MinioBucketName    = "MINIO_BUCKET_NAME"
+	MinioBucketKey     = "bucketName"
 
 	MilvusMetricsPort       = 9091
 	MilvusUIPort            = 9091
@@ -2491,6 +2495,10 @@ const (
 	// adopted onto cloned PVCs (created by the Courier Branch operator) instead of being provisioned
 	// empty. Its value records the branch provenance, e.g. {"cluster": "prod-east", "source": "demo/prod-pg"}.
 	BranchedFromAnnotation = "kubedb.com/branched-from"
+
+	// SkipBackupPauseAnnotation, when set to "true" on an OpsRequest, prevents the
+	// ops-manager from pausing the BackupConfiguration before executing the operation.
+	SkipBackupPauseAnnotation = "kubedb.com/skip-backup-pause"
 
 	// Archiver
 	OwnerDatabasesAnnotation                  = "kubedb.com/owner-databases"

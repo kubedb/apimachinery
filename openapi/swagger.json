@@ -25985,6 +25985,10 @@
           "default": {},
           "$ref": "#/definitions/xyz.kmodules.custom-resources.apis.appcatalog.v1alpha1.StashAddonSpec"
         },
+        "tde": {
+          "description": "TDE describes Transparent Data Encryption (pg_tde) support for this version.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTDE"
+        },
         "tls": {
           "description": "PostgresVersionTLSSpec is used to set postgres version specific tls settings",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTLSSpec"
@@ -26005,6 +26009,24 @@
           "description": "Version",
           "type": "string",
           "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionTDE": {
+      "description": "PostgresVersionTDE describes Transparent Data Encryption support for a PostgresVersion. It is only non-nil for Percona Server for PostgreSQL builds that bundle the pg_tde extension and the tde_heap access method.",
+      "type": "object",
+      "required": [
+        "supported"
+      ],
+      "properties": {
+        "extensionName": {
+          "description": "ExtensionName is the extension to preload and CREATE. Defaults to \"pg_tde\".",
+          "type": "string"
+        },
+        "supported": {
+          "description": "Supported is true when this image bundles pg_tde and a Percona Server for PostgreSQL build capable of the tde_heap access method.",
+          "type": "boolean",
+          "default": false
         }
       }
     },
@@ -32469,12 +32491,16 @@
           "$ref": "#/definitions/io.k8s.api.core.v1.TypedLocalObjectReference"
         },
         "mode": {
-          "description": "Group Replication can be deployed in either \"Single-Primary\" or \"Multi-Primary\" mode",
+          "description": "Mode is the Group Replication primary mode, i.e. the primary mode *within* the group: either \"Single-Primary\" or \"Multi-Primary\". It applies only when targetTopologyMode is \"GroupReplication\" or \"InnoDBCluster\"; it is ignored for \"SemiSync\", which has no group.",
           "type": "string"
         },
         "requireSSL": {
           "description": "Indicates that the database server need to be encrypted connections(ssl)",
           "type": "boolean"
+        },
+        "targetTopologyMode": {
+          "description": "TargetTopologyMode is the clustered topology to transform the database into, i.e. the value that ends up in the database's spec.topology.mode. Supported values are \"GroupReplication\", \"InnoDBCluster\" and \"SemiSync\". This enables promoting a standalone MySQL (or transforming a remote replica) into a clustered topology.",
+          "type": "string"
         }
       }
     },
@@ -32869,6 +32895,16 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresEnableWALEncryptionSpec": {
+      "description": "PostgresEnableWALEncryptionSpec turns on cluster-wide WAL encryption (pg_tde.wal_encrypt=on). It sets the server key and performs a rolling restart.",
+      "type": "object",
+      "properties": {
+        "keyName": {
+          "description": "KeyName is the server key name for WAL encryption. When empty the operator derives it from the principal key name. It is interpolated into pg_tde SQL run as the Postgres superuser, so it is constrained to a safe identifier charset to keep it from being used for SQL injection.",
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresForceFailOver": {
       "type": "object",
       "properties": {
@@ -32996,6 +33032,10 @@
           "default": {},
           "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
         },
+        "enableWALEncryption": {
+          "description": "Specifies information necessary for enabling TDE (pg_tde) WAL encryption",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresEnableWALEncryptionSpec"
+        },
         "forceFailOver": {
           "description": "Forcefully do a failover to the given candidate",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresForceFailOver"
@@ -33019,6 +33059,10 @@
         "restart": {
           "description": "Specifies information necessary for restarting database",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.RestartSpec"
+        },
+        "rotatePrincipalKey": {
+          "description": "Specifies information necessary for rotating the TDE (pg_tde) principal key",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresRotatePrincipalKeySpec"
         },
         "setRaftKeyPair": {
           "description": "Set given key pairs to raft storage",
@@ -33057,6 +33101,16 @@
         "readyTimeOut": {
           "description": "ReadyTimeOut is the time to wait for standby`s to become ready",
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresRotatePrincipalKeySpec": {
+      "description": "PostgresRotatePrincipalKeySpec rotates the pg_tde principal key of a TDE enabled Postgres. The principal key wraps the internal keys, so rotation does not rewrite any data.",
+      "type": "object",
+      "properties": {
+        "keyName": {
+          "description": "KeyName is the new principal key name to set with the configured key provider. When empty the operator derives a new name from the database name and a monotonic suffix. It is interpolated into pg_tde SQL run as the Postgres superuser, so it is constrained to a safe identifier charset to keep it from being used for SQL injection.",
+          "type": "string"
         }
       }
     },

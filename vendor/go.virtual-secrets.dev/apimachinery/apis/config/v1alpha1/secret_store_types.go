@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -44,6 +45,20 @@ type SecretStore struct {
 // SecretStoreSpec defines the desired state of SecretStore
 type SecretStoreSpec struct {
 	Vault *Vault `json:"vault,omitempty"`
+
+	// +optional
+	AWS *AWS `json:"aws,omitempty"`
+
+	// +optional
+	Azure *Azure `json:"azure,omitempty"`
+
+	// +optional
+	GCP *GCP `json:"gcp,omitempty"`
+
+	// **For Dev Mode Only**
+	// We can use a secret as the Secret Store for testing
+	// +optional
+	Secret *Secret `json:"secret,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -62,6 +77,45 @@ type Vault struct {
 	// Name of the vault role to use for the operator
 	// +optional
 	RoleName string `json:"roleName,omitempty"`
+}
+
+type AWS struct {
+	// SecretRef defines a secret that contains the
+	// AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+	// +optional
+	SecretRef *kmapi.ObjectReference `json:"secretRef,omitempty"`
+
+	// Region specifies the AWS region where the Secret will be stored
+	Region string `json:"region,omitempty"`
+}
+
+type Azure struct {
+	// SecretRef defines a secret that contains the
+	// AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+	SecretRef *kmapi.ObjectReference `json:"secretRef,omitempty"`
+
+	// The Azure Key Vault Provider offers four modes for accessing a Key Vault instance
+	// Workload Identity, Pod Identity, Managed Identities, Service Principal
+	// Pod Identity, Managed Identities are not supported yet
+	// +kubebuilder:validation:Enum=WorkloadIdentity;ServicePrincipal
+	AccessMode string `json:"accessMode,omitempty"`
+
+	KeyVaultName string `json:"keyVaultName,omitempty"`
+}
+
+type GCP struct {
+	// SecretRef defines a secret that contains the json file with all data
+	// client_id, client_secret etc
+	SecretRef *kmapi.ObjectReference `json:"secretRef,omitempty"`
+
+	// Region specifies the GCP region where the Secret will be stored
+	Region string `json:"region,omitempty"`
+}
+
+type Secret struct {
+	// Name and namespace of the Secret which will work as the Secret Manager
+	// +optional
+	*kmapi.ObjectReference `json:",omitempty"`
 }
 
 func init() {
