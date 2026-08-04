@@ -625,6 +625,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBReplication":                         schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBReplication(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBTLSConfig":                           schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBTuningConfig":                        schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBTuningConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Druid":                                         schema_apimachinery_apis_kubedb_v1alpha2_Druid(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidApp":                                      schema_apimachinery_apis_kubedb_v1alpha2_DruidApp(ref),
@@ -35821,6 +35822,19 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"sslMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SSLMode for the DocumentDB Postgres server. [disable;allow;prefer;require;verify-ca;verify-full]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains tls configurations for client and server (via cert-manager), and gateway mTLS settings.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBTLSConfig"),
+						},
+					},
 					"storageType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "StorageType can be durable (default) or ephemeral",
@@ -35914,7 +35928,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBReplication", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBReplication", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -35957,6 +35971,34 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBStatus(ref common.Refere
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DocumentDBTLSConfig contains tls configurations for client and server (via cert-manager), plus a toggle for whether the MongoDB-wire gateway listener enforces mutual TLS.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains tls configurations for client and server (via cert-manager). It provisions certs for the Postgres server, the replication client, and the MongoDB gateway.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
+					"gatewayMutualTLSEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GatewayMutualTLSEnabled controls whether the MongoDB-wire gateway listener requires clients to present a valid certificate (mutual TLS), independent of the general TLS config. If unset, mutual TLS is enabled for the gateway for backward compatibility.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.TLSConfig"},
 	}
 }
 

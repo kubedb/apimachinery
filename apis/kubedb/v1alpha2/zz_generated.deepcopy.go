@@ -1451,6 +1451,11 @@ func (in *DocumentDBSpec) DeepCopyInto(out *DocumentDBSpec) {
 		*out = new(DocDBStreamingMode)
 		**out = **in
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(DocumentDBTLSConfig)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Storage != nil {
 		in, out := &in.Storage, &out.Storage
 		*out = new(corev1.PersistentVolumeClaimSpec)
@@ -1497,11 +1502,6 @@ func (in *DocumentDBSpec) DeepCopyInto(out *DocumentDBSpec) {
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
 		*out = new(InitSpec)
-		(*in).DeepCopyInto(*out)
-	}
-	if in.TLS != nil {
-		in, out := &in.TLS, &out.TLS
-		*out = new(DocumentDBTLSConfig)
 		(*in).DeepCopyInto(*out)
 	}
 	return

@@ -35423,6 +35423,20 @@ func schema_apimachinery_apis_ops_v1alpha1_DocumentDBTLSSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"sslMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SSLMode for the DocumentDB Postgres server. [disable;allow;prefer;require;verify-ca;verify-full]",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"clientAuthMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
