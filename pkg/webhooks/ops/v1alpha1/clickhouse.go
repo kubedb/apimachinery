@@ -329,30 +329,20 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScaling
 	}
 
 	if horizontalScalingSpec.ClickHouseKeeper != nil {
-		if *horizontalScalingSpec.ClickHouseKeeper <= 0 {
-			return errors.New("`spec.horizontalScaling.clickHouseKeeper` must be greater than 0")
-		}
 		if err := rv.validateClickHouseKeeperOpsRequest(db); err != nil {
 			return fmt.Errorf("clickHouseKeeper: %w", err)
 		}
-		// Scale-down is not supported for internally-managed keeper.
-		// nuraft persists the server list in the raft changelog on disk.
-		// Removing keeper pods breaks quorum because the persisted state
-		// still expects the old, larger membership. The remove_srv operation
-		// cannot be committed without quorum.
-		if db.Spec.ClusterTopology != nil &&
-			db.Spec.ClusterTopology.ClickHouseKeeper != nil &&
-			!db.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged &&
-			db.Spec.ClusterTopology.ClickHouseKeeper.Spec != nil &&
-			db.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas != nil {
-			currentKeeper := *db.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas
-			if *horizontalScalingSpec.ClickHouseKeeper < currentKeeper {
-				return fmt.Errorf(
-					"scale-down of internally-managed ClickHouseKeeper is not supported: "+
-						"current replicas = %d, requested = %d",
-					currentKeeper, *horizontalScalingSpec.ClickHouseKeeper,
-				)
-			}
+		target := *horizontalScalingSpec.ClickHouseKeeper
+		if target <= 0 {
+			return errors.New("`spec.horizontalScaling.clickHouseKeeper` must be greater than 0")
+		}
+		// Only meaningful before the request starts: once it succeeds the database
+		// really does have the requested replica count, and re-validating would
+		// reject the operator's own closing status update.
+		current := db.Spec.ClusterTopology.ClickHouseKeeper.Spec.Replicas
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") &&
+			current != nil && target == *current {
+			return fmt.Errorf("clickHouseKeeper already has %d replicas", target)
 		}
 	}
 
@@ -446,6 +436,9 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseKeeperOpsRequest(
 	}
 	if db.Spec.ClusterTopology.ClickHouseKeeper.ExternallyManaged {
 		return errors.New("clickHouseKeeper is externally managed; ops are not supported")
+	}
+	if db.Spec.ClusterTopology.ClickHouseKeeper.Spec == nil {
+		return errors.New("spec.clusterTopology.clickHouseKeeper.spec is not set")
 	}
 	return nil
 }
