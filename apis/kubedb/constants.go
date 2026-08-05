@@ -2200,7 +2200,7 @@ var (
 	DefaultResourcesCoreAndMemoryIntensiveOracle = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse("2"),
-			core.ResourceMemory: resource.MustParse("7Gi"),
+			core.ResourceMemory: resource.MustParse("10Gi"),
 		},
 		Limits: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse("4"),
