@@ -364,14 +364,30 @@ var mySqlReservedVolumeMountPaths = []string{
 	kubedb.MySQLVolumeMountPathSourceCA,
 }
 
+// archiverRestoreInProgress reports whether the incoming object is marked as being
+// restored in place by an ArchiverRestore MySQLOpsRequest. It is deliberately read
+// from the *new* object: the ops-manager adds the annotation in the same patch that
+// rewrites spec.init, so requiring it on the old object would reject that first patch.
+func archiverRestoreInProgress(obj *dbapi.MySQL) bool {
+	_, ok := obj.Annotations[kubedb.MySQLArchiverRestoreAnnotation]
+	return ok
+}
+
 func validateUpdate(obj, oldObj *dbapi.MySQL) error {
 	preconditions := meta_util.PreConditionSet{
 		Set: sets.New[string](
 			"spec.storageType",
 		),
 	}
-	// Once the database has been initialized, don't let update the "spec.init" section
-	if oldObj.Spec.Init != nil && oldObj.Spec.Init.Initialized {
+	// Once the database has been initialized, don't let update the "spec.init" section.
+	//
+	// The exception is an in-place archiver restore: an ArchiverRestore MySQLOpsRequest
+	// has to write spec.init.archiver and flip spec.init.initialized back to false on an
+	// already-provisioned database, which is precisely the update this precondition
+	// blocks. The ops-manager marks the object with MySQLArchiverRestoreAnnotation for
+	// the duration of that request and removes it afterwards, so immutability is only
+	// lifted while a restore is actually in flight.
+	if oldObj.Spec.Init != nil && oldObj.Spec.Init.Initialized && !archiverRestoreInProgress(obj) {
 		preconditions.Insert("spec.init")
 	}
 	_, err := meta_util.CreateStrategicPatch(oldObj, obj, preconditions.PreconditionFunc()...)

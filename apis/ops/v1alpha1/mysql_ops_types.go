@@ -78,6 +78,8 @@ type MySQLOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for migrating storageClass or data
 	Migration *StorageMigrationSpec `json:"migration,omitempty"`
+	// Specifies information necessary for restoring the database in place from its archiver backup
+	Archiver *MySQLArchiverRestoreSpec `json:"archiver,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -87,9 +89,27 @@ type MySQLOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth;ReplicationModeTransformation;StorageMigration
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, ReplicationModeTransformation, StorageMigration)
+// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth;ReplicationModeTransformation;StorageMigration;ArchiverRestore
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, ReplicationModeTransformation, StorageMigration, ArchiverRestore)
 type MySQLOpsRequestType string
+
+// MySQLArchiverRestoreSpec carries the archiver recovery information for an
+// ArchiverRestore ops request.
+//
+// An archiver restore needs an empty data directory, which is why the documented
+// flow restores into a *new* MySQL object by setting its spec.init.archiver.
+// ArchiverRestore does the same thing in place: the ops request wipes the data
+// volumes of the referenced database and then writes this payload into the
+// database's own spec.init.archiver, so the provisioner runs the exact same
+// restore path it runs for a freshly created restore target.
+//
+// The fields are therefore literally dbapi.ArchiverRecovery — recoveryTimestamp,
+// encryptionSecret, manifestRepository, fullDBRepository, replicationStrategy and
+// manifestOptions — embedded inline rather than redeclared, so the two stay in
+// step by construction.
+type MySQLArchiverRestoreSpec struct {
+	dbapi.ArchiverRecovery `json:",inline"`
+}
 
 // MySQLReplicaReadinessCriteria is the criteria for checking readiness of a MySQL pod
 // after updating, horizontal scaling etc.

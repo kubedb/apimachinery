@@ -28179,6 +28179,23 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1.ManifestOptions": {
+      "type": "object",
+      "properties": {
+        "archiver": {
+          "description": "Archiver specifies whether to restore the Archiver manifest or not",
+          "type": "boolean"
+        },
+        "archiverRef": {
+          "description": "ArchiverRef specifies the new name and namespace of the Archiver yaml after restore",
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "initScript": {
+          "description": "InitScript specifies whether to restore the InitScript or not",
+          "type": "boolean"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.Age": {
       "type": "object",
       "properties": {
@@ -32302,6 +32319,35 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLArchiverRestoreSpec": {
+      "description": "MySQLArchiverRestoreSpec carries the archiver recovery information for an ArchiverRestore ops request.\n\nAn archiver restore needs an empty data directory, which is why the documented flow restores into a *new* MySQL object by setting its spec.init.archiver. ArchiverRestore does the same thing in place: the ops request wipes the data volumes of the referenced database and then writes this payload into the database's own spec.init.archiver, so the provisioner runs the exact same restore path it runs for a freshly created restore target.\n\nThe fields are therefore literally dbapi.ArchiverRecovery — recoveryTimestamp, encryptionSecret, manifestRepository, fullDBRepository, replicationStrategy and manifestOptions — embedded inline rather than redeclared, so the two stay in step by construction.",
+      "type": "object",
+      "required": [
+        "recoveryTimestamp"
+      ],
+      "properties": {
+        "encryptionSecret": {
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "fullDBRepository": {
+          "description": "FullDBRepository means db restore + manifest restore",
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "manifestOptions": {
+          "description": "ManifestOptions provide options to select particular manifest object to restore",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1.ManifestOptions"
+        },
+        "manifestRepository": {
+          "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
+        },
+        "recoveryTimestamp": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "replicationStrategy": {
+          "type": "string"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLHorizontalScalingSpec": {
       "type": "object",
       "properties": {
@@ -32388,6 +32434,10 @@
         "apply": {
           "description": "ApplyOption is to control the execution of OpsRequest depending on the database state.",
           "type": "string"
+        },
+        "archiver": {
+          "description": "Specifies information necessary for restoring the database in place from its archiver backup",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.MySQLArchiverRestoreSpec"
         },
         "authentication": {
           "description": "Specifies information necessary for configuring authSecret of the database",

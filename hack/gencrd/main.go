@@ -25,6 +25,7 @@ import (
 	courierinstall "kubedb.dev/apimachinery/apis/courier/install"
 	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 	kubedbinstall "kubedb.dev/apimachinery/apis/kubedb/install"
+	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsinstall "kubedb.dev/apimachinery/apis/ops/install"
 	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -66,6 +67,11 @@ func generateSwaggerJson() {
 			},
 		},
 		OpenAPIDefinitions: []common.GetOpenAPIDefinitions{
+			// ops/v1alpha1 reuses kubedb/v1 types directly (MySQLOpsRequest's
+			// spec.archiver embeds kubedb/v1.ArchiverRecovery, which refers to
+			// kubedb/v1.ManifestOptions). Without kubedb/v1 in the definition set the
+			// renderer cannot resolve those $refs and swagger generation fails.
+			kubedbv1.GetOpenAPIDefinitions,
 			kubedbv1alpha2.GetOpenAPIDefinitions,
 			catalogv1alpha1.GetOpenAPIDefinitions,
 			opsv1alpha1.GetOpenAPIDefinitions,

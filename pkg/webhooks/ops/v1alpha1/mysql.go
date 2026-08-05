@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
@@ -39,6 +40,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	cu "kmodules.xyz/client-go/client"
 	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -97,6 +99,14 @@ func (w *MySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 		var db dbapi.MySQL
 		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: ops.Spec.DatabaseRef.Name, Namespace: ops.Namespace}, &db)
 		if err != nil {
+			return nil, err
+		}
+		// An ArchiverRestore marks the database so its spec.init can be rewritten in
+		// place. Clearing the marker here rather than only in the ops-manager covers
+		// every way the request can conclude — including a step timeout, which fails
+		// the request from a goroutine that never returns to the restore's own
+		// cleanup path — so spec.init does not stay permanently mutable.
+		if err := clearArchiverRestoreMarker(w.DefaultClient, ops, &db); err != nil {
 			return nil, err
 		}
 		return nil, resumeDatabase(w.DefaultClient, &db)
@@ -185,7 +195,19 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				req.Name,
 				err.Error()))
 		}
-
+	case opsapi.MySQLOpsRequestTypeArchiverRestore:
+		// Create-time check only, for the same reason as ReplicationModeTransformation:
+		// the restore deliberately mutates the database (spec.init is rewritten, the
+		// topology briefly runs on a single member) while the request is in flight, so
+		// re-validating on every status write would reject the controller's own
+		// progress. spec is immutable on update via validateMySQLOpsRequest.
+		if isCreate {
+			if err := w.validateMySQLArchiverRestoreOpsRequest(db, req); err != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("archiver"),
+					req.Name,
+					err.Error()))
+			}
+		}
 	}
 
 	if len(allErr) == 0 {
@@ -417,6 +439,98 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(d
 		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
 			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
 		}
+	}
+
+	return nil
+}
+
+// clearArchiverRestoreMarker removes the annotation that lets an ArchiverRestore
+// rewrite spec.init on an already-initialized database. It is a no-op for every
+// other ops request type and for a database that is not marked.
+func clearArchiverRestoreMarker(kc client.Client, ops *opsapi.MySQLOpsRequest, db *dbapi.MySQL) error {
+	if opsapi.MySQLOpsRequestType(ops.GetRequestType()) != opsapi.MySQLOpsRequestTypeArchiverRestore {
+		return nil
+	}
+	if _, ok := db.Annotations[kubedb.MySQLArchiverRestoreAnnotation]; !ok {
+		return nil
+	}
+	_, err := cu.CreateOrPatch(context.TODO(), kc, db, func(obj client.Object, createOp bool) client.Object {
+		in := obj.(*dbapi.MySQL)
+		delete(in.Annotations, kubedb.MySQLArchiverRestoreAnnotation)
+		return in
+	})
+	return err
+}
+
+// validateMySQLArchiverRestoreOpsRequest validates an in-place archiver restore.
+//
+// The request wipes the database's data volumes and re-initializes it through the
+// provisioner's normal archiver-recovery path, so everything the provisioner needs
+// in order to reach that path has to be present up front: an archiver payload, a
+// data repository to restore from, durable storage, and a topology whose entrypoint
+// script actually honours PITR_RESTORE.
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLArchiverRestoreOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
+	archiver := req.Spec.Archiver
+	if archiver == nil {
+		return errors.New("spec.archiver is required for an ArchiverRestore ops request")
+	}
+
+	if archiver.RecoveryTimestamp.IsZero() {
+		return errors.New("spec.archiver.recoveryTimestamp is required for an ArchiverRestore ops request")
+	}
+
+	// The physical data (base backup + binlogs) is restored from fullDBRepository.
+	// manifestRepository alone only restores the KubeDB manifests, which would leave
+	// the wiped data directory empty.
+	if archiver.FullDBRepository == nil {
+		return errors.New("spec.archiver.fullDBRepository is required for an ArchiverRestore ops request; a manifest-only restore cannot repopulate the wiped data directory")
+	}
+
+	if archiver.ReplicationStrategy != nil {
+		switch *archiver.ReplicationStrategy {
+		case dbapi.ReplicationStrategySync, dbapi.ReplicationStrategyFSCopy,
+			dbapi.ReplicationStrategyClone, dbapi.ReplicationStrategyNone:
+		default:
+			return fmt.Errorf("unsupported spec.archiver.replicationStrategy %q; supported values are %q, %q, %q and %q",
+				*archiver.ReplicationStrategy, dbapi.ReplicationStrategySync, dbapi.ReplicationStrategyFSCopy,
+				dbapi.ReplicationStrategyClone, dbapi.ReplicationStrategyNone)
+		}
+	}
+
+	// The restore replaces the contents of the data PVCs. An ephemeral database has
+	// none, so there is nothing to restore into.
+	if db.Spec.StorageType == dbapi.StorageTypeEphemeral {
+		return fmt.Errorf("database %s/%s uses %q storage: an archiver restore requires durable storage",
+			db.Namespace, db.Name, dbapi.StorageTypeEphemeral)
+	}
+
+	// Only the entrypoints that wait on /tmp/recovery.done can be restored into:
+	// standalone-run.sh (Standalone), run.sh (GroupReplication) and run_innodb.sh
+	// (InnoDBCluster). run_semi_sync.sh has no PITR_RESTORE gate, so a SemiSync member
+	// would start mysqld on top of a half-restored data directory. A RemoteReplica has
+	// no restore path at all — it is seeded from its source.
+	if db.IsRemoteReplica() {
+		return fmt.Errorf("database %s/%s is a remote replica: an archiver restore is not supported, restore the source database instead",
+			db.Namespace, db.Name)
+	}
+	if db.IsSemiSync() {
+		return fmt.Errorf("database %s/%s runs in %q mode: an archiver restore is only supported for Standalone, %q and %q",
+			db.Namespace, db.Name, dbapi.MySQLModeSemiSync, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster)
+	}
+	if db.Spec.Topology != nil && !db.UsesGroupReplication() && !db.IsInnoDBCluster() {
+		mode := "unknown"
+		if db.Spec.Topology.Mode != nil {
+			mode = string(*db.Spec.Topology.Mode)
+		}
+		return fmt.Errorf("database %s/%s runs in %q mode: an archiver restore is only supported for Standalone, %q and %q",
+			db.Namespace, db.Name, mode, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster)
+	}
+
+	// The restore is a multi-stage, data-sized operation (base backup restore, binlog
+	// replay, then re-seeding the remaining members). The default per-step budget of
+	// 5 minutes per pod is unrelated to how long that actually takes.
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for an ArchiverRestore ops request, adjust it according to the size of your database")
 	}
 
 	return nil

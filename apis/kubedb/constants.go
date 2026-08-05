@@ -294,6 +294,18 @@ const (
 	MySQLComponentRouter  = "router"
 	MySQLCustomConfigFile = "my-inline.cnf"
 
+	// MySQLArchiverRestoreAnnotation is set on a MySQL object by the ops-manager while
+	// an ArchiverRestore MySQLOpsRequest is rewriting that object's spec.init in place;
+	// its value is the name of the ops request driving the restore.
+	//
+	// spec.init is immutable once spec.init.initialized is true (see validateUpdate in
+	// the MySQL webhook), which is exactly the state every provisioned database is in.
+	// An in-place archiver restore has to set spec.init.archiver and flip
+	// spec.init.initialized back to false, so the webhook lifts that precondition for
+	// objects carrying this annotation. The ops request removes the annotation once the
+	// restore finishes, which restores the normal immutability.
+	MySQLArchiverRestoreAnnotation = "ops.kubedb.com/archiver-restore"
+
 	// mysql volume and volume Mounts
 
 	MySQLVolumeNameTemp      = "tmp"

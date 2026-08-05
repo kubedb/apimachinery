@@ -333,6 +333,32 @@ const (
 	DBPatchSucceeded             = "DBPatchSucceeded"
 	RestartMaxscale              = "RestartMaxscale"
 	RestartMaxscalePodsSucceeded = "RestartMaxscalePodsSucceeded"
+
+	// Per-step conditions of an in-place ArchiverRestore, in the order they are
+	// reached. Each one is also the resume point: a step whose condition is already
+	// True is skipped when the ops-manager re-enters the request.
+	ArchiverRestoreRetainPV     = "ArchiverRestoreRetainPV"
+	ArchiverRestoreWipeVolumes  = "ArchiverRestoreWipeVolumes"
+	ArchiverRestoreTriggered    = "ArchiverRestoreTriggered"
+	ArchiverRestoreDataRestored = "ArchiverRestoreDataRestored"
+
+	ArchiverRestoreRetainPVSucceeded      = "ArchiverRestoreRetainPVSucceeded"
+	ArchiverRestoreWipeVolumesSucceeded   = "ArchiverRestoreWipeVolumesSucceeded"
+	ArchiverRestoreTriggeredSucceeded     = "ArchiverRestoreTriggeredSucceeded"
+	ArchiverRestoreDataRestoredSucceeded  = "ArchiverRestoreDataRestoredSucceeded"
+	ArchiverRestoreDatabaseReadySucceeded = "ArchiverRestoreDatabaseReadySucceeded"
+
+	ArchiverRestoreRetainPVFailed      = "ArchiverRestoreRetainPVFailed"
+	ArchiverRestoreWipeVolumesFailed   = "ArchiverRestoreWipeVolumesFailed"
+	ArchiverRestoreTriggeredFailed     = "ArchiverRestoreTriggeredFailed"
+	ArchiverRestoreDataRestoredFailed  = "ArchiverRestoreDataRestoredFailed"
+	ArchiverRestoreDatabaseReadyFailed = "ArchiverRestoreDatabaseReadyFailed"
+
+	// ArchiverRestoreManualCleanupRequired is set (with status False) when a failed
+	// ArchiverRestore leaves state the operator has to look at by hand — released
+	// PersistentVolumes still forced to Retain, or a database whose data directory
+	// was already wiped before the failure.
+	ArchiverRestoreManualCleanupRequired = "ArchiverRestoreManualCleanupRequired"
 )
 
 // Postgres Constants
