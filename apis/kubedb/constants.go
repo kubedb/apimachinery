@@ -294,16 +294,16 @@ const (
 	MySQLComponentRouter  = "router"
 	MySQLCustomConfigFile = "my-inline.cnf"
 
-	// MySQLArchiverRestoreAnnotation is set on a MySQL object by the ops-manager while
-	// an ArchiverRestore MySQLOpsRequest is rewriting that object's spec.init in place;
-	// its value is the name of the ops request driving the restore.
+	// MySQLArchiverRestoreAnnotation tags the in-memory copy of a MySQL object that the
+	// provisioner reconciles while an ArchiverRestore MySQLOpsRequest is restoring that
+	// database onto itself; its value is the name of the ops request driving the restore.
 	//
-	// spec.init is immutable once spec.init.initialized is true (see validateUpdate in
-	// the MySQL webhook), which is exactly the state every provisioned database is in.
-	// An in-place archiver restore has to set spec.init.archiver and flip
-	// spec.init.initialized back to false, so the webhook lifts that precondition for
-	// objects carrying this annotation. The ops request removes the annotation once the
-	// restore finishes, which restores the normal immutability.
+	// It is deliberately never persisted. An in-place restore writes nothing to the
+	// database -- the recovery payload stays on the ops request and is injected into a
+	// copy (see withInPlaceArchiverRecovery in kubedb.dev/mysql). This annotation is how
+	// the restore path on that copy tells "restoring myself", where the KubeDB-side
+	// manifests already exist, from "fresh object pointed at someone else's backup",
+	// where they have to be created.
 	MySQLArchiverRestoreAnnotation = "ops.kubedb.com/archiver-restore"
 
 	// mysql volume and volume Mounts

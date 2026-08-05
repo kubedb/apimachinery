@@ -23,7 +23,6 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
-	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
@@ -40,7 +39,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
-	cu "kmodules.xyz/client-go/client"
 	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -101,14 +99,20 @@ func (w *MySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 		if err != nil {
 			return nil, err
 		}
-		// An ArchiverRestore marks the database so its spec.init can be rewritten in
-		// place. Clearing the marker here rather than only in the ops-manager covers
-		// every way the request can conclude — including a step timeout, which fails
-		// the request from a goroutine that never returns to the restore's own
-		// cleanup path — so spec.init does not stay permanently mutable.
-		if err := clearArchiverRestoreMarker(w.DefaultClient, ops, &db); err != nil {
-			return nil, err
-		}
+		// Deliberately no cleanup of the ArchiverRestore marker annotation here.
+		//
+		// It used to be cleared on any terminal phase, which is wrong: spec.init.archiver
+		// survives a failed restore, so the provisioner goes on retrying it, and the
+		// marker is what tells the provisioner the restore is in-place and that the
+		// manifest RestoreSession has to be skipped. Dropping the marker on failure
+		// flips those retries back to fresh-restore behaviour, where the manifest step
+		// tries to create an auth secret that already exists and fails forever.
+		//
+		// The marker is owned by the ops request's success path, which removes it after
+		// stripping spec.init. A restore abandoned after a failure leaves it in place;
+		// clear it by hand with
+		// `kubectl annotate mysql <db> ops.kubedb.com/archiver-restore-` once the
+		// database is settled.
 		return nil, resumeDatabase(w.DefaultClient, &db)
 	}
 	return nil, nil
@@ -444,24 +448,6 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(d
 	return nil
 }
 
-// clearArchiverRestoreMarker removes the annotation that lets an ArchiverRestore
-// rewrite spec.init on an already-initialized database. It is a no-op for every
-// other ops request type and for a database that is not marked.
-func clearArchiverRestoreMarker(kc client.Client, ops *opsapi.MySQLOpsRequest, db *dbapi.MySQL) error {
-	if opsapi.MySQLOpsRequestType(ops.GetRequestType()) != opsapi.MySQLOpsRequestTypeArchiverRestore {
-		return nil
-	}
-	if _, ok := db.Annotations[kubedb.MySQLArchiverRestoreAnnotation]; !ok {
-		return nil
-	}
-	_, err := cu.CreateOrPatch(context.TODO(), kc, db, func(obj client.Object, createOp bool) client.Object {
-		in := obj.(*dbapi.MySQL)
-		delete(in.Annotations, kubedb.MySQLArchiverRestoreAnnotation)
-		return in
-	})
-	return err
-}
-
 // validateMySQLArchiverRestoreOpsRequest validates an in-place archiver restore.
 //
 // The request wipes the database's data volumes and re-initializes it through the
@@ -531,6 +517,15 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLArchiverRestoreOpsRequest(db
 	// 5 minutes per pod is unrelated to how long that actually takes.
 	if req.Spec.Timeout == nil {
 		return errors.New("spec.timeout is required for an ArchiverRestore ops request, adjust it according to the size of your database")
+	}
+
+	// The default apply option, IfReady, holds the request Pending until the database
+	// reaches phase Ready. This request wipes the database, so on a rerun against one
+	// that a previous attempt already wiped, Ready never arrives and the request waits
+	// forever. Always swaps that for a Provisioned check, which survives the wipe.
+	if req.Spec.Apply != opsapi.ApplyOptionAlways {
+		return fmt.Errorf("spec.apply must be %q for an ArchiverRestore ops request; the default %q waits for the database to be Ready, which never happens once its volumes have been wiped",
+			opsapi.ApplyOptionAlways, opsapi.ApplyOptionIfReady)
 	}
 
 	return nil
