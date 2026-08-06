@@ -109,6 +109,32 @@ type MySQLOpsRequestType string
 // step by construction.
 type MySQLArchiverRestoreSpec struct {
 	dbapi.ArchiverRecovery `json:",inline"`
+
+	// RetainPV controls what happens to the data PersistentVolumes the restore
+	// replaces.
+	//
+	// An archiver restore deletes the database's data PVCs so the restore starts on an
+	// empty data directory. Whether the volumes behind them survive that is decided by
+	// their persistentVolumeReclaimPolicy, which usually comes from the StorageClass and
+	// is usually Delete.
+	//
+	// When true (the default), the ops request records each volume's original policy and
+	// forces every one of them to Retain before deleting anything, so the pre-restore
+	// data survives even if the restore fails partway. Volumes that are still Bound at
+	// the end get their original policy back; volumes the restore released keep Retain
+	// and are named in an ArchiverRestoreManualCleanupRequired condition, because handing
+	// Delete back to a Released volume destroys it within seconds -- which is exactly the
+	// copy Retain was protecting. Removing them stays an explicit operator action.
+	//
+	// When false, no reclaim policy is touched at all. The volumes are released with
+	// whatever policy they already had, so on the usual Delete they are reclaimed as soon
+	// as the restore wipes them and there is no going back to the pre-restore state. Set
+	// this only when the backup is the copy you trust and you would rather not clean up
+	// after every restore.
+	//
+	// +optional
+	// +kubebuilder:default=true
+	RetainPV *bool `json:"retainPV,omitempty"`
 }
 
 // MySQLReplicaReadinessCriteria is the criteria for checking readiness of a MySQL pod

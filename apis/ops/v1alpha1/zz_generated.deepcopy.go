@@ -4779,6 +4779,11 @@ func (in *MongosNode) DeepCopy() *MongosNode {
 func (in *MySQLArchiverRestoreSpec) DeepCopyInto(out *MySQLArchiverRestoreSpec) {
 	*out = *in
 	in.ArchiverRecovery.DeepCopyInto(&out.ArchiverRecovery)
+	if in.RetainPV != nil {
+		in, out := &in.RetainPV, &out.RetainPV
+		*out = new(bool)
+		**out = **in
+	}
 	return
 }
 

@@ -105,6 +105,9 @@ spec:
                     - sync
                     - none
                     type: string
+                  retainPV:
+                    default: true
+                    type: boolean
                 required:
                 - recoveryTimestamp
                 type: object
