@@ -1129,11 +1129,12 @@ const (
 	SolrZkDigest          = "zk-digest"
 	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
-	SolrVolumeDefaultConfig = "default-config"
-	SolrVolumeCustomConfig  = "custom-config"
-	SolrVolumeAuthConfig    = "auth-config"
-	SolrVolumeData          = "data"
-	SolrVolumeConfig        = "slconfig"
+	SolrVolumeDefaultConfig     = "default-config"
+	SolrVolumeCustomConfig      = "custom-config"
+	SolrVolumeAuthConfig        = "auth-config"
+	SolrVolumeData              = "data"
+	SolrVolumeConfig            = "slconfig"
+	SolrVolumeBackupCredentials = "backup-credentials"
 
 	DistLibs              = "/opt/solr/dist"
 	ContribLibs           = "/opt/solr/contrib/%s/lib"
@@ -1145,6 +1146,10 @@ const (
 	SolrSecurityConfigDir = "/var/security"
 	SolrZkReadyCondition  = "SolrZkReady"
 	SolrZkReady           = "ZookeeperReady"
+
+	// Must stay under SolrHomeDir; the Java SecurityManager policy denies reads elsewhere.
+	SolrBackupCredentialsDir  = "/var/solr/backup-credentials"
+	SolrGCSCredentialFileName = "cred.json"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""

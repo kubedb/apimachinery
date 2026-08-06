@@ -310,12 +310,22 @@ func (o Options) readAuthSecretRef() secretRefView {
 	return v
 }
 
+// patchAuthSecretRef pushes only the auth secret reference to the API server and
+// leaves the rest of o.DB alone
 func (o Options) patchAuthSecretRef(ctx context.Context, name string, activeFrom *metav1.Time) error {
-	_, err := cu.CreateOrPatch(ctx, o.KBClient, o.DB, func(in client.Object, _ bool) client.Object {
+	cp := o.DB.DeepCopyObject().(client.Object)
+	_, err := cu.Patch(ctx, o.KBClient, cp, func(in client.Object) client.Object {
 		setAuthSecretRef(in, name, activeFrom)
 		return in
 	})
-	return err
+	if err != nil {
+		return err
+	}
+
+	setAuthSecretRef(o.DB, name, activeFrom)
+	o.DB.SetResourceVersion(cp.GetResourceVersion())
+	o.DB.SetGeneration(cp.GetGeneration())
+	return nil
 }
 
 func setAuthSecretRef(db client.Object, name string, activeFrom *metav1.Time) {
