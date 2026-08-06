@@ -865,14 +865,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreUpdateVersionSpec":                     schema_apimachinery_apis_ops_v1alpha1_SinglestoreUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVerticalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_SinglestoreVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreVolumeExpansionSpec":                   schema_apimachinery_apis_ops_v1alpha1_SinglestoreVolumeExpansionSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrGCSCredentialSpec":                            schema_apimachinery_apis_ops_v1alpha1_SolrGCSCredentialSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrHorizontalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_SolrHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrMigrationSpec":                                schema_apimachinery_apis_ops_v1alpha1_SolrMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrOpsRequest":                                   schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrOpsRequestList":                               schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrOpsRequestSpec":                               schema_apimachinery_apis_ops_v1alpha1_SolrOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrReconfigurationSpec":                          schema_apimachinery_apis_ops_v1alpha1_SolrReconfigurationSpec(ref),
-		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrS3CredentialSpec":                             schema_apimachinery_apis_ops_v1alpha1_SolrS3CredentialSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrUpdateVersionSpec":                            schema_apimachinery_apis_ops_v1alpha1_SolrUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVerticalScalingSpec":                          schema_apimachinery_apis_ops_v1alpha1_SolrVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrVolumeExpansionSpec":                          schema_apimachinery_apis_ops_v1alpha1_SolrVolumeExpansionSpec(ref),
@@ -46090,36 +46088,6 @@ func schema_apimachinery_apis_ops_v1alpha1_SinglestoreVolumeExpansionSpec(ref co
 	}
 }
 
-func schema_apimachinery_apis_ops_v1alpha1_SolrGCSCredentialSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SolrGCSCredentialSpec references a Secret holding a GCS service account key.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"secretRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecretRef is the Secret containing the GCS service account key.",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"namespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Namespace of the referenced Secret. Defaults to the database namespace; a Secret elsewhere is copied in, since a pod can only mount its own namespace.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"secretRef"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference"},
-	}
-}
-
 func schema_apimachinery_apis_ops_v1alpha1_SolrHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -46443,47 +46411,17 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrReconfigurationSpec(ref common.Re
 					},
 					"s3": {
 						SchemaProps: spec.SchemaProps{
-							Description: "S3 credentials for an S3 backup repository, injected as environment variables.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrS3CredentialSpec"),
+							Description: "S3 references the Secret holding the S3 credentials for an S3 backup repository, injected as environment variables. The Secret must be in the database namespace.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"gcs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GCS credentials for a GCS backup repository, mounted as a file.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrGCSCredentialSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrGCSCredentialSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.SolrS3CredentialSpec"},
-	}
-}
-
-func schema_apimachinery_apis_ops_v1alpha1_SolrS3CredentialSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "SolrS3CredentialSpec references a Secret holding S3 credentials.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"secretRef": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecretRef is the Secret containing the S3 credentials.",
-							Default:     map[string]interface{}{},
+							Description: "GCS references the Secret holding the GCS service account key for a GCS backup repository, mounted as a file. The Secret must be in the database namespace.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"namespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Namespace of the referenced Secret. Defaults to the database namespace; a Secret elsewhere is copied in, since a pod can only mount its own namespace.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 				},
-				Required: []string{"secretRef"},
 			},
 		},
 		Dependencies: []string{

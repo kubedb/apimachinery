@@ -70,18 +70,18 @@ spec:
                     properties:
                       gcs:
                         properties:
-                          secretName:
+                          name:
+                            default: ""
                             type: string
-                        required:
-                        - secretName
                         type: object
+                        x-kubernetes-map-type: atomic
                       s3:
                         properties:
-                          secretName:
+                          name:
+                            default: ""
                             type: string
-                        required:
-                        - secretName
                         type: object
+                        x-kubernetes-map-type: atomic
                     type: object
                   inline:
                     additionalProperties:

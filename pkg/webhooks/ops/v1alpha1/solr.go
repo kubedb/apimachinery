@@ -28,8 +28,6 @@ import (
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	"gomodules.xyz/x/arrays"
-	"kubestash.dev/apimachinery/pkg/blob"
-
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -40,6 +38,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	meta_util "kmodules.xyz/client-go/meta"
+	"kubestash.dev/apimachinery/pkg/blob"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -369,32 +368,24 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 	}
 
 	if cfg.S3 != nil {
-		if cfg.S3.SecretRef.Name == "" {
-			return errors.New("`spec.configuration.s3.secretRef.name` must be specified")
+		if cfg.S3.Name == "" {
+			return errors.New("`spec.configuration.s3.name` must be specified")
 		}
-		ns := cfg.S3.Namespace
-		if ns == "" {
-			ns = req.Namespace
-		}
-		if _, err := w.getReferencedSecret(ns, cfg.S3.SecretRef.Name, "s3"); err != nil {
+		if _, err := w.getReferencedSecret(req.Namespace, cfg.S3.Name, "s3"); err != nil {
 			return err
 		}
 	}
 
 	if cfg.GCS != nil {
-		if cfg.GCS.SecretRef.Name == "" {
-			return errors.New("`spec.configuration.gcs.secretRef.name` must be specified")
+		if cfg.GCS.Name == "" {
+			return errors.New("`spec.configuration.gcs.name` must be specified")
 		}
-		ns := cfg.GCS.Namespace
-		if ns == "" {
-			ns = req.Namespace
-		}
-		secret, err := w.getReferencedSecret(ns, cfg.GCS.SecretRef.Name, "gcs")
+		secret, err := w.getReferencedSecret(req.Namespace, cfg.GCS.Name, "gcs")
 		if err != nil {
 			return err
 		}
 		if _, ok := secret.Data[blob.GoogleServiceAccountJSONKey]; !ok {
-			return fmt.Errorf("gcs secret %s/%s has no key %q holding the service account json", ns, secret.Name, blob.GoogleServiceAccountJSONKey)
+			return fmt.Errorf("gcs secret %s/%s has no key %q holding the service account json", req.Namespace, secret.Name, blob.GoogleServiceAccountJSONKey)
 		}
 	}
 

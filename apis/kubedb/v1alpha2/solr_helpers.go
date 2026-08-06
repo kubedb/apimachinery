@@ -113,14 +113,14 @@ func (s *Solr) SolrInlineConfigSecretKey(key string) string {
 	return fmt.Sprintf("%s-%s", kubedb.InlineConfigKeyPrefix, key)
 }
 
-func (s *Solr) S3BackupCredential() *SolrS3Credential {
+func (s *Solr) S3BackupCredential() *v1.LocalObjectReference {
 	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupCredentials == nil {
 		return nil
 	}
 	return s.Spec.Configuration.BackupCredentials.S3
 }
 
-func (s *Solr) GCSBackupCredential() *SolrGCSCredential {
+func (s *Solr) GCSBackupCredential() *v1.LocalObjectReference {
 	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupCredentials == nil {
 		return nil
 	}

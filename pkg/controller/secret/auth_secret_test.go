@@ -22,6 +22,7 @@ import (
 
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
+	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -78,7 +79,7 @@ func TestPatchAuthSecretRefDoesNotMutateCaller(t *testing.T) {
 					Inline: map[string]string{"solr.xml": "<solr/>"},
 				},
 				BackupCredentials: &dbapi.SolrBackupCredentials{
-					S3: &dbapi.SolrS3Credential{SecretName: "aws-s3-secret"},
+					S3: &core.LocalObjectReference{Name: "aws-s3-secret"},
 				},
 			},
 		},

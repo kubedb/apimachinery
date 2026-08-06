@@ -81,18 +81,11 @@ spec:
                     x-kubernetes-map-type: atomic
                   gcs:
                     properties:
-                      namespace:
+                      name:
+                        default: ""
                         type: string
-                      secretRef:
-                        properties:
-                          name:
-                            default: ""
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
-                    required:
-                    - secretRef
                     type: object
+                    x-kubernetes-map-type: atomic
                   removeCustomConfig:
                     type: boolean
                   restart:
@@ -104,18 +97,11 @@ spec:
                     type: string
                   s3:
                     properties:
-                      namespace:
+                      name:
+                        default: ""
                         type: string
-                      secretRef:
-                        properties:
-                          name:
-                            default: ""
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
-                    required:
-                    - secretRef
                     type: object
+                    x-kubernetes-map-type: atomic
                 type: object
               databaseRef:
                 properties:

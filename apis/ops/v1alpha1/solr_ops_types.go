@@ -91,32 +91,14 @@ type SolrOpsRequestSpec struct {
 // credentials Solr needs in order to authenticate with a backup repository.
 type SolrReconfigurationSpec struct {
 	ReconfigurationSpec `json:",inline,omitempty"`
-	// S3 credentials for an S3 backup repository, injected as environment variables.
+	// S3 references the Secret holding the S3 credentials for an S3 backup repository,
+	// injected as environment variables. The Secret must be in the database namespace.
 	// +optional
-	S3 *SolrS3CredentialSpec `json:"s3,omitempty"`
-	// GCS credentials for a GCS backup repository, mounted as a file.
+	S3 *core.LocalObjectReference `json:"s3,omitempty"`
+	// GCS references the Secret holding the GCS service account key for a GCS backup
+	// repository, mounted as a file. The Secret must be in the database namespace.
 	// +optional
-	GCS *SolrGCSCredentialSpec `json:"gcs,omitempty"`
-}
-
-// SolrS3CredentialSpec references a Secret holding S3 credentials.
-type SolrS3CredentialSpec struct {
-	// SecretRef is the Secret containing the S3 credentials.
-	SecretRef core.LocalObjectReference `json:"secretRef"`
-	// Namespace of the referenced Secret. Defaults to the database namespace;
-	// a Secret elsewhere is copied in, since a pod can only mount its own namespace.
-	// +optional
-	Namespace string `json:"namespace,omitempty"`
-}
-
-// SolrGCSCredentialSpec references a Secret holding a GCS service account key.
-type SolrGCSCredentialSpec struct {
-	// SecretRef is the Secret containing the GCS service account key.
-	SecretRef core.LocalObjectReference `json:"secretRef"`
-	// Namespace of the referenced Secret. Defaults to the database namespace;
-	// a Secret elsewhere is copied in, since a pod can only mount its own namespace.
-	// +optional
-	Namespace string `json:"namespace,omitempty"`
+	GCS *core.LocalObjectReference `json:"gcs,omitempty"`
 }
 
 type SolrVerticalScalingSpec struct {

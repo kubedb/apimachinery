@@ -817,10 +817,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBind":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrClusterTopology":                           schema_apimachinery_apis_kubedb_v1alpha2_SolrClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrConfiguration":                             schema_apimachinery_apis_kubedb_v1alpha2_SolrConfiguration(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrGCSCredential":                             schema_apimachinery_apis_kubedb_v1alpha2_SolrGCSCredential(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrList":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrNode":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrNode(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrS3Credential":                              schema_apimachinery_apis_kubedb_v1alpha2_SolrS3Credential(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrSpec":                                      schema_apimachinery_apis_kubedb_v1alpha2_SolrSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrStatus":                                    schema_apimachinery_apis_kubedb_v1alpha2_SolrStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SystemReplicationHealthSummary":                schema_apimachinery_apis_kubedb_v1alpha2_SystemReplicationHealthSummary(ref),
@@ -46491,21 +46489,21 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrBackupCredentials(ref common.R
 				Properties: map[string]spec.Schema{
 					"s3": {
 						SchemaProps: spec.SchemaProps{
-							Description: "S3 credentials, injected as environment variables.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrS3Credential"),
+							Description: "S3 references the Secret holding the S3 credentials, injected as environment variables.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"gcs": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GCS credentials, mounted as a file.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrGCSCredential"),
+							Description: "GCS references the Secret holding the GCS service account key, mounted as a file.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrGCSCredential", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrS3Credential"},
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
@@ -46602,27 +46600,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrConfiguration(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1alpha2_SolrGCSCredential(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"secretName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecretName is the Secret containing the GCS service account key.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"secretName"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1alpha2_SolrList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -46710,27 +46687,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrNode(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_SolrS3Credential(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"secretName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SecretName is the Secret containing the S3 credentials.",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"secretName"},
-			},
-		},
 	}
 }
 
