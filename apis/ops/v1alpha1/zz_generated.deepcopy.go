@@ -466,6 +466,11 @@ func (in *ClickHouseHorizontalScalingSpec) DeepCopyInto(out *ClickHouseHorizonta
 		*out = new(int32)
 		**out = **in
 	}
+	if in.ClickHouseKeeper != nil {
+		in, out := &in.ClickHouseKeeper, &out.ClickHouseKeeper
+		*out = new(int32)
+		**out = **in
+	}
 	return
 }
 
@@ -679,6 +684,11 @@ func (in *ClickHouseVerticalScalingSpec) DeepCopyInto(out *ClickHouseVerticalSca
 		*out = new(PodResources)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ClickHouseKeeper != nil {
+		in, out := &in.ClickHouseKeeper, &out.ClickHouseKeeper
+		*out = new(PodResources)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -697,6 +707,11 @@ func (in *ClickHouseVolumeExpansionSpec) DeepCopyInto(out *ClickHouseVolumeExpan
 	*out = *in
 	if in.Node != nil {
 		in, out := &in.Node, &out.Node
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.ClickHouseKeeper != nil {
+		in, out := &in.ClickHouseKeeper, &out.ClickHouseKeeper
 		x := (*in).DeepCopy()
 		*out = &x
 	}

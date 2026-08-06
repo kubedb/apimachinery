@@ -34241,6 +34241,13 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseHorizontalScalingSpec(ref c
 							Format:      "int32",
 						},
 					},
+					"clickHouseKeeper": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClickHouseKeeper is the number of replicas for the embedded ClickHouse Keeper nodes.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},
@@ -34567,6 +34574,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseVerticalScalingSpec(ref com
 							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
 						},
 					},
+					"clickHouseKeeper": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClickHouseKeeper is the vertical scaling spec for the embedded ClickHouse Keeper nodes.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
 					"mode": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
@@ -34599,6 +34612,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ClickHouseVolumeExpansionSpec(ref com
 					"node": {
 						SchemaProps: spec.SchemaProps{
 							Description: "volume specification for nodes",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"clickHouseKeeper": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClickHouseKeeper is the volume expansion spec for the embedded ClickHouse Keeper nodes.",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},

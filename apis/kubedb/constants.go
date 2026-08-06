@@ -1890,6 +1890,16 @@ const (
 	ClickHouseInternalServerListFile     = "server_list.yaml"
 	ClickHouseKeeperServerIdNo           = "serverid"
 	ClickHouseKeeperServerID             = "KEEPERID"
+
+	// The raft membership lives in its own overlay file inside the keeper_config.d
+	// directory (ClickHouse merges <config>.d/*.xml into the main config). The
+	// overlay is mounted straight from the config Secret into the running keeper
+	// container, so a membership change written by the ops-manager is picked up by
+	// ClickHouse's config reloader and applied via add_srv/remove_srv without
+	// restarting any keeper pod.
+	ClickHouseKeeperRaftConfigFileName   = "raft_configuration.xml"
+	ClickHouseKeeperRaftConfigVolumeName = "keeper-raft-config"
+	ClickHouseKeeperRaftConfigDir        = "/etc/clickhouse-keeper/keeper_config.d"
 )
 
 // =========================== Neo4j Constants ============================
