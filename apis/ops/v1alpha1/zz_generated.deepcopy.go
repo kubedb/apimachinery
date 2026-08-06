@@ -8901,15 +8901,10 @@ func (in *SolrOpsRequestSpec) DeepCopy() *SolrOpsRequestSpec {
 func (in *SolrReconfigurationSpec) DeepCopyInto(out *SolrReconfigurationSpec) {
 	*out = *in
 	in.ReconfigurationSpec.DeepCopyInto(&out.ReconfigurationSpec)
-	if in.S3 != nil {
-		in, out := &in.S3, &out.S3
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
-	}
-	if in.GCS != nil {
-		in, out := &in.GCS, &out.GCS
-		*out = new(corev1.LocalObjectReference)
-		**out = **in
+	if in.BackupCredentials != nil {
+		in, out := &in.BackupCredentials, &out.BackupCredentials
+		*out = new(v1alpha2.SolrBackupCredentials)
+		(*in).DeepCopyInto(*out)
 	}
 	return
 }

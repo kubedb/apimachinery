@@ -46487,15 +46487,15 @@ func schema_apimachinery_apis_kubedb_v1alpha2_SolrBackupCredentials(ref common.R
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"s3": {
+					"s3Secret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "S3 references the Secret holding the S3 credentials, injected as environment variables.",
+							Description: "S3Secret references the Secret holding the S3 credentials, injected as environment variables.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
-					"gcs": {
+					"gcsSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GCS references the Secret holding the GCS service account key, mounted as a file.",
+							Description: "GCSSecret references the Secret holding the GCS service account key, mounted as a file.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},

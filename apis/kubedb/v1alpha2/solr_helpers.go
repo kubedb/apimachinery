@@ -117,14 +117,14 @@ func (s *Solr) S3BackupCredential() *v1.LocalObjectReference {
 	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupCredentials == nil {
 		return nil
 	}
-	return s.Spec.Configuration.BackupCredentials.S3
+	return s.Spec.Configuration.BackupCredentials.S3Secret
 }
 
 func (s *Solr) GCSBackupCredential() *v1.LocalObjectReference {
 	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupCredentials == nil {
 		return nil
 	}
-	return s.Spec.Configuration.BackupCredentials.GCS
+	return s.Spec.Configuration.BackupCredentials.GCSSecret
 }
 
 func GCSCredentialPath() string {

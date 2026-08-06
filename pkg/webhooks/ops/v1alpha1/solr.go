@@ -356,9 +356,10 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
 
+	creds := cfg.BackupCredentials
 	if !cfg.RemoveCustomConfig && cfg.ConfigSecret == nil && len(cfg.ApplyConfig) == 0 &&
-		cfg.S3 == nil && cfg.GCS == nil {
-		return errors.New("at least one of `removeCustomConfig`, `configSecret`, `applyConfig`, `s3` or `gcs` must be specified")
+		(creds == nil || (creds.S3Secret == nil && creds.GCSSecret == nil)) {
+		return errors.New("at least one of `removeCustomConfig`, `configSecret`, `applyConfig` or `backupCredentials` must be specified")
 	}
 
 	if cfg.ConfigSecret != nil && cfg.ConfigSecret.Name != "" {
@@ -367,20 +368,30 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		}
 	}
 
-	if cfg.S3 != nil {
-		if cfg.S3.Name == "" {
-			return errors.New("`spec.configuration.s3.name` must be specified")
+	if creds == nil {
+		return nil
+	}
+
+	if creds.S3Secret != nil {
+		if creds.S3Secret.Name == "" {
+			return errors.New("`spec.configuration.backupCredentials.s3Secret.name` must be specified")
 		}
-		if _, err := w.getReferencedSecret(req.Namespace, cfg.S3.Name, "s3"); err != nil {
+		secret, err := w.getReferencedSecret(req.Namespace, creds.S3Secret.Name, "s3")
+		if err != nil {
 			return err
+		}
+		for _, key := range []string{blob.AWSAccessKeyId, blob.AWSSecretAccessKey} {
+			if _, ok := secret.Data[key]; !ok {
+				return fmt.Errorf("s3 secret %s/%s has no key %q holding the credential", req.Namespace, secret.Name, key)
+			}
 		}
 	}
 
-	if cfg.GCS != nil {
-		if cfg.GCS.Name == "" {
-			return errors.New("`spec.configuration.gcs.name` must be specified")
+	if creds.GCSSecret != nil {
+		if creds.GCSSecret.Name == "" {
+			return errors.New("`spec.configuration.backupCredentials.gcsSecret.name` must be specified")
 		}
-		secret, err := w.getReferencedSecret(req.Namespace, cfg.GCS.Name, "gcs")
+		secret, err := w.getReferencedSecret(req.Namespace, creds.GCSSecret.Name, "gcs")
 		if err != nil {
 			return err
 		}

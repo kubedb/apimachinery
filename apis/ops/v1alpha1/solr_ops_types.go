@@ -18,6 +18,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -91,14 +93,10 @@ type SolrOpsRequestSpec struct {
 // credentials Solr needs in order to authenticate with a backup repository.
 type SolrReconfigurationSpec struct {
 	ReconfigurationSpec `json:",inline,omitempty"`
-	// S3 references the Secret holding the S3 credentials for an S3 backup repository,
-	// injected as environment variables. The Secret must be in the database namespace.
+	// BackupCredentials references the Secrets holding the object storage credentials
+	// for the backup repositories. The Secrets must be in the database namespace.
 	// +optional
-	S3 *core.LocalObjectReference `json:"s3,omitempty"`
-	// GCS references the Secret holding the GCS service account key for a GCS backup
-	// repository, mounted as a file. The Secret must be in the database namespace.
-	// +optional
-	GCS *core.LocalObjectReference `json:"gcs,omitempty"`
+	BackupCredentials *dbapi.SolrBackupCredentials `json:"backupCredentials,omitempty"`
 }
 
 type SolrVerticalScalingSpec struct {

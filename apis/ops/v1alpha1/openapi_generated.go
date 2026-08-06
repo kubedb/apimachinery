@@ -46409,23 +46409,17 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrReconfigurationSpec(ref common.Re
 							Format:      "",
 						},
 					},
-					"s3": {
+					"backupCredentials": {
 						SchemaProps: spec.SchemaProps{
-							Description: "S3 references the Secret holding the S3 credentials for an S3 backup repository, injected as environment variables. The Secret must be in the database namespace.",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
-						},
-					},
-					"gcs": {
-						SchemaProps: spec.SchemaProps{
-							Description: "GCS references the Secret holding the GCS service account key for a GCS backup repository, mounted as a file. The Secret must be in the database namespace.",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+							Description: "BackupCredentials references the Secrets holding the object storage credentials for the backup repositories. The Secrets must be in the database namespace.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials"},
 	}
 }
 

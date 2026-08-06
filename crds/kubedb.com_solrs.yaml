@@ -90,14 +90,14 @@ spec:
                 properties:
                   backupCredentials:
                     properties:
-                      gcs:
+                      gcsSecret:
                         properties:
                           name:
                             default: ""
                             type: string
                         type: object
                         x-kubernetes-map-type: atomic
-                      s3:
+                      s3Secret:
                         properties:
                           name:
                             default: ""

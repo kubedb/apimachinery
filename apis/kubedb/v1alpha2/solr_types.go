@@ -148,12 +148,12 @@ type SolrConfiguration struct {
 }
 
 type SolrBackupCredentials struct {
-	// S3 references the Secret holding the S3 credentials, injected as environment variables.
+	// S3Secret references the Secret holding the S3 credentials, injected as environment variables.
 	// +optional
-	S3 *core.LocalObjectReference `json:"s3,omitempty"`
-	// GCS references the Secret holding the GCS service account key, mounted as a file.
+	S3Secret *core.LocalObjectReference `json:"s3Secret,omitempty"`
+	// GCSSecret references the Secret holding the GCS service account key, mounted as a file.
 	// +optional
-	GCS *core.LocalObjectReference `json:"gcs,omitempty"`
+	GCSSecret *core.LocalObjectReference `json:"gcsSecret,omitempty"`
 }
 
 type SolrClusterTopology struct {

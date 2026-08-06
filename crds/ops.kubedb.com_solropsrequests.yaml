@@ -72,14 +72,24 @@ spec:
                     additionalProperties:
                       type: string
                     type: object
-                  configSecret:
+                  backupCredentials:
                     properties:
-                      name:
-                        default: ""
-                        type: string
+                      gcsSecret:
+                        properties:
+                          name:
+                            default: ""
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
+                      s3Secret:
+                        properties:
+                          name:
+                            default: ""
+                            type: string
+                        type: object
+                        x-kubernetes-map-type: atomic
                     type: object
-                    x-kubernetes-map-type: atomic
-                  gcs:
+                  configSecret:
                     properties:
                       name:
                         default: ""
@@ -95,13 +105,6 @@ spec:
                     - "true"
                     - "false"
                     type: string
-                  s3:
-                    properties:
-                      name:
-                        default: ""
-                        type: string
-                    type: object
-                    x-kubernetes-map-type: atomic
                 type: object
               databaseRef:
                 properties:
