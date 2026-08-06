@@ -2323,6 +2323,8 @@ const (
 	OracleSharedTlsVolumeMountPath = "/tls/certs"
 
 	OracleCustomConfigFileName = "oracle.cnf"
+
+	OracleBackupWalletCreatedCondition = "Backup-wallet-created"
 )
 
 // =========================== DB2 Constants ============================
