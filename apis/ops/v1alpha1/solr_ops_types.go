@@ -93,10 +93,10 @@ type SolrOpsRequestSpec struct {
 // credentials Solr needs in order to authenticate with a backup repository.
 type SolrReconfigurationSpec struct {
 	ReconfigurationSpec `json:",inline,omitempty"`
-	// BackupCredentials references the Secrets holding the object storage credentials
+	// BackupSpec references the Secrets holding the object storage credentials
 	// for the backup repositories. The Secrets must be in the database namespace.
 	// +optional
-	BackupCredentials *dbapi.SolrBackupCredentials `json:"backupCredentials,omitempty"`
+	BackupSpec *dbapi.BackupSpec `json:"backup,omitempty"`
 }
 
 type SolrVerticalScalingSpec struct {

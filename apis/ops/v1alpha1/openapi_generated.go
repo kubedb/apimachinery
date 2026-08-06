@@ -46409,17 +46409,17 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrReconfigurationSpec(ref common.Re
 							Format:      "",
 						},
 					},
-					"backupCredentials": {
+					"backup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BackupCredentials references the Secrets holding the object storage credentials for the backup repositories. The Secrets must be in the database namespace.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials"),
+							Description: "BackupSpec references the Secrets holding the object storage credentials for the backup repositories. The Secrets must be in the database namespace.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.BackupSpec"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SolrBackupCredentials"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.BackupSpec"},
 	}
 }
 

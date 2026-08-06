@@ -142,18 +142,9 @@ type SolrSpec struct {
 type SolrConfiguration struct {
 	ConfigurationSpec `json:",inline,omitempty"`
 
-	// BackupCredentials holds the object storage credentials for Solr backup repositories.
+	// BackupSpec holds the object storage credentials for Solr backup repositories.
 	// +optional
-	BackupCredentials *SolrBackupCredentials `json:"backupCredentials,omitempty"`
-}
-
-type SolrBackupCredentials struct {
-	// S3Secret references the Secret holding the S3 credentials, injected as environment variables.
-	// +optional
-	S3Secret *core.LocalObjectReference `json:"s3Secret,omitempty"`
-	// GCSSecret references the Secret holding the GCS service account key, mounted as a file.
-	// +optional
-	GCSSecret *core.LocalObjectReference `json:"gcsSecret,omitempty"`
+	BackupSpec *BackupSpec `json:"backup,omitempty"`
 }
 
 type SolrClusterTopology struct {

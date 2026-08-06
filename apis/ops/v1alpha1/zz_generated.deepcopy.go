@@ -8901,9 +8901,9 @@ func (in *SolrOpsRequestSpec) DeepCopy() *SolrOpsRequestSpec {
 func (in *SolrReconfigurationSpec) DeepCopyInto(out *SolrReconfigurationSpec) {
 	*out = *in
 	in.ReconfigurationSpec.DeepCopyInto(&out.ReconfigurationSpec)
-	if in.BackupCredentials != nil {
-		in, out := &in.BackupCredentials, &out.BackupCredentials
-		*out = new(v1alpha2.SolrBackupCredentials)
+	if in.BackupSpec != nil {
+		in, out := &in.BackupSpec, &out.BackupSpec
+		*out = new(v1alpha2.BackupSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	return

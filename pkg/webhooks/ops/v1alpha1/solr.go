@@ -356,10 +356,10 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
 
-	creds := cfg.BackupCredentials
+	creds := cfg.BackupSpec
 	if !cfg.RemoveCustomConfig && cfg.ConfigSecret == nil && len(cfg.ApplyConfig) == 0 &&
 		(creds == nil || (creds.S3Secret == nil && creds.GCSSecret == nil)) {
-		return errors.New("at least one of `removeCustomConfig`, `configSecret`, `applyConfig` or `backupCredentials` must be specified")
+		return errors.New("at least one of `removeCustomConfig`, `configSecret`, `applyConfig` or `backup` must be specified")
 	}
 
 	if cfg.ConfigSecret != nil && cfg.ConfigSecret.Name != "" {
@@ -374,7 +374,7 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 
 	if creds.S3Secret != nil {
 		if creds.S3Secret.Name == "" {
-			return errors.New("`spec.configuration.backupCredentials.s3Secret.name` must be specified")
+			return errors.New("`spec.configuration.backup.s3Secret.name` must be specified")
 		}
 		secret, err := w.getReferencedSecret(req.Namespace, creds.S3Secret.Name, "s3")
 		if err != nil {
@@ -389,7 +389,7 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 
 	if creds.GCSSecret != nil {
 		if creds.GCSSecret.Name == "" {
-			return errors.New("`spec.configuration.backupCredentials.gcsSecret.name` must be specified")
+			return errors.New("`spec.configuration.backup.gcsSecret.name` must be specified")
 		}
 		secret, err := w.getReferencedSecret(req.Namespace, creds.GCSSecret.Name, "gcs")
 		if err != nil {

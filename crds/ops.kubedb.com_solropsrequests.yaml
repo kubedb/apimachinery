@@ -72,7 +72,7 @@ spec:
                     additionalProperties:
                       type: string
                     type: object
-                  backupCredentials:
+                  backup:
                     properties:
                       gcsSecret:
                         properties:
