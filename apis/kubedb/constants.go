@@ -2412,13 +2412,14 @@ const (
 	HanaDBVolumePermissionInitContainerName = "hanadb-volume-permissions"
 
 	// Mount paths
-	HanaDBDataDir         = "/hana/mounts"
-	HanaDBSecretMountPath = "/etc/hana-secrets"
-	HanaDBTLSInputPath    = "/etc/hanadb-tls/server"
-	HanaDBExporterTLSPath = "/etc/hanadb_exporter/certs"
-	HanaDBConfigFileName  = "global.ini"
-	HanaDBConfigDir       = "/hana/mounts/system/config"
-	HanaDBConfigMountPath = "/etc/hanadb-config"
+	HanaDBDataDir                   = "/hana/mounts"
+	HanaDBVolumePermissionMountPath = "/tmp/volume-mount-permission"
+	HanaDBSecretMountPath           = "/etc/hana-secrets"
+	HanaDBTLSInputPath              = "/etc/hanadb-tls/server"
+	HanaDBExporterTLSPath           = "/etc/hanadb_exporter/certs"
+	HanaDBConfigFileName            = "global.ini"
+	HanaDBConfigDir                 = "/hana/mounts/system/config"
+	HanaDBConfigMountPath           = "/etc/hanadb-config"
 
 	// Volume names
 	HanaDBDataVolume           = "data"
