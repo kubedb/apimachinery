@@ -484,7 +484,16 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 		return nil, fmt.Errorf("remote replica is not currently supported for version bellow 13")
 	}
 
-	if postgres.Spec.Distributed {
+	// Same reasoning as the PostgresVersion guard above (N210), for the PlacementPolicy a
+	// distributed database references. A deletion in progress must never be blocked on that
+	// object still existing: the database already ran on it and there is nothing left to
+	// validate, but requiring it here wedges the delete FOREVER when the policy is removed
+	// first. Reproduced live: deleting the PlacementPolicy before the Postgres left the CR
+	// with a deletionTimestamp and a kubedb.com finalizer that could never be removed,
+	// because every update to the object - including the finalizer-removal patch itself -
+	// was denied with `PlacementPolicy "<name>" not found`. Recovering it required
+	// re-creating the policy purely so the webhook would let the delete finish.
+	if postgres.Spec.Distributed && postgres.DeletionTimestamp == nil {
 		if postgres.Spec.PodTemplate.Spec.PodPlacementPolicy == nil {
 			return nil, fmt.Errorf(`'spec.podPlacementPolicy' is required for distributed postgres`)
 		}

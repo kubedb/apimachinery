@@ -5236,6 +5236,10 @@ spec:
                 type: integer
               replication:
                 properties:
+                  bestEffortCrossDCLagBytesForFailover:
+                    format: int64
+                    minimum: 0
+                    type: integer
                   forceFailoverAcceptingDataLossAfter:
                     type: string
                   maxSlotWALKeepSize:
@@ -5600,8 +5604,6 @@ spec:
                   type: object
                 type: array
               disasterRecovery:
-                description: DisasterRecovery reports the cross data center (DC-DR)
-                  state for a distributed Postgres.
                 properties:
                   activeDC:
                     type: string
@@ -5610,17 +5612,29 @@ spec:
                       properties:
                         clusterName:
                           type: string
+                        crossDCStreamer:
+                          type: string
                         healthy:
                           type: boolean
                         lagBytes:
                           format: int64
                           type: integer
+                        lagObservedAt:
+                          format: date-time
+                          type: string
                         leader:
                           type: string
+                        notReadyPods:
+                          items:
+                            type: string
+                          type: array
                         role:
                           type: string
                         writable:
                           type: boolean
+                        writableObservedAt:
+                          format: date-time
+                          type: string
                       required:
                       - clusterName
                       type: object
@@ -5629,6 +5643,10 @@ spec:
                     format: date-time
                     type: string
                   phase:
+                    type: string
+                  protected:
+                    type: boolean
+                  protectionMessage:
                     type: string
                 type: object
               observedGeneration:
