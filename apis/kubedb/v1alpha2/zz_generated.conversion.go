@@ -24,6 +24,8 @@ package v1alpha2
 import (
 	unsafe "unsafe"
 
+	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
@@ -33,7 +35,6 @@ import (
 	monitoringagentapiapiv1 "kmodules.xyz/monitoring-agent-api/api/v1"
 	apiv1 "kmodules.xyz/offshoot-api/api/v1"
 	v2 "kmodules.xyz/offshoot-api/api/v2"
-	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 )
 
 func init() {
@@ -643,18 +644,8 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
-	if err := s.AddGeneratedConversionFunc((*v1.PostgresReplication)(nil), (*PostgresReplication)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_PostgresReplication_To_v1alpha2_PostgresReplication(a.(*v1.PostgresReplication), b.(*PostgresReplication), scope)
-	}); err != nil {
-		return err
-	}
 	if err := s.AddGeneratedConversionFunc((*PostgresStatus)(nil), (*v1.PostgresStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1alpha2_PostgresStatus_To_v1_PostgresStatus(a.(*PostgresStatus), b.(*v1.PostgresStatus), scope)
-	}); err != nil {
-		return err
-	}
-	if err := s.AddGeneratedConversionFunc((*v1.PostgresStatus)(nil), (*PostgresStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
-		return Convert_v1_PostgresStatus_To_v1alpha2_PostgresStatus(a.(*v1.PostgresStatus), b.(*PostgresStatus), scope)
 	}); err != nil {
 		return err
 	}
@@ -923,8 +914,18 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}); err != nil {
 		return err
 	}
+	if err := s.AddConversionFunc((*v1.PostgresReplication)(nil), (*PostgresReplication)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_PostgresReplication_To_v1alpha2_PostgresReplication(a.(*v1.PostgresReplication), b.(*PostgresReplication), scope)
+	}); err != nil {
+		return err
+	}
 	if err := s.AddConversionFunc((*v1.PostgresSpec)(nil), (*PostgresSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(a.(*v1.PostgresSpec), b.(*PostgresSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddConversionFunc((*v1.PostgresStatus)(nil), (*PostgresStatus)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_PostgresStatus_To_v1alpha2_PostgresStatus(a.(*v1.PostgresStatus), b.(*PostgresStatus), scope)
 	}); err != nil {
 		return err
 	}
