@@ -283,6 +283,9 @@ func (w *DocumentDBOpsRequestCustomWebhook) validateDocumentDBReconfigureTLSOpsR
 	if tls == nil {
 		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
 	}
+	if tls.Remove && tls.GatewayMutualTLSEnabled != nil && *tls.GatewayMutualTLSEnabled {
+		return errors.New("`spec.tls.gatewayMutualTLSEnabled` can't be true when `spec.tls.remove` is true")
+	}
 
 	return nil
 }

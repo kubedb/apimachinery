@@ -59,9 +59,15 @@ type DocumentDBTLSSpec struct {
 	// +optional
 	SSLMode dbapi.DocumentDBSSLMode `json:"sslMode,omitempty"`
 
-	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
+	// ClientAuthMode for sidecar or sharding. (default will be scram. [scram;cert])
 	// +optional
 	ClientAuthMode dbapi.DocDBClientAuthMode `json:"clientAuthMode,omitempty"`
+
+	// GatewayMutualTLSEnabled controls whether the MongoDB-wire gateway listener requires
+	// clients to present a valid certificate (mutual TLS), independent of the general TLS config.
+	// Leave unset to keep the DocumentDB object's current value unchanged.
+	// +optional
+	GatewayMutualTLSEnabled *bool `json:"gatewayMutualTLSEnabled,omitempty"`
 }
 
 // DocumentDBOpsRequestSpec is the spec for DocumentDBOpsRequest

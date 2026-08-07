@@ -35854,7 +35854,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref common.Referenc
 					},
 					"clientAuthMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])",
+							Description: "ClientAuthMode for sidecar or sharding. (default will be scram. [scram;cert])",
 							Type:        []string{"string"},
 							Format:      "",
 						},

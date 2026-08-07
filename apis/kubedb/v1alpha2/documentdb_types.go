@@ -151,7 +151,7 @@ type DocumentDBSpec struct {
 	// Streaming mode
 	StreamingMode *DocDBStreamingMode `json:"streamingMode,omitempty"`
 
-	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
+	// ClientAuthMode for sidecar or sharding. (default will be scram. [scram;cert])
 	ClientAuthMode DocDBClientAuthMode `json:"clientAuthMode,omitempty"`
 
 	// SSLMode for the DocumentDB Postgres server. [disable;allow;prefer;require;verify-ca;verify-full]

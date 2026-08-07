@@ -1273,6 +1273,11 @@ func (in *DocumentDBSetRaftKeyPair) DeepCopy() *DocumentDBSetRaftKeyPair {
 func (in *DocumentDBTLSSpec) DeepCopyInto(out *DocumentDBTLSSpec) {
 	*out = *in
 	in.TLSSpec.DeepCopyInto(&out.TLSSpec)
+	if in.GatewayMutualTLSEnabled != nil {
+		in, out := &in.GatewayMutualTLSEnabled, &out.GatewayMutualTLSEnabled
+		*out = new(bool)
+		**out = **in
+	}
 	return
 }
 

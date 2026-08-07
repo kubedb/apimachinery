@@ -203,7 +203,7 @@ func (d *DocumentDB) SetTLSDefaults() {
 
 // GatewayMutualTLSEnabled reports whether the MongoDB-wire gateway listener requires mutual TLS.
 func (d *DocumentDB) GatewayMutualTLSEnabled() bool {
-	if d.Spec.TLS == nil {
+	if d.Spec.TLS == nil || d.Spec.TLS.TLS == nil {
 		return false
 	}
 	return d.Spec.TLS.GatewayMutualTLSEnabled == nil || *d.Spec.TLS.GatewayMutualTLSEnabled

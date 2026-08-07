@@ -35491,8 +35491,15 @@ func schema_apimachinery_apis_ops_v1alpha1_DocumentDBTLSSpec(ref common.Referenc
 					},
 					"clientAuthMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])",
+							Description: "ClientAuthMode for sidecar or sharding. (default will be scram. [scram;cert])",
 							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"gatewayMutualTLSEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GatewayMutualTLSEnabled controls whether the MongoDB-wire gateway listener requires clients to present a valid certificate (mutual TLS), independent of the general TLS config. Leave unset to keep the DocumentDB object's current value unchanged.",
+							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},

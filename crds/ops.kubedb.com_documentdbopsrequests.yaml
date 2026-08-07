@@ -494,6 +494,8 @@ spec:
                     - scram
                     - cert
                     type: string
+                  gatewayMutualTLSEnabled:
+                    type: boolean
                   issuerRef:
                     properties:
                       apiGroup:
