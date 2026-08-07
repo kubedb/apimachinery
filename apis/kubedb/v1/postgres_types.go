@@ -250,7 +250,19 @@ type PostgresReplication struct {
 	// When unset nothing is enforced and failover behaves exactly as before, so existing
 	// deployments are unaffected. Setting it to 0 demands a fully caught up survivor.
 	// +optional
-	BestEffortCrossDCLagBytesForFailover *uint64 `json:"bestEffortCrossDCLagBytesForFailover,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	BestEffortCrossDCLagBytesForFailover *int64 `json:"bestEffortCrossDCLagBytesForFailover,omitempty"`
+
+	// Maintainer note, do not "simplify" the field above. It is int64 rather than uint64
+	// because OpenAPI v3, and therefore CRD validation, has no unsigned integer type, so a
+	// uint64 cannot be expressed in the published schema. Minimum=0 is what rules out
+	// negatives. It is a pointer rather than a plain int64 so that nil keeps meaning
+	// "unset", which is what distinguishes "no budget enforced" from a budget of 0.
+	//
+	// Adding a field here that v1alpha2 does not have also means the conversions in
+	// apis/kubedb/v1alpha2/conversion.go can no longer cast PostgresReplication between the
+	// two versions with unsafe.Pointer; doing so reads past the end of the smaller
+	// allocation. See TestPostgresReplicationConversionIsFieldByField.
 }
 
 type ArbiterSpec struct {

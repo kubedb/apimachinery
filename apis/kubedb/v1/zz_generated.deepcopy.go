@@ -2754,7 +2754,7 @@ func (in *PostgresReplication) DeepCopyInto(out *PostgresReplication) {
 	}
 	if in.BestEffortCrossDCLagBytesForFailover != nil {
 		in, out := &in.BestEffortCrossDCLagBytesForFailover, &out.BestEffortCrossDCLagBytesForFailover
-		*out = new(uint64)
+		*out = new(int64)
 		**out = **in
 	}
 	return
