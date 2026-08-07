@@ -18,6 +18,8 @@ limitations under the License.
 package v1alpha1
 
 import (
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -52,6 +54,14 @@ type DocumentDBOpsRequest struct {
 
 type DocumentDBTLSSpec struct {
 	TLSSpec `json:",inline,omitempty"`
+
+	// SSLMode for the DocumentDB Postgres server. [disable;allow;prefer;require;verify-ca;verify-full]
+	// +optional
+	SSLMode dbapi.DocumentDBSSLMode `json:"sslMode,omitempty"`
+
+	// ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])
+	// +optional
+	ClientAuthMode dbapi.DocDBClientAuthMode `json:"clientAuthMode,omitempty"`
 }
 
 // DocumentDBOpsRequestSpec is the spec for DocumentDBOpsRequest
