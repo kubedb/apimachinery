@@ -36018,10 +36018,24 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBTLSConfig(ref common.Ref
 				Description: "DocumentDBTLSConfig contains tls configurations for client and server (via cert-manager), plus a toggle for whether the MongoDB-wire gateway listener enforces mutual TLS.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"tls": {
+					"issuerRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TLS contains tls configurations for client and server (via cert-manager). It provisions certs for the Postgres server, the replication client, and the MongoDB gateway.",
-							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
 						},
 					},
 					"gatewayMutualTLSEnabled": {
@@ -36035,7 +36049,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBTLSConfig(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.TLSConfig"},
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
 	}
 }
 

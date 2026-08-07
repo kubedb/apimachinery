@@ -109,7 +109,7 @@ type DocumentDBTLSConfig struct {
 	// TLS contains tls configurations for client and server (via cert-manager).
 	// It provisions certs for the Postgres server, the replication client, and the MongoDB gateway.
 	// +optional
-	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+	kmapi.TLSConfig `json:",inline"`
 
 	// GatewayMutualTLSEnabled controls whether the MongoDB-wire gateway listener requires
 	// clients to present a valid certificate (mutual TLS), independent of the general TLS config.
