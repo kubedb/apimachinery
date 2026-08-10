@@ -36015,27 +36015,19 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBTLSConfig(ref common.Ref
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DocumentDBTLSConfig contains tls configurations for client and server (via cert-manager), plus a toggle for whether the MongoDB-wire gateway listener enforces mutual TLS.",
+				Description: "DocumentDBTLSConfig contains tls configurations (via cert-manager) for the two security domains DocumentDB serves, plus a toggle for whether the MongoDB-wire gateway listener enforces mutual TLS. The database plane and the client-facing gateway can be issued by different CAs; see DBTLS and GatewayTLS.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"issuerRef": {
+					"dbTLS": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IssuerRef is a reference to a Certificate Issuer.",
-							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+							Description: "DBTLS provisions the database-plane certificates: the Postgres server certificate and the streaming-replication client certificate. This traffic is internal, so it typically belongs to an internal CA. Required when spec.tls is set.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
-					"certificates": {
+					"gatewayTLS": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
-									},
-								},
-							},
+							Description: "GatewayTLS provisions the MongoDB-wire gateway certificate, which is client-facing and often needs a public or edge CA. If unset, the gateway certificate is issued from DBTLS, so a single issuer still covers everything.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
 					"gatewayMutualTLSEnabled": {
@@ -36049,7 +36041,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBTLSConfig(ref common.Ref
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
+			"kmodules.xyz/client-go/api/v1.TLSConfig"},
 	}
 }
 

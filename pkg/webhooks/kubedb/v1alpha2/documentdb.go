@@ -260,6 +260,50 @@ func (w *DocumentDBCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.DocumentDB
 	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), documentdbReservedVolumeMountPaths); err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.Name, err.Error()))
 	}
+
+	// TLS related
+	allErr = append(allErr, validateDocumentDBTLS(db)...)
+
+	return allErr
+}
+
+// validateDocumentDBTLS enforces the dbTLS/gatewayTLS contract. dbTLS is the primary config:
+// the gateway certificate falls back to it when gatewayTLS is unset, and the provisioner waits
+// unconditionally for the server and client secrets, so a gateway-only configuration would
+// never converge.
+func validateDocumentDBTLS(db *olddbapi.DocumentDB) field.ErrorList {
+	var allErr field.ErrorList
+	if db.Spec.TLS == nil {
+		return allErr
+	}
+	tlsPath := field.NewPath("spec").Child("tls")
+
+	if db.Spec.TLS.DBTLS == nil || db.Spec.TLS.DBTLS.IssuerRef == nil {
+		allErr = append(allErr, field.Invalid(tlsPath.Child("dbTLS").Child("issuerRef"), db.Name,
+			"`spec.tls.dbTLS.issuerRef` is required when `spec.tls` is set; `gatewayTLS` only overrides the issuer for the gateway certificate"))
+	}
+	if db.Spec.TLS.GatewayTLS != nil && db.Spec.TLS.GatewayTLS.IssuerRef == nil {
+		allErr = append(allErr, field.Invalid(tlsPath.Child("gatewayTLS").Child("issuerRef"), db.Name,
+			"`spec.tls.gatewayTLS.issuerRef` is required when `spec.tls.gatewayTLS` is set; omit `gatewayTLS` to issue the gateway certificate from `dbTLS`"))
+	}
+
+	// Aliases are routed to a fixed config, so an alias in the wrong list is silently ignored.
+	if db.Spec.TLS.DBTLS != nil {
+		for _, cert := range db.Spec.TLS.DBTLS.Certificates {
+			if cert.Alias == string(olddbapi.DocumentDBGatewayCert) {
+				allErr = append(allErr, field.Invalid(tlsPath.Child("dbTLS").Child("certificates"), cert.Alias,
+					"the `gateway` certificate is configured under `spec.tls.gatewayTLS.certificates`"))
+			}
+		}
+	}
+	if db.Spec.TLS.GatewayTLS != nil {
+		for _, cert := range db.Spec.TLS.GatewayTLS.Certificates {
+			if cert.Alias == string(olddbapi.DocumentDBServerCert) || cert.Alias == string(olddbapi.DocumentDBClientCert) {
+				allErr = append(allErr, field.Invalid(tlsPath.Child("gatewayTLS").Child("certificates"), cert.Alias,
+					"the `server` and `client` certificates are configured under `spec.tls.dbTLS.certificates`"))
+			}
+		}
+	}
 	return allErr
 }
 

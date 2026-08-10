@@ -179,18 +179,83 @@ func (d *DocumentDB) GetGRPCSelfSignedIssuerName() string {
 	return metautil.NameWithSuffix(d.OffshootName(), "grpc-selfsigned")
 }
 
+// tlsConfigUsable reports whether a config can actually issue certificates. A config with no
+// issuerRef cannot, so it reads as "not configured" rather than as an empty configuration.
+func tlsConfigUsable(c *kmapi.TLSConfig) bool {
+	return c != nil && c.IssuerRef != nil
+}
+
+// DBTLSConfig returns the TLS config that signs the database-plane certificates: the Postgres
+// server certificate and the streaming-replication client certificate.
+func (d *DocumentDB) DBTLSConfig() *kmapi.TLSConfig {
+	if d.Spec.TLS == nil {
+		return nil
+	}
+	return d.Spec.TLS.DBTLS
+}
+
+// GatewayTLSConfig returns the TLS config that signs the MongoDB-wire gateway certificate.
+// It falls back to DBTLS so that setting only dbTLS still covers the gateway with one issuer.
+func (d *DocumentDB) GatewayTLSConfig() *kmapi.TLSConfig {
+	if d.Spec.TLS == nil {
+		return nil
+	}
+	if d.Spec.TLS.GatewayTLS != nil {
+		return d.Spec.TLS.GatewayTLS
+	}
+	return d.Spec.TLS.DBTLS
+}
+
+// TLSConfigForAlias routes a certificate alias to the config that owns it. The grpc-* aliases
+// are signed by an operator-managed self-signed CA and belong to neither, so they return nil.
+func (d *DocumentDB) TLSConfigForAlias(alias DocumentDBCertificateAlias) *kmapi.TLSConfig {
+	switch alias {
+	case DocumentDBServerCert, DocumentDBClientCert:
+		return d.DBTLSConfig()
+	case DocumentDBGatewayCert:
+		return d.GatewayTLSConfig()
+	}
+	return nil
+}
+
+// AllCertificates returns the union of both configs' certificate specs, deduplicated by alias
+// with the gateway config winning for the gateway alias. Callers that enumerate "every managed
+// certificate" — rotation, sync, and cleanup — must use this: iterating a single config's list
+// makes the other config's certificates look unrecognized, and cleanup then deletes them.
+func (d *DocumentDB) AllCertificates() []kmapi.CertificateSpec {
+	if d.Spec.TLS == nil {
+		return nil
+	}
+	var out []kmapi.CertificateSpec
+	seen := map[string]bool{}
+	// Gateway first so its entry wins if the same alias appears in both lists.
+	for _, c := range []*kmapi.TLSConfig{d.Spec.TLS.GatewayTLS, d.Spec.TLS.DBTLS} {
+		if c == nil {
+			continue
+		}
+		for _, cert := range c.Certificates {
+			if seen[cert.Alias] {
+				continue
+			}
+			seen[cert.Alias] = true
+			out = append(out, cert)
+		}
+	}
+	return out
+}
+
 // IsTLSEnabled reports whether cert-manager TLS is actually configured. A DocumentDBTLSConfig
 // carrying only GatewayMutualTLSEnabled (left behind by a ReconfigureTLS removal, so the
 // preference survives a later re-add) is not TLS enabled.
 func (d *DocumentDB) IsTLSEnabled() bool {
-	return d.Spec.TLS != nil && d.Spec.TLS.IssuerRef != nil
+	return tlsConfigUsable(d.DBTLSConfig()) || tlsConfigUsable(d.GatewayTLSConfig())
 }
 
 // GetCertSecretName returns the secret name for a certificate alias if provided,
 // otherwise returns the default certificate secret name for the given alias.
 func (d *DocumentDB) GetCertSecretName(alias DocumentDBCertificateAlias) string {
-	if d.Spec.TLS != nil {
-		name, ok := kmapi.GetCertificateSecretName(d.Spec.TLS.Certificates, string(alias))
+	if cfg := d.TLSConfigForAlias(alias); cfg != nil {
+		name, ok := kmapi.GetCertificateSecretName(cfg.Certificates, string(alias))
 		if ok {
 			return name
 		}
@@ -199,13 +264,19 @@ func (d *DocumentDB) GetCertSecretName(alias DocumentDBCertificateAlias) string 
 }
 
 // SetTLSDefaults fills missing secret names for each certificate alias, mirroring postgres.
+// Each config is defaulted independently, so a gatewayTLS with its own issuer still gets its
+// secret name filled even when it is configured alongside a separate dbTLS.
 func (d *DocumentDB) SetTLSDefaults() {
-	if d.Spec.TLS == nil || d.Spec.TLS.IssuerRef == nil {
+	if d.Spec.TLS == nil {
 		return
 	}
-	d.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(d.Spec.TLS.Certificates, string(DocumentDBServerCert), d.CertificateName(DocumentDBServerCert))
-	d.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(d.Spec.TLS.Certificates, string(DocumentDBClientCert), d.CertificateName(DocumentDBClientCert))
-	d.Spec.TLS.Certificates = kmapi.SetMissingSecretNameForCertificate(d.Spec.TLS.Certificates, string(DocumentDBGatewayCert), d.CertificateName(DocumentDBGatewayCert))
+	if db := d.DBTLSConfig(); tlsConfigUsable(db) {
+		db.Certificates = kmapi.SetMissingSecretNameForCertificate(db.Certificates, string(DocumentDBServerCert), d.CertificateName(DocumentDBServerCert))
+		db.Certificates = kmapi.SetMissingSecretNameForCertificate(db.Certificates, string(DocumentDBClientCert), d.CertificateName(DocumentDBClientCert))
+	}
+	if gw := d.GatewayTLSConfig(); tlsConfigUsable(gw) {
+		gw.Certificates = kmapi.SetMissingSecretNameForCertificate(gw.Certificates, string(DocumentDBGatewayCert), d.CertificateName(DocumentDBGatewayCert))
+	}
 }
 
 // GatewayMutualTLSEnabled reports whether the MongoDB-wire gateway listener requires mutual TLS.
