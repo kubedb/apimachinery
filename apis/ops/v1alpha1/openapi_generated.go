@@ -35448,36 +35448,21 @@ func schema_apimachinery_apis_ops_v1alpha1_DocumentDBTLSSpec(ref common.Referenc
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"issuerRef": {
+					"dbTLS": {
 						SchemaProps: spec.SchemaProps{
-							Description: "IssuerRef is a reference to a Certificate Issuer.",
-							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+							Description: "DBTLS reconfigures the database-plane certificates: the Postgres server certificate and the streaming-replication client certificate.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
-					"certificates": {
+					"gatewayTLS": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
-									},
-								},
-							},
-						},
-					},
-					"rotateCertificates": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RotateCertificates tells operator to initiate certificate rotation",
-							Type:        []string{"boolean"},
-							Format:      "",
+							Description: "GatewayTLS reconfigures the MongoDB-wire gateway certificate. Rotating or re-issuing it is independent of the database plane, so a public-facing gateway certificate can be rotated without touching replication.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
 						},
 					},
 					"remove": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Remove tells operator to remove TLS configuration",
+							Description: "Remove removes ALL TLS configuration. TLS is all-or-nothing for DocumentDB, so it cannot be removed from one plane only; the per-plane `remove` fields are rejected.",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -35491,8 +35476,15 @@ func schema_apimachinery_apis_ops_v1alpha1_DocumentDBTLSSpec(ref common.Referenc
 					},
 					"clientAuthMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])",
+							Description: "ClientAuthMode for sidecar or sharding. (default will be scram. [scram;cert])",
 							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"gatewayMutualTLSEnabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GatewayMutualTLSEnabled controls whether the MongoDB-wire gateway listener requires clients to present a valid certificate (mutual TLS), independent of the general TLS config. Leave unset to keep the DocumentDB object's current value unchanged.",
+							Type:        []string{"boolean"},
 							Format:      "",
 						},
 					},
@@ -35500,7 +35492,7 @@ func schema_apimachinery_apis_ops_v1alpha1_DocumentDBTLSSpec(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 

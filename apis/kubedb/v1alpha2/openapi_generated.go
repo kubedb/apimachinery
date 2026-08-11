@@ -35854,7 +35854,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBSpec(ref common.Referenc
 					},
 					"clientAuthMode": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ClientAuthMode for sidecar or sharding. (default will be md5. [md5;scram;cert])",
+							Description: "ClientAuthMode for sidecar or sharding. (default will be scram. [scram;cert])",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -36015,12 +36015,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DocumentDBTLSConfig(ref common.Ref
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DocumentDBTLSConfig contains tls configurations for client and server (via cert-manager), plus a toggle for whether the MongoDB-wire gateway listener enforces mutual TLS.",
+				Description: "DocumentDBTLSConfig contains tls configurations (via cert-manager) for the two security domains DocumentDB serves, plus a toggle for whether the MongoDB-wire gateway listener enforces mutual TLS. The database plane and the client-facing gateway can be issued by different CAs; see DBTLS and GatewayTLS.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"tls": {
+					"dbTLS": {
 						SchemaProps: spec.SchemaProps{
-							Description: "TLS contains tls configurations for client and server (via cert-manager). It provisions certs for the Postgres server, the replication client, and the MongoDB gateway.",
+							Description: "DBTLS provisions the database-plane certificates: the Postgres server certificate and the streaming-replication client certificate. This traffic is internal, so it typically belongs to an internal CA. Required when spec.tls is set.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
+					"gatewayTLS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GatewayTLS provisions the MongoDB-wire gateway certificate, which is client-facing and often needs a public or edge CA. If unset, the gateway certificate is issued from DBTLS, so a single issuer still covers everything.",
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
