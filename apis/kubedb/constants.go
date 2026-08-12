@@ -1141,11 +1141,12 @@ const (
 	SolrZkDigest          = "zk-digest"
 	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
-	SolrVolumeDefaultConfig = "default-config"
-	SolrVolumeCustomConfig  = "custom-config"
-	SolrVolumeAuthConfig    = "auth-config"
-	SolrVolumeData          = "data"
-	SolrVolumeConfig        = "slconfig"
+	SolrVolumeDefaultConfig     = "default-config"
+	SolrVolumeCustomConfig      = "custom-config"
+	SolrVolumeAuthConfig        = "auth-config"
+	SolrVolumeData              = "data"
+	SolrVolumeConfig            = "slconfig"
+	SolrVolumeBackupCredentials = "backup-credentials"
 
 	DistLibs              = "/opt/solr/dist"
 	ContribLibs           = "/opt/solr/contrib/%s/lib"
@@ -1157,6 +1158,10 @@ const (
 	SolrSecurityConfigDir = "/var/security"
 	SolrZkReadyCondition  = "SolrZkReady"
 	SolrZkReady           = "ZookeeperReady"
+
+	// Must stay under SolrHomeDir; the Java SecurityManager policy denies reads elsewhere.
+	SolrBackupCredentialsDir  = "/var/solr/backup-credentials"
+	SolrGCSCredentialFileName = "cred.json"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""
@@ -1897,6 +1902,16 @@ const (
 	ClickHouseInternalServerListFile     = "server_list.yaml"
 	ClickHouseKeeperServerIdNo           = "serverid"
 	ClickHouseKeeperServerID             = "KEEPERID"
+
+	// The raft membership lives in its own overlay file inside the keeper_config.d
+	// directory (ClickHouse merges <config>.d/*.xml into the main config). The
+	// overlay is mounted straight from the config Secret into the running keeper
+	// container, so a membership change written by the ops-manager is picked up by
+	// ClickHouse's config reloader and applied via add_srv/remove_srv without
+	// restarting any keeper pod.
+	ClickHouseKeeperRaftConfigFileName   = "raft_configuration.xml"
+	ClickHouseKeeperRaftConfigVolumeName = "keeper-raft-config"
+	ClickHouseKeeperRaftConfigDir        = "/etc/clickhouse-keeper/keeper_config.d"
 )
 
 // =========================== Neo4j Constants ============================
@@ -2424,13 +2439,14 @@ const (
 	HanaDBVolumePermissionInitContainerName = "hanadb-volume-permissions"
 
 	// Mount paths
-	HanaDBDataDir         = "/hana/mounts"
-	HanaDBSecretMountPath = "/etc/hana-secrets"
-	HanaDBTLSInputPath    = "/etc/hanadb-tls/server"
-	HanaDBExporterTLSPath = "/etc/hanadb_exporter/certs"
-	HanaDBConfigFileName  = "global.ini"
-	HanaDBConfigDir       = "/hana/mounts/system/config"
-	HanaDBConfigMountPath = "/etc/hanadb-config"
+	HanaDBDataDir                   = "/hana/mounts"
+	HanaDBVolumePermissionMountPath = "/tmp/volume-mount-permission"
+	HanaDBSecretMountPath           = "/etc/hana-secrets"
+	HanaDBTLSInputPath              = "/etc/hanadb-tls/server"
+	HanaDBExporterTLSPath           = "/etc/hanadb_exporter/certs"
+	HanaDBConfigFileName            = "global.ini"
+	HanaDBConfigDir                 = "/hana/mounts/system/config"
+	HanaDBConfigMountPath           = "/etc/hanadb-config"
 
 	// Volume names
 	HanaDBDataVolume           = "data"
