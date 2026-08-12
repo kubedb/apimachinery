@@ -1000,8 +1000,8 @@ kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab h1:0aouI9IIIoHDwIOmLjgr0
 kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab/go.mod h1:zb++ZwjAon+cueexxhRSSxzJnNX1J/scqvDrGgeRHcQ=
 kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447 h1:Oz4yTzNyx5vFgoC11QWc5zMaxR8EK/kxxxNnH75PxPc=
 kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447/go.mod h1:tTu9iMs4awf/cuHRA8XcDxyEz+AfTGcc3IOAg9kclmE=
-kubestash.dev/apimachinery v0.29.1-0.20260804114527-0116a4cb4eff h1:XkpBZbNy2JlJsArvewkKVQXk7hi7k3967cR5rkh4N7M=
-kubestash.dev/apimachinery v0.29.1-0.20260804114527-0116a4cb4eff/go.mod h1:xRL87YFpBMKgpHOZXh2gSSNgxW1qLNaNPHI9FrbK3y0=
+kubestash.dev/apimachinery v0.29.0-rc.0 h1:3+oL+C3ZtU8NgHDv44VbCEdP8dE17s7UtNnnp79QOPk=
+kubestash.dev/apimachinery v0.29.0-rc.0/go.mod h1:c9+yW3kf0eaRNpEbK7B6MEDAendpVCrctAKBoweu1VI=
 moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7 h1:NykkTlRB+X40z86cLHdEmuoTxhNKhQebLT379b1EumA=
 moul.io/http2curl/v2 v2.3.1-0.20221024080105-10c404f653f7/go.mod h1:RW4hyBjTWSYDOxapodpNEtX0g5Eb16sxklBqmd2RHcE=
 open-cluster-management.io/api v1.2.0 h1:+yeQgJiErrur5S4s205UM37EcZ2XbC9pFSm0xgV5/hU=
