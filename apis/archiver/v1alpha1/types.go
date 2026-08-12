@@ -114,6 +114,34 @@ type LogBackupOptions struct {
 	// +kubebuilder:default=5
 	// +optional
 	LogRetentionHistoryLimit int32 `json:"logRetentionHistoryLimit,omitempty"`
+
+	// LogRotateInterval forces a log rotation when the interval has elapsed AND
+	// new transactions exist, bounding the archiving RPO. Zero disables rotation.
+	//
+	// This exists for engines that only archive a log file once the server has
+	// closed it, and that have no time-based rotation of their own. MySQL and
+	// MariaDB are both in that category -- neither has an equivalent of
+	// PostgreSQL's archive_timeout, and wal-g uploads only binlogs the server has
+	// already closed. On a low-write database the active log can stay open for
+	// hours, and nothing written to it is archived in the meantime. This interval
+	// is the floor on how much a restore can lose.
+	//
+	// Rotation is skipped when no transaction has been written since the last
+	// one, so an idle database does not accumulate empty log files.
+	// +kubebuilder:default="5m"
+	// +optional
+	LogRotateInterval *metav1.Duration `json:"logRotateInterval,omitempty"`
+
+	// PushInterval defines how often the archiver pushes closed log files to the
+	// backup storage.
+	//
+	// This is latency added on top of LogRotateInterval, and only after a log
+	// file has already been closed -- a push cannot archive an open file. Setting
+	// it to 1s with rotation disabled still archives nothing, which is why it is
+	// only worth exposing alongside LogRotateInterval.
+	// +kubebuilder:default="15s"
+	// +optional
+	PushInterval *metav1.Duration `json:"pushInterval,omitempty"`
 }
 
 func ParseCutoffTimeFromPeriod(period string, now time.Time) (time.Time, error) {
