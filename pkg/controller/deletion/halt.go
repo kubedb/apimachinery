@@ -1,0 +1,98 @@
+/*
+Copyright AppsCode Inc. and Contributors
+
+Licensed under the AppsCode Community License 1.0.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://github.com/appscode/licenses/raw/1.0.0/AppsCode-Community-1.0.0.md
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package deletion
+
+import (
+	"context"
+
+	"kubedb.dev/apimachinery/apis"
+
+	apps "k8s.io/api/apps/v1"
+	core "k8s.io/api/core/v1"
+	policy "k8s.io/api/policy/v1"
+	rbac "k8s.io/api/rbac/v1"
+	kerr "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/api/meta"
+	appcatalog "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	petset "kubeops.dev/petset/apis/apps/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+)
+
+type HaltOptions struct {
+	KBClient  client.Client
+	DB        DBInterface
+	Selectors map[string]string
+	// DeletePDB removes PodDisruptionBudgets; set true for clustered/replicaset topologies
+	// (standalone DBs have none).
+	DeletePDB bool
+	// DeleteMonitor is an optional operator-specific hook to tear down monitoring resources.
+	DeleteMonitor func() error
+}
+
+// Halt deletes the operator-generated resources for a DB while keeping PVCs and secrets intact.
+func Halt(ctx context.Context, opts HaltOptions) error {
+	ns := client.InNamespace(opts.DB.GetNamespace())
+	selector := client.MatchingLabels(opts.Selectors)
+
+	// Order mirrors the per-operator halt logic: dependents first, then owning resources.
+	generated := []client.Object{
+		&appcatalog.AppBinding{},
+		&petset.PetSet{},
+		&apps.Deployment{},
+		&rbac.RoleBinding{},
+		&rbac.Role{},
+		&core.ServiceAccount{},
+	}
+	if opts.DeletePDB {
+		generated = append(generated, &policy.PodDisruptionBudget{})
+	}
+
+	for _, obj := range generated {
+		if err := opts.KBClient.DeleteAllOf(ctx, obj, ns, selector); err != nil && !meta.IsNoMatchError(err) {
+			return err
+		}
+	}
+
+	// The core Service resource does not support the deletecollection verb, so delete
+	// the matching services one by one.
+	svcs := &core.ServiceList{}
+	if err := opts.KBClient.List(ctx, svcs, ns, selector); err != nil {
+		return err
+	}
+	for i := range svcs.Items {
+		if IsPreservedOnHalt(&svcs.Items[i]) {
+			continue
+		}
+		if err := opts.KBClient.Delete(ctx, &svcs.Items[i]); err != nil && !kerr.IsNotFound(err) {
+			return err
+		}
+	}
+
+	if opts.DeleteMonitor != nil {
+		if err := opts.DeleteMonitor(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// IsPreservedOnHalt reports whether obj carries the keep-on-halt annotation, so it must survive
+// the halt path. Operators can reuse it in halt-completion polling to avoid waiting on a Service
+// that Halt intentionally keeps.
+func IsPreservedOnHalt(obj client.Object) bool {
+	return obj.GetAnnotations()[apis.ResourcePolicyKeepOnAnnotation] == apis.ResourcePolicyKeepOnHalt
+}

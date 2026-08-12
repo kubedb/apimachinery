@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"strings"
 
+	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
@@ -161,6 +162,13 @@ func (w *WeaviateOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Wea
 	case opsapi.WeaviateOpsRequestTypeStorageMigration:
 		if err := w.validateWeaviateStorageMigrationOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
+				req.Name,
+				err.Error()))
+		}
+
+	case opsapi.WeaviateOpsRequestTypeUpdateVersion:
+		if err := w.validateWeaviateUpdateVersionOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("updateVersion"),
 				req.Name,
 				err.Error()))
 		}
@@ -359,6 +367,23 @@ func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateVerticalScalingOpsRequ
 
 	if verticalScalingSpec.Node == nil {
 		return errors.New("spec.verticalScaling.Node can't be empty")
+	}
+
+	return nil
+}
+
+func (w *WeaviateOpsRequestCustomWebhook) validateWeaviateUpdateVersionOpsRequest(db *dbapi.Weaviate, req *opsapi.WeaviateOpsRequest) error {
+	updateVersionSpec := req.Spec.UpdateVersion
+	if updateVersionSpec == nil {
+		return errors.New("`spec.updateVersion` nil not supported in UpdateVersion type")
+	}
+
+	yes, err := IsUpgradable(w.DefaultClient, catalog.ResourceKindWeaviateVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+	if !yes {
+		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
 	}
 
 	return nil
