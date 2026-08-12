@@ -58,7 +58,7 @@ require (
 	kubeops.dev/operator-shard-manager v0.0.6-0.20260418091213-65daf7da824d
 	kubeops.dev/petset v0.1.1-0.20260709161836-19b3570c41ab
 	kubeops.dev/sidekick v0.0.16-0.20260711064558-9f0ad344e447
-	kubestash.dev/apimachinery v0.29.1-0.20260804114527-0116a4cb4eff
+	kubestash.dev/apimachinery v0.29.0-rc.0
 	open-cluster-management.io/api v1.2.0
 	sigs.k8s.io/controller-runtime v0.22.4
 	sigs.k8s.io/randfill v1.0.0
