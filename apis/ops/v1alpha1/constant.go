@@ -359,6 +359,17 @@ const (
 	// PersistentVolumes still forced to Retain, or a database whose data directory
 	// was already wiped before the failure.
 	ArchiverRestoreManualCleanupRequired = "ArchiverRestoreManualCleanupRequired"
+
+	// ArchiverRestorePauseArchiver records that the restore paused the MySQLArchiver,
+	// which stops both scheduled backups and binlog push. It is deliberately never
+	// undone by the ops request: a restore forks the binlog history, and an archiver
+	// that resumes on its own pushes the post-restore timeline into a repository that
+	// still holds the abandoned branch. Archiving stays off until an operator sets
+	// spec.pause back to false, by which point they can take a fresh base backup or
+	// re-point the storage prefix first.
+	ArchiverRestorePauseArchiver          = "ArchiverRestorePauseArchiver"
+	ArchiverRestorePauseArchiverSucceeded = "ArchiverRestorePauseArchiverSucceeded"
+	ArchiverRestorePauseArchiverFailed    = "ArchiverRestorePauseArchiverFailed"
 )
 
 // Postgres Constants
