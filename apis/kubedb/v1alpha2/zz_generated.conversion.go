@@ -3870,6 +3870,7 @@ func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, o
 		out.Replication = nil
 	}
 	// WARNING: in.ReadReplicas requires manual conversion: does not exist in peer-type
+	// WARNING: in.TDE requires manual conversion: does not exist in peer-type
 	return nil
 }
 

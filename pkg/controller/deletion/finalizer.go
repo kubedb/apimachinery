@@ -28,8 +28,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
-// EnsureFinalizer adds the kubedb finalizer to the DB if it is not already present.
-// Call it from the operator's reconcile path once the DB is admitted.
 func EnsureFinalizer(ctx context.Context, kbClient client.Client, db client.Object) error {
 	if controllerutil.ContainsFinalizer(db, apis.Finalizer) {
 		return nil
@@ -44,8 +42,6 @@ func EnsureFinalizer(ctx context.Context, kbClient client.Client, db client.Obje
 	return errors.Wrap(err, "failed to add finalizer")
 }
 
-// RemoveFinalizer removes the kubedb finalizer from the DB if present, allowing the object
-// to be garbage collected. Call it from the operator's terminate path after Do has run.
 func RemoveFinalizer(ctx context.Context, kbClient client.Client, db client.Object) error {
 	if !controllerutil.ContainsFinalizer(db, apis.Finalizer) {
 		return nil
