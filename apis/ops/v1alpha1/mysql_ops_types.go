@@ -126,11 +126,12 @@ type MySQLArchiverRestoreSpec struct {
 	// Delete back to a Released volume destroys it within seconds -- which is exactly the
 	// copy Retain was protecting. Removing them stays an explicit operator action.
 	//
-	// When false, no reclaim policy is touched at all. The volumes are released with
-	// whatever policy they already had, so on the usual Delete they are reclaimed as soon
-	// as the restore wipes them and there is no going back to the pre-restore state. Set
-	// this only when the backup is the copy you trust and you would rather not clean up
-	// after every restore.
+	// When false, the volumes are still forced to Retain for the duration of the restore
+	// -- a failure after the wipe has to be undoable either way -- and the released ones
+	// are deleted once the request succeeds. So the choice is about what survives a
+	// successful restore, not about whether a failed one can be rolled back. Set it false
+	// when the backup is the copy you trust and you would rather not clean up after every
+	// restore.
 	//
 	// +optional
 	// +kubebuilder:default=true
