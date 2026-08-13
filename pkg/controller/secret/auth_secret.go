@@ -18,6 +18,8 @@ package secret
 
 import (
 	"context"
+	crand "crypto/rand"
+	"encoding/binary"
 	"fmt"
 	"reflect"
 	"strings"
@@ -30,7 +32,6 @@ import (
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/rand"
 	cu "kmodules.xyz/client-go/client"
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -267,27 +268,61 @@ const (
 // letters, lowercase letters, and digits only (no symbols), guaranteeing at
 // least one character from each of those three classes. The three-class
 // guarantee satisfies common "N of 3/4 character classes" complexity
-// policies (e.g. SQL Server's SA password requirement) that rand.String's
-// lowercase-consonants-and-digits-only alphabet cannot. Symbols are
+// policies (e.g. SQL Server's SA password requirement). Symbols are
 // deliberately excluded because several DB configs render the password into
 // delimiter-based formats (e.g. ProxySQL's "user:pass;user:pass"
-// admin_variables line) that punctuation could corrupt.
+// admin_variables line) that punctuation could corrupt. A database that must
+// include a symbol class supplies its own generator via
+// Options.PasswordGenerator.
+//
+// Randomness comes from crypto/rand, not a time-seeded math/rand whose seed is
+// recoverable from the operator's observable start time: this value is a
+// database credential.
 func generatePassword(n int) string {
+	if n <= 0 {
+		return ""
+	}
 	if n < 3 {
-		return rand.String(n)
+		b := make([]byte, n)
+		for i := range b {
+			b[i] = pwAll[cryptoIntn(len(pwAll))]
+		}
+		return string(b)
 	}
 	b := make([]byte, n)
-	b[0] = pwUpper[rand.Intn(len(pwUpper))]
-	b[1] = pwLower[rand.Intn(len(pwLower))]
-	b[2] = pwDigits[rand.Intn(len(pwDigits))]
+	b[0] = pwUpper[cryptoIntn(len(pwUpper))]
+	b[1] = pwLower[cryptoIntn(len(pwLower))]
+	b[2] = pwDigits[cryptoIntn(len(pwDigits))]
 	for i := 3; i < n; i++ {
-		b[i] = pwAll[rand.Intn(len(pwAll))]
+		b[i] = pwAll[cryptoIntn(len(pwAll))]
 	}
-	shuffled := make([]byte, n)
-	for i, p := range rand.Perm(n) {
-		shuffled[p] = b[i]
+	// Fisher-Yates shuffle so the guaranteed characters are not pinned to the front.
+	for i := n - 1; i > 0; i-- {
+		j := cryptoIntn(i + 1)
+		b[i], b[j] = b[j], b[i]
 	}
-	return string(shuffled)
+	return string(b)
+}
+
+// cryptoIntn returns a random int in [0, max) using crypto/rand.
+//
+// There is no error path, no panic, no retry loop and no fallback to a weaker
+// source: crypto/rand.Read is documented never to return an error and to always
+// fill the buffer, because the Go runtime itself crashes irrecoverably if the
+// OS CSPRNG is unavailable -- a condition no userspace code can detect or
+// prevent. The returned error is therefore ignored deliberately.
+//
+// Reducing a 64-bit draw modulo max leaves a bias of at most max/2^64. For the
+// charset lengths used here (<= 64) that is below 4e-18, i.e. far smaller than
+// the chance of an undetected hardware fault, so rejection sampling would add
+// a loop for no measurable gain.
+func cryptoIntn(max int) int {
+	if max <= 0 {
+		return 0
+	}
+	var b [8]byte
+	_, _ = crand.Read(b[:])
+	return int(binary.BigEndian.Uint64(b[:]) % uint64(max))
 }
 
 func activationTime(annotations map[string]string) (*metav1.Time, error) {

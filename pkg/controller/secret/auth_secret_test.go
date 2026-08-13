@@ -43,9 +43,11 @@ func classesOf(s string) (upper, lower, digit, symbol bool) {
 
 // The default generator must keep its three-class guarantee and must keep
 // excluding symbols: several databases render the password into
-// delimiter-based config formats that punctuation would corrupt.
+// delimiter-based config formats that punctuation would corrupt. It must also
+// not repeat -- a regression to a time-seeded generator would surface here.
 func TestGeneratePasswordDefault(t *testing.T) {
-	for i := 0; i < 200; i++ {
+	seen := make(map[string]struct{}, 500)
+	for i := 0; i < 500; i++ {
 		pw := generatePassword(kubedb.DefaultPasswordLength)
 		if len(pw) != kubedb.DefaultPasswordLength {
 			t.Fatalf("length = %d, want %d", len(pw), kubedb.DefaultPasswordLength)
@@ -57,6 +59,10 @@ func TestGeneratePasswordDefault(t *testing.T) {
 		if symbol {
 			t.Fatalf("default generator emitted a symbol in %q; symbols are deliberately excluded", pw)
 		}
+		if _, dup := seen[pw]; dup {
+			t.Fatalf("duplicate password %q after %d draws", pw, i)
+		}
+		seen[pw] = struct{}{}
 	}
 }
 
