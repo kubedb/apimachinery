@@ -360,16 +360,18 @@ const (
 	// was already wiped before the failure.
 	ArchiverRestoreManualCleanupRequired = "ArchiverRestoreManualCleanupRequired"
 
-	// ArchiverRestorePauseArchiver records that the restore paused the MySQLArchiver,
-	// which stops both scheduled backups and binlog push. It is deliberately never
-	// undone by the ops request: a restore forks the binlog history, and an archiver
-	// that resumes on its own pushes the post-restore timeline into a repository that
-	// still holds the abandoned branch. Archiving stays off until an operator sets
-	// spec.pause back to false, by which point they can take a fresh base backup or
-	// re-point the storage prefix first.
-	ArchiverRestorePauseArchiver          = "ArchiverRestorePauseArchiver"
-	ArchiverRestorePauseArchiverSucceeded = "ArchiverRestorePauseArchiverSucceeded"
-	ArchiverRestorePauseArchiverFailed    = "ArchiverRestorePauseArchiverFailed"
+	// ArchiverRestoreSuspendArchiver records that the restore stopped archiving for this
+	// database, by setting kubedb.SuspendArchiverAnnotation on it — scoped to the one
+	// database rather than to the archiver, which may serve several.
+	//
+	// It is deliberately never undone by the ops request: a restore forks the binlog
+	// history, and an archiver that resumed on its own would push the post-restore
+	// timeline into a repository that still holds the abandoned branch. Archiving stays
+	// off until an operator removes the annotation, by which point they can take a fresh
+	// base backup first.
+	ArchiverRestoreSuspendArchiver          = "ArchiverRestoreSuspendArchiver"
+	ArchiverRestoreSuspendArchiverSucceeded = "ArchiverRestoreSuspendArchiverSucceeded"
+	ArchiverRestoreSuspendArchiverFailed    = "ArchiverRestoreSuspendArchiverFailed"
 )
 
 // Postgres Constants

@@ -2528,6 +2528,25 @@ const (
 	// ops-manager from pausing the BackupConfiguration before executing the operation.
 	SkipBackupPauseAnnotation = "kubedb.com/skip-backup-pause"
 
+	// SuspendArchiverAnnotation, when set to "true" on a database, stops that database
+	// being archived: no scheduled backups and no binlog push. The archiver is left
+	// attached — spec.archiver.ref still records which one this database belongs to, so
+	// resuming is a matter of removing the annotation.
+	//
+	// This exists because an ArchiverRestore has to stop archiving, and the alternatives
+	// are both wrong. Pausing the archiver itself stops every database it selects, not
+	// only the one being restored. Detaching it by editing the database's labels means
+	// inverting an arbitrary LabelSelector — impossible in general, since a selector
+	// using DoesNotExist or NotIn is escaped by *adding* a label — and it mutates labels
+	// the user owns and may rely on elsewhere.
+	//
+	// A restore sets it and deliberately never clears it: a restore forks the binlog
+	// history, and an archiver that resumed on its own would push the post-restore
+	// timeline into a repository that still holds the abandoned branch. Clearing it is
+	// an operator's decision, taken once they have dealt with the repository — a fresh
+	// base backup after the restore is enough to make later restores correct.
+	SuspendArchiverAnnotation = "kubedb.com/suspend-archiver"
+
 	// Archiver
 	OwnerDatabasesAnnotation                  = "kubedb.com/owner-databases"
 	DistributedArchiverSnapshotInfoAnnotation = "distributedsnapshotinfo"
