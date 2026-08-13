@@ -64,6 +64,9 @@ var pgLog = logf.Log.WithName("postgres-resource")
 var _ webhook.CustomDefaulter = &PostgresCustomWebhook{}
 
 func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db := obj.(*dbapi.Postgres)
 
 	pgLog.Info("defaulting", "name", db.GetName())
@@ -608,6 +611,9 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 }
 
 func (wh *PostgresCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	postgres, ok := obj.(*dbapi.Postgres)
 	if !ok {
 		return nil, fmt.Errorf("expected a Postgres but got a %T", obj)
@@ -618,6 +624,9 @@ func (wh *PostgresCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 }
 
 func (wh *PostgresCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldPostgres, ok := oldObj.(*dbapi.Postgres)
 	if !ok {
 		return nil, fmt.Errorf("expected a Postgres but got a %T", oldPostgres)

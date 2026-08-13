@@ -64,6 +64,9 @@ type MongoDBCustomWebhook struct {
 var _ webhook.CustomDefaulter = &MongoDBCustomWebhook{}
 
 func (w MongoDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	log := logf.FromContext(ctx)
 	log.Info("defaulting MongoDB")
 	db := obj.(*dbapi.MongoDB)
@@ -95,12 +98,18 @@ func (w MongoDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) e
 var _ webhook.CustomValidator = &MongoDBCustomWebhook{}
 
 func (w MongoDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	log := logf.FromContext(ctx)
 	log.Info("creating MongoDB")
 	return nil, w.ValidateMongoDB(obj.(*dbapi.MongoDB))
 }
 
 func (w MongoDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	log := logf.FromContext(ctx)
 	log.Info("updating MongoDB")
 	oldMongoDB, ok := oldObj.(*dbapi.MongoDB)
