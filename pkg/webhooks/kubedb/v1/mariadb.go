@@ -67,6 +67,9 @@ var mariadbLog = logf.Log.WithName("mariadb-resource")
 
 // setDefaultValues provides the defaulting that is performed in mutating stage of creating/updating a MySQL database
 func (w *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db := obj.(*dbapi.MariaDB)
 	mariadbLog.Info("defaulting", "name", db.GetName())
 	if db.Spec.Version == "" {
@@ -136,6 +139,9 @@ func (w *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 var _ webhook.CustomValidator = &MariaDBCustomWebhook{}
 
 func (w MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	mariadb := obj.(*dbapi.MariaDB)
 	mariadbLog.Info("validating", "name", mariadb.Name)
 
@@ -143,6 +149,9 @@ func (w MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 }
 
 func (w MariaDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldMariaDB, ok := oldObj.(*dbapi.MariaDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a MariaDB but got a %T", oldMariaDB)
