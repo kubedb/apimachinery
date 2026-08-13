@@ -55,6 +55,19 @@ type Options struct {
 	// DefaultUsername is rejected; when false, only the presence of the
 	// username/password keys is checked.
 	EnforceUsername bool
+	// PasswordGenerator overrides how the password of a kubedb-generated auth
+	// secret is produced. It is only consulted when kubedb generates the
+	// secret; a user-supplied (BYO) secret is never regenerated.
+	//
+	// Leave it nil to get generatePassword, which is the right default for
+	// almost every database: see its doc comment for why symbols are excluded.
+	// Set it from a specific database's operator when that database has a
+	// credential policy the shared default cannot express -- for example an
+	// external regulatory requirement for a symbol class -- and when that
+	// database does not render the password into a delimiter-based config.
+	//
+	// The function must return a password of exactly n characters.
+	PasswordGenerator func(n int) string
 }
 
 func (o Options) EnsureAuthSecret(ctx context.Context) error {
@@ -233,9 +246,13 @@ func (o Options) validateAuthData(data map[string][]byte) error {
 }
 
 func (o Options) generatedData() map[string][]byte {
+	gen := generatePassword
+	if o.PasswordGenerator != nil {
+		gen = o.PasswordGenerator
+	}
 	return map[string][]byte{
 		core.BasicAuthUsernameKey: []byte(o.DefaultUsername),
-		core.BasicAuthPasswordKey: []byte(generatePassword(kubedb.DefaultPasswordLength)),
+		core.BasicAuthPasswordKey: []byte(gen(kubedb.DefaultPasswordLength)),
 	}
 }
 
