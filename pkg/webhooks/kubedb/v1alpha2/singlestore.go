@@ -60,6 +60,9 @@ var singlestorelog = logf.Log.WithName("singlestore-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *SinglestoreCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Singlestore)
 	if !ok {
 		return fmt.Errorf("expected an Singlestore object but got %T", obj)
@@ -75,6 +78,9 @@ var _ webhook.CustomValidator = &SinglestoreCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *SinglestoreCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.Singlestore)
 	if !ok {
 		return nil, fmt.Errorf("expected an Singlestore object but got %T", obj)
@@ -90,6 +96,9 @@ func (w *SinglestoreCustomWebhook) ValidateCreate(ctx context.Context, obj runti
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *SinglestoreCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Singlestore)
 	if !ok {
 		return nil, fmt.Errorf("expected an Singlestore object but got %T", newObj)
