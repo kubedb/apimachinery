@@ -59,12 +59,11 @@ type Options struct {
 	// secret is produced. It is only consulted when kubedb generates the
 	// secret; a user-supplied (BYO) secret is never regenerated.
 	//
-	// Leave it nil to get generatePassword, which is the right default for
-	// almost every database: see its doc comment for why symbols are excluded.
-	// Set it from a specific database's operator when that database has a
-	// credential policy the shared default cannot express -- for example an
-	// external regulatory requirement for a symbol class -- and when that
-	// database does not render the password into a delimiter-based config.
+	// Leave it nil to get password.Generate, which is the right default for
+	// almost every database. Set it from a specific database's operator when
+	// that database has a credential policy the shared default cannot express
+	// -- for example a charset restriction imposed by a delimiter-based config
+	// format, or a mandated character class.
 	//
 	// The function must return a password of exactly n characters.
 	PasswordGenerator func(n int) string
@@ -246,7 +245,7 @@ func (o Options) validateAuthData(data map[string][]byte) error {
 }
 
 func (o Options) generatedData() map[string][]byte {
-	gen := generatePassword
+	gen := password.Generate
 	if o.PasswordGenerator != nil {
 		gen = o.PasswordGenerator
 	}
@@ -254,16 +253,6 @@ func (o Options) generatedData() map[string][]byte {
 		core.BasicAuthUsernameKey: []byte(o.DefaultUsername),
 		core.BasicAuthPasswordKey: []byte(gen(kubedb.DefaultPasswordLength)),
 	}
-}
-
-// generatePassword returns an n-character alphanumeric password. Symbols are
-// deliberately excluded because several DB configs render the password into
-// delimiter-based formats (e.g. ProxySQL's "user:pass;user:pass"
-// admin_variables line) that punctuation could corrupt. A database that must
-// include a symbol class supplies its own generator via
-// Options.PasswordGenerator.
-func generatePassword(n int) string {
-	return password.GenerateForCharset(n, password.AlphaNum)
 }
 
 func activationTime(annotations map[string]string) (*metav1.Time, error) {

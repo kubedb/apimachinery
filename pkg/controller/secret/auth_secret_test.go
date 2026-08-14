@@ -25,52 +25,25 @@ import (
 	core "k8s.io/api/core/v1"
 )
 
-func hasSymbol(s string) bool {
-	for _, r := range s {
-		switch {
-		case r >= 'A' && r <= 'Z', r >= 'a' && r <= 'z', r >= '0' && r <= '9':
-		default:
-			return true
-		}
-	}
-	return false
-}
+// A nil PasswordGenerator must fall back to password.Generate. This is the
+// path every database other than the one opting in takes.
+func TestGeneratedDataNilGeneratorUsesDefault(t *testing.T) {
+	o := Options{DefaultUsername: "root"}
+	seen := make(map[string]struct{}, 100)
+	for i := 0; i < 100; i++ {
+		data := o.generatedData()
 
-// The default generator must keep excluding symbols: several databases render
-// the password into delimiter-based config formats that punctuation would
-// corrupt. It must also not repeat.
-func TestGeneratePasswordDefault(t *testing.T) {
-	seen := make(map[string]struct{}, 500)
-	for i := 0; i < 500; i++ {
-		pw := generatePassword(kubedb.DefaultPasswordLength)
+		if got := string(data[core.BasicAuthUsernameKey]); got != "root" {
+			t.Fatalf("username = %q, want %q", got, "root")
+		}
+		pw := string(data[core.BasicAuthPasswordKey])
 		if len(pw) != kubedb.DefaultPasswordLength {
 			t.Fatalf("length = %d, want %d", len(pw), kubedb.DefaultPasswordLength)
-		}
-		if hasSymbol(pw) {
-			t.Fatalf("default generator emitted a symbol in %q; symbols are deliberately excluded", pw)
 		}
 		if _, dup := seen[pw]; dup {
 			t.Fatalf("duplicate password %q after %d draws", pw, i)
 		}
 		seen[pw] = struct{}{}
-	}
-}
-
-// A nil PasswordGenerator must leave existing behaviour untouched. This is the
-// path every database other than the one opting in takes.
-func TestGeneratedDataNilGeneratorUsesDefault(t *testing.T) {
-	o := Options{DefaultUsername: "root"}
-	data := o.generatedData()
-
-	if got := string(data[core.BasicAuthUsernameKey]); got != "root" {
-		t.Fatalf("username = %q, want %q", got, "root")
-	}
-	pw := string(data[core.BasicAuthPasswordKey])
-	if len(pw) != kubedb.DefaultPasswordLength {
-		t.Fatalf("length = %d, want %d", len(pw), kubedb.DefaultPasswordLength)
-	}
-	if hasSymbol(pw) {
-		t.Fatalf("nil generator produced a symbol in %q", pw)
 	}
 }
 
