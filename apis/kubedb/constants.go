@@ -2547,23 +2547,28 @@ const (
 	// base backup after the restore is enough to make later restores correct.
 	SuspendArchiverAnnotation = "kubedb.com/suspend-archiver"
 
-	// StripPVCDataSourceAnnotation, when set to "true" on a database, asks the operator to
-	// rebuild any data PersistentVolumeClaim still carrying the spec.dataSource that a
-	// VolumeSnapshot restore gave it, so the claim ends up referencing no snapshot.
+	// StripPVCDataSourceAnnotation turns OFF the rebuild of a data PersistentVolumeClaim
+	// still carrying the spec.dataSource that a VolumeSnapshot restore gave it.
 	//
-	// Two reasons to want that. The dataSource records provenance that stops being true:
-	// retention deletes the VolumeSnapshot in time, leaving the claim permanently naming an
-	// object that no longer exists. And azuredisk has been reported to refuse volume
-	// expansion on a claim carrying one — reported, not reproduced: on Longhorn the same
-	// claim expands online with the field present, so the block is driver-specific rather
-	// than a rule of Kubernetes.
+	// The rebuild is the default: a restored database does not keep a reference to the
+	// snapshot it came from. Set this to "false" to keep the claim as the restore left it.
+	// Any other value, and the absence of the annotation, mean the rebuild runs.
 	//
-	// The field is immutable, so the only way to remove it is to rebuild the claim. That is
-	// why this is opt-in rather than automatic: the blast radius is a database's only data
-	// volume, and the member is rebuilt from its peers while it happens.
+	// Two reasons it is the default. The dataSource records provenance that stops being
+	// true: retention deletes the VolumeSnapshot in time, leaving the claim permanently
+	// naming an object that no longer exists. And azuredisk has been reported to refuse
+	// volume expansion on a claim carrying one — reported, not reproduced: on Longhorn the
+	// same claim expands online with the field present, so the block is driver-specific
+	// rather than a rule of Kubernetes.
+	//
+	// What it costs, and why an operator might turn it off. The field is immutable, so the
+	// only way to remove it is to rebuild the claim, and the member that owned it is then
+	// rebuilt from a peer. That is one member down for a full re-clone, on a database that
+	// has just finished restoring — cheap on a small database and not cheap on a large one.
 	//
 	// Only meaningful on a replicated topology. With a single replica there is no peer to
-	// rebuild from, and the operator leaves the claim alone rather than risk the data.
+	// rebuild from, so the operator leaves the claim alone whatever this says, rather than
+	// risk the only copy of the data.
 	StripPVCDataSourceAnnotation = "kubedb.com/strip-pvc-datasource"
 
 	// Archiver
