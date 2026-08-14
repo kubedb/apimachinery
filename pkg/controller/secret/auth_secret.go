@@ -27,7 +27,7 @@ import (
 	dbsecret "kubedb.dev/apimachinery/pkg/secret"
 
 	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
-	"gomodules.xyz/password-generator"
+	passgen "gomodules.xyz/password-generator"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -59,7 +59,7 @@ type Options struct {
 	// secret is produced. It is only consulted when kubedb generates the
 	// secret; a user-supplied (BYO) secret is never regenerated.
 	//
-	// Leave it nil to get password.Generate, which is the right default for
+	// Leave it nil to get passgen.Generate, which is the right default for
 	// almost every database. Set it from a specific database's operator when
 	// that database has a credential policy the shared default cannot express
 	// -- for example a charset restriction imposed by a delimiter-based config
@@ -245,7 +245,7 @@ func (o Options) validateAuthData(data map[string][]byte) error {
 }
 
 func (o Options) generatedData() map[string][]byte {
-	gen := password.Generate
+	gen := passgen.Generate
 	if o.PasswordGenerator != nil {
 		gen = o.PasswordGenerator
 	}
