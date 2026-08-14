@@ -42,6 +42,8 @@ type Options struct {
 	KBClient client.Client
 	DB       DB
 	Version  string
+	// Name overrides the default name returned by DB.AppBindingMeta().Name().
+	Name string
 	// Customize runs inside the CreateOrPatch mutate function to layer on everything DB-specific:
 	// ClientConfig, Secret, TLSSecret, Parameters.
 	Customize func(in *appcat.AppBinding)
@@ -56,7 +58,7 @@ func (o Options) Ensure(ctx context.Context) (kutil.VerbType, error) {
 	appmeta := o.DB.AppBindingMeta()
 	ab := &appcat.AppBinding{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      appmeta.Name(),
+			Name:      o.appBindingName(),
 			Namespace: o.DB.GetNamespace(),
 		},
 	}
@@ -81,4 +83,11 @@ func (o Options) Ensure(ctx context.Context) (kutil.VerbType, error) {
 		}
 		return in
 	})
+}
+
+func (o Options) appBindingName() string {
+	if o.Name != "" {
+		return o.Name
+	}
+	return o.DB.AppBindingMeta().Name()
 }
