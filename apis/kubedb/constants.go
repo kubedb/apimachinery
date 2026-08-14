@@ -2547,6 +2547,25 @@ const (
 	// base backup after the restore is enough to make later restores correct.
 	SuspendArchiverAnnotation = "kubedb.com/suspend-archiver"
 
+	// StripPVCDataSourceAnnotation, when set to "true" on a database, asks the operator to
+	// rebuild any data PersistentVolumeClaim still carrying the spec.dataSource that a
+	// VolumeSnapshot restore gave it, so the claim ends up referencing no snapshot.
+	//
+	// Two reasons to want that. The dataSource records provenance that stops being true:
+	// retention deletes the VolumeSnapshot in time, leaving the claim permanently naming an
+	// object that no longer exists. And azuredisk has been reported to refuse volume
+	// expansion on a claim carrying one — reported, not reproduced: on Longhorn the same
+	// claim expands online with the field present, so the block is driver-specific rather
+	// than a rule of Kubernetes.
+	//
+	// The field is immutable, so the only way to remove it is to rebuild the claim. That is
+	// why this is opt-in rather than automatic: the blast radius is a database's only data
+	// volume, and the member is rebuilt from its peers while it happens.
+	//
+	// Only meaningful on a replicated topology. With a single replica there is no peer to
+	// rebuild from, and the operator leaves the claim alone rather than risk the data.
+	StripPVCDataSourceAnnotation = "kubedb.com/strip-pvc-datasource"
+
 	// Archiver
 	OwnerDatabasesAnnotation                  = "kubedb.com/owner-databases"
 	DistributedArchiverSnapshotInfoAnnotation = "distributedsnapshotinfo"
