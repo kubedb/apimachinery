@@ -469,3 +469,26 @@ const (
 const (
 	UpdateServerPVCs = "UpdateServerPVCs"
 )
+
+// Etcd Constants
+const (
+	// membership management steps
+	EtcdMemberAdded     = "EtcdMemberAdded"
+	EtcdLearnerPromoted = "EtcdLearnerPromoted"
+	EtcdMemberRemoved   = "EtcdMemberRemoved"
+
+	// maintenance steps
+	EtcdLeaderMoved  = "EtcdLeaderMoved"
+	EtcdDefragmented = "EtcdDefragmented"
+	EtcdCompacted    = "EtcdCompacted"
+	EtcdAlarmCleared = "EtcdAlarmCleared"
+
+	// generic per-db steps
+	ReadyEtcdPod        = "ReadyEtcdPod"
+	UpdateEtcdPetSet    = "UpdateEtcdPetSet"
+	UpdateEtcdNodePVCs  = "UpdateEtcdNodePVCs"
+	MigrateEtcdStorage  = "MigrateEtcdStorage"
+	RestartEtcdPods     = "RestartEtcdPods"
+	EtcdClusterHealthy  = "EtcdClusterHealthy"
+	EtcdMemberListReady = "EtcdMemberListReady"
+)
