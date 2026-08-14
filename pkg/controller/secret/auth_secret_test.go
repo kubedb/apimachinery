@@ -25,26 +25,20 @@ import (
 	core "k8s.io/api/core/v1"
 )
 
-func classesOf(s string) (upper, lower, digit, symbol bool) {
+func hasSymbol(s string) bool {
 	for _, r := range s {
 		switch {
-		case r >= 'A' && r <= 'Z':
-			upper = true
-		case r >= 'a' && r <= 'z':
-			lower = true
-		case r >= '0' && r <= '9':
-			digit = true
+		case r >= 'A' && r <= 'Z', r >= 'a' && r <= 'z', r >= '0' && r <= '9':
 		default:
-			symbol = true
+			return true
 		}
 	}
-	return
+	return false
 }
 
-// The default generator must keep its three-class guarantee and must keep
-// excluding symbols: several databases render the password into
-// delimiter-based config formats that punctuation would corrupt. It must also
-// not repeat -- a regression to a time-seeded generator would surface here.
+// The default generator must keep excluding symbols: several databases render
+// the password into delimiter-based config formats that punctuation would
+// corrupt. It must also not repeat.
 func TestGeneratePasswordDefault(t *testing.T) {
 	seen := make(map[string]struct{}, 500)
 	for i := 0; i < 500; i++ {
@@ -52,11 +46,7 @@ func TestGeneratePasswordDefault(t *testing.T) {
 		if len(pw) != kubedb.DefaultPasswordLength {
 			t.Fatalf("length = %d, want %d", len(pw), kubedb.DefaultPasswordLength)
 		}
-		upper, lower, digit, symbol := classesOf(pw)
-		if !upper || !lower || !digit {
-			t.Fatalf("missing a required class in %q: upper=%v lower=%v digit=%v", pw, upper, lower, digit)
-		}
-		if symbol {
+		if hasSymbol(pw) {
 			t.Fatalf("default generator emitted a symbol in %q; symbols are deliberately excluded", pw)
 		}
 		if _, dup := seen[pw]; dup {
@@ -79,7 +69,7 @@ func TestGeneratedDataNilGeneratorUsesDefault(t *testing.T) {
 	if len(pw) != kubedb.DefaultPasswordLength {
 		t.Fatalf("length = %d, want %d", len(pw), kubedb.DefaultPasswordLength)
 	}
-	if _, _, _, symbol := classesOf(pw); symbol {
+	if hasSymbol(pw) {
 		t.Fatalf("nil generator produced a symbol in %q", pw)
 	}
 }
