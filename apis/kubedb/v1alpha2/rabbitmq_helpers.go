@@ -53,9 +53,13 @@ func (r *RabbitMQ) CustomResourceDefinition() *apiextensions.CustomResourceDefin
 
 type RabbitmqApp struct {
 	*RabbitMQ
+	name string
 }
 
 func (r RabbitmqApp) Name() string {
+	if r.name != "" {
+		return r.name
+	}
 	return r.RabbitMQ.Name
 }
 
@@ -64,7 +68,14 @@ func (r RabbitmqApp) Type() appcat.AppType {
 }
 
 func (r *RabbitMQ) AppBindingMeta() appcat.AppBindingMeta {
-	return &RabbitmqApp{r}
+	return &RabbitmqApp{RabbitMQ: r}
+}
+
+func (r *RabbitMQ) ManagementAppBindingMeta() appcat.AppBindingMeta {
+	return &RabbitmqApp{
+		RabbitMQ: r,
+		name:     meta_util.NameWithSuffix(r.AppBindingMeta().Name(), "management"),
+	}
 }
 
 func (r *RabbitMQ) GetConnectionScheme() string {
@@ -97,10 +108,6 @@ func (r *RabbitMQ) GetAMQPConnectionURL(username, password string) string {
 func (r *RabbitMQ) GetManagementConnectionURL() string {
 	scheme, port := r.GetManagementEndpoint()
 	return fmt.Sprintf("%s://%s.%s.svc.%s:%d", scheme, r.DashboardServiceName(), r.Namespace, apiutils.FindDomain(), port)
-}
-
-func (r *RabbitMQ) GetManagementAppBindingName() string {
-	return meta_util.NameWithSuffix(r.AppBindingMeta().Name(), "management")
 }
 
 func (r *RabbitMQ) GetAuthSecretName() string {
