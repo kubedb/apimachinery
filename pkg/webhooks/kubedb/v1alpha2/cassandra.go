@@ -64,6 +64,9 @@ var cassandralog = logf.Log.WithName("cassandra-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *CassandraCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Cassandra)
 	if !ok {
 		return fmt.Errorf("expected an Cassandra object but got %T", obj)
@@ -77,6 +80,9 @@ var _ webhook.CustomValidator = &CassandraCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *CassandraCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.Cassandra)
 	if !ok {
 		return nil, fmt.Errorf("expected an Cassandra object but got %T", obj)
@@ -87,6 +93,9 @@ func (w *CassandraCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *CassandraCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Cassandra)
 	if !ok {
 		return nil, fmt.Errorf("expected an Cassandra object but got %T", newObj)
