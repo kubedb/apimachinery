@@ -18,8 +18,6 @@ package secret
 
 import (
 	"context"
-	crand "crypto/rand"
-	"encoding/binary"
 	"fmt"
 	"reflect"
 	"strings"
@@ -29,6 +27,7 @@ import (
 	dbsecret "kubedb.dev/apimachinery/pkg/secret"
 
 	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
+	passgen "gomodules.xyz/password-generator"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -60,12 +59,11 @@ type Options struct {
 	// secret is produced. It is only consulted when kubedb generates the
 	// secret; a user-supplied (BYO) secret is never regenerated.
 	//
-	// Leave it nil to get generatePassword, which is the right default for
-	// almost every database: see its doc comment for why symbols are excluded.
-	// Set it from a specific database's operator when that database has a
-	// credential policy the shared default cannot express -- for example an
-	// external regulatory requirement for a symbol class -- and when that
-	// database does not render the password into a delimiter-based config.
+	// Leave it nil to get passgen.Generate, which is the right default for
+	// almost every database. Set it from a specific database's operator when
+	// that database has a credential policy the shared default cannot express
+	// -- for example a charset restriction imposed by a delimiter-based config
+	// format, or a mandated character class.
 	//
 	// The function must return a password of exactly n characters.
 	PasswordGenerator func(n int) string
@@ -247,7 +245,7 @@ func (o Options) validateAuthData(data map[string][]byte) error {
 }
 
 func (o Options) generatedData() map[string][]byte {
-	gen := generatePassword
+	gen := passgen.Generate
 	if o.PasswordGenerator != nil {
 		gen = o.PasswordGenerator
 	}
@@ -255,74 +253,6 @@ func (o Options) generatedData() map[string][]byte {
 		core.BasicAuthUsernameKey: []byte(o.DefaultUsername),
 		core.BasicAuthPasswordKey: []byte(gen(kubedb.DefaultPasswordLength)),
 	}
-}
-
-const (
-	pwUpper  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	pwLower  = "abcdefghijklmnopqrstuvwxyz"
-	pwDigits = "0123456789"
-	pwAll    = pwUpper + pwLower + pwDigits
-)
-
-// generatePassword returns an n-character password drawn from uppercase
-// letters, lowercase letters, and digits only (no symbols), guaranteeing at
-// least one character from each of those three classes. The three-class
-// guarantee satisfies common "N of 3/4 character classes" complexity
-// policies (e.g. SQL Server's SA password requirement). Symbols are
-// deliberately excluded because several DB configs render the password into
-// delimiter-based formats (e.g. ProxySQL's "user:pass;user:pass"
-// admin_variables line) that punctuation could corrupt. A database that must
-// include a symbol class supplies its own generator via
-// Options.PasswordGenerator.
-//
-// Randomness comes from crypto/rand, not a time-seeded math/rand whose seed is
-// recoverable from the operator's observable start time: this value is a
-// database credential.
-func generatePassword(n int) string {
-	if n <= 0 {
-		return ""
-	}
-	if n < 3 {
-		b := make([]byte, n)
-		for i := range b {
-			b[i] = pwAll[cryptoIntn(len(pwAll))]
-		}
-		return string(b)
-	}
-	b := make([]byte, n)
-	b[0] = pwUpper[cryptoIntn(len(pwUpper))]
-	b[1] = pwLower[cryptoIntn(len(pwLower))]
-	b[2] = pwDigits[cryptoIntn(len(pwDigits))]
-	for i := 3; i < n; i++ {
-		b[i] = pwAll[cryptoIntn(len(pwAll))]
-	}
-	// Fisher-Yates shuffle so the guaranteed characters are not pinned to the front.
-	for i := n - 1; i > 0; i-- {
-		j := cryptoIntn(i + 1)
-		b[i], b[j] = b[j], b[i]
-	}
-	return string(b)
-}
-
-// cryptoIntn returns a random int in [0, max) using crypto/rand.
-//
-// There is no error path, no panic, no retry loop and no fallback to a weaker
-// source: crypto/rand.Read is documented never to return an error and to always
-// fill the buffer, because the Go runtime itself crashes irrecoverably if the
-// OS CSPRNG is unavailable -- a condition no userspace code can detect or
-// prevent. The returned error is therefore ignored deliberately.
-//
-// Reducing a 64-bit draw modulo max leaves a bias of at most max/2^64. For the
-// charset lengths used here (<= 64) that is below 4e-18, i.e. far smaller than
-// the chance of an undetected hardware fault, so rejection sampling would add
-// a loop for no measurable gain.
-func cryptoIntn(max int) int {
-	if max <= 0 {
-		return 0
-	}
-	var b [8]byte
-	_, _ = crand.Read(b[:])
-	return int(binary.BigEndian.Uint64(b[:]) % uint64(max))
 }
 
 func activationTime(annotations map[string]string) (*metav1.Time, error) {

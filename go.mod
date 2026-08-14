@@ -26,6 +26,7 @@ require (
 	go.uber.org/zap v1.27.0
 	go.virtual-secrets.dev/apimachinery v0.2.0
 	gomodules.xyz/encoding v0.0.8
+	gomodules.xyz/password-generator v0.2.9
 	gomodules.xyz/pointer v0.1.0
 	gomodules.xyz/runtime v0.3.0
 	gomodules.xyz/stow v0.2.4
