@@ -123,7 +123,7 @@ type EtcdSpec struct {
 	Monitor *mona.AgentSpec `json:"monitor,omitempty"`
 
 	// ConfigSecret is an optional field to provide custom configuration file for
-	// the etcd members (i.e. etcd.conf.yml). Deprecated in favour of
+	// the etcd members (i.e. etcd.conf.yaml). Deprecated in favour of
 	// spec.configuration, kept for parity with the other KubeDB databases.
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`

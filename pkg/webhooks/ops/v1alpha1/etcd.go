@@ -166,6 +166,14 @@ func (w *EtcdOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.EtcdOps
 		if err := w.validateEtcdCompactOpsRequest(req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("compact"), req.Name, err.Error()))
 		}
+	case opsapi.EtcdOpsRequestTypeRecoverFromQuorumLoss:
+		if err := w.validateEtcdRecoverFromQuorumLossOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("recoverFromQuorumLoss"), req.Name, err.Error()))
+		}
+	case opsapi.EtcdOpsRequestTypeRestore:
+		if err := w.validateEtcdRestoreOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("restore"), req.Name, err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
@@ -304,11 +312,49 @@ func (w *EtcdOpsRequestCustomWebhook) validateEtcdReconfigureOpsRequest(req *ops
 	if cfg == nil {
 		return errors.New("spec.configuration is nil, not supported in Reconfigure type")
 	}
-	if cfg.Tuning == nil && !cfg.RemoveCustomConfig {
-		return errors.New("spec.configuration.tuning must be specified, since Etcd does not support a mounted custom config file (--config-file is mutually exclusive with etcd command-line flags)")
+	if cfg.Tuning == nil && cfg.ConfigSecret == nil && !cfg.RemoveCustomConfig {
+		return errors.New("spec.configuration has nothing to apply, set spec.configuration.tuning, spec.configuration.configSecret or spec.configuration.removeCustomConfig")
 	}
-	if len(cfg.ApplyConfig) > 0 || (cfg.ConfigSecret != nil && cfg.ConfigSecret.Name != "") {
-		return errors.New("spec.configuration.applyConfig and spec.configuration.configSecret are not supported for Etcd, use spec.configuration.tuning instead")
+	// applyConfig merges free-form key/value pairs into a rendered config file.
+	// Etcd has no such file: --config-file is mutually exclusive with the etcd
+	// command-line flags KubeDB renders, so accepting applyConfig would silently
+	// drop the user's settings.
+	if len(cfg.ApplyConfig) > 0 {
+		return errors.New("spec.configuration.applyConfig is not supported for Etcd, use spec.configuration.tuning or spec.configuration.configSecret instead")
+	}
+	return nil
+}
+
+// validateEtcdRecoverFromQuorumLossOpsRequest mirrors the preconditions the
+// ops-manager enforces before it starts the destructive recovery, so that an
+// unusable request is rejected at admission instead of failing mid-flight.
+func (w *EtcdOpsRequestCustomWebhook) validateEtcdRecoverFromQuorumLossOpsRequest(db *olddbapi.Etcd, req *opsapi.EtcdOpsRequest) error {
+	if req.Spec.RecoverFromQuorumLoss == nil {
+		return errors.New("spec.recoverFromQuorumLoss is nil, not supported in RecoverFromQuorumLoss type")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for a RecoverFromQuorumLoss ops request, since several recovery steps have no other deadline")
+	}
+	if db.Spec.StorageType == olddbapi.StorageTypeEphemeral {
+		return errors.New("recovery from quorum loss is not applicable to an ephemeral Etcd, there is no surviving data directory to rebuild from")
+	}
+	return nil
+}
+
+// validateEtcdRestoreOpsRequest mirrors the preconditions the ops-manager
+// enforces before it wipes the seed member and replays a snapshot.
+func (w *EtcdOpsRequestCustomWebhook) validateEtcdRestoreOpsRequest(db *olddbapi.Etcd, req *opsapi.EtcdOpsRequest) error {
+	if req.Spec.Restore == nil {
+		return errors.New("spec.restore is nil, not supported in Restore type")
+	}
+	if req.Spec.Restore.FullDBRepository.Name == "" {
+		return errors.New("spec.restore.fullDBRepository.name is required for an in-place restore, there is deliberately no default since the restore destroys the existing keyspace")
+	}
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for a Restore ops request, adjust timeout according to the size of your database")
+	}
+	if db.Spec.StorageType == olddbapi.StorageTypeEphemeral || db.Spec.Storage == nil {
+		return errors.New("an in-place restore requires durable storage on the Etcd database")
 	}
 	return nil
 }

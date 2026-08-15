@@ -37502,7 +37502,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_EtcdSpec(ref common.ReferenceCallb
 					},
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret is an optional field to provide custom configuration file for the etcd members (i.e. etcd.conf.yml). Deprecated in favour of spec.configuration, kept for parity with the other KubeDB databases.",
+							Description: "ConfigSecret is an optional field to provide custom configuration file for the etcd members (i.e. etcd.conf.yaml). Deprecated in favour of spec.configuration, kept for parity with the other KubeDB databases.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
