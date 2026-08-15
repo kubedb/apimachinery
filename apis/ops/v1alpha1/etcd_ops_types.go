@@ -23,6 +23,7 @@ import (
 	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -82,6 +83,15 @@ type EtcdOpsRequestSpec struct {
 	Defragment *EtcdDefragmentSpec `json:"defragment,omitempty"`
 	// Specifies information necessary for compacting the etcd keyspace history
 	Compact *EtcdCompactSpec `json:"compact,omitempty"`
+	// RecoverFromQuorumLoss rebuilds an etcd cluster that has permanently lost
+	// raft quorum, from a single surviving member. This is a destructive,
+	// manually-triggered recovery procedure -- see EtcdRecoverFromQuorumLossSpec.
+	// +optional
+	RecoverFromQuorumLoss *EtcdRecoverFromQuorumLossSpec `json:"recoverFromQuorumLoss,omitempty"`
+	// Restore replaces the entire keyspace of an existing Etcd database with the
+	// contents of a snapshot. This destroys all data currently in the database.
+	// +optional
+	Restore *EtcdRestoreSpec `json:"restore,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
 	Timeout *metav1.Duration `json:"timeout,omitempty"`
 	// ApplyOption is to control the execution of OpsRequest depending on the database state.
@@ -91,8 +101,8 @@ type EtcdOpsRequestSpec struct {
 	MaxRetries int32 `json:"maxRetries,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth;StorageMigration;MoveLeader;Defragment;Compact
-// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, StorageMigration, MoveLeader, Defragment, Compact)
+// +kubebuilder:validation:Enum=UpdateVersion;HorizontalScaling;VerticalScaling;VolumeExpansion;Restart;Reconfigure;ReconfigureTLS;RotateAuth;StorageMigration;MoveLeader;Defragment;Compact;RecoverFromQuorumLoss;Restore
+// ENUM(UpdateVersion, HorizontalScaling, VerticalScaling, VolumeExpansion, Restart, Reconfigure, ReconfigureTLS, RotateAuth, StorageMigration, MoveLeader, Defragment, Compact, RecoverFromQuorumLoss, Restore)
 type EtcdOpsRequestType string
 
 // EtcdUpdateVersionSpec contains the update version information of an Etcd cluster
@@ -166,6 +176,64 @@ type EtcdCompactSpec struct {
 	// given, the operator compacts up to the current revision at execution time.
 	// +optional
 	Revision *int64 `json:"revision,omitempty"`
+}
+
+// EtcdRecoverFromQuorumLossSpec names the surviving etcd member to rebuild
+// the cluster from after a permanent loss of raft quorum.
+//
+// This is the last-resort procedure for a cluster where a majority of members
+// are gone for good and raft can therefore never make progress again. The
+// operator discards every other member's data directory and force-boots the
+// single survivor as a brand new one-member cluster, which the ordinary
+// membership reconciliation then regrows back to spec.replicas. Any write that
+// had been accepted by the lost majority but not yet applied on the survivor is
+// lost -- there is no way to recover it, which is why the procedure is never
+// triggered automatically and is gated on the explicit confirmation below.
+type EtcdRecoverFromQuorumLossSpec struct {
+	// Member is the pod name (or bare ordinal, e.g. "0") of the surviving
+	// etcd member to recover from. If empty, the operator selects the
+	// reachable member with the highest raft applied index and records the
+	// choice in a status condition -- but will not proceed until
+	// ConfirmMember matches the resolved name (see below).
+	// +optional
+	Member string `json:"member,omitempty"`
+
+	// ConfirmMember must exactly equal the resolved survivor's pod name
+	// before the destructive recovery step (discarding every other
+	// member's data and force-rebuilding the cluster from this one) is
+	// allowed to proceed. This is a deliberate hard confirmation gate --
+	// even when Member is set explicitly, the operator reports its
+	// resolved choice in status and waits here, so a mistyped ordinal
+	// cannot silently destroy the wrong members' data.
+	// +optional
+	ConfirmMember string `json:"confirmMember,omitempty"`
+}
+
+// EtcdRestoreSpec identifies the snapshot to restore into an existing Etcd
+// database, replacing its entire current keyspace.
+//
+// This is the in-place counterpart of the bootstrap-time restore configured
+// through the database's own spec.init.archiver (dbapi.ArchiverRecovery): the
+// fields below are named and typed to match that struct so the two describe a
+// snapshot the same way. Only the subset that means anything for etcd is
+// exposed -- etcd restores a full snapshot of the keyspace and has no binlog
+// equivalent to replay, so ArchiverRecovery's ManifestRepository,
+// ReplicationStrategy and ManifestOptions have no counterpart here.
+type EtcdRestoreSpec struct {
+	// RecoveryTimestamp selects which snapshot in the repository to
+	// restore. If zero, the latest available snapshot is used.
+	// +optional
+	RecoveryTimestamp metav1.Time `json:"recoveryTimestamp,omitempty"`
+
+	// EncryptionSecret refers to the Secret holding the encryption key the
+	// snapshot was backed up with, if any.
+	// +optional
+	EncryptionSecret *kmapi.ObjectReference `json:"encryptionSecret,omitempty"`
+
+	// FullDBRepository is the KubeStash Repository to restore the etcd
+	// snapshot from. Required: unlike bootstrap-time restore there is no
+	// safe default here, since this destroys the database's existing data.
+	FullDBRepository kmapi.ObjectReference `json:"fullDBRepository"`
 }
 
 // +kubebuilder:object:root=true
