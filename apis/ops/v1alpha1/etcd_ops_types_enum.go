@@ -35,6 +35,10 @@ const (
 	EtcdOpsRequestTypeDefragment EtcdOpsRequestType = "Defragment"
 	// EtcdOpsRequestTypeCompact is a EtcdOpsRequestType of type Compact.
 	EtcdOpsRequestTypeCompact EtcdOpsRequestType = "Compact"
+	// EtcdOpsRequestTypeRecoverFromQuorumLoss is a EtcdOpsRequestType of type RecoverFromQuorumLoss.
+	EtcdOpsRequestTypeRecoverFromQuorumLoss EtcdOpsRequestType = "RecoverFromQuorumLoss"
+	// EtcdOpsRequestTypeRestore is a EtcdOpsRequestType of type Restore.
+	EtcdOpsRequestTypeRestore EtcdOpsRequestType = "Restore"
 )
 
 var ErrInvalidEtcdOpsRequestType = fmt.Errorf("not a valid EtcdOpsRequestType, try [%s]", strings.Join(_EtcdOpsRequestTypeNames, ", "))
@@ -52,6 +56,8 @@ var _EtcdOpsRequestTypeNames = []string{
 	string(EtcdOpsRequestTypeMoveLeader),
 	string(EtcdOpsRequestTypeDefragment),
 	string(EtcdOpsRequestTypeCompact),
+	string(EtcdOpsRequestTypeRecoverFromQuorumLoss),
+	string(EtcdOpsRequestTypeRestore),
 }
 
 // EtcdOpsRequestTypeNames returns a list of possible string values of EtcdOpsRequestType.
@@ -76,6 +82,8 @@ func EtcdOpsRequestTypeValues() []EtcdOpsRequestType {
 		EtcdOpsRequestTypeMoveLeader,
 		EtcdOpsRequestTypeDefragment,
 		EtcdOpsRequestTypeCompact,
+		EtcdOpsRequestTypeRecoverFromQuorumLoss,
+		EtcdOpsRequestTypeRestore,
 	}
 }
 
@@ -92,18 +100,20 @@ func (x EtcdOpsRequestType) IsValid() bool {
 }
 
 var _EtcdOpsRequestTypeValue = map[string]EtcdOpsRequestType{
-	"UpdateVersion":     EtcdOpsRequestTypeUpdateVersion,
-	"HorizontalScaling": EtcdOpsRequestTypeHorizontalScaling,
-	"VerticalScaling":   EtcdOpsRequestTypeVerticalScaling,
-	"VolumeExpansion":   EtcdOpsRequestTypeVolumeExpansion,
-	"Restart":           EtcdOpsRequestTypeRestart,
-	"Reconfigure":       EtcdOpsRequestTypeReconfigure,
-	"ReconfigureTLS":    EtcdOpsRequestTypeReconfigureTLS,
-	"RotateAuth":        EtcdOpsRequestTypeRotateAuth,
-	"StorageMigration":  EtcdOpsRequestTypeStorageMigration,
-	"MoveLeader":        EtcdOpsRequestTypeMoveLeader,
-	"Defragment":        EtcdOpsRequestTypeDefragment,
-	"Compact":           EtcdOpsRequestTypeCompact,
+	"UpdateVersion":         EtcdOpsRequestTypeUpdateVersion,
+	"HorizontalScaling":     EtcdOpsRequestTypeHorizontalScaling,
+	"VerticalScaling":       EtcdOpsRequestTypeVerticalScaling,
+	"VolumeExpansion":       EtcdOpsRequestTypeVolumeExpansion,
+	"Restart":               EtcdOpsRequestTypeRestart,
+	"Reconfigure":           EtcdOpsRequestTypeReconfigure,
+	"ReconfigureTLS":        EtcdOpsRequestTypeReconfigureTLS,
+	"RotateAuth":            EtcdOpsRequestTypeRotateAuth,
+	"StorageMigration":      EtcdOpsRequestTypeStorageMigration,
+	"MoveLeader":            EtcdOpsRequestTypeMoveLeader,
+	"Defragment":            EtcdOpsRequestTypeDefragment,
+	"Compact":               EtcdOpsRequestTypeCompact,
+	"RecoverFromQuorumLoss": EtcdOpsRequestTypeRecoverFromQuorumLoss,
+	"Restore":               EtcdOpsRequestTypeRestore,
 }
 
 // ParseEtcdOpsRequestType attempts to convert a string to a EtcdOpsRequestType.
