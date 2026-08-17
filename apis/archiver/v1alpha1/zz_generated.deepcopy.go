@@ -22,12 +22,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	v1 "kmodules.xyz/client-go/api/v1"
 	apiv1 "kmodules.xyz/offshoot-api/api/v1"
+	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	corev1alpha1 "kubestash.dev/apimachinery/apis/core/v1alpha1"
 	storagev1alpha1 "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 )
