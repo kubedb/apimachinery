@@ -32,6 +32,10 @@ func (c *FakeArchiverV1alpha1) ClickHouseArchivers(namespace string) v1alpha1.Cl
 	return &FakeClickHouseArchivers{c, namespace}
 }
 
+func (c *FakeArchiverV1alpha1) EtcdArchivers(namespace string) v1alpha1.EtcdArchiverInterface {
+	return &FakeEtcdArchivers{c, namespace}
+}
+
 func (c *FakeArchiverV1alpha1) MSSQLServerArchivers(namespace string) v1alpha1.MSSQLServerArchiverInterface {
 	return &FakeMSSQLServerArchivers{c, namespace}
 }

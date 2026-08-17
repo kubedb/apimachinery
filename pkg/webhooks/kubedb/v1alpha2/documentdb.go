@@ -79,6 +79,9 @@ var _ webhook.CustomDefaulter = &DocumentDBCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *DocumentDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.DocumentDB)
 	if !ok {
 		return fmt.Errorf("expected an DocumentDB object but got %T", obj)
@@ -108,6 +111,9 @@ var _ webhook.CustomValidator = &DocumentDBCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *DocumentDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.DocumentDB)
 	if !ok {
 		return nil, fmt.Errorf("expected an DocumentDB object but got %T", obj)
@@ -123,6 +129,9 @@ func (w *DocumentDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtim
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *DocumentDBCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.DocumentDB)
 	if !ok {
 		return nil, fmt.Errorf("expected an DocumentDB object but got %T", newObj)
