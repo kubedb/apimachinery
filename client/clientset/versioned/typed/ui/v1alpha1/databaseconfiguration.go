@@ -22,11 +22,12 @@ import (
 	"context"
 	"time"
 
+	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	scheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
+
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	rest "k8s.io/client-go/rest"
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
-	scheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 )
 
 // DatabaseConfigurationsGetter has a method to return a DatabaseConfigurationInterface.
