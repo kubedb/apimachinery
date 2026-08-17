@@ -94,44 +94,19 @@ type MySQLOpsRequestSpec struct {
 type MySQLOpsRequestType string
 
 // MySQLArchiverRestoreSpec carries the archiver recovery information for an
-// ArchiverRestore ops request.
-//
-// An archiver restore needs an empty data directory, which is why the documented
-// flow restores into a *new* MySQL object by setting its spec.init.archiver.
-// ArchiverRestore does the same thing in place: the ops request wipes the data
-// volumes of the referenced database and then writes this payload into the
-// database's own spec.init.archiver, so the provisioner runs the exact same
-// restore path it runs for a freshly created restore target.
-//
-// The fields are therefore literally dbapi.ArchiverRecovery — recoveryTimestamp,
-// encryptionSecret, manifestRepository, fullDBRepository, replicationStrategy and
-// manifestOptions — embedded inline rather than redeclared, so the two stay in
-// step by construction.
+// ArchiverRestore ops request. The ops request wipes the referenced database's data
+// volumes and feeds this payload to the same restore path a freshly created restore
+// target uses, so the fields are dbapi.ArchiverRecovery embedded inline.
 type MySQLArchiverRestoreSpec struct {
 	dbapi.ArchiverRecovery `json:",inline"`
 
-	// RetainPV controls what happens to the data PersistentVolumes the restore
-	// replaces.
+	// RetainPV decides whether the pre-restore data PersistentVolumes survive a
+	// *successful* restore. Either way they are forced to Retain for the duration, so a
+	// failure after the wipe can be undone.
 	//
-	// An archiver restore deletes the database's data PVCs so the restore starts on an
-	// empty data directory. Whether the volumes behind them survive that is decided by
-	// their persistentVolumeReclaimPolicy, which usually comes from the StorageClass and
-	// is usually Delete.
-	//
-	// When true (the default), the ops request records each volume's original policy and
-	// forces every one of them to Retain before deleting anything, so the pre-restore
-	// data survives even if the restore fails partway. Volumes that are still Bound at
-	// the end get their original policy back; volumes the restore released keep Retain
-	// and are named in an ArchiverRestoreManualCleanupRequired condition, because handing
-	// Delete back to a Released volume destroys it within seconds -- which is exactly the
-	// copy Retain was protecting. Removing them stays an explicit operator action.
-	//
-	// When false, the volumes are still forced to Retain for the duration of the restore
-	// -- a failure after the wipe has to be undoable either way -- and the released ones
-	// are deleted once the request succeeds. So the choice is about what survives a
-	// successful restore, not about whether a failed one can be rolled back. Set it false
-	// when the backup is the copy you trust and you would rather not clean up after every
-	// restore.
+	// When true (the default), released volumes keep Retain and are named in an
+	// ArchiverRestoreManualCleanupRequired condition; deleting them stays an operator
+	// action. When false, they are deleted once the request succeeds.
 	//
 	// +optional
 	// +kubebuilder:default=true

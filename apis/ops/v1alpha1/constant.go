@@ -354,21 +354,13 @@ const (
 	ArchiverRestoreDataRestoredFailed  = "ArchiverRestoreDataRestoredFailed"
 	ArchiverRestoreDatabaseReadyFailed = "ArchiverRestoreDatabaseReadyFailed"
 
-	// ArchiverRestoreManualCleanupRequired is set (with status False) when a failed
-	// ArchiverRestore leaves state the operator has to look at by hand — released
-	// PersistentVolumes still forced to Retain, or a database whose data directory
-	// was already wiped before the failure.
+	// ArchiverRestoreManualCleanupRequired is set (False) when a failed restore leaves
+	// state to inspect by hand: PVs still forced to Retain, or an already-wiped datadir.
 	ArchiverRestoreManualCleanupRequired = "ArchiverRestoreManualCleanupRequired"
 
 	// ArchiverRestoreSuspendArchiver records that the restore stopped archiving for this
-	// database, by setting kubedb.SuspendArchiverAnnotation on it — scoped to the one
-	// database rather than to the archiver, which may serve several.
-	//
-	// It is deliberately never undone by the ops request: a restore forks the binlog
-	// history, and an archiver that resumed on its own would push the post-restore
-	// timeline into a repository that still holds the abandoned branch. Archiving stays
-	// off until an operator removes the annotation, by which point they can take a fresh
-	// base backup first.
+	// database via kubedb.SuspendArchiverAnnotation. Never undone by the ops request --
+	// see that annotation for why.
 	ArchiverRestoreSuspendArchiver          = "ArchiverRestoreSuspendArchiver"
 	ArchiverRestoreSuspendArchiverSucceeded = "ArchiverRestoreSuspendArchiverSucceeded"
 	ArchiverRestoreSuspendArchiverFailed    = "ArchiverRestoreSuspendArchiverFailed"

@@ -294,16 +294,10 @@ const (
 	MySQLComponentRouter  = "router"
 	MySQLCustomConfigFile = "my-inline.cnf"
 
-	// MySQLArchiverRestoreAnnotation tags the in-memory copy of a MySQL object that the
-	// provisioner reconciles while an ArchiverRestore MySQLOpsRequest is restoring that
-	// database onto itself; its value is the name of the ops request driving the restore.
-	//
-	// It is deliberately never persisted. An in-place restore writes nothing to the
-	// database -- the recovery payload stays on the ops request and is injected into a
-	// copy (see withInPlaceArchiverRecovery in kubedb.dev/mysql). This annotation is how
-	// the restore path on that copy tells "restoring myself", where the KubeDB-side
-	// manifests already exist, from "fresh object pointed at someone else's backup",
-	// where they have to be created.
+	// MySQLArchiverRestoreAnnotation names the ArchiverRestore ops request driving an
+	// in-place restore. Set only on the in-memory copy the provisioner reconciles, never
+	// persisted, and is how the restore path tells "restoring myself" from "restoring
+	// someone else's backup".
 	MySQLArchiverRestoreAnnotation = "ops.kubedb.com/archiver-restore"
 
 	// mysql volume and volume Mounts
@@ -2528,47 +2522,16 @@ const (
 	// ops-manager from pausing the BackupConfiguration before executing the operation.
 	SkipBackupPauseAnnotation = "kubedb.com/skip-backup-pause"
 
-	// SuspendArchiverAnnotation, when set to "true" on a database, stops that database
-	// being archived: no scheduled backups and no binlog push. The archiver is left
-	// attached — spec.archiver.ref still records which one this database belongs to, so
-	// resuming is a matter of removing the annotation.
-	//
-	// This exists because an ArchiverRestore has to stop archiving, and the alternatives
-	// are both wrong. Pausing the archiver itself stops every database it selects, not
-	// only the one being restored. Detaching it by editing the database's labels means
-	// inverting an arbitrary LabelSelector — impossible in general, since a selector
-	// using DoesNotExist or NotIn is escaped by *adding* a label — and it mutates labels
-	// the user owns and may rely on elsewhere.
-	//
-	// A restore sets it and deliberately never clears it: a restore forks the binlog
-	// history, and an archiver that resumed on its own would push the post-restore
-	// timeline into a repository that still holds the abandoned branch. Clearing it is
-	// an operator's decision, taken once they have dealt with the repository — a fresh
-	// base backup after the restore is enough to make later restores correct.
+	// SuspendArchiverAnnotation set to "true" stops this database being archived, without
+	// pausing the archiver itself, which would stop every database it selects. An
+	// ArchiverRestore sets it and never clears it: resuming would push the post-restore
+	// timeline into a repository still holding the abandoned branch, so it is the
+	// operator's call once they have taken a fresh base backup.
 	SuspendArchiverAnnotation = "kubedb.com/suspend-archiver"
 
-	// StripPVCDataSourceAnnotation turns OFF the rebuild of a data PersistentVolumeClaim
-	// still carrying the spec.dataSource that a VolumeSnapshot restore gave it.
-	//
-	// The rebuild is the default: a restored database does not keep a reference to the
-	// snapshot it came from. Set this to "false" to keep the claim as the restore left it.
-	// Any other value, and the absence of the annotation, mean the rebuild runs.
-	//
-	// Two reasons it is the default. The dataSource records provenance that stops being
-	// true: retention deletes the VolumeSnapshot in time, leaving the claim permanently
-	// naming an object that no longer exists. And azuredisk has been reported to refuse
-	// volume expansion on a claim carrying one — reported, not reproduced: on Longhorn the
-	// same claim expands online with the field present, so the block is driver-specific
-	// rather than a rule of Kubernetes.
-	//
-	// What it costs, and why an operator might turn it off. The field is immutable, so the
-	// only way to remove it is to rebuild the claim, and the member that owned it is then
-	// rebuilt from a peer. That is one member down for a full re-clone, on a database that
-	// has just finished restoring — cheap on a small database and not cheap on a large one.
-	//
-	// Only meaningful on a replicated topology. With a single replica there is no peer to
-	// rebuild from, so the operator leaves the claim alone whatever this says, rather than
-	// risk the only copy of the data.
+	// StripPVCDataSourceAnnotation set to "false" keeps the spec.dataSource that a
+	// VolumeSnapshot restore leaves on a data PVC. It is removed by default, since the
+	// snapshot it names is deleted by retention in time.
 	StripPVCDataSourceAnnotation = "kubedb.com/strip-pvc-datasource"
 
 	// Archiver
