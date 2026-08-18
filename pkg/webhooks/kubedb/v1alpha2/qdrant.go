@@ -60,6 +60,9 @@ var qdrantlog = logf.Log.WithName("qdrant-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *QdrantCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Qdrant)
 	if !ok {
 		return fmt.Errorf("expected a Qdrant object, got a %T", obj)
@@ -75,6 +78,9 @@ var _ webhook.CustomValidator = &QdrantCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *QdrantCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.Qdrant)
 	if !ok {
 		return nil, fmt.Errorf("expected a Qdrant object, got a %T", obj)
@@ -91,6 +97,9 @@ func (w *QdrantCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *QdrantCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Qdrant)
 	if !ok {
 		return nil, fmt.Errorf("expected a Qdrant object, got a %T", newObj)

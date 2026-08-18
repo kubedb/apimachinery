@@ -57,6 +57,10 @@ func (c *FakeGitopsV1alpha1) Elasticsearches(namespace string) v1alpha1.Elastics
 	return &FakeElasticsearches{c, namespace}
 }
 
+func (c *FakeGitopsV1alpha1) Etcds(namespace string) v1alpha1.EtcdInterface {
+	return &FakeEtcds{c, namespace}
+}
+
 func (c *FakeGitopsV1alpha1) HanaDBs(namespace string) v1alpha1.HanaDBInterface {
 	return &FakeHanaDBs{c, namespace}
 }

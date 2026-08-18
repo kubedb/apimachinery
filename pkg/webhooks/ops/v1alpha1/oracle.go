@@ -226,8 +226,9 @@ func (w *OracleOpsRequestCustomWebhook) validateOracleReconfigurationOpsRequest(
 		return errors.New("spec configuration nil not supported in Reconfigure type")
 	}
 
-	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil && len(reconfigureSpec.ApplyConfig) == 0 {
-		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	if !reconfigureSpec.RemoveCustomConfig && reconfigureSpec.ConfigSecret == nil &&
+		len(reconfigureSpec.ApplyConfig) == 0 && reconfigureSpec.WalletConfigSecret == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, `ApplyConfig`, or `WalletConfigSecret` must be specified")
 	}
 
 	if reconfigureSpec.ConfigSecret != nil && reconfigureSpec.ConfigSecret.Name != "" {

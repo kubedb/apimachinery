@@ -67,6 +67,9 @@ var oraLog = logf.Log.WithName("oracle-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *OracleCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Oracle)
 	if !ok {
 		return fmt.Errorf("expected a Oracle object, got a %T", obj)
@@ -82,6 +85,9 @@ var _ webhook.CustomValidator = &OracleCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *OracleCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.Oracle)
 	if !ok {
 		return nil, fmt.Errorf("expected a Oracle object, got a %T", obj)
@@ -98,6 +104,9 @@ func (w *OracleCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *OracleCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Oracle)
 	if !ok {
 		return nil, fmt.Errorf("expected a Oracle object, got a %T", newObj)

@@ -60,6 +60,9 @@ var druidlog = logf.Log.WithName("druid-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *DruidCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Druid)
 	if !ok {
 		return fmt.Errorf("expected an Druid object but got %T", obj)
@@ -77,6 +80,9 @@ var _ webhook.CustomValidator = &DruidCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *DruidCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.Druid)
 	if !ok {
 		return nil, fmt.Errorf("expected an Druid object but got %T", obj)
@@ -91,6 +97,9 @@ func (w *DruidCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obj
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *DruidCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Druid)
 	if !ok {
 		return nil, fmt.Errorf("expected an Druid object but got %T", newObj)

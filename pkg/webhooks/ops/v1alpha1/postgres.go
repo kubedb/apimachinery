@@ -19,6 +19,7 @@ package v1alpha1
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -174,12 +175,59 @@ func (w *PostgresOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Pos
 	case opsapi.PostgresOpsRequestTypeReconnectStandby:
 	case opsapi.PostgresOpsRequestTypeForceFailOver:
 	case opsapi.PostgresOpsRequestTypeSetRaftKeyPair:
+	case opsapi.PostgresOpsRequestTypeRotatePrincipalKey:
+		if err := w.validatePostgresRotatePrincipalKeyOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("rotatePrincipalKey"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.PostgresOpsRequestTypeEnableWALEncryption:
+		if err := w.validatePostgresEnableWALEncryptionOpsRequest(db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("enableWALEncryption"),
+				req.Name,
+				err.Error()))
+		}
 	}
 
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Postgresopsrequests.kubedb.com", Kind: "PostgresOpsRequest"}, req.Name, allErr)
+}
+
+// tdeKeyNameRegex mirrors the +kubebuilder:validation:Pattern on the ops
+// KeyName fields. The key name is interpolated into pg_tde SQL executed as the
+// Postgres superuser, so it must stay within a safe identifier charset; this is
+// the admission-time backstop for that CRD pattern (and for older CRDs that
+// predate the marker).
+var tdeKeyNameRegex = regexp.MustCompile(`^[A-Za-z0-9_-]{1,128}$`)
+
+// validatePostgresRotatePrincipalKeyOpsRequest checks that the referenced
+// database actually has TDE configured and that any supplied key name is safe.
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresRotatePrincipalKeyOpsRequest(db *dbapi.Postgres, req *opsapi.PostgresOpsRequest) error {
+	if db.Spec.TDE == nil {
+		return fmt.Errorf("RotatePrincipalKey requires spec.tde to be configured on the referenced Postgres %s/%s", db.Namespace, db.Name)
+	}
+	if s := req.Spec.RotatePrincipalKey; s != nil && s.KeyName != "" && !tdeKeyNameRegex.MatchString(s.KeyName) {
+		return fmt.Errorf("spec.rotatePrincipalKey.keyName %q is invalid, it must match %s", s.KeyName, tdeKeyNameRegex.String())
+	}
+	return nil
+}
+
+// validatePostgresEnableWALEncryptionOpsRequest checks that the referenced
+// database has TDE with a global (vault or kmip) provider, which WAL encryption
+// requires, and that any supplied key name is safe.
+func (w *PostgresOpsRequestCustomWebhook) validatePostgresEnableWALEncryptionOpsRequest(db *dbapi.Postgres, req *opsapi.PostgresOpsRequest) error {
+	if db.Spec.TDE == nil {
+		return fmt.Errorf("EnableWALEncryption requires spec.tde to be configured on the referenced Postgres %s/%s", db.Namespace, db.Name)
+	}
+	if db.Spec.TDE.KeyProvider.Vault == nil && db.Spec.TDE.KeyProvider.KMIP == nil {
+		return fmt.Errorf("EnableWALEncryption requires a global (vault or kmip) key provider on the referenced Postgres %s/%s; the file keyring cannot back WAL encryption", db.Namespace, db.Name)
+	}
+	if s := req.Spec.EnableWALEncryption; s != nil && s.KeyName != "" && !tdeKeyNameRegex.MatchString(s.KeyName) {
+		return fmt.Errorf("spec.enableWALEncryption.keyName %q is invalid, it must match %s", s.KeyName, tdeKeyNameRegex.String())
+	}
+	return nil
 }
 
 func (w *PostgresOpsRequestCustomWebhook) hasDatabaseRef(req *opsapi.PostgresOpsRequest) (*dbapi.Postgres, error) {

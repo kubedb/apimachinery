@@ -37,7 +37,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
-	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -69,6 +68,9 @@ var _ webhook.CustomDefaulter = &PgpoolCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *PgpoolCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	pp, ok := obj.(*olddbapi.Pgpool)
 	if !ok {
 		return fmt.Errorf("expected an pgpool object but got %T", obj)
@@ -85,6 +87,9 @@ var _ webhook.CustomValidator = &PgpoolCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *PgpoolCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	pp, ok := obj.(*olddbapi.Pgpool)
 	if !ok {
 		return nil, fmt.Errorf("expected an pgpool object but got %T", obj)
@@ -99,6 +104,9 @@ func (w *PgpoolCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *PgpoolCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	pp, ok := newObj.(*olddbapi.Pgpool)
 	if !ok {
 		return nil, fmt.Errorf("expected an pgpool object but got %T", pp)
@@ -143,44 +151,6 @@ func (w *PgpoolCustomWebhook) ValidateCreateOrUpdate(pp *olddbapi.Pgpool) field.
 			errorList = append(errorList, field.Invalid(field.NewPath("spec").Child("version"),
 				pp.Name,
 				err.Error()))
-		}
-	}
-
-	if pp.Spec.PostgresRef == nil {
-		errorList = append(errorList, field.Required(
-			field.NewPath("spec").Child("postgresRef"),
-			"`spec.postgresRef` is missing",
-		))
-	}
-
-	if pp.DeletionTimestamp == nil {
-		apb := appcat.AppBinding{}
-		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
-			Name:      pp.Spec.PostgresRef.Name,
-			Namespace: pp.Spec.PostgresRef.Namespace,
-		}, &apb)
-		if err != nil {
-			errorList = append(errorList, field.Invalid(
-				field.NewPath("spec").Child("postgresRef"),
-				pp.Name,
-				err.Error(),
-			))
-		}
-
-		backendSSL, err := pp.IsBackendTLSEnabled(w.DefaultClient)
-		if err != nil {
-			errorList = append(errorList, field.Invalid(
-				field.NewPath("spec").Child("postgresRef"),
-				pp.Name,
-				err.Error(),
-			))
-		}
-
-		if pp.Spec.TLS == nil && backendSSL {
-			errorList = append(errorList, field.Required(
-				field.NewPath("spec").Child("tls"),
-				"`spec.tls` must be set because backend postgres is tls enabled",
-			))
 		}
 	}
 

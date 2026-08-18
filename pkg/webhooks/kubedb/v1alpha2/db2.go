@@ -60,6 +60,9 @@ var db2log = logf.Log.WithName("DB2-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *DB2CustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.DB2)
 	if !ok {
 		return fmt.Errorf("expected an DB2 object but got %T", obj)
@@ -75,6 +78,9 @@ var _ webhook.CustomValidator = &DB2CustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *DB2CustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.DB2)
 	if !ok {
 		return nil, fmt.Errorf("expected an DB2 object but got %T", obj)
@@ -89,6 +95,9 @@ func (w *DB2CustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Objec
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *DB2CustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.DB2)
 	if !ok {
 		return nil, fmt.Errorf("expected an DB2 object but got %T", newObj)

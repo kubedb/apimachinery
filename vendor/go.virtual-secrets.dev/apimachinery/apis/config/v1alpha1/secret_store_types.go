@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 const (
@@ -44,6 +45,20 @@ type SecretStore struct {
 // SecretStoreSpec defines the desired state of SecretStore
 type SecretStoreSpec struct {
 	Vault *Vault `json:"vault,omitempty"`
+
+	// +optional
+	AWS *AWS `json:"aws,omitempty"`
+
+	// +optional
+	Azure *Azure `json:"azure,omitempty"`
+
+	// +optional
+	GCP *GCP `json:"gcp,omitempty"`
+
+	// **For Dev Mode Only**
+	// We can use a secret as the Secret Store for testing
+	// +optional
+	Secret *Secret `json:"secret,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -56,12 +71,66 @@ type SecretStoreList struct {
 }
 
 type Vault struct {
-	// Connection url to the secret manager
-	URL string `json:"url"`
+	// Ref refers to the AppBinding (kmodules.xyz/custom-resources) that
+	// describes how to connect to the Vault/OpenBao server: connection URL and CA
+	// bundle. This is the same AppBinding a KubeVault VaultServer publishes for
+	// its consumers.
+	//
+	// If that AppBinding's spec.parameters carries isolateTenants: true, Secret
+	// reads/writes are routed into the OpenBao/Vault namespace of the tenant that
+	// owns the Secret's Kubernetes namespace (derived from the
+	// ace.appscode.com/client-org label and ace.appscode.com/org-id annotation on
+	// that Kubernetes namespace), instead of the Vault root namespace. Virtual
+	// Secrets never creates or mounts engines in that namespace itself; it only
+	// reads/writes into namespaces KubeVault has already provisioned.
+	Ref kmapi.ObjectReference `json:"ref"`
 
-	// Name of the vault role to use for the operator
+	// RoleName is the Vault Kubernetes auth role Virtual Secrets logs in as,
+	// bound to the virtual-secrets-server service account. This is distinct
+	// from the AppBinding's own vaultRole parameter, which authenticates
+	// KubeVault's operator, not Virtual Secrets — it must be provisioned
+	// separately by a Vault admin.
 	// +optional
 	RoleName string `json:"roleName,omitempty"`
+}
+
+type AWS struct {
+	// SecretRef defines a secret that contains the
+	// AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+	// +optional
+	SecretRef *kmapi.ObjectReference `json:"secretRef,omitempty"`
+
+	// Region specifies the AWS region where the Secret will be stored
+	Region string `json:"region,omitempty"`
+}
+
+type Azure struct {
+	// SecretRef defines a secret that contains the
+	// AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+	SecretRef *kmapi.ObjectReference `json:"secretRef,omitempty"`
+
+	// The Azure Key Vault Provider offers four modes for accessing a Key Vault instance
+	// Workload Identity, Pod Identity, Managed Identities, Service Principal
+	// Pod Identity, Managed Identities are not supported yet
+	// +kubebuilder:validation:Enum=WorkloadIdentity;ServicePrincipal
+	AccessMode string `json:"accessMode,omitempty"`
+
+	KeyVaultName string `json:"keyVaultName,omitempty"`
+}
+
+type GCP struct {
+	// SecretRef defines a secret that contains the json file with all data
+	// client_id, client_secret etc
+	SecretRef *kmapi.ObjectReference `json:"secretRef,omitempty"`
+
+	// Region specifies the GCP region where the Secret will be stored
+	Region string `json:"region,omitempty"`
+}
+
+type Secret struct {
+	// Name and namespace of the Secret which will work as the Secret Manager
+	// +optional
+	*kmapi.ObjectReference `json:",omitempty"`
 }
 
 func init() {
