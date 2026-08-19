@@ -34137,16 +34137,34 @@ func schema_apimachinery_apis_kubedb_v1alpha2_BackupSpec(ref common.ReferenceCal
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"s3Secret": {
+					"s3Secrets": {
 						SchemaProps: spec.SchemaProps{
-							Description: "S3Secret references the Secret holding the S3 credentials.",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+							Description: "S3Secrets maps Solr backup repository names to Secrets holding their S3 credentials.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
+									},
+								},
+							},
 						},
 					},
-					"gcsSecret": {
+					"gcsSecrets": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GCSSecret references the Secret holding the GCS service account key.",
-							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+							Description: "GCSSecrets maps Solr backup repository names to Secrets holding their GCS service account keys.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
+									},
+								},
+							},
 						},
 					},
 				},

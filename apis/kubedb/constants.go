@@ -1129,12 +1129,13 @@ const (
 	SolrZkDigest          = "zk-digest"
 	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
-	SolrVolumeDefaultConfig     = "default-config"
-	SolrVolumeCustomConfig      = "custom-config"
-	SolrVolumeAuthConfig        = "auth-config"
-	SolrVolumeData              = "data"
-	SolrVolumeConfig            = "slconfig"
-	SolrVolumeBackupCredentials = "backup-credentials"
+	SolrVolumeDefaultConfig           = "default-config"
+	SolrVolumeCustomConfig            = "custom-config"
+	SolrVolumeAuthConfig              = "auth-config"
+	SolrVolumeData                    = "data"
+	SolrVolumeConfig                  = "slconfig"
+	SolrVolumeBackupCredentials       = "backup-credentials"
+	SolrBackupCredentialsSecretSuffix = "backup-credentials"
 
 	DistLibs              = "/opt/solr/dist"
 	ContribLibs           = "/opt/solr/contrib/%s/lib"
@@ -1148,8 +1149,9 @@ const (
 	SolrZkReady           = "ZookeeperReady"
 
 	// Must stay under SolrHomeDir; the Java SecurityManager policy denies reads elsewhere.
-	SolrBackupCredentialsDir  = "/var/solr/backup-credentials"
-	SolrGCSCredentialFileName = "cred.json"
+	SolrBackupCredentialsDir    = "/var/solr/backup-credentials"
+	SolrAWSCredentialsFileName  = "aws-credentials"
+	SolrAWSSharedCredentialsEnv = "AWS_SHARED_CREDENTIALS_FILE"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""

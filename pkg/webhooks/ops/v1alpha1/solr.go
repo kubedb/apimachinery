@@ -358,7 +358,7 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 
 	creds := cfg.BackupSpec
 	if !cfg.RemoveCustomConfig && cfg.ConfigSecret == nil && len(cfg.ApplyConfig) == 0 &&
-		(creds == nil || (creds.S3Secret == nil && creds.GCSSecret == nil)) {
+		(creds == nil || (len(creds.S3Secrets) == 0 && len(creds.GCSSecrets) == 0)) {
 		return errors.New("at least one of `removeCustomConfig`, `configSecret`, `applyConfig` or `backup` must be specified")
 	}
 
@@ -372,31 +372,37 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		return nil
 	}
 
-	if creds.S3Secret != nil {
-		if creds.S3Secret.Name == "" {
-			return errors.New("`spec.configuration.backup.s3Secret.name` must be specified")
+	for repository, ref := range creds.S3Secrets {
+		if repository == "" {
+			return errors.New("`spec.configuration.backup.s3Secrets` contains an empty repository name")
 		}
-		secret, err := w.getReferencedSecret(req.Namespace, creds.S3Secret.Name, "s3")
+		if ref.Name == "" {
+			return fmt.Errorf("`spec.configuration.backup.s3Secrets[%q].name` must be specified", repository)
+		}
+		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "s3")
 		if err != nil {
 			return err
 		}
 		for _, key := range []string{blob.AWSAccessKeyId, blob.AWSSecretAccessKey} {
 			if _, ok := secret.Data[key]; !ok {
-				return fmt.Errorf("s3 secret %s/%s has no key %q holding the credential", req.Namespace, secret.Name, key)
+				return fmt.Errorf("s3 secret %s/%s for repository %q has no key %q holding the credential", req.Namespace, secret.Name, repository, key)
 			}
 		}
 	}
 
-	if creds.GCSSecret != nil {
-		if creds.GCSSecret.Name == "" {
-			return errors.New("`spec.configuration.backup.gcsSecret.name` must be specified")
+	for repository, ref := range creds.GCSSecrets {
+		if repository == "" {
+			return errors.New("`spec.configuration.backup.gcsSecrets` contains an empty repository name")
 		}
-		secret, err := w.getReferencedSecret(req.Namespace, creds.GCSSecret.Name, "gcs")
+		if ref.Name == "" {
+			return fmt.Errorf("`spec.configuration.backup.gcsSecrets[%q].name` must be specified", repository)
+		}
+		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "gcs")
 		if err != nil {
 			return err
 		}
 		if _, ok := secret.Data[blob.GoogleServiceAccountJSONKey]; !ok {
-			return fmt.Errorf("gcs secret %s/%s has no key %q holding the service account json", req.Namespace, secret.Name, blob.GoogleServiceAccountJSONKey)
+			return fmt.Errorf("gcs secret %s/%s for repository %q has no key %q holding the service account json", req.Namespace, secret.Name, repository, blob.GoogleServiceAccountJSONKey)
 		}
 	}
 
