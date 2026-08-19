@@ -27157,6 +27157,9 @@
         "database"
       ],
       "properties": {
+        "address": {
+          "type": "string"
+        },
         "appBinding": {
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
         },
@@ -27171,8 +27174,14 @@
           "type": "integer",
           "format": "int32"
         },
+        "password": {
+          "type": "string"
+        },
         "trustServerCertificate": {
           "type": "boolean"
+        },
+        "user": {
+          "type": "string"
         }
       }
     },
