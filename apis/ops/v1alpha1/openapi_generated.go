@@ -700,6 +700,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerUpdateVersionSpec":                     schema_apimachinery_apis_ops_v1alpha1_MSSQLServerUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVerticalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MSSQLServerVolumeExpansionSpec":                   schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBArchiverRestoreSpec":                       schema_apimachinery_apis_ops_v1alpha1_MariaDBArchiverRestoreSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBCustomConfiguration":                       schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBHorizontalScalingSpec":                     schema_apimachinery_apis_ops_v1alpha1_MariaDBHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBMigrationSpec":                             schema_apimachinery_apis_ops_v1alpha1_MariaDBMigrationSpec(ref),
@@ -39059,6 +39060,62 @@ func schema_apimachinery_apis_ops_v1alpha1_MSSQLServerVolumeExpansionSpec(ref co
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MariaDBArchiverRestoreSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MariaDBArchiverRestoreSpec carries the archiver recovery information for an ArchiverRestore ops request. The ops request wipes the referenced database's data volumes and feeds this payload to the same restore path a freshly created restore target uses, so the fields are dbapi.ArchiverRecovery embedded inline.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"recoveryTimestamp": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"manifestRepository": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"fullDBRepository": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FullDBRepository means db restore + manifest restore",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"replicationStrategy": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"manifestOptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManifestOptions provide options to select particular manifest object to restore",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ManifestOptions"),
+						},
+					},
+					"retainPV": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetainPV decides whether the pre-restore data PersistentVolumes survive a *successful* restore. Either way they are forced to Retain for the duration, so a failure after the wipe can be undone.\n\nWhen true (the default), released volumes keep Retain and are named in an ArchiverRestoreManualCleanupRequired condition; deleting them stays an operator action. When false, they are deleted once the request succeeds.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"recoveryTimestamp"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1.ManifestOptions"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MariaDBCustomConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -39339,6 +39396,12 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBOpsRequestSpec(ref common.Refe
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBMigrationSpec"),
 						},
 					},
+					"archiver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for restoring the database in place from its archiver",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBArchiverRestoreSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -39363,7 +39426,7 @@ func schema_apimachinery_apis_ops_v1alpha1_MariaDBOpsRequestSpec(ref common.Refe
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBArchiverRestoreSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.MariaDBVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"},
 	}
 }
 
