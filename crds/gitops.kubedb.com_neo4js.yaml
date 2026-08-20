@@ -4752,6 +4752,51 @@ spec:
                         type: array
                     type: object
                 type: object
+              remoteAliasKeystore:
+                properties:
+                  keyName:
+                    minLength: 1
+                    type: string
+                  keystoreRef:
+                    properties:
+                      key:
+                        type: string
+                      name:
+                        default: ""
+                        type: string
+                      optional:
+                        type: boolean
+                    required:
+                    - key
+                    type: object
+                    x-kubernetes-map-type: atomic
+                  passwordRef:
+                    properties:
+                      key:
+                        type: string
+                      name:
+                        default: ""
+                        type: string
+                      optional:
+                        type: boolean
+                    required:
+                    - key
+                    type: object
+                    x-kubernetes-map-type: atomic
+                required:
+                - keyName
+                - keystoreRef
+                - passwordRef
+                type: object
+                x-kubernetes-validations:
+                - message: keystoreRef.name must be non-empty
+                  rule: has(self.keystoreRef.name) && self.keystoreRef.name != ''
+                - message: keystoreRef.key must be non-empty
+                  rule: self.keystoreRef.key != ''
+                - message: passwordRef.name must be non-empty
+                  rule: has(self.passwordRef.name) && self.passwordRef.name != ''
+                - message: passwordRef.key must be non-empty
+                  rule: self.passwordRef.key != ''
               replicas:
                 format: int32
                 type: integer

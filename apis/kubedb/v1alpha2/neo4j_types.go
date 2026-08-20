@@ -106,6 +106,31 @@ type Neo4jSpec struct {
 	// Init is used to initialize the database from a script or git repo.
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
+
+	// RemoteAliasKeystore configures the PKCS12 AES keystore used to encrypt remote database alias credentials.
+	// The referenced Secrets must be in the same namespace as the Neo4j resource.
+	// +optional
+	RemoteAliasKeystore *Neo4jRemoteAliasKeystore `json:"remoteAliasKeystore,omitempty"`
+}
+
+// Neo4jRemoteAliasKeystore configures the PKCS12 AES keystore used for remote database aliases.
+// +kubebuilder:validation:XValidation:rule="has(self.keystoreRef.name) && self.keystoreRef.name != ”",message="keystoreRef.name must be non-empty"
+// +kubebuilder:validation:XValidation:rule="self.keystoreRef.key != ”",message="keystoreRef.key must be non-empty"
+// +kubebuilder:validation:XValidation:rule="has(self.passwordRef.name) && self.passwordRef.name != ”",message="passwordRef.name must be non-empty"
+// +kubebuilder:validation:XValidation:rule="self.passwordRef.key != ”",message="passwordRef.key must be non-empty"
+type Neo4jRemoteAliasKeystore struct {
+	// KeystoreRef selects the Secret key containing the PKCS12 AES keystore.
+	// +kubebuilder:validation:Required
+	KeystoreRef core.SecretKeySelector `json:"keystoreRef"`
+
+	// PasswordRef selects the Secret key containing the keystore password.
+	// +kubebuilder:validation:Required
+	PasswordRef core.SecretKeySelector `json:"passwordRef"`
+
+	// KeyName is the name of the AES key in the keystore.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	KeyName string `json:"keyName"`
 }
 
 type Neo4jTLSConfig struct {
