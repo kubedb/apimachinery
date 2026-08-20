@@ -228,19 +228,22 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *
 		return err
 	}
 
-	var list []string
-	if db.Spec.Topology != nil {
-		if db.Spec.Topology.Mode != nil && *db.Spec.Topology.Mode == dbapi.MySQLModeGroupReplication || *db.Spec.Topology.Mode == dbapi.MySQLModeInnoDBCluster {
-			list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
-			if err != nil {
-				return err
-			}
-		}
-	} else {
-		list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
-		if err != nil {
-			return err
-		}
+	// Every topology is validated against the same constraint list, so there is no
+	// branch to fall out of.
+	//
+	// The branch this replaces filled `list` for GroupReplication, InnoDBCluster and a
+	// nil topology only. SemiSync and RemoteReplica have a non-nil Topology and neither
+	// of those two modes, so they matched no case, `list` stayed nil, and
+	// slices.Contains rejected *every* target version -- a SemiSync database could not
+	// be version-upgraded at all, with an error message ("upgrade from X to Y is not
+	// supported") that pointed at the catalog rather than at the missing case.
+	//
+	// It also read `*db.Spec.Topology.Mode` in the second disjunct with no nil guard:
+	// `a && b || c` is `(a && b) || c`, so a Topology carrying no Mode reached the
+	// dereference and panicked the webhook.
+	list, err := getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
+	if err != nil {
+		return err
 	}
 	if !slices.Contains(list, updateVersionSpec.TargetVersion) {
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
