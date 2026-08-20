@@ -27185,6 +27185,36 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.courier.v1alpha1.MSSQLServerDatabaseSelection": {
+      "description": "MSSQLServerDatabaseSelection defines table filters for one source database. An empty Table list selects every eligible table after the global Schema and ExcludeSchema filters are applied. ExcludeTable takes precedence over Table.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "excludeTable": {
+          "description": "ExcludeTable is the list of schema-qualified tables to exclude.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "name": {
+          "description": "Name is the source database name.",
+          "type": "string",
+          "default": ""
+        },
+        "table": {
+          "description": "Table is the list of schema-qualified tables (e.g. \"dbo.Users\") to include.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.courier.v1alpha1.MSSQLServerMigration": {
       "type": "object",
       "required": [
@@ -27292,13 +27322,17 @@
         "enabled"
       ],
       "properties": {
-        "database": {
-          "description": "Database is the list of databases to migrate.",
+        "databases": {
+          "description": "Databases defines database-specific table selection.",
           "type": "array",
           "items": {
-            "type": "string",
-            "default": ""
-          }
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MSSQLServerDatabaseSelection"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "enabled": {
           "description": "Enabled controls whether the Schema Phase should be executed.",
@@ -27313,24 +27347,8 @@
             "default": ""
           }
         },
-        "excludeTable": {
-          "description": "ExcludeTable is the list of schema-qualified tables to exclude.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
         "schema": {
           "description": "Schema is the list of SQL Server schemas (e.g. \"dbo\") to include.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "table": {
-          "description": "Table is the list of schema-qualified tables (e.g. \"dbo.Users\") to include.",
           "type": "array",
           "items": {
             "type": "string",

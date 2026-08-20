@@ -104,15 +104,27 @@ type MSSQLServerTarget struct {
 type MSSQLServerSchema struct {
 	// Enabled controls whether the Schema Phase should be executed.
 	Enabled bool `yaml:"enabled" json:"enabled"`
-	// Database is the list of databases to migrate.
-	// +optional
-	Database []string `yaml:"database" json:"database,omitempty"`
 	// Schema is the list of SQL Server schemas (e.g. "dbo") to include.
 	// +optional
 	Schema []string `yaml:"schema" json:"schema,omitempty"`
 	// ExcludeSchema is the list of SQL Server schemas to exclude.
 	// +optional
 	ExcludeSchema []string `yaml:"excludeSchema" json:"excludeSchema,omitempty"`
+	// Databases defines database-specific table selection.
+	// +optional
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MinItems=1
+	Databases []MSSQLServerDatabaseSelection `yaml:"databases" json:"databases,omitempty"`
+}
+
+// MSSQLServerDatabaseSelection defines table filters for one source database.
+// An empty Table list selects every eligible table after the global Schema and
+// ExcludeSchema filters are applied. ExcludeTable takes precedence over Table.
+type MSSQLServerDatabaseSelection struct {
+	// Name is the source database name.
+	// +kubebuilder:validation:MinLength=1
+	Name string `yaml:"name" json:"name"`
 	// Table is the list of schema-qualified tables (e.g. "dbo.Users") to include.
 	// +optional
 	Table []string `yaml:"table" json:"table,omitempty"`
