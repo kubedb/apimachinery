@@ -493,12 +493,8 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 	}
 
 	if postgres.Spec.Configuration != nil && len(postgres.Spec.Configuration.Inline) > 0 {
-		if len(postgres.Spec.Configuration.Inline) > 1 {
-			return nil, fmt.Errorf(`only one configuration source is allowed in spec.configuration.applyConfig and it should be %q`, kubedb.PostgresCustomConfigFile)
-		}
-		_, exists := postgres.Spec.Configuration.Inline[kubedb.PostgresCustomConfigFile]
-		if !exists {
-			return nil, fmt.Errorf(`invalid configuration source found in spec.configuration.applyConfig. only %q is allowed`, kubedb.PostgresCustomConfigFile)
+		if err := validatePostgresInlineConfig(postgres.Spec.Configuration.Inline); err != nil {
+			return nil, err
 		}
 	}
 
@@ -647,6 +643,31 @@ func checkPgScramAuthMethodSupport(v string) error {
 	}
 	if pgVersion.Major() < 11 {
 		return fmt.Errorf("scram auth method is available only for 11 or higher Versions")
+	}
+	return nil
+}
+
+// validatePostgresInlineConfig checks the keys of spec.configuration.inline (and the identically
+// shaped applyConfig on a PostgresOpsRequest). Two keys are recognised:
+//
+//	user.conf     -> appended to postgresql.conf via include_if_exists
+//	user_hba.conf -> spliced into $PGDATA/pg_hba.conf by the role scripts
+//
+// Anything else is rejected rather than silently dropped, which is what makes a mistyped key a
+// visible failure instead of a cluster that starts fine and ignores every setting.
+func validatePostgresInlineConfig(inline map[string]string) error {
+	for key, val := range inline {
+		switch key {
+		case kubedb.PostgresCustomConfigFile:
+			// postgresql.conf settings; PostgreSQL itself reports bad entries on reload.
+		case kubedb.PostgresCustomHBAFile:
+			if err := dbapi.ValidateHBAConfig(val); err != nil {
+				return fmt.Errorf("invalid %q in spec.configuration.inline: %w", kubedb.PostgresCustomHBAFile, err)
+			}
+		default:
+			return fmt.Errorf("invalid configuration source %q found in spec.configuration.inline; only %q and %q are allowed",
+				key, kubedb.PostgresCustomConfigFile, kubedb.PostgresCustomHBAFile)
+		}
 	}
 	return nil
 }
