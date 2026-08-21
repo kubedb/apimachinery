@@ -294,6 +294,16 @@ gen-enum: $(BUILD_DIRS)
 	        go generate ./apis/...                              \
 	    "
 
+.PHONY: gen-grpc-protos
+# Regenerates the hand-written gRPC APIs under pkg/utils/grpc/. Run from the repo root so
+# each descriptor registers under its full path; a bare filename would collide in the
+# global proto registry with any other api.proto linked into the same binary.
+gen-grpc-protos:
+	@echo "Generating protobuf for pkg/utils/grpc/postgres"
+	protoc --go_out=. --go_opt=module=kubedb.dev/apimachinery                  \
+		--go-grpc_out=. --go-grpc_opt=module=kubedb.dev/apimachinery       \
+		--proto_path=. ./pkg/utils/grpc/postgres/proto/postgres.proto
+
 .PHONY: manifests
 manifests: gen-crds patch-crds label-crds
 
