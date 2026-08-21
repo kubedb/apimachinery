@@ -183,6 +183,17 @@ func (w *QdrantCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Qdrant) field.
 		}
 	}
 
+	if db.Spec.DisableSecurity && db.Spec.JWTRBAC {
+		allErr = append(
+			allErr,
+			field.Invalid(
+				field.NewPath("spec").Child("jwtRbac"),
+				db.Spec.JWTRBAC,
+				"JWT RBAC requires disable security to be false",
+			),
+		)
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}

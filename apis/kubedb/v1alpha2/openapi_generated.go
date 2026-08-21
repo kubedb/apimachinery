@@ -44933,6 +44933,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_QdrantSpec(ref common.ReferenceCal
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
+					"jwtRbac": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JWTRBAC enables JWT-based role-based access control (RBAC). If unset, it defaults to false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"configuration": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
