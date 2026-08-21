@@ -111,15 +111,15 @@ spec:
                     type: object
                     x-kubernetes-validations:
                     - message: keystoreRef.name must be non-empty
-                      rule: has(self.keystoreRef.name) && self.keystoreRef.name !=
-                        ''
+                      rule: has(self.keystoreRef.name) && size(self.keystoreRef.name)
+                        > 0
                     - message: keystoreRef.key must be non-empty
-                      rule: self.keystoreRef.key != ''
+                      rule: size(self.keystoreRef.key) > 0
                     - message: passwordRef.name must be non-empty
-                      rule: has(self.passwordRef.name) && self.passwordRef.name !=
-                        ''
+                      rule: has(self.passwordRef.name) && size(self.passwordRef.name)
+                        > 0
                     - message: passwordRef.key must be non-empty
-                      rule: self.passwordRef.key != ''
+                      rule: size(self.passwordRef.key) > 0
                   secretName:
                     type: string
                 type: object

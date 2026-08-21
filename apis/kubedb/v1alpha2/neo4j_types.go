@@ -119,10 +119,10 @@ type Neo4jConfiguration struct {
 }
 
 // Neo4jRemoteAliasKeystore configures the PKCS12 AES keystore used for remote database aliases.
-// +kubebuilder:validation:XValidation:rule="has(self.keystoreRef.name) && self.keystoreRef.name != ”",message="keystoreRef.name must be non-empty"
-// +kubebuilder:validation:XValidation:rule="self.keystoreRef.key != ”",message="keystoreRef.key must be non-empty"
-// +kubebuilder:validation:XValidation:rule="has(self.passwordRef.name) && self.passwordRef.name != ”",message="passwordRef.name must be non-empty"
-// +kubebuilder:validation:XValidation:rule="self.passwordRef.key != ”",message="passwordRef.key must be non-empty"
+// +kubebuilder:validation:XValidation:rule="has(self.keystoreRef.name) && size(self.keystoreRef.name) > 0",message="keystoreRef.name must be non-empty"
+// +kubebuilder:validation:XValidation:rule="size(self.keystoreRef.key) > 0",message="keystoreRef.key must be non-empty"
+// +kubebuilder:validation:XValidation:rule="has(self.passwordRef.name) && size(self.passwordRef.name) > 0",message="passwordRef.name must be non-empty"
+// +kubebuilder:validation:XValidation:rule="size(self.passwordRef.key) > 0",message="passwordRef.key must be non-empty"
 type Neo4jRemoteAliasKeystore struct {
 	// KeystoreRef selects the Secret key containing the PKCS12 AES keystore.
 	// +kubebuilder:validation:Required
