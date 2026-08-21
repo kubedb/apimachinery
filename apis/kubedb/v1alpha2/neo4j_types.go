@@ -72,7 +72,7 @@ type Neo4jSpec struct {
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
 	// +optional
-	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
+	Configuration *Neo4jConfiguration `json:"configuration,omitempty"`
 
 	// PodTemplate customizes the pods running Neo4j (resources, environment variables, probes, affinity, etc.).
 	// +optional
@@ -106,6 +106,11 @@ type Neo4jSpec struct {
 	// Init is used to initialize the database from a script or git repo.
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
+}
+
+// Neo4jConfiguration holds the user supplied Neo4j configuration.
+type Neo4jConfiguration struct {
+	ConfigurationSpec `json:",inline,omitempty"`
 
 	// RemoteAliasKeystore configures the PKCS12 AES keystore used to encrypt remote database alias credentials.
 	// The referenced Secrets must be in the same namespace as the Neo4j resource.
