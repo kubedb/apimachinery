@@ -95,6 +95,10 @@ type QdrantSpec struct {
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 
+	// Init is used to initialize database
+	// +optional
+	Init *InitSpec `json:"init,omitempty"`
+
 	// +optional
 	Configuration *ConfigurationSpec `json:"configuration,omitempty"`
 
