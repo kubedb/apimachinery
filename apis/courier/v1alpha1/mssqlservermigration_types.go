@@ -69,6 +69,10 @@ type MSSQLServerMigrationSpec struct {
 	// Target defines the target MSSQL Server database configuration
 	Target MSSQLServerTarget `json:"target"`
 
+	// Precheck runs MSSQL source compatibility checks only and does not start a migration.
+	// +optional
+	Precheck bool `json:"precheck,omitempty"`
+
 	// JobDefaults specifies default settings for migration jobs
 	// +optional
 	JobDefaults *JobDefaults `json:"jobDefaults,omitempty"`

@@ -34735,6 +34735,13 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigrationSpec(ref comm
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerTarget"),
 						},
 					},
+					"precheck": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Precheck runs MSSQL source compatibility checks only and does not start a migration.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"jobDefaults": {
 						SchemaProps: spec.SchemaProps{
 							Description: "JobDefaults specifies default settings for migration jobs",

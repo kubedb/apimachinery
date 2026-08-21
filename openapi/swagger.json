@@ -27304,6 +27304,10 @@
           "description": "JobTemplate specifies runtime configurations for the migration Job",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
+        "precheck": {
+          "description": "Precheck runs MSSQL source compatibility checks only and does not start a migration.",
+          "type": "boolean"
+        },
         "source": {
           "description": "Source defines the source MSSQL Server database configuration",
           "default": {},

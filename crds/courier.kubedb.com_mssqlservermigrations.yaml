@@ -2791,6 +2791,8 @@ spec:
                         type: array
                     type: object
                 type: object
+              precheck:
+                type: boolean
               source:
                 properties:
                   connectionInfo:
