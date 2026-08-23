@@ -277,6 +277,9 @@ func (wh *PostgresCustomWebhook) validateSpecForDB(postgres *dbapi.Postgres, pgV
 	if err := wh.validateTDE(postgres, pgVersion); err != nil {
 		return err
 	}
+	if err := wh.validateLicense(postgres, pgVersion); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -344,6 +347,28 @@ func (wh *PostgresCustomWebhook) validateTDE(postgres *dbapi.Postgres, pgVersion
 	case "", "aes_128", "aes_256":
 	default:
 		return fmt.Errorf("spec.tde.cipher %q invalid, supported values are aes_128 and aes_256", tde.Cipher)
+	}
+	return nil
+}
+
+// validateLicense enforces the AppsCode Postgres Enterprise license invariants.
+// A version that requires a license (spec.license.required = true) must have
+// spec.license set, and conversely spec.license may only be set against a
+// version that requires one; the field only exists to name where the license
+// certificate is, it does not itself decide whether one is needed.
+func (wh *PostgresCustomWebhook) validateLicense(postgres *dbapi.Postgres, pgVersion *catalogapi.PostgresVersion) error {
+	versionRequiresLicense := pgVersion.Spec.License != nil && pgVersion.Spec.License.Required
+	if postgres.Spec.License == nil {
+		if versionRequiresLicense {
+			return fmt.Errorf("PostgresVersion %q requires spec.license (a licensed AppsCode Postgres Enterprise build); set spec.license.secretRef to a Secret containing the license certificate under key \"license.pem\"", pgVersion.Name)
+		}
+		return nil
+	}
+	if !versionRequiresLicense {
+		return fmt.Errorf("spec.license is set but PostgresVersion %q is not a licensed distribution (spec.license.required is not set)", pgVersion.Name)
+	}
+	if postgres.Spec.License.SecretRef.Name == "" {
+		return fmt.Errorf("spec.license.secretRef.name must be set")
 	}
 	return nil
 }

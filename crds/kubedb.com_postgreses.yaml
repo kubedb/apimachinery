@@ -1415,6 +1415,19 @@ spec:
                     default: 60s
                     type: string
                 type: object
+              license:
+                properties:
+                  secretRef:
+                    default: {}
+                    properties:
+                      name:
+                        default: ""
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                required:
+                - secretRef
+                type: object
               mode:
                 type: string
               monitor:
@@ -7148,6 +7161,19 @@ spec:
                   transferLeadershipTimeout:
                     default: 60s
                     type: string
+                type: object
+              license:
+                properties:
+                  secretRef:
+                    default: {}
+                    properties:
+                      name:
+                        default: ""
+                        type: string
+                    type: object
+                    x-kubernetes-map-type: atomic
+                required:
+                - secretRef
                 type: object
               mode:
                 type: string
