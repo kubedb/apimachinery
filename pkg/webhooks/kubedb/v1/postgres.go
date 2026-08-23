@@ -100,6 +100,12 @@ func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) 
 		}
 	}
 
+	if db.Spec.License != nil {
+		if db.Spec.License.SecretRef.Key == "" {
+			db.Spec.License.SecretRef.Key = "license.pem"
+		}
+	}
+
 	return nil
 }
 

@@ -762,6 +762,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase":                      schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter":                      schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionExporter(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer":                 schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionLicense":                       schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionLicense(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionList":                          schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy":             schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref),
@@ -40641,6 +40642,28 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionInitContainer(ref 
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionLicense(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PostgresVersionLicense describes whether a PostgresVersion's postgres binary requires an AppsCode Postgres Enterprise license file to start. It is only non-nil for the AppsCode distribution, which enforces certificate-based licensing directly in the postmaster (see doc/LICENSE_ENFORCEMENT.md in the AppsCode Postgres source repo): the process refuses to start, and shuts down if a running server's license expires, without a valid one.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"required": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Required is true when this image's postgres binary refuses to start without a valid license file. When true, spec.license must be set on every Postgres using this version.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"required"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40849,12 +40872,18 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTDE"),
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Description: "License describes whether this version's image requires an AppsCode Postgres Enterprise license file to start.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionLicense"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "exporter", "coordinator", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTDE", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTLSSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionLicense", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTDE", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTLSSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"},
 	}
 }
 

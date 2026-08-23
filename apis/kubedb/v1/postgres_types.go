@@ -200,9 +200,9 @@ type PostgresSpec struct {
 // mounted outside PGDATA at an identical path on every pod and pointed to via
 // the PGLICENSE environment variable.
 type PostgresLicenseSpec struct {
-	// SecretRef references a Secret holding the license certificate under the
-	// key "license.pem".
-	SecretRef core.LocalObjectReference `json:"secretRef"`
+	// SecretRef selects the key of a Secret holding the license certificate.
+	// Key defaults to "license.pem" if left unset.
+	SecretRef core.SecretKeySelector `json:"secretRef"`
 }
 
 // PostgresTDESpec configures Transparent Data Encryption (encryption at rest)
