@@ -311,10 +311,10 @@ type ArbiterSpec struct {
 }
 
 type BackupSpec struct {
-	// S3Secrets maps Solr backup repository names to Secrets holding their S3 credentials.
+	// S3Secrets maps backup repository names to Secrets holding their S3 credentials.
 	// +optional
 	S3Secrets map[string]core.LocalObjectReference `json:"s3Secrets,omitempty"`
-	// GCSSecrets maps Solr backup repository names to Secrets holding their GCS service account keys.
+	// GCSSecrets maps backup repository names to Secrets holding their GCS service account keys.
 	// +optional
 	GCSSecrets map[string]core.LocalObjectReference `json:"gcsSecrets,omitempty"`
 }
