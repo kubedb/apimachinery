@@ -35063,6 +35063,11 @@ func schema_apimachinery_apis_archiver_v1alpha1_Neo4jDifferentialBackupOptions(r
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"task": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"),
+						},
+					},
 					"runtimeSettings": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"),
@@ -35077,7 +35082,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_Neo4jDifferentialBackupOptions(r
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"},
 	}
 }
 

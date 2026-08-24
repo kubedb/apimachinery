@@ -1246,6 +1246,11 @@ func (in *Neo4jDifferentialBackupOptions) DeepCopyInto(out *Neo4jDifferentialBac
 		*out = new(metav1.Duration)
 		**out = **in
 	}
+	if in.Task != nil {
+		in, out := &in.Task, &out.Task
+		*out = new(Task)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.RuntimeSettings != nil {
 		in, out := &in.RuntimeSettings, &out.RuntimeSettings
 		*out = new(apiv1.RuntimeSettings)

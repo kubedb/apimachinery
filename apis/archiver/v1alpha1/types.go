@@ -253,6 +253,9 @@ type Neo4jDifferentialBackupOptions struct {
 	BackupInterval *metav1.Duration `json:"backupInterval,omitempty"`
 
 	// +optional
+	Task *Task `json:"task,omitempty"`
+
+	// +optional
 	RuntimeSettings *ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
 
 	// +optional

@@ -1302,6 +1302,14 @@ spec:
                             x-kubernetes-list-type: map
                         type: object
                     type: object
+                  task:
+                    properties:
+                      params:
+                        type: object
+                        x-kubernetes-preserve-unknown-fields: true
+                    required:
+                    - params
+                    type: object
                 type: object
               encryptionSecret:
                 properties:
