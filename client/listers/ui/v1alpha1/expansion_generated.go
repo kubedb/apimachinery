@@ -18,6 +18,14 @@ limitations under the License.
 
 package v1alpha1
 
+// DatabaseConfigurationListerExpansion allows custom methods to be added to
+// DatabaseConfigurationLister.
+type DatabaseConfigurationListerExpansion interface{}
+
+// DatabaseConfigurationNamespaceListerExpansion allows custom methods to be added to
+// DatabaseConfigurationNamespaceLister.
+type DatabaseConfigurationNamespaceListerExpansion interface{}
+
 // DatabaseConnectionListerExpansion allows custom methods to be added to
 // DatabaseConnectionLister.
 type DatabaseConnectionListerExpansion interface{}

@@ -57,6 +57,10 @@ func (c *FakeKubedbV1alpha2) Elasticsearches(namespace string) v1alpha2.Elastics
 	return &FakeElasticsearches{c, namespace}
 }
 
+func (c *FakeKubedbV1alpha2) Etcds(namespace string) v1alpha2.EtcdInterface {
+	return &FakeEtcds{c, namespace}
+}
+
 func (c *FakeKubedbV1alpha2) HanaDBs(namespace string) v1alpha2.HanaDBInterface {
 	return &FakeHanaDBs{c, namespace}
 }

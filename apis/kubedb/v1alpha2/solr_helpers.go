@@ -113,6 +113,24 @@ func (s *Solr) SolrInlineConfigSecretKey(key string) string {
 	return fmt.Sprintf("%s-%s", kubedb.InlineConfigKeyPrefix, key)
 }
 
+func (s *Solr) S3BackupCredential() *v1.LocalObjectReference {
+	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupSpec == nil {
+		return nil
+	}
+	return s.Spec.Configuration.BackupSpec.S3Secret
+}
+
+func (s *Solr) GCSBackupCredential() *v1.LocalObjectReference {
+	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupSpec == nil {
+		return nil
+	}
+	return s.Spec.Configuration.BackupSpec.GCSSecret
+}
+
+func GCSCredentialPath() string {
+	return filepath.Join(kubedb.SolrBackupCredentialsDir, kubedb.SolrGCSCredentialFileName)
+}
+
 func (s *Solr) Merge(opt map[string]string) map[string]string {
 	if len(s.Spec.SolrOpts) == 0 {
 		return opt

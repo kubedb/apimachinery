@@ -27,10 +27,10 @@ import (
 	dbsecret "kubedb.dev/apimachinery/pkg/secret"
 
 	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
+	passgen "gomodules.xyz/password-generator"
 	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/rand"
 	cu "kmodules.xyz/client-go/client"
 	core_util "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
@@ -55,6 +55,18 @@ type Options struct {
 	// DefaultUsername is rejected; when false, only the presence of the
 	// username/password keys is checked.
 	EnforceUsername bool
+	// PasswordGenerator overrides how the password of a kubedb-generated auth
+	// secret is produced. It is only consulted when kubedb generates the
+	// secret; a user-supplied (BYO) secret is never regenerated.
+	//
+	// Leave it nil to get passgen.Generate, which is the right default for
+	// almost every database. Set it from a specific database's operator when
+	// that database has a credential policy the shared default cannot express
+	// -- for example a charset restriction imposed by a delimiter-based config
+	// format, or a mandated character class.
+	//
+	// The function must return a password of exactly n characters.
+	PasswordGenerator func(n int) string
 }
 
 func (o Options) EnsureAuthSecret(ctx context.Context) error {
@@ -233,44 +245,14 @@ func (o Options) validateAuthData(data map[string][]byte) error {
 }
 
 func (o Options) generatedData() map[string][]byte {
+	gen := passgen.Generate
+	if o.PasswordGenerator != nil {
+		gen = o.PasswordGenerator
+	}
 	return map[string][]byte{
 		core.BasicAuthUsernameKey: []byte(o.DefaultUsername),
-		core.BasicAuthPasswordKey: []byte(generatePassword(kubedb.DefaultPasswordLength)),
+		core.BasicAuthPasswordKey: []byte(gen(kubedb.DefaultPasswordLength)),
 	}
-}
-
-const (
-	pwUpper  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	pwLower  = "abcdefghijklmnopqrstuvwxyz"
-	pwDigits = "0123456789"
-	pwAll    = pwUpper + pwLower + pwDigits
-)
-
-// generatePassword returns an n-character password drawn from uppercase
-// letters, lowercase letters, and digits only (no symbols), guaranteeing at
-// least one character from each of those three classes. The three-class
-// guarantee satisfies common "N of 3/4 character classes" complexity
-// policies (e.g. SQL Server's SA password requirement) that rand.String's
-// lowercase-consonants-and-digits-only alphabet cannot. Symbols are
-// deliberately excluded because several DB configs render the password into
-// delimiter-based formats (e.g. ProxySQL's "user:pass;user:pass"
-// admin_variables line) that punctuation could corrupt.
-func generatePassword(n int) string {
-	if n < 3 {
-		return rand.String(n)
-	}
-	b := make([]byte, n)
-	b[0] = pwUpper[rand.Intn(len(pwUpper))]
-	b[1] = pwLower[rand.Intn(len(pwLower))]
-	b[2] = pwDigits[rand.Intn(len(pwDigits))]
-	for i := 3; i < n; i++ {
-		b[i] = pwAll[rand.Intn(len(pwAll))]
-	}
-	shuffled := make([]byte, n)
-	for i, p := range rand.Perm(n) {
-		shuffled[p] = b[i]
-	}
-	return string(shuffled)
 }
 
 func activationTime(annotations map[string]string) (*metav1.Time, error) {
@@ -310,12 +292,22 @@ func (o Options) readAuthSecretRef() secretRefView {
 	return v
 }
 
+// patchAuthSecretRef pushes only the auth secret reference to the API server and
+// leaves the rest of o.DB alone
 func (o Options) patchAuthSecretRef(ctx context.Context, name string, activeFrom *metav1.Time) error {
-	_, err := cu.CreateOrPatch(ctx, o.KBClient, o.DB, func(in client.Object, _ bool) client.Object {
+	cp := o.DB.DeepCopyObject().(client.Object)
+	_, err := cu.Patch(ctx, o.KBClient, cp, func(in client.Object) client.Object {
 		setAuthSecretRef(in, name, activeFrom)
 		return in
 	})
-	return err
+	if err != nil {
+		return err
+	}
+
+	setAuthSecretRef(o.DB, name, activeFrom)
+	o.DB.SetResourceVersion(cp.GetResourceVersion())
+	o.DB.SetGeneration(cp.GetGeneration())
+	return nil
 }
 
 func setAuthSecretRef(db client.Object, name string, activeFrom *metav1.Time) {

@@ -70,7 +70,7 @@ func (w *MySQLOpsRequestCustomWebhook) ValidateCreate(ctx context.Context, obj r
 		return nil, fmt.Errorf("expected an MySQLOpsRequest object but got %T", obj)
 	}
 	myLog.Info("validate create", "name", ops.Name)
-	return nil, w.validateCreateOrUpdate(ops)
+	return nil, w.validateCreateOrUpdate(ops, true)
 }
 
 // ValidateUpdate implements webhooin.Validator so a webhook will be registered for the type
@@ -89,7 +89,7 @@ func (w *MySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 	if err := w.validateMySQLOpsRequest(ops, oldOps); err != nil {
 		return nil, err
 	}
-	if err := w.validateCreateOrUpdate(ops); err != nil {
+	if err := w.validateCreateOrUpdate(ops, false); err != nil {
 		return nil, err
 	}
 
@@ -108,7 +108,7 @@ func (w *MySQLOpsRequestCustomWebhook) ValidateDelete(ctx context.Context, obj r
 	return nil, nil
 }
 
-func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLOpsRequest) error {
+func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLOpsRequest, isCreate bool) error {
 	if validType, _ := arrays.Contains(opsapi.MySQLOpsRequestTypeNames(), string(req.Spec.Type)); !validType {
 		return field.Invalid(field.NewPath("spec").Child("type"), req.Name,
 			fmt.Sprintf("defined OpsRequestType %s is not supported, supported types for MySQL are %s", req.Spec.Type, strings.Join(opsapi.MySQLOpsRequestTypeNames(), ", ")))
@@ -161,10 +161,17 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeReplicationModeTransformation:
-		if err := w.validateMySQLReplicationModeTransformation(db, req); err != nil {
-			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicationModeTransformation"),
-				req.Name,
-				err.Error()))
+		// This is a create-time check only. The transform intentionally mutates the
+		// database topology while the ops request runs, so re-validating on every
+		// (status) update would reject the controller's own progress writes once the
+		// database has moved into the requested mode. The ops spec is immutable on
+		// update (enforced by validateMySQLOpsRequest), so skipping this on update is safe.
+		if isCreate {
+			if err := w.validateMySQLReplicationModeTransformation(db, req); err != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicationModeTransformation"),
+					req.Name,
+					err.Error()))
+			}
 		}
 	case opsapi.MySQLOpsRequestTypeRotateAuth:
 		if err := w.validateMySQLRotateAuthenticationOpsRequest(db, req); err != nil {
@@ -223,17 +230,12 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *
 
 	var list []string
 	if db.Spec.Topology != nil {
-		if db.Spec.Topology.Mode != nil && *db.Spec.Topology.Mode == dbapi.MySQLModeGroupReplication || *db.Spec.Topology.Mode == dbapi.MySQLModeInnoDBCluster {
-			list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
-			if err != nil {
-				return err
-			}
-		}
-	} else {
 		list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
-		if err != nil {
-			return err
-		}
+	} else {
+		list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.Standalone, cur.Spec.UpdateConstraints.Denylist.Standalone, &versions)
+	}
+	if err != nil {
+		return err
 	}
 	if !slices.Contains(list, updateVersionSpec.TargetVersion) {
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)
@@ -298,18 +300,70 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLReconfigurationTLSOpsRequest
 }
 
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLReplicationModeTransformation(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
-	curVersion := semver.MustParse(db.Spec.Version)
-	refVersion := semver.MustParse("8.4.2")
-
-	if curVersion.LessThan(refVersion) {
-		return errors.New(fmt.Sprintf("MySQL Replication Mode Transformation support only support for %s or upper.", refVersion))
+	transform := req.Spec.ReplicationModeTransformation
+	if transform == nil {
+		return errors.New("spec.replicationModeTransformation is required for a ReplicationModeTransformation ops request")
 	}
 
-	if req.Spec.ReplicationModeTransformation != nil {
-		if req.Spec.ReplicationModeTransformation.RequireSSL != nil && (req.Spec.ReplicationModeTransformation.IssuerRef == nil &&
-			req.Spec.ReplicationModeTransformation.Certificates == nil) {
-			return errors.New("MySQL Replication Mode Transformation requires TLS configuration to be enabled.")
+	// Replication mode transformation itself carries no minimum MySQL version — every
+	// supported version can be transformed. Only Multi-Primary (multi-master) group
+	// replication is version-limited: it requires MySQL 8.4 or newer.
+	if transform.Mode != nil && *transform.Mode == dbapi.MySQLGroupModeMultiPrimary {
+		curVersion := semver.MustParse(db.Spec.Version)
+		multiPrimaryMinVersion := semver.MustParse("8.4.0")
+		if curVersion.LessThan(multiPrimaryMinVersion) {
+			return fmt.Errorf("spec.replicationModeTransformation.mode %q requires MySQL %s or newer, but database %s/%s runs %s",
+				dbapi.MySQLGroupModeMultiPrimary, multiPrimaryMinVersion, db.Namespace, db.Name, db.Spec.Version)
 		}
+	}
+
+	// Resolve the target topology (defaults to GroupReplication for backward compatibility).
+	targetTopologyMode := dbapi.MySQLModeGroupReplication
+	if transform.TargetTopologyMode != nil {
+		targetTopologyMode = *transform.TargetTopologyMode
+	}
+	if targetTopologyMode != dbapi.MySQLModeGroupReplication && targetTopologyMode != dbapi.MySQLModeInnoDBCluster &&
+		targetTopologyMode != dbapi.MySQLModeSemiSync {
+		return fmt.Errorf("unsupported spec.replicationModeTransformation.targetTopologyMode %q; supported values are %q, %q and %q",
+			targetTopologyMode, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster, dbapi.MySQLModeSemiSync)
+	}
+
+	// Reject no-op transformations (database is already in the requested topology).
+	if (targetTopologyMode == dbapi.MySQLModeGroupReplication && db.UsesGroupReplication()) ||
+		(targetTopologyMode == dbapi.MySQLModeInnoDBCluster && db.IsInnoDBCluster()) ||
+		(targetTopologyMode == dbapi.MySQLModeSemiSync && db.IsSemiSync()) {
+		return fmt.Errorf("database %s/%s is already running in %q mode", db.Namespace, db.Name, targetTopologyMode)
+	}
+
+	// Only a Standalone or a RemoteReplica may be transformed. Cluster-to-cluster
+	// transformation is not supported: a database that already runs a clustered
+	// topology cannot be converted into a different one.
+	//
+	// Rejecting it here matters because the ops request would otherwise appear to
+	// work — the topology is patched and the request can report Successful while the
+	// group is never actually converted, leaving the database unreachable.
+	if db.Spec.Topology != nil && !db.IsRemoteReplica() {
+		sourceMode := "clustered"
+		if db.Spec.Topology.Mode != nil {
+			sourceMode = string(*db.Spec.Topology.Mode)
+		}
+		return fmt.Errorf("database %s/%s is running in %q mode: replication mode transformation is only supported for a standalone or a remote replica source, cluster-to-cluster transformation is not supported",
+			db.Namespace, db.Name, sourceMode)
+	}
+
+	// spec.replicationModeTransformation.mode is the Group Replication primary mode.
+	// Multi-Primary is supported: the coordinator disambiguates the primary/donor by
+	// preferring the data-bearing member (every member reports MEMBER_ROLE='PRIMARY'
+	// in Multi-Primary, so an arbitrary pick could otherwise seed from an empty pod).
+	// The field is ignored when targetTopologyMode is SemiSync, which has no group.
+	if transform.Mode != nil && *transform.Mode != dbapi.MySQLGroupModeSinglePrimary &&
+		*transform.Mode != dbapi.MySQLGroupModeMultiPrimary {
+		return fmt.Errorf("unsupported spec.replicationModeTransformation.mode %q; supported values are %q and %q",
+			*transform.Mode, dbapi.MySQLGroupModeSinglePrimary, dbapi.MySQLGroupModeMultiPrimary)
+	}
+
+	if transform.RequireSSL != nil && (transform.IssuerRef == nil && transform.Certificates == nil) {
+		return errors.New("MySQL Replication Mode Transformation requires TLS configuration to be enabled")
 	}
 
 	return nil

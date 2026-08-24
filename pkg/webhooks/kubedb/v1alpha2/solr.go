@@ -63,6 +63,9 @@ var solrlog = logf.Log.WithName("solr-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *SolrCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Solr)
 	if !ok {
 		return fmt.Errorf("expected an Solr object but got %T", obj)
@@ -78,6 +81,9 @@ var _ webhook.CustomValidator = &SolrCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *SolrCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.Solr)
 	if !ok {
 		return nil, fmt.Errorf("expected an Solr object but got %T", obj)
@@ -93,6 +99,9 @@ func (w *SolrCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obje
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *SolrCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Solr)
 	if !ok {
 		return nil, fmt.Errorf("expected an Solr object but got %T", newObj)

@@ -29,6 +29,7 @@ import (
 	secret_lib "kubedb.dev/apimachinery/pkg/secret"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
 	"gomodules.xyz/x/arrays"
@@ -249,7 +250,34 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jUpdateVersionOpsRequest(db *
 		return errors.New("spec.updateVersion nil not supported in UpdateVersion type")
 	}
 
-	yes, err := IsCalVerUpgradable(w.DefaultClient, catalog.ResourceKindNeo4jVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	currentVersion, err := getCatalogSpecVersion(w.DefaultClient, catalog.ResourceKindNeo4jVersion, db.Spec.Version)
+	if err != nil {
+		return err
+	}
+	targetVersion, err := getCatalogSpecVersion(w.DefaultClient, catalog.ResourceKindNeo4jVersion, updateVersionSpec.TargetVersion)
+	if err != nil {
+		return err
+	}
+
+	currentScheme, err := detectVersionScheme(currentVersion)
+	if err != nil {
+		return fmt.Errorf("failed to determine current version scheme for %q: %w", currentVersion, err)
+	}
+	targetScheme, err := detectVersionScheme(targetVersion)
+	if err != nil {
+		return fmt.Errorf("failed to determine target version scheme for %q: %w", targetVersion, err)
+	}
+
+	if currentScheme != targetScheme {
+		return fmt.Errorf("cross-scheme update is not supported: current %q uses %s but target %q uses %s", currentVersion, currentScheme, targetVersion, targetScheme)
+	}
+
+	var yes bool
+	if currentScheme == versionSchemeSemver {
+		yes, err = IsUpgradable(w.DefaultClient, catalog.ResourceKindNeo4jVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	} else {
+		yes, err = IsCalVerUpgradable(w.DefaultClient, catalog.ResourceKindNeo4jVersion, db.Spec.Version, updateVersionSpec.TargetVersion)
+	}
 	if err != nil {
 		return err
 	}
@@ -258,6 +286,58 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jUpdateVersionOpsRequest(db *
 	}
 
 	return nil
+}
+
+type versionScheme string
+
+const (
+	versionSchemeSemver versionScheme = "semver"
+	versionSchemeCalver versionScheme = "calver"
+)
+
+func getCatalogSpecVersion(kc client.Client, kind, name string) (string, error) {
+	var versionObj unstructured.Unstructured
+	versionObj.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   catalog.SchemeGroupVersion.Group,
+		Version: catalog.SchemeGroupVersion.Version,
+		Kind:    kind,
+	})
+
+	if err := kc.Get(context.Background(), types.NamespacedName{Name: name}, &versionObj); err != nil {
+		return "", err
+	}
+
+	version, found, err := unstructured.NestedString(versionObj.Object, "spec", "version")
+	if err != nil {
+		return "", err
+	}
+	if !found || strings.TrimSpace(version) == "" {
+		return "", fmt.Errorf("catalog %s %q does not contain non-empty .spec.version", kind, name)
+	}
+
+	return version, nil
+}
+
+func detectVersionScheme(version string) (versionScheme, error) {
+	if _, err := semver.StrictNewVersion(strings.TrimSpace(version)); err == nil {
+		return versionSchemeSemver, nil
+	}
+
+	normalized := strings.TrimSpace(strings.TrimPrefix(strings.TrimSpace(version), "v"))
+	if idx := strings.Index(normalized, "-"); idx != -1 {
+		normalized = normalized[:idx]
+	}
+	parts := strings.Split(normalized, ".")
+	if len(parts) != 3 {
+		return "", fmt.Errorf("version %q is neither strict semver nor supported calver", version)
+	}
+	if len(parts[0]) == 4 && len(parts[1]) == 2 {
+		if _, err := parseVersion(version); err == nil {
+			return versionSchemeCalver, nil
+		}
+	}
+
+	return "", fmt.Errorf("version %q is neither strict semver nor supported calver", version)
 }
 
 type CalVersionInfo struct {
@@ -503,8 +583,8 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jReconfigurationOpsRequest(re
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
 
-	if !configurationSpec.RemoveCustomConfig && configurationSpec.ConfigSecret == nil && len(configurationSpec.ApplyConfig) == 0 {
-		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	if !configurationSpec.RemoveCustomConfig && configurationSpec.ConfigSecret == nil && len(configurationSpec.ApplyConfig) == 0 && configurationSpec.RemoteAliasKeystore == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, `ApplyConfig`, or `RemoteAliasKeystore` must be specified")
 	}
 	return nil
 }

@@ -420,6 +420,12 @@ type SolrStats struct {
 	// BackupId represents the ID of the backup
 	BackupId int `json:"backupId,omitempty"`
 
+	// BackupName is the name Solr filed this backup under, which is also the
+	// directory it occupies inside the repository. Restore needs it to locate the
+	// data, and retention needs it to delete only this snapshot's objects, so it
+	// is recorded rather than reconstructed from a naming convention.
+	BackupName string `json:"backupName,omitempty"`
+
 	// collection represents the collection for which backup has been taken
 	Collection string `json:"collection,omitempty"`
 
