@@ -248,41 +248,13 @@ type Neo4jFullBackupOptions struct {
 }
 
 type Neo4jDifferentialBackupOptions struct {
+	// BackupInterval defines how frequently a differential backup is triggered.
+	// +optional
+	BackupInterval *metav1.Duration `json:"backupInterval,omitempty"`
+
 	// +optional
 	RuntimeSettings *ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
 
 	// +optional
 	ConfigSecret *GenericSecretReference `json:"configSecret,omitempty"`
-
-	// RetentionPeriod is the retention policy to be used for Logs (i.e. '60d') means how long logs will be retained before being pruned.
-	// The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years.
-	// time.RFC3339 We need to parse the time to RFC3339 format
-	// +kubebuilder:validation:Pattern=^[1-9][0-9]*[dwmy]$
-	// +kubebuilder:default="1y"
-	// +optional
-	RetentionPeriod string `json:"retentionPeriod,omitempty"`
-
-	// RetentionSchedule defines the cron expression when the differential backup retention (pruning) task will run.
-	// Cron format, e.g. "0 0 1 * *" (monthly on the 1st at 12).
-	// +kubebuilder:default="0 0 1 * *"
-	// +optional
-	RetentionSchedule string `json:"retentionSchedule,omitempty"`
-
-	// SuccessfulLogHistoryLimit defines the number of successful differential backup status that the archiver will retain
-	// The default value is 5.
-	// +kubebuilder:default=5
-	// +optional
-	SuccessfulLogHistoryLimit int32 `json:"successfulLogHistoryLimit,omitempty"`
-
-	// FailedLogHistoryLimit defines the number of failed differential backup that the archiver will retain for debugging purposes.
-	// The default value is 5.
-	// +kubebuilder:default=5
-	// +optional
-	FailedLogHistoryLimit int32 `json:"failedLogHistoryLimit,omitempty"`
-
-	// LogRetentionHistoryLimit defines the number of retention status the archiver will retain for debugging purposes.
-	// The default value is 5.
-	// +kubebuilder:default=5
-	// +optional
-	LogRetentionHistoryLimit int32 `json:"logRetentionHistoryLimit,omitempty"`
 }

@@ -35057,6 +35057,12 @@ func schema_apimachinery_apis_archiver_v1alpha1_Neo4jDifferentialBackupOptions(r
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"backupInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackupInterval defines how frequently a differential backup is triggered.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
 					"runtimeSettings": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"),
@@ -35067,46 +35073,11 @@ func schema_apimachinery_apis_archiver_v1alpha1_Neo4jDifferentialBackupOptions(r
 							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"),
 						},
 					},
-					"retentionPeriod": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RetentionPeriod is the retention policy to be used for Logs (i.e. '60d') means how long logs will be retained before being pruned. The retention policy is expressed in the form of `XXu` where `XX` is a positive integer and `u` is in `[dwm]` - days, weeks, months, years. time.RFC3339 We need to parse the time to RFC3339 format",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"retentionSchedule": {
-						SchemaProps: spec.SchemaProps{
-							Description: "RetentionSchedule defines the cron expression when the differential backup retention (pruning) task will run. Cron format, e.g. \"0 0 1 * *\" (monthly on the 1st at 12).",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"successfulLogHistoryLimit": {
-						SchemaProps: spec.SchemaProps{
-							Description: "SuccessfulLogHistoryLimit defines the number of successful differential backup status that the archiver will retain The default value is 5.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"failedLogHistoryLimit": {
-						SchemaProps: spec.SchemaProps{
-							Description: "FailedLogHistoryLimit defines the number of failed differential backup that the archiver will retain for debugging purposes. The default value is 5.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"logRetentionHistoryLimit": {
-						SchemaProps: spec.SchemaProps{
-							Description: "LogRetentionHistoryLimit defines the number of retention status the archiver will retain for debugging purposes. The default value is 5.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"},
 	}
 }
 
