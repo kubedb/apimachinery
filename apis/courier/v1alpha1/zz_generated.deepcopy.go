@@ -1766,7 +1766,7 @@ func (in *OracleMigrationSpec) DeepCopyInto(out *OracleMigrationSpec) {
 	}
 	if in.JobTemplate != nil {
 		in, out := &in.JobTemplate, &out.JobTemplate
-		*out = new(offshootapiapiv1.PodTemplateSpec)
+		*out = new(apiv1.PodTemplateSpec)
 		(*in).DeepCopyInto(*out)
 	}
 	return
