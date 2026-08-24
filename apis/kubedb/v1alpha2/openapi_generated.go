@@ -34139,7 +34139,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_BackupSpec(ref common.ReferenceCal
 				Properties: map[string]spec.Schema{
 					"s3Secrets": {
 						SchemaProps: spec.SchemaProps{
-							Description: "S3Secrets maps Solr backup repository names to Secrets holding their S3 credentials.",
+							Description: "S3Secrets maps backup repository names to Secrets holding their S3 credentials.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
@@ -34154,7 +34154,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_BackupSpec(ref common.ReferenceCal
 					},
 					"gcsSecrets": {
 						SchemaProps: spec.SchemaProps{
-							Description: "GCSSecrets maps Solr backup repository names to Secrets holding their GCS service account keys.",
+							Description: "GCSSecrets maps backup repository names to Secrets holding their GCS service account keys.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,
