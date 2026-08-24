@@ -1198,6 +1198,7 @@ const (
 	SolrKeystorePassKey            = "keystore-secret"
 	SolrServerKeystorePath         = "/var/solr/etc/keystore.p12"
 	SolrServerTruststorePath       = "/var/solr/etc/truststore.p12"
+	SolrMergedTruststorePath       = "/var/solr/merged-tls/truststore.p12"
 	SolrTLSMountPath               = "/var/solr/etc"
 
 	ProxyDeploymentName = "s3proxy"
