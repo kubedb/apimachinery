@@ -34137,24 +34137,9 @@ func schema_apimachinery_apis_kubedb_v1alpha2_BackupSpec(ref common.ReferenceCal
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"s3Secrets": {
+					"repositories": {
 						SchemaProps: spec.SchemaProps{
-							Description: "S3Secrets maps backup repository names to Secrets holding their S3 credentials.",
-							Type:        []string{"object"},
-							AdditionalProperties: &spec.SchemaOrBool{
-								Allows: true,
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("k8s.io/api/core/v1.LocalObjectReference"),
-									},
-								},
-							},
-						},
-					},
-					"gcsSecrets": {
-						SchemaProps: spec.SchemaProps{
-							Description: "GCSSecrets maps backup repository names to Secrets holding their GCS service account keys.",
+							Description: "Repositories maps backup repository names to Secrets holding their backup credentials.",
 							Type:        []string{"object"},
 							AdditionalProperties: &spec.SchemaOrBool{
 								Allows: true,

@@ -68,16 +68,7 @@ spec:
                 properties:
                   backup:
                     properties:
-                      gcsSecrets:
-                        additionalProperties:
-                          properties:
-                            name:
-                              default: ""
-                              type: string
-                          type: object
-                          x-kubernetes-map-type: atomic
-                        type: object
-                      s3Secrets:
+                      repositories:
                         additionalProperties:
                           properties:
                             name:

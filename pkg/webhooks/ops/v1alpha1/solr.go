@@ -38,6 +38,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	meta_util "kmodules.xyz/client-go/meta"
+	storageapi "kubestash.dev/apimachinery/apis/storage/v1alpha1"
 	"kubestash.dev/apimachinery/pkg/blob"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -358,7 +359,7 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 
 	creds := cfg.BackupSpec
 	if !cfg.RemoveCustomConfig && cfg.ConfigSecret == nil && len(cfg.ApplyConfig) == 0 &&
-		(creds == nil || (len(creds.S3Secrets) == 0 && len(creds.GCSSecrets) == 0)) {
+		(creds == nil || len(creds.Repositories) == 0) {
 		return errors.New("at least one of `removeCustomConfig`, `configSecret`, `applyConfig` or `backup` must be specified")
 	}
 
@@ -372,41 +373,57 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		return nil
 	}
 
-	for repository, ref := range creds.S3Secrets {
+	for repository, ref := range creds.Repositories {
 		if repository == "" {
-			return errors.New("`spec.configuration.backup.s3Secrets` contains an empty repository name")
+			return errors.New("`spec.configuration.backup.repositories` contains an empty repository name")
 		}
 		if ref.Name == "" {
-			return fmt.Errorf("`spec.configuration.backup.s3Secrets[%q].name` must be specified", repository)
+			return fmt.Errorf("`spec.configuration.backup.repositories[%q].name` must be specified", repository)
 		}
-		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "s3")
-		if err != nil {
-			return err
-		}
-		for _, key := range []string{blob.AWSAccessKeyId, blob.AWSSecretAccessKey} {
-			if _, ok := secret.Data[key]; !ok {
-				return fmt.Errorf("s3 secret %s/%s for repository %q has no key %q holding the credential", req.Namespace, secret.Name, repository, key)
-			}
-		}
-	}
 
-	for repository, ref := range creds.GCSSecrets {
-		if repository == "" {
-			return errors.New("`spec.configuration.backup.gcsSecrets` contains an empty repository name")
-		}
-		if ref.Name == "" {
-			return fmt.Errorf("`spec.configuration.backup.gcsSecrets[%q].name` must be specified", repository)
-		}
-		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "gcs")
+		storage, err := w.getRepositoryStorage(req.Namespace, repository)
 		if err != nil {
 			return err
 		}
-		if _, ok := secret.Data[blob.GoogleServiceAccountJSONKey]; !ok {
-			return fmt.Errorf("gcs secret %s/%s for repository %q has no key %q holding the service account json", req.Namespace, secret.Name, repository, blob.GoogleServiceAccountJSONKey)
+		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "backup credential")
+		if err != nil {
+			return err
+		}
+
+		switch {
+		case storage.Spec.Storage.S3 != nil:
+			for _, key := range []string{blob.AWSAccessKeyId, blob.AWSSecretAccessKey} {
+				if _, ok := secret.Data[key]; !ok {
+					return fmt.Errorf("s3 secret %s/%s for repository %q has no key %q holding the credential", req.Namespace, secret.Name, repository, key)
+				}
+			}
+		case storage.Spec.Storage.GCS != nil:
+			if _, ok := secret.Data[blob.GoogleServiceAccountJSONKey]; !ok {
+				return fmt.Errorf("gcs secret %s/%s for repository %q has no key %q holding the service account json", req.Namespace, secret.Name, repository, blob.GoogleServiceAccountJSONKey)
+			}
+		default:
+			return fmt.Errorf("backup storage %s/%s for repository %q is not configured with a supported S3 or GCS backend", storage.Namespace, storage.Name, repository)
 		}
 	}
 
 	return nil
+}
+
+func (w *SolrOpsRequestCustomWebhook) getRepositoryStorage(namespace, name string) (*storageapi.BackupStorage, error) {
+	var repository storageapi.Repository
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: name, Namespace: namespace}, &repository); err != nil {
+		return nil, fmt.Errorf("failed to get repository %s/%s: %w", namespace, name, err)
+	}
+
+	storageNamespace := repository.Spec.StorageRef.Namespace
+	if storageNamespace == "" {
+		storageNamespace = repository.Namespace
+	}
+	var storage storageapi.BackupStorage
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: repository.Spec.StorageRef.Name, Namespace: storageNamespace}, &storage); err != nil {
+		return nil, fmt.Errorf("failed to get backup storage %s/%s for repository %s/%s: %w", storageNamespace, repository.Spec.StorageRef.Name, namespace, name, err)
+	}
+	return &storage, nil
 }
 
 func (w *SolrOpsRequestCustomWebhook) getReferencedSecret(namespace, name, kind string) (*core.Secret, error) {
