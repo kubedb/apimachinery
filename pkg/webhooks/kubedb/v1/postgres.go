@@ -84,6 +84,16 @@ func (wh *PostgresCustomWebhook) Default(_ context.Context, obj runtime.Object) 
 	if db.Spec.Replicas == nil {
 		db.Spec.Replicas = pointer.Int32P(1)
 	}
+
+	// A deletion in progress (the finalizer-removal patch on WipeOut) must never be
+	// blocked on the referenced PostgresVersion catalog object still existing: the DB
+	// already ran on it, there is nothing left to default, and requiring it here only
+	// wedges the delete forever if the catalog entry is removed before the DB (N210).
+	// Skipped ONLY for this case, gated strictly on DeletionTimestamp != nil.
+	if db.DeletionTimestamp != nil {
+		return nil
+	}
+
 	var postgresVersion catalogapi.PostgresVersion
 	err := wh.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
@@ -393,11 +403,18 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 		return nil, errors.New(`'spec.version' is missing`)
 	}
 	var postgresVersion catalogapi.PostgresVersion
-	err := wh.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: postgres.Spec.Version,
-	}, &postgresVersion)
-	if err != nil {
-		return nil, err
+	var err error
+	// See Default()'s and ValidateUpdate()'s matching guards (N210): skip ONLY the
+	// version-existence check for a deletion in progress, so the finalizer-removal
+	// patch is never wedged by an already-deleted PostgresVersion catalog entry. Every
+	// other validation below still runs unconditionally.
+	if postgres.DeletionTimestamp == nil {
+		err = wh.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name: postgres.Spec.Version,
+		}, &postgresVersion)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	if postgres.Spec.Replicas == nil || ptr.Deref(postgres.Spec.Replicas, 0) < 1 {
@@ -486,7 +503,7 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 		}
 	}
 
-	if postgres.Spec.ClientAuthMode == dbapi.ClientAuthModeScram {
+	if postgres.Spec.ClientAuthMode == dbapi.ClientAuthModeScram && postgres.DeletionTimestamp == nil {
 		if err := checkPgScramAuthMethodSupport(postgresVersion.Spec.Version); err != nil {
 			return nil, err
 		}
@@ -511,9 +528,15 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 		return nil, err
 	}
 
-	err = wh.validateSpecForDB(postgres, &postgresVersion)
-	if err != nil {
-		return nil, err
+	// Guarded the same as the version-existence check above: postgresVersion is a zero
+	// value while deleting, and validateSpecForDB dereferences its semver-parsed
+	// Spec.Version unconditionally (would panic on an empty version string), so it must
+	// not run against a zero value.
+	if postgres.DeletionTimestamp == nil {
+		err = wh.validateSpecForDB(postgres, &postgresVersion)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	// if secret managed externally verify auth secret name is not empty
@@ -523,7 +546,7 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 		return nil, fmt.Errorf(`for externallyManaged auth secret, user must configure "spec.authSecret.name"`)
 	}
 
-	if wh.StrictValidation {
+	if wh.StrictValidation && postgres.DeletionTimestamp == nil {
 
 		// Check if postgresVersion is deprecated.
 		// If deprecated, return error
@@ -557,11 +580,20 @@ func (wh *PostgresCustomWebhook) validate(postgres *dbapi.Postgres) (admission.W
 	if err = amv.ValidateHealth(&postgres.Spec.HealthChecker); err != nil {
 		return nil, err
 	}
-	if postgres.IsRemoteReplica() && postgresVersion.Spec.Version < "13" {
+	if postgres.DeletionTimestamp == nil && postgres.IsRemoteReplica() && postgresVersion.Spec.Version < "13" {
 		return nil, fmt.Errorf("remote replica is not currently supported for version bellow 13")
 	}
 
-	if postgres.Spec.Distributed {
+	// Same reasoning as the PostgresVersion guard above (N210), for the PlacementPolicy a
+	// distributed database references. A deletion in progress must never be blocked on that
+	// object still existing: the database already ran on it and there is nothing left to
+	// validate, but requiring it here wedges the delete FOREVER when the policy is removed
+	// first. Reproduced live: deleting the PlacementPolicy before the Postgres left the CR
+	// with a deletionTimestamp and a kubedb.com finalizer that could never be removed,
+	// because every update to the object - including the finalizer-removal patch itself -
+	// was denied with `PlacementPolicy "<name>" not found`. Recovering it required
+	// re-creating the policy purely so the webhook would let the delete finish.
+	if postgres.Spec.Distributed && postgres.DeletionTimestamp == nil {
 		if postgres.Spec.PodTemplate.Spec.PodPlacementPolicy == nil {
 			return nil, fmt.Errorf(`'spec.podPlacementPolicy' is required for distributed postgres`)
 		}
@@ -604,14 +636,18 @@ func (wh *PostgresCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 		return nil, fmt.Errorf("expected a Postgres but got a %T", postgres)
 	}
 
-	var postgresVersion catalogapi.PostgresVersion
-	err := wh.DefaultClient.Get(context.TODO(), types.NamespacedName{
-		Name: oldPostgres.Spec.Version,
-	}, &postgresVersion)
-	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get PostgresVersion: %s", oldPostgres.Spec.Version)
+	// See validate()'s DeletionTimestamp guard (N210): the finalizer-removal patch on
+	// WipeOut must not be blocked on the referenced PostgresVersion still existing.
+	if postgres.DeletionTimestamp == nil {
+		var postgresVersion catalogapi.PostgresVersion
+		err := wh.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name: oldPostgres.Spec.Version,
+		}, &postgresVersion)
+		if err != nil {
+			return nil, errors.Wrapf(err, "failed to get PostgresVersion: %s", oldPostgres.Spec.Version)
+		}
+		oldPostgres.SetDefaults(&postgresVersion)
 	}
-	oldPostgres.SetDefaults(&postgresVersion)
 	if oldPostgres.Spec.AuthSecret == nil {
 		oldPostgres.Spec.AuthSecret = postgres.Spec.AuthSecret
 	}

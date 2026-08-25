@@ -37983,6 +37983,13 @@ func schema_apimachinery_apis_kubedb_v1_PostgresReplication(ref common.Reference
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
+					"bestEffortCrossDCLagBytesForFailover": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxCrossDCLagBytesForFailover is the RPO budget, in bytes, for an UNPLANNED cross data center failover. It is the most un-replicated WAL the operator may destroy by promoting a surviving data center whose standby is behind the lost primary.\n\nThis is NOT the same knob as spec.leaderElection.maximumLagBeforeFailover, which bounds the INTRA-DC raft election. This one bounds cross-DC disaster recovery, where the data at risk is whatever never crossed the link.\n\nWhen set, the operator refuses to create the ForceFailOver OpsRequest if the surviving data center's lag exceeds this many bytes, or if its lag cannot be established at all. Refusing is deliberate and it is fail closed: once the active data center is gone its remaining WAL can never be recovered, so the choice is between an outage and a data loss larger than the budget the operator asked for. The database therefore stays down until a human resolves it by annotating the Postgres object with dr.kubedb.com/accept-failover-data-loss=true, which records an explicit decision to accept the loss and lets the failover proceed.\n\nWhen unset, no cross-DC RPO budget is enforced and failover behaves as before, so existing deployments are unaffected. Setting it to 0 demands a fully caught up survivor and will refuse any failover that would lose even a single byte.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 				},
 				Required: []string{"walLimitPolicy"},
 			},
