@@ -375,17 +375,13 @@ func (in *BackupSpec) DeepCopyInto(out *BackupSpec) {
 	*out = *in
 	if in.S3Secrets != nil {
 		in, out := &in.S3Secrets, &out.S3Secrets
-		*out = make(map[string]corev1.LocalObjectReference, len(*in))
-		for key, val := range *in {
-			(*out)[key] = val
-		}
+		*out = make([]corev1.LocalObjectReference, len(*in))
+		copy(*out, *in)
 	}
 	if in.GCSSecrets != nil {
 		in, out := &in.GCSSecrets, &out.GCSSecrets
-		*out = make(map[string]corev1.LocalObjectReference, len(*in))
-		for key, val := range *in {
-			(*out)[key] = val
-		}
+		*out = make([]corev1.LocalObjectReference, len(*in))
+		copy(*out, *in)
 	}
 	return
 }

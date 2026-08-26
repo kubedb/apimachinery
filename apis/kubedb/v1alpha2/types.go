@@ -311,12 +311,12 @@ type ArbiterSpec struct {
 }
 
 type BackupSpec struct {
-	// S3Secrets maps backup repository names to Secrets holding their S3 credentials.
+	// S3Secrets holding their S3 credentials.
 	// +optional
-	S3Secrets map[string]core.LocalObjectReference `json:"s3Secrets,omitempty"`
-	// GCSSecrets maps backup repository names to Secrets holding their GCS service account keys.
+	S3Secrets []core.LocalObjectReference `json:"s3Secrets,omitempty"`
+	// GCSSecrets holding their GCS service account keys.
 	// +optional
-	GCSSecrets map[string]core.LocalObjectReference `json:"gcsSecrets,omitempty"`
+	GCSSecrets []core.LocalObjectReference `json:"gcsSecrets,omitempty"`
 }
 
 type DBBindInterface interface {

@@ -372,12 +372,9 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		return nil
 	}
 
-	for repository, ref := range creds.S3Secrets {
-		if repository == "" {
-			return errors.New("`spec.configuration.backup.s3Secrets` contains an empty repository name")
-		}
+	for i, ref := range creds.S3Secrets {
 		if ref.Name == "" {
-			return fmt.Errorf("`spec.configuration.backup.s3Secrets[%q].name` must be specified", repository)
+			return fmt.Errorf("`spec.configuration.backup.s3Secrets[%d].name` must be specified", i)
 		}
 		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "s3")
 		if err != nil {
@@ -385,24 +382,21 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		}
 		for _, key := range []string{blob.AWSAccessKeyId, blob.AWSSecretAccessKey} {
 			if _, ok := secret.Data[key]; !ok {
-				return fmt.Errorf("s3 secret %s/%s for repository %q has no key %q holding the credential", req.Namespace, secret.Name, repository, key)
+				return fmt.Errorf("s3 secret %s/%s has no key %q holding the credential", req.Namespace, secret.Name, key)
 			}
 		}
 	}
 
-	for repository, ref := range creds.GCSSecrets {
-		if repository == "" {
-			return errors.New("`spec.configuration.backup.gcsSecrets` contains an empty repository name")
-		}
+	for i, ref := range creds.GCSSecrets {
 		if ref.Name == "" {
-			return fmt.Errorf("`spec.configuration.backup.gcsSecrets[%q].name` must be specified", repository)
+			return fmt.Errorf("`spec.configuration.backup.gcsSecrets[%d].name` must be specified", i)
 		}
 		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "gcs")
 		if err != nil {
 			return err
 		}
 		if _, ok := secret.Data[blob.GoogleServiceAccountJSONKey]; !ok {
-			return fmt.Errorf("gcs secret %s/%s for repository %q has no key %q holding the service account json", req.Namespace, secret.Name, repository, blob.GoogleServiceAccountJSONKey)
+			return fmt.Errorf("gcs secret %s/%s has no key %q holding the service account json", req.Namespace, secret.Name, blob.GoogleServiceAccountJSONKey)
 		}
 	}
 

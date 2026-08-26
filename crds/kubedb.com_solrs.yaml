@@ -91,23 +91,23 @@ spec:
                   backup:
                     properties:
                       gcsSecrets:
-                        additionalProperties:
+                        items:
                           properties:
                             name:
                               default: ""
                               type: string
                           type: object
                           x-kubernetes-map-type: atomic
-                        type: object
+                        type: array
                       s3Secrets:
-                        additionalProperties:
+                        items:
                           properties:
                             name:
                               default: ""
                               type: string
                           type: object
                           x-kubernetes-map-type: atomic
-                        type: object
+                        type: array
                     type: object
                   inline:
                     additionalProperties:

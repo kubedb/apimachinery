@@ -113,14 +113,14 @@ func (s *Solr) SolrInlineConfigSecretKey(key string) string {
 	return fmt.Sprintf("%s-%s", kubedb.InlineConfigKeyPrefix, key)
 }
 
-func (s *Solr) S3BackupCredentials() map[string]v1.LocalObjectReference {
+func (s *Solr) S3BackupCredentials() []v1.LocalObjectReference {
 	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupSpec == nil {
 		return nil
 	}
 	return s.Spec.Configuration.BackupSpec.S3Secrets
 }
 
-func (s *Solr) GCSBackupCredentials() map[string]v1.LocalObjectReference {
+func (s *Solr) GCSBackupCredentials() []v1.LocalObjectReference {
 	if s.Spec.Configuration == nil || s.Spec.Configuration.BackupSpec == nil {
 		return nil
 	}
@@ -135,12 +135,12 @@ func AWSCredentialsPath() string {
 	return filepath.Join(kubedb.SolrBackupCredentialsDir, kubedb.SolrAWSCredentialsFileName)
 }
 
-func GCSCredentialSecretKey(repository string) string {
-	return "gcs-" + repository + ".json"
+func GCSCredentialSecretKey(secretName string) string {
+	return "gcs-" + secretName + ".json"
 }
 
-func GCSCredentialPath(repository string) string {
-	return filepath.Join(kubedb.SolrBackupCredentialsDir, "gcs", repository+".json")
+func GCSCredentialPath(secretName string) string {
+	return filepath.Join(kubedb.SolrBackupCredentialsDir, "gcs", secretName+".json")
 }
 
 func (s *Solr) Merge(opt map[string]string) map[string]string {

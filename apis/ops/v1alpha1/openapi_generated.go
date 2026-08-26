@@ -47059,7 +47059,7 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrReconfigurationSpec(ref common.Re
 					},
 					"backup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BackupSpec maps backup repositories to the Secrets holding their object storage credentials. The Secrets must be in the database namespace.",
+							Description: "BackupSpec references Secrets holding object storage credentials. The Secrets must be in the database namespace.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.BackupSpec"),
 						},
 					},
