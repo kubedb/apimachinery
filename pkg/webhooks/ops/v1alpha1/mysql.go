@@ -230,17 +230,12 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLUpdateVersionOpsRequest(db *
 
 	var list []string
 	if db.Spec.Topology != nil {
-		if db.Spec.Topology.Mode != nil && *db.Spec.Topology.Mode == dbapi.MySQLModeGroupReplication || *db.Spec.Topology.Mode == dbapi.MySQLModeInnoDBCluster {
-			list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
-			if err != nil {
-				return err
-			}
-		}
-	} else {
 		list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.GroupReplication, cur.Spec.UpdateConstraints.Denylist.GroupReplication, &versions)
-		if err != nil {
-			return err
-		}
+	} else {
+		list, err = getUpgradableVersions(cur.Spec.UpdateConstraints.Allowlist.Standalone, cur.Spec.UpdateConstraints.Denylist.Standalone, &versions)
+	}
+	if err != nil {
+		return err
 	}
 	if !slices.Contains(list, updateVersionSpec.TargetVersion) {
 		return fmt.Errorf("upgrade from version %v to %v is not supported", db.Spec.Version, req.Spec.UpdateVersion.TargetVersion)

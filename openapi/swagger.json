@@ -25866,6 +25866,20 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionLicense": {
+      "description": "PostgresVersionLicense describes whether a PostgresVersion's postgres binary requires an AppsCode Postgres Enterprise license file to start. It is only non-nil for the AppsCode distribution, which enforces certificate-based licensing directly in the postmaster (see doc/LICENSE_ENFORCEMENT.md in the AppsCode Postgres source repo): the process refuses to start, and shuts down if a running server's license expires, without a valid one.",
+      "type": "object",
+      "required": [
+        "required"
+      ],
+      "properties": {
+        "required": {
+          "description": "Required is true when this image's postgres binary refuses to start without a valid license file. When true, spec.license must be set on every Postgres using this version.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionList": {
       "description": "PostgresVersionList is a list of PostgresVersions",
       "type": "object",
@@ -25969,6 +25983,10 @@
           "description": "init container image",
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionInitContainer"
+        },
+        "license": {
+          "description": "License describes whether this version's image requires an AppsCode Postgres Enterprise license file to start.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionLicense"
         },
         "podSecurityPolicies": {
           "description": "PSP names",
@@ -27157,6 +27175,9 @@
         "database"
       ],
       "properties": {
+        "address": {
+          "type": "string"
+        },
         "appBinding": {
           "$ref": "#/definitions/xyz.kmodules.client-go.api.v1.ObjectReference"
         },
@@ -27171,8 +27192,14 @@
           "type": "integer",
           "format": "int32"
         },
+        "password": {
+          "type": "string"
+        },
         "trustServerCertificate": {
           "type": "boolean"
+        },
+        "user": {
+          "type": "string"
         }
       }
     },
