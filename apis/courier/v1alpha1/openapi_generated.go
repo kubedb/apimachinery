@@ -602,6 +602,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.JobDefaults":                                  schema_apimachinery_apis_courier_v1alpha1_JobDefaults(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.LogicalReplication":                           schema_apimachinery_apis_courier_v1alpha1_LogicalReplication(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerConnectionInfo":                    schema_apimachinery_apis_courier_v1alpha1_MSSQLServerConnectionInfo(ref),
+		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerDatabaseSelection":                 schema_apimachinery_apis_courier_v1alpha1_MSSQLServerDatabaseSelection(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerMigration":                         schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigration(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerMigrationList":                     schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigrationList(ref),
 		"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerMigrationSpec":                     schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigrationSpec(ref),
@@ -34563,6 +34564,58 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerConnectionInfo(ref com
 	}
 }
 
+func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerDatabaseSelection(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MSSQLServerDatabaseSelection defines table filters for one source database. An empty Table list selects every eligible table after the global Schema and ExcludeSchema filters are applied. ExcludeTable takes precedence over Table.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name is the source database name.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"table": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Table is the list of schema-qualified tables (e.g. \"dbo.Users\") to include.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"excludeTable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExcludeTable is the list of schema-qualified tables to exclude.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34682,6 +34735,13 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerMigrationSpec(ref comm
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerTarget"),
 						},
 					},
+					"precheck": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Precheck runs MSSQL source compatibility checks only and does not start a migration.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"jobDefaults": {
 						SchemaProps: spec.SchemaProps{
 							Description: "JobDefaults specifies default settings for migration jobs",
@@ -34717,21 +34777,6 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerSchema(ref common.Refe
 							Format:      "",
 						},
 					},
-					"database": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Database is the list of databases to migrate.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
-								},
-							},
-						},
-					},
 					"schema": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Schema is the list of SQL Server schemas (e.g. \"dbo\") to include.",
@@ -34762,31 +34807,23 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerSchema(ref common.Refe
 							},
 						},
 					},
-					"table": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Table is the list of schema-qualified tables (e.g. \"dbo.Users\") to include.",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
-									},
+					"databases": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
 								},
+								"x-kubernetes-list-type": "map",
 							},
 						},
-					},
-					"excludeTable": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ExcludeTable is the list of schema-qualified tables to exclude.",
+							Description: "Databases defines database-specific table selection.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Default: "",
-										Type:    []string{"string"},
-										Format:  "",
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerDatabaseSelection"),
 									},
 								},
 							},
@@ -34796,6 +34833,8 @@ func schema_apimachinery_apis_courier_v1alpha1_MSSQLServerSchema(ref common.Refe
 				Required: []string{"enabled"},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/courier/v1alpha1.MSSQLServerDatabaseSelection"},
 	}
 }
 
