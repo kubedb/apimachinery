@@ -83,10 +83,19 @@ for gv in "${group_versions[@]}"; do
     input_pkgs+=("${THIS_PKG}/apis/${gv}")
 done
 
-# Install the generator binaries the same way kube_codegen.sh does: cd into
-# the code-generator module and `go install` fully-qualified package names,
-# so they resolve against the module already on disk instead of as an
-# out-of-module dependency.
+# Install the generator binaries into a scratch dir rather than the
+# default $GOBIN/$GOPATH/bin: this runs as an arbitrary non-root uid (via
+# `docker run -u $(id -u):$(id -g)`), and unlike the binaries the
+# gengo-builder image pre-installs at build time (as root), these are
+# (re-)installed fresh at generation time, which needs a directory that
+# uid can actually write into -- not guaranteed for $GOPATH/bin depending
+# on how the image was built.
+GOBIN="${GOBIN:-$(mktemp -d)}"
+export GOBIN
+
+# cd into the code-generator module and `go install` fully-qualified package
+# names, the same way kube_codegen.sh does, so they resolve against the
+# module already on disk instead of as an out-of-module dependency.
 (
     cd "${CODEGEN_PKG}"
     GO111MODULE=on go install \
@@ -96,7 +105,6 @@ done
         k8s.io/code-generator/cmd/lister-gen \
         k8s.io/code-generator/cmd/informer-gen
 )
-GOBIN="${GOBIN:-$(go env GOPATH)/bin}"
 
 # Deepcopy helpers for every group/version in $(API_GROUPS).
 echo "Generating deepcopy code for ${#input_pkgs[@]} targets"
