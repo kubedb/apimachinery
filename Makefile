@@ -104,9 +104,13 @@ version:
 
 DOCKER_REPO_ROOT := /go/src/$(GO_PKG)/$(REPO)
 
-# Generate a typed clientset
-.PHONY: clientset
-clientset:
+# Generate a typed clientset, listers, informers and deepcopy/conversion
+# helpers, using k8s.io/code-generator's kube_codegen.sh toolchain (see
+# hack/update-codegen.sh). $(API_GROUPS) is passed through so the generation
+# scope lives in one place (this Makefile) instead of being duplicated in
+# the script.
+.PHONY: update-codegen
+update-codegen:
 	@docker run --rm	                                 \
 		-u $$(id -u):$$(id -g)                           \
 		-v /tmp:/.cache                                  \
@@ -114,28 +118,31 @@ clientset:
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
 		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
+		--env API_GROUPS="$(API_GROUPS)"                 \
 		$(CODE_GENERATOR_IMAGE)                          \
-		/go/src/k8s.io/code-generator/generate-groups.sh \
-			client,deepcopy,informer,lister              \
-			$(GO_PKG)/$(REPO)/client                     \
-			$(GO_PKG)/$(REPO)/apis                       \
-			"$(API_GROUPS)" \
-			--go-header-file "./hack/license/go.txt"
+		./hack/update-codegen.sh
 
-.PHONY: gen-conversion
-gen-conversion:
-	@docker run --rm                                   \
+# Verifies that ./apis and ./client are up to date with hack/update-codegen.sh.
+.PHONY: verify-codegen
+verify-codegen:
+	@docker run --rm	                                 \
 		-u $$(id -u):$$(id -g)                           \
 		-v /tmp:/.cache                                  \
 		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
 		-w $(DOCKER_REPO_ROOT)                           \
 		--env HTTP_PROXY=$(HTTP_PROXY)                   \
 		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
+		--env API_GROUPS="$(API_GROUPS)"                 \
 		$(CODE_GENERATOR_IMAGE)                          \
-		/go/bin/conversion-gen --go-header-file ./hack/license/go.txt \
-			--input-dirs ./apis/kubedb/v1alpha2 \
-			--extra-peer-dirs "kmodules.xyz/monitoring-agent-api/api/v1" \
-			-O zz_generated.conversion
+		./hack/verify-codegen.sh
+
+# Deprecated aliases for update-codegen, kept so muscle memory (and any
+# external tooling) invoking these older target names keeps working.
+.PHONY: clientset
+clientset: update-codegen
+
+.PHONY: gen-conversion
+gen-conversion: update-codegen
 
 # Generate openapi schema
 .PHONY: openapi
@@ -299,7 +306,7 @@ gen-enum: $(BUILD_DIRS)
 manifests: gen-crds patch-crds label-crds
 
 .PHONY: gen
-gen: clientset gen-enum manifests openapi gen-conversion #gen-crd-protos
+gen: update-codegen gen-enum manifests openapi #gen-crd-protos
 
 fmt: $(BUILD_DIRS)
 	@docker run                                                 \
@@ -398,7 +405,7 @@ $(BUILD_DIRS):
 dev: gen fmt push
 
 .PHONY: verify
-verify: verify-gen verify-modules
+verify: verify-codegen verify-gen verify-modules
 
 .PHONY: verify-modules
 verify-modules:
