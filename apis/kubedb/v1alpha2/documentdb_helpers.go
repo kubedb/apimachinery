@@ -308,6 +308,32 @@ func (d *DocumentDB) AppBindingMeta() appcat.AppBindingMeta {
 	return &documentDBApp{d}
 }
 
+// AdminAppBindingName is the AppBinding describing the backend Postgres endpoint, as opposed to
+// the MongoDB-wire gateway endpoint published under the DocumentDB's own name. It parallels the
+// <db>-admin-auth secret, which holds the credentials for that same endpoint.
+func (d *DocumentDB) AdminAppBindingName() string {
+	return metautil.NameWithSuffix(d.OffshootName(), kubedb.DocumentDBAdminAppBindingSuffix)
+}
+
+// documentDBAdminApp is the AppBindingMeta for the backend Postgres endpoint. The name stays
+// engine-neutral, but the type must be kubedb.com/postgres: that is the discriminator KubeStash
+// addons and the restic plugin dispatch on, and the backend genuinely is a Postgres.
+type documentDBAdminApp struct {
+	*DocumentDB
+}
+
+func (r documentDBAdminApp) Name() string {
+	return r.DocumentDB.AdminAppBindingName()
+}
+
+func (r documentDBAdminApp) Type() appcat.AppType {
+	return appcat.AppType(fmt.Sprintf("%s/%s", kubedb.GroupName, ResourceSingularPostgres))
+}
+
+func (d *DocumentDB) AdminAppBindingMeta() appcat.AppBindingMeta {
+	return &documentDBAdminApp{d}
+}
+
 type documentDBStatsService struct {
 	*DocumentDB
 }

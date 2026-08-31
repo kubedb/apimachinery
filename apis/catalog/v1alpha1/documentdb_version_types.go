@@ -79,6 +79,14 @@ type DocumentDBVersionSpec struct {
 	//+ optional
 	PostgresVersion string `json:"postgresVersion,omitempty"`
 
+	// AddonPostgresVersion is the Postgres version string published as spec.version on the
+	// <db>-admin AppBinding, which describes the backend Postgres endpoint for backup and
+	// restore. KubeStash substitutes it into the addon Function's image tag, so it must name a
+	// Postgres version the plugin image is actually published for - e.g. "17.2", not the
+	// major "17" carried by PostgresVersion.
+	// +optional
+	AddonPostgresVersion string `json:"addonPostgresVersion,omitempty"`
+
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
 
