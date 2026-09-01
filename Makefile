@@ -105,12 +105,15 @@ version:
 DOCKER_REPO_ROOT := /go/src/$(GO_PKG)/$(REPO)
 
 # Generate a typed clientset, listers, informers and deepcopy/conversion
-# helpers, using update-codegen.sh/verify-codegen.sh -- a generic pair of
-# scripts bundled into $(CODE_GENERATOR_IMAGE) (see
+# helpers, using update-codegen.sh -- a generic script bundled into
+# $(CODE_GENERATOR_IMAGE) (see
 # https://github.com/appscodelabs/gengo-builder/blob/master/scripts/update-codegen.sh
 # for the full env-var interface) driving k8s.io/code-generator's
 # kube_codegen.sh toolchain. Generation scope is configured entirely through
-# the env vars below rather than a repo-local copy of these scripts.
+# the env vars below rather than a repo-local copy of this script.
+# Staleness is checked by verify-gen (which re-runs `gen`, including this
+# target, and diffs against HEAD) rather than a separate verify-codegen
+# target.
 CONVERSION_GROUPS           ?= kubedb:v1alpha2
 CONVERSION_EXTRA_PEER_DIRS  ?= kmodules.xyz/monitoring-agent-api/api/v1
 
@@ -128,22 +131,6 @@ update-codegen:
 		--env CONVERSION_EXTRA_PEER_DIRS="$(CONVERSION_EXTRA_PEER_DIRS)" \
 		$(CODE_GENERATOR_IMAGE)                          \
 		update-codegen.sh
-
-# Verifies that ./apis and ./client are up to date with update-codegen.sh.
-.PHONY: verify-codegen
-verify-codegen:
-	@docker run --rm	                                 \
-		-u $$(id -u):$$(id -g)                           \
-		-v /tmp:/.cache                                  \
-		-v $$(pwd):$(DOCKER_REPO_ROOT)                   \
-		-w $(DOCKER_REPO_ROOT)                           \
-		--env HTTP_PROXY=$(HTTP_PROXY)                   \
-		--env HTTPS_PROXY=$(HTTPS_PROXY)                 \
-		--env API_GROUPS="$(API_GROUPS)"                 \
-		--env CONVERSION_GROUPS="$(CONVERSION_GROUPS)"   \
-		--env CONVERSION_EXTRA_PEER_DIRS="$(CONVERSION_EXTRA_PEER_DIRS)" \
-		$(CODE_GENERATOR_IMAGE)                          \
-		verify-codegen.sh
 
 # Generate openapi schema
 .PHONY: openapi
@@ -424,7 +411,7 @@ $(BUILD_DIRS):
 dev: gen fmt push
 
 .PHONY: verify
-verify: verify-codegen verify-gen verify-modules
+verify: verify-gen verify-modules
 
 .PHONY: verify-modules
 verify-modules:
