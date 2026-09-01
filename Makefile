@@ -145,14 +145,6 @@ verify-codegen:
 		$(CODE_GENERATOR_IMAGE)                          \
 		verify-codegen.sh
 
-# Deprecated aliases for update-codegen, kept so muscle memory (and any
-# external tooling) invoking these older target names keeps working.
-.PHONY: clientset
-clientset: update-codegen
-
-.PHONY: gen-conversion
-gen-conversion: update-codegen
-
 # Generate openapi schema
 .PHONY: openapi
 openapi: $(addprefix openapi-, $(subst :,_, $(API_GROUPS)))
