@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMariaDBs implements MariaDBInterface
-type FakeMariaDBs struct {
+// fakeMariaDBs implements MariaDBInterface
+type fakeMariaDBs struct {
+	*gentype.FakeClientWithList[*v1alpha2.MariaDB, *v1alpha2.MariaDBList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var mariadbsResource = v1alpha2.SchemeGroupVersion.WithResource("mariadbs")
-
-var mariadbsKind = v1alpha2.SchemeGroupVersion.WithKind("MariaDB")
-
-// Get takes name of the mariaDB, and returns the corresponding mariaDB object, and an error if there is any.
-func (c *FakeMariaDBs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.MariaDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mariadbsResource, c.ns, name), &v1alpha2.MariaDB{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMariaDBs(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.MariaDBInterface {
+	return &fakeMariaDBs{
+		gentype.NewFakeClientWithList[*v1alpha2.MariaDB, *v1alpha2.MariaDBList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("mariadbs"),
+			v1alpha2.SchemeGroupVersion.WithKind("MariaDB"),
+			func() *v1alpha2.MariaDB { return &v1alpha2.MariaDB{} },
+			func() *v1alpha2.MariaDBList { return &v1alpha2.MariaDBList{} },
+			func(dst, src *v1alpha2.MariaDBList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.MariaDBList) []*v1alpha2.MariaDB { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.MariaDBList, items []*v1alpha2.MariaDB) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.MariaDB), err
-}
-
-// List takes label and field selectors, and returns the list of MariaDBs that match those selectors.
-func (c *FakeMariaDBs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.MariaDBList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mariadbsResource, mariadbsKind, c.ns, opts), &v1alpha2.MariaDBList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.MariaDBList{ListMeta: obj.(*v1alpha2.MariaDBList).ListMeta}
-	for _, item := range obj.(*v1alpha2.MariaDBList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mariaDBs.
-func (c *FakeMariaDBs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mariadbsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mariaDB and creates it.  Returns the server's representation of the mariaDB, and an error, if there is any.
-func (c *FakeMariaDBs) Create(ctx context.Context, mariaDB *v1alpha2.MariaDB, opts v1.CreateOptions) (result *v1alpha2.MariaDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mariadbsResource, c.ns, mariaDB), &v1alpha2.MariaDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MariaDB), err
-}
-
-// Update takes the representation of a mariaDB and updates it. Returns the server's representation of the mariaDB, and an error, if there is any.
-func (c *FakeMariaDBs) Update(ctx context.Context, mariaDB *v1alpha2.MariaDB, opts v1.UpdateOptions) (result *v1alpha2.MariaDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mariadbsResource, c.ns, mariaDB), &v1alpha2.MariaDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MariaDB), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMariaDBs) UpdateStatus(ctx context.Context, mariaDB *v1alpha2.MariaDB, opts v1.UpdateOptions) (*v1alpha2.MariaDB, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mariadbsResource, "status", c.ns, mariaDB), &v1alpha2.MariaDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MariaDB), err
-}
-
-// Delete takes name of the mariaDB and deletes it. Returns an error if one occurs.
-func (c *FakeMariaDBs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mariadbsResource, c.ns, name, opts), &v1alpha2.MariaDB{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMariaDBs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mariadbsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.MariaDBList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mariaDB.
-func (c *FakeMariaDBs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.MariaDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mariadbsResource, c.ns, name, pt, data, subresources...), &v1alpha2.MariaDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MariaDB), err
 }

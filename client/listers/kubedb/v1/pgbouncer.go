@@ -19,11 +19,11 @@ limitations under the License.
 package v1
 
 import (
-	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PgBouncerLister helps list PgBouncers.
@@ -31,7 +31,7 @@ import (
 type PgBouncerLister interface {
 	// List lists all PgBouncers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.PgBouncer, err error)
+	List(selector labels.Selector) (ret []*kubedbv1.PgBouncer, err error)
 	// PgBouncers returns an object that can list and get PgBouncers.
 	PgBouncers(namespace string) PgBouncerNamespaceLister
 	PgBouncerListerExpansion
@@ -39,25 +39,17 @@ type PgBouncerLister interface {
 
 // pgBouncerLister implements the PgBouncerLister interface.
 type pgBouncerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1.PgBouncer]
 }
 
 // NewPgBouncerLister returns a new PgBouncerLister.
 func NewPgBouncerLister(indexer cache.Indexer) PgBouncerLister {
-	return &pgBouncerLister{indexer: indexer}
-}
-
-// List lists all PgBouncers in the indexer.
-func (s *pgBouncerLister) List(selector labels.Selector) (ret []*v1.PgBouncer, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.PgBouncer))
-	})
-	return ret, err
+	return &pgBouncerLister{listers.New[*kubedbv1.PgBouncer](indexer, kubedbv1.Resource("pgbouncer"))}
 }
 
 // PgBouncers returns an object that can list and get PgBouncers.
 func (s *pgBouncerLister) PgBouncers(namespace string) PgBouncerNamespaceLister {
-	return pgBouncerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return pgBouncerNamespaceLister{listers.NewNamespaced[*kubedbv1.PgBouncer](s.ResourceIndexer, namespace)}
 }
 
 // PgBouncerNamespaceLister helps list and get PgBouncers.
@@ -65,36 +57,15 @@ func (s *pgBouncerLister) PgBouncers(namespace string) PgBouncerNamespaceLister 
 type PgBouncerNamespaceLister interface {
 	// List lists all PgBouncers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1.PgBouncer, err error)
+	List(selector labels.Selector) (ret []*kubedbv1.PgBouncer, err error)
 	// Get retrieves the PgBouncer from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1.PgBouncer, error)
+	Get(name string) (*kubedbv1.PgBouncer, error)
 	PgBouncerNamespaceListerExpansion
 }
 
 // pgBouncerNamespaceLister implements the PgBouncerNamespaceLister
 // interface.
 type pgBouncerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PgBouncers in the indexer for a given namespace.
-func (s pgBouncerNamespaceLister) List(selector labels.Selector) (ret []*v1.PgBouncer, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1.PgBouncer))
-	})
-	return ret, err
-}
-
-// Get retrieves the PgBouncer from the indexer for a given namespace and name.
-func (s pgBouncerNamespaceLister) Get(name string) (*v1.PgBouncer, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1.Resource("pgbouncer"), name)
-	}
-	return obj.(*v1.PgBouncer), nil
+	listers.ResourceIndexer[*kubedbv1.PgBouncer]
 }

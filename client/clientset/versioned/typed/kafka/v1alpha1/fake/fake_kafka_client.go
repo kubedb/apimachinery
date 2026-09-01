@@ -30,19 +30,19 @@ type FakeKafkaV1alpha1 struct {
 }
 
 func (c *FakeKafkaV1alpha1) ConnectClusters(namespace string) v1alpha1.ConnectClusterInterface {
-	return &FakeConnectClusters{c, namespace}
+	return newFakeConnectClusters(c, namespace)
 }
 
 func (c *FakeKafkaV1alpha1) Connectors(namespace string) v1alpha1.ConnectorInterface {
-	return &FakeConnectors{c, namespace}
+	return newFakeConnectors(c, namespace)
 }
 
 func (c *FakeKafkaV1alpha1) RestProxies(namespace string) v1alpha1.RestProxyInterface {
-	return &FakeRestProxies{c, namespace}
+	return newFakeRestProxies(c, namespace)
 }
 
 func (c *FakeKafkaV1alpha1) SchemaRegistries(namespace string) v1alpha1.SchemaRegistryInterface {
-	return &FakeSchemaRegistries{c, namespace}
+	return newFakeSchemaRegistries(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

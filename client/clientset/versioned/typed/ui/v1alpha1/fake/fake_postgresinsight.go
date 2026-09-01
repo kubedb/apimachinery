@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePostgresInsights implements PostgresInsightInterface
-type FakePostgresInsights struct {
+// fakePostgresInsights implements PostgresInsightInterface
+type fakePostgresInsights struct {
+	*gentype.FakeClientWithList[*v1alpha1.PostgresInsight, *v1alpha1.PostgresInsightList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var postgresinsightsResource = v1alpha1.SchemeGroupVersion.WithResource("postgresinsights")
-
-var postgresinsightsKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresInsight")
-
-// Get takes name of the postgresInsight, and returns the corresponding postgresInsight object, and an error if there is any.
-func (c *FakePostgresInsights) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(postgresinsightsResource, c.ns, name), &v1alpha1.PostgresInsight{})
-
-	if obj == nil {
-		return nil, err
+func newFakePostgresInsights(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.PostgresInsightInterface {
+	return &fakePostgresInsights{
+		gentype.NewFakeClientWithList[*v1alpha1.PostgresInsight, *v1alpha1.PostgresInsightList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("postgresinsights"),
+			v1alpha1.SchemeGroupVersion.WithKind("PostgresInsight"),
+			func() *v1alpha1.PostgresInsight { return &v1alpha1.PostgresInsight{} },
+			func() *v1alpha1.PostgresInsightList { return &v1alpha1.PostgresInsightList{} },
+			func(dst, src *v1alpha1.PostgresInsightList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PostgresInsightList) []*v1alpha1.PostgresInsight {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PostgresInsightList, items []*v1alpha1.PostgresInsight) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PostgresInsight), err
-}
-
-// List takes label and field selectors, and returns the list of PostgresInsights that match those selectors.
-func (c *FakePostgresInsights) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PostgresInsightList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(postgresinsightsResource, postgresinsightsKind, c.ns, opts), &v1alpha1.PostgresInsightList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PostgresInsightList{ListMeta: obj.(*v1alpha1.PostgresInsightList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PostgresInsightList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested postgresInsights.
-func (c *FakePostgresInsights) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(postgresinsightsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a postgresInsight and creates it.  Returns the server's representation of the postgresInsight, and an error, if there is any.
-func (c *FakePostgresInsights) Create(ctx context.Context, postgresInsight *v1alpha1.PostgresInsight, opts v1.CreateOptions) (result *v1alpha1.PostgresInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(postgresinsightsResource, c.ns, postgresInsight), &v1alpha1.PostgresInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresInsight), err
-}
-
-// Update takes the representation of a postgresInsight and updates it. Returns the server's representation of the postgresInsight, and an error, if there is any.
-func (c *FakePostgresInsights) Update(ctx context.Context, postgresInsight *v1alpha1.PostgresInsight, opts v1.UpdateOptions) (result *v1alpha1.PostgresInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(postgresinsightsResource, c.ns, postgresInsight), &v1alpha1.PostgresInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresInsight), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePostgresInsights) UpdateStatus(ctx context.Context, postgresInsight *v1alpha1.PostgresInsight, opts v1.UpdateOptions) (*v1alpha1.PostgresInsight, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(postgresinsightsResource, "status", c.ns, postgresInsight), &v1alpha1.PostgresInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresInsight), err
-}
-
-// Delete takes name of the postgresInsight and deletes it. Returns an error if one occurs.
-func (c *FakePostgresInsights) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(postgresinsightsResource, c.ns, name, opts), &v1alpha1.PostgresInsight{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePostgresInsights) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(postgresinsightsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PostgresInsightList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched postgresInsight.
-func (c *FakePostgresInsights) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PostgresInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(postgresinsightsResource, c.ns, name, pt, data, subresources...), &v1alpha1.PostgresInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresInsight), err
 }

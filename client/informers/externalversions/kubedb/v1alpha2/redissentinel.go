@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	apiskubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha2 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha2"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // RedisSentinels.
 type RedisSentinelInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha2.RedisSentinelLister
+	Lister() kubedbv1alpha2.RedisSentinelLister
 }
 
 type redisSentinelInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredRedisSentinelInformer(client versioned.Interface, namespace stri
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().RedisSentinels(namespace).List(context.TODO(), options)
+				return client.KubedbV1alpha2().RedisSentinels(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().RedisSentinels(namespace).Watch(context.TODO(), options)
+				return client.KubedbV1alpha2().RedisSentinels(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1alpha2().RedisSentinels(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1alpha2().RedisSentinels(namespace).Watch(ctx, options)
 			},
 		},
-		&kubedbv1alpha2.RedisSentinel{},
+		&apiskubedbv1alpha2.RedisSentinel{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *redisSentinelInformer) defaultInformer(client versioned.Interface, resy
 }
 
 func (f *redisSentinelInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1alpha2.RedisSentinel{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiskubedbv1alpha2.RedisSentinel{}, f.defaultInformer)
 }
 
-func (f *redisSentinelInformer) Lister() v1alpha2.RedisSentinelLister {
-	return v1alpha2.NewRedisSentinelLister(f.Informer().GetIndexer())
+func (f *redisSentinelInformer) Lister() kubedbv1alpha2.RedisSentinelLister {
+	return kubedbv1alpha2.NewRedisSentinelLister(f.Informer().GetIndexer())
 }

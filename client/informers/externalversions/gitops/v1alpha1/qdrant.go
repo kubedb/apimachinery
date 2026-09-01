@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	apisgitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Qdrants.
 type QdrantInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.QdrantLister
+	Lister() gitopsv1alpha1.QdrantLister
 }
 
 type qdrantInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredQdrantInformer(client versioned.Interface, namespace string, res
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Qdrants(namespace).List(context.TODO(), options)
+				return client.GitopsV1alpha1().Qdrants(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Qdrants(namespace).Watch(context.TODO(), options)
+				return client.GitopsV1alpha1().Qdrants(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Qdrants(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Qdrants(namespace).Watch(ctx, options)
 			},
 		},
-		&gitopsv1alpha1.Qdrant{},
+		&apisgitopsv1alpha1.Qdrant{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *qdrantInformer) defaultInformer(client versioned.Interface, resyncPerio
 }
 
 func (f *qdrantInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&gitopsv1alpha1.Qdrant{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisgitopsv1alpha1.Qdrant{}, f.defaultInformer)
 }
 
-func (f *qdrantInformer) Lister() v1alpha1.QdrantLister {
-	return v1alpha1.NewQdrantLister(f.Informer().GetIndexer())
+func (f *qdrantInformer) Lister() gitopsv1alpha1.QdrantLister {
+	return gitopsv1alpha1.NewQdrantLister(f.Informer().GetIndexer())
 }

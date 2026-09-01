@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // Neo4jLister helps list Neo4js.
@@ -31,7 +31,7 @@ import (
 type Neo4jLister interface {
 	// List lists all Neo4js in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4j, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Neo4j, err error)
 	// Neo4js returns an object that can list and get Neo4js.
 	Neo4js(namespace string) Neo4jNamespaceLister
 	Neo4jListerExpansion
@@ -39,25 +39,17 @@ type Neo4jLister interface {
 
 // neo4jLister implements the Neo4jLister interface.
 type neo4jLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*gitopsv1alpha1.Neo4j]
 }
 
 // NewNeo4jLister returns a new Neo4jLister.
 func NewNeo4jLister(indexer cache.Indexer) Neo4jLister {
-	return &neo4jLister{indexer: indexer}
-}
-
-// List lists all Neo4js in the indexer.
-func (s *neo4jLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4j, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4j))
-	})
-	return ret, err
+	return &neo4jLister{listers.New[*gitopsv1alpha1.Neo4j](indexer, gitopsv1alpha1.Resource("neo4j"))}
 }
 
 // Neo4js returns an object that can list and get Neo4js.
 func (s *neo4jLister) Neo4js(namespace string) Neo4jNamespaceLister {
-	return neo4jNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return neo4jNamespaceLister{listers.NewNamespaced[*gitopsv1alpha1.Neo4j](s.ResourceIndexer, namespace)}
 }
 
 // Neo4jNamespaceLister helps list and get Neo4js.
@@ -65,36 +57,15 @@ func (s *neo4jLister) Neo4js(namespace string) Neo4jNamespaceLister {
 type Neo4jNamespaceLister interface {
 	// List lists all Neo4js in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4j, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Neo4j, err error)
 	// Get retrieves the Neo4j from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Neo4j, error)
+	Get(name string) (*gitopsv1alpha1.Neo4j, error)
 	Neo4jNamespaceListerExpansion
 }
 
 // neo4jNamespaceLister implements the Neo4jNamespaceLister
 // interface.
 type neo4jNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Neo4js in the indexer for a given namespace.
-func (s neo4jNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4j, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4j))
-	})
-	return ret, err
-}
-
-// Get retrieves the Neo4j from the indexer for a given namespace and name.
-func (s neo4jNamespaceLister) Get(name string) (*v1alpha1.Neo4j, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("neo4j"), name)
-	}
-	return obj.(*v1alpha1.Neo4j), nil
+	listers.ResourceIndexer[*gitopsv1alpha1.Neo4j]
 }

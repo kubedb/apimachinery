@@ -19,29 +19,27 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDatabaseSummaries implements DatabaseSummaryInterface
-type FakeDatabaseSummaries struct {
+// fakeDatabaseSummaries implements DatabaseSummaryInterface
+type fakeDatabaseSummaries struct {
+	*gentype.FakeClient[*v1alpha1.DatabaseSummary]
 	Fake *FakeUiV1alpha1
 }
 
-var databasesummariesResource = v1alpha1.SchemeGroupVersion.WithResource("databasesummaries")
-
-var databasesummariesKind = v1alpha1.SchemeGroupVersion.WithKind("DatabaseSummary")
-
-// Create takes the representation of a databaseSummary and creates it.  Returns the server's representation of the databaseSummary, and an error, if there is any.
-func (c *FakeDatabaseSummaries) Create(ctx context.Context, databaseSummary *v1alpha1.DatabaseSummary, opts v1.CreateOptions) (result *v1alpha1.DatabaseSummary, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(databasesummariesResource, databaseSummary), &v1alpha1.DatabaseSummary{})
-	if obj == nil {
-		return nil, err
+func newFakeDatabaseSummaries(fake *FakeUiV1alpha1) uiv1alpha1.DatabaseSummaryInterface {
+	return &fakeDatabaseSummaries{
+		gentype.NewFakeClient[*v1alpha1.DatabaseSummary](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("databasesummaries"),
+			v1alpha1.SchemeGroupVersion.WithKind("DatabaseSummary"),
+			func() *v1alpha1.DatabaseSummary { return &v1alpha1.DatabaseSummary{} },
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DatabaseSummary), err
 }

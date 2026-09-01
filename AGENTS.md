@@ -43,9 +43,11 @@ make clean
 The repo is generation-heavy. Run `make gen` after any change to `apis/`:
 
 ```bash
-make gen             # clientset + gen-enum + manifests + openapi + gen-conversion
-make clientset       # client/{clientset,informers,listers}
-make gen-conversion  # zz_generated.conversion.go between kubedb/v1 and v1alpha2
+make gen             # update-codegen + gen-enum + manifests + openapi
+make update-codegen  # client/{clientset,informers,listers} + zz_generated.{deepcopy,conversion}.go,
+                      # via the k8s.io/code-generator toolchain (hack/update-codegen.sh);
+                      # `make clientset` / `make gen-conversion` still work as aliases for this
+make verify-codegen  # fails if apis/ or client/ are out of date with hack/update-codegen.sh
 make gen-enum        # go generate ./apis/... (enum stringers)
 make openapi         # apis/.../openapi_generated.go + openapi/swagger.json
 make gen-crds        # crds/*.yaml from kubebuilder markers (controller-gen)

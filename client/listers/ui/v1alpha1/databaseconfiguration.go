@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DatabaseConfigurationLister helps list DatabaseConfigurations.
@@ -31,7 +31,7 @@ import (
 type DatabaseConfigurationLister interface {
 	// List lists all DatabaseConfigurations in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DatabaseConfiguration, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.DatabaseConfiguration, err error)
 	// DatabaseConfigurations returns an object that can list and get DatabaseConfigurations.
 	DatabaseConfigurations(namespace string) DatabaseConfigurationNamespaceLister
 	DatabaseConfigurationListerExpansion
@@ -39,25 +39,17 @@ type DatabaseConfigurationLister interface {
 
 // databaseConfigurationLister implements the DatabaseConfigurationLister interface.
 type databaseConfigurationLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.DatabaseConfiguration]
 }
 
 // NewDatabaseConfigurationLister returns a new DatabaseConfigurationLister.
 func NewDatabaseConfigurationLister(indexer cache.Indexer) DatabaseConfigurationLister {
-	return &databaseConfigurationLister{indexer: indexer}
-}
-
-// List lists all DatabaseConfigurations in the indexer.
-func (s *databaseConfigurationLister) List(selector labels.Selector) (ret []*v1alpha1.DatabaseConfiguration, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DatabaseConfiguration))
-	})
-	return ret, err
+	return &databaseConfigurationLister{listers.New[*uiv1alpha1.DatabaseConfiguration](indexer, uiv1alpha1.Resource("databaseconfiguration"))}
 }
 
 // DatabaseConfigurations returns an object that can list and get DatabaseConfigurations.
 func (s *databaseConfigurationLister) DatabaseConfigurations(namespace string) DatabaseConfigurationNamespaceLister {
-	return databaseConfigurationNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return databaseConfigurationNamespaceLister{listers.NewNamespaced[*uiv1alpha1.DatabaseConfiguration](s.ResourceIndexer, namespace)}
 }
 
 // DatabaseConfigurationNamespaceLister helps list and get DatabaseConfigurations.
@@ -65,36 +57,15 @@ func (s *databaseConfigurationLister) DatabaseConfigurations(namespace string) D
 type DatabaseConfigurationNamespaceLister interface {
 	// List lists all DatabaseConfigurations in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DatabaseConfiguration, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.DatabaseConfiguration, err error)
 	// Get retrieves the DatabaseConfiguration from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DatabaseConfiguration, error)
+	Get(name string) (*uiv1alpha1.DatabaseConfiguration, error)
 	DatabaseConfigurationNamespaceListerExpansion
 }
 
 // databaseConfigurationNamespaceLister implements the DatabaseConfigurationNamespaceLister
 // interface.
 type databaseConfigurationNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all DatabaseConfigurations in the indexer for a given namespace.
-func (s databaseConfigurationNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.DatabaseConfiguration, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DatabaseConfiguration))
-	})
-	return ret, err
-}
-
-// Get retrieves the DatabaseConfiguration from the indexer for a given namespace and name.
-func (s databaseConfigurationNamespaceLister) Get(name string) (*v1alpha1.DatabaseConfiguration, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("databaseconfiguration"), name)
-	}
-	return obj.(*v1alpha1.DatabaseConfiguration), nil
+	listers.ResourceIndexer[*uiv1alpha1.DatabaseConfiguration]
 }

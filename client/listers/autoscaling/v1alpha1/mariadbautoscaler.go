@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MariaDBAutoscalerLister helps list MariaDBAutoscalers.
@@ -31,7 +31,7 @@ import (
 type MariaDBAutoscalerLister interface {
 	// List lists all MariaDBAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MariaDBAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.MariaDBAutoscaler, err error)
 	// MariaDBAutoscalers returns an object that can list and get MariaDBAutoscalers.
 	MariaDBAutoscalers(namespace string) MariaDBAutoscalerNamespaceLister
 	MariaDBAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type MariaDBAutoscalerLister interface {
 
 // mariaDBAutoscalerLister implements the MariaDBAutoscalerLister interface.
 type mariaDBAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.MariaDBAutoscaler]
 }
 
 // NewMariaDBAutoscalerLister returns a new MariaDBAutoscalerLister.
 func NewMariaDBAutoscalerLister(indexer cache.Indexer) MariaDBAutoscalerLister {
-	return &mariaDBAutoscalerLister{indexer: indexer}
-}
-
-// List lists all MariaDBAutoscalers in the indexer.
-func (s *mariaDBAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.MariaDBAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MariaDBAutoscaler))
-	})
-	return ret, err
+	return &mariaDBAutoscalerLister{listers.New[*autoscalingv1alpha1.MariaDBAutoscaler](indexer, autoscalingv1alpha1.Resource("mariadbautoscaler"))}
 }
 
 // MariaDBAutoscalers returns an object that can list and get MariaDBAutoscalers.
 func (s *mariaDBAutoscalerLister) MariaDBAutoscalers(namespace string) MariaDBAutoscalerNamespaceLister {
-	return mariaDBAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mariaDBAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.MariaDBAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // MariaDBAutoscalerNamespaceLister helps list and get MariaDBAutoscalers.
@@ -65,36 +57,15 @@ func (s *mariaDBAutoscalerLister) MariaDBAutoscalers(namespace string) MariaDBAu
 type MariaDBAutoscalerNamespaceLister interface {
 	// List lists all MariaDBAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MariaDBAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.MariaDBAutoscaler, err error)
 	// Get retrieves the MariaDBAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MariaDBAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.MariaDBAutoscaler, error)
 	MariaDBAutoscalerNamespaceListerExpansion
 }
 
 // mariaDBAutoscalerNamespaceLister implements the MariaDBAutoscalerNamespaceLister
 // interface.
 type mariaDBAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MariaDBAutoscalers in the indexer for a given namespace.
-func (s mariaDBAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MariaDBAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MariaDBAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the MariaDBAutoscaler from the indexer for a given namespace and name.
-func (s mariaDBAutoscalerNamespaceLister) Get(name string) (*v1alpha1.MariaDBAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mariadbautoscaler"), name)
-	}
-	return obj.(*v1alpha1.MariaDBAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.MariaDBAutoscaler]
 }

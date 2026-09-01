@@ -30,51 +30,51 @@ type FakeKubedbV1 struct {
 }
 
 func (c *FakeKubedbV1) Elasticsearches(namespace string) v1.ElasticsearchInterface {
-	return &FakeElasticsearches{c, namespace}
+	return newFakeElasticsearches(c, namespace)
 }
 
 func (c *FakeKubedbV1) Kafkas(namespace string) v1.KafkaInterface {
-	return &FakeKafkas{c, namespace}
+	return newFakeKafkas(c, namespace)
 }
 
 func (c *FakeKubedbV1) MariaDBs(namespace string) v1.MariaDBInterface {
-	return &FakeMariaDBs{c, namespace}
+	return newFakeMariaDBs(c, namespace)
 }
 
 func (c *FakeKubedbV1) Memcacheds(namespace string) v1.MemcachedInterface {
-	return &FakeMemcacheds{c, namespace}
+	return newFakeMemcacheds(c, namespace)
 }
 
 func (c *FakeKubedbV1) MongoDBs(namespace string) v1.MongoDBInterface {
-	return &FakeMongoDBs{c, namespace}
+	return newFakeMongoDBs(c, namespace)
 }
 
 func (c *FakeKubedbV1) MySQLs(namespace string) v1.MySQLInterface {
-	return &FakeMySQLs{c, namespace}
+	return newFakeMySQLs(c, namespace)
 }
 
 func (c *FakeKubedbV1) PerconaXtraDBs(namespace string) v1.PerconaXtraDBInterface {
-	return &FakePerconaXtraDBs{c, namespace}
+	return newFakePerconaXtraDBs(c, namespace)
 }
 
 func (c *FakeKubedbV1) PgBouncers(namespace string) v1.PgBouncerInterface {
-	return &FakePgBouncers{c, namespace}
+	return newFakePgBouncers(c, namespace)
 }
 
 func (c *FakeKubedbV1) Postgreses(namespace string) v1.PostgresInterface {
-	return &FakePostgreses{c, namespace}
+	return newFakePostgreses(c, namespace)
 }
 
 func (c *FakeKubedbV1) ProxySQLs(namespace string) v1.ProxySQLInterface {
-	return &FakeProxySQLs{c, namespace}
+	return newFakeProxySQLs(c, namespace)
 }
 
 func (c *FakeKubedbV1) Redises(namespace string) v1.RedisInterface {
-	return &FakeRedises{c, namespace}
+	return newFakeRedises(c, namespace)
 }
 
 func (c *FakeKubedbV1) RedisSentinels(namespace string) v1.RedisSentinelInterface {
-	return &FakeRedisSentinels{c, namespace}
+	return newFakeRedisSentinels(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

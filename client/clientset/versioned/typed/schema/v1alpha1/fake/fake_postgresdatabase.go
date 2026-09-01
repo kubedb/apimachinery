@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
+	schemav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/schema/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePostgresDatabases implements PostgresDatabaseInterface
-type FakePostgresDatabases struct {
+// fakePostgresDatabases implements PostgresDatabaseInterface
+type fakePostgresDatabases struct {
+	*gentype.FakeClientWithList[*v1alpha1.PostgresDatabase, *v1alpha1.PostgresDatabaseList]
 	Fake *FakeSchemaV1alpha1
-	ns   string
 }
 
-var postgresdatabasesResource = v1alpha1.SchemeGroupVersion.WithResource("postgresdatabases")
-
-var postgresdatabasesKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresDatabase")
-
-// Get takes name of the postgresDatabase, and returns the corresponding postgresDatabase object, and an error if there is any.
-func (c *FakePostgresDatabases) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresDatabase, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(postgresdatabasesResource, c.ns, name), &v1alpha1.PostgresDatabase{})
-
-	if obj == nil {
-		return nil, err
+func newFakePostgresDatabases(fake *FakeSchemaV1alpha1, namespace string) schemav1alpha1.PostgresDatabaseInterface {
+	return &fakePostgresDatabases{
+		gentype.NewFakeClientWithList[*v1alpha1.PostgresDatabase, *v1alpha1.PostgresDatabaseList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("postgresdatabases"),
+			v1alpha1.SchemeGroupVersion.WithKind("PostgresDatabase"),
+			func() *v1alpha1.PostgresDatabase { return &v1alpha1.PostgresDatabase{} },
+			func() *v1alpha1.PostgresDatabaseList { return &v1alpha1.PostgresDatabaseList{} },
+			func(dst, src *v1alpha1.PostgresDatabaseList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PostgresDatabaseList) []*v1alpha1.PostgresDatabase {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PostgresDatabaseList, items []*v1alpha1.PostgresDatabase) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PostgresDatabase), err
-}
-
-// List takes label and field selectors, and returns the list of PostgresDatabases that match those selectors.
-func (c *FakePostgresDatabases) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PostgresDatabaseList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(postgresdatabasesResource, postgresdatabasesKind, c.ns, opts), &v1alpha1.PostgresDatabaseList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PostgresDatabaseList{ListMeta: obj.(*v1alpha1.PostgresDatabaseList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PostgresDatabaseList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested postgresDatabases.
-func (c *FakePostgresDatabases) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(postgresdatabasesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a postgresDatabase and creates it.  Returns the server's representation of the postgresDatabase, and an error, if there is any.
-func (c *FakePostgresDatabases) Create(ctx context.Context, postgresDatabase *v1alpha1.PostgresDatabase, opts v1.CreateOptions) (result *v1alpha1.PostgresDatabase, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(postgresdatabasesResource, c.ns, postgresDatabase), &v1alpha1.PostgresDatabase{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresDatabase), err
-}
-
-// Update takes the representation of a postgresDatabase and updates it. Returns the server's representation of the postgresDatabase, and an error, if there is any.
-func (c *FakePostgresDatabases) Update(ctx context.Context, postgresDatabase *v1alpha1.PostgresDatabase, opts v1.UpdateOptions) (result *v1alpha1.PostgresDatabase, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(postgresdatabasesResource, c.ns, postgresDatabase), &v1alpha1.PostgresDatabase{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresDatabase), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePostgresDatabases) UpdateStatus(ctx context.Context, postgresDatabase *v1alpha1.PostgresDatabase, opts v1.UpdateOptions) (*v1alpha1.PostgresDatabase, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(postgresdatabasesResource, "status", c.ns, postgresDatabase), &v1alpha1.PostgresDatabase{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresDatabase), err
-}
-
-// Delete takes name of the postgresDatabase and deletes it. Returns an error if one occurs.
-func (c *FakePostgresDatabases) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(postgresdatabasesResource, c.ns, name, opts), &v1alpha1.PostgresDatabase{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePostgresDatabases) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(postgresdatabasesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PostgresDatabaseList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched postgresDatabase.
-func (c *FakePostgresDatabases) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PostgresDatabase, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(postgresdatabasesResource, c.ns, name, pt, data, subresources...), &v1alpha1.PostgresDatabase{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresDatabase), err
 }

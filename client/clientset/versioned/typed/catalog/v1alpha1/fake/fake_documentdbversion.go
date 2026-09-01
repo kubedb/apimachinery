@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDocumentDBVersions implements DocumentDBVersionInterface
-type FakeDocumentDBVersions struct {
+// fakeDocumentDBVersions implements DocumentDBVersionInterface
+type fakeDocumentDBVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.DocumentDBVersion, *v1alpha1.DocumentDBVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var documentdbversionsResource = v1alpha1.SchemeGroupVersion.WithResource("documentdbversions")
-
-var documentdbversionsKind = v1alpha1.SchemeGroupVersion.WithKind("DocumentDBVersion")
-
-// Get takes name of the documentDBVersion, and returns the corresponding documentDBVersion object, and an error if there is any.
-func (c *FakeDocumentDBVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DocumentDBVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(documentdbversionsResource, name), &v1alpha1.DocumentDBVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeDocumentDBVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.DocumentDBVersionInterface {
+	return &fakeDocumentDBVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.DocumentDBVersion, *v1alpha1.DocumentDBVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("documentdbversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("DocumentDBVersion"),
+			func() *v1alpha1.DocumentDBVersion { return &v1alpha1.DocumentDBVersion{} },
+			func() *v1alpha1.DocumentDBVersionList { return &v1alpha1.DocumentDBVersionList{} },
+			func(dst, src *v1alpha1.DocumentDBVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.DocumentDBVersionList) []*v1alpha1.DocumentDBVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.DocumentDBVersionList, items []*v1alpha1.DocumentDBVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DocumentDBVersion), err
-}
-
-// List takes label and field selectors, and returns the list of DocumentDBVersions that match those selectors.
-func (c *FakeDocumentDBVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DocumentDBVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(documentdbversionsResource, documentdbversionsKind, opts), &v1alpha1.DocumentDBVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.DocumentDBVersionList{ListMeta: obj.(*v1alpha1.DocumentDBVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.DocumentDBVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested documentDBVersions.
-func (c *FakeDocumentDBVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(documentdbversionsResource, opts))
-}
-
-// Create takes the representation of a documentDBVersion and creates it.  Returns the server's representation of the documentDBVersion, and an error, if there is any.
-func (c *FakeDocumentDBVersions) Create(ctx context.Context, documentDBVersion *v1alpha1.DocumentDBVersion, opts v1.CreateOptions) (result *v1alpha1.DocumentDBVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(documentdbversionsResource, documentDBVersion), &v1alpha1.DocumentDBVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBVersion), err
-}
-
-// Update takes the representation of a documentDBVersion and updates it. Returns the server's representation of the documentDBVersion, and an error, if there is any.
-func (c *FakeDocumentDBVersions) Update(ctx context.Context, documentDBVersion *v1alpha1.DocumentDBVersion, opts v1.UpdateOptions) (result *v1alpha1.DocumentDBVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(documentdbversionsResource, documentDBVersion), &v1alpha1.DocumentDBVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBVersion), err
-}
-
-// Delete takes name of the documentDBVersion and deletes it. Returns an error if one occurs.
-func (c *FakeDocumentDBVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(documentdbversionsResource, name, opts), &v1alpha1.DocumentDBVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeDocumentDBVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(documentdbversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.DocumentDBVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched documentDBVersion.
-func (c *FakeDocumentDBVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DocumentDBVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(documentdbversionsResource, name, pt, data, subresources...), &v1alpha1.DocumentDBVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBVersion), err
 }
