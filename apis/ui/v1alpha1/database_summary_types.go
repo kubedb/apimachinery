@@ -38,7 +38,8 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=databasesummaries,singular=databasesummary,scope=Cluster
 type DatabaseSummary struct {
-	metav1.TypeMeta `json:",inline"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
 	// +optional
 	Request *DatabaseSummaryRequest `json:"request,omitempty"`
 	// +optional

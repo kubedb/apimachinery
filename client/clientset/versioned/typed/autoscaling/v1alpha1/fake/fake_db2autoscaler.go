@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDB2Autoscalers implements DB2AutoscalerInterface
-type FakeDB2Autoscalers struct {
+// fakeDB2Autoscalers implements DB2AutoscalerInterface
+type fakeDB2Autoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.DB2Autoscaler, *v1alpha1.DB2AutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var db2autoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("db2autoscalers")
-
-var db2autoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("DB2Autoscaler")
-
-// Get takes name of the dB2Autoscaler, and returns the corresponding dB2Autoscaler object, and an error if there is any.
-func (c *FakeDB2Autoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DB2Autoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(db2autoscalersResource, c.ns, name), &v1alpha1.DB2Autoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeDB2Autoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.DB2AutoscalerInterface {
+	return &fakeDB2Autoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.DB2Autoscaler, *v1alpha1.DB2AutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("db2autoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("DB2Autoscaler"),
+			func() *v1alpha1.DB2Autoscaler { return &v1alpha1.DB2Autoscaler{} },
+			func() *v1alpha1.DB2AutoscalerList { return &v1alpha1.DB2AutoscalerList{} },
+			func(dst, src *v1alpha1.DB2AutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.DB2AutoscalerList) []*v1alpha1.DB2Autoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.DB2AutoscalerList, items []*v1alpha1.DB2Autoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DB2Autoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of DB2Autoscalers that match those selectors.
-func (c *FakeDB2Autoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DB2AutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(db2autoscalersResource, db2autoscalersKind, c.ns, opts), &v1alpha1.DB2AutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.DB2AutoscalerList{ListMeta: obj.(*v1alpha1.DB2AutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.DB2AutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested dB2Autoscalers.
-func (c *FakeDB2Autoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(db2autoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a dB2Autoscaler and creates it.  Returns the server's representation of the dB2Autoscaler, and an error, if there is any.
-func (c *FakeDB2Autoscalers) Create(ctx context.Context, dB2Autoscaler *v1alpha1.DB2Autoscaler, opts v1.CreateOptions) (result *v1alpha1.DB2Autoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(db2autoscalersResource, c.ns, dB2Autoscaler), &v1alpha1.DB2Autoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2Autoscaler), err
-}
-
-// Update takes the representation of a dB2Autoscaler and updates it. Returns the server's representation of the dB2Autoscaler, and an error, if there is any.
-func (c *FakeDB2Autoscalers) Update(ctx context.Context, dB2Autoscaler *v1alpha1.DB2Autoscaler, opts v1.UpdateOptions) (result *v1alpha1.DB2Autoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(db2autoscalersResource, c.ns, dB2Autoscaler), &v1alpha1.DB2Autoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2Autoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeDB2Autoscalers) UpdateStatus(ctx context.Context, dB2Autoscaler *v1alpha1.DB2Autoscaler, opts v1.UpdateOptions) (*v1alpha1.DB2Autoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(db2autoscalersResource, "status", c.ns, dB2Autoscaler), &v1alpha1.DB2Autoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2Autoscaler), err
-}
-
-// Delete takes name of the dB2Autoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeDB2Autoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(db2autoscalersResource, c.ns, name, opts), &v1alpha1.DB2Autoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeDB2Autoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(db2autoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.DB2AutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched dB2Autoscaler.
-func (c *FakeDB2Autoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DB2Autoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(db2autoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.DB2Autoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2Autoscaler), err
 }

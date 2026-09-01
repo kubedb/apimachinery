@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	archiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	apisarchiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/listers/archiver/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // PostgresArchivers.
 type PostgresArchiverInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PostgresArchiverLister
+	Lister() archiverv1alpha1.PostgresArchiverLister
 }
 
 type postgresArchiverInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredPostgresArchiverInformer(client versioned.Interface, namespace s
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ArchiverV1alpha1().PostgresArchivers(namespace).List(context.TODO(), options)
+				return client.ArchiverV1alpha1().PostgresArchivers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ArchiverV1alpha1().PostgresArchivers(namespace).Watch(context.TODO(), options)
+				return client.ArchiverV1alpha1().PostgresArchivers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ArchiverV1alpha1().PostgresArchivers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ArchiverV1alpha1().PostgresArchivers(namespace).Watch(ctx, options)
 			},
 		},
-		&archiverv1alpha1.PostgresArchiver{},
+		&apisarchiverv1alpha1.PostgresArchiver{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *postgresArchiverInformer) defaultInformer(client versioned.Interface, r
 }
 
 func (f *postgresArchiverInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&archiverv1alpha1.PostgresArchiver{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisarchiverv1alpha1.PostgresArchiver{}, f.defaultInformer)
 }
 
-func (f *postgresArchiverInformer) Lister() v1alpha1.PostgresArchiverLister {
-	return v1alpha1.NewPostgresArchiverLister(f.Informer().GetIndexer())
+func (f *postgresArchiverInformer) Lister() archiverv1alpha1.PostgresArchiverLister {
+	return archiverv1alpha1.NewPostgresArchiverLister(f.Informer().GetIndexer())
 }

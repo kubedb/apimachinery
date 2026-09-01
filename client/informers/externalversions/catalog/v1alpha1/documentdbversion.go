@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // DocumentDBVersions.
 type DocumentDBVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.DocumentDBVersionLister
+	Lister() catalogv1alpha1.DocumentDBVersionLister
 }
 
 type documentDBVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredDocumentDBVersionInformer(client versioned.Interface, resyncPeri
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().DocumentDBVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().DocumentDBVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().DocumentDBVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().DocumentDBVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().DocumentDBVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().DocumentDBVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.DocumentDBVersion{},
+		&apiscatalogv1alpha1.DocumentDBVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *documentDBVersionInformer) defaultInformer(client versioned.Interface, 
 }
 
 func (f *documentDBVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.DocumentDBVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.DocumentDBVersion{}, f.defaultInformer)
 }
 
-func (f *documentDBVersionInformer) Lister() v1alpha1.DocumentDBVersionLister {
-	return v1alpha1.NewDocumentDBVersionLister(f.Informer().GetIndexer())
+func (f *documentDBVersionInformer) Lister() catalogv1alpha1.DocumentDBVersionLister {
+	return catalogv1alpha1.NewDocumentDBVersionLister(f.Informer().GetIndexer())
 }

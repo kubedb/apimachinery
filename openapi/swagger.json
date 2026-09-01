@@ -34734,6 +34734,9 @@
     "io.k8s.api.core.v1.ContainerRestartRule": {
       "description": "ContainerRestartRule describes how a container exit is handled.",
       "type": "object",
+      "required": [
+        "action"
+      ],
       "properties": {
         "action": {
           "description": "Specifies the action taken on a container exit if the requirements are satisfied. The only possible value is \"Restart\" to restart the container.",
@@ -34748,6 +34751,9 @@
     "io.k8s.api.core.v1.ContainerRestartRuleOnExitCodes": {
       "description": "ContainerRestartRuleOnExitCodes describes the condition for handling an exited container based on its exit codes.",
       "type": "object",
+      "required": [
+        "operator"
+      ],
       "properties": {
         "operator": {
           "description": "Represents the relationship between the container exit code(s) and the specified values. Possible values are: - In: the requirement is satisfied if the container exit code is in the\n  set of specified values.\n- NotIn: the requirement is satisfied if the container exit code is\n  not in the set of specified values.",
@@ -35643,7 +35649,13 @@
           "type": "array",
           "items": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+              "ReadOnlyMany",
+              "ReadWriteMany",
+              "ReadWriteOnce",
+              "ReadWriteOncePod"
+            ]
           },
           "x-kubernetes-list-type": "atomic"
         },
@@ -35841,6 +35853,10 @@
     "io.k8s.api.core.v1.PodCertificateProjection": {
       "description": "PodCertificateProjection provides a private key and X.509 certificate in the pod filesystem.",
       "type": "object",
+      "required": [
+        "signerName",
+        "keyType"
+      ],
       "properties": {
         "certificateChainPath": {
           "description": "Write the certificate chain at this path in the projected volume.\n\nMost applications should use credentialBundlePath.  When using keyPath and certificateChainPath, your application needs to check that the key and leaf certificate are consistent, because it is possible to read the files mid-rotation.",
@@ -38812,12 +38828,10 @@
           }
         },
         "externalTrafficPolicy": {
-          "description": "externalTrafficPolicy denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints. \"Local\" preserves the client source IP and avoids a second hop for LoadBalancer and Nodeport type services, but risks potentially imbalanced traffic spreading. \"Cluster\" obscures the client source IP and may cause a second hop to another node, but should have good overall load-spreading.\n\nPossible enum values:\n - `\"Cluster\"`\n - `\"Cluster\"` routes traffic to all endpoints.\n - `\"Local\"`\n - `\"Local\"` preserves the source IP of the traffic by routing only to endpoints on the same node as the traffic was received on (dropping the traffic if there are no local endpoints).",
+          "description": "externalTrafficPolicy denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints. \"Local\" preserves the client source IP and avoids a second hop for LoadBalancer and Nodeport type services, but risks potentially imbalanced traffic spreading. \"Cluster\" obscures the client source IP and may cause a second hop to another node, but should have good overall load-spreading.\n\nPossible enum values:\n - `\"Cluster\"` routes traffic to all endpoints.\n - `\"Local\"` preserves the source IP of the traffic by routing only to endpoints on the same node as the traffic was received on (dropping the traffic if there are no local endpoints).",
           "type": "string",
           "enum": [
             "Cluster",
-            "Cluster",
-            "Local",
             "Local"
           ]
         },

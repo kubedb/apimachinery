@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeZooKeeperOpsRequests implements ZooKeeperOpsRequestInterface
-type FakeZooKeeperOpsRequests struct {
+// fakeZooKeeperOpsRequests implements ZooKeeperOpsRequestInterface
+type fakeZooKeeperOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.ZooKeeperOpsRequest, *v1alpha1.ZooKeeperOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var zookeeperopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("zookeeperopsrequests")
-
-var zookeeperopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("ZooKeeperOpsRequest")
-
-// Get takes name of the zooKeeperOpsRequest, and returns the corresponding zooKeeperOpsRequest object, and an error if there is any.
-func (c *FakeZooKeeperOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ZooKeeperOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(zookeeperopsrequestsResource, c.ns, name), &v1alpha1.ZooKeeperOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeZooKeeperOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.ZooKeeperOpsRequestInterface {
+	return &fakeZooKeeperOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.ZooKeeperOpsRequest, *v1alpha1.ZooKeeperOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("zookeeperopsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("ZooKeeperOpsRequest"),
+			func() *v1alpha1.ZooKeeperOpsRequest { return &v1alpha1.ZooKeeperOpsRequest{} },
+			func() *v1alpha1.ZooKeeperOpsRequestList { return &v1alpha1.ZooKeeperOpsRequestList{} },
+			func(dst, src *v1alpha1.ZooKeeperOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ZooKeeperOpsRequestList) []*v1alpha1.ZooKeeperOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ZooKeeperOpsRequestList, items []*v1alpha1.ZooKeeperOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ZooKeeperOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of ZooKeeperOpsRequests that match those selectors.
-func (c *FakeZooKeeperOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ZooKeeperOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(zookeeperopsrequestsResource, zookeeperopsrequestsKind, c.ns, opts), &v1alpha1.ZooKeeperOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ZooKeeperOpsRequestList{ListMeta: obj.(*v1alpha1.ZooKeeperOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ZooKeeperOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested zooKeeperOpsRequests.
-func (c *FakeZooKeeperOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(zookeeperopsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a zooKeeperOpsRequest and creates it.  Returns the server's representation of the zooKeeperOpsRequest, and an error, if there is any.
-func (c *FakeZooKeeperOpsRequests) Create(ctx context.Context, zooKeeperOpsRequest *v1alpha1.ZooKeeperOpsRequest, opts v1.CreateOptions) (result *v1alpha1.ZooKeeperOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(zookeeperopsrequestsResource, c.ns, zooKeeperOpsRequest), &v1alpha1.ZooKeeperOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ZooKeeperOpsRequest), err
-}
-
-// Update takes the representation of a zooKeeperOpsRequest and updates it. Returns the server's representation of the zooKeeperOpsRequest, and an error, if there is any.
-func (c *FakeZooKeeperOpsRequests) Update(ctx context.Context, zooKeeperOpsRequest *v1alpha1.ZooKeeperOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.ZooKeeperOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(zookeeperopsrequestsResource, c.ns, zooKeeperOpsRequest), &v1alpha1.ZooKeeperOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ZooKeeperOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeZooKeeperOpsRequests) UpdateStatus(ctx context.Context, zooKeeperOpsRequest *v1alpha1.ZooKeeperOpsRequest, opts v1.UpdateOptions) (*v1alpha1.ZooKeeperOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(zookeeperopsrequestsResource, "status", c.ns, zooKeeperOpsRequest), &v1alpha1.ZooKeeperOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ZooKeeperOpsRequest), err
-}
-
-// Delete takes name of the zooKeeperOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeZooKeeperOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(zookeeperopsrequestsResource, c.ns, name, opts), &v1alpha1.ZooKeeperOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeZooKeeperOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(zookeeperopsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ZooKeeperOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched zooKeeperOpsRequest.
-func (c *FakeZooKeeperOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ZooKeeperOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(zookeeperopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.ZooKeeperOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ZooKeeperOpsRequest), err
 }

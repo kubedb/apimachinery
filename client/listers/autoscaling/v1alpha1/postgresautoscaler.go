@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PostgresAutoscalerLister helps list PostgresAutoscalers.
@@ -31,7 +31,7 @@ import (
 type PostgresAutoscalerLister interface {
 	// List lists all PostgresAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PostgresAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.PostgresAutoscaler, err error)
 	// PostgresAutoscalers returns an object that can list and get PostgresAutoscalers.
 	PostgresAutoscalers(namespace string) PostgresAutoscalerNamespaceLister
 	PostgresAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type PostgresAutoscalerLister interface {
 
 // postgresAutoscalerLister implements the PostgresAutoscalerLister interface.
 type postgresAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.PostgresAutoscaler]
 }
 
 // NewPostgresAutoscalerLister returns a new PostgresAutoscalerLister.
 func NewPostgresAutoscalerLister(indexer cache.Indexer) PostgresAutoscalerLister {
-	return &postgresAutoscalerLister{indexer: indexer}
-}
-
-// List lists all PostgresAutoscalers in the indexer.
-func (s *postgresAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PostgresAutoscaler))
-	})
-	return ret, err
+	return &postgresAutoscalerLister{listers.New[*autoscalingv1alpha1.PostgresAutoscaler](indexer, autoscalingv1alpha1.Resource("postgresautoscaler"))}
 }
 
 // PostgresAutoscalers returns an object that can list and get PostgresAutoscalers.
 func (s *postgresAutoscalerLister) PostgresAutoscalers(namespace string) PostgresAutoscalerNamespaceLister {
-	return postgresAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return postgresAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.PostgresAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // PostgresAutoscalerNamespaceLister helps list and get PostgresAutoscalers.
@@ -65,36 +57,15 @@ func (s *postgresAutoscalerLister) PostgresAutoscalers(namespace string) Postgre
 type PostgresAutoscalerNamespaceLister interface {
 	// List lists all PostgresAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PostgresAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.PostgresAutoscaler, err error)
 	// Get retrieves the PostgresAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PostgresAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.PostgresAutoscaler, error)
 	PostgresAutoscalerNamespaceListerExpansion
 }
 
 // postgresAutoscalerNamespaceLister implements the PostgresAutoscalerNamespaceLister
 // interface.
 type postgresAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PostgresAutoscalers in the indexer for a given namespace.
-func (s postgresAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PostgresAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the PostgresAutoscaler from the indexer for a given namespace and name.
-func (s postgresAutoscalerNamespaceLister) Get(name string) (*v1alpha1.PostgresAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("postgresautoscaler"), name)
-	}
-	return obj.(*v1alpha1.PostgresAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.PostgresAutoscaler]
 }

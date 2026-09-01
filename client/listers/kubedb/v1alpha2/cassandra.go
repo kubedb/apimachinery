@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // CassandraLister helps list Cassandras.
@@ -31,7 +31,7 @@ import (
 type CassandraLister interface {
 	// List lists all Cassandras in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Cassandra, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Cassandra, err error)
 	// Cassandras returns an object that can list and get Cassandras.
 	Cassandras(namespace string) CassandraNamespaceLister
 	CassandraListerExpansion
@@ -39,25 +39,17 @@ type CassandraLister interface {
 
 // cassandraLister implements the CassandraLister interface.
 type cassandraLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.Cassandra]
 }
 
 // NewCassandraLister returns a new CassandraLister.
 func NewCassandraLister(indexer cache.Indexer) CassandraLister {
-	return &cassandraLister{indexer: indexer}
-}
-
-// List lists all Cassandras in the indexer.
-func (s *cassandraLister) List(selector labels.Selector) (ret []*v1alpha2.Cassandra, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Cassandra))
-	})
-	return ret, err
+	return &cassandraLister{listers.New[*kubedbv1alpha2.Cassandra](indexer, kubedbv1alpha2.Resource("cassandra"))}
 }
 
 // Cassandras returns an object that can list and get Cassandras.
 func (s *cassandraLister) Cassandras(namespace string) CassandraNamespaceLister {
-	return cassandraNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return cassandraNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.Cassandra](s.ResourceIndexer, namespace)}
 }
 
 // CassandraNamespaceLister helps list and get Cassandras.
@@ -65,36 +57,15 @@ func (s *cassandraLister) Cassandras(namespace string) CassandraNamespaceLister 
 type CassandraNamespaceLister interface {
 	// List lists all Cassandras in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Cassandra, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Cassandra, err error)
 	// Get retrieves the Cassandra from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.Cassandra, error)
+	Get(name string) (*kubedbv1alpha2.Cassandra, error)
 	CassandraNamespaceListerExpansion
 }
 
 // cassandraNamespaceLister implements the CassandraNamespaceLister
 // interface.
 type cassandraNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Cassandras in the indexer for a given namespace.
-func (s cassandraNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.Cassandra, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Cassandra))
-	})
-	return ret, err
-}
-
-// Get retrieves the Cassandra from the indexer for a given namespace and name.
-func (s cassandraNamespaceLister) Get(name string) (*v1alpha2.Cassandra, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("cassandra"), name)
-	}
-	return obj.(*v1alpha2.Cassandra), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.Cassandra]
 }

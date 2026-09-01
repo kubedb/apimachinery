@@ -310,6 +310,7 @@ func (in *DatabaseIndexEntry) DeepCopy() *DatabaseIndexEntry {
 func (in *DatabaseSummary) DeepCopyInto(out *DatabaseSummary) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
+	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
 	if in.Request != nil {
 		in, out := &in.Request, &out.Request
 		*out = new(DatabaseSummaryRequest)

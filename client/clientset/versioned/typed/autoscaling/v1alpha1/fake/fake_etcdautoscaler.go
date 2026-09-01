@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeEtcdAutoscalers implements EtcdAutoscalerInterface
-type FakeEtcdAutoscalers struct {
+// fakeEtcdAutoscalers implements EtcdAutoscalerInterface
+type fakeEtcdAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.EtcdAutoscaler, *v1alpha1.EtcdAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var etcdautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("etcdautoscalers")
-
-var etcdautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("EtcdAutoscaler")
-
-// Get takes name of the etcdAutoscaler, and returns the corresponding etcdAutoscaler object, and an error if there is any.
-func (c *FakeEtcdAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.EtcdAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(etcdautoscalersResource, c.ns, name), &v1alpha1.EtcdAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeEtcdAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.EtcdAutoscalerInterface {
+	return &fakeEtcdAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.EtcdAutoscaler, *v1alpha1.EtcdAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("etcdautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("EtcdAutoscaler"),
+			func() *v1alpha1.EtcdAutoscaler { return &v1alpha1.EtcdAutoscaler{} },
+			func() *v1alpha1.EtcdAutoscalerList { return &v1alpha1.EtcdAutoscalerList{} },
+			func(dst, src *v1alpha1.EtcdAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.EtcdAutoscalerList) []*v1alpha1.EtcdAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.EtcdAutoscalerList, items []*v1alpha1.EtcdAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.EtcdAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of EtcdAutoscalers that match those selectors.
-func (c *FakeEtcdAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.EtcdAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(etcdautoscalersResource, etcdautoscalersKind, c.ns, opts), &v1alpha1.EtcdAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.EtcdAutoscalerList{ListMeta: obj.(*v1alpha1.EtcdAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.EtcdAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested etcdAutoscalers.
-func (c *FakeEtcdAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(etcdautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a etcdAutoscaler and creates it.  Returns the server's representation of the etcdAutoscaler, and an error, if there is any.
-func (c *FakeEtcdAutoscalers) Create(ctx context.Context, etcdAutoscaler *v1alpha1.EtcdAutoscaler, opts v1.CreateOptions) (result *v1alpha1.EtcdAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(etcdautoscalersResource, c.ns, etcdAutoscaler), &v1alpha1.EtcdAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdAutoscaler), err
-}
-
-// Update takes the representation of a etcdAutoscaler and updates it. Returns the server's representation of the etcdAutoscaler, and an error, if there is any.
-func (c *FakeEtcdAutoscalers) Update(ctx context.Context, etcdAutoscaler *v1alpha1.EtcdAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.EtcdAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(etcdautoscalersResource, c.ns, etcdAutoscaler), &v1alpha1.EtcdAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeEtcdAutoscalers) UpdateStatus(ctx context.Context, etcdAutoscaler *v1alpha1.EtcdAutoscaler, opts v1.UpdateOptions) (*v1alpha1.EtcdAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(etcdautoscalersResource, "status", c.ns, etcdAutoscaler), &v1alpha1.EtcdAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdAutoscaler), err
-}
-
-// Delete takes name of the etcdAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeEtcdAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(etcdautoscalersResource, c.ns, name, opts), &v1alpha1.EtcdAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeEtcdAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(etcdautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.EtcdAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched etcdAutoscaler.
-func (c *FakeEtcdAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.EtcdAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(etcdautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.EtcdAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdAutoscaler), err
 }

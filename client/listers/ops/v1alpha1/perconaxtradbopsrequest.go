@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PerconaXtraDBOpsRequestLister helps list PerconaXtraDBOpsRequests.
@@ -31,7 +31,7 @@ import (
 type PerconaXtraDBOpsRequestLister interface {
 	// List lists all PerconaXtraDBOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDBOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.PerconaXtraDBOpsRequest, err error)
 	// PerconaXtraDBOpsRequests returns an object that can list and get PerconaXtraDBOpsRequests.
 	PerconaXtraDBOpsRequests(namespace string) PerconaXtraDBOpsRequestNamespaceLister
 	PerconaXtraDBOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type PerconaXtraDBOpsRequestLister interface {
 
 // perconaXtraDBOpsRequestLister implements the PerconaXtraDBOpsRequestLister interface.
 type perconaXtraDBOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.PerconaXtraDBOpsRequest]
 }
 
 // NewPerconaXtraDBOpsRequestLister returns a new PerconaXtraDBOpsRequestLister.
 func NewPerconaXtraDBOpsRequestLister(indexer cache.Indexer) PerconaXtraDBOpsRequestLister {
-	return &perconaXtraDBOpsRequestLister{indexer: indexer}
-}
-
-// List lists all PerconaXtraDBOpsRequests in the indexer.
-func (s *perconaXtraDBOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDBOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PerconaXtraDBOpsRequest))
-	})
-	return ret, err
+	return &perconaXtraDBOpsRequestLister{listers.New[*opsv1alpha1.PerconaXtraDBOpsRequest](indexer, opsv1alpha1.Resource("perconaxtradbopsrequest"))}
 }
 
 // PerconaXtraDBOpsRequests returns an object that can list and get PerconaXtraDBOpsRequests.
 func (s *perconaXtraDBOpsRequestLister) PerconaXtraDBOpsRequests(namespace string) PerconaXtraDBOpsRequestNamespaceLister {
-	return perconaXtraDBOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return perconaXtraDBOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.PerconaXtraDBOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // PerconaXtraDBOpsRequestNamespaceLister helps list and get PerconaXtraDBOpsRequests.
@@ -65,36 +57,15 @@ func (s *perconaXtraDBOpsRequestLister) PerconaXtraDBOpsRequests(namespace strin
 type PerconaXtraDBOpsRequestNamespaceLister interface {
 	// List lists all PerconaXtraDBOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDBOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.PerconaXtraDBOpsRequest, err error)
 	// Get retrieves the PerconaXtraDBOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PerconaXtraDBOpsRequest, error)
+	Get(name string) (*opsv1alpha1.PerconaXtraDBOpsRequest, error)
 	PerconaXtraDBOpsRequestNamespaceListerExpansion
 }
 
 // perconaXtraDBOpsRequestNamespaceLister implements the PerconaXtraDBOpsRequestNamespaceLister
 // interface.
 type perconaXtraDBOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PerconaXtraDBOpsRequests in the indexer for a given namespace.
-func (s perconaXtraDBOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDBOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PerconaXtraDBOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the PerconaXtraDBOpsRequest from the indexer for a given namespace and name.
-func (s perconaXtraDBOpsRequestNamespaceLister) Get(name string) (*v1alpha1.PerconaXtraDBOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("perconaxtradbopsrequest"), name)
-	}
-	return obj.(*v1alpha1.PerconaXtraDBOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.PerconaXtraDBOpsRequest]
 }

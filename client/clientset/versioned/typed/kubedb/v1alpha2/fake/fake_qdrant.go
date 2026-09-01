@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeQdrants implements QdrantInterface
-type FakeQdrants struct {
+// fakeQdrants implements QdrantInterface
+type fakeQdrants struct {
+	*gentype.FakeClientWithList[*v1alpha2.Qdrant, *v1alpha2.QdrantList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var qdrantsResource = v1alpha2.SchemeGroupVersion.WithResource("qdrants")
-
-var qdrantsKind = v1alpha2.SchemeGroupVersion.WithKind("Qdrant")
-
-// Get takes name of the qdrant, and returns the corresponding qdrant object, and an error if there is any.
-func (c *FakeQdrants) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Qdrant, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(qdrantsResource, c.ns, name), &v1alpha2.Qdrant{})
-
-	if obj == nil {
-		return nil, err
+func newFakeQdrants(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.QdrantInterface {
+	return &fakeQdrants{
+		gentype.NewFakeClientWithList[*v1alpha2.Qdrant, *v1alpha2.QdrantList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("qdrants"),
+			v1alpha2.SchemeGroupVersion.WithKind("Qdrant"),
+			func() *v1alpha2.Qdrant { return &v1alpha2.Qdrant{} },
+			func() *v1alpha2.QdrantList { return &v1alpha2.QdrantList{} },
+			func(dst, src *v1alpha2.QdrantList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.QdrantList) []*v1alpha2.Qdrant { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.QdrantList, items []*v1alpha2.Qdrant) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.Qdrant), err
-}
-
-// List takes label and field selectors, and returns the list of Qdrants that match those selectors.
-func (c *FakeQdrants) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.QdrantList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(qdrantsResource, qdrantsKind, c.ns, opts), &v1alpha2.QdrantList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.QdrantList{ListMeta: obj.(*v1alpha2.QdrantList).ListMeta}
-	for _, item := range obj.(*v1alpha2.QdrantList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested qdrants.
-func (c *FakeQdrants) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(qdrantsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a qdrant and creates it.  Returns the server's representation of the qdrant, and an error, if there is any.
-func (c *FakeQdrants) Create(ctx context.Context, qdrant *v1alpha2.Qdrant, opts v1.CreateOptions) (result *v1alpha2.Qdrant, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(qdrantsResource, c.ns, qdrant), &v1alpha2.Qdrant{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Qdrant), err
-}
-
-// Update takes the representation of a qdrant and updates it. Returns the server's representation of the qdrant, and an error, if there is any.
-func (c *FakeQdrants) Update(ctx context.Context, qdrant *v1alpha2.Qdrant, opts v1.UpdateOptions) (result *v1alpha2.Qdrant, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(qdrantsResource, c.ns, qdrant), &v1alpha2.Qdrant{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Qdrant), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeQdrants) UpdateStatus(ctx context.Context, qdrant *v1alpha2.Qdrant, opts v1.UpdateOptions) (*v1alpha2.Qdrant, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(qdrantsResource, "status", c.ns, qdrant), &v1alpha2.Qdrant{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Qdrant), err
-}
-
-// Delete takes name of the qdrant and deletes it. Returns an error if one occurs.
-func (c *FakeQdrants) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(qdrantsResource, c.ns, name, opts), &v1alpha2.Qdrant{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeQdrants) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(qdrantsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.QdrantList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched qdrant.
-func (c *FakeQdrants) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.Qdrant, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(qdrantsResource, c.ns, name, pt, data, subresources...), &v1alpha2.Qdrant{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Qdrant), err
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // RedisSentinelOpsRequestLister helps list RedisSentinelOpsRequests.
@@ -31,7 +31,7 @@ import (
 type RedisSentinelOpsRequestLister interface {
 	// List lists all RedisSentinelOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RedisSentinelOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.RedisSentinelOpsRequest, err error)
 	// RedisSentinelOpsRequests returns an object that can list and get RedisSentinelOpsRequests.
 	RedisSentinelOpsRequests(namespace string) RedisSentinelOpsRequestNamespaceLister
 	RedisSentinelOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type RedisSentinelOpsRequestLister interface {
 
 // redisSentinelOpsRequestLister implements the RedisSentinelOpsRequestLister interface.
 type redisSentinelOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.RedisSentinelOpsRequest]
 }
 
 // NewRedisSentinelOpsRequestLister returns a new RedisSentinelOpsRequestLister.
 func NewRedisSentinelOpsRequestLister(indexer cache.Indexer) RedisSentinelOpsRequestLister {
-	return &redisSentinelOpsRequestLister{indexer: indexer}
-}
-
-// List lists all RedisSentinelOpsRequests in the indexer.
-func (s *redisSentinelOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.RedisSentinelOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RedisSentinelOpsRequest))
-	})
-	return ret, err
+	return &redisSentinelOpsRequestLister{listers.New[*opsv1alpha1.RedisSentinelOpsRequest](indexer, opsv1alpha1.Resource("redissentinelopsrequest"))}
 }
 
 // RedisSentinelOpsRequests returns an object that can list and get RedisSentinelOpsRequests.
 func (s *redisSentinelOpsRequestLister) RedisSentinelOpsRequests(namespace string) RedisSentinelOpsRequestNamespaceLister {
-	return redisSentinelOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return redisSentinelOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.RedisSentinelOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // RedisSentinelOpsRequestNamespaceLister helps list and get RedisSentinelOpsRequests.
@@ -65,36 +57,15 @@ func (s *redisSentinelOpsRequestLister) RedisSentinelOpsRequests(namespace strin
 type RedisSentinelOpsRequestNamespaceLister interface {
 	// List lists all RedisSentinelOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RedisSentinelOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.RedisSentinelOpsRequest, err error)
 	// Get retrieves the RedisSentinelOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.RedisSentinelOpsRequest, error)
+	Get(name string) (*opsv1alpha1.RedisSentinelOpsRequest, error)
 	RedisSentinelOpsRequestNamespaceListerExpansion
 }
 
 // redisSentinelOpsRequestNamespaceLister implements the RedisSentinelOpsRequestNamespaceLister
 // interface.
 type redisSentinelOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all RedisSentinelOpsRequests in the indexer for a given namespace.
-func (s redisSentinelOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.RedisSentinelOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RedisSentinelOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the RedisSentinelOpsRequest from the indexer for a given namespace and name.
-func (s redisSentinelOpsRequestNamespaceLister) Get(name string) (*v1alpha1.RedisSentinelOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("redissentinelopsrequest"), name)
-	}
-	return obj.(*v1alpha1.RedisSentinelOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.RedisSentinelOpsRequest]
 }

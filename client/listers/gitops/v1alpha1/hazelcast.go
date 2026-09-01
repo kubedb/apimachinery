@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // HazelcastLister helps list Hazelcasts.
@@ -31,7 +31,7 @@ import (
 type HazelcastLister interface {
 	// List lists all Hazelcasts in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Hazelcast, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Hazelcast, err error)
 	// Hazelcasts returns an object that can list and get Hazelcasts.
 	Hazelcasts(namespace string) HazelcastNamespaceLister
 	HazelcastListerExpansion
@@ -39,25 +39,17 @@ type HazelcastLister interface {
 
 // hazelcastLister implements the HazelcastLister interface.
 type hazelcastLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*gitopsv1alpha1.Hazelcast]
 }
 
 // NewHazelcastLister returns a new HazelcastLister.
 func NewHazelcastLister(indexer cache.Indexer) HazelcastLister {
-	return &hazelcastLister{indexer: indexer}
-}
-
-// List lists all Hazelcasts in the indexer.
-func (s *hazelcastLister) List(selector labels.Selector) (ret []*v1alpha1.Hazelcast, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Hazelcast))
-	})
-	return ret, err
+	return &hazelcastLister{listers.New[*gitopsv1alpha1.Hazelcast](indexer, gitopsv1alpha1.Resource("hazelcast"))}
 }
 
 // Hazelcasts returns an object that can list and get Hazelcasts.
 func (s *hazelcastLister) Hazelcasts(namespace string) HazelcastNamespaceLister {
-	return hazelcastNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return hazelcastNamespaceLister{listers.NewNamespaced[*gitopsv1alpha1.Hazelcast](s.ResourceIndexer, namespace)}
 }
 
 // HazelcastNamespaceLister helps list and get Hazelcasts.
@@ -65,36 +57,15 @@ func (s *hazelcastLister) Hazelcasts(namespace string) HazelcastNamespaceLister 
 type HazelcastNamespaceLister interface {
 	// List lists all Hazelcasts in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Hazelcast, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Hazelcast, err error)
 	// Get retrieves the Hazelcast from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Hazelcast, error)
+	Get(name string) (*gitopsv1alpha1.Hazelcast, error)
 	HazelcastNamespaceListerExpansion
 }
 
 // hazelcastNamespaceLister implements the HazelcastNamespaceLister
 // interface.
 type hazelcastNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Hazelcasts in the indexer for a given namespace.
-func (s hazelcastNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Hazelcast, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Hazelcast))
-	})
-	return ret, err
-}
-
-// Get retrieves the Hazelcast from the indexer for a given namespace and name.
-func (s hazelcastNamespaceLister) Get(name string) (*v1alpha1.Hazelcast, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("hazelcast"), name)
-	}
-	return obj.(*v1alpha1.Hazelcast), nil
+	listers.ResourceIndexer[*gitopsv1alpha1.Hazelcast]
 }

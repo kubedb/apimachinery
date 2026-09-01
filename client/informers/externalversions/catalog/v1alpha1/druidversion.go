@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // DruidVersions.
 type DruidVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.DruidVersionLister
+	Lister() catalogv1alpha1.DruidVersionLister
 }
 
 type druidVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredDruidVersionInformer(client versioned.Interface, resyncPeriod ti
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().DruidVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().DruidVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().DruidVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().DruidVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().DruidVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().DruidVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.DruidVersion{},
+		&apiscatalogv1alpha1.DruidVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *druidVersionInformer) defaultInformer(client versioned.Interface, resyn
 }
 
 func (f *druidVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.DruidVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.DruidVersion{}, f.defaultInformer)
 }
 
-func (f *druidVersionInformer) Lister() v1alpha1.DruidVersionLister {
-	return v1alpha1.NewDruidVersionLister(f.Informer().GetIndexer())
+func (f *druidVersionInformer) Lister() catalogv1alpha1.DruidVersionLister {
+	return catalogv1alpha1.NewDruidVersionLister(f.Informer().GetIndexer())
 }
