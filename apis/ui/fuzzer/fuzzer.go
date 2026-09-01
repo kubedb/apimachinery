@@ -53,6 +53,15 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 		func(s *v1alpha1.MongoDBQueries, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
+		func(s *v1alpha1.Neo4jInsight, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.Neo4jNodesStats, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.Neo4jSchemaOverview, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
 		func(s *v1alpha1.MySQLInsight, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},

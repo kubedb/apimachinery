@@ -89,6 +89,18 @@ func (c *FakeUiV1alpha1) MySQLSchemaOverviews(namespace string) v1alpha1.MySQLSc
 	return &FakeMySQLSchemaOverviews{c, namespace}
 }
 
+func (c *FakeUiV1alpha1) Neo4jInsights(namespace string) v1alpha1.Neo4jInsightInterface {
+	return &FakeNeo4jInsights{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) Neo4jNodesStatses(namespace string) v1alpha1.Neo4jNodesStatsInterface {
+	return &FakeNeo4jNodesStatses{c, namespace}
+}
+
+func (c *FakeUiV1alpha1) Neo4jSchemaOverviews(namespace string) v1alpha1.Neo4jSchemaOverviewInterface {
+	return &FakeNeo4jSchemaOverviews{c, namespace}
+}
+
 func (c *FakeUiV1alpha1) PgBouncerInsights(namespace string) v1alpha1.PgBouncerInsightInterface {
 	return &FakePgBouncerInsights{c, namespace}
 }

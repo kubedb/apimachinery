@@ -48,6 +48,12 @@ type MySQLQueriesExpansion interface{}
 
 type MySQLSchemaOverviewExpansion interface{}
 
+type Neo4jInsightExpansion interface{}
+
+type Neo4jNodesStatsExpansion interface{}
+
+type Neo4jSchemaOverviewExpansion interface{}
+
 type PgBouncerInsightExpansion interface{}
 
 type PgBouncerPoolOverviewExpansion interface{}
