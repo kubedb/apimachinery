@@ -314,9 +314,20 @@ var oracleReservedVolumesMountPaths = []string{
 func (w *OracleCustomWebhook) oracleValidateVersion(db *olddbapi.Oracle) error {
 	var oracleVersion catalog.OracleVersion
 
-	return w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
-	}, &oracleVersion)
+	}, &oracleVersion); err != nil {
+		return err
+	}
+	if err := oracleVersion.ValidateSpecs(); err != nil {
+		return err
+	}
+	if db.Spec.Mode == olddbapi.OracleModeDataGuard {
+		if err := oracleVersion.ValidateDataGuardSpecs(); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func oracleValidateVolumes(podTemplate *ofst.PodTemplateSpec) error {
