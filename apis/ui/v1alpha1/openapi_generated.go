@@ -33907,7 +33907,7 @@ func schema_apimachinery_apis_ui_v1alpha1_DatabaseSummary(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DatabaseSummary is a request/response payload, not a stored Kubernetes object -- it carries no metav1.ObjectMeta, matching how upstream Kubernetes shapes the same kind of type (e.g. k8s.io/api/admission/v1.AdmissionReview). It has no +genclient marker for the same reason: a generated typed client requires metav1.Object, which this type deliberately doesn't implement.",
+				Description: "DatabaseSummary is a request/response payload, not a stored Kubernetes object -- it carries no metav1.ObjectMeta, matching how upstream Kubernetes shapes the same kind of type (e.g. k8s.io/api/admission/v1.AdmissionReview). Its generated client is built on kmodules.xyz/client-go/gentype's create-only Client[T runtime.Object] instead of k8s.io/client-go/gentype's Client[T], which requires metav1.Object -- see that package's doc comment. This only works because DatabaseSummary is create-only (+genclient:onlyVerbs=create); it carries no +kubebuilder:object:root=true/+kubebuilder:resource markers since controller-gen needs ObjectMeta to treat a type as a CRD root, and ui-server serves this type via API aggregation, not a CRD.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
