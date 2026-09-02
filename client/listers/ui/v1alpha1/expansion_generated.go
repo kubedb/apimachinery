@@ -138,13 +138,13 @@ type Neo4jInsightListerExpansion interface{}
 // Neo4jInsightNamespaceLister.
 type Neo4jInsightNamespaceListerExpansion interface{}
 
-// Neo4jNodesStatsListerExpansion allows custom methods to be added to
-// Neo4jNodesStatsLister.
-type Neo4jNodesStatsListerExpansion interface{}
+// Neo4jQueriesListerExpansion allows custom methods to be added to
+// Neo4jQueriesLister.
+type Neo4jQueriesListerExpansion interface{}
 
-// Neo4jNodesStatsNamespaceListerExpansion allows custom methods to be added to
-// Neo4jNodesStatsNamespaceLister.
-type Neo4jNodesStatsNamespaceListerExpansion interface{}
+// Neo4jQueriesNamespaceListerExpansion allows custom methods to be added to
+// Neo4jQueriesNamespaceLister.
+type Neo4jQueriesNamespaceListerExpansion interface{}
 
 // Neo4jSchemaOverviewListerExpansion allows custom methods to be added to
 // Neo4jSchemaOverviewLister.

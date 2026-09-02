@@ -47,7 +47,42 @@ spec:
                     format: int32
                     type: integer
                 type: object
+              databases:
+                items:
+                  properties:
+                    access:
+                      type: string
+                    address:
+                      type: string
+                    currentStatus:
+                      type: string
+                    databaseID:
+                      type: string
+                    default:
+                      type: boolean
+                    home:
+                      type: boolean
+                    name:
+                      type: string
+                    requestedStatus:
+                      type: string
+                    role:
+                      type: string
+                    serverID:
+                      type: string
+                    statusMessage:
+                      type: string
+                    type:
+                      type: string
+                    writer:
+                      type: boolean
+                  required:
+                  - name
+                  type: object
+                type: array
               defaultDatabase:
+                type: string
+              edition:
                 type: string
               graphSummary:
                 properties:
@@ -64,6 +99,37 @@ spec:
                 type: object
               mode:
                 type: string
+              servers:
+                items:
+                  properties:
+                    address:
+                      type: string
+                    health:
+                      type: string
+                    hosting:
+                      items:
+                        type: string
+                      type: array
+                    modeConstraint:
+                      type: string
+                    name:
+                      type: string
+                    requestedHosting:
+                      items:
+                        type: string
+                      type: array
+                    serverID:
+                      type: string
+                    state:
+                      type: string
+                    version:
+                      type: string
+                  required:
+                  - health
+                  - name
+                  - state
+                  type: object
+                type: array
               status:
                 type: string
               version:

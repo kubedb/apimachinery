@@ -642,22 +642,23 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jClusterHealth":                                schema_apimachinery_apis_ui_v1alpha1_Neo4jClusterHealth(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jConstraintSchema":                             schema_apimachinery_apis_ui_v1alpha1_Neo4jConstraintSchema(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseSchema":                               schema_apimachinery_apis_ui_v1alpha1_Neo4jDatabaseSchema(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseStat":                                 schema_apimachinery_apis_ui_v1alpha1_Neo4jDatabaseStat(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseStatus":                               schema_apimachinery_apis_ui_v1alpha1_Neo4jDatabaseStatus(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jGraphSummary":                                 schema_apimachinery_apis_ui_v1alpha1_Neo4jGraphSummary(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jIndexSchema":                                  schema_apimachinery_apis_ui_v1alpha1_Neo4jIndexSchema(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jInsight":                                      schema_apimachinery_apis_ui_v1alpha1_Neo4jInsight(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jInsightList":                                  schema_apimachinery_apis_ui_v1alpha1_Neo4jInsightList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jInsightSpec":                                  schema_apimachinery_apis_ui_v1alpha1_Neo4jInsightSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jNodeTypeSchema":                               schema_apimachinery_apis_ui_v1alpha1_Neo4jNodeTypeSchema(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jNodesStats":                                   schema_apimachinery_apis_ui_v1alpha1_Neo4jNodesStats(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jNodesStatsList":                               schema_apimachinery_apis_ui_v1alpha1_Neo4jNodesStatsList(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jNodesStatsSpec":                               schema_apimachinery_apis_ui_v1alpha1_Neo4jNodesStatsSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jPropertySchema":                               schema_apimachinery_apis_ui_v1alpha1_Neo4jPropertySchema(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jQueries":                                      schema_apimachinery_apis_ui_v1alpha1_Neo4jQueries(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jQueriesList":                                  schema_apimachinery_apis_ui_v1alpha1_Neo4jQueriesList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jQueriesSpec":                                  schema_apimachinery_apis_ui_v1alpha1_Neo4jQueriesSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jQuerySpec":                                    schema_apimachinery_apis_ui_v1alpha1_Neo4jQuerySpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jRelationshipSchema":                           schema_apimachinery_apis_ui_v1alpha1_Neo4jRelationshipSchema(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jSchemaOverview":                               schema_apimachinery_apis_ui_v1alpha1_Neo4jSchemaOverview(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jSchemaOverviewList":                           schema_apimachinery_apis_ui_v1alpha1_Neo4jSchemaOverviewList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jSchemaOverviewSpec":                           schema_apimachinery_apis_ui_v1alpha1_Neo4jSchemaOverviewSpec(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jServerStat":                                   schema_apimachinery_apis_ui_v1alpha1_Neo4jServerStat(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jServerStatus":                                 schema_apimachinery_apis_ui_v1alpha1_Neo4jServerStatus(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.NodesStatsCompletionFields":                        schema_apimachinery_apis_ui_v1alpha1_NodesStatsCompletionFields(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.NodesStatsCompletionStats":                         schema_apimachinery_apis_ui_v1alpha1_NodesStatsCompletionStats(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.NodesStatsDocsStats":                               schema_apimachinery_apis_ui_v1alpha1_NodesStatsDocsStats(ref),
@@ -36701,7 +36702,7 @@ func schema_apimachinery_apis_ui_v1alpha1_Neo4jDatabaseSchema(ref common.Referen
 	}
 }
 
-func schema_apimachinery_apis_ui_v1alpha1_Neo4jDatabaseStat(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ui_v1alpha1_Neo4jDatabaseStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
@@ -37020,6 +37021,12 @@ func schema_apimachinery_apis_ui_v1alpha1_Neo4jInsightSpec(ref common.ReferenceC
 							Format:  "",
 						},
 					},
+					"edition": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
@@ -37051,12 +37058,38 @@ func schema_apimachinery_apis_ui_v1alpha1_Neo4jInsightSpec(ref common.ReferenceC
 							Ref: ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jGraphSummary"),
 						},
 					},
+					"servers": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jServerStatus"),
+									},
+								},
+							},
+						},
+					},
+					"databases": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseStatus"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"version", "status", "mode", "clusterHealth"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jClusterHealth", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jGraphSummary"},
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jClusterHealth", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseStatus", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jGraphSummary", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jServerStatus"},
 	}
 }
 
@@ -37109,140 +37142,6 @@ func schema_apimachinery_apis_ui_v1alpha1_Neo4jNodeTypeSchema(ref common.Referen
 	}
 }
 
-func schema_apimachinery_apis_ui_v1alpha1_Neo4jNodesStats(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jNodesStatsSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jNodesStatsSpec"},
-	}
-}
-
-func schema_apimachinery_apis_ui_v1alpha1_Neo4jNodesStatsList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jNodesStats"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jNodesStats"},
-	}
-}
-
-func schema_apimachinery_apis_ui_v1alpha1_Neo4jNodesStatsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"collectedAt": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-					"servers": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jServerStat"),
-									},
-								},
-							},
-						},
-					},
-					"databases": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseStat"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"servers", "databases"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseStat", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jServerStat"},
-	}
-}
-
 func schema_apimachinery_apis_ui_v1alpha1_Neo4jPropertySchema(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37281,6 +37180,272 @@ func schema_apimachinery_apis_ui_v1alpha1_Neo4jPropertySchema(ref common.Referen
 				Required: []string{"name", "mandatory"},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_Neo4jQueries(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jQueriesSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jQueriesSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_Neo4jQueriesList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jQueries"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jQueries"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_Neo4jQueriesSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"collectedAt": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"queries": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jQuerySpec"),
+									},
+								},
+							},
+						},
+					},
+					"incomplete": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"unavailableServers": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"queries"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jQuerySpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_Neo4jQuerySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"serverName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"transactionID": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"queryID": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"username": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"query": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"startTime": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"elapsedTimeMillis": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"cpuTimeMillis": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"waitTimeMillis": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"idleTimeMillis": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"allocatedBytes": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"pageHits": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"pageFaults": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"activeLockCount": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"connectionID": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"clientAddress": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"serverName", "database", "query"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 
@@ -37435,7 +37600,7 @@ func schema_apimachinery_apis_ui_v1alpha1_Neo4jSchemaOverviewSpec(ref common.Ref
 	}
 }
 
-func schema_apimachinery_apis_ui_v1alpha1_Neo4jServerStat(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ui_v1alpha1_Neo4jServerStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{

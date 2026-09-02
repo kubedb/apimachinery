@@ -524,8 +524,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MySQLSchemaOverviews().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("neo4jinsights"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().Neo4jInsights().Informer()}, nil
-	case uiv1alpha1.SchemeGroupVersion.WithResource("neo4jnodesstatses"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().Neo4jNodesStatses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("neo4jquerieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().Neo4jQuerieses().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("neo4jschemaoverviews"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().Neo4jSchemaOverviews().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("pgbouncerinsights"):

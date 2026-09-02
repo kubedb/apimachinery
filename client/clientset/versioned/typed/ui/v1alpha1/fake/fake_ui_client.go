@@ -93,8 +93,8 @@ func (c *FakeUiV1alpha1) Neo4jInsights(namespace string) v1alpha1.Neo4jInsightIn
 	return &FakeNeo4jInsights{c, namespace}
 }
 
-func (c *FakeUiV1alpha1) Neo4jNodesStatses(namespace string) v1alpha1.Neo4jNodesStatsInterface {
-	return &FakeNeo4jNodesStatses{c, namespace}
+func (c *FakeUiV1alpha1) Neo4jQuerieses(namespace string) v1alpha1.Neo4jQueriesInterface {
+	return &FakeNeo4jQuerieses{c, namespace}
 }
 
 func (c *FakeUiV1alpha1) Neo4jSchemaOverviews(namespace string) v1alpha1.Neo4jSchemaOverviewInterface {

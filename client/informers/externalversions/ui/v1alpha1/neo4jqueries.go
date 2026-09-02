@@ -33,59 +33,59 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// Neo4jNodesStatsInformer provides access to a shared informer and lister for
-// Neo4jNodesStatses.
-type Neo4jNodesStatsInformer interface {
+// Neo4jQueriesInformer provides access to a shared informer and lister for
+// Neo4jQuerieses.
+type Neo4jQueriesInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.Neo4jNodesStatsLister
+	Lister() v1alpha1.Neo4jQueriesLister
 }
 
-type neo4jNodesStatsInformer struct {
+type neo4jQueriesInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewNeo4jNodesStatsInformer constructs a new informer for Neo4jNodesStats type.
+// NewNeo4jQueriesInformer constructs a new informer for Neo4jQueries type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewNeo4jNodesStatsInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredNeo4jNodesStatsInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewNeo4jQueriesInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredNeo4jQueriesInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredNeo4jNodesStatsInformer constructs a new informer for Neo4jNodesStats type.
+// NewFilteredNeo4jQueriesInformer constructs a new informer for Neo4jQueries type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredNeo4jNodesStatsInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredNeo4jQueriesInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().Neo4jNodesStatses(namespace).List(context.TODO(), options)
+				return client.UiV1alpha1().Neo4jQuerieses(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().Neo4jNodesStatses(namespace).Watch(context.TODO(), options)
+				return client.UiV1alpha1().Neo4jQuerieses(namespace).Watch(context.TODO(), options)
 			},
 		},
-		&uiv1alpha1.Neo4jNodesStats{},
+		&uiv1alpha1.Neo4jQueries{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *neo4jNodesStatsInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredNeo4jNodesStatsInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *neo4jQueriesInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredNeo4jQueriesInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *neo4jNodesStatsInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&uiv1alpha1.Neo4jNodesStats{}, f.defaultInformer)
+func (f *neo4jQueriesInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&uiv1alpha1.Neo4jQueries{}, f.defaultInformer)
 }
 
-func (f *neo4jNodesStatsInformer) Lister() v1alpha1.Neo4jNodesStatsLister {
-	return v1alpha1.NewNeo4jNodesStatsLister(f.Informer().GetIndexer())
+func (f *neo4jQueriesInformer) Lister() v1alpha1.Neo4jQueriesLister {
+	return v1alpha1.NewNeo4jQueriesLister(f.Informer().GetIndexer())
 }
