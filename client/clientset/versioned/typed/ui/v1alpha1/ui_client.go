@@ -19,10 +19,10 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"net/http"
+	http "net/http"
 
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
-	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	scheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 
 	rest "k8s.io/client-go/rest"
 )
@@ -31,7 +31,6 @@ type UiV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	DatabaseConfigurationsGetter
 	DatabaseConnectionsGetter
-	DatabaseSummariesGetter
 	ElasticsearchInsightsGetter
 	ElasticsearchNodesStatsesGetter
 	ElasticsearchSchemaOverviewsGetter
@@ -74,10 +73,6 @@ func (c *UiV1alpha1Client) DatabaseConfigurations(namespace string) DatabaseConf
 
 func (c *UiV1alpha1Client) DatabaseConnections(namespace string) DatabaseConnectionInterface {
 	return newDatabaseConnections(c, namespace)
-}
-
-func (c *UiV1alpha1Client) DatabaseSummaries() DatabaseSummaryInterface {
-	return newDatabaseSummaries(c)
 }
 
 func (c *UiV1alpha1Client) ElasticsearchInsights(namespace string) ElasticsearchInsightInterface {
@@ -201,9 +196,7 @@ func (c *UiV1alpha1Client) RedisSchemaOverviews(namespace string) RedisSchemaOve
 // where httpClient was generated with rest.HTTPClientFor(c).
 func NewForConfig(c *rest.Config) (*UiV1alpha1Client, error) {
 	config := *c
-	if err := setConfigDefaults(&config); err != nil {
-		return nil, err
-	}
+	setConfigDefaults(&config)
 	httpClient, err := rest.HTTPClientFor(&config)
 	if err != nil {
 		return nil, err
@@ -215,9 +208,7 @@ func NewForConfig(c *rest.Config) (*UiV1alpha1Client, error) {
 // Note the http client provided takes precedence over the configured transport values.
 func NewForConfigAndClient(c *rest.Config, h *http.Client) (*UiV1alpha1Client, error) {
 	config := *c
-	if err := setConfigDefaults(&config); err != nil {
-		return nil, err
-	}
+	setConfigDefaults(&config)
 	client, err := rest.RESTClientForConfigAndClient(&config, h)
 	if err != nil {
 		return nil, err
@@ -240,17 +231,15 @@ func New(c rest.Interface) *UiV1alpha1Client {
 	return &UiV1alpha1Client{c}
 }
 
-func setConfigDefaults(config *rest.Config) error {
-	gv := v1alpha1.SchemeGroupVersion
+func setConfigDefaults(config *rest.Config) {
+	gv := uiv1alpha1.SchemeGroupVersion
 	config.GroupVersion = &gv
 	config.APIPath = "/apis"
-	config.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
+	config.NegotiatedSerializer = rest.CodecFactoryForGeneratedClient(scheme.Scheme, scheme.Codecs).WithoutConversion()
 
 	if config.UserAgent == "" {
 		config.UserAgent = rest.DefaultKubernetesUserAgent()
 	}
-
-	return nil
 }
 
 // RESTClient returns a RESTClient that is used to communicate

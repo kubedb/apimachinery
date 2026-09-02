@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDB2OpsRequests implements DB2OpsRequestInterface
-type FakeDB2OpsRequests struct {
+// fakeDB2OpsRequests implements DB2OpsRequestInterface
+type fakeDB2OpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.DB2OpsRequest, *v1alpha1.DB2OpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var db2opsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("db2opsrequests")
-
-var db2opsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("DB2OpsRequest")
-
-// Get takes name of the dB2OpsRequest, and returns the corresponding dB2OpsRequest object, and an error if there is any.
-func (c *FakeDB2OpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DB2OpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(db2opsrequestsResource, c.ns, name), &v1alpha1.DB2OpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeDB2OpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.DB2OpsRequestInterface {
+	return &fakeDB2OpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.DB2OpsRequest, *v1alpha1.DB2OpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("db2opsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("DB2OpsRequest"),
+			func() *v1alpha1.DB2OpsRequest { return &v1alpha1.DB2OpsRequest{} },
+			func() *v1alpha1.DB2OpsRequestList { return &v1alpha1.DB2OpsRequestList{} },
+			func(dst, src *v1alpha1.DB2OpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.DB2OpsRequestList) []*v1alpha1.DB2OpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.DB2OpsRequestList, items []*v1alpha1.DB2OpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DB2OpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of DB2OpsRequests that match those selectors.
-func (c *FakeDB2OpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DB2OpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(db2opsrequestsResource, db2opsrequestsKind, c.ns, opts), &v1alpha1.DB2OpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.DB2OpsRequestList{ListMeta: obj.(*v1alpha1.DB2OpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.DB2OpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested dB2OpsRequests.
-func (c *FakeDB2OpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(db2opsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a dB2OpsRequest and creates it.  Returns the server's representation of the dB2OpsRequest, and an error, if there is any.
-func (c *FakeDB2OpsRequests) Create(ctx context.Context, dB2OpsRequest *v1alpha1.DB2OpsRequest, opts v1.CreateOptions) (result *v1alpha1.DB2OpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(db2opsrequestsResource, c.ns, dB2OpsRequest), &v1alpha1.DB2OpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2OpsRequest), err
-}
-
-// Update takes the representation of a dB2OpsRequest and updates it. Returns the server's representation of the dB2OpsRequest, and an error, if there is any.
-func (c *FakeDB2OpsRequests) Update(ctx context.Context, dB2OpsRequest *v1alpha1.DB2OpsRequest, opts v1.UpdateOptions) (result *v1alpha1.DB2OpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(db2opsrequestsResource, c.ns, dB2OpsRequest), &v1alpha1.DB2OpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2OpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeDB2OpsRequests) UpdateStatus(ctx context.Context, dB2OpsRequest *v1alpha1.DB2OpsRequest, opts v1.UpdateOptions) (*v1alpha1.DB2OpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(db2opsrequestsResource, "status", c.ns, dB2OpsRequest), &v1alpha1.DB2OpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2OpsRequest), err
-}
-
-// Delete takes name of the dB2OpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeDB2OpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(db2opsrequestsResource, c.ns, name, opts), &v1alpha1.DB2OpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeDB2OpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(db2opsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.DB2OpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched dB2OpsRequest.
-func (c *FakeDB2OpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DB2OpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(db2opsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.DB2OpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2OpsRequest), err
 }

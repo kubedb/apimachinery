@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDocumentDBOpsRequests implements DocumentDBOpsRequestInterface
-type FakeDocumentDBOpsRequests struct {
+// fakeDocumentDBOpsRequests implements DocumentDBOpsRequestInterface
+type fakeDocumentDBOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.DocumentDBOpsRequest, *v1alpha1.DocumentDBOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var documentdbopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("documentdbopsrequests")
-
-var documentdbopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("DocumentDBOpsRequest")
-
-// Get takes name of the documentDBOpsRequest, and returns the corresponding documentDBOpsRequest object, and an error if there is any.
-func (c *FakeDocumentDBOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DocumentDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(documentdbopsrequestsResource, c.ns, name), &v1alpha1.DocumentDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeDocumentDBOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.DocumentDBOpsRequestInterface {
+	return &fakeDocumentDBOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.DocumentDBOpsRequest, *v1alpha1.DocumentDBOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("documentdbopsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("DocumentDBOpsRequest"),
+			func() *v1alpha1.DocumentDBOpsRequest { return &v1alpha1.DocumentDBOpsRequest{} },
+			func() *v1alpha1.DocumentDBOpsRequestList { return &v1alpha1.DocumentDBOpsRequestList{} },
+			func(dst, src *v1alpha1.DocumentDBOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.DocumentDBOpsRequestList) []*v1alpha1.DocumentDBOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.DocumentDBOpsRequestList, items []*v1alpha1.DocumentDBOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DocumentDBOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of DocumentDBOpsRequests that match those selectors.
-func (c *FakeDocumentDBOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DocumentDBOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(documentdbopsrequestsResource, documentdbopsrequestsKind, c.ns, opts), &v1alpha1.DocumentDBOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.DocumentDBOpsRequestList{ListMeta: obj.(*v1alpha1.DocumentDBOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.DocumentDBOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested documentDBOpsRequests.
-func (c *FakeDocumentDBOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(documentdbopsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a documentDBOpsRequest and creates it.  Returns the server's representation of the documentDBOpsRequest, and an error, if there is any.
-func (c *FakeDocumentDBOpsRequests) Create(ctx context.Context, documentDBOpsRequest *v1alpha1.DocumentDBOpsRequest, opts v1.CreateOptions) (result *v1alpha1.DocumentDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(documentdbopsrequestsResource, c.ns, documentDBOpsRequest), &v1alpha1.DocumentDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBOpsRequest), err
-}
-
-// Update takes the representation of a documentDBOpsRequest and updates it. Returns the server's representation of the documentDBOpsRequest, and an error, if there is any.
-func (c *FakeDocumentDBOpsRequests) Update(ctx context.Context, documentDBOpsRequest *v1alpha1.DocumentDBOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.DocumentDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(documentdbopsrequestsResource, c.ns, documentDBOpsRequest), &v1alpha1.DocumentDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeDocumentDBOpsRequests) UpdateStatus(ctx context.Context, documentDBOpsRequest *v1alpha1.DocumentDBOpsRequest, opts v1.UpdateOptions) (*v1alpha1.DocumentDBOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(documentdbopsrequestsResource, "status", c.ns, documentDBOpsRequest), &v1alpha1.DocumentDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBOpsRequest), err
-}
-
-// Delete takes name of the documentDBOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeDocumentDBOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(documentdbopsrequestsResource, c.ns, name, opts), &v1alpha1.DocumentDBOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeDocumentDBOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(documentdbopsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.DocumentDBOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched documentDBOpsRequest.
-func (c *FakeDocumentDBOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DocumentDBOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(documentdbopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.DocumentDBOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBOpsRequest), err
 }

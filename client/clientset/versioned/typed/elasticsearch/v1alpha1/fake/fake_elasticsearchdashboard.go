@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
+	elasticsearchv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/elasticsearch/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeElasticsearchDashboards implements ElasticsearchDashboardInterface
-type FakeElasticsearchDashboards struct {
+// fakeElasticsearchDashboards implements ElasticsearchDashboardInterface
+type fakeElasticsearchDashboards struct {
+	*gentype.FakeClientWithList[*v1alpha1.ElasticsearchDashboard, *v1alpha1.ElasticsearchDashboardList]
 	Fake *FakeElasticsearchV1alpha1
-	ns   string
 }
 
-var elasticsearchdashboardsResource = v1alpha1.SchemeGroupVersion.WithResource("elasticsearchdashboards")
-
-var elasticsearchdashboardsKind = v1alpha1.SchemeGroupVersion.WithKind("ElasticsearchDashboard")
-
-// Get takes name of the elasticsearchDashboard, and returns the corresponding elasticsearchDashboard object, and an error if there is any.
-func (c *FakeElasticsearchDashboards) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ElasticsearchDashboard, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(elasticsearchdashboardsResource, c.ns, name), &v1alpha1.ElasticsearchDashboard{})
-
-	if obj == nil {
-		return nil, err
+func newFakeElasticsearchDashboards(fake *FakeElasticsearchV1alpha1, namespace string) elasticsearchv1alpha1.ElasticsearchDashboardInterface {
+	return &fakeElasticsearchDashboards{
+		gentype.NewFakeClientWithList[*v1alpha1.ElasticsearchDashboard, *v1alpha1.ElasticsearchDashboardList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("elasticsearchdashboards"),
+			v1alpha1.SchemeGroupVersion.WithKind("ElasticsearchDashboard"),
+			func() *v1alpha1.ElasticsearchDashboard { return &v1alpha1.ElasticsearchDashboard{} },
+			func() *v1alpha1.ElasticsearchDashboardList { return &v1alpha1.ElasticsearchDashboardList{} },
+			func(dst, src *v1alpha1.ElasticsearchDashboardList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ElasticsearchDashboardList) []*v1alpha1.ElasticsearchDashboard {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ElasticsearchDashboardList, items []*v1alpha1.ElasticsearchDashboard) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ElasticsearchDashboard), err
-}
-
-// List takes label and field selectors, and returns the list of ElasticsearchDashboards that match those selectors.
-func (c *FakeElasticsearchDashboards) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ElasticsearchDashboardList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(elasticsearchdashboardsResource, elasticsearchdashboardsKind, c.ns, opts), &v1alpha1.ElasticsearchDashboardList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ElasticsearchDashboardList{ListMeta: obj.(*v1alpha1.ElasticsearchDashboardList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ElasticsearchDashboardList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested elasticsearchDashboards.
-func (c *FakeElasticsearchDashboards) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(elasticsearchdashboardsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a elasticsearchDashboard and creates it.  Returns the server's representation of the elasticsearchDashboard, and an error, if there is any.
-func (c *FakeElasticsearchDashboards) Create(ctx context.Context, elasticsearchDashboard *v1alpha1.ElasticsearchDashboard, opts v1.CreateOptions) (result *v1alpha1.ElasticsearchDashboard, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(elasticsearchdashboardsResource, c.ns, elasticsearchDashboard), &v1alpha1.ElasticsearchDashboard{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchDashboard), err
-}
-
-// Update takes the representation of a elasticsearchDashboard and updates it. Returns the server's representation of the elasticsearchDashboard, and an error, if there is any.
-func (c *FakeElasticsearchDashboards) Update(ctx context.Context, elasticsearchDashboard *v1alpha1.ElasticsearchDashboard, opts v1.UpdateOptions) (result *v1alpha1.ElasticsearchDashboard, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(elasticsearchdashboardsResource, c.ns, elasticsearchDashboard), &v1alpha1.ElasticsearchDashboard{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchDashboard), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeElasticsearchDashboards) UpdateStatus(ctx context.Context, elasticsearchDashboard *v1alpha1.ElasticsearchDashboard, opts v1.UpdateOptions) (*v1alpha1.ElasticsearchDashboard, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(elasticsearchdashboardsResource, "status", c.ns, elasticsearchDashboard), &v1alpha1.ElasticsearchDashboard{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchDashboard), err
-}
-
-// Delete takes name of the elasticsearchDashboard and deletes it. Returns an error if one occurs.
-func (c *FakeElasticsearchDashboards) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(elasticsearchdashboardsResource, c.ns, name, opts), &v1alpha1.ElasticsearchDashboard{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeElasticsearchDashboards) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(elasticsearchdashboardsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ElasticsearchDashboardList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched elasticsearchDashboard.
-func (c *FakeElasticsearchDashboards) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ElasticsearchDashboard, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(elasticsearchdashboardsResource, c.ns, name, pt, data, subresources...), &v1alpha1.ElasticsearchDashboard{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchDashboard), err
 }

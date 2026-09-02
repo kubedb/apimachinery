@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	apiskubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha2 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha2"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Singlestores.
 type SinglestoreInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha2.SinglestoreLister
+	Lister() kubedbv1alpha2.SinglestoreLister
 }
 
 type singlestoreInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredSinglestoreInformer(client versioned.Interface, namespace string
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().Singlestores(namespace).List(context.TODO(), options)
+				return client.KubedbV1alpha2().Singlestores(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().Singlestores(namespace).Watch(context.TODO(), options)
+				return client.KubedbV1alpha2().Singlestores(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1alpha2().Singlestores(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1alpha2().Singlestores(namespace).Watch(ctx, options)
 			},
 		},
-		&kubedbv1alpha2.Singlestore{},
+		&apiskubedbv1alpha2.Singlestore{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *singlestoreInformer) defaultInformer(client versioned.Interface, resync
 }
 
 func (f *singlestoreInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1alpha2.Singlestore{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiskubedbv1alpha2.Singlestore{}, f.defaultInformer)
 }
 
-func (f *singlestoreInformer) Lister() v1alpha2.SinglestoreLister {
-	return v1alpha2.NewSinglestoreLister(f.Informer().GetIndexer())
+func (f *singlestoreInformer) Lister() kubedbv1alpha2.SinglestoreLister {
+	return kubedbv1alpha2.NewSinglestoreLister(f.Informer().GetIndexer())
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	apiscourierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/listers/courier/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Branches.
 type BranchInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.BranchLister
+	Lister() courierv1alpha1.BranchLister
 }
 
 type branchInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredBranchInformer(client versioned.Interface, namespace string, res
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().Branches(namespace).List(context.TODO(), options)
+				return client.CourierV1alpha1().Branches(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().Branches(namespace).Watch(context.TODO(), options)
+				return client.CourierV1alpha1().Branches(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CourierV1alpha1().Branches(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CourierV1alpha1().Branches(namespace).Watch(ctx, options)
 			},
 		},
-		&courierv1alpha1.Branch{},
+		&apiscourierv1alpha1.Branch{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *branchInformer) defaultInformer(client versioned.Interface, resyncPerio
 }
 
 func (f *branchInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&courierv1alpha1.Branch{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscourierv1alpha1.Branch{}, f.defaultInformer)
 }
 
-func (f *branchInformer) Lister() v1alpha1.BranchLister {
-	return v1alpha1.NewBranchLister(f.Informer().GetIndexer())
+func (f *branchInformer) Lister() courierv1alpha1.BranchLister {
+	return courierv1alpha1.NewBranchLister(f.Informer().GetIndexer())
 }

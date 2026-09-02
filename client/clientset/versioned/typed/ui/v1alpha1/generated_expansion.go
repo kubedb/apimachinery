@@ -22,8 +22,6 @@ type DatabaseConfigurationExpansion interface{}
 
 type DatabaseConnectionExpansion interface{}
 
-type DatabaseSummaryExpansion interface{}
-
 type ElasticsearchInsightExpansion interface{}
 
 type ElasticsearchNodesStatsExpansion interface{}

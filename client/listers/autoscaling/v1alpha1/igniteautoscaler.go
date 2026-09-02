@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // IgniteAutoscalerLister helps list IgniteAutoscalers.
@@ -31,7 +31,7 @@ import (
 type IgniteAutoscalerLister interface {
 	// List lists all IgniteAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.IgniteAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.IgniteAutoscaler, err error)
 	// IgniteAutoscalers returns an object that can list and get IgniteAutoscalers.
 	IgniteAutoscalers(namespace string) IgniteAutoscalerNamespaceLister
 	IgniteAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type IgniteAutoscalerLister interface {
 
 // igniteAutoscalerLister implements the IgniteAutoscalerLister interface.
 type igniteAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.IgniteAutoscaler]
 }
 
 // NewIgniteAutoscalerLister returns a new IgniteAutoscalerLister.
 func NewIgniteAutoscalerLister(indexer cache.Indexer) IgniteAutoscalerLister {
-	return &igniteAutoscalerLister{indexer: indexer}
-}
-
-// List lists all IgniteAutoscalers in the indexer.
-func (s *igniteAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.IgniteAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.IgniteAutoscaler))
-	})
-	return ret, err
+	return &igniteAutoscalerLister{listers.New[*autoscalingv1alpha1.IgniteAutoscaler](indexer, autoscalingv1alpha1.Resource("igniteautoscaler"))}
 }
 
 // IgniteAutoscalers returns an object that can list and get IgniteAutoscalers.
 func (s *igniteAutoscalerLister) IgniteAutoscalers(namespace string) IgniteAutoscalerNamespaceLister {
-	return igniteAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return igniteAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.IgniteAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // IgniteAutoscalerNamespaceLister helps list and get IgniteAutoscalers.
@@ -65,36 +57,15 @@ func (s *igniteAutoscalerLister) IgniteAutoscalers(namespace string) IgniteAutos
 type IgniteAutoscalerNamespaceLister interface {
 	// List lists all IgniteAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.IgniteAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.IgniteAutoscaler, err error)
 	// Get retrieves the IgniteAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.IgniteAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.IgniteAutoscaler, error)
 	IgniteAutoscalerNamespaceListerExpansion
 }
 
 // igniteAutoscalerNamespaceLister implements the IgniteAutoscalerNamespaceLister
 // interface.
 type igniteAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all IgniteAutoscalers in the indexer for a given namespace.
-func (s igniteAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.IgniteAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.IgniteAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the IgniteAutoscaler from the indexer for a given namespace and name.
-func (s igniteAutoscalerNamespaceLister) Get(name string) (*v1alpha1.IgniteAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("igniteautoscaler"), name)
-	}
-	return obj.(*v1alpha1.IgniteAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.IgniteAutoscaler]
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ElasticsearchVersions.
 type ElasticsearchVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ElasticsearchVersionLister
+	Lister() catalogv1alpha1.ElasticsearchVersionLister
 }
 
 type elasticsearchVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredElasticsearchVersionInformer(client versioned.Interface, resyncP
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().ElasticsearchVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().ElasticsearchVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().ElasticsearchVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().ElasticsearchVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().ElasticsearchVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().ElasticsearchVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.ElasticsearchVersion{},
+		&apiscatalogv1alpha1.ElasticsearchVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *elasticsearchVersionInformer) defaultInformer(client versioned.Interfac
 }
 
 func (f *elasticsearchVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.ElasticsearchVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.ElasticsearchVersion{}, f.defaultInformer)
 }
 
-func (f *elasticsearchVersionInformer) Lister() v1alpha1.ElasticsearchVersionLister {
-	return v1alpha1.NewElasticsearchVersionLister(f.Informer().GetIndexer())
+func (f *elasticsearchVersionInformer) Lister() catalogv1alpha1.ElasticsearchVersionLister {
+	return catalogv1alpha1.NewElasticsearchVersionLister(f.Informer().GetIndexer())
 }

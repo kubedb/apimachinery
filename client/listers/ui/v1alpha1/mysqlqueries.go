@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MySQLQueriesLister helps list MySQLQuerieses.
@@ -31,7 +31,7 @@ import (
 type MySQLQueriesLister interface {
 	// List lists all MySQLQuerieses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.MySQLQueries, err error)
 	// MySQLQuerieses returns an object that can list and get MySQLQuerieses.
 	MySQLQuerieses(namespace string) MySQLQueriesNamespaceLister
 	MySQLQueriesListerExpansion
@@ -39,25 +39,17 @@ type MySQLQueriesLister interface {
 
 // mySQLQueriesLister implements the MySQLQueriesLister interface.
 type mySQLQueriesLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.MySQLQueries]
 }
 
 // NewMySQLQueriesLister returns a new MySQLQueriesLister.
 func NewMySQLQueriesLister(indexer cache.Indexer) MySQLQueriesLister {
-	return &mySQLQueriesLister{indexer: indexer}
-}
-
-// List lists all MySQLQuerieses in the indexer.
-func (s *mySQLQueriesLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLQueries, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLQueries))
-	})
-	return ret, err
+	return &mySQLQueriesLister{listers.New[*uiv1alpha1.MySQLQueries](indexer, uiv1alpha1.Resource("mysqlqueries"))}
 }
 
 // MySQLQuerieses returns an object that can list and get MySQLQuerieses.
 func (s *mySQLQueriesLister) MySQLQuerieses(namespace string) MySQLQueriesNamespaceLister {
-	return mySQLQueriesNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mySQLQueriesNamespaceLister{listers.NewNamespaced[*uiv1alpha1.MySQLQueries](s.ResourceIndexer, namespace)}
 }
 
 // MySQLQueriesNamespaceLister helps list and get MySQLQuerieses.
@@ -65,36 +57,15 @@ func (s *mySQLQueriesLister) MySQLQuerieses(namespace string) MySQLQueriesNamesp
 type MySQLQueriesNamespaceLister interface {
 	// List lists all MySQLQuerieses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.MySQLQueries, err error)
 	// Get retrieves the MySQLQueries from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MySQLQueries, error)
+	Get(name string) (*uiv1alpha1.MySQLQueries, error)
 	MySQLQueriesNamespaceListerExpansion
 }
 
 // mySQLQueriesNamespaceLister implements the MySQLQueriesNamespaceLister
 // interface.
 type mySQLQueriesNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MySQLQuerieses in the indexer for a given namespace.
-func (s mySQLQueriesNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLQueries, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLQueries))
-	})
-	return ret, err
-}
-
-// Get retrieves the MySQLQueries from the indexer for a given namespace and name.
-func (s mySQLQueriesNamespaceLister) Get(name string) (*v1alpha1.MySQLQueries, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mysqlqueries"), name)
-	}
-	return obj.(*v1alpha1.MySQLQueries), nil
+	listers.ResourceIndexer[*uiv1alpha1.MySQLQueries]
 }

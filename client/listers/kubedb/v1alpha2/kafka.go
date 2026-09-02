@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // KafkaLister helps list Kafkas.
@@ -31,7 +31,7 @@ import (
 type KafkaLister interface {
 	// List lists all Kafkas in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Kafka, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Kafka, err error)
 	// Kafkas returns an object that can list and get Kafkas.
 	Kafkas(namespace string) KafkaNamespaceLister
 	KafkaListerExpansion
@@ -39,25 +39,17 @@ type KafkaLister interface {
 
 // kafkaLister implements the KafkaLister interface.
 type kafkaLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.Kafka]
 }
 
 // NewKafkaLister returns a new KafkaLister.
 func NewKafkaLister(indexer cache.Indexer) KafkaLister {
-	return &kafkaLister{indexer: indexer}
-}
-
-// List lists all Kafkas in the indexer.
-func (s *kafkaLister) List(selector labels.Selector) (ret []*v1alpha2.Kafka, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Kafka))
-	})
-	return ret, err
+	return &kafkaLister{listers.New[*kubedbv1alpha2.Kafka](indexer, kubedbv1alpha2.Resource("kafka"))}
 }
 
 // Kafkas returns an object that can list and get Kafkas.
 func (s *kafkaLister) Kafkas(namespace string) KafkaNamespaceLister {
-	return kafkaNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return kafkaNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.Kafka](s.ResourceIndexer, namespace)}
 }
 
 // KafkaNamespaceLister helps list and get Kafkas.
@@ -65,36 +57,15 @@ func (s *kafkaLister) Kafkas(namespace string) KafkaNamespaceLister {
 type KafkaNamespaceLister interface {
 	// List lists all Kafkas in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Kafka, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Kafka, err error)
 	// Get retrieves the Kafka from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.Kafka, error)
+	Get(name string) (*kubedbv1alpha2.Kafka, error)
 	KafkaNamespaceListerExpansion
 }
 
 // kafkaNamespaceLister implements the KafkaNamespaceLister
 // interface.
 type kafkaNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Kafkas in the indexer for a given namespace.
-func (s kafkaNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.Kafka, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Kafka))
-	})
-	return ret, err
-}
-
-// Get retrieves the Kafka from the indexer for a given namespace and name.
-func (s kafkaNamespaceLister) Get(name string) (*v1alpha2.Kafka, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("kafka"), name)
-	}
-	return obj.(*v1alpha2.Kafka), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.Kafka]
 }

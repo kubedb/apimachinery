@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeKafkaAutoscalers implements KafkaAutoscalerInterface
-type FakeKafkaAutoscalers struct {
+// fakeKafkaAutoscalers implements KafkaAutoscalerInterface
+type fakeKafkaAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.KafkaAutoscaler, *v1alpha1.KafkaAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var kafkaautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("kafkaautoscalers")
-
-var kafkaautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("KafkaAutoscaler")
-
-// Get takes name of the kafkaAutoscaler, and returns the corresponding kafkaAutoscaler object, and an error if there is any.
-func (c *FakeKafkaAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.KafkaAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(kafkaautoscalersResource, c.ns, name), &v1alpha1.KafkaAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeKafkaAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.KafkaAutoscalerInterface {
+	return &fakeKafkaAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.KafkaAutoscaler, *v1alpha1.KafkaAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("kafkaautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("KafkaAutoscaler"),
+			func() *v1alpha1.KafkaAutoscaler { return &v1alpha1.KafkaAutoscaler{} },
+			func() *v1alpha1.KafkaAutoscalerList { return &v1alpha1.KafkaAutoscalerList{} },
+			func(dst, src *v1alpha1.KafkaAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.KafkaAutoscalerList) []*v1alpha1.KafkaAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.KafkaAutoscalerList, items []*v1alpha1.KafkaAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.KafkaAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of KafkaAutoscalers that match those selectors.
-func (c *FakeKafkaAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.KafkaAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(kafkaautoscalersResource, kafkaautoscalersKind, c.ns, opts), &v1alpha1.KafkaAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.KafkaAutoscalerList{ListMeta: obj.(*v1alpha1.KafkaAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.KafkaAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested kafkaAutoscalers.
-func (c *FakeKafkaAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(kafkaautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a kafkaAutoscaler and creates it.  Returns the server's representation of the kafkaAutoscaler, and an error, if there is any.
-func (c *FakeKafkaAutoscalers) Create(ctx context.Context, kafkaAutoscaler *v1alpha1.KafkaAutoscaler, opts v1.CreateOptions) (result *v1alpha1.KafkaAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(kafkaautoscalersResource, c.ns, kafkaAutoscaler), &v1alpha1.KafkaAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.KafkaAutoscaler), err
-}
-
-// Update takes the representation of a kafkaAutoscaler and updates it. Returns the server's representation of the kafkaAutoscaler, and an error, if there is any.
-func (c *FakeKafkaAutoscalers) Update(ctx context.Context, kafkaAutoscaler *v1alpha1.KafkaAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.KafkaAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(kafkaautoscalersResource, c.ns, kafkaAutoscaler), &v1alpha1.KafkaAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.KafkaAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeKafkaAutoscalers) UpdateStatus(ctx context.Context, kafkaAutoscaler *v1alpha1.KafkaAutoscaler, opts v1.UpdateOptions) (*v1alpha1.KafkaAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(kafkaautoscalersResource, "status", c.ns, kafkaAutoscaler), &v1alpha1.KafkaAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.KafkaAutoscaler), err
-}
-
-// Delete takes name of the kafkaAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeKafkaAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(kafkaautoscalersResource, c.ns, name, opts), &v1alpha1.KafkaAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeKafkaAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(kafkaautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.KafkaAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched kafkaAutoscaler.
-func (c *FakeKafkaAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.KafkaAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(kafkaautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.KafkaAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.KafkaAutoscaler), err
 }

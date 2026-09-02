@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // BranchWorkLister helps list BranchWorks.
@@ -31,7 +31,7 @@ import (
 type BranchWorkLister interface {
 	// List lists all BranchWorks in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.BranchWork, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.BranchWork, err error)
 	// BranchWorks returns an object that can list and get BranchWorks.
 	BranchWorks(namespace string) BranchWorkNamespaceLister
 	BranchWorkListerExpansion
@@ -39,25 +39,17 @@ type BranchWorkLister interface {
 
 // branchWorkLister implements the BranchWorkLister interface.
 type branchWorkLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*courierv1alpha1.BranchWork]
 }
 
 // NewBranchWorkLister returns a new BranchWorkLister.
 func NewBranchWorkLister(indexer cache.Indexer) BranchWorkLister {
-	return &branchWorkLister{indexer: indexer}
-}
-
-// List lists all BranchWorks in the indexer.
-func (s *branchWorkLister) List(selector labels.Selector) (ret []*v1alpha1.BranchWork, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.BranchWork))
-	})
-	return ret, err
+	return &branchWorkLister{listers.New[*courierv1alpha1.BranchWork](indexer, courierv1alpha1.Resource("branchwork"))}
 }
 
 // BranchWorks returns an object that can list and get BranchWorks.
 func (s *branchWorkLister) BranchWorks(namespace string) BranchWorkNamespaceLister {
-	return branchWorkNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return branchWorkNamespaceLister{listers.NewNamespaced[*courierv1alpha1.BranchWork](s.ResourceIndexer, namespace)}
 }
 
 // BranchWorkNamespaceLister helps list and get BranchWorks.
@@ -65,36 +57,15 @@ func (s *branchWorkLister) BranchWorks(namespace string) BranchWorkNamespaceList
 type BranchWorkNamespaceLister interface {
 	// List lists all BranchWorks in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.BranchWork, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.BranchWork, err error)
 	// Get retrieves the BranchWork from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.BranchWork, error)
+	Get(name string) (*courierv1alpha1.BranchWork, error)
 	BranchWorkNamespaceListerExpansion
 }
 
 // branchWorkNamespaceLister implements the BranchWorkNamespaceLister
 // interface.
 type branchWorkNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all BranchWorks in the indexer for a given namespace.
-func (s branchWorkNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.BranchWork, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.BranchWork))
-	})
-	return ret, err
-}
-
-// Get retrieves the BranchWork from the indexer for a given namespace and name.
-func (s branchWorkNamespaceLister) Get(name string) (*v1alpha1.BranchWork, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("branchwork"), name)
-	}
-	return obj.(*v1alpha1.BranchWork), nil
+	listers.ResourceIndexer[*courierv1alpha1.BranchWork]
 }

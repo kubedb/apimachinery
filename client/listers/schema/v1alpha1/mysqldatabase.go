@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
+	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MySQLDatabaseLister helps list MySQLDatabases.
@@ -31,7 +31,7 @@ import (
 type MySQLDatabaseLister interface {
 	// List lists all MySQLDatabases in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLDatabase, err error)
+	List(selector labels.Selector) (ret []*schemav1alpha1.MySQLDatabase, err error)
 	// MySQLDatabases returns an object that can list and get MySQLDatabases.
 	MySQLDatabases(namespace string) MySQLDatabaseNamespaceLister
 	MySQLDatabaseListerExpansion
@@ -39,25 +39,17 @@ type MySQLDatabaseLister interface {
 
 // mySQLDatabaseLister implements the MySQLDatabaseLister interface.
 type mySQLDatabaseLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*schemav1alpha1.MySQLDatabase]
 }
 
 // NewMySQLDatabaseLister returns a new MySQLDatabaseLister.
 func NewMySQLDatabaseLister(indexer cache.Indexer) MySQLDatabaseLister {
-	return &mySQLDatabaseLister{indexer: indexer}
-}
-
-// List lists all MySQLDatabases in the indexer.
-func (s *mySQLDatabaseLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLDatabase, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLDatabase))
-	})
-	return ret, err
+	return &mySQLDatabaseLister{listers.New[*schemav1alpha1.MySQLDatabase](indexer, schemav1alpha1.Resource("mysqldatabase"))}
 }
 
 // MySQLDatabases returns an object that can list and get MySQLDatabases.
 func (s *mySQLDatabaseLister) MySQLDatabases(namespace string) MySQLDatabaseNamespaceLister {
-	return mySQLDatabaseNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mySQLDatabaseNamespaceLister{listers.NewNamespaced[*schemav1alpha1.MySQLDatabase](s.ResourceIndexer, namespace)}
 }
 
 // MySQLDatabaseNamespaceLister helps list and get MySQLDatabases.
@@ -65,36 +57,15 @@ func (s *mySQLDatabaseLister) MySQLDatabases(namespace string) MySQLDatabaseName
 type MySQLDatabaseNamespaceLister interface {
 	// List lists all MySQLDatabases in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLDatabase, err error)
+	List(selector labels.Selector) (ret []*schemav1alpha1.MySQLDatabase, err error)
 	// Get retrieves the MySQLDatabase from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MySQLDatabase, error)
+	Get(name string) (*schemav1alpha1.MySQLDatabase, error)
 	MySQLDatabaseNamespaceListerExpansion
 }
 
 // mySQLDatabaseNamespaceLister implements the MySQLDatabaseNamespaceLister
 // interface.
 type mySQLDatabaseNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MySQLDatabases in the indexer for a given namespace.
-func (s mySQLDatabaseNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLDatabase, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLDatabase))
-	})
-	return ret, err
-}
-
-// Get retrieves the MySQLDatabase from the indexer for a given namespace and name.
-func (s mySQLDatabaseNamespaceLister) Get(name string) (*v1alpha1.MySQLDatabase, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mysqldatabase"), name)
-	}
-	return obj.(*v1alpha1.MySQLDatabase), nil
+	listers.ResourceIndexer[*schemav1alpha1.MySQLDatabase]
 }

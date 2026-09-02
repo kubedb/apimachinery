@@ -54,12 +54,6 @@ API rule violation: list_type_missing,github.com/prometheus-operator/prometheus-
 API rule violation: list_type_missing,github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1,ThanosSpec,VolumeMounts
 API rule violation: list_type_missing,github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1,WebTLSConfig,CipherSuites
 API rule violation: list_type_missing,github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1,WebTLSConfig,CurvePreferences
-API rule violation: list_type_missing,k8s.io/api/core/v1,RangeAllocation,Data
-API rule violation: list_type_missing,k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1,JSON,Raw
-API rule violation: list_type_missing,k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1,WebhookClientConfig,CABundle
-API rule violation: list_type_missing,k8s.io/apimachinery/pkg/apis/meta/v1,FieldsV1,Raw
-API rule violation: list_type_missing,k8s.io/apimachinery/pkg/runtime,RawExtension,Raw
-API rule violation: list_type_missing,k8s.io/apimachinery/pkg/runtime,Unknown,Raw
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,CertificateSpec,DNSNames
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,CertificateSpec,EmailAddresses
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,CertificateSpec,IPAddresses
@@ -79,11 +73,8 @@ API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,X509Subject,
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,X509Subject,PostalCodes
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,X509Subject,Provinces
 API rule violation: list_type_missing,kmodules.xyz/client-go/api/v1,X509Subject,StreetAddresses
-API rule violation: list_type_missing,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,AddKeyTransform,Value
 API rule violation: list_type_missing,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,AppBindingSpec,SecretTransforms
-API rule violation: list_type_missing,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,ClientConfig,CABundle
 API rule violation: list_type_missing,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,TaskRef,Params
-API rule violation: list_type_missing,kmodules.xyz/monitoring-agent-api/api/v1,ClientConfig,CABundle
 API rule violation: list_type_missing,kmodules.xyz/monitoring-agent-api/api/v1,Endpoint,MetricRelabelConfigs
 API rule violation: list_type_missing,kmodules.xyz/monitoring-agent-api/api/v1,Endpoint,RelabelConfigs
 API rule violation: list_type_missing,kmodules.xyz/monitoring-agent-api/api/v1,PrometheusExporterSpec,Args
@@ -121,9 +112,7 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,D
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatSpec,Roles
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatsSpec,Nodes
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchSchemaOverviewSpec,Indices
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,GatewayConnection,CACert
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,GenericSchemaOverviewSpec,Databases
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,InClusterConnection,CACert
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MariaDBQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBCollectionSpec,TotalSize
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBQueriesSpec,Queries
@@ -269,6 +258,10 @@ API rule violation: names_match,kmodules.xyz/client-go/api/v1,TimeOfDay,Time
 API rule violation: names_match,kmodules.xyz/monitoring-agent-api/api/v1,Endpoint,MetricRelabelConfigs
 API rule violation: names_match,kmodules.xyz/monitoring-agent-api/api/v1,Endpoint,RelabelConfigs
 API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,ContainerRuntimeSettings,IONice
+API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,PersistentVolumeClaim,PartialObjectMeta
+API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,PersistentVolumeClaimTemplate,PartialObjectMeta
+API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,PodTemplateSpec,ObjectMeta
+API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,ServiceTemplateSpec,ObjectMeta
 API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,VolumeSource,CephFS
 API rule violation: names_match,kmodules.xyz/offshoot-api/api/v1,VolumeSource,StorageOS
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBCollectionSpec,TotalSize
@@ -389,3 +382,4 @@ API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQ
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLSettingsSpec,MySQLServers
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLSettingsSpec,MySQLVariables
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLSettingsSpec,ProxySQLServers
+API rule violation: streaming_list_type_json_tags,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,AppBindingList,Items

@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeClickHouseAutoscalers implements ClickHouseAutoscalerInterface
-type FakeClickHouseAutoscalers struct {
+// fakeClickHouseAutoscalers implements ClickHouseAutoscalerInterface
+type fakeClickHouseAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.ClickHouseAutoscaler, *v1alpha1.ClickHouseAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var clickhouseautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("clickhouseautoscalers")
-
-var clickhouseautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("ClickHouseAutoscaler")
-
-// Get takes name of the clickHouseAutoscaler, and returns the corresponding clickHouseAutoscaler object, and an error if there is any.
-func (c *FakeClickHouseAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ClickHouseAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(clickhouseautoscalersResource, c.ns, name), &v1alpha1.ClickHouseAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeClickHouseAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.ClickHouseAutoscalerInterface {
+	return &fakeClickHouseAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.ClickHouseAutoscaler, *v1alpha1.ClickHouseAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("clickhouseautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("ClickHouseAutoscaler"),
+			func() *v1alpha1.ClickHouseAutoscaler { return &v1alpha1.ClickHouseAutoscaler{} },
+			func() *v1alpha1.ClickHouseAutoscalerList { return &v1alpha1.ClickHouseAutoscalerList{} },
+			func(dst, src *v1alpha1.ClickHouseAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ClickHouseAutoscalerList) []*v1alpha1.ClickHouseAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ClickHouseAutoscalerList, items []*v1alpha1.ClickHouseAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ClickHouseAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of ClickHouseAutoscalers that match those selectors.
-func (c *FakeClickHouseAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ClickHouseAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(clickhouseautoscalersResource, clickhouseautoscalersKind, c.ns, opts), &v1alpha1.ClickHouseAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ClickHouseAutoscalerList{ListMeta: obj.(*v1alpha1.ClickHouseAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ClickHouseAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested clickHouseAutoscalers.
-func (c *FakeClickHouseAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(clickhouseautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a clickHouseAutoscaler and creates it.  Returns the server's representation of the clickHouseAutoscaler, and an error, if there is any.
-func (c *FakeClickHouseAutoscalers) Create(ctx context.Context, clickHouseAutoscaler *v1alpha1.ClickHouseAutoscaler, opts v1.CreateOptions) (result *v1alpha1.ClickHouseAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(clickhouseautoscalersResource, c.ns, clickHouseAutoscaler), &v1alpha1.ClickHouseAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseAutoscaler), err
-}
-
-// Update takes the representation of a clickHouseAutoscaler and updates it. Returns the server's representation of the clickHouseAutoscaler, and an error, if there is any.
-func (c *FakeClickHouseAutoscalers) Update(ctx context.Context, clickHouseAutoscaler *v1alpha1.ClickHouseAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.ClickHouseAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(clickhouseautoscalersResource, c.ns, clickHouseAutoscaler), &v1alpha1.ClickHouseAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeClickHouseAutoscalers) UpdateStatus(ctx context.Context, clickHouseAutoscaler *v1alpha1.ClickHouseAutoscaler, opts v1.UpdateOptions) (*v1alpha1.ClickHouseAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(clickhouseautoscalersResource, "status", c.ns, clickHouseAutoscaler), &v1alpha1.ClickHouseAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseAutoscaler), err
-}
-
-// Delete takes name of the clickHouseAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeClickHouseAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(clickhouseautoscalersResource, c.ns, name, opts), &v1alpha1.ClickHouseAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeClickHouseAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(clickhouseautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ClickHouseAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched clickHouseAutoscaler.
-func (c *FakeClickHouseAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ClickHouseAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(clickhouseautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.ClickHouseAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ClickHouseAutoscaler), err
 }

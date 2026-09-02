@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ClickHouseArchiverLister helps list ClickHouseArchivers.
@@ -31,7 +31,7 @@ import (
 type ClickHouseArchiverLister interface {
 	// List lists all ClickHouseArchivers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ClickHouseArchiver, err error)
+	List(selector labels.Selector) (ret []*archiverv1alpha1.ClickHouseArchiver, err error)
 	// ClickHouseArchivers returns an object that can list and get ClickHouseArchivers.
 	ClickHouseArchivers(namespace string) ClickHouseArchiverNamespaceLister
 	ClickHouseArchiverListerExpansion
@@ -39,25 +39,17 @@ type ClickHouseArchiverLister interface {
 
 // clickHouseArchiverLister implements the ClickHouseArchiverLister interface.
 type clickHouseArchiverLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*archiverv1alpha1.ClickHouseArchiver]
 }
 
 // NewClickHouseArchiverLister returns a new ClickHouseArchiverLister.
 func NewClickHouseArchiverLister(indexer cache.Indexer) ClickHouseArchiverLister {
-	return &clickHouseArchiverLister{indexer: indexer}
-}
-
-// List lists all ClickHouseArchivers in the indexer.
-func (s *clickHouseArchiverLister) List(selector labels.Selector) (ret []*v1alpha1.ClickHouseArchiver, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ClickHouseArchiver))
-	})
-	return ret, err
+	return &clickHouseArchiverLister{listers.New[*archiverv1alpha1.ClickHouseArchiver](indexer, archiverv1alpha1.Resource("clickhousearchiver"))}
 }
 
 // ClickHouseArchivers returns an object that can list and get ClickHouseArchivers.
 func (s *clickHouseArchiverLister) ClickHouseArchivers(namespace string) ClickHouseArchiverNamespaceLister {
-	return clickHouseArchiverNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return clickHouseArchiverNamespaceLister{listers.NewNamespaced[*archiverv1alpha1.ClickHouseArchiver](s.ResourceIndexer, namespace)}
 }
 
 // ClickHouseArchiverNamespaceLister helps list and get ClickHouseArchivers.
@@ -65,36 +57,15 @@ func (s *clickHouseArchiverLister) ClickHouseArchivers(namespace string) ClickHo
 type ClickHouseArchiverNamespaceLister interface {
 	// List lists all ClickHouseArchivers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ClickHouseArchiver, err error)
+	List(selector labels.Selector) (ret []*archiverv1alpha1.ClickHouseArchiver, err error)
 	// Get retrieves the ClickHouseArchiver from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ClickHouseArchiver, error)
+	Get(name string) (*archiverv1alpha1.ClickHouseArchiver, error)
 	ClickHouseArchiverNamespaceListerExpansion
 }
 
 // clickHouseArchiverNamespaceLister implements the ClickHouseArchiverNamespaceLister
 // interface.
 type clickHouseArchiverNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ClickHouseArchivers in the indexer for a given namespace.
-func (s clickHouseArchiverNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ClickHouseArchiver, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ClickHouseArchiver))
-	})
-	return ret, err
-}
-
-// Get retrieves the ClickHouseArchiver from the indexer for a given namespace and name.
-func (s clickHouseArchiverNamespaceLister) Get(name string) (*v1alpha1.ClickHouseArchiver, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("clickhousearchiver"), name)
-	}
-	return obj.(*v1alpha1.ClickHouseArchiver), nil
+	listers.ResourceIndexer[*archiverv1alpha1.ClickHouseArchiver]
 }

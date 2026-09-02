@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeHazelcasts implements HazelcastInterface
-type FakeHazelcasts struct {
+// fakeHazelcasts implements HazelcastInterface
+type fakeHazelcasts struct {
+	*gentype.FakeClientWithList[*v1alpha2.Hazelcast, *v1alpha2.HazelcastList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var hazelcastsResource = v1alpha2.SchemeGroupVersion.WithResource("hazelcasts")
-
-var hazelcastsKind = v1alpha2.SchemeGroupVersion.WithKind("Hazelcast")
-
-// Get takes name of the hazelcast, and returns the corresponding hazelcast object, and an error if there is any.
-func (c *FakeHazelcasts) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Hazelcast, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(hazelcastsResource, c.ns, name), &v1alpha2.Hazelcast{})
-
-	if obj == nil {
-		return nil, err
+func newFakeHazelcasts(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.HazelcastInterface {
+	return &fakeHazelcasts{
+		gentype.NewFakeClientWithList[*v1alpha2.Hazelcast, *v1alpha2.HazelcastList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("hazelcasts"),
+			v1alpha2.SchemeGroupVersion.WithKind("Hazelcast"),
+			func() *v1alpha2.Hazelcast { return &v1alpha2.Hazelcast{} },
+			func() *v1alpha2.HazelcastList { return &v1alpha2.HazelcastList{} },
+			func(dst, src *v1alpha2.HazelcastList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.HazelcastList) []*v1alpha2.Hazelcast { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.HazelcastList, items []*v1alpha2.Hazelcast) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.Hazelcast), err
-}
-
-// List takes label and field selectors, and returns the list of Hazelcasts that match those selectors.
-func (c *FakeHazelcasts) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.HazelcastList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(hazelcastsResource, hazelcastsKind, c.ns, opts), &v1alpha2.HazelcastList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.HazelcastList{ListMeta: obj.(*v1alpha2.HazelcastList).ListMeta}
-	for _, item := range obj.(*v1alpha2.HazelcastList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested hazelcasts.
-func (c *FakeHazelcasts) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(hazelcastsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a hazelcast and creates it.  Returns the server's representation of the hazelcast, and an error, if there is any.
-func (c *FakeHazelcasts) Create(ctx context.Context, hazelcast *v1alpha2.Hazelcast, opts v1.CreateOptions) (result *v1alpha2.Hazelcast, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(hazelcastsResource, c.ns, hazelcast), &v1alpha2.Hazelcast{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Hazelcast), err
-}
-
-// Update takes the representation of a hazelcast and updates it. Returns the server's representation of the hazelcast, and an error, if there is any.
-func (c *FakeHazelcasts) Update(ctx context.Context, hazelcast *v1alpha2.Hazelcast, opts v1.UpdateOptions) (result *v1alpha2.Hazelcast, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(hazelcastsResource, c.ns, hazelcast), &v1alpha2.Hazelcast{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Hazelcast), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeHazelcasts) UpdateStatus(ctx context.Context, hazelcast *v1alpha2.Hazelcast, opts v1.UpdateOptions) (*v1alpha2.Hazelcast, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(hazelcastsResource, "status", c.ns, hazelcast), &v1alpha2.Hazelcast{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Hazelcast), err
-}
-
-// Delete takes name of the hazelcast and deletes it. Returns an error if one occurs.
-func (c *FakeHazelcasts) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(hazelcastsResource, c.ns, name, opts), &v1alpha2.Hazelcast{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeHazelcasts) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(hazelcastsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.HazelcastList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched hazelcast.
-func (c *FakeHazelcasts) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.Hazelcast, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(hazelcastsResource, c.ns, name, pt, data, subresources...), &v1alpha2.Hazelcast{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Hazelcast), err
 }
