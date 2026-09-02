@@ -46,6 +46,12 @@ type MySQLQueriesExpansion interface{}
 
 type MySQLSchemaOverviewExpansion interface{}
 
+type PerconaXtraDBInsightExpansion interface{}
+
+type PerconaXtraDBQueriesExpansion interface{}
+
+type PerconaXtraDBSchemaOverviewExpansion interface{}
+
 type PgBouncerInsightExpansion interface{}
 
 type PgBouncerPoolOverviewExpansion interface{}

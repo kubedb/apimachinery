@@ -50,6 +50,12 @@ type Interface interface {
 	MySQLQuerieses() MySQLQueriesInformer
 	// MySQLSchemaOverviews returns a MySQLSchemaOverviewInformer.
 	MySQLSchemaOverviews() MySQLSchemaOverviewInformer
+	// PerconaXtraDBInsights returns a PerconaXtraDBInsightInformer.
+	PerconaXtraDBInsights() PerconaXtraDBInsightInformer
+	// PerconaXtraDBQuerieses returns a PerconaXtraDBQueriesInformer.
+	PerconaXtraDBQuerieses() PerconaXtraDBQueriesInformer
+	// PerconaXtraDBSchemaOverviews returns a PerconaXtraDBSchemaOverviewInformer.
+	PerconaXtraDBSchemaOverviews() PerconaXtraDBSchemaOverviewInformer
 	// PgBouncerInsights returns a PgBouncerInsightInformer.
 	PgBouncerInsights() PgBouncerInsightInformer
 	// PgBouncerPoolOverviews returns a PgBouncerPoolOverviewInformer.
@@ -154,6 +160,21 @@ func (v *version) MySQLQuerieses() MySQLQueriesInformer {
 // MySQLSchemaOverviews returns a MySQLSchemaOverviewInformer.
 func (v *version) MySQLSchemaOverviews() MySQLSchemaOverviewInformer {
 	return &mySQLSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PerconaXtraDBInsights returns a PerconaXtraDBInsightInformer.
+func (v *version) PerconaXtraDBInsights() PerconaXtraDBInsightInformer {
+	return &perconaXtraDBInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PerconaXtraDBQuerieses returns a PerconaXtraDBQueriesInformer.
+func (v *version) PerconaXtraDBQuerieses() PerconaXtraDBQueriesInformer {
+	return &perconaXtraDBQueriesInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PerconaXtraDBSchemaOverviews returns a PerconaXtraDBSchemaOverviewInformer.
+func (v *version) PerconaXtraDBSchemaOverviews() PerconaXtraDBSchemaOverviewInformer {
+	return &perconaXtraDBSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PgBouncerInsights returns a PgBouncerInsightInformer.
