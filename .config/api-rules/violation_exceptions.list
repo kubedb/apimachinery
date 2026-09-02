@@ -136,6 +136,8 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,P
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,RedisQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,RedisQuerySpec,Args
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,RedisSchemaOverviewSpec,Databases
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,SinglestoreQueriesSpec,Queries
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,SinglestoreSchemaOverviewSpec,Databases
 API rule violation: names_match,github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1,AlertmanagerEndpoints,AlertRelabelConfigs
 API rule violation: names_match,github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1,AlertmanagerEndpoints,RelabelConfigs
 API rule violation: names_match,github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1,AlertmanagerSpec,ExternalURL
@@ -363,4 +365,5 @@ API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQ
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLSettingsSpec,MySQLServers
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLSettingsSpec,MySQLVariables
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLSettingsSpec,ProxySQLServers
+API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,SinglestoreQuerySpec,PlanID
 API rule violation: streaming_list_type_json_tags,kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1,AppBindingList,Items

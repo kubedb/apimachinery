@@ -116,6 +116,12 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&RedisQueriesList{},
 		&RedisSchemaOverview{},
 		&RedisSchemaOverviewList{},
+		&SinglestoreInsight{},
+		&SinglestoreInsightList{},
+		&SinglestoreQueries{},
+		&SinglestoreQueriesList{},
+		&SinglestoreSchemaOverview{},
+		&SinglestoreSchemaOverviewList{},
 	)
 
 	scheme.AddKnownTypes(

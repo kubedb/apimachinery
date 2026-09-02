@@ -73,3 +73,9 @@ type RedisInsightExpansion interface{}
 type RedisQueriesExpansion interface{}
 
 type RedisSchemaOverviewExpansion interface{}
+
+type SinglestoreInsightExpansion interface{}
+
+type SinglestoreQueriesExpansion interface{}
+
+type SinglestoreSchemaOverviewExpansion interface{}

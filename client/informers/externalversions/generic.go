@@ -550,6 +550,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().RedisQuerieses().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("redisschemaoverviews"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().RedisSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("singlestoreinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().SinglestoreInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("singlestorequerieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().SinglestoreQuerieses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("singlestoreschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().SinglestoreSchemaOverviews().Informer()}, nil
 
 	}
 

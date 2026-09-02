@@ -141,6 +141,18 @@ func (c *FakeUiV1alpha1) RedisSchemaOverviews(namespace string) v1alpha1.RedisSc
 	return newFakeRedisSchemaOverviews(c, namespace)
 }
 
+func (c *FakeUiV1alpha1) SinglestoreInsights(namespace string) v1alpha1.SinglestoreInsightInterface {
+	return newFakeSinglestoreInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreQuerieses(namespace string) v1alpha1.SinglestoreQueriesInterface {
+	return newFakeSinglestoreQuerieses(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreSchemaOverviews(namespace string) v1alpha1.SinglestoreSchemaOverviewInterface {
+	return newFakeSinglestoreSchemaOverviews(c, namespace)
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeUiV1alpha1) RESTClient() rest.Interface {
