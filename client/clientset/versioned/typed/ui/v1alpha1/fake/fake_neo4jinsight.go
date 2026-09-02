@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeNeo4jInsights implements Neo4jInsightInterface
-type FakeNeo4jInsights struct {
+// fakeNeo4jInsights implements Neo4jInsightInterface
+type fakeNeo4jInsights struct {
+	*gentype.FakeClientWithList[*v1alpha1.Neo4jInsight, *v1alpha1.Neo4jInsightList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var neo4jinsightsResource = v1alpha1.SchemeGroupVersion.WithResource("neo4jinsights")
-
-var neo4jinsightsKind = v1alpha1.SchemeGroupVersion.WithKind("Neo4jInsight")
-
-// Get takes name of the neo4jInsight, and returns the corresponding neo4jInsight object, and an error if there is any.
-func (c *FakeNeo4jInsights) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Neo4jInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(neo4jinsightsResource, c.ns, name), &v1alpha1.Neo4jInsight{})
-
-	if obj == nil {
-		return nil, err
+func newFakeNeo4jInsights(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.Neo4jInsightInterface {
+	return &fakeNeo4jInsights{
+		gentype.NewFakeClientWithList[*v1alpha1.Neo4jInsight, *v1alpha1.Neo4jInsightList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("neo4jinsights"),
+			v1alpha1.SchemeGroupVersion.WithKind("Neo4jInsight"),
+			func() *v1alpha1.Neo4jInsight { return &v1alpha1.Neo4jInsight{} },
+			func() *v1alpha1.Neo4jInsightList { return &v1alpha1.Neo4jInsightList{} },
+			func(dst, src *v1alpha1.Neo4jInsightList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.Neo4jInsightList) []*v1alpha1.Neo4jInsight {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.Neo4jInsightList, items []*v1alpha1.Neo4jInsight) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Neo4jInsight), err
-}
-
-// List takes label and field selectors, and returns the list of Neo4jInsights that match those selectors.
-func (c *FakeNeo4jInsights) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.Neo4jInsightList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(neo4jinsightsResource, neo4jinsightsKind, c.ns, opts), &v1alpha1.Neo4jInsightList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.Neo4jInsightList{ListMeta: obj.(*v1alpha1.Neo4jInsightList).ListMeta}
-	for _, item := range obj.(*v1alpha1.Neo4jInsightList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested neo4jInsights.
-func (c *FakeNeo4jInsights) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(neo4jinsightsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a neo4jInsight and creates it.  Returns the server's representation of the neo4jInsight, and an error, if there is any.
-func (c *FakeNeo4jInsights) Create(ctx context.Context, neo4jInsight *v1alpha1.Neo4jInsight, opts v1.CreateOptions) (result *v1alpha1.Neo4jInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(neo4jinsightsResource, c.ns, neo4jInsight), &v1alpha1.Neo4jInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jInsight), err
-}
-
-// Update takes the representation of a neo4jInsight and updates it. Returns the server's representation of the neo4jInsight, and an error, if there is any.
-func (c *FakeNeo4jInsights) Update(ctx context.Context, neo4jInsight *v1alpha1.Neo4jInsight, opts v1.UpdateOptions) (result *v1alpha1.Neo4jInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(neo4jinsightsResource, c.ns, neo4jInsight), &v1alpha1.Neo4jInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jInsight), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeNeo4jInsights) UpdateStatus(ctx context.Context, neo4jInsight *v1alpha1.Neo4jInsight, opts v1.UpdateOptions) (*v1alpha1.Neo4jInsight, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(neo4jinsightsResource, "status", c.ns, neo4jInsight), &v1alpha1.Neo4jInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jInsight), err
-}
-
-// Delete takes name of the neo4jInsight and deletes it. Returns an error if one occurs.
-func (c *FakeNeo4jInsights) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(neo4jinsightsResource, c.ns, name, opts), &v1alpha1.Neo4jInsight{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeNeo4jInsights) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(neo4jinsightsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.Neo4jInsightList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched neo4jInsight.
-func (c *FakeNeo4jInsights) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Neo4jInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(neo4jinsightsResource, c.ns, name, pt, data, subresources...), &v1alpha1.Neo4jInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jInsight), err
 }

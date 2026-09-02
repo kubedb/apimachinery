@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // Neo4jQueriesLister helps list Neo4jQuerieses.
@@ -31,7 +31,7 @@ import (
 type Neo4jQueriesLister interface {
 	// List lists all Neo4jQuerieses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.Neo4jQueries, err error)
 	// Neo4jQuerieses returns an object that can list and get Neo4jQuerieses.
 	Neo4jQuerieses(namespace string) Neo4jQueriesNamespaceLister
 	Neo4jQueriesListerExpansion
@@ -39,25 +39,17 @@ type Neo4jQueriesLister interface {
 
 // neo4jQueriesLister implements the Neo4jQueriesLister interface.
 type neo4jQueriesLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.Neo4jQueries]
 }
 
 // NewNeo4jQueriesLister returns a new Neo4jQueriesLister.
 func NewNeo4jQueriesLister(indexer cache.Indexer) Neo4jQueriesLister {
-	return &neo4jQueriesLister{indexer: indexer}
-}
-
-// List lists all Neo4jQuerieses in the indexer.
-func (s *neo4jQueriesLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jQueries, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jQueries))
-	})
-	return ret, err
+	return &neo4jQueriesLister{listers.New[*uiv1alpha1.Neo4jQueries](indexer, uiv1alpha1.Resource("neo4jqueries"))}
 }
 
 // Neo4jQuerieses returns an object that can list and get Neo4jQuerieses.
 func (s *neo4jQueriesLister) Neo4jQuerieses(namespace string) Neo4jQueriesNamespaceLister {
-	return neo4jQueriesNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return neo4jQueriesNamespaceLister{listers.NewNamespaced[*uiv1alpha1.Neo4jQueries](s.ResourceIndexer, namespace)}
 }
 
 // Neo4jQueriesNamespaceLister helps list and get Neo4jQuerieses.
@@ -65,36 +57,15 @@ func (s *neo4jQueriesLister) Neo4jQuerieses(namespace string) Neo4jQueriesNamesp
 type Neo4jQueriesNamespaceLister interface {
 	// List lists all Neo4jQuerieses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.Neo4jQueries, err error)
 	// Get retrieves the Neo4jQueries from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Neo4jQueries, error)
+	Get(name string) (*uiv1alpha1.Neo4jQueries, error)
 	Neo4jQueriesNamespaceListerExpansion
 }
 
 // neo4jQueriesNamespaceLister implements the Neo4jQueriesNamespaceLister
 // interface.
 type neo4jQueriesNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Neo4jQuerieses in the indexer for a given namespace.
-func (s neo4jQueriesNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jQueries, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jQueries))
-	})
-	return ret, err
-}
-
-// Get retrieves the Neo4jQueries from the indexer for a given namespace and name.
-func (s neo4jQueriesNamespaceLister) Get(name string) (*v1alpha1.Neo4jQueries, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("neo4jqueries"), name)
-	}
-	return obj.(*v1alpha1.Neo4jQueries), nil
+	listers.ResourceIndexer[*uiv1alpha1.Neo4jQueries]
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // Neo4jInsightLister helps list Neo4jInsights.
@@ -31,7 +31,7 @@ import (
 type Neo4jInsightLister interface {
 	// List lists all Neo4jInsights in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.Neo4jInsight, err error)
 	// Neo4jInsights returns an object that can list and get Neo4jInsights.
 	Neo4jInsights(namespace string) Neo4jInsightNamespaceLister
 	Neo4jInsightListerExpansion
@@ -39,25 +39,17 @@ type Neo4jInsightLister interface {
 
 // neo4jInsightLister implements the Neo4jInsightLister interface.
 type neo4jInsightLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.Neo4jInsight]
 }
 
 // NewNeo4jInsightLister returns a new Neo4jInsightLister.
 func NewNeo4jInsightLister(indexer cache.Indexer) Neo4jInsightLister {
-	return &neo4jInsightLister{indexer: indexer}
-}
-
-// List lists all Neo4jInsights in the indexer.
-func (s *neo4jInsightLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jInsight, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jInsight))
-	})
-	return ret, err
+	return &neo4jInsightLister{listers.New[*uiv1alpha1.Neo4jInsight](indexer, uiv1alpha1.Resource("neo4jinsight"))}
 }
 
 // Neo4jInsights returns an object that can list and get Neo4jInsights.
 func (s *neo4jInsightLister) Neo4jInsights(namespace string) Neo4jInsightNamespaceLister {
-	return neo4jInsightNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return neo4jInsightNamespaceLister{listers.NewNamespaced[*uiv1alpha1.Neo4jInsight](s.ResourceIndexer, namespace)}
 }
 
 // Neo4jInsightNamespaceLister helps list and get Neo4jInsights.
@@ -65,36 +57,15 @@ func (s *neo4jInsightLister) Neo4jInsights(namespace string) Neo4jInsightNamespa
 type Neo4jInsightNamespaceLister interface {
 	// List lists all Neo4jInsights in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.Neo4jInsight, err error)
 	// Get retrieves the Neo4jInsight from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Neo4jInsight, error)
+	Get(name string) (*uiv1alpha1.Neo4jInsight, error)
 	Neo4jInsightNamespaceListerExpansion
 }
 
 // neo4jInsightNamespaceLister implements the Neo4jInsightNamespaceLister
 // interface.
 type neo4jInsightNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Neo4jInsights in the indexer for a given namespace.
-func (s neo4jInsightNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jInsight, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jInsight))
-	})
-	return ret, err
-}
-
-// Get retrieves the Neo4jInsight from the indexer for a given namespace and name.
-func (s neo4jInsightNamespaceLister) Get(name string) (*v1alpha1.Neo4jInsight, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("neo4jinsight"), name)
-	}
-	return obj.(*v1alpha1.Neo4jInsight), nil
+	listers.ResourceIndexer[*uiv1alpha1.Neo4jInsight]
 }

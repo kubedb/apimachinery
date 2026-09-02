@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeNeo4jSchemaOverviews implements Neo4jSchemaOverviewInterface
-type FakeNeo4jSchemaOverviews struct {
+// fakeNeo4jSchemaOverviews implements Neo4jSchemaOverviewInterface
+type fakeNeo4jSchemaOverviews struct {
+	*gentype.FakeClientWithList[*v1alpha1.Neo4jSchemaOverview, *v1alpha1.Neo4jSchemaOverviewList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var neo4jschemaoverviewsResource = v1alpha1.SchemeGroupVersion.WithResource("neo4jschemaoverviews")
-
-var neo4jschemaoverviewsKind = v1alpha1.SchemeGroupVersion.WithKind("Neo4jSchemaOverview")
-
-// Get takes name of the neo4jSchemaOverview, and returns the corresponding neo4jSchemaOverview object, and an error if there is any.
-func (c *FakeNeo4jSchemaOverviews) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Neo4jSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(neo4jschemaoverviewsResource, c.ns, name), &v1alpha1.Neo4jSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
+func newFakeNeo4jSchemaOverviews(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.Neo4jSchemaOverviewInterface {
+	return &fakeNeo4jSchemaOverviews{
+		gentype.NewFakeClientWithList[*v1alpha1.Neo4jSchemaOverview, *v1alpha1.Neo4jSchemaOverviewList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("neo4jschemaoverviews"),
+			v1alpha1.SchemeGroupVersion.WithKind("Neo4jSchemaOverview"),
+			func() *v1alpha1.Neo4jSchemaOverview { return &v1alpha1.Neo4jSchemaOverview{} },
+			func() *v1alpha1.Neo4jSchemaOverviewList { return &v1alpha1.Neo4jSchemaOverviewList{} },
+			func(dst, src *v1alpha1.Neo4jSchemaOverviewList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.Neo4jSchemaOverviewList) []*v1alpha1.Neo4jSchemaOverview {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.Neo4jSchemaOverviewList, items []*v1alpha1.Neo4jSchemaOverview) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Neo4jSchemaOverview), err
-}
-
-// List takes label and field selectors, and returns the list of Neo4jSchemaOverviews that match those selectors.
-func (c *FakeNeo4jSchemaOverviews) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.Neo4jSchemaOverviewList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(neo4jschemaoverviewsResource, neo4jschemaoverviewsKind, c.ns, opts), &v1alpha1.Neo4jSchemaOverviewList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.Neo4jSchemaOverviewList{ListMeta: obj.(*v1alpha1.Neo4jSchemaOverviewList).ListMeta}
-	for _, item := range obj.(*v1alpha1.Neo4jSchemaOverviewList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested neo4jSchemaOverviews.
-func (c *FakeNeo4jSchemaOverviews) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(neo4jschemaoverviewsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a neo4jSchemaOverview and creates it.  Returns the server's representation of the neo4jSchemaOverview, and an error, if there is any.
-func (c *FakeNeo4jSchemaOverviews) Create(ctx context.Context, neo4jSchemaOverview *v1alpha1.Neo4jSchemaOverview, opts v1.CreateOptions) (result *v1alpha1.Neo4jSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(neo4jschemaoverviewsResource, c.ns, neo4jSchemaOverview), &v1alpha1.Neo4jSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jSchemaOverview), err
-}
-
-// Update takes the representation of a neo4jSchemaOverview and updates it. Returns the server's representation of the neo4jSchemaOverview, and an error, if there is any.
-func (c *FakeNeo4jSchemaOverviews) Update(ctx context.Context, neo4jSchemaOverview *v1alpha1.Neo4jSchemaOverview, opts v1.UpdateOptions) (result *v1alpha1.Neo4jSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(neo4jschemaoverviewsResource, c.ns, neo4jSchemaOverview), &v1alpha1.Neo4jSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jSchemaOverview), err
-}
-
-// Delete takes name of the neo4jSchemaOverview and deletes it. Returns an error if one occurs.
-func (c *FakeNeo4jSchemaOverviews) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(neo4jschemaoverviewsResource, c.ns, name, opts), &v1alpha1.Neo4jSchemaOverview{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeNeo4jSchemaOverviews) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(neo4jschemaoverviewsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.Neo4jSchemaOverviewList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched neo4jSchemaOverview.
-func (c *FakeNeo4jSchemaOverviews) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Neo4jSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(neo4jschemaoverviewsResource, c.ns, name, pt, data, subresources...), &v1alpha1.Neo4jSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jSchemaOverview), err
 }

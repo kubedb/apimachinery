@@ -86,15 +86,15 @@ func (c *FakeUiV1alpha1) MySQLSchemaOverviews(namespace string) v1alpha1.MySQLSc
 }
 
 func (c *FakeUiV1alpha1) Neo4jInsights(namespace string) v1alpha1.Neo4jInsightInterface {
-	return &FakeNeo4jInsights{c, namespace}
+	return newFakeNeo4jInsights(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) Neo4jQuerieses(namespace string) v1alpha1.Neo4jQueriesInterface {
-	return &FakeNeo4jQuerieses{c, namespace}
+	return newFakeNeo4jQuerieses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) Neo4jSchemaOverviews(namespace string) v1alpha1.Neo4jSchemaOverviewInterface {
-	return &FakeNeo4jSchemaOverviews{c, namespace}
+	return newFakeNeo4jSchemaOverviews(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) PgBouncerInsights(namespace string) v1alpha1.PgBouncerInsightInterface {

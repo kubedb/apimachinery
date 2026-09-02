@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	apisuiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Neo4jSchemaOverviews.
 type Neo4jSchemaOverviewInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.Neo4jSchemaOverviewLister
+	Lister() uiv1alpha1.Neo4jSchemaOverviewLister
 }
 
 type neo4jSchemaOverviewInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredNeo4jSchemaOverviewInformer(client versioned.Interface, namespac
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().Neo4jSchemaOverviews(namespace).List(context.TODO(), options)
+				return client.UiV1alpha1().Neo4jSchemaOverviews(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().Neo4jSchemaOverviews(namespace).Watch(context.TODO(), options)
+				return client.UiV1alpha1().Neo4jSchemaOverviews(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().Neo4jSchemaOverviews(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().Neo4jSchemaOverviews(namespace).Watch(ctx, options)
 			},
 		},
-		&uiv1alpha1.Neo4jSchemaOverview{},
+		&apisuiv1alpha1.Neo4jSchemaOverview{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *neo4jSchemaOverviewInformer) defaultInformer(client versioned.Interface
 }
 
 func (f *neo4jSchemaOverviewInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&uiv1alpha1.Neo4jSchemaOverview{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisuiv1alpha1.Neo4jSchemaOverview{}, f.defaultInformer)
 }
 
-func (f *neo4jSchemaOverviewInformer) Lister() v1alpha1.Neo4jSchemaOverviewLister {
-	return v1alpha1.NewNeo4jSchemaOverviewLister(f.Informer().GetIndexer())
+func (f *neo4jSchemaOverviewInformer) Lister() uiv1alpha1.Neo4jSchemaOverviewLister {
+	return uiv1alpha1.NewNeo4jSchemaOverviewLister(f.Informer().GetIndexer())
 }

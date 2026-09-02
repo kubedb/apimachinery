@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // Neo4jSchemaOverviewLister helps list Neo4jSchemaOverviews.
@@ -31,7 +31,7 @@ import (
 type Neo4jSchemaOverviewLister interface {
 	// List lists all Neo4jSchemaOverviews in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jSchemaOverview, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.Neo4jSchemaOverview, err error)
 	// Neo4jSchemaOverviews returns an object that can list and get Neo4jSchemaOverviews.
 	Neo4jSchemaOverviews(namespace string) Neo4jSchemaOverviewNamespaceLister
 	Neo4jSchemaOverviewListerExpansion
@@ -39,25 +39,17 @@ type Neo4jSchemaOverviewLister interface {
 
 // neo4jSchemaOverviewLister implements the Neo4jSchemaOverviewLister interface.
 type neo4jSchemaOverviewLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.Neo4jSchemaOverview]
 }
 
 // NewNeo4jSchemaOverviewLister returns a new Neo4jSchemaOverviewLister.
 func NewNeo4jSchemaOverviewLister(indexer cache.Indexer) Neo4jSchemaOverviewLister {
-	return &neo4jSchemaOverviewLister{indexer: indexer}
-}
-
-// List lists all Neo4jSchemaOverviews in the indexer.
-func (s *neo4jSchemaOverviewLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jSchemaOverview, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jSchemaOverview))
-	})
-	return ret, err
+	return &neo4jSchemaOverviewLister{listers.New[*uiv1alpha1.Neo4jSchemaOverview](indexer, uiv1alpha1.Resource("neo4jschemaoverview"))}
 }
 
 // Neo4jSchemaOverviews returns an object that can list and get Neo4jSchemaOverviews.
 func (s *neo4jSchemaOverviewLister) Neo4jSchemaOverviews(namespace string) Neo4jSchemaOverviewNamespaceLister {
-	return neo4jSchemaOverviewNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return neo4jSchemaOverviewNamespaceLister{listers.NewNamespaced[*uiv1alpha1.Neo4jSchemaOverview](s.ResourceIndexer, namespace)}
 }
 
 // Neo4jSchemaOverviewNamespaceLister helps list and get Neo4jSchemaOverviews.
@@ -65,36 +57,15 @@ func (s *neo4jSchemaOverviewLister) Neo4jSchemaOverviews(namespace string) Neo4j
 type Neo4jSchemaOverviewNamespaceLister interface {
 	// List lists all Neo4jSchemaOverviews in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jSchemaOverview, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.Neo4jSchemaOverview, err error)
 	// Get retrieves the Neo4jSchemaOverview from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Neo4jSchemaOverview, error)
+	Get(name string) (*uiv1alpha1.Neo4jSchemaOverview, error)
 	Neo4jSchemaOverviewNamespaceListerExpansion
 }
 
 // neo4jSchemaOverviewNamespaceLister implements the Neo4jSchemaOverviewNamespaceLister
 // interface.
 type neo4jSchemaOverviewNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Neo4jSchemaOverviews in the indexer for a given namespace.
-func (s neo4jSchemaOverviewNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jSchemaOverview, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jSchemaOverview))
-	})
-	return ret, err
-}
-
-// Get retrieves the Neo4jSchemaOverview from the indexer for a given namespace and name.
-func (s neo4jSchemaOverviewNamespaceLister) Get(name string) (*v1alpha1.Neo4jSchemaOverview, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("neo4jschemaoverview"), name)
-	}
-	return obj.(*v1alpha1.Neo4jSchemaOverview), nil
+	listers.ResourceIndexer[*uiv1alpha1.Neo4jSchemaOverview]
 }

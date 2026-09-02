@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeNeo4jQuerieses implements Neo4jQueriesInterface
-type FakeNeo4jQuerieses struct {
+// fakeNeo4jQuerieses implements Neo4jQueriesInterface
+type fakeNeo4jQuerieses struct {
+	*gentype.FakeClientWithList[*v1alpha1.Neo4jQueries, *v1alpha1.Neo4jQueriesList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var neo4jqueriesesResource = v1alpha1.SchemeGroupVersion.WithResource("neo4jquerieses")
-
-var neo4jqueriesesKind = v1alpha1.SchemeGroupVersion.WithKind("Neo4jQueries")
-
-// Get takes name of the neo4jQueries, and returns the corresponding neo4jQueries object, and an error if there is any.
-func (c *FakeNeo4jQuerieses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Neo4jQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(neo4jqueriesesResource, c.ns, name), &v1alpha1.Neo4jQueries{})
-
-	if obj == nil {
-		return nil, err
+func newFakeNeo4jQuerieses(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.Neo4jQueriesInterface {
+	return &fakeNeo4jQuerieses{
+		gentype.NewFakeClientWithList[*v1alpha1.Neo4jQueries, *v1alpha1.Neo4jQueriesList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("neo4jquerieses"),
+			v1alpha1.SchemeGroupVersion.WithKind("Neo4jQueries"),
+			func() *v1alpha1.Neo4jQueries { return &v1alpha1.Neo4jQueries{} },
+			func() *v1alpha1.Neo4jQueriesList { return &v1alpha1.Neo4jQueriesList{} },
+			func(dst, src *v1alpha1.Neo4jQueriesList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.Neo4jQueriesList) []*v1alpha1.Neo4jQueries {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.Neo4jQueriesList, items []*v1alpha1.Neo4jQueries) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Neo4jQueries), err
-}
-
-// List takes label and field selectors, and returns the list of Neo4jQuerieses that match those selectors.
-func (c *FakeNeo4jQuerieses) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.Neo4jQueriesList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(neo4jqueriesesResource, neo4jqueriesesKind, c.ns, opts), &v1alpha1.Neo4jQueriesList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.Neo4jQueriesList{ListMeta: obj.(*v1alpha1.Neo4jQueriesList).ListMeta}
-	for _, item := range obj.(*v1alpha1.Neo4jQueriesList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested neo4jQuerieses.
-func (c *FakeNeo4jQuerieses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(neo4jqueriesesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a neo4jQueries and creates it.  Returns the server's representation of the neo4jQueries, and an error, if there is any.
-func (c *FakeNeo4jQuerieses) Create(ctx context.Context, neo4jQueries *v1alpha1.Neo4jQueries, opts v1.CreateOptions) (result *v1alpha1.Neo4jQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(neo4jqueriesesResource, c.ns, neo4jQueries), &v1alpha1.Neo4jQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jQueries), err
-}
-
-// Update takes the representation of a neo4jQueries and updates it. Returns the server's representation of the neo4jQueries, and an error, if there is any.
-func (c *FakeNeo4jQuerieses) Update(ctx context.Context, neo4jQueries *v1alpha1.Neo4jQueries, opts v1.UpdateOptions) (result *v1alpha1.Neo4jQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(neo4jqueriesesResource, c.ns, neo4jQueries), &v1alpha1.Neo4jQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jQueries), err
-}
-
-// Delete takes name of the neo4jQueries and deletes it. Returns an error if one occurs.
-func (c *FakeNeo4jQuerieses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(neo4jqueriesesResource, c.ns, name, opts), &v1alpha1.Neo4jQueries{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeNeo4jQuerieses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(neo4jqueriesesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.Neo4jQueriesList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched neo4jQueries.
-func (c *FakeNeo4jQuerieses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Neo4jQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(neo4jqueriesesResource, c.ns, name, pt, data, subresources...), &v1alpha1.Neo4jQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jQueries), err
 }
