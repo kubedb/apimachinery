@@ -37,10 +37,6 @@ func (c *FakeUiV1alpha1) DatabaseConnections(namespace string) v1alpha1.Database
 	return newFakeDatabaseConnections(c, namespace)
 }
 
-func (c *FakeUiV1alpha1) DatabaseSummaries() v1alpha1.DatabaseSummaryInterface {
-	return newFakeDatabaseSummaries(c)
-}
-
 func (c *FakeUiV1alpha1) ElasticsearchInsights(namespace string) v1alpha1.ElasticsearchInsightInterface {
 	return newFakeElasticsearchInsights(c, namespace)
 }
