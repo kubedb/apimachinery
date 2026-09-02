@@ -33907,7 +33907,8 @@ func schema_apimachinery_apis_ui_v1alpha1_DatabaseSummary(ref common.ReferenceCa
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "DatabaseSummary is a request/response payload, not a stored Kubernetes object -- it carries no metav1.ObjectMeta, matching how upstream Kubernetes shapes the same kind of type (e.g. k8s.io/api/admission/v1.AdmissionReview). It has no +genclient marker for the same reason: a generated typed client requires metav1.Object, which this type deliberately doesn't implement.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -33921,12 +33922,6 @@ func schema_apimachinery_apis_ui_v1alpha1_DatabaseSummary(ref common.ReferenceCa
 							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
 							Type:        []string{"string"},
 							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"request": {
@@ -33943,7 +33938,7 @@ func schema_apimachinery_apis_ui_v1alpha1_DatabaseSummary(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummaryRequest", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummaryResponse"},
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummaryRequest", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummaryResponse"},
 	}
 }
 
