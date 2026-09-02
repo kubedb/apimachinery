@@ -87,6 +87,9 @@ type DocumentDBVersionSpec struct {
 	// +optional
 	AddonPostgresVersion string `json:"addonPostgresVersion,omitempty"`
 
+	// Archiver defines the walg & kube-stash-addon related specifications
+	// +optional
+	Archiver ArchiverSpec `json:"archiver,omitempty"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
 

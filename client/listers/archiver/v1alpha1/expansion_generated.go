@@ -26,6 +26,14 @@ type ClickHouseArchiverListerExpansion interface{}
 // ClickHouseArchiverNamespaceLister.
 type ClickHouseArchiverNamespaceListerExpansion interface{}
 
+// DocumentDBArchiverListerExpansion allows custom methods to be added to
+// DocumentDBArchiverLister.
+type DocumentDBArchiverListerExpansion interface{}
+
+// DocumentDBArchiverNamespaceListerExpansion allows custom methods to be added to
+// DocumentDBArchiverNamespaceLister.
+type DocumentDBArchiverNamespaceListerExpansion interface{}
+
 // EtcdArchiverListerExpansion allows custom methods to be added to
 // EtcdArchiverLister.
 type EtcdArchiverListerExpansion interface{}
