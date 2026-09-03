@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SchemaRegistryVersionLister helps list SchemaRegistryVersions.
@@ -31,39 +31,19 @@ import (
 type SchemaRegistryVersionLister interface {
 	// List lists all SchemaRegistryVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SchemaRegistryVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.SchemaRegistryVersion, err error)
 	// Get retrieves the SchemaRegistryVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.SchemaRegistryVersion, error)
+	Get(name string) (*catalogv1alpha1.SchemaRegistryVersion, error)
 	SchemaRegistryVersionListerExpansion
 }
 
 // schemaRegistryVersionLister implements the SchemaRegistryVersionLister interface.
 type schemaRegistryVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.SchemaRegistryVersion]
 }
 
 // NewSchemaRegistryVersionLister returns a new SchemaRegistryVersionLister.
 func NewSchemaRegistryVersionLister(indexer cache.Indexer) SchemaRegistryVersionLister {
-	return &schemaRegistryVersionLister{indexer: indexer}
-}
-
-// List lists all SchemaRegistryVersions in the indexer.
-func (s *schemaRegistryVersionLister) List(selector labels.Selector) (ret []*v1alpha1.SchemaRegistryVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SchemaRegistryVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the SchemaRegistryVersion from the index for a given name.
-func (s *schemaRegistryVersionLister) Get(name string) (*v1alpha1.SchemaRegistryVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("schemaregistryversion"), name)
-	}
-	return obj.(*v1alpha1.SchemaRegistryVersion), nil
+	return &schemaRegistryVersionLister{listers.New[*catalogv1alpha1.SchemaRegistryVersion](indexer, catalogv1alpha1.Resource("schemaregistryversion"))}
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MemcachedVersionLister helps list MemcachedVersions.
@@ -31,39 +31,19 @@ import (
 type MemcachedVersionLister interface {
 	// List lists all MemcachedVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MemcachedVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.MemcachedVersion, err error)
 	// Get retrieves the MemcachedVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MemcachedVersion, error)
+	Get(name string) (*catalogv1alpha1.MemcachedVersion, error)
 	MemcachedVersionListerExpansion
 }
 
 // memcachedVersionLister implements the MemcachedVersionLister interface.
 type memcachedVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.MemcachedVersion]
 }
 
 // NewMemcachedVersionLister returns a new MemcachedVersionLister.
 func NewMemcachedVersionLister(indexer cache.Indexer) MemcachedVersionLister {
-	return &memcachedVersionLister{indexer: indexer}
-}
-
-// List lists all MemcachedVersions in the indexer.
-func (s *memcachedVersionLister) List(selector labels.Selector) (ret []*v1alpha1.MemcachedVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MemcachedVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the MemcachedVersion from the index for a given name.
-func (s *memcachedVersionLister) Get(name string) (*v1alpha1.MemcachedVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("memcachedversion"), name)
-	}
-	return obj.(*v1alpha1.MemcachedVersion), nil
+	return &memcachedVersionLister{listers.New[*catalogv1alpha1.MemcachedVersion](indexer, catalogv1alpha1.Resource("memcachedversion"))}
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // QdrantLister helps list Qdrants.
@@ -31,7 +31,7 @@ import (
 type QdrantLister interface {
 	// List lists all Qdrants in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Qdrant, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Qdrant, err error)
 	// Qdrants returns an object that can list and get Qdrants.
 	Qdrants(namespace string) QdrantNamespaceLister
 	QdrantListerExpansion
@@ -39,25 +39,17 @@ type QdrantLister interface {
 
 // qdrantLister implements the QdrantLister interface.
 type qdrantLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*gitopsv1alpha1.Qdrant]
 }
 
 // NewQdrantLister returns a new QdrantLister.
 func NewQdrantLister(indexer cache.Indexer) QdrantLister {
-	return &qdrantLister{indexer: indexer}
-}
-
-// List lists all Qdrants in the indexer.
-func (s *qdrantLister) List(selector labels.Selector) (ret []*v1alpha1.Qdrant, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Qdrant))
-	})
-	return ret, err
+	return &qdrantLister{listers.New[*gitopsv1alpha1.Qdrant](indexer, gitopsv1alpha1.Resource("qdrant"))}
 }
 
 // Qdrants returns an object that can list and get Qdrants.
 func (s *qdrantLister) Qdrants(namespace string) QdrantNamespaceLister {
-	return qdrantNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return qdrantNamespaceLister{listers.NewNamespaced[*gitopsv1alpha1.Qdrant](s.ResourceIndexer, namespace)}
 }
 
 // QdrantNamespaceLister helps list and get Qdrants.
@@ -65,36 +57,15 @@ func (s *qdrantLister) Qdrants(namespace string) QdrantNamespaceLister {
 type QdrantNamespaceLister interface {
 	// List lists all Qdrants in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Qdrant, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Qdrant, err error)
 	// Get retrieves the Qdrant from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Qdrant, error)
+	Get(name string) (*gitopsv1alpha1.Qdrant, error)
 	QdrantNamespaceListerExpansion
 }
 
 // qdrantNamespaceLister implements the QdrantNamespaceLister
 // interface.
 type qdrantNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Qdrants in the indexer for a given namespace.
-func (s qdrantNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Qdrant, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Qdrant))
-	})
-	return ret, err
-}
-
-// Get retrieves the Qdrant from the indexer for a given namespace and name.
-func (s qdrantNamespaceLister) Get(name string) (*v1alpha1.Qdrant, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("qdrant"), name)
-	}
-	return obj.(*v1alpha1.Qdrant), nil
+	listers.ResourceIndexer[*gitopsv1alpha1.Qdrant]
 }

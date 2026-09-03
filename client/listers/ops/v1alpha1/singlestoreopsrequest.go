@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SinglestoreOpsRequestLister helps list SinglestoreOpsRequests.
@@ -31,7 +31,7 @@ import (
 type SinglestoreOpsRequestLister interface {
 	// List lists all SinglestoreOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SinglestoreOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.SinglestoreOpsRequest, err error)
 	// SinglestoreOpsRequests returns an object that can list and get SinglestoreOpsRequests.
 	SinglestoreOpsRequests(namespace string) SinglestoreOpsRequestNamespaceLister
 	SinglestoreOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type SinglestoreOpsRequestLister interface {
 
 // singlestoreOpsRequestLister implements the SinglestoreOpsRequestLister interface.
 type singlestoreOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.SinglestoreOpsRequest]
 }
 
 // NewSinglestoreOpsRequestLister returns a new SinglestoreOpsRequestLister.
 func NewSinglestoreOpsRequestLister(indexer cache.Indexer) SinglestoreOpsRequestLister {
-	return &singlestoreOpsRequestLister{indexer: indexer}
-}
-
-// List lists all SinglestoreOpsRequests in the indexer.
-func (s *singlestoreOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.SinglestoreOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SinglestoreOpsRequest))
-	})
-	return ret, err
+	return &singlestoreOpsRequestLister{listers.New[*opsv1alpha1.SinglestoreOpsRequest](indexer, opsv1alpha1.Resource("singlestoreopsrequest"))}
 }
 
 // SinglestoreOpsRequests returns an object that can list and get SinglestoreOpsRequests.
 func (s *singlestoreOpsRequestLister) SinglestoreOpsRequests(namespace string) SinglestoreOpsRequestNamespaceLister {
-	return singlestoreOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return singlestoreOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.SinglestoreOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // SinglestoreOpsRequestNamespaceLister helps list and get SinglestoreOpsRequests.
@@ -65,36 +57,15 @@ func (s *singlestoreOpsRequestLister) SinglestoreOpsRequests(namespace string) S
 type SinglestoreOpsRequestNamespaceLister interface {
 	// List lists all SinglestoreOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SinglestoreOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.SinglestoreOpsRequest, err error)
 	// Get retrieves the SinglestoreOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.SinglestoreOpsRequest, error)
+	Get(name string) (*opsv1alpha1.SinglestoreOpsRequest, error)
 	SinglestoreOpsRequestNamespaceListerExpansion
 }
 
 // singlestoreOpsRequestNamespaceLister implements the SinglestoreOpsRequestNamespaceLister
 // interface.
 type singlestoreOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all SinglestoreOpsRequests in the indexer for a given namespace.
-func (s singlestoreOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.SinglestoreOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SinglestoreOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the SinglestoreOpsRequest from the indexer for a given namespace and name.
-func (s singlestoreOpsRequestNamespaceLister) Get(name string) (*v1alpha1.SinglestoreOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("singlestoreopsrequest"), name)
-	}
-	return obj.(*v1alpha1.SinglestoreOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.SinglestoreOpsRequest]
 }

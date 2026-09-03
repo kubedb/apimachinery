@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // QdrantOpsRequestLister helps list QdrantOpsRequests.
@@ -31,7 +31,7 @@ import (
 type QdrantOpsRequestLister interface {
 	// List lists all QdrantOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.QdrantOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.QdrantOpsRequest, err error)
 	// QdrantOpsRequests returns an object that can list and get QdrantOpsRequests.
 	QdrantOpsRequests(namespace string) QdrantOpsRequestNamespaceLister
 	QdrantOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type QdrantOpsRequestLister interface {
 
 // qdrantOpsRequestLister implements the QdrantOpsRequestLister interface.
 type qdrantOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.QdrantOpsRequest]
 }
 
 // NewQdrantOpsRequestLister returns a new QdrantOpsRequestLister.
 func NewQdrantOpsRequestLister(indexer cache.Indexer) QdrantOpsRequestLister {
-	return &qdrantOpsRequestLister{indexer: indexer}
-}
-
-// List lists all QdrantOpsRequests in the indexer.
-func (s *qdrantOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.QdrantOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.QdrantOpsRequest))
-	})
-	return ret, err
+	return &qdrantOpsRequestLister{listers.New[*opsv1alpha1.QdrantOpsRequest](indexer, opsv1alpha1.Resource("qdrantopsrequest"))}
 }
 
 // QdrantOpsRequests returns an object that can list and get QdrantOpsRequests.
 func (s *qdrantOpsRequestLister) QdrantOpsRequests(namespace string) QdrantOpsRequestNamespaceLister {
-	return qdrantOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return qdrantOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.QdrantOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // QdrantOpsRequestNamespaceLister helps list and get QdrantOpsRequests.
@@ -65,36 +57,15 @@ func (s *qdrantOpsRequestLister) QdrantOpsRequests(namespace string) QdrantOpsRe
 type QdrantOpsRequestNamespaceLister interface {
 	// List lists all QdrantOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.QdrantOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.QdrantOpsRequest, err error)
 	// Get retrieves the QdrantOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.QdrantOpsRequest, error)
+	Get(name string) (*opsv1alpha1.QdrantOpsRequest, error)
 	QdrantOpsRequestNamespaceListerExpansion
 }
 
 // qdrantOpsRequestNamespaceLister implements the QdrantOpsRequestNamespaceLister
 // interface.
 type qdrantOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all QdrantOpsRequests in the indexer for a given namespace.
-func (s qdrantOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.QdrantOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.QdrantOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the QdrantOpsRequest from the indexer for a given namespace and name.
-func (s qdrantOpsRequestNamespaceLister) Get(name string) (*v1alpha1.QdrantOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("qdrantopsrequest"), name)
-	}
-	return obj.(*v1alpha1.QdrantOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.QdrantOpsRequest]
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	apiskubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1 "kubedb.dev/apimachinery/client/listers/kubedb/v1"
+	kubedbv1 "kubedb.dev/apimachinery/client/listers/kubedb/v1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Kafkas.
 type KafkaInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.KafkaLister
+	Lister() kubedbv1.KafkaLister
 }
 
 type kafkaInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredKafkaInformer(client versioned.Interface, namespace string, resy
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1().Kafkas(namespace).List(context.TODO(), options)
+				return client.KubedbV1().Kafkas(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1().Kafkas(namespace).Watch(context.TODO(), options)
+				return client.KubedbV1().Kafkas(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options metav1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1().Kafkas(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options metav1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1().Kafkas(namespace).Watch(ctx, options)
 			},
 		},
-		&kubedbv1.Kafka{},
+		&apiskubedbv1.Kafka{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *kafkaInformer) defaultInformer(client versioned.Interface, resyncPeriod
 }
 
 func (f *kafkaInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1.Kafka{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiskubedbv1.Kafka{}, f.defaultInformer)
 }
 
-func (f *kafkaInformer) Lister() v1.KafkaLister {
-	return v1.NewKafkaLister(f.Informer().GetIndexer())
+func (f *kafkaInformer) Lister() kubedbv1.KafkaLister {
+	return kubedbv1.NewKafkaLister(f.Informer().GetIndexer())
 }

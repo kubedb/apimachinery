@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SolrAutoscalerLister helps list SolrAutoscalers.
@@ -31,7 +31,7 @@ import (
 type SolrAutoscalerLister interface {
 	// List lists all SolrAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SolrAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.SolrAutoscaler, err error)
 	// SolrAutoscalers returns an object that can list and get SolrAutoscalers.
 	SolrAutoscalers(namespace string) SolrAutoscalerNamespaceLister
 	SolrAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type SolrAutoscalerLister interface {
 
 // solrAutoscalerLister implements the SolrAutoscalerLister interface.
 type solrAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.SolrAutoscaler]
 }
 
 // NewSolrAutoscalerLister returns a new SolrAutoscalerLister.
 func NewSolrAutoscalerLister(indexer cache.Indexer) SolrAutoscalerLister {
-	return &solrAutoscalerLister{indexer: indexer}
-}
-
-// List lists all SolrAutoscalers in the indexer.
-func (s *solrAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.SolrAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SolrAutoscaler))
-	})
-	return ret, err
+	return &solrAutoscalerLister{listers.New[*autoscalingv1alpha1.SolrAutoscaler](indexer, autoscalingv1alpha1.Resource("solrautoscaler"))}
 }
 
 // SolrAutoscalers returns an object that can list and get SolrAutoscalers.
 func (s *solrAutoscalerLister) SolrAutoscalers(namespace string) SolrAutoscalerNamespaceLister {
-	return solrAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return solrAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.SolrAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // SolrAutoscalerNamespaceLister helps list and get SolrAutoscalers.
@@ -65,36 +57,15 @@ func (s *solrAutoscalerLister) SolrAutoscalers(namespace string) SolrAutoscalerN
 type SolrAutoscalerNamespaceLister interface {
 	// List lists all SolrAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SolrAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.SolrAutoscaler, err error)
 	// Get retrieves the SolrAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.SolrAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.SolrAutoscaler, error)
 	SolrAutoscalerNamespaceListerExpansion
 }
 
 // solrAutoscalerNamespaceLister implements the SolrAutoscalerNamespaceLister
 // interface.
 type solrAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all SolrAutoscalers in the indexer for a given namespace.
-func (s solrAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.SolrAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SolrAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the SolrAutoscaler from the indexer for a given namespace and name.
-func (s solrAutoscalerNamespaceLister) Get(name string) (*v1alpha1.SolrAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("solrautoscaler"), name)
-	}
-	return obj.(*v1alpha1.SolrAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.SolrAutoscaler]
 }

@@ -30,27 +30,31 @@ type FakeArchiverV1alpha1 struct {
 }
 
 func (c *FakeArchiverV1alpha1) ClickHouseArchivers(namespace string) v1alpha1.ClickHouseArchiverInterface {
-	return &FakeClickHouseArchivers{c, namespace}
+	return newFakeClickHouseArchivers(c, namespace)
+}
+
+func (c *FakeArchiverV1alpha1) EtcdArchivers(namespace string) v1alpha1.EtcdArchiverInterface {
+	return newFakeEtcdArchivers(c, namespace)
 }
 
 func (c *FakeArchiverV1alpha1) MSSQLServerArchivers(namespace string) v1alpha1.MSSQLServerArchiverInterface {
-	return &FakeMSSQLServerArchivers{c, namespace}
+	return newFakeMSSQLServerArchivers(c, namespace)
 }
 
 func (c *FakeArchiverV1alpha1) MariaDBArchivers(namespace string) v1alpha1.MariaDBArchiverInterface {
-	return &FakeMariaDBArchivers{c, namespace}
+	return newFakeMariaDBArchivers(c, namespace)
 }
 
 func (c *FakeArchiverV1alpha1) MongoDBArchivers(namespace string) v1alpha1.MongoDBArchiverInterface {
-	return &FakeMongoDBArchivers{c, namespace}
+	return newFakeMongoDBArchivers(c, namespace)
 }
 
 func (c *FakeArchiverV1alpha1) MySQLArchivers(namespace string) v1alpha1.MySQLArchiverInterface {
-	return &FakeMySQLArchivers{c, namespace}
+	return newFakeMySQLArchivers(c, namespace)
 }
 
 func (c *FakeArchiverV1alpha1) PostgresArchivers(namespace string) v1alpha1.PostgresArchiverInterface {
-	return &FakePostgresArchivers{c, namespace}
+	return newFakePostgresArchivers(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

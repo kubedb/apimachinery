@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	apiskubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha2 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/listers/kubedb/v1alpha2"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MySQLs.
 type MySQLInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha2.MySQLLister
+	Lister() kubedbv1alpha2.MySQLLister
 }
 
 type mySQLInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredMySQLInformer(client versioned.Interface, namespace string, resy
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().MySQLs(namespace).List(context.TODO(), options)
+				return client.KubedbV1alpha2().MySQLs(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1alpha2().MySQLs(namespace).Watch(context.TODO(), options)
+				return client.KubedbV1alpha2().MySQLs(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1alpha2().MySQLs(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1alpha2().MySQLs(namespace).Watch(ctx, options)
 			},
 		},
-		&kubedbv1alpha2.MySQL{},
+		&apiskubedbv1alpha2.MySQL{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *mySQLInformer) defaultInformer(client versioned.Interface, resyncPeriod
 }
 
 func (f *mySQLInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1alpha2.MySQL{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiskubedbv1alpha2.MySQL{}, f.defaultInformer)
 }
 
-func (f *mySQLInformer) Lister() v1alpha2.MySQLLister {
-	return v1alpha2.NewMySQLLister(f.Informer().GetIndexer())
+func (f *mySQLInformer) Lister() kubedbv1alpha2.MySQLLister {
+	return kubedbv1alpha2.NewMySQLLister(f.Informer().GetIndexer())
 }

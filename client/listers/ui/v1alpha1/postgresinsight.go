@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PostgresInsightLister helps list PostgresInsights.
@@ -31,7 +31,7 @@ import (
 type PostgresInsightLister interface {
 	// List lists all PostgresInsights in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PostgresInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.PostgresInsight, err error)
 	// PostgresInsights returns an object that can list and get PostgresInsights.
 	PostgresInsights(namespace string) PostgresInsightNamespaceLister
 	PostgresInsightListerExpansion
@@ -39,25 +39,17 @@ type PostgresInsightLister interface {
 
 // postgresInsightLister implements the PostgresInsightLister interface.
 type postgresInsightLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.PostgresInsight]
 }
 
 // NewPostgresInsightLister returns a new PostgresInsightLister.
 func NewPostgresInsightLister(indexer cache.Indexer) PostgresInsightLister {
-	return &postgresInsightLister{indexer: indexer}
-}
-
-// List lists all PostgresInsights in the indexer.
-func (s *postgresInsightLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresInsight, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PostgresInsight))
-	})
-	return ret, err
+	return &postgresInsightLister{listers.New[*uiv1alpha1.PostgresInsight](indexer, uiv1alpha1.Resource("postgresinsight"))}
 }
 
 // PostgresInsights returns an object that can list and get PostgresInsights.
 func (s *postgresInsightLister) PostgresInsights(namespace string) PostgresInsightNamespaceLister {
-	return postgresInsightNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return postgresInsightNamespaceLister{listers.NewNamespaced[*uiv1alpha1.PostgresInsight](s.ResourceIndexer, namespace)}
 }
 
 // PostgresInsightNamespaceLister helps list and get PostgresInsights.
@@ -65,36 +57,15 @@ func (s *postgresInsightLister) PostgresInsights(namespace string) PostgresInsig
 type PostgresInsightNamespaceLister interface {
 	// List lists all PostgresInsights in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PostgresInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.PostgresInsight, err error)
 	// Get retrieves the PostgresInsight from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PostgresInsight, error)
+	Get(name string) (*uiv1alpha1.PostgresInsight, error)
 	PostgresInsightNamespaceListerExpansion
 }
 
 // postgresInsightNamespaceLister implements the PostgresInsightNamespaceLister
 // interface.
 type postgresInsightNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PostgresInsights in the indexer for a given namespace.
-func (s postgresInsightNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresInsight, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PostgresInsight))
-	})
-	return ret, err
-}
-
-// Get retrieves the PostgresInsight from the indexer for a given namespace and name.
-func (s postgresInsightNamespaceLister) Get(name string) (*v1alpha1.PostgresInsight, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("postgresinsight"), name)
-	}
-	return obj.(*v1alpha1.PostgresInsight), nil
+	listers.ResourceIndexer[*uiv1alpha1.PostgresInsight]
 }

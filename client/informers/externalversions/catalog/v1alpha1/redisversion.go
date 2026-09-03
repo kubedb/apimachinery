@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // RedisVersions.
 type RedisVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.RedisVersionLister
+	Lister() catalogv1alpha1.RedisVersionLister
 }
 
 type redisVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredRedisVersionInformer(client versioned.Interface, resyncPeriod ti
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().RedisVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().RedisVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().RedisVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().RedisVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().RedisVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().RedisVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.RedisVersion{},
+		&apiscatalogv1alpha1.RedisVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *redisVersionInformer) defaultInformer(client versioned.Interface, resyn
 }
 
 func (f *redisVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.RedisVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.RedisVersion{}, f.defaultInformer)
 }
 
-func (f *redisVersionInformer) Lister() v1alpha1.RedisVersionLister {
-	return v1alpha1.NewRedisVersionLister(f.Informer().GetIndexer())
+func (f *redisVersionInformer) Lister() catalogv1alpha1.RedisVersionLister {
+	return catalogv1alpha1.NewRedisVersionLister(f.Informer().GetIndexer())
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // RedisInsightLister helps list RedisInsights.
@@ -31,7 +31,7 @@ import (
 type RedisInsightLister interface {
 	// List lists all RedisInsights in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RedisInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.RedisInsight, err error)
 	// RedisInsights returns an object that can list and get RedisInsights.
 	RedisInsights(namespace string) RedisInsightNamespaceLister
 	RedisInsightListerExpansion
@@ -39,25 +39,17 @@ type RedisInsightLister interface {
 
 // redisInsightLister implements the RedisInsightLister interface.
 type redisInsightLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.RedisInsight]
 }
 
 // NewRedisInsightLister returns a new RedisInsightLister.
 func NewRedisInsightLister(indexer cache.Indexer) RedisInsightLister {
-	return &redisInsightLister{indexer: indexer}
-}
-
-// List lists all RedisInsights in the indexer.
-func (s *redisInsightLister) List(selector labels.Selector) (ret []*v1alpha1.RedisInsight, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RedisInsight))
-	})
-	return ret, err
+	return &redisInsightLister{listers.New[*uiv1alpha1.RedisInsight](indexer, uiv1alpha1.Resource("redisinsight"))}
 }
 
 // RedisInsights returns an object that can list and get RedisInsights.
 func (s *redisInsightLister) RedisInsights(namespace string) RedisInsightNamespaceLister {
-	return redisInsightNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return redisInsightNamespaceLister{listers.NewNamespaced[*uiv1alpha1.RedisInsight](s.ResourceIndexer, namespace)}
 }
 
 // RedisInsightNamespaceLister helps list and get RedisInsights.
@@ -65,36 +57,15 @@ func (s *redisInsightLister) RedisInsights(namespace string) RedisInsightNamespa
 type RedisInsightNamespaceLister interface {
 	// List lists all RedisInsights in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RedisInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.RedisInsight, err error)
 	// Get retrieves the RedisInsight from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.RedisInsight, error)
+	Get(name string) (*uiv1alpha1.RedisInsight, error)
 	RedisInsightNamespaceListerExpansion
 }
 
 // redisInsightNamespaceLister implements the RedisInsightNamespaceLister
 // interface.
 type redisInsightNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all RedisInsights in the indexer for a given namespace.
-func (s redisInsightNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.RedisInsight, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RedisInsight))
-	})
-	return ret, err
-}
-
-// Get retrieves the RedisInsight from the indexer for a given namespace and name.
-func (s redisInsightNamespaceLister) Get(name string) (*v1alpha1.RedisInsight, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("redisinsight"), name)
-	}
-	return obj.(*v1alpha1.RedisInsight), nil
+	listers.ResourceIndexer[*uiv1alpha1.RedisInsight]
 }

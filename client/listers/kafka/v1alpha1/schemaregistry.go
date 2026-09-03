@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SchemaRegistryLister helps list SchemaRegistries.
@@ -31,7 +31,7 @@ import (
 type SchemaRegistryLister interface {
 	// List lists all SchemaRegistries in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SchemaRegistry, err error)
+	List(selector labels.Selector) (ret []*kafkav1alpha1.SchemaRegistry, err error)
 	// SchemaRegistries returns an object that can list and get SchemaRegistries.
 	SchemaRegistries(namespace string) SchemaRegistryNamespaceLister
 	SchemaRegistryListerExpansion
@@ -39,25 +39,17 @@ type SchemaRegistryLister interface {
 
 // schemaRegistryLister implements the SchemaRegistryLister interface.
 type schemaRegistryLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kafkav1alpha1.SchemaRegistry]
 }
 
 // NewSchemaRegistryLister returns a new SchemaRegistryLister.
 func NewSchemaRegistryLister(indexer cache.Indexer) SchemaRegistryLister {
-	return &schemaRegistryLister{indexer: indexer}
-}
-
-// List lists all SchemaRegistries in the indexer.
-func (s *schemaRegistryLister) List(selector labels.Selector) (ret []*v1alpha1.SchemaRegistry, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SchemaRegistry))
-	})
-	return ret, err
+	return &schemaRegistryLister{listers.New[*kafkav1alpha1.SchemaRegistry](indexer, kafkav1alpha1.Resource("schemaregistry"))}
 }
 
 // SchemaRegistries returns an object that can list and get SchemaRegistries.
 func (s *schemaRegistryLister) SchemaRegistries(namespace string) SchemaRegistryNamespaceLister {
-	return schemaRegistryNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return schemaRegistryNamespaceLister{listers.NewNamespaced[*kafkav1alpha1.SchemaRegistry](s.ResourceIndexer, namespace)}
 }
 
 // SchemaRegistryNamespaceLister helps list and get SchemaRegistries.
@@ -65,36 +57,15 @@ func (s *schemaRegistryLister) SchemaRegistries(namespace string) SchemaRegistry
 type SchemaRegistryNamespaceLister interface {
 	// List lists all SchemaRegistries in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.SchemaRegistry, err error)
+	List(selector labels.Selector) (ret []*kafkav1alpha1.SchemaRegistry, err error)
 	// Get retrieves the SchemaRegistry from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.SchemaRegistry, error)
+	Get(name string) (*kafkav1alpha1.SchemaRegistry, error)
 	SchemaRegistryNamespaceListerExpansion
 }
 
 // schemaRegistryNamespaceLister implements the SchemaRegistryNamespaceLister
 // interface.
 type schemaRegistryNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all SchemaRegistries in the indexer for a given namespace.
-func (s schemaRegistryNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.SchemaRegistry, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.SchemaRegistry))
-	})
-	return ret, err
-}
-
-// Get retrieves the SchemaRegistry from the indexer for a given namespace and name.
-func (s schemaRegistryNamespaceLister) Get(name string) (*v1alpha1.SchemaRegistry, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("schemaregistry"), name)
-	}
-	return obj.(*v1alpha1.SchemaRegistry), nil
+	listers.ResourceIndexer[*kafkav1alpha1.SchemaRegistry]
 }

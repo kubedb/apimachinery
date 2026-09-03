@@ -57,6 +57,9 @@ var weaviatelog = logf.Log.WithName("weaviate-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *WeaviateCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Weaviate)
 	if !ok {
 		return fmt.Errorf("expected an Weaviate object but got %T", obj)
@@ -71,6 +74,9 @@ var _ webhook.CustomValidator = &WeaviateCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *WeaviateCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.Weaviate)
 	if !ok {
 		return nil, fmt.Errorf("expected an Weaviate object but got %T", obj)
@@ -81,6 +87,9 @@ func (w *WeaviateCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *WeaviateCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Weaviate)
 	if !ok {
 		return nil, fmt.Errorf("expected an Weaviate object but got %T", newObj)

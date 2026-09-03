@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMySQLSchemaOverviews implements MySQLSchemaOverviewInterface
-type FakeMySQLSchemaOverviews struct {
+// fakeMySQLSchemaOverviews implements MySQLSchemaOverviewInterface
+type fakeMySQLSchemaOverviews struct {
+	*gentype.FakeClientWithList[*v1alpha1.MySQLSchemaOverview, *v1alpha1.MySQLSchemaOverviewList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var mysqlschemaoverviewsResource = v1alpha1.SchemeGroupVersion.WithResource("mysqlschemaoverviews")
-
-var mysqlschemaoverviewsKind = v1alpha1.SchemeGroupVersion.WithKind("MySQLSchemaOverview")
-
-// Get takes name of the mySQLSchemaOverview, and returns the corresponding mySQLSchemaOverview object, and an error if there is any.
-func (c *FakeMySQLSchemaOverviews) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MySQLSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mysqlschemaoverviewsResource, c.ns, name), &v1alpha1.MySQLSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMySQLSchemaOverviews(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.MySQLSchemaOverviewInterface {
+	return &fakeMySQLSchemaOverviews{
+		gentype.NewFakeClientWithList[*v1alpha1.MySQLSchemaOverview, *v1alpha1.MySQLSchemaOverviewList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mysqlschemaoverviews"),
+			v1alpha1.SchemeGroupVersion.WithKind("MySQLSchemaOverview"),
+			func() *v1alpha1.MySQLSchemaOverview { return &v1alpha1.MySQLSchemaOverview{} },
+			func() *v1alpha1.MySQLSchemaOverviewList { return &v1alpha1.MySQLSchemaOverviewList{} },
+			func(dst, src *v1alpha1.MySQLSchemaOverviewList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MySQLSchemaOverviewList) []*v1alpha1.MySQLSchemaOverview {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MySQLSchemaOverviewList, items []*v1alpha1.MySQLSchemaOverview) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MySQLSchemaOverview), err
-}
-
-// List takes label and field selectors, and returns the list of MySQLSchemaOverviews that match those selectors.
-func (c *FakeMySQLSchemaOverviews) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MySQLSchemaOverviewList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mysqlschemaoverviewsResource, mysqlschemaoverviewsKind, c.ns, opts), &v1alpha1.MySQLSchemaOverviewList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MySQLSchemaOverviewList{ListMeta: obj.(*v1alpha1.MySQLSchemaOverviewList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MySQLSchemaOverviewList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mySQLSchemaOverviews.
-func (c *FakeMySQLSchemaOverviews) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mysqlschemaoverviewsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mySQLSchemaOverview and creates it.  Returns the server's representation of the mySQLSchemaOverview, and an error, if there is any.
-func (c *FakeMySQLSchemaOverviews) Create(ctx context.Context, mySQLSchemaOverview *v1alpha1.MySQLSchemaOverview, opts v1.CreateOptions) (result *v1alpha1.MySQLSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mysqlschemaoverviewsResource, c.ns, mySQLSchemaOverview), &v1alpha1.MySQLSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLSchemaOverview), err
-}
-
-// Update takes the representation of a mySQLSchemaOverview and updates it. Returns the server's representation of the mySQLSchemaOverview, and an error, if there is any.
-func (c *FakeMySQLSchemaOverviews) Update(ctx context.Context, mySQLSchemaOverview *v1alpha1.MySQLSchemaOverview, opts v1.UpdateOptions) (result *v1alpha1.MySQLSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mysqlschemaoverviewsResource, c.ns, mySQLSchemaOverview), &v1alpha1.MySQLSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLSchemaOverview), err
-}
-
-// Delete takes name of the mySQLSchemaOverview and deletes it. Returns an error if one occurs.
-func (c *FakeMySQLSchemaOverviews) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mysqlschemaoverviewsResource, c.ns, name, opts), &v1alpha1.MySQLSchemaOverview{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMySQLSchemaOverviews) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mysqlschemaoverviewsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MySQLSchemaOverviewList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mySQLSchemaOverview.
-func (c *FakeMySQLSchemaOverviews) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MySQLSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mysqlschemaoverviewsResource, c.ns, name, pt, data, subresources...), &v1alpha1.MySQLSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLSchemaOverview), err
 }

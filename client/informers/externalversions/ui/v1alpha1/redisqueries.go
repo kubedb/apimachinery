@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	apisuiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // RedisQuerieses.
 type RedisQueriesInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.RedisQueriesLister
+	Lister() uiv1alpha1.RedisQueriesLister
 }
 
 type redisQueriesInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredRedisQueriesInformer(client versioned.Interface, namespace strin
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().RedisQuerieses(namespace).List(context.TODO(), options)
+				return client.UiV1alpha1().RedisQuerieses(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().RedisQuerieses(namespace).Watch(context.TODO(), options)
+				return client.UiV1alpha1().RedisQuerieses(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().RedisQuerieses(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().RedisQuerieses(namespace).Watch(ctx, options)
 			},
 		},
-		&uiv1alpha1.RedisQueries{},
+		&apisuiv1alpha1.RedisQueries{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *redisQueriesInformer) defaultInformer(client versioned.Interface, resyn
 }
 
 func (f *redisQueriesInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&uiv1alpha1.RedisQueries{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisuiv1alpha1.RedisQueries{}, f.defaultInformer)
 }
 
-func (f *redisQueriesInformer) Lister() v1alpha1.RedisQueriesLister {
-	return v1alpha1.NewRedisQueriesLister(f.Informer().GetIndexer())
+func (f *redisQueriesInformer) Lister() uiv1alpha1.RedisQueriesLister {
+	return uiv1alpha1.NewRedisQueriesLister(f.Informer().GetIndexer())
 }
