@@ -130,6 +130,14 @@ type MySQLSchemaOverviewListerExpansion interface{}
 // MySQLSchemaOverviewNamespaceLister.
 type MySQLSchemaOverviewNamespaceListerExpansion interface{}
 
+// Neo4jActivityListerExpansion allows custom methods to be added to
+// Neo4jActivityLister.
+type Neo4jActivityListerExpansion interface{}
+
+// Neo4jActivityNamespaceListerExpansion allows custom methods to be added to
+// Neo4jActivityNamespaceLister.
+type Neo4jActivityNamespaceListerExpansion interface{}
+
 // Neo4jInsightListerExpansion allows custom methods to be added to
 // Neo4jInsightLister.
 type Neo4jInsightListerExpansion interface{}
@@ -137,14 +145,6 @@ type Neo4jInsightListerExpansion interface{}
 // Neo4jInsightNamespaceListerExpansion allows custom methods to be added to
 // Neo4jInsightNamespaceLister.
 type Neo4jInsightNamespaceListerExpansion interface{}
-
-// Neo4jQueriesListerExpansion allows custom methods to be added to
-// Neo4jQueriesLister.
-type Neo4jQueriesListerExpansion interface{}
-
-// Neo4jQueriesNamespaceListerExpansion allows custom methods to be added to
-// Neo4jQueriesNamespaceLister.
-type Neo4jQueriesNamespaceListerExpansion interface{}
 
 // Neo4jSchemaOverviewListerExpansion allows custom methods to be added to
 // Neo4jSchemaOverviewLister.

@@ -85,12 +85,12 @@ func (c *FakeUiV1alpha1) MySQLSchemaOverviews(namespace string) v1alpha1.MySQLSc
 	return newFakeMySQLSchemaOverviews(c, namespace)
 }
 
-func (c *FakeUiV1alpha1) Neo4jInsights(namespace string) v1alpha1.Neo4jInsightInterface {
-	return newFakeNeo4jInsights(c, namespace)
+func (c *FakeUiV1alpha1) Neo4jActivities(namespace string) v1alpha1.Neo4jActivityInterface {
+	return newFakeNeo4jActivities(c, namespace)
 }
 
-func (c *FakeUiV1alpha1) Neo4jQuerieses(namespace string) v1alpha1.Neo4jQueriesInterface {
-	return newFakeNeo4jQuerieses(c, namespace)
+func (c *FakeUiV1alpha1) Neo4jInsights(namespace string) v1alpha1.Neo4jInsightInterface {
+	return newFakeNeo4jInsights(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) Neo4jSchemaOverviews(namespace string) v1alpha1.Neo4jSchemaOverviewInterface {

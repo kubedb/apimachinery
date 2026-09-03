@@ -25,26 +25,26 @@ import (
 	gentype "k8s.io/client-go/gentype"
 )
 
-// fakeNeo4jQuerieses implements Neo4jQueriesInterface
-type fakeNeo4jQuerieses struct {
-	*gentype.FakeClientWithList[*v1alpha1.Neo4jQueries, *v1alpha1.Neo4jQueriesList]
+// fakeNeo4jActivities implements Neo4jActivityInterface
+type fakeNeo4jActivities struct {
+	*gentype.FakeClientWithList[*v1alpha1.Neo4jActivity, *v1alpha1.Neo4jActivityList]
 	Fake *FakeUiV1alpha1
 }
 
-func newFakeNeo4jQuerieses(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.Neo4jQueriesInterface {
-	return &fakeNeo4jQuerieses{
-		gentype.NewFakeClientWithList[*v1alpha1.Neo4jQueries, *v1alpha1.Neo4jQueriesList](
+func newFakeNeo4jActivities(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.Neo4jActivityInterface {
+	return &fakeNeo4jActivities{
+		gentype.NewFakeClientWithList[*v1alpha1.Neo4jActivity, *v1alpha1.Neo4jActivityList](
 			fake.Fake,
 			namespace,
-			v1alpha1.SchemeGroupVersion.WithResource("neo4jquerieses"),
-			v1alpha1.SchemeGroupVersion.WithKind("Neo4jQueries"),
-			func() *v1alpha1.Neo4jQueries { return &v1alpha1.Neo4jQueries{} },
-			func() *v1alpha1.Neo4jQueriesList { return &v1alpha1.Neo4jQueriesList{} },
-			func(dst, src *v1alpha1.Neo4jQueriesList) { dst.ListMeta = src.ListMeta },
-			func(list *v1alpha1.Neo4jQueriesList) []*v1alpha1.Neo4jQueries {
+			v1alpha1.SchemeGroupVersion.WithResource("neo4jactivities"),
+			v1alpha1.SchemeGroupVersion.WithKind("Neo4jActivity"),
+			func() *v1alpha1.Neo4jActivity { return &v1alpha1.Neo4jActivity{} },
+			func() *v1alpha1.Neo4jActivityList { return &v1alpha1.Neo4jActivityList{} },
+			func(dst, src *v1alpha1.Neo4jActivityList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.Neo4jActivityList) []*v1alpha1.Neo4jActivity {
 				return gentype.ToPointerSlice(list.Items)
 			},
-			func(list *v1alpha1.Neo4jQueriesList, items []*v1alpha1.Neo4jQueries) {
+			func(list *v1alpha1.Neo4jActivityList, items []*v1alpha1.Neo4jActivity) {
 				list.Items = gentype.FromPointerSlice(items)
 			},
 		),

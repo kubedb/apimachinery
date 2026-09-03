@@ -51,36 +51,40 @@ spec:
                   properties:
                     access:
                       type: string
-                    address:
-                      type: string
+                    constituents:
+                      items:
+                        type: string
+                      type: array
+                    currentPrimariesCount:
+                      format: int32
+                      type: integer
+                    currentSecondariesCount:
+                      format: int32
+                      type: integer
                     currentStatus:
-                      type: string
-                    databaseID:
                       type: string
                     default:
                       type: boolean
-                    home:
-                      type: boolean
                     name:
                       type: string
+                    requestedPrimariesCount:
+                      format: int32
+                      type: integer
+                    requestedSecondariesCount:
+                      format: int32
+                      type: integer
                     requestedStatus:
-                      type: string
-                    role:
-                      type: string
-                    serverID:
                       type: string
                     statusMessage:
                       type: string
                     type:
                       type: string
-                    writer:
-                      type: boolean
+                    writerAddress:
+                      type: string
                   required:
                   - name
                   type: object
                 type: array
-              defaultDatabase:
-                type: string
               edition:
                 type: string
               graphSummary:
@@ -113,12 +117,6 @@ spec:
                       type: string
                     name:
                       type: string
-                    requestedHosting:
-                      items:
-                        type: string
-                      type: array
-                    serverID:
-                      type: string
                     state:
                       type: string
                     version:
@@ -129,14 +127,11 @@ spec:
                   - state
                   type: object
                 type: array
-              status:
-                type: string
               version:
                 type: string
             required:
             - clusterHealth
             - mode
-            - status
             - version
             type: object
           status:

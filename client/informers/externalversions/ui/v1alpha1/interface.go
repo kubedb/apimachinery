@@ -50,10 +50,10 @@ type Interface interface {
 	MySQLQuerieses() MySQLQueriesInformer
 	// MySQLSchemaOverviews returns a MySQLSchemaOverviewInformer.
 	MySQLSchemaOverviews() MySQLSchemaOverviewInformer
+	// Neo4jActivities returns a Neo4jActivityInformer.
+	Neo4jActivities() Neo4jActivityInformer
 	// Neo4jInsights returns a Neo4jInsightInformer.
 	Neo4jInsights() Neo4jInsightInformer
-	// Neo4jQuerieses returns a Neo4jQueriesInformer.
-	Neo4jQuerieses() Neo4jQueriesInformer
 	// Neo4jSchemaOverviews returns a Neo4jSchemaOverviewInformer.
 	Neo4jSchemaOverviews() Neo4jSchemaOverviewInformer
 	// PgBouncerInsights returns a PgBouncerInsightInformer.
@@ -162,14 +162,14 @@ func (v *version) MySQLSchemaOverviews() MySQLSchemaOverviewInformer {
 	return &mySQLSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// Neo4jActivities returns a Neo4jActivityInformer.
+func (v *version) Neo4jActivities() Neo4jActivityInformer {
+	return &neo4jActivityInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // Neo4jInsights returns a Neo4jInsightInformer.
 func (v *version) Neo4jInsights() Neo4jInsightInformer {
 	return &neo4jInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// Neo4jQuerieses returns a Neo4jQueriesInformer.
-func (v *version) Neo4jQuerieses() Neo4jQueriesInformer {
-	return &neo4jQueriesInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Neo4jSchemaOverviews returns a Neo4jSchemaOverviewInformer.

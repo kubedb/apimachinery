@@ -33,71 +33,71 @@ import (
 	cache "k8s.io/client-go/tools/cache"
 )
 
-// Neo4jQueriesInformer provides access to a shared informer and lister for
-// Neo4jQuerieses.
-type Neo4jQueriesInformer interface {
+// Neo4jActivityInformer provides access to a shared informer and lister for
+// Neo4jActivities.
+type Neo4jActivityInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() uiv1alpha1.Neo4jQueriesLister
+	Lister() uiv1alpha1.Neo4jActivityLister
 }
 
-type neo4jQueriesInformer struct {
+type neo4jActivityInformer struct {
 	factory          internalinterfaces.SharedInformerFactory
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
 	namespace        string
 }
 
-// NewNeo4jQueriesInformer constructs a new informer for Neo4jQueries type.
+// NewNeo4jActivityInformer constructs a new informer for Neo4jActivity type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewNeo4jQueriesInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
-	return NewFilteredNeo4jQueriesInformer(client, namespace, resyncPeriod, indexers, nil)
+func NewNeo4jActivityInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
+	return NewFilteredNeo4jActivityInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
-// NewFilteredNeo4jQueriesInformer constructs a new informer for Neo4jQueries type.
+// NewFilteredNeo4jActivityInformer constructs a new informer for Neo4jActivity type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
 // one. This reduces memory footprint and number of connections to the server.
-func NewFilteredNeo4jQueriesInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
+func NewFilteredNeo4jActivityInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers, tweakListOptions internalinterfaces.TweakListOptionsFunc) cache.SharedIndexInformer {
 	return cache.NewSharedIndexInformer(
 		&cache.ListWatch{
 			ListFunc: func(options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().Neo4jQuerieses(namespace).List(context.Background(), options)
+				return client.UiV1alpha1().Neo4jActivities(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().Neo4jQuerieses(namespace).Watch(context.Background(), options)
+				return client.UiV1alpha1().Neo4jActivities(namespace).Watch(context.Background(), options)
 			},
 			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().Neo4jQuerieses(namespace).List(ctx, options)
+				return client.UiV1alpha1().Neo4jActivities(namespace).List(ctx, options)
 			},
 			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().Neo4jQuerieses(namespace).Watch(ctx, options)
+				return client.UiV1alpha1().Neo4jActivities(namespace).Watch(ctx, options)
 			},
 		},
-		&apisuiv1alpha1.Neo4jQueries{},
+		&apisuiv1alpha1.Neo4jActivity{},
 		resyncPeriod,
 		indexers,
 	)
 }
 
-func (f *neo4jQueriesInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
-	return NewFilteredNeo4jQueriesInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
+func (f *neo4jActivityInformer) defaultInformer(client versioned.Interface, resyncPeriod time.Duration) cache.SharedIndexInformer {
+	return NewFilteredNeo4jActivityInformer(client, f.namespace, resyncPeriod, cache.Indexers{cache.NamespaceIndex: cache.MetaNamespaceIndexFunc}, f.tweakListOptions)
 }
 
-func (f *neo4jQueriesInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&apisuiv1alpha1.Neo4jQueries{}, f.defaultInformer)
+func (f *neo4jActivityInformer) Informer() cache.SharedIndexInformer {
+	return f.factory.InformerFor(&apisuiv1alpha1.Neo4jActivity{}, f.defaultInformer)
 }
 
-func (f *neo4jQueriesInformer) Lister() uiv1alpha1.Neo4jQueriesLister {
-	return uiv1alpha1.NewNeo4jQueriesLister(f.Informer().GetIndexer())
+func (f *neo4jActivityInformer) Lister() uiv1alpha1.Neo4jActivityLister {
+	return uiv1alpha1.NewNeo4jActivityLister(f.Informer().GetIndexer())
 }

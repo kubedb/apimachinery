@@ -3,14 +3,14 @@ kind: CustomResourceDefinition
 metadata:
   labels:
     app.kubernetes.io/name: kubedb
-  name: neo4jqueries.ui.kubedb.com
+  name: neo4jactivities.ui.kubedb.com
 spec:
   group: ui.kubedb.com
   names:
-    kind: Neo4jQueries
-    listKind: Neo4jQueriesList
-    plural: neo4jqueries
-    singular: neo4jqueries
+    kind: Neo4jActivity
+    listKind: Neo4jActivityList
+    plural: neo4jactivities
+    singular: neo4jactivity
   scope: Namespaced
   versions:
   - name: v1alpha1
@@ -30,40 +30,50 @@ spec:
                 type: string
               incomplete:
                 type: boolean
-              queries:
+              summary:
+                properties:
+                  blockedTransactions:
+                    format: int32
+                    type: integer
+                  longRunningThresholdMillis:
+                    format: int64
+                    type: integer
+                  longRunningTransactions:
+                    format: int32
+                    type: integer
+                  runningQueries:
+                    format: int32
+                    type: integer
+                  totalTransactions:
+                    format: int32
+                    type: integer
+                  waitingQueries:
+                    format: int32
+                    type: integer
+                type: object
+              transactions:
                 items:
                   properties:
                     activeLockCount:
-                      format: int64
-                      type: integer
-                    allocatedBytes:
                       format: int64
                       type: integer
                     clientAddress:
                       type: string
                     connectionID:
                       type: string
-                    cpuTimeMillis:
-                      format: int64
-                      type: integer
+                    currentQueryID:
+                      type: string
+                    currentQueryStatus:
+                      type: string
                     database:
                       type: string
                     elapsedTimeMillis:
                       format: int64
                       type: integer
-                    idleTimeMillis:
-                      format: int64
-                      type: integer
-                    pageFaults:
-                      format: int64
-                      type: integer
-                    pageHits:
-                      format: int64
-                      type: integer
                     query:
                       type: string
-                    queryID:
-                      type: string
+                    queryTruncated:
+                      type: boolean
                     serverName:
                       type: string
                     startTime:
@@ -80,16 +90,17 @@ spec:
                       type: integer
                   required:
                   - database
-                  - query
                   - serverName
                   type: object
                 type: array
+              transactionsTruncated:
+                type: boolean
               unavailableServers:
                 items:
                   type: string
                 type: array
             required:
-            - queries
+            - summary
             type: object
         type: object
     served: true

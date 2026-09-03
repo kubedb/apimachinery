@@ -43,8 +43,8 @@ type UiV1alpha1Interface interface {
 	MySQLInsightsGetter
 	MySQLQueriesesGetter
 	MySQLSchemaOverviewsGetter
+	Neo4jActivitiesGetter
 	Neo4jInsightsGetter
-	Neo4jQueriesesGetter
 	Neo4jSchemaOverviewsGetter
 	PgBouncerInsightsGetter
 	PgBouncerPoolOverviewsGetter
@@ -123,12 +123,12 @@ func (c *UiV1alpha1Client) MySQLSchemaOverviews(namespace string) MySQLSchemaOve
 	return newMySQLSchemaOverviews(c, namespace)
 }
 
-func (c *UiV1alpha1Client) Neo4jInsights(namespace string) Neo4jInsightInterface {
-	return newNeo4jInsights(c, namespace)
+func (c *UiV1alpha1Client) Neo4jActivities(namespace string) Neo4jActivityInterface {
+	return newNeo4jActivities(c, namespace)
 }
 
-func (c *UiV1alpha1Client) Neo4jQuerieses(namespace string) Neo4jQueriesInterface {
-	return newNeo4jQuerieses(c, namespace)
+func (c *UiV1alpha1Client) Neo4jInsights(namespace string) Neo4jInsightInterface {
+	return newNeo4jInsights(c, namespace)
 }
 
 func (c *UiV1alpha1Client) Neo4jSchemaOverviews(namespace string) Neo4jSchemaOverviewInterface {

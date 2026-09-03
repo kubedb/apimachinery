@@ -25,32 +25,16 @@ const (
 )
 
 type Neo4jSchemaOverviewSpec struct {
-	Databases []Neo4jDatabaseSchema `json:"databases"`
+	CollectedAt *metav1.Time          `json:"collectedAt,omitempty"`
+	Databases   []Neo4jDatabaseSchema `json:"databases"`
 }
 
 type Neo4jDatabaseSchema struct {
-	DatabaseName      string                    `json:"databaseName"`
-	NodeTypes         []Neo4jNodeTypeSchema     `json:"nodeTypes,omitempty"`
-	RelationshipTypes []Neo4jRelationshipSchema `json:"relationshipTypes,omitempty"`
-	Indexes           []Neo4jIndexSchema        `json:"indexes,omitempty"`
-	Constraints       []Neo4jConstraintSchema   `json:"constraints,omitempty"`
-}
-
-type Neo4jNodeTypeSchema struct {
-	NodeType   string                `json:"nodeType"`
-	Labels     []string              `json:"labels,omitempty"`
-	Properties []Neo4jPropertySchema `json:"properties,omitempty"`
-}
-
-type Neo4jRelationshipSchema struct {
-	RelationshipType string                `json:"relationshipType"`
-	Properties       []Neo4jPropertySchema `json:"properties,omitempty"`
-}
-
-type Neo4jPropertySchema struct {
-	Name      string   `json:"name"`
-	Types     []string `json:"types,omitempty"`
-	Mandatory bool     `json:"mandatory"`
+	Name              string                  `json:"name"`
+	Labels            []string                `json:"labels,omitempty"`
+	RelationshipTypes []string                `json:"relationshipTypes,omitempty"`
+	Indexes           []Neo4jIndexSchema      `json:"indexes,omitempty"`
+	Constraints       []Neo4jConstraintSchema `json:"constraints,omitempty"`
 }
 
 type Neo4jIndexSchema struct {
@@ -61,8 +45,6 @@ type Neo4jIndexSchema struct {
 	LabelsOrTypes     []string `json:"labelsOrTypes,omitempty"`
 	Properties        []string `json:"properties,omitempty"`
 	PopulationPercent *float64 `json:"populationPercent,omitempty"`
-	IndexProvider     string   `json:"indexProvider,omitempty"`
-	OwningConstraint  string   `json:"owningConstraint,omitempty"`
 }
 
 type Neo4jConstraintSchema struct {
@@ -72,7 +54,6 @@ type Neo4jConstraintSchema struct {
 	LabelsOrTypes []string `json:"labelsOrTypes,omitempty"`
 	Properties    []string `json:"properties,omitempty"`
 	PropertyType  string   `json:"propertyType,omitempty"`
-	OwnedIndex    string   `json:"ownedIndex,omitempty"`
 }
 
 // +genclient

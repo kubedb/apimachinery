@@ -30,15 +30,13 @@ const (
 
 // Neo4jInsightSpec defines the observed database information displayed by the UI.
 type Neo4jInsightSpec struct {
-	Version         string                `json:"version"`
-	Edition         string                `json:"edition,omitempty"`
-	Status          string                `json:"status"`
-	Mode            string                `json:"mode"`
-	DefaultDatabase string                `json:"defaultDatabase,omitempty"`
-	ClusterHealth   Neo4jClusterHealth    `json:"clusterHealth"`
-	GraphSummary    *Neo4jGraphSummary    `json:"graphSummary,omitempty"`
-	Servers         []Neo4jServerStatus   `json:"servers,omitempty"`
-	Databases       []Neo4jDatabaseStatus `json:"databases,omitempty"`
+	Version       string                `json:"version"`
+	Edition       string                `json:"edition,omitempty"`
+	Mode          string                `json:"mode"`
+	ClusterHealth Neo4jClusterHealth    `json:"clusterHealth"`
+	GraphSummary  *Neo4jGraphSummary    `json:"graphSummary,omitempty"`
+	Servers       []Neo4jServerStatus   `json:"servers,omitempty"`
+	Databases     []Neo4jDatabaseStatus `json:"databases,omitempty"`
 }
 
 type Neo4jClusterHealth struct {
@@ -57,31 +55,29 @@ type Neo4jGraphSummary struct {
 }
 
 type Neo4jServerStatus struct {
-	ServerID         string   `json:"serverID,omitempty"`
-	Name             string   `json:"name"`
-	Address          string   `json:"address,omitempty"`
-	State            string   `json:"state"`
-	Health           string   `json:"health"`
-	Version          string   `json:"version,omitempty"`
-	ModeConstraint   string   `json:"modeConstraint,omitempty"`
-	Hosting          []string `json:"hosting,omitempty"`
-	RequestedHosting []string `json:"requestedHosting,omitempty"`
+	Name           string   `json:"name"`
+	Address        string   `json:"address,omitempty"`
+	State          string   `json:"state"`
+	Health         string   `json:"health"`
+	Version        string   `json:"version,omitempty"`
+	ModeConstraint string   `json:"modeConstraint,omitempty"`
+	Hosting        []string `json:"hosting,omitempty"`
 }
 
 type Neo4jDatabaseStatus struct {
-	Name            string `json:"name"`
-	Type            string `json:"type,omitempty"`
-	Access          string `json:"access,omitempty"`
-	DatabaseID      string `json:"databaseID,omitempty"`
-	ServerID        string `json:"serverID,omitempty"`
-	Address         string `json:"address,omitempty"`
-	Role            string `json:"role,omitempty"`
-	Writer          *bool  `json:"writer,omitempty"`
-	RequestedStatus string `json:"requestedStatus,omitempty"`
-	CurrentStatus   string `json:"currentStatus,omitempty"`
-	StatusMessage   string `json:"statusMessage,omitempty"`
-	Default         bool   `json:"default,omitempty"`
-	Home            bool   `json:"home,omitempty"`
+	Name                      string   `json:"name"`
+	Type                      string   `json:"type,omitempty"`
+	Access                    string   `json:"access,omitempty"`
+	RequestedStatus           string   `json:"requestedStatus,omitempty"`
+	CurrentStatus             string   `json:"currentStatus,omitempty"`
+	StatusMessage             string   `json:"statusMessage,omitempty"`
+	Default                   bool     `json:"default,omitempty"`
+	WriterAddress             string   `json:"writerAddress,omitempty"`
+	Constituents              []string `json:"constituents,omitempty"`
+	CurrentPrimariesCount     *int32   `json:"currentPrimariesCount,omitempty"`
+	CurrentSecondariesCount   *int32   `json:"currentSecondariesCount,omitempty"`
+	RequestedPrimariesCount   *int32   `json:"requestedPrimariesCount,omitempty"`
+	RequestedSecondariesCount *int32   `json:"requestedSecondariesCount,omitempty"`
 }
 
 // +genclient

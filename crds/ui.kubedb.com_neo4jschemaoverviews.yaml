@@ -25,6 +25,9 @@ spec:
             type: object
           spec:
             properties:
+              collectedAt:
+                format: date-time
+                type: string
               databases:
                 items:
                   properties:
@@ -38,8 +41,6 @@ spec:
                               type: string
                             type: array
                           name:
-                            type: string
-                          ownedIndex:
                             type: string
                           properties:
                             items:
@@ -55,22 +56,16 @@ spec:
                         - type
                         type: object
                       type: array
-                    databaseName:
-                      type: string
                     indexes:
                       items:
                         properties:
                           entityType:
-                            type: string
-                          indexProvider:
                             type: string
                           labelsOrTypes:
                             items:
                               type: string
                             type: array
                           name:
-                            type: string
-                          owningConstraint:
                             type: string
                           populationPercent:
                             format: double
@@ -90,62 +85,18 @@ spec:
                         - type
                         type: object
                       type: array
-                    nodeTypes:
+                    labels:
                       items:
-                        properties:
-                          labels:
-                            items:
-                              type: string
-                            type: array
-                          nodeType:
-                            type: string
-                          properties:
-                            items:
-                              properties:
-                                mandatory:
-                                  type: boolean
-                                name:
-                                  type: string
-                                types:
-                                  items:
-                                    type: string
-                                  type: array
-                              required:
-                              - mandatory
-                              - name
-                              type: object
-                            type: array
-                        required:
-                        - nodeType
-                        type: object
+                        type: string
                       type: array
+                    name:
+                      type: string
                     relationshipTypes:
                       items:
-                        properties:
-                          properties:
-                            items:
-                              properties:
-                                mandatory:
-                                  type: boolean
-                                name:
-                                  type: string
-                                types:
-                                  items:
-                                    type: string
-                                  type: array
-                              required:
-                              - mandatory
-                              - name
-                              type: object
-                            type: array
-                          relationshipType:
-                            type: string
-                        required:
-                        - relationshipType
-                        type: object
+                        type: string
                       type: array
                   required:
-                  - databaseName
+                  - name
                   type: object
                 type: array
             required:
