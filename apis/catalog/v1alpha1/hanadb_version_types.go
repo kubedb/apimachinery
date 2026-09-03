@@ -66,6 +66,10 @@ type HanaDBVersionSpec struct {
 	UpdateConstraints UpdateConstraints `json:"updateConstraints,omitempty"`
 	// +optional
 	GitSyncer GitSyncer `json:"gitSyncer,omitempty"`
+	// Backint defines the HANA-side Backint image for versions that support native
+	// Backint backup and restore.
+	// +optional
+	Backint *BackintAgent `json:"backint,omitempty"`
 }
 
 // HanaDBSecurityContext is for the additional config for the DB container
@@ -86,6 +90,11 @@ type HanaDBCoordinator struct {
 
 // HanaDBVersionExporter is the image for the HanaDB exporter
 type HanaDBVersionExporter struct {
+	Image string `json:"image"`
+}
+
+// BackintAgent is the HANA-side Backint agent image.
+type BackintAgent struct {
 	Image string `json:"image"`
 }
 
