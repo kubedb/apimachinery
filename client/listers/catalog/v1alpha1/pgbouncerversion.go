@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PgBouncerVersionLister helps list PgBouncerVersions.
@@ -31,39 +31,19 @@ import (
 type PgBouncerVersionLister interface {
 	// List lists all PgBouncerVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgBouncerVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.PgBouncerVersion, err error)
 	// Get retrieves the PgBouncerVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PgBouncerVersion, error)
+	Get(name string) (*catalogv1alpha1.PgBouncerVersion, error)
 	PgBouncerVersionListerExpansion
 }
 
 // pgBouncerVersionLister implements the PgBouncerVersionLister interface.
 type pgBouncerVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.PgBouncerVersion]
 }
 
 // NewPgBouncerVersionLister returns a new PgBouncerVersionLister.
 func NewPgBouncerVersionLister(indexer cache.Indexer) PgBouncerVersionLister {
-	return &pgBouncerVersionLister{indexer: indexer}
-}
-
-// List lists all PgBouncerVersions in the indexer.
-func (s *pgBouncerVersionLister) List(selector labels.Selector) (ret []*v1alpha1.PgBouncerVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgBouncerVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the PgBouncerVersion from the index for a given name.
-func (s *pgBouncerVersionLister) Get(name string) (*v1alpha1.PgBouncerVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("pgbouncerversion"), name)
-	}
-	return obj.(*v1alpha1.PgBouncerVersion), nil
+	return &pgBouncerVersionLister{listers.New[*catalogv1alpha1.PgBouncerVersion](indexer, catalogv1alpha1.Resource("pgbouncerversion"))}
 }

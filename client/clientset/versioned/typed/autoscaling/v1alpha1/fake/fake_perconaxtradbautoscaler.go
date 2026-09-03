@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePerconaXtraDBAutoscalers implements PerconaXtraDBAutoscalerInterface
-type FakePerconaXtraDBAutoscalers struct {
+// fakePerconaXtraDBAutoscalers implements PerconaXtraDBAutoscalerInterface
+type fakePerconaXtraDBAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.PerconaXtraDBAutoscaler, *v1alpha1.PerconaXtraDBAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var perconaxtradbautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("perconaxtradbautoscalers")
-
-var perconaxtradbautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("PerconaXtraDBAutoscaler")
-
-// Get takes name of the perconaXtraDBAutoscaler, and returns the corresponding perconaXtraDBAutoscaler object, and an error if there is any.
-func (c *FakePerconaXtraDBAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PerconaXtraDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(perconaxtradbautoscalersResource, c.ns, name), &v1alpha1.PerconaXtraDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakePerconaXtraDBAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.PerconaXtraDBAutoscalerInterface {
+	return &fakePerconaXtraDBAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.PerconaXtraDBAutoscaler, *v1alpha1.PerconaXtraDBAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("perconaxtradbautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("PerconaXtraDBAutoscaler"),
+			func() *v1alpha1.PerconaXtraDBAutoscaler { return &v1alpha1.PerconaXtraDBAutoscaler{} },
+			func() *v1alpha1.PerconaXtraDBAutoscalerList { return &v1alpha1.PerconaXtraDBAutoscalerList{} },
+			func(dst, src *v1alpha1.PerconaXtraDBAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PerconaXtraDBAutoscalerList) []*v1alpha1.PerconaXtraDBAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PerconaXtraDBAutoscalerList, items []*v1alpha1.PerconaXtraDBAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PerconaXtraDBAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of PerconaXtraDBAutoscalers that match those selectors.
-func (c *FakePerconaXtraDBAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PerconaXtraDBAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(perconaxtradbautoscalersResource, perconaxtradbautoscalersKind, c.ns, opts), &v1alpha1.PerconaXtraDBAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PerconaXtraDBAutoscalerList{ListMeta: obj.(*v1alpha1.PerconaXtraDBAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PerconaXtraDBAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested perconaXtraDBAutoscalers.
-func (c *FakePerconaXtraDBAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(perconaxtradbautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a perconaXtraDBAutoscaler and creates it.  Returns the server's representation of the perconaXtraDBAutoscaler, and an error, if there is any.
-func (c *FakePerconaXtraDBAutoscalers) Create(ctx context.Context, perconaXtraDBAutoscaler *v1alpha1.PerconaXtraDBAutoscaler, opts v1.CreateOptions) (result *v1alpha1.PerconaXtraDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(perconaxtradbautoscalersResource, c.ns, perconaXtraDBAutoscaler), &v1alpha1.PerconaXtraDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PerconaXtraDBAutoscaler), err
-}
-
-// Update takes the representation of a perconaXtraDBAutoscaler and updates it. Returns the server's representation of the perconaXtraDBAutoscaler, and an error, if there is any.
-func (c *FakePerconaXtraDBAutoscalers) Update(ctx context.Context, perconaXtraDBAutoscaler *v1alpha1.PerconaXtraDBAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.PerconaXtraDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(perconaxtradbautoscalersResource, c.ns, perconaXtraDBAutoscaler), &v1alpha1.PerconaXtraDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PerconaXtraDBAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePerconaXtraDBAutoscalers) UpdateStatus(ctx context.Context, perconaXtraDBAutoscaler *v1alpha1.PerconaXtraDBAutoscaler, opts v1.UpdateOptions) (*v1alpha1.PerconaXtraDBAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(perconaxtradbautoscalersResource, "status", c.ns, perconaXtraDBAutoscaler), &v1alpha1.PerconaXtraDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PerconaXtraDBAutoscaler), err
-}
-
-// Delete takes name of the perconaXtraDBAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakePerconaXtraDBAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(perconaxtradbautoscalersResource, c.ns, name, opts), &v1alpha1.PerconaXtraDBAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePerconaXtraDBAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(perconaxtradbautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PerconaXtraDBAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched perconaXtraDBAutoscaler.
-func (c *FakePerconaXtraDBAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PerconaXtraDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(perconaxtradbautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.PerconaXtraDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PerconaXtraDBAutoscaler), err
 }

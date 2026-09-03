@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // EtcdArchiverLister helps list EtcdArchivers.
@@ -31,7 +31,7 @@ import (
 type EtcdArchiverLister interface {
 	// List lists all EtcdArchivers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.EtcdArchiver, err error)
+	List(selector labels.Selector) (ret []*archiverv1alpha1.EtcdArchiver, err error)
 	// EtcdArchivers returns an object that can list and get EtcdArchivers.
 	EtcdArchivers(namespace string) EtcdArchiverNamespaceLister
 	EtcdArchiverListerExpansion
@@ -39,25 +39,17 @@ type EtcdArchiverLister interface {
 
 // etcdArchiverLister implements the EtcdArchiverLister interface.
 type etcdArchiverLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*archiverv1alpha1.EtcdArchiver]
 }
 
 // NewEtcdArchiverLister returns a new EtcdArchiverLister.
 func NewEtcdArchiverLister(indexer cache.Indexer) EtcdArchiverLister {
-	return &etcdArchiverLister{indexer: indexer}
-}
-
-// List lists all EtcdArchivers in the indexer.
-func (s *etcdArchiverLister) List(selector labels.Selector) (ret []*v1alpha1.EtcdArchiver, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.EtcdArchiver))
-	})
-	return ret, err
+	return &etcdArchiverLister{listers.New[*archiverv1alpha1.EtcdArchiver](indexer, archiverv1alpha1.Resource("etcdarchiver"))}
 }
 
 // EtcdArchivers returns an object that can list and get EtcdArchivers.
 func (s *etcdArchiverLister) EtcdArchivers(namespace string) EtcdArchiverNamespaceLister {
-	return etcdArchiverNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return etcdArchiverNamespaceLister{listers.NewNamespaced[*archiverv1alpha1.EtcdArchiver](s.ResourceIndexer, namespace)}
 }
 
 // EtcdArchiverNamespaceLister helps list and get EtcdArchivers.
@@ -65,36 +57,15 @@ func (s *etcdArchiverLister) EtcdArchivers(namespace string) EtcdArchiverNamespa
 type EtcdArchiverNamespaceLister interface {
 	// List lists all EtcdArchivers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.EtcdArchiver, err error)
+	List(selector labels.Selector) (ret []*archiverv1alpha1.EtcdArchiver, err error)
 	// Get retrieves the EtcdArchiver from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.EtcdArchiver, error)
+	Get(name string) (*archiverv1alpha1.EtcdArchiver, error)
 	EtcdArchiverNamespaceListerExpansion
 }
 
 // etcdArchiverNamespaceLister implements the EtcdArchiverNamespaceLister
 // interface.
 type etcdArchiverNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all EtcdArchivers in the indexer for a given namespace.
-func (s etcdArchiverNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.EtcdArchiver, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.EtcdArchiver))
-	})
-	return ret, err
-}
-
-// Get retrieves the EtcdArchiver from the indexer for a given namespace and name.
-func (s etcdArchiverNamespaceLister) Get(name string) (*v1alpha1.EtcdArchiver, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("etcdarchiver"), name)
-	}
-	return obj.(*v1alpha1.EtcdArchiver), nil
+	listers.ResourceIndexer[*archiverv1alpha1.EtcdArchiver]
 }

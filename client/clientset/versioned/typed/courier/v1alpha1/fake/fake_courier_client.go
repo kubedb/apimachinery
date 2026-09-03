@@ -30,27 +30,27 @@ type FakeCourierV1alpha1 struct {
 }
 
 func (c *FakeCourierV1alpha1) Branches(namespace string) v1alpha1.BranchInterface {
-	return &FakeBranches{c, namespace}
+	return newFakeBranches(c, namespace)
 }
 
 func (c *FakeCourierV1alpha1) BranchWorks(namespace string) v1alpha1.BranchWorkInterface {
-	return &FakeBranchWorks{c, namespace}
+	return newFakeBranchWorks(c, namespace)
 }
 
 func (c *FakeCourierV1alpha1) MSSQLServerMigrations(namespace string) v1alpha1.MSSQLServerMigrationInterface {
-	return &FakeMSSQLServerMigrations{c, namespace}
+	return newFakeMSSQLServerMigrations(c, namespace)
 }
 
 func (c *FakeCourierV1alpha1) MariaDBMigrations(namespace string) v1alpha1.MariaDBMigrationInterface {
-	return &FakeMariaDBMigrations{c, namespace}
+	return newFakeMariaDBMigrations(c, namespace)
 }
 
 func (c *FakeCourierV1alpha1) MongoDBMigrations(namespace string) v1alpha1.MongoDBMigrationInterface {
-	return &FakeMongoDBMigrations{c, namespace}
+	return newFakeMongoDBMigrations(c, namespace)
 }
 
 func (c *FakeCourierV1alpha1) MySQLMigrations(namespace string) v1alpha1.MySQLMigrationInterface {
-	return &FakeMySQLMigrations{c, namespace}
+	return newFakeMySQLMigrations(c, namespace)
 }
 
 func (c *FakeCourierV1alpha1) OracleMigrations(namespace string) v1alpha1.OracleMigrationInterface {
@@ -58,7 +58,7 @@ func (c *FakeCourierV1alpha1) OracleMigrations(namespace string) v1alpha1.Oracle
 }
 
 func (c *FakeCourierV1alpha1) PostgresMigrations(namespace string) v1alpha1.PostgresMigrationInterface {
-	return &FakePostgresMigrations{c, namespace}
+	return newFakePostgresMigrations(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

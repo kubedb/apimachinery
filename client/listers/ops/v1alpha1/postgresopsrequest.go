@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PostgresOpsRequestLister helps list PostgresOpsRequests.
@@ -31,7 +31,7 @@ import (
 type PostgresOpsRequestLister interface {
 	// List lists all PostgresOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PostgresOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.PostgresOpsRequest, err error)
 	// PostgresOpsRequests returns an object that can list and get PostgresOpsRequests.
 	PostgresOpsRequests(namespace string) PostgresOpsRequestNamespaceLister
 	PostgresOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type PostgresOpsRequestLister interface {
 
 // postgresOpsRequestLister implements the PostgresOpsRequestLister interface.
 type postgresOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.PostgresOpsRequest]
 }
 
 // NewPostgresOpsRequestLister returns a new PostgresOpsRequestLister.
 func NewPostgresOpsRequestLister(indexer cache.Indexer) PostgresOpsRequestLister {
-	return &postgresOpsRequestLister{indexer: indexer}
-}
-
-// List lists all PostgresOpsRequests in the indexer.
-func (s *postgresOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PostgresOpsRequest))
-	})
-	return ret, err
+	return &postgresOpsRequestLister{listers.New[*opsv1alpha1.PostgresOpsRequest](indexer, opsv1alpha1.Resource("postgresopsrequest"))}
 }
 
 // PostgresOpsRequests returns an object that can list and get PostgresOpsRequests.
 func (s *postgresOpsRequestLister) PostgresOpsRequests(namespace string) PostgresOpsRequestNamespaceLister {
-	return postgresOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return postgresOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.PostgresOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // PostgresOpsRequestNamespaceLister helps list and get PostgresOpsRequests.
@@ -65,36 +57,15 @@ func (s *postgresOpsRequestLister) PostgresOpsRequests(namespace string) Postgre
 type PostgresOpsRequestNamespaceLister interface {
 	// List lists all PostgresOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PostgresOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.PostgresOpsRequest, err error)
 	// Get retrieves the PostgresOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PostgresOpsRequest, error)
+	Get(name string) (*opsv1alpha1.PostgresOpsRequest, error)
 	PostgresOpsRequestNamespaceListerExpansion
 }
 
 // postgresOpsRequestNamespaceLister implements the PostgresOpsRequestNamespaceLister
 // interface.
 type postgresOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PostgresOpsRequests in the indexer for a given namespace.
-func (s postgresOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PostgresOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the PostgresOpsRequest from the indexer for a given namespace and name.
-func (s postgresOpsRequestNamespaceLister) Get(name string) (*v1alpha1.PostgresOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("postgresopsrequest"), name)
-	}
-	return obj.(*v1alpha1.PostgresOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.PostgresOpsRequest]
 }

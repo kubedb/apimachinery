@@ -19,13 +19,13 @@ limitations under the License.
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	apiskubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1 "kubedb.dev/apimachinery/client/listers/kubedb/v1"
+	kubedbv1 "kubedb.dev/apimachinery/client/listers/kubedb/v1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Elasticsearches.
 type ElasticsearchInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ElasticsearchLister
+	Lister() kubedbv1.ElasticsearchLister
 }
 
 type elasticsearchInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredElasticsearchInformer(client versioned.Interface, namespace stri
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1().Elasticsearches(namespace).List(context.TODO(), options)
+				return client.KubedbV1().Elasticsearches(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1().Elasticsearches(namespace).Watch(context.TODO(), options)
+				return client.KubedbV1().Elasticsearches(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options metav1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1().Elasticsearches(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options metav1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1().Elasticsearches(namespace).Watch(ctx, options)
 			},
 		},
-		&kubedbv1.Elasticsearch{},
+		&apiskubedbv1.Elasticsearch{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *elasticsearchInformer) defaultInformer(client versioned.Interface, resy
 }
 
 func (f *elasticsearchInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1.Elasticsearch{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiskubedbv1.Elasticsearch{}, f.defaultInformer)
 }
 
-func (f *elasticsearchInformer) Lister() v1.ElasticsearchLister {
-	return v1.NewElasticsearchLister(f.Informer().GetIndexer())
+func (f *elasticsearchInformer) Lister() kubedbv1.ElasticsearchLister {
+	return kubedbv1.NewElasticsearchLister(f.Informer().GetIndexer())
 }

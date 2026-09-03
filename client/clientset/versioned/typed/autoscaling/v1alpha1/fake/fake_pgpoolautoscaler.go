@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePgpoolAutoscalers implements PgpoolAutoscalerInterface
-type FakePgpoolAutoscalers struct {
+// fakePgpoolAutoscalers implements PgpoolAutoscalerInterface
+type fakePgpoolAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.PgpoolAutoscaler, *v1alpha1.PgpoolAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var pgpoolautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("pgpoolautoscalers")
-
-var pgpoolautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("PgpoolAutoscaler")
-
-// Get takes name of the pgpoolAutoscaler, and returns the corresponding pgpoolAutoscaler object, and an error if there is any.
-func (c *FakePgpoolAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PgpoolAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(pgpoolautoscalersResource, c.ns, name), &v1alpha1.PgpoolAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakePgpoolAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.PgpoolAutoscalerInterface {
+	return &fakePgpoolAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.PgpoolAutoscaler, *v1alpha1.PgpoolAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("pgpoolautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("PgpoolAutoscaler"),
+			func() *v1alpha1.PgpoolAutoscaler { return &v1alpha1.PgpoolAutoscaler{} },
+			func() *v1alpha1.PgpoolAutoscalerList { return &v1alpha1.PgpoolAutoscalerList{} },
+			func(dst, src *v1alpha1.PgpoolAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PgpoolAutoscalerList) []*v1alpha1.PgpoolAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PgpoolAutoscalerList, items []*v1alpha1.PgpoolAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PgpoolAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of PgpoolAutoscalers that match those selectors.
-func (c *FakePgpoolAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PgpoolAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(pgpoolautoscalersResource, pgpoolautoscalersKind, c.ns, opts), &v1alpha1.PgpoolAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PgpoolAutoscalerList{ListMeta: obj.(*v1alpha1.PgpoolAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PgpoolAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested pgpoolAutoscalers.
-func (c *FakePgpoolAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(pgpoolautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a pgpoolAutoscaler and creates it.  Returns the server's representation of the pgpoolAutoscaler, and an error, if there is any.
-func (c *FakePgpoolAutoscalers) Create(ctx context.Context, pgpoolAutoscaler *v1alpha1.PgpoolAutoscaler, opts v1.CreateOptions) (result *v1alpha1.PgpoolAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(pgpoolautoscalersResource, c.ns, pgpoolAutoscaler), &v1alpha1.PgpoolAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PgpoolAutoscaler), err
-}
-
-// Update takes the representation of a pgpoolAutoscaler and updates it. Returns the server's representation of the pgpoolAutoscaler, and an error, if there is any.
-func (c *FakePgpoolAutoscalers) Update(ctx context.Context, pgpoolAutoscaler *v1alpha1.PgpoolAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.PgpoolAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(pgpoolautoscalersResource, c.ns, pgpoolAutoscaler), &v1alpha1.PgpoolAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PgpoolAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePgpoolAutoscalers) UpdateStatus(ctx context.Context, pgpoolAutoscaler *v1alpha1.PgpoolAutoscaler, opts v1.UpdateOptions) (*v1alpha1.PgpoolAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(pgpoolautoscalersResource, "status", c.ns, pgpoolAutoscaler), &v1alpha1.PgpoolAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PgpoolAutoscaler), err
-}
-
-// Delete takes name of the pgpoolAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakePgpoolAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(pgpoolautoscalersResource, c.ns, name, opts), &v1alpha1.PgpoolAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePgpoolAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(pgpoolautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PgpoolAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched pgpoolAutoscaler.
-func (c *FakePgpoolAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PgpoolAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(pgpoolautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.PgpoolAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PgpoolAutoscaler), err
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ZooKeeperAutoscalerLister helps list ZooKeeperAutoscalers.
@@ -31,7 +31,7 @@ import (
 type ZooKeeperAutoscalerLister interface {
 	// List lists all ZooKeeperAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ZooKeeperAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.ZooKeeperAutoscaler, err error)
 	// ZooKeeperAutoscalers returns an object that can list and get ZooKeeperAutoscalers.
 	ZooKeeperAutoscalers(namespace string) ZooKeeperAutoscalerNamespaceLister
 	ZooKeeperAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type ZooKeeperAutoscalerLister interface {
 
 // zooKeeperAutoscalerLister implements the ZooKeeperAutoscalerLister interface.
 type zooKeeperAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.ZooKeeperAutoscaler]
 }
 
 // NewZooKeeperAutoscalerLister returns a new ZooKeeperAutoscalerLister.
 func NewZooKeeperAutoscalerLister(indexer cache.Indexer) ZooKeeperAutoscalerLister {
-	return &zooKeeperAutoscalerLister{indexer: indexer}
-}
-
-// List lists all ZooKeeperAutoscalers in the indexer.
-func (s *zooKeeperAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.ZooKeeperAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ZooKeeperAutoscaler))
-	})
-	return ret, err
+	return &zooKeeperAutoscalerLister{listers.New[*autoscalingv1alpha1.ZooKeeperAutoscaler](indexer, autoscalingv1alpha1.Resource("zookeeperautoscaler"))}
 }
 
 // ZooKeeperAutoscalers returns an object that can list and get ZooKeeperAutoscalers.
 func (s *zooKeeperAutoscalerLister) ZooKeeperAutoscalers(namespace string) ZooKeeperAutoscalerNamespaceLister {
-	return zooKeeperAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return zooKeeperAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.ZooKeeperAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // ZooKeeperAutoscalerNamespaceLister helps list and get ZooKeeperAutoscalers.
@@ -65,36 +57,15 @@ func (s *zooKeeperAutoscalerLister) ZooKeeperAutoscalers(namespace string) ZooKe
 type ZooKeeperAutoscalerNamespaceLister interface {
 	// List lists all ZooKeeperAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ZooKeeperAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.ZooKeeperAutoscaler, err error)
 	// Get retrieves the ZooKeeperAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ZooKeeperAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.ZooKeeperAutoscaler, error)
 	ZooKeeperAutoscalerNamespaceListerExpansion
 }
 
 // zooKeeperAutoscalerNamespaceLister implements the ZooKeeperAutoscalerNamespaceLister
 // interface.
 type zooKeeperAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ZooKeeperAutoscalers in the indexer for a given namespace.
-func (s zooKeeperAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ZooKeeperAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ZooKeeperAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the ZooKeeperAutoscaler from the indexer for a given namespace and name.
-func (s zooKeeperAutoscalerNamespaceLister) Get(name string) (*v1alpha1.ZooKeeperAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("zookeeperautoscaler"), name)
-	}
-	return obj.(*v1alpha1.ZooKeeperAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.ZooKeeperAutoscaler]
 }

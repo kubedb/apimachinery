@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PgBouncerOpsRequestLister helps list PgBouncerOpsRequests.
@@ -31,7 +31,7 @@ import (
 type PgBouncerOpsRequestLister interface {
 	// List lists all PgBouncerOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgBouncerOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.PgBouncerOpsRequest, err error)
 	// PgBouncerOpsRequests returns an object that can list and get PgBouncerOpsRequests.
 	PgBouncerOpsRequests(namespace string) PgBouncerOpsRequestNamespaceLister
 	PgBouncerOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type PgBouncerOpsRequestLister interface {
 
 // pgBouncerOpsRequestLister implements the PgBouncerOpsRequestLister interface.
 type pgBouncerOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.PgBouncerOpsRequest]
 }
 
 // NewPgBouncerOpsRequestLister returns a new PgBouncerOpsRequestLister.
 func NewPgBouncerOpsRequestLister(indexer cache.Indexer) PgBouncerOpsRequestLister {
-	return &pgBouncerOpsRequestLister{indexer: indexer}
-}
-
-// List lists all PgBouncerOpsRequests in the indexer.
-func (s *pgBouncerOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.PgBouncerOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgBouncerOpsRequest))
-	})
-	return ret, err
+	return &pgBouncerOpsRequestLister{listers.New[*opsv1alpha1.PgBouncerOpsRequest](indexer, opsv1alpha1.Resource("pgbounceropsrequest"))}
 }
 
 // PgBouncerOpsRequests returns an object that can list and get PgBouncerOpsRequests.
 func (s *pgBouncerOpsRequestLister) PgBouncerOpsRequests(namespace string) PgBouncerOpsRequestNamespaceLister {
-	return pgBouncerOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return pgBouncerOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.PgBouncerOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // PgBouncerOpsRequestNamespaceLister helps list and get PgBouncerOpsRequests.
@@ -65,36 +57,15 @@ func (s *pgBouncerOpsRequestLister) PgBouncerOpsRequests(namespace string) PgBou
 type PgBouncerOpsRequestNamespaceLister interface {
 	// List lists all PgBouncerOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgBouncerOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.PgBouncerOpsRequest, err error)
 	// Get retrieves the PgBouncerOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PgBouncerOpsRequest, error)
+	Get(name string) (*opsv1alpha1.PgBouncerOpsRequest, error)
 	PgBouncerOpsRequestNamespaceListerExpansion
 }
 
 // pgBouncerOpsRequestNamespaceLister implements the PgBouncerOpsRequestNamespaceLister
 // interface.
 type pgBouncerOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PgBouncerOpsRequests in the indexer for a given namespace.
-func (s pgBouncerOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PgBouncerOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgBouncerOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the PgBouncerOpsRequest from the indexer for a given namespace and name.
-func (s pgBouncerOpsRequestNamespaceLister) Get(name string) (*v1alpha1.PgBouncerOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("pgbounceropsrequest"), name)
-	}
-	return obj.(*v1alpha1.PgBouncerOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.PgBouncerOpsRequest]
 }

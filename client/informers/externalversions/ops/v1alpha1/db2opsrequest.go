@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	apisopsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/listers/ops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // DB2OpsRequests.
 type DB2OpsRequestInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.DB2OpsRequestLister
+	Lister() opsv1alpha1.DB2OpsRequestLister
 }
 
 type dB2OpsRequestInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredDB2OpsRequestInformer(client versioned.Interface, namespace stri
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().DB2OpsRequests(namespace).List(context.TODO(), options)
+				return client.OpsV1alpha1().DB2OpsRequests(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().DB2OpsRequests(namespace).Watch(context.TODO(), options)
+				return client.OpsV1alpha1().DB2OpsRequests(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.OpsV1alpha1().DB2OpsRequests(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.OpsV1alpha1().DB2OpsRequests(namespace).Watch(ctx, options)
 			},
 		},
-		&opsv1alpha1.DB2OpsRequest{},
+		&apisopsv1alpha1.DB2OpsRequest{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *dB2OpsRequestInformer) defaultInformer(client versioned.Interface, resy
 }
 
 func (f *dB2OpsRequestInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&opsv1alpha1.DB2OpsRequest{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisopsv1alpha1.DB2OpsRequest{}, f.defaultInformer)
 }
 
-func (f *dB2OpsRequestInformer) Lister() v1alpha1.DB2OpsRequestLister {
-	return v1alpha1.NewDB2OpsRequestLister(f.Informer().GetIndexer())
+func (f *dB2OpsRequestInformer) Lister() opsv1alpha1.DB2OpsRequestLister {
+	return opsv1alpha1.NewDB2OpsRequestLister(f.Informer().GetIndexer())
 }

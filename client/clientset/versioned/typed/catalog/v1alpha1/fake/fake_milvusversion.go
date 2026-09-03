@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMilvusVersions implements MilvusVersionInterface
-type FakeMilvusVersions struct {
+// fakeMilvusVersions implements MilvusVersionInterface
+type fakeMilvusVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.MilvusVersion, *v1alpha1.MilvusVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var milvusversionsResource = v1alpha1.SchemeGroupVersion.WithResource("milvusversions")
-
-var milvusversionsKind = v1alpha1.SchemeGroupVersion.WithKind("MilvusVersion")
-
-// Get takes name of the milvusVersion, and returns the corresponding milvusVersion object, and an error if there is any.
-func (c *FakeMilvusVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MilvusVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(milvusversionsResource, name), &v1alpha1.MilvusVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeMilvusVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.MilvusVersionInterface {
+	return &fakeMilvusVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.MilvusVersion, *v1alpha1.MilvusVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("milvusversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("MilvusVersion"),
+			func() *v1alpha1.MilvusVersion { return &v1alpha1.MilvusVersion{} },
+			func() *v1alpha1.MilvusVersionList { return &v1alpha1.MilvusVersionList{} },
+			func(dst, src *v1alpha1.MilvusVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MilvusVersionList) []*v1alpha1.MilvusVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MilvusVersionList, items []*v1alpha1.MilvusVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MilvusVersion), err
-}
-
-// List takes label and field selectors, and returns the list of MilvusVersions that match those selectors.
-func (c *FakeMilvusVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MilvusVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(milvusversionsResource, milvusversionsKind, opts), &v1alpha1.MilvusVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MilvusVersionList{ListMeta: obj.(*v1alpha1.MilvusVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MilvusVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested milvusVersions.
-func (c *FakeMilvusVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(milvusversionsResource, opts))
-}
-
-// Create takes the representation of a milvusVersion and creates it.  Returns the server's representation of the milvusVersion, and an error, if there is any.
-func (c *FakeMilvusVersions) Create(ctx context.Context, milvusVersion *v1alpha1.MilvusVersion, opts v1.CreateOptions) (result *v1alpha1.MilvusVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(milvusversionsResource, milvusVersion), &v1alpha1.MilvusVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MilvusVersion), err
-}
-
-// Update takes the representation of a milvusVersion and updates it. Returns the server's representation of the milvusVersion, and an error, if there is any.
-func (c *FakeMilvusVersions) Update(ctx context.Context, milvusVersion *v1alpha1.MilvusVersion, opts v1.UpdateOptions) (result *v1alpha1.MilvusVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(milvusversionsResource, milvusVersion), &v1alpha1.MilvusVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MilvusVersion), err
-}
-
-// Delete takes name of the milvusVersion and deletes it. Returns an error if one occurs.
-func (c *FakeMilvusVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(milvusversionsResource, name, opts), &v1alpha1.MilvusVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMilvusVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(milvusversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MilvusVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched milvusVersion.
-func (c *FakeMilvusVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MilvusVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(milvusversionsResource, name, pt, data, subresources...), &v1alpha1.MilvusVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MilvusVersion), err
 }

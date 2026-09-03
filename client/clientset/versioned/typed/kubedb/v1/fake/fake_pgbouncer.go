@@ -19,124 +19,31 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	kubedbv1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1"
 
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePgBouncers implements PgBouncerInterface
-type FakePgBouncers struct {
+// fakePgBouncers implements PgBouncerInterface
+type fakePgBouncers struct {
+	*gentype.FakeClientWithList[*v1.PgBouncer, *v1.PgBouncerList]
 	Fake *FakeKubedbV1
-	ns   string
 }
 
-var pgbouncersResource = v1.SchemeGroupVersion.WithResource("pgbouncers")
-
-var pgbouncersKind = v1.SchemeGroupVersion.WithKind("PgBouncer")
-
-// Get takes name of the pgBouncer, and returns the corresponding pgBouncer object, and an error if there is any.
-func (c *FakePgBouncers) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.PgBouncer, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(pgbouncersResource, c.ns, name), &v1.PgBouncer{})
-
-	if obj == nil {
-		return nil, err
+func newFakePgBouncers(fake *FakeKubedbV1, namespace string) kubedbv1.PgBouncerInterface {
+	return &fakePgBouncers{
+		gentype.NewFakeClientWithList[*v1.PgBouncer, *v1.PgBouncerList](
+			fake.Fake,
+			namespace,
+			v1.SchemeGroupVersion.WithResource("pgbouncers"),
+			v1.SchemeGroupVersion.WithKind("PgBouncer"),
+			func() *v1.PgBouncer { return &v1.PgBouncer{} },
+			func() *v1.PgBouncerList { return &v1.PgBouncerList{} },
+			func(dst, src *v1.PgBouncerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1.PgBouncerList) []*v1.PgBouncer { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1.PgBouncerList, items []*v1.PgBouncer) { list.Items = gentype.FromPointerSlice(items) },
+		),
+		fake,
 	}
-	return obj.(*v1.PgBouncer), err
-}
-
-// List takes label and field selectors, and returns the list of PgBouncers that match those selectors.
-func (c *FakePgBouncers) List(ctx context.Context, opts metav1.ListOptions) (result *v1.PgBouncerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(pgbouncersResource, pgbouncersKind, c.ns, opts), &v1.PgBouncerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1.PgBouncerList{ListMeta: obj.(*v1.PgBouncerList).ListMeta}
-	for _, item := range obj.(*v1.PgBouncerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested pgBouncers.
-func (c *FakePgBouncers) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(pgbouncersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a pgBouncer and creates it.  Returns the server's representation of the pgBouncer, and an error, if there is any.
-func (c *FakePgBouncers) Create(ctx context.Context, pgBouncer *v1.PgBouncer, opts metav1.CreateOptions) (result *v1.PgBouncer, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(pgbouncersResource, c.ns, pgBouncer), &v1.PgBouncer{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1.PgBouncer), err
-}
-
-// Update takes the representation of a pgBouncer and updates it. Returns the server's representation of the pgBouncer, and an error, if there is any.
-func (c *FakePgBouncers) Update(ctx context.Context, pgBouncer *v1.PgBouncer, opts metav1.UpdateOptions) (result *v1.PgBouncer, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(pgbouncersResource, c.ns, pgBouncer), &v1.PgBouncer{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1.PgBouncer), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePgBouncers) UpdateStatus(ctx context.Context, pgBouncer *v1.PgBouncer, opts metav1.UpdateOptions) (*v1.PgBouncer, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(pgbouncersResource, "status", c.ns, pgBouncer), &v1.PgBouncer{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1.PgBouncer), err
-}
-
-// Delete takes name of the pgBouncer and deletes it. Returns an error if one occurs.
-func (c *FakePgBouncers) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(pgbouncersResource, c.ns, name, opts), &v1.PgBouncer{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePgBouncers) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(pgbouncersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1.PgBouncerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched pgBouncer.
-func (c *FakePgBouncers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.PgBouncer, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(pgbouncersResource, c.ns, name, pt, data, subresources...), &v1.PgBouncer{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1.PgBouncer), err
 }

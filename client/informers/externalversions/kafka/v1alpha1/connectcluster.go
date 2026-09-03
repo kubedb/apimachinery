@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	apiskafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/kafka/v1alpha1"
+	kafkav1alpha1 "kubedb.dev/apimachinery/client/listers/kafka/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ConnectClusters.
 type ConnectClusterInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ConnectClusterLister
+	Lister() kafkav1alpha1.ConnectClusterLister
 }
 
 type connectClusterInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredConnectClusterInformer(client versioned.Interface, namespace str
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KafkaV1alpha1().ConnectClusters(namespace).List(context.TODO(), options)
+				return client.KafkaV1alpha1().ConnectClusters(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KafkaV1alpha1().ConnectClusters(namespace).Watch(context.TODO(), options)
+				return client.KafkaV1alpha1().ConnectClusters(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KafkaV1alpha1().ConnectClusters(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KafkaV1alpha1().ConnectClusters(namespace).Watch(ctx, options)
 			},
 		},
-		&kafkav1alpha1.ConnectCluster{},
+		&apiskafkav1alpha1.ConnectCluster{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *connectClusterInformer) defaultInformer(client versioned.Interface, res
 }
 
 func (f *connectClusterInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kafkav1alpha1.ConnectCluster{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiskafkav1alpha1.ConnectCluster{}, f.defaultInformer)
 }
 
-func (f *connectClusterInformer) Lister() v1alpha1.ConnectClusterLister {
-	return v1alpha1.NewConnectClusterLister(f.Informer().GetIndexer())
+func (f *connectClusterInformer) Lister() kafkav1alpha1.ConnectClusterLister {
+	return kafkav1alpha1.NewConnectClusterLister(f.Informer().GetIndexer())
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	apiscourierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/listers/courier/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MongoDBMigrations.
 type MongoDBMigrationInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MongoDBMigrationLister
+	Lister() courierv1alpha1.MongoDBMigrationLister
 }
 
 type mongoDBMigrationInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredMongoDBMigrationInformer(client versioned.Interface, namespace s
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().MongoDBMigrations(namespace).List(context.TODO(), options)
+				return client.CourierV1alpha1().MongoDBMigrations(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().MongoDBMigrations(namespace).Watch(context.TODO(), options)
+				return client.CourierV1alpha1().MongoDBMigrations(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CourierV1alpha1().MongoDBMigrations(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CourierV1alpha1().MongoDBMigrations(namespace).Watch(ctx, options)
 			},
 		},
-		&courierv1alpha1.MongoDBMigration{},
+		&apiscourierv1alpha1.MongoDBMigration{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *mongoDBMigrationInformer) defaultInformer(client versioned.Interface, r
 }
 
 func (f *mongoDBMigrationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&courierv1alpha1.MongoDBMigration{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscourierv1alpha1.MongoDBMigration{}, f.defaultInformer)
 }
 
-func (f *mongoDBMigrationInformer) Lister() v1alpha1.MongoDBMigrationLister {
-	return v1alpha1.NewMongoDBMigrationLister(f.Informer().GetIndexer())
+func (f *mongoDBMigrationInformer) Lister() courierv1alpha1.MongoDBMigrationLister {
+	return courierv1alpha1.NewMongoDBMigrationLister(f.Informer().GetIndexer())
 }

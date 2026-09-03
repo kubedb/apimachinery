@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	archiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	apisarchiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/listers/archiver/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MariaDBArchivers.
 type MariaDBArchiverInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MariaDBArchiverLister
+	Lister() archiverv1alpha1.MariaDBArchiverLister
 }
 
 type mariaDBArchiverInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredMariaDBArchiverInformer(client versioned.Interface, namespace st
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ArchiverV1alpha1().MariaDBArchivers(namespace).List(context.TODO(), options)
+				return client.ArchiverV1alpha1().MariaDBArchivers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ArchiverV1alpha1().MariaDBArchivers(namespace).Watch(context.TODO(), options)
+				return client.ArchiverV1alpha1().MariaDBArchivers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ArchiverV1alpha1().MariaDBArchivers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ArchiverV1alpha1().MariaDBArchivers(namespace).Watch(ctx, options)
 			},
 		},
-		&archiverv1alpha1.MariaDBArchiver{},
+		&apisarchiverv1alpha1.MariaDBArchiver{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *mariaDBArchiverInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *mariaDBArchiverInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&archiverv1alpha1.MariaDBArchiver{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisarchiverv1alpha1.MariaDBArchiver{}, f.defaultInformer)
 }
 
-func (f *mariaDBArchiverInformer) Lister() v1alpha1.MariaDBArchiverLister {
-	return v1alpha1.NewMariaDBArchiverLister(f.Informer().GetIndexer())
+func (f *mariaDBArchiverInformer) Lister() archiverv1alpha1.MariaDBArchiverLister {
+	return archiverv1alpha1.NewMariaDBArchiverLister(f.Informer().GetIndexer())
 }

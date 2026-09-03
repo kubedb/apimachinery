@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePerconaXtraDBs implements PerconaXtraDBInterface
-type FakePerconaXtraDBs struct {
+// fakePerconaXtraDBs implements PerconaXtraDBInterface
+type fakePerconaXtraDBs struct {
+	*gentype.FakeClientWithList[*v1alpha1.PerconaXtraDB, *v1alpha1.PerconaXtraDBList]
 	Fake *FakeGitopsV1alpha1
-	ns   string
 }
 
-var perconaxtradbsResource = v1alpha1.SchemeGroupVersion.WithResource("perconaxtradbs")
-
-var perconaxtradbsKind = v1alpha1.SchemeGroupVersion.WithKind("PerconaXtraDB")
-
-// Get takes name of the perconaXtraDB, and returns the corresponding perconaXtraDB object, and an error if there is any.
-func (c *FakePerconaXtraDBs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PerconaXtraDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(perconaxtradbsResource, c.ns, name), &v1alpha1.PerconaXtraDB{})
-
-	if obj == nil {
-		return nil, err
+func newFakePerconaXtraDBs(fake *FakeGitopsV1alpha1, namespace string) gitopsv1alpha1.PerconaXtraDBInterface {
+	return &fakePerconaXtraDBs{
+		gentype.NewFakeClientWithList[*v1alpha1.PerconaXtraDB, *v1alpha1.PerconaXtraDBList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("perconaxtradbs"),
+			v1alpha1.SchemeGroupVersion.WithKind("PerconaXtraDB"),
+			func() *v1alpha1.PerconaXtraDB { return &v1alpha1.PerconaXtraDB{} },
+			func() *v1alpha1.PerconaXtraDBList { return &v1alpha1.PerconaXtraDBList{} },
+			func(dst, src *v1alpha1.PerconaXtraDBList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PerconaXtraDBList) []*v1alpha1.PerconaXtraDB {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PerconaXtraDBList, items []*v1alpha1.PerconaXtraDB) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PerconaXtraDB), err
-}
-
-// List takes label and field selectors, and returns the list of PerconaXtraDBs that match those selectors.
-func (c *FakePerconaXtraDBs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PerconaXtraDBList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(perconaxtradbsResource, perconaxtradbsKind, c.ns, opts), &v1alpha1.PerconaXtraDBList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PerconaXtraDBList{ListMeta: obj.(*v1alpha1.PerconaXtraDBList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PerconaXtraDBList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested perconaXtraDBs.
-func (c *FakePerconaXtraDBs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(perconaxtradbsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a perconaXtraDB and creates it.  Returns the server's representation of the perconaXtraDB, and an error, if there is any.
-func (c *FakePerconaXtraDBs) Create(ctx context.Context, perconaXtraDB *v1alpha1.PerconaXtraDB, opts v1.CreateOptions) (result *v1alpha1.PerconaXtraDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(perconaxtradbsResource, c.ns, perconaXtraDB), &v1alpha1.PerconaXtraDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PerconaXtraDB), err
-}
-
-// Update takes the representation of a perconaXtraDB and updates it. Returns the server's representation of the perconaXtraDB, and an error, if there is any.
-func (c *FakePerconaXtraDBs) Update(ctx context.Context, perconaXtraDB *v1alpha1.PerconaXtraDB, opts v1.UpdateOptions) (result *v1alpha1.PerconaXtraDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(perconaxtradbsResource, c.ns, perconaXtraDB), &v1alpha1.PerconaXtraDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PerconaXtraDB), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePerconaXtraDBs) UpdateStatus(ctx context.Context, perconaXtraDB *v1alpha1.PerconaXtraDB, opts v1.UpdateOptions) (*v1alpha1.PerconaXtraDB, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(perconaxtradbsResource, "status", c.ns, perconaXtraDB), &v1alpha1.PerconaXtraDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PerconaXtraDB), err
-}
-
-// Delete takes name of the perconaXtraDB and deletes it. Returns an error if one occurs.
-func (c *FakePerconaXtraDBs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(perconaxtradbsResource, c.ns, name, opts), &v1alpha1.PerconaXtraDB{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePerconaXtraDBs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(perconaxtradbsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PerconaXtraDBList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched perconaXtraDB.
-func (c *FakePerconaXtraDBs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PerconaXtraDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(perconaxtradbsResource, c.ns, name, pt, data, subresources...), &v1alpha1.PerconaXtraDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PerconaXtraDB), err
 }
