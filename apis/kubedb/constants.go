@@ -1672,6 +1672,9 @@ const (
 	DocumentDBDefaultUsername       = "default_user"
 	DocumentDBAdminUsername         = "documentdb"
 	DocumentDBAdminAuthSecretSuffix = "admin-auth"
+	// DocumentDBAdminAppBindingSuffix names the AppBinding that describes the backend Postgres
+	// endpoint, paralleling DocumentDBAdminAuthSecretSuffix which holds its credentials.
+	DocumentDBAdminAppBindingSuffix = "admin"
 
 	DefaultDocumentDBDatabase = "sampledb"
 

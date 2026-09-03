@@ -850,6 +850,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.aerospikeStatsService":                         schema_apimachinery_apis_kubedb_v1alpha2_aerospikeStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.db2App":                                        schema_apimachinery_apis_kubedb_v1alpha2_db2App(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.db2StatsService":                               schema_apimachinery_apis_kubedb_v1alpha2_db2StatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBAdminApp":                            schema_apimachinery_apis_kubedb_v1alpha2_documentDBAdminApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBApp":                                 schema_apimachinery_apis_kubedb_v1alpha2_documentDBApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBStatsService":                        schema_apimachinery_apis_kubedb_v1alpha2_documentDBStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchApp":                              schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchApp(ref),
@@ -48387,6 +48388,27 @@ func schema_apimachinery_apis_kubedb_v1alpha2_db2StatsService(ref common.Referen
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_documentDBAdminApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "documentDBAdminApp is the AppBindingMeta for the backend Postgres endpoint. The name stays engine-neutral, but the type must be kubedb.com/postgres: that is the discriminator KubeStash addons and the restic plugin dispatch on, and the backend genuinely is a Postgres.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"DocumentDB": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"),
+						},
+					},
+				},
+				Required: []string{"DocumentDB"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"},
 	}
 }
 
