@@ -323,7 +323,7 @@ type documentDBAdminApp struct {
 }
 
 func (r documentDBAdminApp) Name() string {
-	return r.DocumentDB.AdminAppBindingName()
+	return r.AdminAppBindingName()
 }
 
 func (r documentDBAdminApp) Type() appcat.AppType {

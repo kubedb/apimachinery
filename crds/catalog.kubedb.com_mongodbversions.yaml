@@ -60,6 +60,7 @@ spec:
                         - mariadb-addon
                         - mssqlserver-addon
                         - clickhouse-addon
+                        - documentdb-addon
                         type: string
                       tasks:
                         properties:

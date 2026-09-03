@@ -1530,6 +1530,11 @@ func (in *DocumentDBSpec) DeepCopyInto(out *DocumentDBSpec) {
 		*out = new(InitSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Archiver != nil {
+		in, out := &in.Archiver, &out.Archiver
+		*out = new(Archiver)
+		**out = **in
+	}
 	return
 }
 

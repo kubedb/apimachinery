@@ -887,6 +887,7 @@ func (in *DocumentDBVersionSpec) DeepCopyInto(out *DocumentDBVersionSpec) {
 	out.InitContainer = in.InitContainer
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
+	out.Archiver = in.Archiver
 	if in.UI != nil {
 		in, out := &in.UI, &out.UI
 		*out = make([]ChartInfo, len(*in))

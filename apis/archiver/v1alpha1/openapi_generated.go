@@ -584,6 +584,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ClickHouseArchiverStatus":                    schema_apimachinery_apis_archiver_v1alpha1_ClickHouseArchiverStatus(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ClickHouseFullBackupOptions":                 schema_apimachinery_apis_archiver_v1alpha1_ClickHouseFullBackupOptions(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ClickHouseIncrementalBackupOptions":          schema_apimachinery_apis_archiver_v1alpha1_ClickHouseIncrementalBackupOptions(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.DocumentDBArchiver":                          schema_apimachinery_apis_archiver_v1alpha1_DocumentDBArchiver(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.DocumentDBArchiverList":                      schema_apimachinery_apis_archiver_v1alpha1_DocumentDBArchiverList(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.DocumentDBArchiverSpec":                      schema_apimachinery_apis_archiver_v1alpha1_DocumentDBArchiverSpec(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.DocumentDBArchiverStatus":                    schema_apimachinery_apis_archiver_v1alpha1_DocumentDBArchiverStatus(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.EtcdArchiver":                                schema_apimachinery_apis_archiver_v1alpha1_EtcdArchiver(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.EtcdArchiverList":                            schema_apimachinery_apis_archiver_v1alpha1_EtcdArchiverList(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.EtcdArchiverSpec":                            schema_apimachinery_apis_archiver_v1alpha1_EtcdArchiverSpec(ref),
@@ -33685,6 +33689,200 @@ func schema_apimachinery_apis_archiver_v1alpha1_ClickHouseIncrementalBackupOptio
 		},
 		Dependencies: []string{
 			"kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_DocumentDBArchiver(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.DocumentDBArchiverSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.DocumentDBArchiverStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.DocumentDBArchiverSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.DocumentDBArchiverStatus"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_DocumentDBArchiverList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.DocumentDBArchiver"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.DocumentDBArchiver"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_DocumentDBArchiverSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DocumentDBArchiverSpec defines the desired state of DocumentDBArchiver.\n\nDocumentDB's storage engine is PostgreSQL, so continuous archiving works exactly as it does for Postgres: wal-g pushes WAL segments from a sidekick, and recovery replays them onto a physical base backup. This spec therefore mirrors PostgresArchiverSpec field for field.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databases": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Databases define which DocumentDB databases are allowed to consume this archiver",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"),
+						},
+					},
+					"pause": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Pause defines if the backup process should be paused or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"retentionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionPolicy field is the RetentionPolicy of the backupConfiguration's backend",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"fullBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FullBackup defines the sessionConfig of the fullBackup This options will eventually go to the full-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions"),
+						},
+					},
+					"logBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogBackup defines the sidekick configuration for the log backup",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.LogBackupOptions"),
+						},
+					},
+					"manifestBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManifestBackup defines the sessionConfig of the manifestBackup This options will eventually go to the manifest-backup job's yaml",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
+						},
+					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"backupStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackupStorage is the backend storageRef of the BackupConfiguration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy defines the created repository's deletionPolicy",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"databases"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.LogBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_DocumentDBArchiverStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DocumentDBArchiverStatus defines the observed state of DocumentDBArchiver",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRefs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the information of all the databases managed by this archiver",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"},
 	}
 }
 
