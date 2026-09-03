@@ -645,7 +645,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jConstraintSchema":                             schema_apimachinery_apis_ui_v1alpha1_Neo4jConstraintSchema(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseSchema":                               schema_apimachinery_apis_ui_v1alpha1_Neo4jDatabaseSchema(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseStatus":                               schema_apimachinery_apis_ui_v1alpha1_Neo4jDatabaseStatus(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jGraphSummary":                                 schema_apimachinery_apis_ui_v1alpha1_Neo4jGraphSummary(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jIndexSchema":                                  schema_apimachinery_apis_ui_v1alpha1_Neo4jIndexSchema(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jInsight":                                      schema_apimachinery_apis_ui_v1alpha1_Neo4jInsight(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jInsightList":                                  schema_apimachinery_apis_ui_v1alpha1_Neo4jInsightList(ref),
@@ -37000,26 +36999,6 @@ func schema_apimachinery_apis_ui_v1alpha1_Neo4jDatabaseStatus(ref common.Referen
 							Format: "int32",
 						},
 					},
-				},
-				Required: []string{"name"},
-			},
-		},
-	}
-}
-
-func schema_apimachinery_apis_ui_v1alpha1_Neo4jGraphSummary(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databaseName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
 					"nodeCount": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"integer"},
@@ -37033,7 +37012,7 @@ func schema_apimachinery_apis_ui_v1alpha1_Neo4jGraphSummary(ref common.Reference
 						},
 					},
 				},
-				Required: []string{"databaseName"},
+				Required: []string{"name"},
 			},
 		},
 	}
@@ -37241,11 +37220,6 @@ func schema_apimachinery_apis_ui_v1alpha1_Neo4jInsightSpec(ref common.ReferenceC
 							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jClusterHealth"),
 						},
 					},
-					"graphSummary": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jGraphSummary"),
-						},
-					},
 					"servers": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
@@ -37277,7 +37251,7 @@ func schema_apimachinery_apis_ui_v1alpha1_Neo4jInsightSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jClusterHealth", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseStatus", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jGraphSummary", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jServerStatus"},
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jClusterHealth", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jDatabaseStatus", "kubedb.dev/apimachinery/apis/ui/v1alpha1.Neo4jServerStatus"},
 	}
 }
 

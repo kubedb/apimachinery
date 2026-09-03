@@ -67,6 +67,12 @@ spec:
                       type: boolean
                     name:
                       type: string
+                    nodeCount:
+                      format: int64
+                      type: integer
+                    relationshipCount:
+                      format: int64
+                      type: integer
                     requestedPrimariesCount:
                       format: int32
                       type: integer
@@ -87,19 +93,6 @@ spec:
                 type: array
               edition:
                 type: string
-              graphSummary:
-                properties:
-                  databaseName:
-                    type: string
-                  nodeCount:
-                    format: int64
-                    type: integer
-                  relationshipCount:
-                    format: int64
-                    type: integer
-                required:
-                - databaseName
-                type: object
               mode:
                 type: string
               servers:

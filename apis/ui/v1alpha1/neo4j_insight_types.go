@@ -34,7 +34,6 @@ type Neo4jInsightSpec struct {
 	Edition       string                `json:"edition,omitempty"`
 	Mode          string                `json:"mode"`
 	ClusterHealth Neo4jClusterHealth    `json:"clusterHealth"`
-	GraphSummary  *Neo4jGraphSummary    `json:"graphSummary,omitempty"`
 	Servers       []Neo4jServerStatus   `json:"servers,omitempty"`
 	Databases     []Neo4jDatabaseStatus `json:"databases,omitempty"`
 }
@@ -46,12 +45,6 @@ type Neo4jClusterHealth struct {
 	TotalDatabases     *int32 `json:"totalDatabases,omitempty"`
 	OnlineDatabases    *int32 `json:"onlineDatabases,omitempty"`
 	OfflineDatabases   *int32 `json:"offlineDatabases,omitempty"`
-}
-
-type Neo4jGraphSummary struct {
-	DatabaseName      string `json:"databaseName"`
-	NodeCount         *int64 `json:"nodeCount,omitempty"`
-	RelationshipCount *int64 `json:"relationshipCount,omitempty"`
 }
 
 type Neo4jServerStatus struct {
@@ -78,6 +71,8 @@ type Neo4jDatabaseStatus struct {
 	CurrentSecondariesCount   *int32   `json:"currentSecondariesCount,omitempty"`
 	RequestedPrimariesCount   *int32   `json:"requestedPrimariesCount,omitempty"`
 	RequestedSecondariesCount *int32   `json:"requestedSecondariesCount,omitempty"`
+	NodeCount                 *int64   `json:"nodeCount,omitempty"`
+	RelationshipCount         *int64   `json:"relationshipCount,omitempty"`
 }
 
 // +genclient
