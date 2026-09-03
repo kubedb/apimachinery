@@ -241,3 +241,27 @@ type RedisSchemaOverviewListerExpansion interface{}
 // RedisSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
 // RedisSchemaOverviewNamespaceLister.
 type RedisSchemaOverviewNamespaceListerExpansion interface{}
+
+// SinglestoreInsightListerExpansion allows custom methods to be added to
+// SinglestoreInsightLister.
+type SinglestoreInsightListerExpansion interface{}
+
+// SinglestoreInsightNamespaceListerExpansion allows custom methods to be added to
+// SinglestoreInsightNamespaceLister.
+type SinglestoreInsightNamespaceListerExpansion interface{}
+
+// SinglestoreQueriesListerExpansion allows custom methods to be added to
+// SinglestoreQueriesLister.
+type SinglestoreQueriesListerExpansion interface{}
+
+// SinglestoreQueriesNamespaceListerExpansion allows custom methods to be added to
+// SinglestoreQueriesNamespaceLister.
+type SinglestoreQueriesNamespaceListerExpansion interface{}
+
+// SinglestoreSchemaOverviewListerExpansion allows custom methods to be added to
+// SinglestoreSchemaOverviewLister.
+type SinglestoreSchemaOverviewListerExpansion interface{}
+
+// SinglestoreSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// SinglestoreSchemaOverviewNamespaceLister.
+type SinglestoreSchemaOverviewNamespaceListerExpansion interface{}

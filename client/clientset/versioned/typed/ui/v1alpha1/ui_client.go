@@ -58,6 +58,9 @@ type UiV1alpha1Interface interface {
 	RedisInsightsGetter
 	RedisQueriesesGetter
 	RedisSchemaOverviewsGetter
+	SinglestoreInsightsGetter
+	SinglestoreQueriesesGetter
+	SinglestoreSchemaOverviewsGetter
 }
 
 // UiV1alpha1Client is used to interact with features provided by the ui.kubedb.com group.
@@ -179,6 +182,18 @@ func (c *UiV1alpha1Client) RedisQuerieses(namespace string) RedisQueriesInterfac
 
 func (c *UiV1alpha1Client) RedisSchemaOverviews(namespace string) RedisSchemaOverviewInterface {
 	return newRedisSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) SinglestoreInsights(namespace string) SinglestoreInsightInterface {
+	return newSinglestoreInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) SinglestoreQuerieses(namespace string) SinglestoreQueriesInterface {
+	return newSinglestoreQuerieses(c, namespace)
+}
+
+func (c *UiV1alpha1Client) SinglestoreSchemaOverviews(namespace string) SinglestoreSchemaOverviewInterface {
+	return newSinglestoreSchemaOverviews(c, namespace)
 }
 
 // NewForConfig creates a new UiV1alpha1Client for the given config.
