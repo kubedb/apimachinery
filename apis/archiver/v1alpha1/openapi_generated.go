@@ -34031,7 +34031,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_LogBackupOptions(ref common.Refe
 					},
 					"logRotateInterval": {
 						SchemaProps: spec.SchemaProps{
-							Description: "LogRotateInterval defines how often the archiver rotates the log file when new transactions exist. Zero disables rotation. The default value is 5m.",
+							Description: "LogRotateInterval defines how often the archiver rotates the log file when new transactions exist. Zero disables rotation. The default value is 10m.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},

@@ -119,8 +119,8 @@ type LogBackupOptions struct {
 
 	// LogRotateInterval defines how often the archiver rotates the log file when new transactions exist.
 	// Zero disables rotation.
-	// The default value is 5m.
-	// +kubebuilder:default="5m"
+	// The default value is 10m.
+	// +kubebuilder:default="10m"
 	// +optional
 	// +kubebuilder:validation:XValidation:rule="self.matches('^([0-9]+(ns|us|ms|s|m|h))+$')",message="must be a Go duration such as 30s, 5m or 1h30m"
 	LogRotateInterval *metav1.Duration `json:"logRotateInterval,omitempty"`
