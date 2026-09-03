@@ -30,7 +30,6 @@ import (
 type ArchiverV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	ClickHouseArchiversGetter
-	DocumentDBArchiversGetter
 	EtcdArchiversGetter
 	MSSQLServerArchiversGetter
 	MariaDBArchiversGetter
@@ -46,10 +45,6 @@ type ArchiverV1alpha1Client struct {
 
 func (c *ArchiverV1alpha1Client) ClickHouseArchivers(namespace string) ClickHouseArchiverInterface {
 	return newClickHouseArchivers(c, namespace)
-}
-
-func (c *ArchiverV1alpha1Client) DocumentDBArchivers(namespace string) DocumentDBArchiverInterface {
-	return newDocumentDBArchivers(c, namespace)
 }
 
 func (c *ArchiverV1alpha1Client) EtcdArchivers(namespace string) EtcdArchiverInterface {

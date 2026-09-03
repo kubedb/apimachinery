@@ -33,10 +33,6 @@ func (c *FakeArchiverV1alpha1) ClickHouseArchivers(namespace string) v1alpha1.Cl
 	return &FakeClickHouseArchivers{c, namespace}
 }
 
-func (c *FakeArchiverV1alpha1) DocumentDBArchivers(namespace string) v1alpha1.DocumentDBArchiverInterface {
-	return &FakeDocumentDBArchivers{c, namespace}
-}
-
 func (c *FakeArchiverV1alpha1) EtcdArchivers(namespace string) v1alpha1.EtcdArchiverInterface {
 	return &FakeEtcdArchivers{c, namespace}
 }

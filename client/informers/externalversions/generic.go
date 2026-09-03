@@ -68,8 +68,6 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	// Group=archiver.kubedb.com, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithResource("clickhousearchivers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().ClickHouseArchivers().Informer()}, nil
-	case v1alpha1.SchemeGroupVersion.WithResource("documentdbarchivers"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().DocumentDBArchivers().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("etcdarchivers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().EtcdArchivers().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("mssqlserverarchivers"):

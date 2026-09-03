@@ -26,8 +26,6 @@ import (
 type Interface interface {
 	// ClickHouseArchivers returns a ClickHouseArchiverInformer.
 	ClickHouseArchivers() ClickHouseArchiverInformer
-	// DocumentDBArchivers returns a DocumentDBArchiverInformer.
-	DocumentDBArchivers() DocumentDBArchiverInformer
 	// EtcdArchivers returns a EtcdArchiverInformer.
 	EtcdArchivers() EtcdArchiverInformer
 	// MSSQLServerArchivers returns a MSSQLServerArchiverInformer.
@@ -56,11 +54,6 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // ClickHouseArchivers returns a ClickHouseArchiverInformer.
 func (v *version) ClickHouseArchivers() ClickHouseArchiverInformer {
 	return &clickHouseArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// DocumentDBArchivers returns a DocumentDBArchiverInformer.
-func (v *version) DocumentDBArchivers() DocumentDBArchiverInformer {
-	return &documentDBArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // EtcdArchivers returns a EtcdArchiverInformer.
