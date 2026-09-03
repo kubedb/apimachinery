@@ -161,11 +161,6 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeReplicationModeTransformation:
-		// This is a create-time check only. The transform intentionally mutates the
-		// database topology while the ops request runs, so re-validating on every
-		// (status) update would reject the controller's own progress writes once the
-		// database has moved into the requested mode. The ops spec is immutable on
-		// update (enforced by validateMySQLOpsRequest), so skipping this on update is safe.
 		if isCreate {
 			if err := w.validateMySQLReplicationModeTransformation(db, req); err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicationModeTransformation"),
@@ -185,7 +180,14 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				req.Name,
 				err.Error()))
 		}
-
+	case opsapi.MySQLOpsRequestTypeArchiverRestore:
+		if isCreate {
+			if err := w.validateMySQLArchiverRestoreOpsRequest(db, req); err != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("archiver"),
+					req.Name,
+					err.Error()))
+			}
+		}
 	}
 
 	if len(allErr) == 0 {
@@ -412,6 +414,89 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(d
 		if *newstorage.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer {
 			return errors.New(fmt.Sprintf("volume binding mode should be WaitForFirstConsumer for %s storageClass", newstorage.Name))
 		}
+	}
+
+	return nil
+}
+
+// validateMySQLArchiverRestoreOpsRequest validates an in-place archiver restore.
+//
+// The request wipes the database's data volumes and re-initializes it through the
+// provisioner's normal archiver-recovery path, so everything the provisioner needs
+// in order to reach that path has to be present up front: an archiver payload, a
+// data repository to restore from, durable storage, and a topology whose entrypoint
+// script actually honours PITR_RESTORE.
+func (w *MySQLOpsRequestCustomWebhook) validateMySQLArchiverRestoreOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
+	archiver := req.Spec.Archiver
+	if archiver == nil {
+		return errors.New("spec.archiver is required for an ArchiverRestore ops request")
+	}
+
+	if archiver.RecoveryTimestamp.IsZero() {
+		return errors.New("spec.archiver.recoveryTimestamp is required for an ArchiverRestore ops request")
+	}
+
+	// The physical data (base backup + binlogs) is restored from fullDBRepository.
+	// manifestRepository alone only restores the KubeDB manifests, which would leave
+	// the wiped data directory empty.
+	if archiver.FullDBRepository == nil {
+		return errors.New("spec.archiver.fullDBRepository is required for an ArchiverRestore ops request; a manifest-only restore cannot repopulate the wiped data directory")
+	}
+
+	if archiver.ReplicationStrategy != nil {
+		switch *archiver.ReplicationStrategy {
+		case dbapi.ReplicationStrategySync, dbapi.ReplicationStrategyFSCopy,
+			dbapi.ReplicationStrategyClone, dbapi.ReplicationStrategyNone:
+		default:
+			return fmt.Errorf("unsupported spec.archiver.replicationStrategy %q; supported values are %q, %q, %q and %q",
+				*archiver.ReplicationStrategy, dbapi.ReplicationStrategySync, dbapi.ReplicationStrategyFSCopy,
+				dbapi.ReplicationStrategyClone, dbapi.ReplicationStrategyNone)
+		}
+	}
+
+	// The restore replaces the contents of the data PVCs. An ephemeral database has
+	// none, so there is nothing to restore into.
+	if db.Spec.StorageType == dbapi.StorageTypeEphemeral {
+		return fmt.Errorf("database %s/%s uses %q storage: an archiver restore requires durable storage",
+			db.Namespace, db.Name, dbapi.StorageTypeEphemeral)
+	}
+
+	// Only the entrypoints that wait on /tmp/recovery.done can be restored into:
+	// standalone-run.sh (Standalone), run.sh (GroupReplication) and run_innodb.sh
+	// (InnoDBCluster). run_semi_sync.sh has no PITR_RESTORE gate, so a SemiSync member
+	// would start mysqld on top of a half-restored data directory. A RemoteReplica has
+	// no restore path at all — it is seeded from its source.
+	if db.IsRemoteReplica() {
+		return fmt.Errorf("database %s/%s is a remote replica: an archiver restore is not supported, restore the source database instead",
+			db.Namespace, db.Name)
+	}
+	if db.IsSemiSync() {
+		return fmt.Errorf("database %s/%s runs in %q mode: an archiver restore is only supported for Standalone, %q and %q",
+			db.Namespace, db.Name, dbapi.MySQLModeSemiSync, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster)
+	}
+	if db.Spec.Topology != nil && !db.UsesGroupReplication() && !db.IsInnoDBCluster() {
+		mode := "unknown"
+		if db.Spec.Topology.Mode != nil {
+			mode = string(*db.Spec.Topology.Mode)
+		}
+		return fmt.Errorf("database %s/%s runs in %q mode: an archiver restore is only supported for Standalone, %q and %q",
+			db.Namespace, db.Name, mode, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster)
+	}
+
+	// The restore is a multi-stage, data-sized operation (base backup restore, binlog
+	// replay, then re-seeding the remaining members). The default per-step budget of
+	// 5 minutes per pod is unrelated to how long that actually takes.
+	if req.Spec.Timeout == nil {
+		return errors.New("spec.timeout is required for an ArchiverRestore ops request, adjust it according to the size of your database")
+	}
+
+	// The default apply option, IfReady, holds the request Pending until the database
+	// reaches phase Ready. This request wipes the database, so on a rerun against one
+	// that a previous attempt already wiped, Ready never arrives and the request waits
+	// forever. Always swaps that for a Provisioned check, which survives the wipe.
+	if req.Spec.Apply != opsapi.ApplyOptionAlways {
+		return fmt.Errorf("spec.apply must be %q for an ArchiverRestore ops request; the default %q waits for the database to be Ready, which never happens once its volumes have been wiped",
+			opsapi.ApplyOptionAlways, opsapi.ApplyOptionIfReady)
 	}
 
 	return nil

@@ -333,6 +333,37 @@ const (
 	DBPatchSucceeded             = "DBPatchSucceeded"
 	RestartMaxscale              = "RestartMaxscale"
 	RestartMaxscalePodsSucceeded = "RestartMaxscalePodsSucceeded"
+
+	// Per-step conditions of an in-place ArchiverRestore, in the order they are
+	// reached. Each one is also the resume point: a step whose condition is already
+	// True is skipped when the ops-manager re-enters the request.
+	ArchiverRestoreRetainPV     = "ArchiverRestoreRetainPV"
+	ArchiverRestoreWipeVolumes  = "ArchiverRestoreWipeVolumes"
+	ArchiverRestoreTriggered    = "ArchiverRestoreTriggered"
+	ArchiverRestoreDataRestored = "ArchiverRestoreDataRestored"
+
+	ArchiverRestoreRetainPVSucceeded      = "ArchiverRestoreRetainPVSucceeded"
+	ArchiverRestoreWipeVolumesSucceeded   = "ArchiverRestoreWipeVolumesSucceeded"
+	ArchiverRestoreTriggeredSucceeded     = "ArchiverRestoreTriggeredSucceeded"
+	ArchiverRestoreDataRestoredSucceeded  = "ArchiverRestoreDataRestoredSucceeded"
+	ArchiverRestoreDatabaseReadySucceeded = "ArchiverRestoreDatabaseReadySucceeded"
+
+	ArchiverRestoreRetainPVFailed      = "ArchiverRestoreRetainPVFailed"
+	ArchiverRestoreWipeVolumesFailed   = "ArchiverRestoreWipeVolumesFailed"
+	ArchiverRestoreTriggeredFailed     = "ArchiverRestoreTriggeredFailed"
+	ArchiverRestoreDataRestoredFailed  = "ArchiverRestoreDataRestoredFailed"
+	ArchiverRestoreDatabaseReadyFailed = "ArchiverRestoreDatabaseReadyFailed"
+
+	// ArchiverRestoreManualCleanupRequired is set (False) when a failed restore leaves
+	// state to inspect by hand: PVs still forced to Retain, or an already-wiped datadir.
+	ArchiverRestoreManualCleanupRequired = "ArchiverRestoreManualCleanupRequired"
+
+	// ArchiverRestoreSuspendArchiver records that the restore stopped archiving for this
+	// database via kubedb.SuspendArchiverAnnotation. Never undone by the ops request --
+	// see that annotation for why.
+	ArchiverRestoreSuspendArchiver          = "ArchiverRestoreSuspendArchiver"
+	ArchiverRestoreSuspendArchiverSucceeded = "ArchiverRestoreSuspendArchiverSucceeded"
+	ArchiverRestoreSuspendArchiverFailed    = "ArchiverRestoreSuspendArchiverFailed"
 )
 
 // Postgres Constants

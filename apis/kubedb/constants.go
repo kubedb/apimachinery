@@ -294,6 +294,12 @@ const (
 	MySQLComponentRouter  = "router"
 	MySQLCustomConfigFile = "my-inline.cnf"
 
+	// MySQLArchiverRestoreAnnotation names the ArchiverRestore ops request driving an
+	// in-place restore. Set only on the in-memory copy the provisioner reconciles, never
+	// persisted, and is how the restore path tells "restoring myself" from "restoring
+	// someone else's backup".
+	MySQLArchiverRestoreAnnotation = "ops.kubedb.com/archiver-restore"
+
 	// mysql volume and volume Mounts
 
 	MySQLVolumeNameTemp      = "tmp"
@@ -352,18 +358,27 @@ const (
 	PerconaXtraDBMySQLUserGroupID              = 1001
 
 	// =========================== MariaDB Constants ============================
-	MariaDBMaxClusterNameLength          = 32
-	MariaDBStandaloneReplicas            = 1
-	MariaDBDefaultClusterSize            = 3
-	MariaDBDataMountPath                 = "/var/lib/mysql"
-	MariaDBDataLostFoundPath             = MariaDBDataMountPath + "/lost+found"
-	MariaDBInitDBVolumeName              = "initial-script"
-	MariaDBInitDBMountPath               = "/docker-entrypoint-initdb.d"
-	MariaDBCustomConfigMountPath         = "/etc/mysql/conf.d/"
-	MariaDBClusterCustomConfigMountPath  = "/etc/mysql/custom.conf.d/"
-	MariaDBCustomConfigVolumeName        = "custom-config"
-	MariaDBTLSConfigCustom               = "custom"
-	MariaDBInitContainerName             = "mariadb-init"
+	MariaDBMaxClusterNameLength         = 32
+	MariaDBStandaloneReplicas           = 1
+	MariaDBDefaultClusterSize           = 3
+	MariaDBDataMountPath                = "/var/lib/mysql"
+	MariaDBDataLostFoundPath            = MariaDBDataMountPath + "/lost+found"
+	MariaDBInitDBVolumeName             = "initial-script"
+	MariaDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
+	MariaDBCustomConfigMountPath        = "/etc/mysql/conf.d/"
+	MariaDBClusterCustomConfigMountPath = "/etc/mysql/custom.conf.d/"
+	MariaDBCustomConfigVolumeName       = "custom-config"
+	MariaDBTLSConfigCustom              = "custom"
+	MariaDBInitContainerName            = "mariadb-init"
+
+	MariaDBComponentKey = MariaDBKey + "/component"
+	MariaDBComponentDB  = "database"
+
+	// MariaDBArchiverRestoreAnnotation names the ArchiverRestore ops request driving an
+	// in-place restore. Set only on the in-memory copy the provisioner reconciles, never
+	// persisted, and is how the restore path tells "restoring myself" from "restoring
+	// someone else's backup".
+	MariaDBArchiverRestoreAnnotation     = "ops.kubedb.com/archiver-restore"
 	MariaDBCoordinatorContainerName      = "md-coordinator"
 	MariaDBRunScriptVolumeName           = "run-script"
 	MariaDBRunScriptVolumeMountPath      = "/run-script"
@@ -2534,6 +2549,18 @@ const (
 	// SkipBackupPauseAnnotation, when set to "true" on an OpsRequest, prevents the
 	// ops-manager from pausing the BackupConfiguration before executing the operation.
 	SkipBackupPauseAnnotation = "kubedb.com/skip-backup-pause"
+
+	// SuspendArchiverAnnotation set to "true" stops this database being archived, without
+	// pausing the archiver itself, which would stop every database it selects. An
+	// ArchiverRestore sets it and never clears it: resuming would push the post-restore
+	// timeline into a repository still holding the abandoned branch, so it is the
+	// operator's call once they have taken a fresh base backup.
+	SuspendArchiverAnnotation = "kubedb.com/suspend-archiver"
+
+	// StripPVCDataSourceAnnotation set to "false" keeps the spec.dataSource that a
+	// VolumeSnapshot restore leaves on a data PVC. It is removed by default, since the
+	// snapshot it names is deleted by retention in time.
+	StripPVCDataSourceAnnotation = "kubedb.com/strip-pvc-datasource"
 
 	// Archiver
 	OwnerDatabasesAnnotation                  = "kubedb.com/owner-databases"
