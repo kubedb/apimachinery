@@ -99,20 +99,6 @@ func (w *MySQLOpsRequestCustomWebhook) ValidateUpdate(ctx context.Context, oldOb
 		if err != nil {
 			return nil, err
 		}
-		// Deliberately no cleanup of the ArchiverRestore marker annotation here.
-		//
-		// It used to be cleared on any terminal phase, which is wrong: spec.init.archiver
-		// survives a failed restore, so the provisioner goes on retrying it, and the
-		// marker is what tells the provisioner the restore is in-place and that the
-		// manifest RestoreSession has to be skipped. Dropping the marker on failure
-		// flips those retries back to fresh-restore behaviour, where the manifest step
-		// tries to create an auth secret that already exists and fails forever.
-		//
-		// The marker is owned by the ops request's success path, which removes it after
-		// stripping spec.init. A restore abandoned after a failure leaves it in place;
-		// clear it by hand with
-		// `kubectl annotate mysql <db> ops.kubedb.com/archiver-restore-` once the
-		// database is settled.
 		return nil, resumeDatabase(w.DefaultClient, &db)
 	}
 	return nil, nil
@@ -175,11 +161,6 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeReplicationModeTransformation:
-		// This is a create-time check only. The transform intentionally mutates the
-		// database topology while the ops request runs, so re-validating on every
-		// (status) update would reject the controller's own progress writes once the
-		// database has moved into the requested mode. The ops spec is immutable on
-		// update (enforced by validateMySQLOpsRequest), so skipping this on update is safe.
 		if isCreate {
 			if err := w.validateMySQLReplicationModeTransformation(db, req); err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicationModeTransformation"),
@@ -200,11 +181,6 @@ func (w *MySQLOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.MySQLO
 				err.Error()))
 		}
 	case opsapi.MySQLOpsRequestTypeArchiverRestore:
-		// Create-time check only, for the same reason as ReplicationModeTransformation:
-		// the restore deliberately mutates the database (spec.init is rewritten, the
-		// topology briefly runs on a single member) while the request is in flight, so
-		// re-validating on every status write would reject the controller's own
-		// progress. spec is immutable on update via validateMySQLOpsRequest.
 		if isCreate {
 			if err := w.validateMySQLArchiverRestoreOpsRequest(db, req); err != nil {
 				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("archiver"),
