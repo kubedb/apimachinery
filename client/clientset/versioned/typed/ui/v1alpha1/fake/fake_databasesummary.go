@@ -22,7 +22,7 @@ import (
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	gentype "kmodules.xyz/client-go/gentype"
+	gentype "k8s.io/client-go/gentype"
 )
 
 // fakeDatabaseSummaries implements DatabaseSummaryInterface
