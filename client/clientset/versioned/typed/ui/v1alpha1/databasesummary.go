@@ -25,7 +25,7 @@ import (
 	scheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	gentype "k8s.io/client-go/gentype"
+	gentype "kmodules.xyz/client-go/gentype"
 )
 
 // DatabaseSummariesGetter has a method to return a DatabaseSummaryInterface.
