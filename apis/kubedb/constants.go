@@ -358,18 +358,27 @@ const (
 	PerconaXtraDBMySQLUserGroupID              = 1001
 
 	// =========================== MariaDB Constants ============================
-	MariaDBMaxClusterNameLength          = 32
-	MariaDBStandaloneReplicas            = 1
-	MariaDBDefaultClusterSize            = 3
-	MariaDBDataMountPath                 = "/var/lib/mysql"
-	MariaDBDataLostFoundPath             = MariaDBDataMountPath + "/lost+found"
-	MariaDBInitDBVolumeName              = "initial-script"
-	MariaDBInitDBMountPath               = "/docker-entrypoint-initdb.d"
-	MariaDBCustomConfigMountPath         = "/etc/mysql/conf.d/"
-	MariaDBClusterCustomConfigMountPath  = "/etc/mysql/custom.conf.d/"
-	MariaDBCustomConfigVolumeName        = "custom-config"
-	MariaDBTLSConfigCustom               = "custom"
-	MariaDBInitContainerName             = "mariadb-init"
+	MariaDBMaxClusterNameLength         = 32
+	MariaDBStandaloneReplicas           = 1
+	MariaDBDefaultClusterSize           = 3
+	MariaDBDataMountPath                = "/var/lib/mysql"
+	MariaDBDataLostFoundPath            = MariaDBDataMountPath + "/lost+found"
+	MariaDBInitDBVolumeName             = "initial-script"
+	MariaDBInitDBMountPath              = "/docker-entrypoint-initdb.d"
+	MariaDBCustomConfigMountPath        = "/etc/mysql/conf.d/"
+	MariaDBClusterCustomConfigMountPath = "/etc/mysql/custom.conf.d/"
+	MariaDBCustomConfigVolumeName       = "custom-config"
+	MariaDBTLSConfigCustom              = "custom"
+	MariaDBInitContainerName            = "mariadb-init"
+
+	MariaDBComponentKey = MariaDBKey + "/component"
+	MariaDBComponentDB  = "database"
+
+	// MariaDBArchiverRestoreAnnotation names the ArchiverRestore ops request driving an
+	// in-place restore. Set only on the in-memory copy the provisioner reconciles, never
+	// persisted, and is how the restore path tells "restoring myself" from "restoring
+	// someone else's backup".
+	MariaDBArchiverRestoreAnnotation     = "ops.kubedb.com/archiver-restore"
 	MariaDBCoordinatorContainerName      = "md-coordinator"
 	MariaDBRunScriptVolumeName           = "run-script"
 	MariaDBRunScriptVolumeMountPath      = "/run-script"
