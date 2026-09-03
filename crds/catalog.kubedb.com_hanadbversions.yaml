@@ -45,6 +45,13 @@ spec:
             type: object
           spec:
             properties:
+              backint:
+                properties:
+                  image:
+                    type: string
+                required:
+                - image
+                type: object
               coordinator:
                 properties:
                   image:

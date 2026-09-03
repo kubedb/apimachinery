@@ -587,6 +587,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.AerospikeVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_AerospikeVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ApicurioInMemory":                             schema_apimachinery_apis_catalog_v1alpha1_ApicurioInMemory(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec":                                 schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.BackintAgent":                                 schema_apimachinery_apis_catalog_v1alpha1_BackintAgent(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraInitContainer":                       schema_apimachinery_apis_catalog_v1alpha1_CassandraInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersion":                             schema_apimachinery_apis_catalog_v1alpha1_CassandraVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.CassandraVersionDatabase":                     schema_apimachinery_apis_catalog_v1alpha1_CassandraVersionDatabase(ref),
@@ -33917,6 +33918,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_ArchiverSpec(ref common.Reference
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_BackintAgent(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BackintAgent is the HANA-side Backint agent image.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_CassandraInitContainer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -35932,12 +35954,18 @@ func schema_apimachinery_apis_catalog_v1alpha1_HanaDBVersionSpec(ref common.Refe
 							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
 						},
 					},
+					"backint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Backint defines the HANA-side Backint image for versions that support native Backint backup and restore.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.BackintAgent"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "coordinator", "exporter"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.BackintAgent", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.HanaDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
