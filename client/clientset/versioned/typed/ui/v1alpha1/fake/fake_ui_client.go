@@ -89,6 +89,18 @@ func (c *FakeUiV1alpha1) MySQLSchemaOverviews(namespace string) v1alpha1.MySQLSc
 	return newFakeMySQLSchemaOverviews(c, namespace)
 }
 
+func (c *FakeUiV1alpha1) PerconaXtraDBInsights(namespace string) v1alpha1.PerconaXtraDBInsightInterface {
+	return newFakePerconaXtraDBInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) PerconaXtraDBQuerieses(namespace string) v1alpha1.PerconaXtraDBQueriesInterface {
+	return newFakePerconaXtraDBQuerieses(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) PerconaXtraDBSchemaOverviews(namespace string) v1alpha1.PerconaXtraDBSchemaOverviewInterface {
+	return newFakePerconaXtraDBSchemaOverviews(c, namespace)
+}
+
 func (c *FakeUiV1alpha1) PgBouncerInsights(namespace string) v1alpha1.PgBouncerInsightInterface {
 	return newFakePgBouncerInsights(c, namespace)
 }

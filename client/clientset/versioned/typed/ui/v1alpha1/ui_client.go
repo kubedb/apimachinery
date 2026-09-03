@@ -44,6 +44,9 @@ type UiV1alpha1Interface interface {
 	MySQLInsightsGetter
 	MySQLQueriesesGetter
 	MySQLSchemaOverviewsGetter
+	PerconaXtraDBInsightsGetter
+	PerconaXtraDBQueriesesGetter
+	PerconaXtraDBSchemaOverviewsGetter
 	PgBouncerInsightsGetter
 	PgBouncerPoolOverviewsGetter
 	PgBouncerServerOverviewsGetter
@@ -123,6 +126,18 @@ func (c *UiV1alpha1Client) MySQLQuerieses(namespace string) MySQLQueriesInterfac
 
 func (c *UiV1alpha1Client) MySQLSchemaOverviews(namespace string) MySQLSchemaOverviewInterface {
 	return newMySQLSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBInsights(namespace string) PerconaXtraDBInsightInterface {
+	return newPerconaXtraDBInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBQuerieses(namespace string) PerconaXtraDBQueriesInterface {
+	return newPerconaXtraDBQuerieses(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBSchemaOverviews(namespace string) PerconaXtraDBSchemaOverviewInterface {
+	return newPerconaXtraDBSchemaOverviews(c, namespace)
 }
 
 func (c *UiV1alpha1Client) PgBouncerInsights(namespace string) PgBouncerInsightInterface {

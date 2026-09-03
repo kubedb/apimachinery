@@ -118,6 +118,7 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,M
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBSchemaOverviewSpec,Collections
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MySQLQueriesSpec,Queries
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PerconaXtraDBQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PgBouncerInsightSpec,PodInsights
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PgBouncerPoolOverviewSpec,Pools
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,PgBouncerServerOverviewSpec,Servers
@@ -357,6 +358,13 @@ API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesSt
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsTranslogStats,TotalSize
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsWarmerStats,TotalTime
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,NodesStatsWarmerStats,TotalTimeInMillis
+API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,PerconaXtraDBInsightSpec,WSRepClusterSize
+API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,PerconaXtraDBInsightSpec,WSRepClusterStatus
+API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,PerconaXtraDBInsightSpec,WSRepConnected
+API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,PerconaXtraDBInsightSpec,WSRepFlowControlPaused
+API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,PerconaXtraDBInsightSpec,WSRepLocalState
+API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,PerconaXtraDBInsightSpec,WSRepLocalStateComment
+API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,PerconaXtraDBInsightSpec,WSRepReady
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,PodInsight,QueryTypeInsight
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLSettingsSpec,AdminVariables
 API rule violation: names_match,kubedb.dev/apimachinery/apis/ui/v1alpha1,ProxySQLSettingsSpec,MySQLQueryRules

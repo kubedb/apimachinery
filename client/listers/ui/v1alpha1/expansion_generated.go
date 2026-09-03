@@ -130,6 +130,30 @@ type MySQLSchemaOverviewListerExpansion interface{}
 // MySQLSchemaOverviewNamespaceLister.
 type MySQLSchemaOverviewNamespaceListerExpansion interface{}
 
+// PerconaXtraDBInsightListerExpansion allows custom methods to be added to
+// PerconaXtraDBInsightLister.
+type PerconaXtraDBInsightListerExpansion interface{}
+
+// PerconaXtraDBInsightNamespaceListerExpansion allows custom methods to be added to
+// PerconaXtraDBInsightNamespaceLister.
+type PerconaXtraDBInsightNamespaceListerExpansion interface{}
+
+// PerconaXtraDBQueriesListerExpansion allows custom methods to be added to
+// PerconaXtraDBQueriesLister.
+type PerconaXtraDBQueriesListerExpansion interface{}
+
+// PerconaXtraDBQueriesNamespaceListerExpansion allows custom methods to be added to
+// PerconaXtraDBQueriesNamespaceLister.
+type PerconaXtraDBQueriesNamespaceListerExpansion interface{}
+
+// PerconaXtraDBSchemaOverviewListerExpansion allows custom methods to be added to
+// PerconaXtraDBSchemaOverviewLister.
+type PerconaXtraDBSchemaOverviewListerExpansion interface{}
+
+// PerconaXtraDBSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// PerconaXtraDBSchemaOverviewNamespaceLister.
+type PerconaXtraDBSchemaOverviewNamespaceListerExpansion interface{}
+
 // PgBouncerInsightListerExpansion allows custom methods to be added to
 // PgBouncerInsightLister.
 type PgBouncerInsightListerExpansion interface{}
