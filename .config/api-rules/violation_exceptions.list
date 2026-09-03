@@ -109,6 +109,11 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,D
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseConnectionSpec,Public
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseIndexEntry,Indices
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseSummaryResponse,Stats
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DruidDatasourceSchema,Columns
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DruidInsightSpec,Datasources
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DruidInsightSpec,Services
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DruidSchemaOverviewSpec,Datasources
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DruidTasksSpec,Tasks
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatSpec,Roles
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchNodesStatsSpec,Nodes
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchSchemaOverviewSpec,Indices

@@ -26,6 +26,12 @@ import (
 type Interface interface {
 	// DatabaseConnections returns a DatabaseConnectionInformer.
 	DatabaseConnections() DatabaseConnectionInformer
+	// DruidInsights returns a DruidInsightInformer.
+	DruidInsights() DruidInsightInformer
+	// DruidSchemaOverviews returns a DruidSchemaOverviewInformer.
+	DruidSchemaOverviews() DruidSchemaOverviewInformer
+	// DruidTaskses returns a DruidTasksInformer.
+	DruidTaskses() DruidTasksInformer
 	// ElasticsearchInsights returns a ElasticsearchInsightInformer.
 	ElasticsearchInsights() ElasticsearchInsightInformer
 	// ElasticsearchNodesStatses returns a ElasticsearchNodesStatsInformer.
@@ -94,6 +100,21 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 // DatabaseConnections returns a DatabaseConnectionInformer.
 func (v *version) DatabaseConnections() DatabaseConnectionInformer {
 	return &databaseConnectionInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DruidInsights returns a DruidInsightInformer.
+func (v *version) DruidInsights() DruidInsightInformer {
+	return &druidInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DruidSchemaOverviews returns a DruidSchemaOverviewInformer.
+func (v *version) DruidSchemaOverviews() DruidSchemaOverviewInformer {
+	return &druidSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DruidTaskses returns a DruidTasksInformer.
+func (v *version) DruidTaskses() DruidTasksInformer {
+	return &druidTasksInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ElasticsearchInsights returns a ElasticsearchInsightInformer.
