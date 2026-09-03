@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/courier/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMariaDBMigrations implements MariaDBMigrationInterface
-type FakeMariaDBMigrations struct {
+// fakeMariaDBMigrations implements MariaDBMigrationInterface
+type fakeMariaDBMigrations struct {
+	*gentype.FakeClientWithList[*v1alpha1.MariaDBMigration, *v1alpha1.MariaDBMigrationList]
 	Fake *FakeCourierV1alpha1
-	ns   string
 }
 
-var mariadbmigrationsResource = v1alpha1.SchemeGroupVersion.WithResource("mariadbmigrations")
-
-var mariadbmigrationsKind = v1alpha1.SchemeGroupVersion.WithKind("MariaDBMigration")
-
-// Get takes name of the mariaDBMigration, and returns the corresponding mariaDBMigration object, and an error if there is any.
-func (c *FakeMariaDBMigrations) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MariaDBMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mariadbmigrationsResource, c.ns, name), &v1alpha1.MariaDBMigration{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMariaDBMigrations(fake *FakeCourierV1alpha1, namespace string) courierv1alpha1.MariaDBMigrationInterface {
+	return &fakeMariaDBMigrations{
+		gentype.NewFakeClientWithList[*v1alpha1.MariaDBMigration, *v1alpha1.MariaDBMigrationList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mariadbmigrations"),
+			v1alpha1.SchemeGroupVersion.WithKind("MariaDBMigration"),
+			func() *v1alpha1.MariaDBMigration { return &v1alpha1.MariaDBMigration{} },
+			func() *v1alpha1.MariaDBMigrationList { return &v1alpha1.MariaDBMigrationList{} },
+			func(dst, src *v1alpha1.MariaDBMigrationList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MariaDBMigrationList) []*v1alpha1.MariaDBMigration {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MariaDBMigrationList, items []*v1alpha1.MariaDBMigration) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MariaDBMigration), err
-}
-
-// List takes label and field selectors, and returns the list of MariaDBMigrations that match those selectors.
-func (c *FakeMariaDBMigrations) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MariaDBMigrationList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mariadbmigrationsResource, mariadbmigrationsKind, c.ns, opts), &v1alpha1.MariaDBMigrationList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MariaDBMigrationList{ListMeta: obj.(*v1alpha1.MariaDBMigrationList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MariaDBMigrationList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mariaDBMigrations.
-func (c *FakeMariaDBMigrations) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mariadbmigrationsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mariaDBMigration and creates it.  Returns the server's representation of the mariaDBMigration, and an error, if there is any.
-func (c *FakeMariaDBMigrations) Create(ctx context.Context, mariaDBMigration *v1alpha1.MariaDBMigration, opts v1.CreateOptions) (result *v1alpha1.MariaDBMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mariadbmigrationsResource, c.ns, mariaDBMigration), &v1alpha1.MariaDBMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBMigration), err
-}
-
-// Update takes the representation of a mariaDBMigration and updates it. Returns the server's representation of the mariaDBMigration, and an error, if there is any.
-func (c *FakeMariaDBMigrations) Update(ctx context.Context, mariaDBMigration *v1alpha1.MariaDBMigration, opts v1.UpdateOptions) (result *v1alpha1.MariaDBMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mariadbmigrationsResource, c.ns, mariaDBMigration), &v1alpha1.MariaDBMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBMigration), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMariaDBMigrations) UpdateStatus(ctx context.Context, mariaDBMigration *v1alpha1.MariaDBMigration, opts v1.UpdateOptions) (*v1alpha1.MariaDBMigration, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mariadbmigrationsResource, "status", c.ns, mariaDBMigration), &v1alpha1.MariaDBMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBMigration), err
-}
-
-// Delete takes name of the mariaDBMigration and deletes it. Returns an error if one occurs.
-func (c *FakeMariaDBMigrations) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mariadbmigrationsResource, c.ns, name, opts), &v1alpha1.MariaDBMigration{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMariaDBMigrations) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mariadbmigrationsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MariaDBMigrationList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mariaDBMigration.
-func (c *FakeMariaDBMigrations) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MariaDBMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mariadbmigrationsResource, c.ns, name, pt, data, subresources...), &v1alpha1.MariaDBMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBMigration), err
 }

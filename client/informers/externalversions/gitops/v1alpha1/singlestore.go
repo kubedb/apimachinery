@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	apisgitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Singlestores.
 type SinglestoreInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.SinglestoreLister
+	Lister() gitopsv1alpha1.SinglestoreLister
 }
 
 type singlestoreInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredSinglestoreInformer(client versioned.Interface, namespace string
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Singlestores(namespace).List(context.TODO(), options)
+				return client.GitopsV1alpha1().Singlestores(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Singlestores(namespace).Watch(context.TODO(), options)
+				return client.GitopsV1alpha1().Singlestores(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Singlestores(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Singlestores(namespace).Watch(ctx, options)
 			},
 		},
-		&gitopsv1alpha1.Singlestore{},
+		&apisgitopsv1alpha1.Singlestore{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *singlestoreInformer) defaultInformer(client versioned.Interface, resync
 }
 
 func (f *singlestoreInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&gitopsv1alpha1.Singlestore{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisgitopsv1alpha1.Singlestore{}, f.defaultInformer)
 }
 
-func (f *singlestoreInformer) Lister() v1alpha1.SinglestoreLister {
-	return v1alpha1.NewSinglestoreLister(f.Informer().GetIndexer())
+func (f *singlestoreInformer) Lister() gitopsv1alpha1.SinglestoreLister {
+	return gitopsv1alpha1.NewSinglestoreLister(f.Informer().GetIndexer())
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // WeaviateVersions.
 type WeaviateVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.WeaviateVersionLister
+	Lister() catalogv1alpha1.WeaviateVersionLister
 }
 
 type weaviateVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredWeaviateVersionInformer(client versioned.Interface, resyncPeriod
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().WeaviateVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().WeaviateVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().WeaviateVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().WeaviateVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().WeaviateVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().WeaviateVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.WeaviateVersion{},
+		&apiscatalogv1alpha1.WeaviateVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *weaviateVersionInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *weaviateVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.WeaviateVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.WeaviateVersion{}, f.defaultInformer)
 }
 
-func (f *weaviateVersionInformer) Lister() v1alpha1.WeaviateVersionLister {
-	return v1alpha1.NewWeaviateVersionLister(f.Informer().GetIndexer())
+func (f *weaviateVersionInformer) Lister() catalogv1alpha1.WeaviateVersionLister {
+	return catalogv1alpha1.NewWeaviateVersionLister(f.Informer().GetIndexer())
 }

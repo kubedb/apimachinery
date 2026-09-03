@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	apisautoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // RedisAutoscalers.
 type RedisAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.RedisAutoscalerLister
+	Lister() autoscalingv1alpha1.RedisAutoscalerLister
 }
 
 type redisAutoscalerInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredRedisAutoscalerInformer(client versioned.Interface, namespace st
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().RedisAutoscalers(namespace).List(context.TODO(), options)
+				return client.AutoscalingV1alpha1().RedisAutoscalers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().RedisAutoscalers(namespace).Watch(context.TODO(), options)
+				return client.AutoscalingV1alpha1().RedisAutoscalers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().RedisAutoscalers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().RedisAutoscalers(namespace).Watch(ctx, options)
 			},
 		},
-		&autoscalingv1alpha1.RedisAutoscaler{},
+		&apisautoscalingv1alpha1.RedisAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *redisAutoscalerInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *redisAutoscalerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&autoscalingv1alpha1.RedisAutoscaler{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisautoscalingv1alpha1.RedisAutoscaler{}, f.defaultInformer)
 }
 
-func (f *redisAutoscalerInformer) Lister() v1alpha1.RedisAutoscalerLister {
-	return v1alpha1.NewRedisAutoscalerLister(f.Informer().GetIndexer())
+func (f *redisAutoscalerInformer) Lister() autoscalingv1alpha1.RedisAutoscalerLister {
+	return autoscalingv1alpha1.NewRedisAutoscalerLister(f.Informer().GetIndexer())
 }

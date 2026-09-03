@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMongoDBAutoscalers implements MongoDBAutoscalerInterface
-type FakeMongoDBAutoscalers struct {
+// fakeMongoDBAutoscalers implements MongoDBAutoscalerInterface
+type fakeMongoDBAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.MongoDBAutoscaler, *v1alpha1.MongoDBAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var mongodbautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("mongodbautoscalers")
-
-var mongodbautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("MongoDBAutoscaler")
-
-// Get takes name of the mongoDBAutoscaler, and returns the corresponding mongoDBAutoscaler object, and an error if there is any.
-func (c *FakeMongoDBAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MongoDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mongodbautoscalersResource, c.ns, name), &v1alpha1.MongoDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMongoDBAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.MongoDBAutoscalerInterface {
+	return &fakeMongoDBAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.MongoDBAutoscaler, *v1alpha1.MongoDBAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mongodbautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("MongoDBAutoscaler"),
+			func() *v1alpha1.MongoDBAutoscaler { return &v1alpha1.MongoDBAutoscaler{} },
+			func() *v1alpha1.MongoDBAutoscalerList { return &v1alpha1.MongoDBAutoscalerList{} },
+			func(dst, src *v1alpha1.MongoDBAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MongoDBAutoscalerList) []*v1alpha1.MongoDBAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MongoDBAutoscalerList, items []*v1alpha1.MongoDBAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MongoDBAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of MongoDBAutoscalers that match those selectors.
-func (c *FakeMongoDBAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MongoDBAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mongodbautoscalersResource, mongodbautoscalersKind, c.ns, opts), &v1alpha1.MongoDBAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MongoDBAutoscalerList{ListMeta: obj.(*v1alpha1.MongoDBAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MongoDBAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mongoDBAutoscalers.
-func (c *FakeMongoDBAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mongodbautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mongoDBAutoscaler and creates it.  Returns the server's representation of the mongoDBAutoscaler, and an error, if there is any.
-func (c *FakeMongoDBAutoscalers) Create(ctx context.Context, mongoDBAutoscaler *v1alpha1.MongoDBAutoscaler, opts v1.CreateOptions) (result *v1alpha1.MongoDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mongodbautoscalersResource, c.ns, mongoDBAutoscaler), &v1alpha1.MongoDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBAutoscaler), err
-}
-
-// Update takes the representation of a mongoDBAutoscaler and updates it. Returns the server's representation of the mongoDBAutoscaler, and an error, if there is any.
-func (c *FakeMongoDBAutoscalers) Update(ctx context.Context, mongoDBAutoscaler *v1alpha1.MongoDBAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.MongoDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mongodbautoscalersResource, c.ns, mongoDBAutoscaler), &v1alpha1.MongoDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMongoDBAutoscalers) UpdateStatus(ctx context.Context, mongoDBAutoscaler *v1alpha1.MongoDBAutoscaler, opts v1.UpdateOptions) (*v1alpha1.MongoDBAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mongodbautoscalersResource, "status", c.ns, mongoDBAutoscaler), &v1alpha1.MongoDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBAutoscaler), err
-}
-
-// Delete takes name of the mongoDBAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeMongoDBAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mongodbautoscalersResource, c.ns, name, opts), &v1alpha1.MongoDBAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMongoDBAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mongodbautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MongoDBAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mongoDBAutoscaler.
-func (c *FakeMongoDBAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MongoDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mongodbautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.MongoDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBAutoscaler), err
 }

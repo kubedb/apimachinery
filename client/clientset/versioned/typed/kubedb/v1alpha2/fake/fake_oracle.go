@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeOracles implements OracleInterface
-type FakeOracles struct {
+// fakeOracles implements OracleInterface
+type fakeOracles struct {
+	*gentype.FakeClientWithList[*v1alpha2.Oracle, *v1alpha2.OracleList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var oraclesResource = v1alpha2.SchemeGroupVersion.WithResource("oracles")
-
-var oraclesKind = v1alpha2.SchemeGroupVersion.WithKind("Oracle")
-
-// Get takes name of the oracle, and returns the corresponding oracle object, and an error if there is any.
-func (c *FakeOracles) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Oracle, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(oraclesResource, c.ns, name), &v1alpha2.Oracle{})
-
-	if obj == nil {
-		return nil, err
+func newFakeOracles(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.OracleInterface {
+	return &fakeOracles{
+		gentype.NewFakeClientWithList[*v1alpha2.Oracle, *v1alpha2.OracleList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("oracles"),
+			v1alpha2.SchemeGroupVersion.WithKind("Oracle"),
+			func() *v1alpha2.Oracle { return &v1alpha2.Oracle{} },
+			func() *v1alpha2.OracleList { return &v1alpha2.OracleList{} },
+			func(dst, src *v1alpha2.OracleList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.OracleList) []*v1alpha2.Oracle { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.OracleList, items []*v1alpha2.Oracle) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.Oracle), err
-}
-
-// List takes label and field selectors, and returns the list of Oracles that match those selectors.
-func (c *FakeOracles) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.OracleList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(oraclesResource, oraclesKind, c.ns, opts), &v1alpha2.OracleList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.OracleList{ListMeta: obj.(*v1alpha2.OracleList).ListMeta}
-	for _, item := range obj.(*v1alpha2.OracleList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested oracles.
-func (c *FakeOracles) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(oraclesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a oracle and creates it.  Returns the server's representation of the oracle, and an error, if there is any.
-func (c *FakeOracles) Create(ctx context.Context, oracle *v1alpha2.Oracle, opts v1.CreateOptions) (result *v1alpha2.Oracle, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(oraclesResource, c.ns, oracle), &v1alpha2.Oracle{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Oracle), err
-}
-
-// Update takes the representation of a oracle and updates it. Returns the server's representation of the oracle, and an error, if there is any.
-func (c *FakeOracles) Update(ctx context.Context, oracle *v1alpha2.Oracle, opts v1.UpdateOptions) (result *v1alpha2.Oracle, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(oraclesResource, c.ns, oracle), &v1alpha2.Oracle{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Oracle), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeOracles) UpdateStatus(ctx context.Context, oracle *v1alpha2.Oracle, opts v1.UpdateOptions) (*v1alpha2.Oracle, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(oraclesResource, "status", c.ns, oracle), &v1alpha2.Oracle{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Oracle), err
-}
-
-// Delete takes name of the oracle and deletes it. Returns an error if one occurs.
-func (c *FakeOracles) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(oraclesResource, c.ns, name, opts), &v1alpha2.Oracle{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeOracles) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(oraclesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.OracleList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched oracle.
-func (c *FakeOracles) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.Oracle, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(oraclesResource, c.ns, name, pt, data, subresources...), &v1alpha2.Oracle{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Oracle), err
 }

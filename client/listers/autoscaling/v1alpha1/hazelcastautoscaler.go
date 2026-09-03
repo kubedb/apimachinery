@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // HazelcastAutoscalerLister helps list HazelcastAutoscalers.
@@ -31,7 +31,7 @@ import (
 type HazelcastAutoscalerLister interface {
 	// List lists all HazelcastAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.HazelcastAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.HazelcastAutoscaler, err error)
 	// HazelcastAutoscalers returns an object that can list and get HazelcastAutoscalers.
 	HazelcastAutoscalers(namespace string) HazelcastAutoscalerNamespaceLister
 	HazelcastAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type HazelcastAutoscalerLister interface {
 
 // hazelcastAutoscalerLister implements the HazelcastAutoscalerLister interface.
 type hazelcastAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.HazelcastAutoscaler]
 }
 
 // NewHazelcastAutoscalerLister returns a new HazelcastAutoscalerLister.
 func NewHazelcastAutoscalerLister(indexer cache.Indexer) HazelcastAutoscalerLister {
-	return &hazelcastAutoscalerLister{indexer: indexer}
-}
-
-// List lists all HazelcastAutoscalers in the indexer.
-func (s *hazelcastAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.HazelcastAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.HazelcastAutoscaler))
-	})
-	return ret, err
+	return &hazelcastAutoscalerLister{listers.New[*autoscalingv1alpha1.HazelcastAutoscaler](indexer, autoscalingv1alpha1.Resource("hazelcastautoscaler"))}
 }
 
 // HazelcastAutoscalers returns an object that can list and get HazelcastAutoscalers.
 func (s *hazelcastAutoscalerLister) HazelcastAutoscalers(namespace string) HazelcastAutoscalerNamespaceLister {
-	return hazelcastAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return hazelcastAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.HazelcastAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // HazelcastAutoscalerNamespaceLister helps list and get HazelcastAutoscalers.
@@ -65,36 +57,15 @@ func (s *hazelcastAutoscalerLister) HazelcastAutoscalers(namespace string) Hazel
 type HazelcastAutoscalerNamespaceLister interface {
 	// List lists all HazelcastAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.HazelcastAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.HazelcastAutoscaler, err error)
 	// Get retrieves the HazelcastAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.HazelcastAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.HazelcastAutoscaler, error)
 	HazelcastAutoscalerNamespaceListerExpansion
 }
 
 // hazelcastAutoscalerNamespaceLister implements the HazelcastAutoscalerNamespaceLister
 // interface.
 type hazelcastAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all HazelcastAutoscalers in the indexer for a given namespace.
-func (s hazelcastAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.HazelcastAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.HazelcastAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the HazelcastAutoscaler from the indexer for a given namespace and name.
-func (s hazelcastAutoscalerNamespaceLister) Get(name string) (*v1alpha1.HazelcastAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("hazelcastautoscaler"), name)
-	}
-	return obj.(*v1alpha1.HazelcastAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.HazelcastAutoscaler]
 }

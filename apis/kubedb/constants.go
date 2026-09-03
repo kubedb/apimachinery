@@ -570,11 +570,18 @@ const (
 	PostgresSharedTlsVolumeName      = "certs"
 	PostgresSharedTlsVolumeMountPath = "/tls/certs"
 	PostgresCustomConfigFile         = "user.conf"
-	PostgresTuningConfigFile         = "pgtune.conf"
-	PostgresKeyFileSecretSuffix      = "key"
-	PostgresPEMSecretSuffix          = "pem"
-	PostgresDefaultUsername          = "postgres"
-	PostgresPgCoordinatorStatus      = "Coordinator/Status"
+	// PostgresCustomHBAFile is the optional configSecret key whose content is
+	// surfaced to the DB pod as /etc/config/user_hba.conf. postgres-init-docker
+	// splices it into the generated pg_hba.conf between the operator-essential
+	// local/loopback rules and the world-CIDR catch-alls, so user rules can
+	// override the catch-alls (pg_hba.conf is first-match-wins) but cannot lock
+	// the operator out.
+	PostgresCustomHBAFile       = "user_hba.conf"
+	PostgresTuningConfigFile    = "pgtune.conf"
+	PostgresKeyFileSecretSuffix = "key"
+	PostgresPEMSecretSuffix     = "pem"
+	PostgresDefaultUsername     = "postgres"
+	PostgresPgCoordinatorStatus = "Coordinator/Status"
 	// to pause the failover for postgres. this is helpful for ops request
 	PostgresPgCoordinatorStatusPause = "Pause"
 	// to resume the failover for postgres. this is helpful for ops request

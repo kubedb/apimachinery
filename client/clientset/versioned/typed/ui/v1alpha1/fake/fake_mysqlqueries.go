@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMySQLQuerieses implements MySQLQueriesInterface
-type FakeMySQLQuerieses struct {
+// fakeMySQLQuerieses implements MySQLQueriesInterface
+type fakeMySQLQuerieses struct {
+	*gentype.FakeClientWithList[*v1alpha1.MySQLQueries, *v1alpha1.MySQLQueriesList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var mysqlqueriesesResource = v1alpha1.SchemeGroupVersion.WithResource("mysqlquerieses")
-
-var mysqlqueriesesKind = v1alpha1.SchemeGroupVersion.WithKind("MySQLQueries")
-
-// Get takes name of the mySQLQueries, and returns the corresponding mySQLQueries object, and an error if there is any.
-func (c *FakeMySQLQuerieses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MySQLQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mysqlqueriesesResource, c.ns, name), &v1alpha1.MySQLQueries{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMySQLQuerieses(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.MySQLQueriesInterface {
+	return &fakeMySQLQuerieses{
+		gentype.NewFakeClientWithList[*v1alpha1.MySQLQueries, *v1alpha1.MySQLQueriesList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mysqlquerieses"),
+			v1alpha1.SchemeGroupVersion.WithKind("MySQLQueries"),
+			func() *v1alpha1.MySQLQueries { return &v1alpha1.MySQLQueries{} },
+			func() *v1alpha1.MySQLQueriesList { return &v1alpha1.MySQLQueriesList{} },
+			func(dst, src *v1alpha1.MySQLQueriesList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MySQLQueriesList) []*v1alpha1.MySQLQueries {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MySQLQueriesList, items []*v1alpha1.MySQLQueries) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MySQLQueries), err
-}
-
-// List takes label and field selectors, and returns the list of MySQLQuerieses that match those selectors.
-func (c *FakeMySQLQuerieses) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MySQLQueriesList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mysqlqueriesesResource, mysqlqueriesesKind, c.ns, opts), &v1alpha1.MySQLQueriesList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MySQLQueriesList{ListMeta: obj.(*v1alpha1.MySQLQueriesList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MySQLQueriesList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mySQLQuerieses.
-func (c *FakeMySQLQuerieses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mysqlqueriesesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mySQLQueries and creates it.  Returns the server's representation of the mySQLQueries, and an error, if there is any.
-func (c *FakeMySQLQuerieses) Create(ctx context.Context, mySQLQueries *v1alpha1.MySQLQueries, opts v1.CreateOptions) (result *v1alpha1.MySQLQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mysqlqueriesesResource, c.ns, mySQLQueries), &v1alpha1.MySQLQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLQueries), err
-}
-
-// Update takes the representation of a mySQLQueries and updates it. Returns the server's representation of the mySQLQueries, and an error, if there is any.
-func (c *FakeMySQLQuerieses) Update(ctx context.Context, mySQLQueries *v1alpha1.MySQLQueries, opts v1.UpdateOptions) (result *v1alpha1.MySQLQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mysqlqueriesesResource, c.ns, mySQLQueries), &v1alpha1.MySQLQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLQueries), err
-}
-
-// Delete takes name of the mySQLQueries and deletes it. Returns an error if one occurs.
-func (c *FakeMySQLQuerieses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mysqlqueriesesResource, c.ns, name, opts), &v1alpha1.MySQLQueries{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMySQLQuerieses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mysqlqueriesesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MySQLQueriesList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mySQLQueries.
-func (c *FakeMySQLQuerieses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MySQLQueries, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mysqlqueriesesResource, c.ns, name, pt, data, subresources...), &v1alpha1.MySQLQueries{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLQueries), err
 }

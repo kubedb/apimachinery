@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/courier/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMongoDBMigrations implements MongoDBMigrationInterface
-type FakeMongoDBMigrations struct {
+// fakeMongoDBMigrations implements MongoDBMigrationInterface
+type fakeMongoDBMigrations struct {
+	*gentype.FakeClientWithList[*v1alpha1.MongoDBMigration, *v1alpha1.MongoDBMigrationList]
 	Fake *FakeCourierV1alpha1
-	ns   string
 }
 
-var mongodbmigrationsResource = v1alpha1.SchemeGroupVersion.WithResource("mongodbmigrations")
-
-var mongodbmigrationsKind = v1alpha1.SchemeGroupVersion.WithKind("MongoDBMigration")
-
-// Get takes name of the mongoDBMigration, and returns the corresponding mongoDBMigration object, and an error if there is any.
-func (c *FakeMongoDBMigrations) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MongoDBMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mongodbmigrationsResource, c.ns, name), &v1alpha1.MongoDBMigration{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMongoDBMigrations(fake *FakeCourierV1alpha1, namespace string) courierv1alpha1.MongoDBMigrationInterface {
+	return &fakeMongoDBMigrations{
+		gentype.NewFakeClientWithList[*v1alpha1.MongoDBMigration, *v1alpha1.MongoDBMigrationList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mongodbmigrations"),
+			v1alpha1.SchemeGroupVersion.WithKind("MongoDBMigration"),
+			func() *v1alpha1.MongoDBMigration { return &v1alpha1.MongoDBMigration{} },
+			func() *v1alpha1.MongoDBMigrationList { return &v1alpha1.MongoDBMigrationList{} },
+			func(dst, src *v1alpha1.MongoDBMigrationList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MongoDBMigrationList) []*v1alpha1.MongoDBMigration {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MongoDBMigrationList, items []*v1alpha1.MongoDBMigration) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MongoDBMigration), err
-}
-
-// List takes label and field selectors, and returns the list of MongoDBMigrations that match those selectors.
-func (c *FakeMongoDBMigrations) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MongoDBMigrationList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mongodbmigrationsResource, mongodbmigrationsKind, c.ns, opts), &v1alpha1.MongoDBMigrationList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MongoDBMigrationList{ListMeta: obj.(*v1alpha1.MongoDBMigrationList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MongoDBMigrationList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mongoDBMigrations.
-func (c *FakeMongoDBMigrations) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mongodbmigrationsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mongoDBMigration and creates it.  Returns the server's representation of the mongoDBMigration, and an error, if there is any.
-func (c *FakeMongoDBMigrations) Create(ctx context.Context, mongoDBMigration *v1alpha1.MongoDBMigration, opts v1.CreateOptions) (result *v1alpha1.MongoDBMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mongodbmigrationsResource, c.ns, mongoDBMigration), &v1alpha1.MongoDBMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBMigration), err
-}
-
-// Update takes the representation of a mongoDBMigration and updates it. Returns the server's representation of the mongoDBMigration, and an error, if there is any.
-func (c *FakeMongoDBMigrations) Update(ctx context.Context, mongoDBMigration *v1alpha1.MongoDBMigration, opts v1.UpdateOptions) (result *v1alpha1.MongoDBMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mongodbmigrationsResource, c.ns, mongoDBMigration), &v1alpha1.MongoDBMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBMigration), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMongoDBMigrations) UpdateStatus(ctx context.Context, mongoDBMigration *v1alpha1.MongoDBMigration, opts v1.UpdateOptions) (*v1alpha1.MongoDBMigration, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mongodbmigrationsResource, "status", c.ns, mongoDBMigration), &v1alpha1.MongoDBMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBMigration), err
-}
-
-// Delete takes name of the mongoDBMigration and deletes it. Returns an error if one occurs.
-func (c *FakeMongoDBMigrations) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mongodbmigrationsResource, c.ns, name, opts), &v1alpha1.MongoDBMigration{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMongoDBMigrations) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mongodbmigrationsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MongoDBMigrationList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mongoDBMigration.
-func (c *FakeMongoDBMigrations) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MongoDBMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mongodbmigrationsResource, c.ns, name, pt, data, subresources...), &v1alpha1.MongoDBMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MongoDBMigration), err
 }

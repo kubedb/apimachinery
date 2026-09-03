@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // Neo4jOpsRequestLister helps list Neo4jOpsRequests.
@@ -31,7 +31,7 @@ import (
 type Neo4jOpsRequestLister interface {
 	// List lists all Neo4jOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.Neo4jOpsRequest, err error)
 	// Neo4jOpsRequests returns an object that can list and get Neo4jOpsRequests.
 	Neo4jOpsRequests(namespace string) Neo4jOpsRequestNamespaceLister
 	Neo4jOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type Neo4jOpsRequestLister interface {
 
 // neo4jOpsRequestLister implements the Neo4jOpsRequestLister interface.
 type neo4jOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.Neo4jOpsRequest]
 }
 
 // NewNeo4jOpsRequestLister returns a new Neo4jOpsRequestLister.
 func NewNeo4jOpsRequestLister(indexer cache.Indexer) Neo4jOpsRequestLister {
-	return &neo4jOpsRequestLister{indexer: indexer}
-}
-
-// List lists all Neo4jOpsRequests in the indexer.
-func (s *neo4jOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jOpsRequest))
-	})
-	return ret, err
+	return &neo4jOpsRequestLister{listers.New[*opsv1alpha1.Neo4jOpsRequest](indexer, opsv1alpha1.Resource("neo4jopsrequest"))}
 }
 
 // Neo4jOpsRequests returns an object that can list and get Neo4jOpsRequests.
 func (s *neo4jOpsRequestLister) Neo4jOpsRequests(namespace string) Neo4jOpsRequestNamespaceLister {
-	return neo4jOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return neo4jOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.Neo4jOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // Neo4jOpsRequestNamespaceLister helps list and get Neo4jOpsRequests.
@@ -65,36 +57,15 @@ func (s *neo4jOpsRequestLister) Neo4jOpsRequests(namespace string) Neo4jOpsReque
 type Neo4jOpsRequestNamespaceLister interface {
 	// List lists all Neo4jOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.Neo4jOpsRequest, err error)
 	// Get retrieves the Neo4jOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Neo4jOpsRequest, error)
+	Get(name string) (*opsv1alpha1.Neo4jOpsRequest, error)
 	Neo4jOpsRequestNamespaceListerExpansion
 }
 
 // neo4jOpsRequestNamespaceLister implements the Neo4jOpsRequestNamespaceLister
 // interface.
 type neo4jOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Neo4jOpsRequests in the indexer for a given namespace.
-func (s neo4jOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the Neo4jOpsRequest from the indexer for a given namespace and name.
-func (s neo4jOpsRequestNamespaceLister) Get(name string) (*v1alpha1.Neo4jOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("neo4jopsrequest"), name)
-	}
-	return obj.(*v1alpha1.Neo4jOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.Neo4jOpsRequest]
 }
