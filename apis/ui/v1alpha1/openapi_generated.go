@@ -587,7 +587,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummary":                                   schema_apimachinery_apis_ui_v1alpha1_DatabaseSummary(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummaryRequest":                            schema_apimachinery_apis_ui_v1alpha1_DatabaseSummaryRequest(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummaryResponse":                           schema_apimachinery_apis_ui_v1alpha1_DatabaseSummaryResponse(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidClusterSummary":                               schema_apimachinery_apis_ui_v1alpha1_DruidClusterSummary(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidColumn":                                       schema_apimachinery_apis_ui_v1alpha1_DruidColumn(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidDatasourceSchema":                             schema_apimachinery_apis_ui_v1alpha1_DruidDatasourceSchema(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidDatasourceStatus":                             schema_apimachinery_apis_ui_v1alpha1_DruidDatasourceStatus(ref),
@@ -34040,66 +34039,6 @@ func schema_apimachinery_apis_ui_v1alpha1_DatabaseSummaryResponse(ref common.Ref
 	}
 }
 
-func schema_apimachinery_apis_ui_v1alpha1_DruidClusterSummary(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"totalServices": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"totalDatasources": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"totalSegments": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"availableSegments": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"unavailableSegments": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"realtimeSegments": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"totalRows": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"totalSizeBytes": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_ui_v1alpha1_DruidColumn(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34364,12 +34303,6 @@ func schema_apimachinery_apis_ui_v1alpha1_DruidInsightSpec(ref common.ReferenceC
 							Format:  "",
 						},
 					},
-					"summary": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidClusterSummary"),
-						},
-					},
 					"services": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
@@ -34397,11 +34330,11 @@ func schema_apimachinery_apis_ui_v1alpha1_DruidInsightSpec(ref common.ReferenceC
 						},
 					},
 				},
-				Required: []string{"version", "summary"},
+				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidClusterSummary", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidDatasourceStatus", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidServiceStatus"},
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidDatasourceStatus", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidServiceStatus"},
 	}
 }
 
@@ -34531,19 +34464,6 @@ func schema_apimachinery_apis_ui_v1alpha1_DruidServiceStatus(ref common.Referenc
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
-					"server": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"host": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
@@ -34551,33 +34471,11 @@ func schema_apimachinery_apis_ui_v1alpha1_DruidServiceStatus(ref common.Referenc
 							Format:  "",
 						},
 					},
-					"tier": {
+					"replicaCount": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"plaintextPort": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"tlsPort": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"leader": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
-						},
-					},
-					"startTime": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
 						},
 					},
 					"version": {
@@ -34586,36 +34484,16 @@ func schema_apimachinery_apis_ui_v1alpha1_DruidServiceStatus(ref common.Referenc
 							Format: "",
 						},
 					},
-					"availableProcessors": {
+					"leaderAddress": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
-						},
-					},
-					"totalMemoryBytes": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"currentSizeBytes": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"maxSizeBytes": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 				},
-				Required: []string{"server", "type"},
+				Required: []string{"type", "replicaCount"},
 			},
 		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

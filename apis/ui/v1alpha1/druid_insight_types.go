@@ -30,36 +30,15 @@ const (
 
 type DruidInsightSpec struct {
 	Version     string                  `json:"version"`
-	Summary     DruidClusterSummary     `json:"summary"`
 	Services    []DruidServiceStatus    `json:"services,omitempty"`
 	Datasources []DruidDatasourceStatus `json:"datasources,omitempty"`
 }
 
-type DruidClusterSummary struct {
-	TotalServices       *int32 `json:"totalServices,omitempty"`
-	TotalDatasources    *int32 `json:"totalDatasources,omitempty"`
-	TotalSegments       *int64 `json:"totalSegments,omitempty"`
-	AvailableSegments   *int64 `json:"availableSegments,omitempty"`
-	UnavailableSegments *int64 `json:"unavailableSegments,omitempty"`
-	RealtimeSegments    *int64 `json:"realtimeSegments,omitempty"`
-	TotalRows           *int64 `json:"totalRows,omitempty"`
-	TotalSizeBytes      *int64 `json:"totalSizeBytes,omitempty"`
-}
-
 type DruidServiceStatus struct {
-	Server              string       `json:"server"`
-	Host                string       `json:"host,omitempty"`
-	Type                string       `json:"type"`
-	Tier                string       `json:"tier,omitempty"`
-	PlaintextPort       *int32       `json:"plaintextPort,omitempty"`
-	TLSPort             *int32       `json:"tlsPort,omitempty"`
-	Leader              *bool        `json:"leader,omitempty"`
-	StartTime           *metav1.Time `json:"startTime,omitempty"`
-	Version             string       `json:"version,omitempty"`
-	AvailableProcessors *int32       `json:"availableProcessors,omitempty"`
-	TotalMemoryBytes    *int64       `json:"totalMemoryBytes,omitempty"`
-	CurrentSizeBytes    *int64       `json:"currentSizeBytes,omitempty"`
-	MaxSizeBytes        *int64       `json:"maxSizeBytes,omitempty"`
+	Type          string `json:"type"`
+	ReplicaCount  int32  `json:"replicaCount"`
+	Version       string `json:"version,omitempty"`
+	LeaderAddress string `json:"leaderAddress,omitempty"`
 }
 
 type DruidDatasourceStatus struct {

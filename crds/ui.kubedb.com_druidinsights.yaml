@@ -61,75 +61,23 @@ spec:
               services:
                 items:
                   properties:
-                    availableProcessors:
+                    leaderAddress:
+                      type: string
+                    replicaCount:
                       format: int32
-                      type: integer
-                    currentSizeBytes:
-                      format: int64
-                      type: integer
-                    host:
-                      type: string
-                    leader:
-                      type: boolean
-                    maxSizeBytes:
-                      format: int64
-                      type: integer
-                    plaintextPort:
-                      format: int32
-                      type: integer
-                    server:
-                      type: string
-                    startTime:
-                      format: date-time
-                      type: string
-                    tier:
-                      type: string
-                    tlsPort:
-                      format: int32
-                      type: integer
-                    totalMemoryBytes:
-                      format: int64
                       type: integer
                     type:
                       type: string
                     version:
                       type: string
                   required:
-                  - server
+                  - replicaCount
                   - type
                   type: object
                 type: array
-              summary:
-                properties:
-                  availableSegments:
-                    format: int64
-                    type: integer
-                  realtimeSegments:
-                    format: int64
-                    type: integer
-                  totalDatasources:
-                    format: int32
-                    type: integer
-                  totalRows:
-                    format: int64
-                    type: integer
-                  totalSegments:
-                    format: int64
-                    type: integer
-                  totalServices:
-                    format: int32
-                    type: integer
-                  totalSizeBytes:
-                    format: int64
-                    type: integer
-                  unavailableSegments:
-                    format: int64
-                    type: integer
-                type: object
               version:
                 type: string
             required:
-            - summary
             - version
             type: object
           status:
