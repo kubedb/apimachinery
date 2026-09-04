@@ -105,3 +105,11 @@ const (
 
 	ClickHouseDriver = "ClickHouseBackup"
 )
+
+const (
+	BackupDirNeo4jMetadata     = "metadata"
+	BackupDirNeo4jData         = "data"
+	BackupDirNeo4jDifferential = "differential"
+
+	Neo4jDriver = "Neo4jAdmin"
+)

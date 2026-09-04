@@ -227,3 +227,37 @@ type ClickHouseIncrementalBackupOptions struct {
 	// +optional
 	LogRetentionHistoryLimit int32 `json:"logRetentionHistoryLimit,omitempty"`
 }
+
+type Neo4jFullBackupOptions struct {
+	// +kubebuilder:default:=Neo4jAdmin
+	Driver apis.Driver `json:"driver"`
+	// +optional
+	Task *Task `json:"task,omitempty"`
+	// +optional
+	Scheduler *SchedulerOptions `json:"scheduler,omitempty"`
+	// +optional
+	ContainerRuntimeSettings *ofst.ContainerRuntimeSettings `json:"containerRuntimeSettings,omitempty"`
+	// +optional
+	JobTemplate *ofst.PodTemplateSpec `json:"jobTemplate,omitempty"`
+	// +optional
+	RetryConfig *stashcoreapi.RetryConfig `json:"retryConfig,omitempty"`
+	// +optional
+	Timeout *metav1.Duration `json:"timeout,omitempty"`
+	// +optional
+	SessionHistoryLimit int32 `json:"sessionHistoryLimit,omitempty"`
+}
+
+type Neo4jDifferentialBackupOptions struct {
+	// BackupInterval defines how frequently a differential backup is triggered.
+	// +optional
+	BackupInterval *metav1.Duration `json:"backupInterval,omitempty"`
+
+	// +optional
+	Task *Task `json:"task,omitempty"`
+
+	// +optional
+	RuntimeSettings *ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
+
+	// +optional
+	ConfigSecret *GenericSecretReference `json:"configSecret,omitempty"`
+}

@@ -53,6 +53,10 @@ func (c *FakeArchiverV1alpha1) MySQLArchivers(namespace string) v1alpha1.MySQLAr
 	return newFakeMySQLArchivers(c, namespace)
 }
 
+func (c *FakeArchiverV1alpha1) Neo4jArchivers(namespace string) v1alpha1.Neo4jArchiverInterface {
+	return &FakeNeo4jArchivers{c, namespace}
+}
+
 func (c *FakeArchiverV1alpha1) PostgresArchivers(namespace string) v1alpha1.PostgresArchiverInterface {
 	return newFakePostgresArchivers(c, namespace)
 }
