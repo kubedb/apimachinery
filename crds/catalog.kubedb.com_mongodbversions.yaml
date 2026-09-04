@@ -146,6 +146,7 @@ spec:
                 - Percona
                 - KubeDB
                 - MongoDB
+                - Enterprise
                 type: string
               endOfLife:
                 type: boolean

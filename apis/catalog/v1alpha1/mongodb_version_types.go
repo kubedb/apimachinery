@@ -133,7 +133,7 @@ type MongoDBVersionList struct {
 	Items []MongoDBVersion `json:"items,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Official;Percona;KubeDB;MongoDB
+// +kubebuilder:validation:Enum=Official;Percona;KubeDB;MongoDB;Enterprise
 type MongoDBDistro string
 
 const (
@@ -141,4 +141,14 @@ const (
 	MongoDBDistroPercona   MongoDBDistro = "Percona"
 	MongoDBDistroKubeDB    MongoDBDistro = "KubeDB"
 	MongoDBDistroMongoDB   MongoDBDistro = "MongoDB"
+	// MongoDBDistroEnterprise is MongoDB Inc.'s official mongodb/mongodb-enterprise-server
+	// build (LDAP, Kerberos, encryption-at-rest, auditing, SNMP, queryable encryption, etc.).
+	// It requires no runtime license file: MongoDB Enterprise Server has no license-key
+	// enforcement built into the binary, unlike e.g. the AppsCode Postgres Enterprise
+	// distribution. Using it in production requires a commercial MongoDB Enterprise
+	// Advanced subscription, but that is a contractual obligation, not something this
+	// operator can or needs to enforce technically. The image shares its entrypoint
+	// with MongoDBDistroMongoDB (mongodb/mongodb-community-server), so it is handled
+	// identically wherever that distro is branched on (see usesOfficialMongoDBEntrypoint).
+	MongoDBDistroEnterprise MongoDBDistro = "Enterprise"
 )
