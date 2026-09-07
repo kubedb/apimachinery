@@ -739,6 +739,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4j":                                         schema_apimachinery_apis_kubedb_v1alpha2_Neo4j(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jApp":                                      schema_apimachinery_apis_kubedb_v1alpha2_Neo4jApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jBind":                                     schema_apimachinery_apis_kubedb_v1alpha2_Neo4jBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jConfiguration":                            schema_apimachinery_apis_kubedb_v1alpha2_Neo4jConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jList":                                     schema_apimachinery_apis_kubedb_v1alpha2_Neo4jList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jRemoteAliasKeystore":                      schema_apimachinery_apis_kubedb_v1alpha2_Neo4jRemoteAliasKeystore(ref),
@@ -42336,6 +42337,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Neo4j(ref common.ReferenceCallback
 }
 
 func schema_apimachinery_apis_kubedb_v1alpha2_Neo4jApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"Neo4j": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4j"),
+						},
+					},
+				},
+				Required: []string{"Neo4j"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4j"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_Neo4jBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
