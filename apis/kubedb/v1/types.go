@@ -119,7 +119,8 @@ const (
 	PrimaryServiceAlias     ServiceAlias = "primary"
 	StandbyServiceAlias     ServiceAlias = "standby"
 	StatsServiceAlias       ServiceAlias = "stats"
-	ReadReplicaServiceAlias ServiceAlias = "rr"
+	DashboardServiceAlias   ServiceAlias = "dashboard"
+	ReadReplicaServiceAlias ServiceAlias = "readreplica"
 )
 
 // +kubebuilder:validation:Enum=fscopy;clone;sync;none

@@ -120,7 +120,6 @@ const (
 	StandbyServiceAlias   ServiceAlias = "standby"
 	StatsServiceAlias     ServiceAlias = "stats"
 	DashboardServiceAlias ServiceAlias = "dashboard"
-	SecondaryServiceAlias ServiceAlias = "secondary"
 )
 
 // +kubebuilder:validation:Enum=fscopy;clone;sync;none
