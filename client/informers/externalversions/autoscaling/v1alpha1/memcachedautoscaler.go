@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	apisautoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MemcachedAutoscalers.
 type MemcachedAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MemcachedAutoscalerLister
+	Lister() autoscalingv1alpha1.MemcachedAutoscalerLister
 }
 
 type memcachedAutoscalerInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredMemcachedAutoscalerInformer(client versioned.Interface, namespac
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().MemcachedAutoscalers(namespace).List(context.TODO(), options)
+				return client.AutoscalingV1alpha1().MemcachedAutoscalers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().MemcachedAutoscalers(namespace).Watch(context.TODO(), options)
+				return client.AutoscalingV1alpha1().MemcachedAutoscalers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().MemcachedAutoscalers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().MemcachedAutoscalers(namespace).Watch(ctx, options)
 			},
 		},
-		&autoscalingv1alpha1.MemcachedAutoscaler{},
+		&apisautoscalingv1alpha1.MemcachedAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *memcachedAutoscalerInformer) defaultInformer(client versioned.Interface
 }
 
 func (f *memcachedAutoscalerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&autoscalingv1alpha1.MemcachedAutoscaler{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisautoscalingv1alpha1.MemcachedAutoscaler{}, f.defaultInformer)
 }
 
-func (f *memcachedAutoscalerInformer) Lister() v1alpha1.MemcachedAutoscalerLister {
-	return v1alpha1.NewMemcachedAutoscalerLister(f.Informer().GetIndexer())
+func (f *memcachedAutoscalerInformer) Lister() autoscalingv1alpha1.MemcachedAutoscalerLister {
+	return autoscalingv1alpha1.NewMemcachedAutoscalerLister(f.Informer().GetIndexer())
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // IgniteVersions.
 type IgniteVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.IgniteVersionLister
+	Lister() catalogv1alpha1.IgniteVersionLister
 }
 
 type igniteVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredIgniteVersionInformer(client versioned.Interface, resyncPeriod t
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().IgniteVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().IgniteVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().IgniteVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().IgniteVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().IgniteVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().IgniteVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.IgniteVersion{},
+		&apiscatalogv1alpha1.IgniteVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *igniteVersionInformer) defaultInformer(client versioned.Interface, resy
 }
 
 func (f *igniteVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.IgniteVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.IgniteVersion{}, f.defaultInformer)
 }
 
-func (f *igniteVersionInformer) Lister() v1alpha1.IgniteVersionLister {
-	return v1alpha1.NewIgniteVersionLister(f.Informer().GetIndexer())
+func (f *igniteVersionInformer) Lister() catalogv1alpha1.IgniteVersionLister {
+	return catalogv1alpha1.NewIgniteVersionLister(f.Informer().GetIndexer())
 }

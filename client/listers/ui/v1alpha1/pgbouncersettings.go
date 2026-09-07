@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PgBouncerSettingsLister helps list PgBouncerSettingses.
@@ -31,7 +31,7 @@ import (
 type PgBouncerSettingsLister interface {
 	// List lists all PgBouncerSettingses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgBouncerSettings, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.PgBouncerSettings, err error)
 	// PgBouncerSettingses returns an object that can list and get PgBouncerSettingses.
 	PgBouncerSettingses(namespace string) PgBouncerSettingsNamespaceLister
 	PgBouncerSettingsListerExpansion
@@ -39,25 +39,17 @@ type PgBouncerSettingsLister interface {
 
 // pgBouncerSettingsLister implements the PgBouncerSettingsLister interface.
 type pgBouncerSettingsLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.PgBouncerSettings]
 }
 
 // NewPgBouncerSettingsLister returns a new PgBouncerSettingsLister.
 func NewPgBouncerSettingsLister(indexer cache.Indexer) PgBouncerSettingsLister {
-	return &pgBouncerSettingsLister{indexer: indexer}
-}
-
-// List lists all PgBouncerSettingses in the indexer.
-func (s *pgBouncerSettingsLister) List(selector labels.Selector) (ret []*v1alpha1.PgBouncerSettings, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgBouncerSettings))
-	})
-	return ret, err
+	return &pgBouncerSettingsLister{listers.New[*uiv1alpha1.PgBouncerSettings](indexer, uiv1alpha1.Resource("pgbouncersettings"))}
 }
 
 // PgBouncerSettingses returns an object that can list and get PgBouncerSettingses.
 func (s *pgBouncerSettingsLister) PgBouncerSettingses(namespace string) PgBouncerSettingsNamespaceLister {
-	return pgBouncerSettingsNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return pgBouncerSettingsNamespaceLister{listers.NewNamespaced[*uiv1alpha1.PgBouncerSettings](s.ResourceIndexer, namespace)}
 }
 
 // PgBouncerSettingsNamespaceLister helps list and get PgBouncerSettingses.
@@ -65,36 +57,15 @@ func (s *pgBouncerSettingsLister) PgBouncerSettingses(namespace string) PgBounce
 type PgBouncerSettingsNamespaceLister interface {
 	// List lists all PgBouncerSettingses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgBouncerSettings, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.PgBouncerSettings, err error)
 	// Get retrieves the PgBouncerSettings from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PgBouncerSettings, error)
+	Get(name string) (*uiv1alpha1.PgBouncerSettings, error)
 	PgBouncerSettingsNamespaceListerExpansion
 }
 
 // pgBouncerSettingsNamespaceLister implements the PgBouncerSettingsNamespaceLister
 // interface.
 type pgBouncerSettingsNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PgBouncerSettingses in the indexer for a given namespace.
-func (s pgBouncerSettingsNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PgBouncerSettings, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgBouncerSettings))
-	})
-	return ret, err
-}
-
-// Get retrieves the PgBouncerSettings from the indexer for a given namespace and name.
-func (s pgBouncerSettingsNamespaceLister) Get(name string) (*v1alpha1.PgBouncerSettings, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("pgbouncersettings"), name)
-	}
-	return obj.(*v1alpha1.PgBouncerSettings), nil
+	listers.ResourceIndexer[*uiv1alpha1.PgBouncerSettings]
 }

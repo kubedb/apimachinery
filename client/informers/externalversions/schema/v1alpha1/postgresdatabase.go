@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
+	apisschemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/schema/v1alpha1"
+	schemav1alpha1 "kubedb.dev/apimachinery/client/listers/schema/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // PostgresDatabases.
 type PostgresDatabaseInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PostgresDatabaseLister
+	Lister() schemav1alpha1.PostgresDatabaseLister
 }
 
 type postgresDatabaseInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredPostgresDatabaseInformer(client versioned.Interface, namespace s
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SchemaV1alpha1().PostgresDatabases(namespace).List(context.TODO(), options)
+				return client.SchemaV1alpha1().PostgresDatabases(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SchemaV1alpha1().PostgresDatabases(namespace).Watch(context.TODO(), options)
+				return client.SchemaV1alpha1().PostgresDatabases(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.SchemaV1alpha1().PostgresDatabases(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.SchemaV1alpha1().PostgresDatabases(namespace).Watch(ctx, options)
 			},
 		},
-		&schemav1alpha1.PostgresDatabase{},
+		&apisschemav1alpha1.PostgresDatabase{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *postgresDatabaseInformer) defaultInformer(client versioned.Interface, r
 }
 
 func (f *postgresDatabaseInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&schemav1alpha1.PostgresDatabase{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisschemav1alpha1.PostgresDatabase{}, f.defaultInformer)
 }
 
-func (f *postgresDatabaseInformer) Lister() v1alpha1.PostgresDatabaseLister {
-	return v1alpha1.NewPostgresDatabaseLister(f.Informer().GetIndexer())
+func (f *postgresDatabaseInformer) Lister() schemav1alpha1.PostgresDatabaseLister {
+	return schemav1alpha1.NewPostgresDatabaseLister(f.Informer().GetIndexer())
 }

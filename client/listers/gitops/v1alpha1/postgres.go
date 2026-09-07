@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PostgresLister helps list Postgreses.
@@ -31,7 +31,7 @@ import (
 type PostgresLister interface {
 	// List lists all Postgreses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Postgres, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Postgres, err error)
 	// Postgreses returns an object that can list and get Postgreses.
 	Postgreses(namespace string) PostgresNamespaceLister
 	PostgresListerExpansion
@@ -39,25 +39,17 @@ type PostgresLister interface {
 
 // postgresLister implements the PostgresLister interface.
 type postgresLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*gitopsv1alpha1.Postgres]
 }
 
 // NewPostgresLister returns a new PostgresLister.
 func NewPostgresLister(indexer cache.Indexer) PostgresLister {
-	return &postgresLister{indexer: indexer}
-}
-
-// List lists all Postgreses in the indexer.
-func (s *postgresLister) List(selector labels.Selector) (ret []*v1alpha1.Postgres, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Postgres))
-	})
-	return ret, err
+	return &postgresLister{listers.New[*gitopsv1alpha1.Postgres](indexer, gitopsv1alpha1.Resource("postgres"))}
 }
 
 // Postgreses returns an object that can list and get Postgreses.
 func (s *postgresLister) Postgreses(namespace string) PostgresNamespaceLister {
-	return postgresNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return postgresNamespaceLister{listers.NewNamespaced[*gitopsv1alpha1.Postgres](s.ResourceIndexer, namespace)}
 }
 
 // PostgresNamespaceLister helps list and get Postgreses.
@@ -65,36 +57,15 @@ func (s *postgresLister) Postgreses(namespace string) PostgresNamespaceLister {
 type PostgresNamespaceLister interface {
 	// List lists all Postgreses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Postgres, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Postgres, err error)
 	// Get retrieves the Postgres from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Postgres, error)
+	Get(name string) (*gitopsv1alpha1.Postgres, error)
 	PostgresNamespaceListerExpansion
 }
 
 // postgresNamespaceLister implements the PostgresNamespaceLister
 // interface.
 type postgresNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Postgreses in the indexer for a given namespace.
-func (s postgresNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Postgres, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Postgres))
-	})
-	return ret, err
-}
-
-// Get retrieves the Postgres from the indexer for a given namespace and name.
-func (s postgresNamespaceLister) Get(name string) (*v1alpha1.Postgres, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("postgres"), name)
-	}
-	return obj.(*v1alpha1.Postgres), nil
+	listers.ResourceIndexer[*gitopsv1alpha1.Postgres]
 }

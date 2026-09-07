@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeKafkaConnectorVersions implements KafkaConnectorVersionInterface
-type FakeKafkaConnectorVersions struct {
+// fakeKafkaConnectorVersions implements KafkaConnectorVersionInterface
+type fakeKafkaConnectorVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.KafkaConnectorVersion, *v1alpha1.KafkaConnectorVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var kafkaconnectorversionsResource = v1alpha1.SchemeGroupVersion.WithResource("kafkaconnectorversions")
-
-var kafkaconnectorversionsKind = v1alpha1.SchemeGroupVersion.WithKind("KafkaConnectorVersion")
-
-// Get takes name of the kafkaConnectorVersion, and returns the corresponding kafkaConnectorVersion object, and an error if there is any.
-func (c *FakeKafkaConnectorVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.KafkaConnectorVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(kafkaconnectorversionsResource, name), &v1alpha1.KafkaConnectorVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeKafkaConnectorVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.KafkaConnectorVersionInterface {
+	return &fakeKafkaConnectorVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.KafkaConnectorVersion, *v1alpha1.KafkaConnectorVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("kafkaconnectorversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("KafkaConnectorVersion"),
+			func() *v1alpha1.KafkaConnectorVersion { return &v1alpha1.KafkaConnectorVersion{} },
+			func() *v1alpha1.KafkaConnectorVersionList { return &v1alpha1.KafkaConnectorVersionList{} },
+			func(dst, src *v1alpha1.KafkaConnectorVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.KafkaConnectorVersionList) []*v1alpha1.KafkaConnectorVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.KafkaConnectorVersionList, items []*v1alpha1.KafkaConnectorVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.KafkaConnectorVersion), err
-}
-
-// List takes label and field selectors, and returns the list of KafkaConnectorVersions that match those selectors.
-func (c *FakeKafkaConnectorVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.KafkaConnectorVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(kafkaconnectorversionsResource, kafkaconnectorversionsKind, opts), &v1alpha1.KafkaConnectorVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.KafkaConnectorVersionList{ListMeta: obj.(*v1alpha1.KafkaConnectorVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.KafkaConnectorVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested kafkaConnectorVersions.
-func (c *FakeKafkaConnectorVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(kafkaconnectorversionsResource, opts))
-}
-
-// Create takes the representation of a kafkaConnectorVersion and creates it.  Returns the server's representation of the kafkaConnectorVersion, and an error, if there is any.
-func (c *FakeKafkaConnectorVersions) Create(ctx context.Context, kafkaConnectorVersion *v1alpha1.KafkaConnectorVersion, opts v1.CreateOptions) (result *v1alpha1.KafkaConnectorVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(kafkaconnectorversionsResource, kafkaConnectorVersion), &v1alpha1.KafkaConnectorVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.KafkaConnectorVersion), err
-}
-
-// Update takes the representation of a kafkaConnectorVersion and updates it. Returns the server's representation of the kafkaConnectorVersion, and an error, if there is any.
-func (c *FakeKafkaConnectorVersions) Update(ctx context.Context, kafkaConnectorVersion *v1alpha1.KafkaConnectorVersion, opts v1.UpdateOptions) (result *v1alpha1.KafkaConnectorVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(kafkaconnectorversionsResource, kafkaConnectorVersion), &v1alpha1.KafkaConnectorVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.KafkaConnectorVersion), err
-}
-
-// Delete takes name of the kafkaConnectorVersion and deletes it. Returns an error if one occurs.
-func (c *FakeKafkaConnectorVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(kafkaconnectorversionsResource, name, opts), &v1alpha1.KafkaConnectorVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeKafkaConnectorVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(kafkaconnectorversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.KafkaConnectorVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched kafkaConnectorVersion.
-func (c *FakeKafkaConnectorVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.KafkaConnectorVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(kafkaconnectorversionsResource, name, pt, data, subresources...), &v1alpha1.KafkaConnectorVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.KafkaConnectorVersion), err
 }

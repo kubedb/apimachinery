@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ClickHouseAutoscalerLister helps list ClickHouseAutoscalers.
@@ -31,7 +31,7 @@ import (
 type ClickHouseAutoscalerLister interface {
 	// List lists all ClickHouseAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ClickHouseAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.ClickHouseAutoscaler, err error)
 	// ClickHouseAutoscalers returns an object that can list and get ClickHouseAutoscalers.
 	ClickHouseAutoscalers(namespace string) ClickHouseAutoscalerNamespaceLister
 	ClickHouseAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type ClickHouseAutoscalerLister interface {
 
 // clickHouseAutoscalerLister implements the ClickHouseAutoscalerLister interface.
 type clickHouseAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.ClickHouseAutoscaler]
 }
 
 // NewClickHouseAutoscalerLister returns a new ClickHouseAutoscalerLister.
 func NewClickHouseAutoscalerLister(indexer cache.Indexer) ClickHouseAutoscalerLister {
-	return &clickHouseAutoscalerLister{indexer: indexer}
-}
-
-// List lists all ClickHouseAutoscalers in the indexer.
-func (s *clickHouseAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.ClickHouseAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ClickHouseAutoscaler))
-	})
-	return ret, err
+	return &clickHouseAutoscalerLister{listers.New[*autoscalingv1alpha1.ClickHouseAutoscaler](indexer, autoscalingv1alpha1.Resource("clickhouseautoscaler"))}
 }
 
 // ClickHouseAutoscalers returns an object that can list and get ClickHouseAutoscalers.
 func (s *clickHouseAutoscalerLister) ClickHouseAutoscalers(namespace string) ClickHouseAutoscalerNamespaceLister {
-	return clickHouseAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return clickHouseAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.ClickHouseAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // ClickHouseAutoscalerNamespaceLister helps list and get ClickHouseAutoscalers.
@@ -65,36 +57,15 @@ func (s *clickHouseAutoscalerLister) ClickHouseAutoscalers(namespace string) Cli
 type ClickHouseAutoscalerNamespaceLister interface {
 	// List lists all ClickHouseAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ClickHouseAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.ClickHouseAutoscaler, err error)
 	// Get retrieves the ClickHouseAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ClickHouseAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.ClickHouseAutoscaler, error)
 	ClickHouseAutoscalerNamespaceListerExpansion
 }
 
 // clickHouseAutoscalerNamespaceLister implements the ClickHouseAutoscalerNamespaceLister
 // interface.
 type clickHouseAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ClickHouseAutoscalers in the indexer for a given namespace.
-func (s clickHouseAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ClickHouseAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ClickHouseAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the ClickHouseAutoscaler from the indexer for a given namespace and name.
-func (s clickHouseAutoscalerNamespaceLister) Get(name string) (*v1alpha1.ClickHouseAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("clickhouseautoscaler"), name)
-	}
-	return obj.(*v1alpha1.ClickHouseAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.ClickHouseAutoscaler]
 }

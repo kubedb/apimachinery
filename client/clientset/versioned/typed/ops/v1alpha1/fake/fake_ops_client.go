@@ -30,135 +30,135 @@ type FakeOpsV1alpha1 struct {
 }
 
 func (c *FakeOpsV1alpha1) AerospikeOpsRequests(namespace string) v1alpha1.AerospikeOpsRequestInterface {
-	return &FakeAerospikeOpsRequests{c, namespace}
+	return newFakeAerospikeOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) CassandraOpsRequests(namespace string) v1alpha1.CassandraOpsRequestInterface {
-	return &FakeCassandraOpsRequests{c, namespace}
+	return newFakeCassandraOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) ClickHouseOpsRequests(namespace string) v1alpha1.ClickHouseOpsRequestInterface {
-	return &FakeClickHouseOpsRequests{c, namespace}
+	return newFakeClickHouseOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) DB2OpsRequests(namespace string) v1alpha1.DB2OpsRequestInterface {
-	return &FakeDB2OpsRequests{c, namespace}
+	return newFakeDB2OpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) DocumentDBOpsRequests(namespace string) v1alpha1.DocumentDBOpsRequestInterface {
-	return &FakeDocumentDBOpsRequests{c, namespace}
+	return newFakeDocumentDBOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) DruidOpsRequests(namespace string) v1alpha1.DruidOpsRequestInterface {
-	return &FakeDruidOpsRequests{c, namespace}
+	return newFakeDruidOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) ElasticsearchOpsRequests(namespace string) v1alpha1.ElasticsearchOpsRequestInterface {
-	return &FakeElasticsearchOpsRequests{c, namespace}
+	return newFakeElasticsearchOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) EtcdOpsRequests(namespace string) v1alpha1.EtcdOpsRequestInterface {
-	return &FakeEtcdOpsRequests{c, namespace}
+	return newFakeEtcdOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) HanaDBOpsRequests(namespace string) v1alpha1.HanaDBOpsRequestInterface {
-	return &FakeHanaDBOpsRequests{c, namespace}
+	return newFakeHanaDBOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) HazelcastOpsRequests(namespace string) v1alpha1.HazelcastOpsRequestInterface {
-	return &FakeHazelcastOpsRequests{c, namespace}
+	return newFakeHazelcastOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) IgniteOpsRequests(namespace string) v1alpha1.IgniteOpsRequestInterface {
-	return &FakeIgniteOpsRequests{c, namespace}
+	return newFakeIgniteOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) KafkaOpsRequests(namespace string) v1alpha1.KafkaOpsRequestInterface {
-	return &FakeKafkaOpsRequests{c, namespace}
+	return newFakeKafkaOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) MSSQLServerOpsRequests(namespace string) v1alpha1.MSSQLServerOpsRequestInterface {
-	return &FakeMSSQLServerOpsRequests{c, namespace}
+	return newFakeMSSQLServerOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) MariaDBOpsRequests(namespace string) v1alpha1.MariaDBOpsRequestInterface {
-	return &FakeMariaDBOpsRequests{c, namespace}
+	return newFakeMariaDBOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) MemcachedOpsRequests(namespace string) v1alpha1.MemcachedOpsRequestInterface {
-	return &FakeMemcachedOpsRequests{c, namespace}
+	return newFakeMemcachedOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) MilvusOpsRequests(namespace string) v1alpha1.MilvusOpsRequestInterface {
-	return &FakeMilvusOpsRequests{c, namespace}
+	return newFakeMilvusOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) MongoDBOpsRequests(namespace string) v1alpha1.MongoDBOpsRequestInterface {
-	return &FakeMongoDBOpsRequests{c, namespace}
+	return newFakeMongoDBOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) MySQLOpsRequests(namespace string) v1alpha1.MySQLOpsRequestInterface {
-	return &FakeMySQLOpsRequests{c, namespace}
+	return newFakeMySQLOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) Neo4jOpsRequests(namespace string) v1alpha1.Neo4jOpsRequestInterface {
-	return &FakeNeo4jOpsRequests{c, namespace}
+	return newFakeNeo4jOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) OracleOpsRequests(namespace string) v1alpha1.OracleOpsRequestInterface {
-	return &FakeOracleOpsRequests{c, namespace}
+	return newFakeOracleOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) PerconaXtraDBOpsRequests(namespace string) v1alpha1.PerconaXtraDBOpsRequestInterface {
-	return &FakePerconaXtraDBOpsRequests{c, namespace}
+	return newFakePerconaXtraDBOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) PgBouncerOpsRequests(namespace string) v1alpha1.PgBouncerOpsRequestInterface {
-	return &FakePgBouncerOpsRequests{c, namespace}
+	return newFakePgBouncerOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) PgpoolOpsRequests(namespace string) v1alpha1.PgpoolOpsRequestInterface {
-	return &FakePgpoolOpsRequests{c, namespace}
+	return newFakePgpoolOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) PostgresOpsRequests(namespace string) v1alpha1.PostgresOpsRequestInterface {
-	return &FakePostgresOpsRequests{c, namespace}
+	return newFakePostgresOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) ProxySQLOpsRequests(namespace string) v1alpha1.ProxySQLOpsRequestInterface {
-	return &FakeProxySQLOpsRequests{c, namespace}
+	return newFakeProxySQLOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) QdrantOpsRequests(namespace string) v1alpha1.QdrantOpsRequestInterface {
-	return &FakeQdrantOpsRequests{c, namespace}
+	return newFakeQdrantOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) RabbitMQOpsRequests(namespace string) v1alpha1.RabbitMQOpsRequestInterface {
-	return &FakeRabbitMQOpsRequests{c, namespace}
+	return newFakeRabbitMQOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) RedisOpsRequests(namespace string) v1alpha1.RedisOpsRequestInterface {
-	return &FakeRedisOpsRequests{c, namespace}
+	return newFakeRedisOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) RedisSentinelOpsRequests(namespace string) v1alpha1.RedisSentinelOpsRequestInterface {
-	return &FakeRedisSentinelOpsRequests{c, namespace}
+	return newFakeRedisSentinelOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) SinglestoreOpsRequests(namespace string) v1alpha1.SinglestoreOpsRequestInterface {
-	return &FakeSinglestoreOpsRequests{c, namespace}
+	return newFakeSinglestoreOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) SolrOpsRequests(namespace string) v1alpha1.SolrOpsRequestInterface {
-	return &FakeSolrOpsRequests{c, namespace}
+	return newFakeSolrOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) WeaviateOpsRequests(namespace string) v1alpha1.WeaviateOpsRequestInterface {
-	return &FakeWeaviateOpsRequests{c, namespace}
+	return newFakeWeaviateOpsRequests(c, namespace)
 }
 
 func (c *FakeOpsV1alpha1) ZooKeeperOpsRequests(namespace string) v1alpha1.ZooKeeperOpsRequestInterface {
-	return &FakeZooKeeperOpsRequests{c, namespace}
+	return newFakeZooKeeperOpsRequests(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

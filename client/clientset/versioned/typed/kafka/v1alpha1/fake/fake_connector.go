@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	kafkav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kafka/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeConnectors implements ConnectorInterface
-type FakeConnectors struct {
+// fakeConnectors implements ConnectorInterface
+type fakeConnectors struct {
+	*gentype.FakeClientWithList[*v1alpha1.Connector, *v1alpha1.ConnectorList]
 	Fake *FakeKafkaV1alpha1
-	ns   string
 }
 
-var connectorsResource = v1alpha1.SchemeGroupVersion.WithResource("connectors")
-
-var connectorsKind = v1alpha1.SchemeGroupVersion.WithKind("Connector")
-
-// Get takes name of the connector, and returns the corresponding connector object, and an error if there is any.
-func (c *FakeConnectors) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Connector, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(connectorsResource, c.ns, name), &v1alpha1.Connector{})
-
-	if obj == nil {
-		return nil, err
+func newFakeConnectors(fake *FakeKafkaV1alpha1, namespace string) kafkav1alpha1.ConnectorInterface {
+	return &fakeConnectors{
+		gentype.NewFakeClientWithList[*v1alpha1.Connector, *v1alpha1.ConnectorList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("connectors"),
+			v1alpha1.SchemeGroupVersion.WithKind("Connector"),
+			func() *v1alpha1.Connector { return &v1alpha1.Connector{} },
+			func() *v1alpha1.ConnectorList { return &v1alpha1.ConnectorList{} },
+			func(dst, src *v1alpha1.ConnectorList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ConnectorList) []*v1alpha1.Connector { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.ConnectorList, items []*v1alpha1.Connector) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Connector), err
-}
-
-// List takes label and field selectors, and returns the list of Connectors that match those selectors.
-func (c *FakeConnectors) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ConnectorList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(connectorsResource, connectorsKind, c.ns, opts), &v1alpha1.ConnectorList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ConnectorList{ListMeta: obj.(*v1alpha1.ConnectorList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ConnectorList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested connectors.
-func (c *FakeConnectors) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(connectorsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a connector and creates it.  Returns the server's representation of the connector, and an error, if there is any.
-func (c *FakeConnectors) Create(ctx context.Context, connector *v1alpha1.Connector, opts v1.CreateOptions) (result *v1alpha1.Connector, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(connectorsResource, c.ns, connector), &v1alpha1.Connector{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Connector), err
-}
-
-// Update takes the representation of a connector and updates it. Returns the server's representation of the connector, and an error, if there is any.
-func (c *FakeConnectors) Update(ctx context.Context, connector *v1alpha1.Connector, opts v1.UpdateOptions) (result *v1alpha1.Connector, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(connectorsResource, c.ns, connector), &v1alpha1.Connector{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Connector), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeConnectors) UpdateStatus(ctx context.Context, connector *v1alpha1.Connector, opts v1.UpdateOptions) (*v1alpha1.Connector, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(connectorsResource, "status", c.ns, connector), &v1alpha1.Connector{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Connector), err
-}
-
-// Delete takes name of the connector and deletes it. Returns an error if one occurs.
-func (c *FakeConnectors) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(connectorsResource, c.ns, name, opts), &v1alpha1.Connector{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeConnectors) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(connectorsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ConnectorList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched connector.
-func (c *FakeConnectors) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Connector, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(connectorsResource, c.ns, name, pt, data, subresources...), &v1alpha1.Connector{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Connector), err
 }

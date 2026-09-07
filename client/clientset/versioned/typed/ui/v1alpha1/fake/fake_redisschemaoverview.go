@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeRedisSchemaOverviews implements RedisSchemaOverviewInterface
-type FakeRedisSchemaOverviews struct {
+// fakeRedisSchemaOverviews implements RedisSchemaOverviewInterface
+type fakeRedisSchemaOverviews struct {
+	*gentype.FakeClientWithList[*v1alpha1.RedisSchemaOverview, *v1alpha1.RedisSchemaOverviewList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var redisschemaoverviewsResource = v1alpha1.SchemeGroupVersion.WithResource("redisschemaoverviews")
-
-var redisschemaoverviewsKind = v1alpha1.SchemeGroupVersion.WithKind("RedisSchemaOverview")
-
-// Get takes name of the redisSchemaOverview, and returns the corresponding redisSchemaOverview object, and an error if there is any.
-func (c *FakeRedisSchemaOverviews) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.RedisSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(redisschemaoverviewsResource, c.ns, name), &v1alpha1.RedisSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
+func newFakeRedisSchemaOverviews(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.RedisSchemaOverviewInterface {
+	return &fakeRedisSchemaOverviews{
+		gentype.NewFakeClientWithList[*v1alpha1.RedisSchemaOverview, *v1alpha1.RedisSchemaOverviewList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("redisschemaoverviews"),
+			v1alpha1.SchemeGroupVersion.WithKind("RedisSchemaOverview"),
+			func() *v1alpha1.RedisSchemaOverview { return &v1alpha1.RedisSchemaOverview{} },
+			func() *v1alpha1.RedisSchemaOverviewList { return &v1alpha1.RedisSchemaOverviewList{} },
+			func(dst, src *v1alpha1.RedisSchemaOverviewList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.RedisSchemaOverviewList) []*v1alpha1.RedisSchemaOverview {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.RedisSchemaOverviewList, items []*v1alpha1.RedisSchemaOverview) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.RedisSchemaOverview), err
-}
-
-// List takes label and field selectors, and returns the list of RedisSchemaOverviews that match those selectors.
-func (c *FakeRedisSchemaOverviews) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.RedisSchemaOverviewList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(redisschemaoverviewsResource, redisschemaoverviewsKind, c.ns, opts), &v1alpha1.RedisSchemaOverviewList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.RedisSchemaOverviewList{ListMeta: obj.(*v1alpha1.RedisSchemaOverviewList).ListMeta}
-	for _, item := range obj.(*v1alpha1.RedisSchemaOverviewList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested redisSchemaOverviews.
-func (c *FakeRedisSchemaOverviews) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(redisschemaoverviewsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a redisSchemaOverview and creates it.  Returns the server's representation of the redisSchemaOverview, and an error, if there is any.
-func (c *FakeRedisSchemaOverviews) Create(ctx context.Context, redisSchemaOverview *v1alpha1.RedisSchemaOverview, opts v1.CreateOptions) (result *v1alpha1.RedisSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(redisschemaoverviewsResource, c.ns, redisSchemaOverview), &v1alpha1.RedisSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RedisSchemaOverview), err
-}
-
-// Update takes the representation of a redisSchemaOverview and updates it. Returns the server's representation of the redisSchemaOverview, and an error, if there is any.
-func (c *FakeRedisSchemaOverviews) Update(ctx context.Context, redisSchemaOverview *v1alpha1.RedisSchemaOverview, opts v1.UpdateOptions) (result *v1alpha1.RedisSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(redisschemaoverviewsResource, c.ns, redisSchemaOverview), &v1alpha1.RedisSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RedisSchemaOverview), err
-}
-
-// Delete takes name of the redisSchemaOverview and deletes it. Returns an error if one occurs.
-func (c *FakeRedisSchemaOverviews) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(redisschemaoverviewsResource, c.ns, name, opts), &v1alpha1.RedisSchemaOverview{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeRedisSchemaOverviews) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(redisschemaoverviewsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.RedisSchemaOverviewList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched redisSchemaOverview.
-func (c *FakeRedisSchemaOverviews) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.RedisSchemaOverview, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(redisschemaoverviewsResource, c.ns, name, pt, data, subresources...), &v1alpha1.RedisSchemaOverview{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RedisSchemaOverview), err
 }

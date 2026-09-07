@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	apisgitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Druids.
 type DruidInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.DruidLister
+	Lister() gitopsv1alpha1.DruidLister
 }
 
 type druidInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredDruidInformer(client versioned.Interface, namespace string, resy
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Druids(namespace).List(context.TODO(), options)
+				return client.GitopsV1alpha1().Druids(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Druids(namespace).Watch(context.TODO(), options)
+				return client.GitopsV1alpha1().Druids(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Druids(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Druids(namespace).Watch(ctx, options)
 			},
 		},
-		&gitopsv1alpha1.Druid{},
+		&apisgitopsv1alpha1.Druid{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *druidInformer) defaultInformer(client versioned.Interface, resyncPeriod
 }
 
 func (f *druidInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&gitopsv1alpha1.Druid{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisgitopsv1alpha1.Druid{}, f.defaultInformer)
 }
 
-func (f *druidInformer) Lister() v1alpha1.DruidLister {
-	return v1alpha1.NewDruidLister(f.Informer().GetIndexer())
+func (f *druidInformer) Lister() gitopsv1alpha1.DruidLister {
+	return gitopsv1alpha1.NewDruidLister(f.Informer().GetIndexer())
 }
