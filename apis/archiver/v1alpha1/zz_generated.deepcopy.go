@@ -1256,11 +1256,6 @@ func (in *Neo4jDifferentialBackupOptions) DeepCopyInto(out *Neo4jDifferentialBac
 		*out = new(apiv1.RuntimeSettings)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.ConfigSecret != nil {
-		in, out := &in.ConfigSecret, &out.ConfigSecret
-		*out = new(GenericSecretReference)
-		(*in).DeepCopyInto(*out)
-	}
 	return
 }
 

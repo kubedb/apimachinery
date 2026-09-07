@@ -123,18 +123,6 @@ spec:
                 properties:
                   backupInterval:
                     type: string
-                  configSecret:
-                    properties:
-                      envToSecretKey:
-                        additionalProperties:
-                          type: string
-                        type: object
-                      name:
-                        type: string
-                    required:
-                    - envToSecretKey
-                    - name
-                    type: object
                   runtimeSettings:
                     properties:
                       container:

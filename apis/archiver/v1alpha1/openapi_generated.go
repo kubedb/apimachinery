@@ -35065,24 +35065,21 @@ func schema_apimachinery_apis_archiver_v1alpha1_Neo4jDifferentialBackupOptions(r
 					},
 					"task": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"),
+							Description: "Task specifies the task configuration for a differential backup.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"),
 						},
 					},
 					"runtimeSettings": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"),
-						},
-					},
-					"configSecret": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference"),
+							Description: "RuntimeSettings specifies the runtime settings for a differential backup.",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.GenericSecretReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/offshoot-api/api/v1.RuntimeSettings", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"},
 	}
 }
 
@@ -35094,45 +35091,53 @@ func schema_apimachinery_apis_archiver_v1alpha1_Neo4jFullBackupOptions(ref commo
 				Properties: map[string]spec.Schema{
 					"driver": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "Driver specifies the mechanism used to perform a full backup.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"task": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"),
+							Description: "Task specifies the task configuration for a full backup.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.Task"),
 						},
 					},
 					"scheduler": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions"),
+							Description: "Scheduler specifies the scheduling configuration for full backups.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.SchedulerOptions"),
 						},
 					},
 					"containerRuntimeSettings": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings"),
+							Description: "ContainerRuntimeSettings specifies the runtime settings for the full backup containers.",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.ContainerRuntimeSettings"),
 						},
 					},
 					"jobTemplate": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
+							Description: "JobTemplate specifies the pod template for a full backup job.",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec"),
 						},
 					},
 					"retryConfig": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"),
+							Description: "RetryConfig specifies the retry policy for a failed full backup.",
+							Ref:         ref("kubestash.dev/apimachinery/apis/core/v1alpha1.RetryConfig"),
 						},
 					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+							Description: "Timeout specifies the maximum duration allowed for a full backup.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
 						},
 					},
 					"sessionHistoryLimit": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "SessionHistoryLimit specifies the number of full backup session histories to retain.",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 				},
