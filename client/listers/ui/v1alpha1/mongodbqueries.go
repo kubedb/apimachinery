@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MongoDBQueriesLister helps list MongoDBQuerieses.
@@ -31,7 +31,7 @@ import (
 type MongoDBQueriesLister interface {
 	// List lists all MongoDBQuerieses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MongoDBQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.MongoDBQueries, err error)
 	// MongoDBQuerieses returns an object that can list and get MongoDBQuerieses.
 	MongoDBQuerieses(namespace string) MongoDBQueriesNamespaceLister
 	MongoDBQueriesListerExpansion
@@ -39,25 +39,17 @@ type MongoDBQueriesLister interface {
 
 // mongoDBQueriesLister implements the MongoDBQueriesLister interface.
 type mongoDBQueriesLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.MongoDBQueries]
 }
 
 // NewMongoDBQueriesLister returns a new MongoDBQueriesLister.
 func NewMongoDBQueriesLister(indexer cache.Indexer) MongoDBQueriesLister {
-	return &mongoDBQueriesLister{indexer: indexer}
-}
-
-// List lists all MongoDBQuerieses in the indexer.
-func (s *mongoDBQueriesLister) List(selector labels.Selector) (ret []*v1alpha1.MongoDBQueries, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MongoDBQueries))
-	})
-	return ret, err
+	return &mongoDBQueriesLister{listers.New[*uiv1alpha1.MongoDBQueries](indexer, uiv1alpha1.Resource("mongodbqueries"))}
 }
 
 // MongoDBQuerieses returns an object that can list and get MongoDBQuerieses.
 func (s *mongoDBQueriesLister) MongoDBQuerieses(namespace string) MongoDBQueriesNamespaceLister {
-	return mongoDBQueriesNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mongoDBQueriesNamespaceLister{listers.NewNamespaced[*uiv1alpha1.MongoDBQueries](s.ResourceIndexer, namespace)}
 }
 
 // MongoDBQueriesNamespaceLister helps list and get MongoDBQuerieses.
@@ -65,36 +57,15 @@ func (s *mongoDBQueriesLister) MongoDBQuerieses(namespace string) MongoDBQueries
 type MongoDBQueriesNamespaceLister interface {
 	// List lists all MongoDBQuerieses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MongoDBQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.MongoDBQueries, err error)
 	// Get retrieves the MongoDBQueries from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MongoDBQueries, error)
+	Get(name string) (*uiv1alpha1.MongoDBQueries, error)
 	MongoDBQueriesNamespaceListerExpansion
 }
 
 // mongoDBQueriesNamespaceLister implements the MongoDBQueriesNamespaceLister
 // interface.
 type mongoDBQueriesNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MongoDBQuerieses in the indexer for a given namespace.
-func (s mongoDBQueriesNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MongoDBQueries, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MongoDBQueries))
-	})
-	return ret, err
-}
-
-// Get retrieves the MongoDBQueries from the indexer for a given namespace and name.
-func (s mongoDBQueriesNamespaceLister) Get(name string) (*v1alpha1.MongoDBQueries, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mongodbqueries"), name)
-	}
-	return obj.(*v1alpha1.MongoDBQueries), nil
+	listers.ResourceIndexer[*uiv1alpha1.MongoDBQueries]
 }

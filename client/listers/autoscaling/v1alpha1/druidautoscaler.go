@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DruidAutoscalerLister helps list DruidAutoscalers.
@@ -31,7 +31,7 @@ import (
 type DruidAutoscalerLister interface {
 	// List lists all DruidAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DruidAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.DruidAutoscaler, err error)
 	// DruidAutoscalers returns an object that can list and get DruidAutoscalers.
 	DruidAutoscalers(namespace string) DruidAutoscalerNamespaceLister
 	DruidAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type DruidAutoscalerLister interface {
 
 // druidAutoscalerLister implements the DruidAutoscalerLister interface.
 type druidAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.DruidAutoscaler]
 }
 
 // NewDruidAutoscalerLister returns a new DruidAutoscalerLister.
 func NewDruidAutoscalerLister(indexer cache.Indexer) DruidAutoscalerLister {
-	return &druidAutoscalerLister{indexer: indexer}
-}
-
-// List lists all DruidAutoscalers in the indexer.
-func (s *druidAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.DruidAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DruidAutoscaler))
-	})
-	return ret, err
+	return &druidAutoscalerLister{listers.New[*autoscalingv1alpha1.DruidAutoscaler](indexer, autoscalingv1alpha1.Resource("druidautoscaler"))}
 }
 
 // DruidAutoscalers returns an object that can list and get DruidAutoscalers.
 func (s *druidAutoscalerLister) DruidAutoscalers(namespace string) DruidAutoscalerNamespaceLister {
-	return druidAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return druidAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.DruidAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // DruidAutoscalerNamespaceLister helps list and get DruidAutoscalers.
@@ -65,36 +57,15 @@ func (s *druidAutoscalerLister) DruidAutoscalers(namespace string) DruidAutoscal
 type DruidAutoscalerNamespaceLister interface {
 	// List lists all DruidAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DruidAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.DruidAutoscaler, err error)
 	// Get retrieves the DruidAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DruidAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.DruidAutoscaler, error)
 	DruidAutoscalerNamespaceListerExpansion
 }
 
 // druidAutoscalerNamespaceLister implements the DruidAutoscalerNamespaceLister
 // interface.
 type druidAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all DruidAutoscalers in the indexer for a given namespace.
-func (s druidAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.DruidAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DruidAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the DruidAutoscaler from the indexer for a given namespace and name.
-func (s druidAutoscalerNamespaceLister) Get(name string) (*v1alpha1.DruidAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("druidautoscaler"), name)
-	}
-	return obj.(*v1alpha1.DruidAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.DruidAutoscaler]
 }

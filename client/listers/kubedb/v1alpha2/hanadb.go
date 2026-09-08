@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // HanaDBLister helps list HanaDBs.
@@ -31,7 +31,7 @@ import (
 type HanaDBLister interface {
 	// List lists all HanaDBs in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.HanaDB, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.HanaDB, err error)
 	// HanaDBs returns an object that can list and get HanaDBs.
 	HanaDBs(namespace string) HanaDBNamespaceLister
 	HanaDBListerExpansion
@@ -39,25 +39,17 @@ type HanaDBLister interface {
 
 // hanaDBLister implements the HanaDBLister interface.
 type hanaDBLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.HanaDB]
 }
 
 // NewHanaDBLister returns a new HanaDBLister.
 func NewHanaDBLister(indexer cache.Indexer) HanaDBLister {
-	return &hanaDBLister{indexer: indexer}
-}
-
-// List lists all HanaDBs in the indexer.
-func (s *hanaDBLister) List(selector labels.Selector) (ret []*v1alpha2.HanaDB, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.HanaDB))
-	})
-	return ret, err
+	return &hanaDBLister{listers.New[*kubedbv1alpha2.HanaDB](indexer, kubedbv1alpha2.Resource("hanadb"))}
 }
 
 // HanaDBs returns an object that can list and get HanaDBs.
 func (s *hanaDBLister) HanaDBs(namespace string) HanaDBNamespaceLister {
-	return hanaDBNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return hanaDBNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.HanaDB](s.ResourceIndexer, namespace)}
 }
 
 // HanaDBNamespaceLister helps list and get HanaDBs.
@@ -65,36 +57,15 @@ func (s *hanaDBLister) HanaDBs(namespace string) HanaDBNamespaceLister {
 type HanaDBNamespaceLister interface {
 	// List lists all HanaDBs in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.HanaDB, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.HanaDB, err error)
 	// Get retrieves the HanaDB from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.HanaDB, error)
+	Get(name string) (*kubedbv1alpha2.HanaDB, error)
 	HanaDBNamespaceListerExpansion
 }
 
 // hanaDBNamespaceLister implements the HanaDBNamespaceLister
 // interface.
 type hanaDBNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all HanaDBs in the indexer for a given namespace.
-func (s hanaDBNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.HanaDB, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.HanaDB))
-	})
-	return ret, err
-}
-
-// Get retrieves the HanaDB from the indexer for a given namespace and name.
-func (s hanaDBNamespaceLister) Get(name string) (*v1alpha2.HanaDB, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("hanadb"), name)
-	}
-	return obj.(*v1alpha2.HanaDB), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.HanaDB]
 }

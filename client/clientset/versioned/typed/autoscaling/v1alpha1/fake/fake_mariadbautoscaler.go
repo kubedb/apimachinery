@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMariaDBAutoscalers implements MariaDBAutoscalerInterface
-type FakeMariaDBAutoscalers struct {
+// fakeMariaDBAutoscalers implements MariaDBAutoscalerInterface
+type fakeMariaDBAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.MariaDBAutoscaler, *v1alpha1.MariaDBAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var mariadbautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("mariadbautoscalers")
-
-var mariadbautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("MariaDBAutoscaler")
-
-// Get takes name of the mariaDBAutoscaler, and returns the corresponding mariaDBAutoscaler object, and an error if there is any.
-func (c *FakeMariaDBAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MariaDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mariadbautoscalersResource, c.ns, name), &v1alpha1.MariaDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMariaDBAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.MariaDBAutoscalerInterface {
+	return &fakeMariaDBAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.MariaDBAutoscaler, *v1alpha1.MariaDBAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mariadbautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("MariaDBAutoscaler"),
+			func() *v1alpha1.MariaDBAutoscaler { return &v1alpha1.MariaDBAutoscaler{} },
+			func() *v1alpha1.MariaDBAutoscalerList { return &v1alpha1.MariaDBAutoscalerList{} },
+			func(dst, src *v1alpha1.MariaDBAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MariaDBAutoscalerList) []*v1alpha1.MariaDBAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MariaDBAutoscalerList, items []*v1alpha1.MariaDBAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MariaDBAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of MariaDBAutoscalers that match those selectors.
-func (c *FakeMariaDBAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MariaDBAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mariadbautoscalersResource, mariadbautoscalersKind, c.ns, opts), &v1alpha1.MariaDBAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MariaDBAutoscalerList{ListMeta: obj.(*v1alpha1.MariaDBAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MariaDBAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mariaDBAutoscalers.
-func (c *FakeMariaDBAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mariadbautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mariaDBAutoscaler and creates it.  Returns the server's representation of the mariaDBAutoscaler, and an error, if there is any.
-func (c *FakeMariaDBAutoscalers) Create(ctx context.Context, mariaDBAutoscaler *v1alpha1.MariaDBAutoscaler, opts v1.CreateOptions) (result *v1alpha1.MariaDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mariadbautoscalersResource, c.ns, mariaDBAutoscaler), &v1alpha1.MariaDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBAutoscaler), err
-}
-
-// Update takes the representation of a mariaDBAutoscaler and updates it. Returns the server's representation of the mariaDBAutoscaler, and an error, if there is any.
-func (c *FakeMariaDBAutoscalers) Update(ctx context.Context, mariaDBAutoscaler *v1alpha1.MariaDBAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.MariaDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mariadbautoscalersResource, c.ns, mariaDBAutoscaler), &v1alpha1.MariaDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMariaDBAutoscalers) UpdateStatus(ctx context.Context, mariaDBAutoscaler *v1alpha1.MariaDBAutoscaler, opts v1.UpdateOptions) (*v1alpha1.MariaDBAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mariadbautoscalersResource, "status", c.ns, mariaDBAutoscaler), &v1alpha1.MariaDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBAutoscaler), err
-}
-
-// Delete takes name of the mariaDBAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeMariaDBAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mariadbautoscalersResource, c.ns, name, opts), &v1alpha1.MariaDBAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMariaDBAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mariadbautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MariaDBAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mariaDBAutoscaler.
-func (c *FakeMariaDBAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MariaDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mariadbautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.MariaDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MariaDBAutoscaler), err
 }

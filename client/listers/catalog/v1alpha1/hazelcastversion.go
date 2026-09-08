@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // HazelcastVersionLister helps list HazelcastVersions.
@@ -31,39 +31,19 @@ import (
 type HazelcastVersionLister interface {
 	// List lists all HazelcastVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.HazelcastVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.HazelcastVersion, err error)
 	// Get retrieves the HazelcastVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.HazelcastVersion, error)
+	Get(name string) (*catalogv1alpha1.HazelcastVersion, error)
 	HazelcastVersionListerExpansion
 }
 
 // hazelcastVersionLister implements the HazelcastVersionLister interface.
 type hazelcastVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.HazelcastVersion]
 }
 
 // NewHazelcastVersionLister returns a new HazelcastVersionLister.
 func NewHazelcastVersionLister(indexer cache.Indexer) HazelcastVersionLister {
-	return &hazelcastVersionLister{indexer: indexer}
-}
-
-// List lists all HazelcastVersions in the indexer.
-func (s *hazelcastVersionLister) List(selector labels.Selector) (ret []*v1alpha1.HazelcastVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.HazelcastVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the HazelcastVersion from the index for a given name.
-func (s *hazelcastVersionLister) Get(name string) (*v1alpha1.HazelcastVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("hazelcastversion"), name)
-	}
-	return obj.(*v1alpha1.HazelcastVersion), nil
+	return &hazelcastVersionLister{listers.New[*catalogv1alpha1.HazelcastVersion](indexer, catalogv1alpha1.Resource("hazelcastversion"))}
 }

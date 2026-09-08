@@ -291,15 +291,25 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresReconfigureOpsRequest(
 		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
 	}
 
-	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExistsForPostgres(req.Spec.Configuration.ApplyConfig) && req.Spec.Configuration.Tuning == nil {
-		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, `Tuning` or `ApplyConfig` must be specified")
+	// Validate the applyConfig keys before the "at least one of ..." precondition below. An
+	// unknown key makes applyConfigExistsForPostgres false, so checking the precondition first
+	// would tell the user nothing was specified when they clearly specified applyConfig.
+	for key, val := range req.Spec.Configuration.ApplyConfig {
+		switch key {
+		case kubedb.PostgresCustomConfigFile:
+			// postgresql.conf settings; PostgreSQL reports bad entries itself on reload.
+		case kubedb.PostgresCustomHBAFile:
+			if err := dbapi.ValidateHBAConfig(val); err != nil {
+				return fmt.Errorf("invalid %q in `spec.configuration.applyConfig`: %w", kubedb.PostgresCustomHBAFile, err)
+			}
+		default:
+			return fmt.Errorf("invalid configuration source %q in `spec.configuration.applyConfig`; only %q and %q are allowed",
+				key, kubedb.PostgresCustomConfigFile, kubedb.PostgresCustomHBAFile)
+		}
 	}
 
-	if applyConfigExistsForPostgres(req.Spec.Configuration.ApplyConfig) {
-		_, ok := req.Spec.Configuration.ApplyConfig[kubedb.PostgresCustomConfigFile]
-		if !ok {
-			return fmt.Errorf("`spec.configuration.applyConfig` does not have file named '%v'", kubedb.PostgresCustomConfigFile)
-		}
+	if !req.Spec.Configuration.RemoveCustomConfig && req.Spec.Configuration.ConfigSecret == nil && !applyConfigExistsForPostgres(req.Spec.Configuration.ApplyConfig) && req.Spec.Configuration.Tuning == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, `Tuning` or `ApplyConfig` must be specified")
 	}
 
 	if req.Spec.Configuration.Restart == opsapi.ReconfigureRestartFalse && req.Spec.Configuration.RemoveCustomConfig {
@@ -465,11 +475,18 @@ func (w *PostgresOpsRequestCustomWebhook) validatePostgresVolumeExpansionOpsRequ
 	return nil
 }
 
+// applyConfigExistsForPostgres reports whether the request carries any recognised config key.
+// Either key counts on its own: a Reconfigure may touch only postgresql.conf settings, only
+// pg_hba.conf rules, or both. Checking user.conf alone made an hba-only request look empty and
+// fail the "at least one of ..." precondition.
 func applyConfigExistsForPostgres(applyConfig map[string]string) bool {
 	if applyConfig == nil {
 		return false
 	}
-	_, exists := applyConfig[kubedb.PostgresCustomConfigFile]
+	if _, exists := applyConfig[kubedb.PostgresCustomConfigFile]; exists {
+		return true
+	}
+	_, exists := applyConfig[kubedb.PostgresCustomHBAFile]
 	return exists
 }
 

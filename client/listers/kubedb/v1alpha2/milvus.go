@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MilvusLister helps list Milvuses.
@@ -31,7 +31,7 @@ import (
 type MilvusLister interface {
 	// List lists all Milvuses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Milvus, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Milvus, err error)
 	// Milvuses returns an object that can list and get Milvuses.
 	Milvuses(namespace string) MilvusNamespaceLister
 	MilvusListerExpansion
@@ -39,25 +39,17 @@ type MilvusLister interface {
 
 // milvusLister implements the MilvusLister interface.
 type milvusLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.Milvus]
 }
 
 // NewMilvusLister returns a new MilvusLister.
 func NewMilvusLister(indexer cache.Indexer) MilvusLister {
-	return &milvusLister{indexer: indexer}
-}
-
-// List lists all Milvuses in the indexer.
-func (s *milvusLister) List(selector labels.Selector) (ret []*v1alpha2.Milvus, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Milvus))
-	})
-	return ret, err
+	return &milvusLister{listers.New[*kubedbv1alpha2.Milvus](indexer, kubedbv1alpha2.Resource("milvus"))}
 }
 
 // Milvuses returns an object that can list and get Milvuses.
 func (s *milvusLister) Milvuses(namespace string) MilvusNamespaceLister {
-	return milvusNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return milvusNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.Milvus](s.ResourceIndexer, namespace)}
 }
 
 // MilvusNamespaceLister helps list and get Milvuses.
@@ -65,36 +57,15 @@ func (s *milvusLister) Milvuses(namespace string) MilvusNamespaceLister {
 type MilvusNamespaceLister interface {
 	// List lists all Milvuses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Milvus, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Milvus, err error)
 	// Get retrieves the Milvus from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.Milvus, error)
+	Get(name string) (*kubedbv1alpha2.Milvus, error)
 	MilvusNamespaceListerExpansion
 }
 
 // milvusNamespaceLister implements the MilvusNamespaceLister
 // interface.
 type milvusNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Milvuses in the indexer for a given namespace.
-func (s milvusNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.Milvus, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Milvus))
-	})
-	return ret, err
-}
-
-// Get retrieves the Milvus from the indexer for a given namespace and name.
-func (s milvusNamespaceLister) Get(name string) (*v1alpha2.Milvus, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("milvus"), name)
-	}
-	return obj.(*v1alpha2.Milvus), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.Milvus]
 }

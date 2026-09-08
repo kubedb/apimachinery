@@ -19,104 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDB2Versions implements DB2VersionInterface
-type FakeDB2Versions struct {
+// fakeDB2Versions implements DB2VersionInterface
+type fakeDB2Versions struct {
+	*gentype.FakeClientWithList[*v1alpha1.DB2Version, *v1alpha1.DB2VersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var db2versionsResource = v1alpha1.SchemeGroupVersion.WithResource("db2versions")
-
-var db2versionsKind = v1alpha1.SchemeGroupVersion.WithKind("DB2Version")
-
-// Get takes name of the dB2Version, and returns the corresponding dB2Version object, and an error if there is any.
-func (c *FakeDB2Versions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DB2Version, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(db2versionsResource, name), &v1alpha1.DB2Version{})
-	if obj == nil {
-		return nil, err
+func newFakeDB2Versions(fake *FakeCatalogV1alpha1) catalogv1alpha1.DB2VersionInterface {
+	return &fakeDB2Versions{
+		gentype.NewFakeClientWithList[*v1alpha1.DB2Version, *v1alpha1.DB2VersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("db2versions"),
+			v1alpha1.SchemeGroupVersion.WithKind("DB2Version"),
+			func() *v1alpha1.DB2Version { return &v1alpha1.DB2Version{} },
+			func() *v1alpha1.DB2VersionList { return &v1alpha1.DB2VersionList{} },
+			func(dst, src *v1alpha1.DB2VersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.DB2VersionList) []*v1alpha1.DB2Version { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.DB2VersionList, items []*v1alpha1.DB2Version) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DB2Version), err
-}
-
-// List takes label and field selectors, and returns the list of DB2Versions that match those selectors.
-func (c *FakeDB2Versions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DB2VersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(db2versionsResource, db2versionsKind, opts), &v1alpha1.DB2VersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.DB2VersionList{ListMeta: obj.(*v1alpha1.DB2VersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.DB2VersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested dB2Versions.
-func (c *FakeDB2Versions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(db2versionsResource, opts))
-}
-
-// Create takes the representation of a dB2Version and creates it.  Returns the server's representation of the dB2Version, and an error, if there is any.
-func (c *FakeDB2Versions) Create(ctx context.Context, dB2Version *v1alpha1.DB2Version, opts v1.CreateOptions) (result *v1alpha1.DB2Version, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(db2versionsResource, dB2Version), &v1alpha1.DB2Version{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2Version), err
-}
-
-// Update takes the representation of a dB2Version and updates it. Returns the server's representation of the dB2Version, and an error, if there is any.
-func (c *FakeDB2Versions) Update(ctx context.Context, dB2Version *v1alpha1.DB2Version, opts v1.UpdateOptions) (result *v1alpha1.DB2Version, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(db2versionsResource, dB2Version), &v1alpha1.DB2Version{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2Version), err
-}
-
-// Delete takes name of the dB2Version and deletes it. Returns an error if one occurs.
-func (c *FakeDB2Versions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(db2versionsResource, name, opts), &v1alpha1.DB2Version{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeDB2Versions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(db2versionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.DB2VersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched dB2Version.
-func (c *FakeDB2Versions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DB2Version, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(db2versionsResource, name, pt, data, subresources...), &v1alpha1.DB2Version{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2Version), err
 }

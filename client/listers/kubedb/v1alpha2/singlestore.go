@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SinglestoreLister helps list Singlestores.
@@ -31,7 +31,7 @@ import (
 type SinglestoreLister interface {
 	// List lists all Singlestores in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Singlestore, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Singlestore, err error)
 	// Singlestores returns an object that can list and get Singlestores.
 	Singlestores(namespace string) SinglestoreNamespaceLister
 	SinglestoreListerExpansion
@@ -39,25 +39,17 @@ type SinglestoreLister interface {
 
 // singlestoreLister implements the SinglestoreLister interface.
 type singlestoreLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.Singlestore]
 }
 
 // NewSinglestoreLister returns a new SinglestoreLister.
 func NewSinglestoreLister(indexer cache.Indexer) SinglestoreLister {
-	return &singlestoreLister{indexer: indexer}
-}
-
-// List lists all Singlestores in the indexer.
-func (s *singlestoreLister) List(selector labels.Selector) (ret []*v1alpha2.Singlestore, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Singlestore))
-	})
-	return ret, err
+	return &singlestoreLister{listers.New[*kubedbv1alpha2.Singlestore](indexer, kubedbv1alpha2.Resource("singlestore"))}
 }
 
 // Singlestores returns an object that can list and get Singlestores.
 func (s *singlestoreLister) Singlestores(namespace string) SinglestoreNamespaceLister {
-	return singlestoreNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return singlestoreNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.Singlestore](s.ResourceIndexer, namespace)}
 }
 
 // SinglestoreNamespaceLister helps list and get Singlestores.
@@ -65,36 +57,15 @@ func (s *singlestoreLister) Singlestores(namespace string) SinglestoreNamespaceL
 type SinglestoreNamespaceLister interface {
 	// List lists all Singlestores in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Singlestore, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Singlestore, err error)
 	// Get retrieves the Singlestore from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.Singlestore, error)
+	Get(name string) (*kubedbv1alpha2.Singlestore, error)
 	SinglestoreNamespaceListerExpansion
 }
 
 // singlestoreNamespaceLister implements the SinglestoreNamespaceLister
 // interface.
 type singlestoreNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Singlestores in the indexer for a given namespace.
-func (s singlestoreNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.Singlestore, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Singlestore))
-	})
-	return ret, err
-}
-
-// Get retrieves the Singlestore from the indexer for a given namespace and name.
-func (s singlestoreNamespaceLister) Get(name string) (*v1alpha2.Singlestore, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("singlestore"), name)
-	}
-	return obj.(*v1alpha2.Singlestore), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.Singlestore]
 }

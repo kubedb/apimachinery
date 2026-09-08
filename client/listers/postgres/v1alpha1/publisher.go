@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
+	postgresv1alpha1 "kubedb.dev/apimachinery/apis/postgres/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PublisherLister helps list Publishers.
@@ -31,7 +31,7 @@ import (
 type PublisherLister interface {
 	// List lists all Publishers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Publisher, err error)
+	List(selector labels.Selector) (ret []*postgresv1alpha1.Publisher, err error)
 	// Publishers returns an object that can list and get Publishers.
 	Publishers(namespace string) PublisherNamespaceLister
 	PublisherListerExpansion
@@ -39,25 +39,17 @@ type PublisherLister interface {
 
 // publisherLister implements the PublisherLister interface.
 type publisherLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*postgresv1alpha1.Publisher]
 }
 
 // NewPublisherLister returns a new PublisherLister.
 func NewPublisherLister(indexer cache.Indexer) PublisherLister {
-	return &publisherLister{indexer: indexer}
-}
-
-// List lists all Publishers in the indexer.
-func (s *publisherLister) List(selector labels.Selector) (ret []*v1alpha1.Publisher, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Publisher))
-	})
-	return ret, err
+	return &publisherLister{listers.New[*postgresv1alpha1.Publisher](indexer, postgresv1alpha1.Resource("publisher"))}
 }
 
 // Publishers returns an object that can list and get Publishers.
 func (s *publisherLister) Publishers(namespace string) PublisherNamespaceLister {
-	return publisherNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return publisherNamespaceLister{listers.NewNamespaced[*postgresv1alpha1.Publisher](s.ResourceIndexer, namespace)}
 }
 
 // PublisherNamespaceLister helps list and get Publishers.
@@ -65,36 +57,15 @@ func (s *publisherLister) Publishers(namespace string) PublisherNamespaceLister 
 type PublisherNamespaceLister interface {
 	// List lists all Publishers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Publisher, err error)
+	List(selector labels.Selector) (ret []*postgresv1alpha1.Publisher, err error)
 	// Get retrieves the Publisher from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Publisher, error)
+	Get(name string) (*postgresv1alpha1.Publisher, error)
 	PublisherNamespaceListerExpansion
 }
 
 // publisherNamespaceLister implements the PublisherNamespaceLister
 // interface.
 type publisherNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Publishers in the indexer for a given namespace.
-func (s publisherNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Publisher, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Publisher))
-	})
-	return ret, err
-}
-
-// Get retrieves the Publisher from the indexer for a given namespace and name.
-func (s publisherNamespaceLister) Get(name string) (*v1alpha1.Publisher, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("publisher"), name)
-	}
-	return obj.(*v1alpha1.Publisher), nil
+	listers.ResourceIndexer[*postgresv1alpha1.Publisher]
 }

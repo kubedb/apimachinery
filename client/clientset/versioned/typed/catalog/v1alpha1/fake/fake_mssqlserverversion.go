@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMSSQLServerVersions implements MSSQLServerVersionInterface
-type FakeMSSQLServerVersions struct {
+// fakeMSSQLServerVersions implements MSSQLServerVersionInterface
+type fakeMSSQLServerVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.MSSQLServerVersion, *v1alpha1.MSSQLServerVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var mssqlserverversionsResource = v1alpha1.SchemeGroupVersion.WithResource("mssqlserverversions")
-
-var mssqlserverversionsKind = v1alpha1.SchemeGroupVersion.WithKind("MSSQLServerVersion")
-
-// Get takes name of the mSSQLServerVersion, and returns the corresponding mSSQLServerVersion object, and an error if there is any.
-func (c *FakeMSSQLServerVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MSSQLServerVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(mssqlserverversionsResource, name), &v1alpha1.MSSQLServerVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeMSSQLServerVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.MSSQLServerVersionInterface {
+	return &fakeMSSQLServerVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.MSSQLServerVersion, *v1alpha1.MSSQLServerVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("mssqlserverversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("MSSQLServerVersion"),
+			func() *v1alpha1.MSSQLServerVersion { return &v1alpha1.MSSQLServerVersion{} },
+			func() *v1alpha1.MSSQLServerVersionList { return &v1alpha1.MSSQLServerVersionList{} },
+			func(dst, src *v1alpha1.MSSQLServerVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MSSQLServerVersionList) []*v1alpha1.MSSQLServerVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MSSQLServerVersionList, items []*v1alpha1.MSSQLServerVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MSSQLServerVersion), err
-}
-
-// List takes label and field selectors, and returns the list of MSSQLServerVersions that match those selectors.
-func (c *FakeMSSQLServerVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MSSQLServerVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(mssqlserverversionsResource, mssqlserverversionsKind, opts), &v1alpha1.MSSQLServerVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MSSQLServerVersionList{ListMeta: obj.(*v1alpha1.MSSQLServerVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MSSQLServerVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mSSQLServerVersions.
-func (c *FakeMSSQLServerVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(mssqlserverversionsResource, opts))
-}
-
-// Create takes the representation of a mSSQLServerVersion and creates it.  Returns the server's representation of the mSSQLServerVersion, and an error, if there is any.
-func (c *FakeMSSQLServerVersions) Create(ctx context.Context, mSSQLServerVersion *v1alpha1.MSSQLServerVersion, opts v1.CreateOptions) (result *v1alpha1.MSSQLServerVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(mssqlserverversionsResource, mSSQLServerVersion), &v1alpha1.MSSQLServerVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerVersion), err
-}
-
-// Update takes the representation of a mSSQLServerVersion and updates it. Returns the server's representation of the mSSQLServerVersion, and an error, if there is any.
-func (c *FakeMSSQLServerVersions) Update(ctx context.Context, mSSQLServerVersion *v1alpha1.MSSQLServerVersion, opts v1.UpdateOptions) (result *v1alpha1.MSSQLServerVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(mssqlserverversionsResource, mSSQLServerVersion), &v1alpha1.MSSQLServerVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerVersion), err
-}
-
-// Delete takes name of the mSSQLServerVersion and deletes it. Returns an error if one occurs.
-func (c *FakeMSSQLServerVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(mssqlserverversionsResource, name, opts), &v1alpha1.MSSQLServerVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMSSQLServerVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(mssqlserverversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MSSQLServerVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mSSQLServerVersion.
-func (c *FakeMSSQLServerVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MSSQLServerVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(mssqlserverversionsResource, name, pt, data, subresources...), &v1alpha1.MSSQLServerVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerVersion), err
 }

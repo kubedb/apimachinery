@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePgpoolVersions implements PgpoolVersionInterface
-type FakePgpoolVersions struct {
+// fakePgpoolVersions implements PgpoolVersionInterface
+type fakePgpoolVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.PgpoolVersion, *v1alpha1.PgpoolVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var pgpoolversionsResource = v1alpha1.SchemeGroupVersion.WithResource("pgpoolversions")
-
-var pgpoolversionsKind = v1alpha1.SchemeGroupVersion.WithKind("PgpoolVersion")
-
-// Get takes name of the pgpoolVersion, and returns the corresponding pgpoolVersion object, and an error if there is any.
-func (c *FakePgpoolVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PgpoolVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(pgpoolversionsResource, name), &v1alpha1.PgpoolVersion{})
-	if obj == nil {
-		return nil, err
+func newFakePgpoolVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.PgpoolVersionInterface {
+	return &fakePgpoolVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.PgpoolVersion, *v1alpha1.PgpoolVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("pgpoolversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("PgpoolVersion"),
+			func() *v1alpha1.PgpoolVersion { return &v1alpha1.PgpoolVersion{} },
+			func() *v1alpha1.PgpoolVersionList { return &v1alpha1.PgpoolVersionList{} },
+			func(dst, src *v1alpha1.PgpoolVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PgpoolVersionList) []*v1alpha1.PgpoolVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PgpoolVersionList, items []*v1alpha1.PgpoolVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PgpoolVersion), err
-}
-
-// List takes label and field selectors, and returns the list of PgpoolVersions that match those selectors.
-func (c *FakePgpoolVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PgpoolVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(pgpoolversionsResource, pgpoolversionsKind, opts), &v1alpha1.PgpoolVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PgpoolVersionList{ListMeta: obj.(*v1alpha1.PgpoolVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PgpoolVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested pgpoolVersions.
-func (c *FakePgpoolVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(pgpoolversionsResource, opts))
-}
-
-// Create takes the representation of a pgpoolVersion and creates it.  Returns the server's representation of the pgpoolVersion, and an error, if there is any.
-func (c *FakePgpoolVersions) Create(ctx context.Context, pgpoolVersion *v1alpha1.PgpoolVersion, opts v1.CreateOptions) (result *v1alpha1.PgpoolVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(pgpoolversionsResource, pgpoolVersion), &v1alpha1.PgpoolVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PgpoolVersion), err
-}
-
-// Update takes the representation of a pgpoolVersion and updates it. Returns the server's representation of the pgpoolVersion, and an error, if there is any.
-func (c *FakePgpoolVersions) Update(ctx context.Context, pgpoolVersion *v1alpha1.PgpoolVersion, opts v1.UpdateOptions) (result *v1alpha1.PgpoolVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(pgpoolversionsResource, pgpoolVersion), &v1alpha1.PgpoolVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PgpoolVersion), err
-}
-
-// Delete takes name of the pgpoolVersion and deletes it. Returns an error if one occurs.
-func (c *FakePgpoolVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(pgpoolversionsResource, name, opts), &v1alpha1.PgpoolVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePgpoolVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(pgpoolversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PgpoolVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched pgpoolVersion.
-func (c *FakePgpoolVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PgpoolVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(pgpoolversionsResource, name, pt, data, subresources...), &v1alpha1.PgpoolVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PgpoolVersion), err
 }

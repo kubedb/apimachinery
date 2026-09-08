@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // EtcdVersions.
 type EtcdVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.EtcdVersionLister
+	Lister() catalogv1alpha1.EtcdVersionLister
 }
 
 type etcdVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredEtcdVersionInformer(client versioned.Interface, resyncPeriod tim
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().EtcdVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().EtcdVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().EtcdVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().EtcdVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().EtcdVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().EtcdVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.EtcdVersion{},
+		&apiscatalogv1alpha1.EtcdVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *etcdVersionInformer) defaultInformer(client versioned.Interface, resync
 }
 
 func (f *etcdVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.EtcdVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.EtcdVersion{}, f.defaultInformer)
 }
 
-func (f *etcdVersionInformer) Lister() v1alpha1.EtcdVersionLister {
-	return v1alpha1.NewEtcdVersionLister(f.Informer().GetIndexer())
+func (f *etcdVersionInformer) Lister() catalogv1alpha1.EtcdVersionLister {
+	return catalogv1alpha1.NewEtcdVersionLister(f.Informer().GetIndexer())
 }

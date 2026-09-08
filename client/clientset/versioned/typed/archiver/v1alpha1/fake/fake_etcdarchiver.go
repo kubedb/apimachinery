@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeEtcdArchivers implements EtcdArchiverInterface
-type FakeEtcdArchivers struct {
+// fakeEtcdArchivers implements EtcdArchiverInterface
+type fakeEtcdArchivers struct {
+	*gentype.FakeClientWithList[*v1alpha1.EtcdArchiver, *v1alpha1.EtcdArchiverList]
 	Fake *FakeArchiverV1alpha1
-	ns   string
 }
 
-var etcdarchiversResource = v1alpha1.SchemeGroupVersion.WithResource("etcdarchivers")
-
-var etcdarchiversKind = v1alpha1.SchemeGroupVersion.WithKind("EtcdArchiver")
-
-// Get takes name of the etcdArchiver, and returns the corresponding etcdArchiver object, and an error if there is any.
-func (c *FakeEtcdArchivers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.EtcdArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(etcdarchiversResource, c.ns, name), &v1alpha1.EtcdArchiver{})
-
-	if obj == nil {
-		return nil, err
+func newFakeEtcdArchivers(fake *FakeArchiverV1alpha1, namespace string) archiverv1alpha1.EtcdArchiverInterface {
+	return &fakeEtcdArchivers{
+		gentype.NewFakeClientWithList[*v1alpha1.EtcdArchiver, *v1alpha1.EtcdArchiverList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("etcdarchivers"),
+			v1alpha1.SchemeGroupVersion.WithKind("EtcdArchiver"),
+			func() *v1alpha1.EtcdArchiver { return &v1alpha1.EtcdArchiver{} },
+			func() *v1alpha1.EtcdArchiverList { return &v1alpha1.EtcdArchiverList{} },
+			func(dst, src *v1alpha1.EtcdArchiverList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.EtcdArchiverList) []*v1alpha1.EtcdArchiver {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.EtcdArchiverList, items []*v1alpha1.EtcdArchiver) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.EtcdArchiver), err
-}
-
-// List takes label and field selectors, and returns the list of EtcdArchivers that match those selectors.
-func (c *FakeEtcdArchivers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.EtcdArchiverList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(etcdarchiversResource, etcdarchiversKind, c.ns, opts), &v1alpha1.EtcdArchiverList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.EtcdArchiverList{ListMeta: obj.(*v1alpha1.EtcdArchiverList).ListMeta}
-	for _, item := range obj.(*v1alpha1.EtcdArchiverList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested etcdArchivers.
-func (c *FakeEtcdArchivers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(etcdarchiversResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a etcdArchiver and creates it.  Returns the server's representation of the etcdArchiver, and an error, if there is any.
-func (c *FakeEtcdArchivers) Create(ctx context.Context, etcdArchiver *v1alpha1.EtcdArchiver, opts v1.CreateOptions) (result *v1alpha1.EtcdArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(etcdarchiversResource, c.ns, etcdArchiver), &v1alpha1.EtcdArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdArchiver), err
-}
-
-// Update takes the representation of a etcdArchiver and updates it. Returns the server's representation of the etcdArchiver, and an error, if there is any.
-func (c *FakeEtcdArchivers) Update(ctx context.Context, etcdArchiver *v1alpha1.EtcdArchiver, opts v1.UpdateOptions) (result *v1alpha1.EtcdArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(etcdarchiversResource, c.ns, etcdArchiver), &v1alpha1.EtcdArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdArchiver), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeEtcdArchivers) UpdateStatus(ctx context.Context, etcdArchiver *v1alpha1.EtcdArchiver, opts v1.UpdateOptions) (*v1alpha1.EtcdArchiver, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(etcdarchiversResource, "status", c.ns, etcdArchiver), &v1alpha1.EtcdArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdArchiver), err
-}
-
-// Delete takes name of the etcdArchiver and deletes it. Returns an error if one occurs.
-func (c *FakeEtcdArchivers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(etcdarchiversResource, c.ns, name, opts), &v1alpha1.EtcdArchiver{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeEtcdArchivers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(etcdarchiversResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.EtcdArchiverList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched etcdArchiver.
-func (c *FakeEtcdArchivers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.EtcdArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(etcdarchiversResource, c.ns, name, pt, data, subresources...), &v1alpha1.EtcdArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdArchiver), err
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MySQLSchemaOverviewLister helps list MySQLSchemaOverviews.
@@ -31,7 +31,7 @@ import (
 type MySQLSchemaOverviewLister interface {
 	// List lists all MySQLSchemaOverviews in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLSchemaOverview, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.MySQLSchemaOverview, err error)
 	// MySQLSchemaOverviews returns an object that can list and get MySQLSchemaOverviews.
 	MySQLSchemaOverviews(namespace string) MySQLSchemaOverviewNamespaceLister
 	MySQLSchemaOverviewListerExpansion
@@ -39,25 +39,17 @@ type MySQLSchemaOverviewLister interface {
 
 // mySQLSchemaOverviewLister implements the MySQLSchemaOverviewLister interface.
 type mySQLSchemaOverviewLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.MySQLSchemaOverview]
 }
 
 // NewMySQLSchemaOverviewLister returns a new MySQLSchemaOverviewLister.
 func NewMySQLSchemaOverviewLister(indexer cache.Indexer) MySQLSchemaOverviewLister {
-	return &mySQLSchemaOverviewLister{indexer: indexer}
-}
-
-// List lists all MySQLSchemaOverviews in the indexer.
-func (s *mySQLSchemaOverviewLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLSchemaOverview, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLSchemaOverview))
-	})
-	return ret, err
+	return &mySQLSchemaOverviewLister{listers.New[*uiv1alpha1.MySQLSchemaOverview](indexer, uiv1alpha1.Resource("mysqlschemaoverview"))}
 }
 
 // MySQLSchemaOverviews returns an object that can list and get MySQLSchemaOverviews.
 func (s *mySQLSchemaOverviewLister) MySQLSchemaOverviews(namespace string) MySQLSchemaOverviewNamespaceLister {
-	return mySQLSchemaOverviewNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mySQLSchemaOverviewNamespaceLister{listers.NewNamespaced[*uiv1alpha1.MySQLSchemaOverview](s.ResourceIndexer, namespace)}
 }
 
 // MySQLSchemaOverviewNamespaceLister helps list and get MySQLSchemaOverviews.
@@ -65,36 +57,15 @@ func (s *mySQLSchemaOverviewLister) MySQLSchemaOverviews(namespace string) MySQL
 type MySQLSchemaOverviewNamespaceLister interface {
 	// List lists all MySQLSchemaOverviews in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLSchemaOverview, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.MySQLSchemaOverview, err error)
 	// Get retrieves the MySQLSchemaOverview from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MySQLSchemaOverview, error)
+	Get(name string) (*uiv1alpha1.MySQLSchemaOverview, error)
 	MySQLSchemaOverviewNamespaceListerExpansion
 }
 
 // mySQLSchemaOverviewNamespaceLister implements the MySQLSchemaOverviewNamespaceLister
 // interface.
 type mySQLSchemaOverviewNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MySQLSchemaOverviews in the indexer for a given namespace.
-func (s mySQLSchemaOverviewNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLSchemaOverview, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLSchemaOverview))
-	})
-	return ret, err
-}
-
-// Get retrieves the MySQLSchemaOverview from the indexer for a given namespace and name.
-func (s mySQLSchemaOverviewNamespaceLister) Get(name string) (*v1alpha1.MySQLSchemaOverview, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mysqlschemaoverview"), name)
-	}
-	return obj.(*v1alpha1.MySQLSchemaOverview), nil
+	listers.ResourceIndexer[*uiv1alpha1.MySQLSchemaOverview]
 }

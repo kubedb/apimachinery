@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ClickHouseLister helps list ClickHouses.
@@ -31,7 +31,7 @@ import (
 type ClickHouseLister interface {
 	// List lists all ClickHouses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.ClickHouse, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.ClickHouse, err error)
 	// ClickHouses returns an object that can list and get ClickHouses.
 	ClickHouses(namespace string) ClickHouseNamespaceLister
 	ClickHouseListerExpansion
@@ -39,25 +39,17 @@ type ClickHouseLister interface {
 
 // clickHouseLister implements the ClickHouseLister interface.
 type clickHouseLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.ClickHouse]
 }
 
 // NewClickHouseLister returns a new ClickHouseLister.
 func NewClickHouseLister(indexer cache.Indexer) ClickHouseLister {
-	return &clickHouseLister{indexer: indexer}
-}
-
-// List lists all ClickHouses in the indexer.
-func (s *clickHouseLister) List(selector labels.Selector) (ret []*v1alpha2.ClickHouse, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.ClickHouse))
-	})
-	return ret, err
+	return &clickHouseLister{listers.New[*kubedbv1alpha2.ClickHouse](indexer, kubedbv1alpha2.Resource("clickhouse"))}
 }
 
 // ClickHouses returns an object that can list and get ClickHouses.
 func (s *clickHouseLister) ClickHouses(namespace string) ClickHouseNamespaceLister {
-	return clickHouseNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return clickHouseNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.ClickHouse](s.ResourceIndexer, namespace)}
 }
 
 // ClickHouseNamespaceLister helps list and get ClickHouses.
@@ -65,36 +57,15 @@ func (s *clickHouseLister) ClickHouses(namespace string) ClickHouseNamespaceList
 type ClickHouseNamespaceLister interface {
 	// List lists all ClickHouses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.ClickHouse, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.ClickHouse, err error)
 	// Get retrieves the ClickHouse from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.ClickHouse, error)
+	Get(name string) (*kubedbv1alpha2.ClickHouse, error)
 	ClickHouseNamespaceListerExpansion
 }
 
 // clickHouseNamespaceLister implements the ClickHouseNamespaceLister
 // interface.
 type clickHouseNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ClickHouses in the indexer for a given namespace.
-func (s clickHouseNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.ClickHouse, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.ClickHouse))
-	})
-	return ret, err
-}
-
-// Get retrieves the ClickHouse from the indexer for a given namespace and name.
-func (s clickHouseNamespaceLister) Get(name string) (*v1alpha2.ClickHouse, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("clickhouse"), name)
-	}
-	return obj.(*v1alpha2.ClickHouse), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.ClickHouse]
 }

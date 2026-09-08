@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MySQLArchiverLister helps list MySQLArchivers.
@@ -31,7 +31,7 @@ import (
 type MySQLArchiverLister interface {
 	// List lists all MySQLArchivers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLArchiver, err error)
+	List(selector labels.Selector) (ret []*archiverv1alpha1.MySQLArchiver, err error)
 	// MySQLArchivers returns an object that can list and get MySQLArchivers.
 	MySQLArchivers(namespace string) MySQLArchiverNamespaceLister
 	MySQLArchiverListerExpansion
@@ -39,25 +39,17 @@ type MySQLArchiverLister interface {
 
 // mySQLArchiverLister implements the MySQLArchiverLister interface.
 type mySQLArchiverLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*archiverv1alpha1.MySQLArchiver]
 }
 
 // NewMySQLArchiverLister returns a new MySQLArchiverLister.
 func NewMySQLArchiverLister(indexer cache.Indexer) MySQLArchiverLister {
-	return &mySQLArchiverLister{indexer: indexer}
-}
-
-// List lists all MySQLArchivers in the indexer.
-func (s *mySQLArchiverLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLArchiver, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLArchiver))
-	})
-	return ret, err
+	return &mySQLArchiverLister{listers.New[*archiverv1alpha1.MySQLArchiver](indexer, archiverv1alpha1.Resource("mysqlarchiver"))}
 }
 
 // MySQLArchivers returns an object that can list and get MySQLArchivers.
 func (s *mySQLArchiverLister) MySQLArchivers(namespace string) MySQLArchiverNamespaceLister {
-	return mySQLArchiverNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mySQLArchiverNamespaceLister{listers.NewNamespaced[*archiverv1alpha1.MySQLArchiver](s.ResourceIndexer, namespace)}
 }
 
 // MySQLArchiverNamespaceLister helps list and get MySQLArchivers.
@@ -65,36 +57,15 @@ func (s *mySQLArchiverLister) MySQLArchivers(namespace string) MySQLArchiverName
 type MySQLArchiverNamespaceLister interface {
 	// List lists all MySQLArchivers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLArchiver, err error)
+	List(selector labels.Selector) (ret []*archiverv1alpha1.MySQLArchiver, err error)
 	// Get retrieves the MySQLArchiver from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MySQLArchiver, error)
+	Get(name string) (*archiverv1alpha1.MySQLArchiver, error)
 	MySQLArchiverNamespaceListerExpansion
 }
 
 // mySQLArchiverNamespaceLister implements the MySQLArchiverNamespaceLister
 // interface.
 type mySQLArchiverNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MySQLArchivers in the indexer for a given namespace.
-func (s mySQLArchiverNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLArchiver, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLArchiver))
-	})
-	return ret, err
-}
-
-// Get retrieves the MySQLArchiver from the indexer for a given namespace and name.
-func (s mySQLArchiverNamespaceLister) Get(name string) (*v1alpha1.MySQLArchiver, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mysqlarchiver"), name)
-	}
-	return obj.(*v1alpha1.MySQLArchiver), nil
+	listers.ResourceIndexer[*archiverv1alpha1.MySQLArchiver]
 }

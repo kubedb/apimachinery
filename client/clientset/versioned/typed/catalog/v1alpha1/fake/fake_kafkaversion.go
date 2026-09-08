@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeKafkaVersions implements KafkaVersionInterface
-type FakeKafkaVersions struct {
+// fakeKafkaVersions implements KafkaVersionInterface
+type fakeKafkaVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.KafkaVersion, *v1alpha1.KafkaVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var kafkaversionsResource = v1alpha1.SchemeGroupVersion.WithResource("kafkaversions")
-
-var kafkaversionsKind = v1alpha1.SchemeGroupVersion.WithKind("KafkaVersion")
-
-// Get takes name of the kafkaVersion, and returns the corresponding kafkaVersion object, and an error if there is any.
-func (c *FakeKafkaVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.KafkaVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(kafkaversionsResource, name), &v1alpha1.KafkaVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeKafkaVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.KafkaVersionInterface {
+	return &fakeKafkaVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.KafkaVersion, *v1alpha1.KafkaVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("kafkaversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("KafkaVersion"),
+			func() *v1alpha1.KafkaVersion { return &v1alpha1.KafkaVersion{} },
+			func() *v1alpha1.KafkaVersionList { return &v1alpha1.KafkaVersionList{} },
+			func(dst, src *v1alpha1.KafkaVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.KafkaVersionList) []*v1alpha1.KafkaVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.KafkaVersionList, items []*v1alpha1.KafkaVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.KafkaVersion), err
-}
-
-// List takes label and field selectors, and returns the list of KafkaVersions that match those selectors.
-func (c *FakeKafkaVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.KafkaVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(kafkaversionsResource, kafkaversionsKind, opts), &v1alpha1.KafkaVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.KafkaVersionList{ListMeta: obj.(*v1alpha1.KafkaVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.KafkaVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested kafkaVersions.
-func (c *FakeKafkaVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(kafkaversionsResource, opts))
-}
-
-// Create takes the representation of a kafkaVersion and creates it.  Returns the server's representation of the kafkaVersion, and an error, if there is any.
-func (c *FakeKafkaVersions) Create(ctx context.Context, kafkaVersion *v1alpha1.KafkaVersion, opts v1.CreateOptions) (result *v1alpha1.KafkaVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(kafkaversionsResource, kafkaVersion), &v1alpha1.KafkaVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.KafkaVersion), err
-}
-
-// Update takes the representation of a kafkaVersion and updates it. Returns the server's representation of the kafkaVersion, and an error, if there is any.
-func (c *FakeKafkaVersions) Update(ctx context.Context, kafkaVersion *v1alpha1.KafkaVersion, opts v1.UpdateOptions) (result *v1alpha1.KafkaVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(kafkaversionsResource, kafkaVersion), &v1alpha1.KafkaVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.KafkaVersion), err
-}
-
-// Delete takes name of the kafkaVersion and deletes it. Returns an error if one occurs.
-func (c *FakeKafkaVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(kafkaversionsResource, name, opts), &v1alpha1.KafkaVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeKafkaVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(kafkaversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.KafkaVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched kafkaVersion.
-func (c *FakeKafkaVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.KafkaVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(kafkaversionsResource, name, pt, data, subresources...), &v1alpha1.KafkaVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.KafkaVersion), err
 }

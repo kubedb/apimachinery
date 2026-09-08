@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeHanaDBs implements HanaDBInterface
-type FakeHanaDBs struct {
+// fakeHanaDBs implements HanaDBInterface
+type fakeHanaDBs struct {
+	*gentype.FakeClientWithList[*v1alpha2.HanaDB, *v1alpha2.HanaDBList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var hanadbsResource = v1alpha2.SchemeGroupVersion.WithResource("hanadbs")
-
-var hanadbsKind = v1alpha2.SchemeGroupVersion.WithKind("HanaDB")
-
-// Get takes name of the hanaDB, and returns the corresponding hanaDB object, and an error if there is any.
-func (c *FakeHanaDBs) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.HanaDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(hanadbsResource, c.ns, name), &v1alpha2.HanaDB{})
-
-	if obj == nil {
-		return nil, err
+func newFakeHanaDBs(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.HanaDBInterface {
+	return &fakeHanaDBs{
+		gentype.NewFakeClientWithList[*v1alpha2.HanaDB, *v1alpha2.HanaDBList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("hanadbs"),
+			v1alpha2.SchemeGroupVersion.WithKind("HanaDB"),
+			func() *v1alpha2.HanaDB { return &v1alpha2.HanaDB{} },
+			func() *v1alpha2.HanaDBList { return &v1alpha2.HanaDBList{} },
+			func(dst, src *v1alpha2.HanaDBList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.HanaDBList) []*v1alpha2.HanaDB { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.HanaDBList, items []*v1alpha2.HanaDB) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.HanaDB), err
-}
-
-// List takes label and field selectors, and returns the list of HanaDBs that match those selectors.
-func (c *FakeHanaDBs) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.HanaDBList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(hanadbsResource, hanadbsKind, c.ns, opts), &v1alpha2.HanaDBList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.HanaDBList{ListMeta: obj.(*v1alpha2.HanaDBList).ListMeta}
-	for _, item := range obj.(*v1alpha2.HanaDBList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested hanaDBs.
-func (c *FakeHanaDBs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(hanadbsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a hanaDB and creates it.  Returns the server's representation of the hanaDB, and an error, if there is any.
-func (c *FakeHanaDBs) Create(ctx context.Context, hanaDB *v1alpha2.HanaDB, opts v1.CreateOptions) (result *v1alpha2.HanaDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(hanadbsResource, c.ns, hanaDB), &v1alpha2.HanaDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.HanaDB), err
-}
-
-// Update takes the representation of a hanaDB and updates it. Returns the server's representation of the hanaDB, and an error, if there is any.
-func (c *FakeHanaDBs) Update(ctx context.Context, hanaDB *v1alpha2.HanaDB, opts v1.UpdateOptions) (result *v1alpha2.HanaDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(hanadbsResource, c.ns, hanaDB), &v1alpha2.HanaDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.HanaDB), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeHanaDBs) UpdateStatus(ctx context.Context, hanaDB *v1alpha2.HanaDB, opts v1.UpdateOptions) (*v1alpha2.HanaDB, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(hanadbsResource, "status", c.ns, hanaDB), &v1alpha2.HanaDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.HanaDB), err
-}
-
-// Delete takes name of the hanaDB and deletes it. Returns an error if one occurs.
-func (c *FakeHanaDBs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(hanadbsResource, c.ns, name, opts), &v1alpha2.HanaDB{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeHanaDBs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(hanadbsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.HanaDBList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched hanaDB.
-func (c *FakeHanaDBs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.HanaDB, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(hanadbsResource, c.ns, name, pt, data, subresources...), &v1alpha2.HanaDB{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.HanaDB), err
 }

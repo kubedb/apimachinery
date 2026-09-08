@@ -19,124 +19,31 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeEtcds implements EtcdInterface
-type FakeEtcds struct {
+// fakeEtcds implements EtcdInterface
+type fakeEtcds struct {
+	*gentype.FakeClientWithList[*v1alpha2.Etcd, *v1alpha2.EtcdList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var etcdsResource = v1alpha2.SchemeGroupVersion.WithResource("etcds")
-
-var etcdsKind = v1alpha2.SchemeGroupVersion.WithKind("Etcd")
-
-// Get takes name of the etcd, and returns the corresponding etcd object, and an error if there is any.
-func (c *FakeEtcds) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Etcd, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(etcdsResource, c.ns, name), &v1alpha2.Etcd{})
-
-	if obj == nil {
-		return nil, err
+func newFakeEtcds(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.EtcdInterface {
+	return &fakeEtcds{
+		gentype.NewFakeClientWithList[*v1alpha2.Etcd, *v1alpha2.EtcdList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("etcds"),
+			v1alpha2.SchemeGroupVersion.WithKind("Etcd"),
+			func() *v1alpha2.Etcd { return &v1alpha2.Etcd{} },
+			func() *v1alpha2.EtcdList { return &v1alpha2.EtcdList{} },
+			func(dst, src *v1alpha2.EtcdList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.EtcdList) []*v1alpha2.Etcd { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.EtcdList, items []*v1alpha2.Etcd) { list.Items = gentype.FromPointerSlice(items) },
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.Etcd), err
-}
-
-// List takes label and field selectors, and returns the list of Etcds that match those selectors.
-func (c *FakeEtcds) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.EtcdList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(etcdsResource, etcdsKind, c.ns, opts), &v1alpha2.EtcdList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.EtcdList{ListMeta: obj.(*v1alpha2.EtcdList).ListMeta}
-	for _, item := range obj.(*v1alpha2.EtcdList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested etcds.
-func (c *FakeEtcds) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(etcdsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a etcd and creates it.  Returns the server's representation of the etcd, and an error, if there is any.
-func (c *FakeEtcds) Create(ctx context.Context, etcd *v1alpha2.Etcd, opts v1.CreateOptions) (result *v1alpha2.Etcd, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(etcdsResource, c.ns, etcd), &v1alpha2.Etcd{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Etcd), err
-}
-
-// Update takes the representation of a etcd and updates it. Returns the server's representation of the etcd, and an error, if there is any.
-func (c *FakeEtcds) Update(ctx context.Context, etcd *v1alpha2.Etcd, opts v1.UpdateOptions) (result *v1alpha2.Etcd, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(etcdsResource, c.ns, etcd), &v1alpha2.Etcd{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Etcd), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeEtcds) UpdateStatus(ctx context.Context, etcd *v1alpha2.Etcd, opts v1.UpdateOptions) (*v1alpha2.Etcd, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(etcdsResource, "status", c.ns, etcd), &v1alpha2.Etcd{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Etcd), err
-}
-
-// Delete takes name of the etcd and deletes it. Returns an error if one occurs.
-func (c *FakeEtcds) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(etcdsResource, c.ns, name, opts), &v1alpha2.Etcd{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeEtcds) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(etcdsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.EtcdList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched etcd.
-func (c *FakeEtcds) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.Etcd, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(etcdsResource, c.ns, name, pt, data, subresources...), &v1alpha2.Etcd{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Etcd), err
 }

@@ -555,11 +555,18 @@ const (
 	PostgresSharedTlsVolumeName      = "certs"
 	PostgresSharedTlsVolumeMountPath = "/tls/certs"
 	PostgresCustomConfigFile         = "user.conf"
-	PostgresTuningConfigFile         = "pgtune.conf"
-	PostgresKeyFileSecretSuffix      = "key"
-	PostgresPEMSecretSuffix          = "pem"
-	PostgresDefaultUsername          = "postgres"
-	PostgresPgCoordinatorStatus      = "Coordinator/Status"
+	// PostgresCustomHBAFile is the optional configSecret key whose content is
+	// surfaced to the DB pod as /etc/config/user_hba.conf. postgres-init-docker
+	// splices it into the generated pg_hba.conf between the operator-essential
+	// local/loopback rules and the world-CIDR catch-alls, so user rules can
+	// override the catch-alls (pg_hba.conf is first-match-wins) but cannot lock
+	// the operator out.
+	PostgresCustomHBAFile       = "user_hba.conf"
+	PostgresTuningConfigFile    = "pgtune.conf"
+	PostgresKeyFileSecretSuffix = "key"
+	PostgresPEMSecretSuffix     = "pem"
+	PostgresDefaultUsername     = "postgres"
+	PostgresPgCoordinatorStatus = "Coordinator/Status"
 	// to pause the failover for postgres. this is helpful for ops request
 	PostgresPgCoordinatorStatusPause = "Pause"
 	// to resume the failover for postgres. this is helpful for ops request
@@ -1129,12 +1136,14 @@ const (
 	SolrZkDigest          = "zk-digest"
 	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
-	SolrVolumeDefaultConfig     = "default-config"
-	SolrVolumeCustomConfig      = "custom-config"
-	SolrVolumeAuthConfig        = "auth-config"
-	SolrVolumeData              = "data"
-	SolrVolumeConfig            = "slconfig"
-	SolrVolumeBackupCredentials = "backup-credentials"
+	SolrVolumeDefaultConfig           = "default-config"
+	SolrVolumeCustomConfig            = "custom-config"
+	SolrVolumeAuthConfig              = "auth-config"
+	SolrVolumeData                    = "data"
+	SolrVolumeConfig                  = "slconfig"
+	SolrVolumeBackupCredentials       = "backup-credentials"
+	SolrVolumeMergedTruststore        = "solr-merged-truststore"
+	SolrBackupCredentialsSecretSuffix = "backup-credentials"
 
 	DistLibs              = "/opt/solr/dist"
 	ContribLibs           = "/opt/solr/contrib/%s/lib"
@@ -1148,8 +1157,9 @@ const (
 	SolrZkReady           = "ZookeeperReady"
 
 	// Must stay under SolrHomeDir; the Java SecurityManager policy denies reads elsewhere.
-	SolrBackupCredentialsDir  = "/var/solr/backup-credentials"
-	SolrGCSCredentialFileName = "cred.json"
+	SolrBackupCredentialsDir    = "/var/solr/backup-credentials"
+	SolrAWSCredentialsFileName  = "aws-credentials"
+	SolrAWSSharedCredentialsEnv = "AWS_SHARED_CREDENTIALS_FILE"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""
@@ -1196,6 +1206,8 @@ const (
 	SolrKeystorePassKey            = "keystore-secret"
 	SolrServerKeystorePath         = "/var/solr/etc/keystore.p12"
 	SolrServerTruststorePath       = "/var/solr/etc/truststore.p12"
+	SolrMergedTruststoreMountPath  = "/var/solr/merged-tls"
+	SolrMergedTruststorePath       = SolrMergedTruststoreMountPath + "/truststore.p12"
 	SolrTLSMountPath               = "/var/solr/etc"
 
 	ProxyDeploymentName = "s3proxy"
@@ -2350,6 +2362,11 @@ const (
 	OracleSharedTlsVolumeMountPath = "/tls/certs"
 
 	OracleCustomConfigFileName = "oracle.cnf"
+
+	OracleBackupWalletCreatedCondition = "Backup-wallet-created"
+
+	OracleDefaultOSBWSPFilePath = OracleDataDir + "/osbws" + OracleDatabaseServiceName + ".ora"
+	OracleOsbwsPFilePathFormat  = OracleDataDir + "/osbws%s.ora"
 )
 
 // =========================== DB2 Constants ============================

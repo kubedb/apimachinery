@@ -30,135 +30,135 @@ type FakeGitopsV1alpha1 struct {
 }
 
 func (c *FakeGitopsV1alpha1) Aerospikes(namespace string) v1alpha1.AerospikeInterface {
-	return &FakeAerospikes{c, namespace}
+	return newFakeAerospikes(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Cassandras(namespace string) v1alpha1.CassandraInterface {
-	return &FakeCassandras{c, namespace}
+	return newFakeCassandras(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) ClickHouses(namespace string) v1alpha1.ClickHouseInterface {
-	return &FakeClickHouses{c, namespace}
+	return newFakeClickHouses(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) DB2s(namespace string) v1alpha1.DB2Interface {
-	return &FakeDB2s{c, namespace}
+	return newFakeDB2s(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) DocumentDBs(namespace string) v1alpha1.DocumentDBInterface {
-	return &FakeDocumentDBs{c, namespace}
+	return newFakeDocumentDBs(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Druids(namespace string) v1alpha1.DruidInterface {
-	return &FakeDruids{c, namespace}
+	return newFakeDruids(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Elasticsearches(namespace string) v1alpha1.ElasticsearchInterface {
-	return &FakeElasticsearches{c, namespace}
+	return newFakeElasticsearches(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Etcds(namespace string) v1alpha1.EtcdInterface {
-	return &FakeEtcds{c, namespace}
+	return newFakeEtcds(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) HanaDBs(namespace string) v1alpha1.HanaDBInterface {
-	return &FakeHanaDBs{c, namespace}
+	return newFakeHanaDBs(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Hazelcasts(namespace string) v1alpha1.HazelcastInterface {
-	return &FakeHazelcasts{c, namespace}
+	return newFakeHazelcasts(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Ignites(namespace string) v1alpha1.IgniteInterface {
-	return &FakeIgnites{c, namespace}
+	return newFakeIgnites(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Kafkas(namespace string) v1alpha1.KafkaInterface {
-	return &FakeKafkas{c, namespace}
+	return newFakeKafkas(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) MSSQLServers(namespace string) v1alpha1.MSSQLServerInterface {
-	return &FakeMSSQLServers{c, namespace}
+	return newFakeMSSQLServers(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) MariaDBs(namespace string) v1alpha1.MariaDBInterface {
-	return &FakeMariaDBs{c, namespace}
+	return newFakeMariaDBs(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Memcacheds(namespace string) v1alpha1.MemcachedInterface {
-	return &FakeMemcacheds{c, namespace}
+	return newFakeMemcacheds(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Milvuses(namespace string) v1alpha1.MilvusInterface {
-	return &FakeMilvuses{c, namespace}
+	return newFakeMilvuses(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) MongoDBs(namespace string) v1alpha1.MongoDBInterface {
-	return &FakeMongoDBs{c, namespace}
+	return newFakeMongoDBs(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) MySQLs(namespace string) v1alpha1.MySQLInterface {
-	return &FakeMySQLs{c, namespace}
+	return newFakeMySQLs(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Neo4js(namespace string) v1alpha1.Neo4jInterface {
-	return &FakeNeo4js{c, namespace}
+	return newFakeNeo4js(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Oracles(namespace string) v1alpha1.OracleInterface {
-	return &FakeOracles{c, namespace}
+	return newFakeOracles(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) PerconaXtraDBs(namespace string) v1alpha1.PerconaXtraDBInterface {
-	return &FakePerconaXtraDBs{c, namespace}
+	return newFakePerconaXtraDBs(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) PgBouncers(namespace string) v1alpha1.PgBouncerInterface {
-	return &FakePgBouncers{c, namespace}
+	return newFakePgBouncers(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Pgpools(namespace string) v1alpha1.PgpoolInterface {
-	return &FakePgpools{c, namespace}
+	return newFakePgpools(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Postgreses(namespace string) v1alpha1.PostgresInterface {
-	return &FakePostgreses{c, namespace}
+	return newFakePostgreses(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) ProxySQLs(namespace string) v1alpha1.ProxySQLInterface {
-	return &FakeProxySQLs{c, namespace}
+	return newFakeProxySQLs(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Qdrants(namespace string) v1alpha1.QdrantInterface {
-	return &FakeQdrants{c, namespace}
+	return newFakeQdrants(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) RabbitMQs(namespace string) v1alpha1.RabbitMQInterface {
-	return &FakeRabbitMQs{c, namespace}
+	return newFakeRabbitMQs(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Redises(namespace string) v1alpha1.RedisInterface {
-	return &FakeRedises{c, namespace}
+	return newFakeRedises(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) RedisSentinels(namespace string) v1alpha1.RedisSentinelInterface {
-	return &FakeRedisSentinels{c, namespace}
+	return newFakeRedisSentinels(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Singlestores(namespace string) v1alpha1.SinglestoreInterface {
-	return &FakeSinglestores{c, namespace}
+	return newFakeSinglestores(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Solrs(namespace string) v1alpha1.SolrInterface {
-	return &FakeSolrs{c, namespace}
+	return newFakeSolrs(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) Weaviates(namespace string) v1alpha1.WeaviateInterface {
-	return &FakeWeaviates{c, namespace}
+	return newFakeWeaviates(c, namespace)
 }
 
 func (c *FakeGitopsV1alpha1) ZooKeepers(namespace string) v1alpha1.ZooKeeperInterface {
-	return &FakeZooKeepers{c, namespace}
+	return newFakeZooKeepers(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

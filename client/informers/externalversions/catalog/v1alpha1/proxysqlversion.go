@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ProxySQLVersions.
 type ProxySQLVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ProxySQLVersionLister
+	Lister() catalogv1alpha1.ProxySQLVersionLister
 }
 
 type proxySQLVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredProxySQLVersionInformer(client versioned.Interface, resyncPeriod
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().ProxySQLVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().ProxySQLVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().ProxySQLVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().ProxySQLVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().ProxySQLVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().ProxySQLVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.ProxySQLVersion{},
+		&apiscatalogv1alpha1.ProxySQLVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *proxySQLVersionInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *proxySQLVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.ProxySQLVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.ProxySQLVersion{}, f.defaultInformer)
 }
 
-func (f *proxySQLVersionInformer) Lister() v1alpha1.ProxySQLVersionLister {
-	return v1alpha1.NewProxySQLVersionLister(f.Informer().GetIndexer())
+func (f *proxySQLVersionInformer) Lister() catalogv1alpha1.ProxySQLVersionLister {
+	return catalogv1alpha1.NewProxySQLVersionLister(f.Informer().GetIndexer())
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // CassandraOpsRequestLister helps list CassandraOpsRequests.
@@ -31,7 +31,7 @@ import (
 type CassandraOpsRequestLister interface {
 	// List lists all CassandraOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.CassandraOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.CassandraOpsRequest, err error)
 	// CassandraOpsRequests returns an object that can list and get CassandraOpsRequests.
 	CassandraOpsRequests(namespace string) CassandraOpsRequestNamespaceLister
 	CassandraOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type CassandraOpsRequestLister interface {
 
 // cassandraOpsRequestLister implements the CassandraOpsRequestLister interface.
 type cassandraOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.CassandraOpsRequest]
 }
 
 // NewCassandraOpsRequestLister returns a new CassandraOpsRequestLister.
 func NewCassandraOpsRequestLister(indexer cache.Indexer) CassandraOpsRequestLister {
-	return &cassandraOpsRequestLister{indexer: indexer}
-}
-
-// List lists all CassandraOpsRequests in the indexer.
-func (s *cassandraOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.CassandraOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.CassandraOpsRequest))
-	})
-	return ret, err
+	return &cassandraOpsRequestLister{listers.New[*opsv1alpha1.CassandraOpsRequest](indexer, opsv1alpha1.Resource("cassandraopsrequest"))}
 }
 
 // CassandraOpsRequests returns an object that can list and get CassandraOpsRequests.
 func (s *cassandraOpsRequestLister) CassandraOpsRequests(namespace string) CassandraOpsRequestNamespaceLister {
-	return cassandraOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return cassandraOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.CassandraOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // CassandraOpsRequestNamespaceLister helps list and get CassandraOpsRequests.
@@ -65,36 +57,15 @@ func (s *cassandraOpsRequestLister) CassandraOpsRequests(namespace string) Cassa
 type CassandraOpsRequestNamespaceLister interface {
 	// List lists all CassandraOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.CassandraOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.CassandraOpsRequest, err error)
 	// Get retrieves the CassandraOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.CassandraOpsRequest, error)
+	Get(name string) (*opsv1alpha1.CassandraOpsRequest, error)
 	CassandraOpsRequestNamespaceListerExpansion
 }
 
 // cassandraOpsRequestNamespaceLister implements the CassandraOpsRequestNamespaceLister
 // interface.
 type cassandraOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all CassandraOpsRequests in the indexer for a given namespace.
-func (s cassandraOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.CassandraOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.CassandraOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the CassandraOpsRequest from the indexer for a given namespace and name.
-func (s cassandraOpsRequestNamespaceLister) Get(name string) (*v1alpha1.CassandraOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("cassandraopsrequest"), name)
-	}
-	return obj.(*v1alpha1.CassandraOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.CassandraOpsRequest]
 }

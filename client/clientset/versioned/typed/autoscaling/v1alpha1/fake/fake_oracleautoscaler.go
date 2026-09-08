@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeOracleAutoscalers implements OracleAutoscalerInterface
-type FakeOracleAutoscalers struct {
+// fakeOracleAutoscalers implements OracleAutoscalerInterface
+type fakeOracleAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.OracleAutoscaler, *v1alpha1.OracleAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var oracleautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("oracleautoscalers")
-
-var oracleautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("OracleAutoscaler")
-
-// Get takes name of the oracleAutoscaler, and returns the corresponding oracleAutoscaler object, and an error if there is any.
-func (c *FakeOracleAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.OracleAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(oracleautoscalersResource, c.ns, name), &v1alpha1.OracleAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeOracleAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.OracleAutoscalerInterface {
+	return &fakeOracleAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.OracleAutoscaler, *v1alpha1.OracleAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("oracleautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("OracleAutoscaler"),
+			func() *v1alpha1.OracleAutoscaler { return &v1alpha1.OracleAutoscaler{} },
+			func() *v1alpha1.OracleAutoscalerList { return &v1alpha1.OracleAutoscalerList{} },
+			func(dst, src *v1alpha1.OracleAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.OracleAutoscalerList) []*v1alpha1.OracleAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.OracleAutoscalerList, items []*v1alpha1.OracleAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.OracleAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of OracleAutoscalers that match those selectors.
-func (c *FakeOracleAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.OracleAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(oracleautoscalersResource, oracleautoscalersKind, c.ns, opts), &v1alpha1.OracleAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.OracleAutoscalerList{ListMeta: obj.(*v1alpha1.OracleAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.OracleAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested oracleAutoscalers.
-func (c *FakeOracleAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(oracleautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a oracleAutoscaler and creates it.  Returns the server's representation of the oracleAutoscaler, and an error, if there is any.
-func (c *FakeOracleAutoscalers) Create(ctx context.Context, oracleAutoscaler *v1alpha1.OracleAutoscaler, opts v1.CreateOptions) (result *v1alpha1.OracleAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(oracleautoscalersResource, c.ns, oracleAutoscaler), &v1alpha1.OracleAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleAutoscaler), err
-}
-
-// Update takes the representation of a oracleAutoscaler and updates it. Returns the server's representation of the oracleAutoscaler, and an error, if there is any.
-func (c *FakeOracleAutoscalers) Update(ctx context.Context, oracleAutoscaler *v1alpha1.OracleAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.OracleAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(oracleautoscalersResource, c.ns, oracleAutoscaler), &v1alpha1.OracleAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeOracleAutoscalers) UpdateStatus(ctx context.Context, oracleAutoscaler *v1alpha1.OracleAutoscaler, opts v1.UpdateOptions) (*v1alpha1.OracleAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(oracleautoscalersResource, "status", c.ns, oracleAutoscaler), &v1alpha1.OracleAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleAutoscaler), err
-}
-
-// Delete takes name of the oracleAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeOracleAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(oracleautoscalersResource, c.ns, name, opts), &v1alpha1.OracleAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeOracleAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(oracleautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.OracleAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched oracleAutoscaler.
-func (c *FakeOracleAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.OracleAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(oracleautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.OracleAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleAutoscaler), err
 }

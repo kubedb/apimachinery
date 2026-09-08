@@ -323,9 +323,19 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScaling
 	if horizontalScalingSpec.Replicas == nil && horizontalScalingSpec.Shards == nil && horizontalScalingSpec.ClickHouseKeeper == nil {
 		return errors.New("at least one of `spec.horizontalScaling.replicas`, `spec.horizontalScaling.shards`, or `spec.horizontalScaling.clickHouseKeeper` must be provided")
 	}
+	if db.Spec.ClusterTopology == nil {
+		return errors.New("horizontal scaling is only supported for a sharded cluster (spec.clusterTopology)")
+	}
 
-	if horizontalScalingSpec.Replicas != nil && *horizontalScalingSpec.Replicas <= 0 {
-		return errors.New("`spec.horizontalScaling.replicas` must be greater than 0")
+	if horizontalScalingSpec.Replicas != nil {
+		target := *horizontalScalingSpec.Replicas
+		if target <= 0 {
+			return errors.New("`spec.horizontalScaling.replicas` must be greater than 0")
+		}
+		if (req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "") &&
+			db.Spec.ClusterTopology.Cluster.Replicas != nil && target == *db.Spec.ClusterTopology.Cluster.Replicas {
+			return fmt.Errorf("cluster already has %d replicas", target)
+		}
 	}
 
 	if horizontalScalingSpec.ClickHouseKeeper != nil {
@@ -350,14 +360,10 @@ func (rv *ClickHouseOpsRequestCustomWebhook) validateClickHouseHorizontalScaling
 		if *horizontalScalingSpec.Shards <= 0 {
 			return errors.New("`spec.horizontalScaling.shards` must be greater than 0")
 		}
-		// shard scaling only applies to sharded (topology) clusters
-		if db.Spec.ClusterTopology == nil {
-			return errors.New("`spec.horizontalScaling.shards` is only supported for a sharded cluster (spec.clusterTopology)")
-		}
-		// scale-up only — validate at creation time to avoid re-validation failures
+		// Scale-up only — validate at creation time to avoid re-validation failures
 		if req.Status.Phase == opsapi.OpsRequestPhasePending || req.Status.Phase == "" {
 			currentShards := int(*db.Spec.ClusterTopology.Cluster.Shards)
-			if int(*horizontalScalingSpec.Shards) < currentShards {
+			if int(*horizontalScalingSpec.Shards) <= currentShards {
 				return fmt.Errorf("shard scale-up only: `spec.horizontalScaling.shards` (%d) must be greater than current shard count (%d)", *horizontalScalingSpec.Shards, currentShards)
 			}
 		}
