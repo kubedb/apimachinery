@@ -2362,6 +2362,9 @@ const (
 	OracleSharedTlsVolumeMountPath = "/tls/certs"
 
 	OracleCustomConfigFileName = "oracle.cnf"
+
+	OracleDefaultOSBWSPFilePath = OracleDataDir + "/osbws" + OracleDatabaseServiceName + ".ora"
+	OracleOsbwsPFilePathFormat  = OracleDataDir + "/osbws%s.ora"
 )
 
 // =========================== DB2 Constants ============================
