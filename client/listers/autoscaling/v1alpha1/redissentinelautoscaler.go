@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // RedisSentinelAutoscalerLister helps list RedisSentinelAutoscalers.
@@ -31,7 +31,7 @@ import (
 type RedisSentinelAutoscalerLister interface {
 	// List lists all RedisSentinelAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RedisSentinelAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.RedisSentinelAutoscaler, err error)
 	// RedisSentinelAutoscalers returns an object that can list and get RedisSentinelAutoscalers.
 	RedisSentinelAutoscalers(namespace string) RedisSentinelAutoscalerNamespaceLister
 	RedisSentinelAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type RedisSentinelAutoscalerLister interface {
 
 // redisSentinelAutoscalerLister implements the RedisSentinelAutoscalerLister interface.
 type redisSentinelAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.RedisSentinelAutoscaler]
 }
 
 // NewRedisSentinelAutoscalerLister returns a new RedisSentinelAutoscalerLister.
 func NewRedisSentinelAutoscalerLister(indexer cache.Indexer) RedisSentinelAutoscalerLister {
-	return &redisSentinelAutoscalerLister{indexer: indexer}
-}
-
-// List lists all RedisSentinelAutoscalers in the indexer.
-func (s *redisSentinelAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.RedisSentinelAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RedisSentinelAutoscaler))
-	})
-	return ret, err
+	return &redisSentinelAutoscalerLister{listers.New[*autoscalingv1alpha1.RedisSentinelAutoscaler](indexer, autoscalingv1alpha1.Resource("redissentinelautoscaler"))}
 }
 
 // RedisSentinelAutoscalers returns an object that can list and get RedisSentinelAutoscalers.
 func (s *redisSentinelAutoscalerLister) RedisSentinelAutoscalers(namespace string) RedisSentinelAutoscalerNamespaceLister {
-	return redisSentinelAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return redisSentinelAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.RedisSentinelAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // RedisSentinelAutoscalerNamespaceLister helps list and get RedisSentinelAutoscalers.
@@ -65,36 +57,15 @@ func (s *redisSentinelAutoscalerLister) RedisSentinelAutoscalers(namespace strin
 type RedisSentinelAutoscalerNamespaceLister interface {
 	// List lists all RedisSentinelAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RedisSentinelAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.RedisSentinelAutoscaler, err error)
 	// Get retrieves the RedisSentinelAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.RedisSentinelAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.RedisSentinelAutoscaler, error)
 	RedisSentinelAutoscalerNamespaceListerExpansion
 }
 
 // redisSentinelAutoscalerNamespaceLister implements the RedisSentinelAutoscalerNamespaceLister
 // interface.
 type redisSentinelAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all RedisSentinelAutoscalers in the indexer for a given namespace.
-func (s redisSentinelAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.RedisSentinelAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RedisSentinelAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the RedisSentinelAutoscaler from the indexer for a given namespace and name.
-func (s redisSentinelAutoscalerNamespaceLister) Get(name string) (*v1alpha1.RedisSentinelAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("redissentinelautoscaler"), name)
-	}
-	return obj.(*v1alpha1.RedisSentinelAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.RedisSentinelAutoscaler]
 }

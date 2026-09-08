@@ -26,6 +26,14 @@ type ClickHouseArchiverListerExpansion interface{}
 // ClickHouseArchiverNamespaceLister.
 type ClickHouseArchiverNamespaceListerExpansion interface{}
 
+// EtcdArchiverListerExpansion allows custom methods to be added to
+// EtcdArchiverLister.
+type EtcdArchiverListerExpansion interface{}
+
+// EtcdArchiverNamespaceListerExpansion allows custom methods to be added to
+// EtcdArchiverNamespaceLister.
+type EtcdArchiverNamespaceListerExpansion interface{}
+
 // MSSQLServerArchiverListerExpansion allows custom methods to be added to
 // MSSQLServerArchiverLister.
 type MSSQLServerArchiverListerExpansion interface{}

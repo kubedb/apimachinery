@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	apisuiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ProxySQLInsights.
 type ProxySQLInsightInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ProxySQLInsightLister
+	Lister() uiv1alpha1.ProxySQLInsightLister
 }
 
 type proxySQLInsightInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredProxySQLInsightInformer(client versioned.Interface, namespace st
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().ProxySQLInsights(namespace).List(context.TODO(), options)
+				return client.UiV1alpha1().ProxySQLInsights(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().ProxySQLInsights(namespace).Watch(context.TODO(), options)
+				return client.UiV1alpha1().ProxySQLInsights(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().ProxySQLInsights(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().ProxySQLInsights(namespace).Watch(ctx, options)
 			},
 		},
-		&uiv1alpha1.ProxySQLInsight{},
+		&apisuiv1alpha1.ProxySQLInsight{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *proxySQLInsightInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *proxySQLInsightInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&uiv1alpha1.ProxySQLInsight{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisuiv1alpha1.ProxySQLInsight{}, f.defaultInformer)
 }
 
-func (f *proxySQLInsightInformer) Lister() v1alpha1.ProxySQLInsightLister {
-	return v1alpha1.NewProxySQLInsightLister(f.Informer().GetIndexer())
+func (f *proxySQLInsightInformer) Lister() uiv1alpha1.ProxySQLInsightLister {
+	return uiv1alpha1.NewProxySQLInsightLister(f.Informer().GetIndexer())
 }

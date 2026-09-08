@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // RedisQueriesLister helps list RedisQuerieses.
@@ -31,7 +31,7 @@ import (
 type RedisQueriesLister interface {
 	// List lists all RedisQuerieses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RedisQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.RedisQueries, err error)
 	// RedisQuerieses returns an object that can list and get RedisQuerieses.
 	RedisQuerieses(namespace string) RedisQueriesNamespaceLister
 	RedisQueriesListerExpansion
@@ -39,25 +39,17 @@ type RedisQueriesLister interface {
 
 // redisQueriesLister implements the RedisQueriesLister interface.
 type redisQueriesLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.RedisQueries]
 }
 
 // NewRedisQueriesLister returns a new RedisQueriesLister.
 func NewRedisQueriesLister(indexer cache.Indexer) RedisQueriesLister {
-	return &redisQueriesLister{indexer: indexer}
-}
-
-// List lists all RedisQuerieses in the indexer.
-func (s *redisQueriesLister) List(selector labels.Selector) (ret []*v1alpha1.RedisQueries, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RedisQueries))
-	})
-	return ret, err
+	return &redisQueriesLister{listers.New[*uiv1alpha1.RedisQueries](indexer, uiv1alpha1.Resource("redisqueries"))}
 }
 
 // RedisQuerieses returns an object that can list and get RedisQuerieses.
 func (s *redisQueriesLister) RedisQuerieses(namespace string) RedisQueriesNamespaceLister {
-	return redisQueriesNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return redisQueriesNamespaceLister{listers.NewNamespaced[*uiv1alpha1.RedisQueries](s.ResourceIndexer, namespace)}
 }
 
 // RedisQueriesNamespaceLister helps list and get RedisQuerieses.
@@ -65,36 +57,15 @@ func (s *redisQueriesLister) RedisQuerieses(namespace string) RedisQueriesNamesp
 type RedisQueriesNamespaceLister interface {
 	// List lists all RedisQuerieses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RedisQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.RedisQueries, err error)
 	// Get retrieves the RedisQueries from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.RedisQueries, error)
+	Get(name string) (*uiv1alpha1.RedisQueries, error)
 	RedisQueriesNamespaceListerExpansion
 }
 
 // redisQueriesNamespaceLister implements the RedisQueriesNamespaceLister
 // interface.
 type redisQueriesNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all RedisQuerieses in the indexer for a given namespace.
-func (s redisQueriesNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.RedisQueries, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RedisQueries))
-	})
-	return ret, err
-}
-
-// Get retrieves the RedisQueries from the indexer for a given namespace and name.
-func (s redisQueriesNamespaceLister) Get(name string) (*v1alpha1.RedisQueries, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("redisqueries"), name)
-	}
-	return obj.(*v1alpha1.RedisQueries), nil
+	listers.ResourceIndexer[*uiv1alpha1.RedisQueries]
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MilvusVersions.
 type MilvusVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MilvusVersionLister
+	Lister() catalogv1alpha1.MilvusVersionLister
 }
 
 type milvusVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredMilvusVersionInformer(client versioned.Interface, resyncPeriod t
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().MilvusVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().MilvusVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().MilvusVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().MilvusVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().MilvusVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().MilvusVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.MilvusVersion{},
+		&apiscatalogv1alpha1.MilvusVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *milvusVersionInformer) defaultInformer(client versioned.Interface, resy
 }
 
 func (f *milvusVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.MilvusVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.MilvusVersion{}, f.defaultInformer)
 }
 
-func (f *milvusVersionInformer) Lister() v1alpha1.MilvusVersionLister {
-	return v1alpha1.NewMilvusVersionLister(f.Informer().GetIndexer())
+func (f *milvusVersionInformer) Lister() catalogv1alpha1.MilvusVersionLister {
+	return catalogv1alpha1.NewMilvusVersionLister(f.Informer().GetIndexer())
 }

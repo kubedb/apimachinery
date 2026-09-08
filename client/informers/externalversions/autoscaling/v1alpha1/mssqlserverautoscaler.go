@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	apisautoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MSSQLServerAutoscalers.
 type MSSQLServerAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MSSQLServerAutoscalerLister
+	Lister() autoscalingv1alpha1.MSSQLServerAutoscalerLister
 }
 
 type mSSQLServerAutoscalerInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredMSSQLServerAutoscalerInformer(client versioned.Interface, namesp
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().MSSQLServerAutoscalers(namespace).List(context.TODO(), options)
+				return client.AutoscalingV1alpha1().MSSQLServerAutoscalers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().MSSQLServerAutoscalers(namespace).Watch(context.TODO(), options)
+				return client.AutoscalingV1alpha1().MSSQLServerAutoscalers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().MSSQLServerAutoscalers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().MSSQLServerAutoscalers(namespace).Watch(ctx, options)
 			},
 		},
-		&autoscalingv1alpha1.MSSQLServerAutoscaler{},
+		&apisautoscalingv1alpha1.MSSQLServerAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *mSSQLServerAutoscalerInformer) defaultInformer(client versioned.Interfa
 }
 
 func (f *mSSQLServerAutoscalerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&autoscalingv1alpha1.MSSQLServerAutoscaler{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisautoscalingv1alpha1.MSSQLServerAutoscaler{}, f.defaultInformer)
 }
 
-func (f *mSSQLServerAutoscalerInformer) Lister() v1alpha1.MSSQLServerAutoscalerLister {
-	return v1alpha1.NewMSSQLServerAutoscalerLister(f.Informer().GetIndexer())
+func (f *mSSQLServerAutoscalerInformer) Lister() autoscalingv1alpha1.MSSQLServerAutoscalerLister {
+	return autoscalingv1alpha1.NewMSSQLServerAutoscalerLister(f.Informer().GetIndexer())
 }

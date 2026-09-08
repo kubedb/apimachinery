@@ -59,6 +59,9 @@ var pxlLog = logf.Log.WithName("perconaxtradb-resource")
 var _ webhook.CustomDefaulter = &PerconaXtraDBCustomWebhook{}
 
 func (w PerconaXtraDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db := obj.(*dbapi.PerconaXtraDB)
 	pxlLog.Info("defaulting", "name", db.GetName())
 	if db.Spec.Version == "" {
@@ -87,6 +90,9 @@ func (w PerconaXtraDBCustomWebhook) Default(ctx context.Context, obj runtime.Obj
 var _ webhook.CustomValidator = &PerconaXtraDBCustomWebhook{}
 
 func (w PerconaXtraDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	perconaxtradb := obj.(*dbapi.PerconaXtraDB)
 	err = w.ValidatePerconaXtraDB(perconaxtradb)
 	pxlLog.Info("validating", "name", perconaxtradb.GetName())
@@ -94,6 +100,9 @@ func (w PerconaXtraDBCustomWebhook) ValidateCreate(ctx context.Context, obj runt
 }
 
 func (w PerconaXtraDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldPerconaXtraDB, ok := oldObj.(*dbapi.PerconaXtraDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a PerconaXtraDB but got a %T", oldPerconaXtraDB)

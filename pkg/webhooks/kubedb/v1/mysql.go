@@ -62,6 +62,9 @@ var mysqlLog = logf.Log.WithName("mysql-resource")
 var _ webhook.CustomDefaulter = &MySQLCustomWebhook{}
 
 func (w MySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db := obj.(*dbapi.MySQL)
 	mysqlLog.Info("defaulting", "name", db.GetName())
 
@@ -94,6 +97,9 @@ func (w MySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 var _ webhook.CustomValidator = &MySQLCustomWebhook{}
 
 func (w MySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	mysql := obj.(*dbapi.MySQL)
 	err = w.ValidateMySQL(mysql)
 	mysqlLog.Info("validating", "name", mysql.Name)
@@ -101,6 +107,9 @@ func (w MySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obje
 }
 
 func (w MySQLCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldMySQL, ok := oldObj.(*dbapi.MySQL)
 	if !ok {
 		return nil, fmt.Errorf("expected a MySQL but got a %T", oldMySQL)

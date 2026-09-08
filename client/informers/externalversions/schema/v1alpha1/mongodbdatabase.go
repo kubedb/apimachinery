@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	schemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
+	apisschemav1alpha1 "kubedb.dev/apimachinery/apis/schema/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/schema/v1alpha1"
+	schemav1alpha1 "kubedb.dev/apimachinery/client/listers/schema/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MongoDBDatabases.
 type MongoDBDatabaseInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MongoDBDatabaseLister
+	Lister() schemav1alpha1.MongoDBDatabaseLister
 }
 
 type mongoDBDatabaseInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredMongoDBDatabaseInformer(client versioned.Interface, namespace st
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SchemaV1alpha1().MongoDBDatabases(namespace).List(context.TODO(), options)
+				return client.SchemaV1alpha1().MongoDBDatabases(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.SchemaV1alpha1().MongoDBDatabases(namespace).Watch(context.TODO(), options)
+				return client.SchemaV1alpha1().MongoDBDatabases(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.SchemaV1alpha1().MongoDBDatabases(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.SchemaV1alpha1().MongoDBDatabases(namespace).Watch(ctx, options)
 			},
 		},
-		&schemav1alpha1.MongoDBDatabase{},
+		&apisschemav1alpha1.MongoDBDatabase{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *mongoDBDatabaseInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *mongoDBDatabaseInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&schemav1alpha1.MongoDBDatabase{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisschemav1alpha1.MongoDBDatabase{}, f.defaultInformer)
 }
 
-func (f *mongoDBDatabaseInformer) Lister() v1alpha1.MongoDBDatabaseLister {
-	return v1alpha1.NewMongoDBDatabaseLister(f.Informer().GetIndexer())
+func (f *mongoDBDatabaseInformer) Lister() schemav1alpha1.MongoDBDatabaseLister {
+	return schemav1alpha1.NewMongoDBDatabaseLister(f.Informer().GetIndexer())
 }

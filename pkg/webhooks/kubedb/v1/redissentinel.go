@@ -60,6 +60,9 @@ var _ webhook.CustomDefaulter = &RedisSentinelCustomWebhook{}
 var sentinelLog = logf.Log.WithName("redissentinel-resource")
 
 func (w RedisSentinelCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	sentinel, ok := obj.(*dbapi.RedisSentinel)
 	if !ok {
 		return fmt.Errorf("expected a RedisSentinel but got a %T", obj)
@@ -92,6 +95,9 @@ func (w RedisSentinelCustomWebhook) Default(ctx context.Context, obj runtime.Obj
 var _ webhook.CustomValidator = &RedisSentinelCustomWebhook{}
 
 func (w RedisSentinelCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	sentinel, ok := obj.(*dbapi.RedisSentinel)
 	if !ok {
 		return nil, fmt.Errorf("expected a RedisSentinel but got a %T", obj)
@@ -102,6 +108,9 @@ func (w RedisSentinelCustomWebhook) ValidateCreate(ctx context.Context, obj runt
 }
 
 func (w RedisSentinelCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldRedisSentinel, ok := oldObj.(*dbapi.RedisSentinel)
 	if !ok {
 		return nil, fmt.Errorf("expected a RedisSentinel but got a %T", oldRedisSentinel)

@@ -59,6 +59,9 @@ type HazelcastCustomWebhook struct {
 var _ webhook.CustomDefaulter = &HazelcastCustomWebhook{}
 
 func (w *HazelcastCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Hazelcast)
 	if !ok {
 		return fmt.Errorf("expected an Hazelcast object but got %T", obj)
@@ -86,6 +89,9 @@ var hazelcastReservedVolumeMountPaths = []string{
 var _ webhook.CustomValidator = &HazelcastCustomWebhook{}
 
 func (w *HazelcastCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.Hazelcast)
 	if !ok {
 		return nil, fmt.Errorf("expected an Hazelcast object but got %T", obj)
@@ -211,6 +217,9 @@ func (w *HazelcastCustomWebhook) hazelcastValidateVolumesMountPaths(podTemplate 
 }
 
 func (w *HazelcastCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Hazelcast)
 	if !ok {
 		return nil, fmt.Errorf("expected an Hazelcast object but got %T", newObj)

@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	elasticsearchv1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
+	apiselasticsearchv1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/elasticsearch/v1alpha1"
+	elasticsearchv1alpha1 "kubedb.dev/apimachinery/client/listers/elasticsearch/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ElasticsearchDashboards.
 type ElasticsearchDashboardInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ElasticsearchDashboardLister
+	Lister() elasticsearchv1alpha1.ElasticsearchDashboardLister
 }
 
 type elasticsearchDashboardInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredElasticsearchDashboardInformer(client versioned.Interface, names
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ElasticsearchV1alpha1().ElasticsearchDashboards(namespace).List(context.TODO(), options)
+				return client.ElasticsearchV1alpha1().ElasticsearchDashboards(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ElasticsearchV1alpha1().ElasticsearchDashboards(namespace).Watch(context.TODO(), options)
+				return client.ElasticsearchV1alpha1().ElasticsearchDashboards(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ElasticsearchV1alpha1().ElasticsearchDashboards(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ElasticsearchV1alpha1().ElasticsearchDashboards(namespace).Watch(ctx, options)
 			},
 		},
-		&elasticsearchv1alpha1.ElasticsearchDashboard{},
+		&apiselasticsearchv1alpha1.ElasticsearchDashboard{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *elasticsearchDashboardInformer) defaultInformer(client versioned.Interf
 }
 
 func (f *elasticsearchDashboardInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&elasticsearchv1alpha1.ElasticsearchDashboard{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiselasticsearchv1alpha1.ElasticsearchDashboard{}, f.defaultInformer)
 }
 
-func (f *elasticsearchDashboardInformer) Lister() v1alpha1.ElasticsearchDashboardLister {
-	return v1alpha1.NewElasticsearchDashboardLister(f.Informer().GetIndexer())
+func (f *elasticsearchDashboardInformer) Lister() elasticsearchv1alpha1.ElasticsearchDashboardLister {
+	return elasticsearchv1alpha1.NewElasticsearchDashboardLister(f.Informer().GetIndexer())
 }

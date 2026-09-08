@@ -64,6 +64,9 @@ var hanaLog = logf.Log.WithName("hanadb-resource")
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *HanaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*api.HanaDB)
 	if !ok {
 		return fmt.Errorf("expected a HanaDB object, got a %T", obj)
@@ -79,6 +82,9 @@ var _ webhook.CustomValidator = &HanaDBCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *HanaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*api.HanaDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a HanaDB object, got a %T", obj)
@@ -95,6 +101,9 @@ func (w *HanaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *HanaDBCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*api.HanaDB)
 	if !ok {
 		return nil, fmt.Errorf("expected a HanaDB object, got a %T", newObj)

@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeHanaDBVersions implements HanaDBVersionInterface
-type FakeHanaDBVersions struct {
+// fakeHanaDBVersions implements HanaDBVersionInterface
+type fakeHanaDBVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.HanaDBVersion, *v1alpha1.HanaDBVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var hanadbversionsResource = v1alpha1.SchemeGroupVersion.WithResource("hanadbversions")
-
-var hanadbversionsKind = v1alpha1.SchemeGroupVersion.WithKind("HanaDBVersion")
-
-// Get takes name of the hanaDBVersion, and returns the corresponding hanaDBVersion object, and an error if there is any.
-func (c *FakeHanaDBVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.HanaDBVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(hanadbversionsResource, name), &v1alpha1.HanaDBVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeHanaDBVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.HanaDBVersionInterface {
+	return &fakeHanaDBVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.HanaDBVersion, *v1alpha1.HanaDBVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("hanadbversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("HanaDBVersion"),
+			func() *v1alpha1.HanaDBVersion { return &v1alpha1.HanaDBVersion{} },
+			func() *v1alpha1.HanaDBVersionList { return &v1alpha1.HanaDBVersionList{} },
+			func(dst, src *v1alpha1.HanaDBVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.HanaDBVersionList) []*v1alpha1.HanaDBVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.HanaDBVersionList, items []*v1alpha1.HanaDBVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.HanaDBVersion), err
-}
-
-// List takes label and field selectors, and returns the list of HanaDBVersions that match those selectors.
-func (c *FakeHanaDBVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.HanaDBVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(hanadbversionsResource, hanadbversionsKind, opts), &v1alpha1.HanaDBVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.HanaDBVersionList{ListMeta: obj.(*v1alpha1.HanaDBVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.HanaDBVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested hanaDBVersions.
-func (c *FakeHanaDBVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(hanadbversionsResource, opts))
-}
-
-// Create takes the representation of a hanaDBVersion and creates it.  Returns the server's representation of the hanaDBVersion, and an error, if there is any.
-func (c *FakeHanaDBVersions) Create(ctx context.Context, hanaDBVersion *v1alpha1.HanaDBVersion, opts v1.CreateOptions) (result *v1alpha1.HanaDBVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(hanadbversionsResource, hanaDBVersion), &v1alpha1.HanaDBVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBVersion), err
-}
-
-// Update takes the representation of a hanaDBVersion and updates it. Returns the server's representation of the hanaDBVersion, and an error, if there is any.
-func (c *FakeHanaDBVersions) Update(ctx context.Context, hanaDBVersion *v1alpha1.HanaDBVersion, opts v1.UpdateOptions) (result *v1alpha1.HanaDBVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(hanadbversionsResource, hanaDBVersion), &v1alpha1.HanaDBVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBVersion), err
-}
-
-// Delete takes name of the hanaDBVersion and deletes it. Returns an error if one occurs.
-func (c *FakeHanaDBVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(hanadbversionsResource, name, opts), &v1alpha1.HanaDBVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeHanaDBVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(hanadbversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.HanaDBVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched hanaDBVersion.
-func (c *FakeHanaDBVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.HanaDBVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(hanadbversionsResource, name, pt, data, subresources...), &v1alpha1.HanaDBVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBVersion), err
 }

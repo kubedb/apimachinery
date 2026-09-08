@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeHanaDBAutoscalers implements HanaDBAutoscalerInterface
-type FakeHanaDBAutoscalers struct {
+// fakeHanaDBAutoscalers implements HanaDBAutoscalerInterface
+type fakeHanaDBAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.HanaDBAutoscaler, *v1alpha1.HanaDBAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var hanadbautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("hanadbautoscalers")
-
-var hanadbautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("HanaDBAutoscaler")
-
-// Get takes name of the hanaDBAutoscaler, and returns the corresponding hanaDBAutoscaler object, and an error if there is any.
-func (c *FakeHanaDBAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.HanaDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(hanadbautoscalersResource, c.ns, name), &v1alpha1.HanaDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeHanaDBAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.HanaDBAutoscalerInterface {
+	return &fakeHanaDBAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.HanaDBAutoscaler, *v1alpha1.HanaDBAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("hanadbautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("HanaDBAutoscaler"),
+			func() *v1alpha1.HanaDBAutoscaler { return &v1alpha1.HanaDBAutoscaler{} },
+			func() *v1alpha1.HanaDBAutoscalerList { return &v1alpha1.HanaDBAutoscalerList{} },
+			func(dst, src *v1alpha1.HanaDBAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.HanaDBAutoscalerList) []*v1alpha1.HanaDBAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.HanaDBAutoscalerList, items []*v1alpha1.HanaDBAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.HanaDBAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of HanaDBAutoscalers that match those selectors.
-func (c *FakeHanaDBAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.HanaDBAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(hanadbautoscalersResource, hanadbautoscalersKind, c.ns, opts), &v1alpha1.HanaDBAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.HanaDBAutoscalerList{ListMeta: obj.(*v1alpha1.HanaDBAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.HanaDBAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested hanaDBAutoscalers.
-func (c *FakeHanaDBAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(hanadbautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a hanaDBAutoscaler and creates it.  Returns the server's representation of the hanaDBAutoscaler, and an error, if there is any.
-func (c *FakeHanaDBAutoscalers) Create(ctx context.Context, hanaDBAutoscaler *v1alpha1.HanaDBAutoscaler, opts v1.CreateOptions) (result *v1alpha1.HanaDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(hanadbautoscalersResource, c.ns, hanaDBAutoscaler), &v1alpha1.HanaDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBAutoscaler), err
-}
-
-// Update takes the representation of a hanaDBAutoscaler and updates it. Returns the server's representation of the hanaDBAutoscaler, and an error, if there is any.
-func (c *FakeHanaDBAutoscalers) Update(ctx context.Context, hanaDBAutoscaler *v1alpha1.HanaDBAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.HanaDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(hanadbautoscalersResource, c.ns, hanaDBAutoscaler), &v1alpha1.HanaDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeHanaDBAutoscalers) UpdateStatus(ctx context.Context, hanaDBAutoscaler *v1alpha1.HanaDBAutoscaler, opts v1.UpdateOptions) (*v1alpha1.HanaDBAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(hanadbautoscalersResource, "status", c.ns, hanaDBAutoscaler), &v1alpha1.HanaDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBAutoscaler), err
-}
-
-// Delete takes name of the hanaDBAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeHanaDBAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(hanadbautoscalersResource, c.ns, name, opts), &v1alpha1.HanaDBAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeHanaDBAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(hanadbautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.HanaDBAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched hanaDBAutoscaler.
-func (c *FakeHanaDBAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.HanaDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(hanadbautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.HanaDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HanaDBAutoscaler), err
 }

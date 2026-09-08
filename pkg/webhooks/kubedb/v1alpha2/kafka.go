@@ -59,6 +59,9 @@ var _ webhook.CustomDefaulter = &KafkaCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *KafkaCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db, ok := obj.(*olddbapi.Kafka)
 	if !ok {
 		return fmt.Errorf("expected an Kafka object but got %T", obj)
@@ -73,6 +76,9 @@ var _ webhook.CustomValidator = &KafkaCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *KafkaCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	db, ok := obj.(*olddbapi.Kafka)
 	if !ok {
 		return nil, fmt.Errorf("expected an Kafka object but got %T", obj)
@@ -83,6 +89,9 @@ func (w *KafkaCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obj
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *KafkaCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	db, ok := newObj.(*olddbapi.Kafka)
 	if !ok {
 		return nil, fmt.Errorf("expected an Kafka object but got %T", newObj)

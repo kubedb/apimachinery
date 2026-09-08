@@ -30,19 +30,19 @@ type FakeSchemaV1alpha1 struct {
 }
 
 func (c *FakeSchemaV1alpha1) MariaDBDatabases(namespace string) v1alpha1.MariaDBDatabaseInterface {
-	return &FakeMariaDBDatabases{c, namespace}
+	return newFakeMariaDBDatabases(c, namespace)
 }
 
 func (c *FakeSchemaV1alpha1) MongoDBDatabases(namespace string) v1alpha1.MongoDBDatabaseInterface {
-	return &FakeMongoDBDatabases{c, namespace}
+	return newFakeMongoDBDatabases(c, namespace)
 }
 
 func (c *FakeSchemaV1alpha1) MySQLDatabases(namespace string) v1alpha1.MySQLDatabaseInterface {
-	return &FakeMySQLDatabases{c, namespace}
+	return newFakeMySQLDatabases(c, namespace)
 }
 
 func (c *FakeSchemaV1alpha1) PostgresDatabases(namespace string) v1alpha1.PostgresDatabaseInterface {
-	return &FakePostgresDatabases{c, namespace}
+	return newFakePostgresDatabases(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

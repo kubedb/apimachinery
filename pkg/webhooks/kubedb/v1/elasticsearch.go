@@ -64,6 +64,9 @@ var eslog = logf.Log.WithName("elasticsearch-resource")
 var _ webhook.CustomDefaulter = &ElasticsearchCustomWebhook{}
 
 func (w *ElasticsearchCustomWebhook) Default(_ context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	db := obj.(*dbapi.Elasticsearch)
 	if db.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
@@ -310,6 +313,9 @@ func (w *ElasticsearchCustomWebhook) ValidateElasticsearch(db *dbapi.Elasticsear
 }
 
 func (w *ElasticsearchCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	es := obj.(*dbapi.Elasticsearch)
 	err := w.ValidateElasticsearch(es)
 	mysqlLog.Info("validating", "name", es.Name)
@@ -317,6 +323,9 @@ func (w *ElasticsearchCustomWebhook) ValidateCreate(ctx context.Context, obj run
 }
 
 func (w *ElasticsearchCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	oldElasticsearch, ok := oldObj.(*dbapi.Elasticsearch)
 	if !ok {
 		return nil, fmt.Errorf("expected a Elasticsearch but got a %T", oldElasticsearch)

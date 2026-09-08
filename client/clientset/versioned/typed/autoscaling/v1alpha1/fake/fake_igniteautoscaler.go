@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeIgniteAutoscalers implements IgniteAutoscalerInterface
-type FakeIgniteAutoscalers struct {
+// fakeIgniteAutoscalers implements IgniteAutoscalerInterface
+type fakeIgniteAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.IgniteAutoscaler, *v1alpha1.IgniteAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var igniteautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("igniteautoscalers")
-
-var igniteautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("IgniteAutoscaler")
-
-// Get takes name of the igniteAutoscaler, and returns the corresponding igniteAutoscaler object, and an error if there is any.
-func (c *FakeIgniteAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.IgniteAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(igniteautoscalersResource, c.ns, name), &v1alpha1.IgniteAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeIgniteAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.IgniteAutoscalerInterface {
+	return &fakeIgniteAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.IgniteAutoscaler, *v1alpha1.IgniteAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("igniteautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("IgniteAutoscaler"),
+			func() *v1alpha1.IgniteAutoscaler { return &v1alpha1.IgniteAutoscaler{} },
+			func() *v1alpha1.IgniteAutoscalerList { return &v1alpha1.IgniteAutoscalerList{} },
+			func(dst, src *v1alpha1.IgniteAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.IgniteAutoscalerList) []*v1alpha1.IgniteAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.IgniteAutoscalerList, items []*v1alpha1.IgniteAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.IgniteAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of IgniteAutoscalers that match those selectors.
-func (c *FakeIgniteAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.IgniteAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(igniteautoscalersResource, igniteautoscalersKind, c.ns, opts), &v1alpha1.IgniteAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.IgniteAutoscalerList{ListMeta: obj.(*v1alpha1.IgniteAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.IgniteAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested igniteAutoscalers.
-func (c *FakeIgniteAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(igniteautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a igniteAutoscaler and creates it.  Returns the server's representation of the igniteAutoscaler, and an error, if there is any.
-func (c *FakeIgniteAutoscalers) Create(ctx context.Context, igniteAutoscaler *v1alpha1.IgniteAutoscaler, opts v1.CreateOptions) (result *v1alpha1.IgniteAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(igniteautoscalersResource, c.ns, igniteAutoscaler), &v1alpha1.IgniteAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.IgniteAutoscaler), err
-}
-
-// Update takes the representation of a igniteAutoscaler and updates it. Returns the server's representation of the igniteAutoscaler, and an error, if there is any.
-func (c *FakeIgniteAutoscalers) Update(ctx context.Context, igniteAutoscaler *v1alpha1.IgniteAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.IgniteAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(igniteautoscalersResource, c.ns, igniteAutoscaler), &v1alpha1.IgniteAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.IgniteAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeIgniteAutoscalers) UpdateStatus(ctx context.Context, igniteAutoscaler *v1alpha1.IgniteAutoscaler, opts v1.UpdateOptions) (*v1alpha1.IgniteAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(igniteautoscalersResource, "status", c.ns, igniteAutoscaler), &v1alpha1.IgniteAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.IgniteAutoscaler), err
-}
-
-// Delete takes name of the igniteAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeIgniteAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(igniteautoscalersResource, c.ns, name, opts), &v1alpha1.IgniteAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeIgniteAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(igniteautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.IgniteAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched igniteAutoscaler.
-func (c *FakeIgniteAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.IgniteAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(igniteautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.IgniteAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.IgniteAutoscaler), err
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	kubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
+	apiskubedbv1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1 "kubedb.dev/apimachinery/client/listers/kubedb/v1"
+	kubedbv1 "kubedb.dev/apimachinery/client/listers/kubedb/v1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ProxySQLs.
 type ProxySQLInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1.ProxySQLLister
+	Lister() kubedbv1.ProxySQLLister
 }
 
 type proxySQLInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredProxySQLInformer(client versioned.Interface, namespace string, r
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1().ProxySQLs(namespace).List(context.TODO(), options)
+				return client.KubedbV1().ProxySQLs(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.KubedbV1().ProxySQLs(namespace).Watch(context.TODO(), options)
+				return client.KubedbV1().ProxySQLs(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options metav1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1().ProxySQLs(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options metav1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.KubedbV1().ProxySQLs(namespace).Watch(ctx, options)
 			},
 		},
-		&kubedbv1.ProxySQL{},
+		&apiskubedbv1.ProxySQL{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *proxySQLInformer) defaultInformer(client versioned.Interface, resyncPer
 }
 
 func (f *proxySQLInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&kubedbv1.ProxySQL{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiskubedbv1.ProxySQL{}, f.defaultInformer)
 }
 
-func (f *proxySQLInformer) Lister() v1.ProxySQLLister {
-	return v1.NewProxySQLLister(f.Informer().GetIndexer())
+func (f *proxySQLInformer) Lister() kubedbv1.ProxySQLLister {
+	return kubedbv1.NewProxySQLLister(f.Informer().GetIndexer())
 }

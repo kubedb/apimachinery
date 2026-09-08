@@ -283,6 +283,22 @@ func (w *DocumentDBOpsRequestCustomWebhook) validateDocumentDBReconfigureTLSOpsR
 	if tls == nil {
 		return errors.New("`spec.tls` nil not supported in ReconfigureTLS type")
 	}
+	if tls.Remove && tls.GatewayMutualTLSEnabled != nil && *tls.GatewayMutualTLSEnabled {
+		return errors.New("`spec.tls.gatewayMutualTLSEnabled` can't be true when `spec.tls.remove` is true")
+	}
+	// TLS is all-or-nothing for DocumentDB: the gateway certificate is issued from the database
+	// plane's config when gatewayTLS is unset, so removing one plane alone is not representable.
+	if tls.DBTLS != nil && tls.DBTLS.Remove {
+		return errors.New("`spec.tls.dbTLS.remove` is not supported; use `spec.tls.remove` to remove all TLS configuration")
+	}
+	if tls.GatewayTLS != nil && tls.GatewayTLS.Remove {
+		return errors.New("`spec.tls.gatewayTLS.remove` is not supported; use `spec.tls.remove` to remove all TLS configuration")
+	}
+	// Reject a request that would silently do nothing.
+	if !tls.Remove && tls.DBTLS == nil && tls.GatewayTLS == nil &&
+		tls.SSLMode == "" && tls.ClientAuthMode == "" && tls.GatewayMutualTLSEnabled == nil {
+		return errors.New("`spec.tls` must set at least one of `dbTLS`, `gatewayTLS`, `remove`, `sslMode`, `clientAuthMode` or `gatewayMutualTLSEnabled`")
+	}
 
 	return nil
 }

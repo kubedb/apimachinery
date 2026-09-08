@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	apiscourierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/listers/courier/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // PostgresMigrations.
 type PostgresMigrationInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PostgresMigrationLister
+	Lister() courierv1alpha1.PostgresMigrationLister
 }
 
 type postgresMigrationInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredPostgresMigrationInformer(client versioned.Interface, namespace 
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().PostgresMigrations(namespace).List(context.TODO(), options)
+				return client.CourierV1alpha1().PostgresMigrations(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().PostgresMigrations(namespace).Watch(context.TODO(), options)
+				return client.CourierV1alpha1().PostgresMigrations(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CourierV1alpha1().PostgresMigrations(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CourierV1alpha1().PostgresMigrations(namespace).Watch(ctx, options)
 			},
 		},
-		&courierv1alpha1.PostgresMigration{},
+		&apiscourierv1alpha1.PostgresMigration{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *postgresMigrationInformer) defaultInformer(client versioned.Interface, 
 }
 
 func (f *postgresMigrationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&courierv1alpha1.PostgresMigration{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscourierv1alpha1.PostgresMigration{}, f.defaultInformer)
 }
 
-func (f *postgresMigrationInformer) Lister() v1alpha1.PostgresMigrationLister {
-	return v1alpha1.NewPostgresMigrationLister(f.Informer().GetIndexer())
+func (f *postgresMigrationInformer) Lister() courierv1alpha1.PostgresMigrationLister {
+	return courierv1alpha1.NewPostgresMigrationLister(f.Informer().GetIndexer())
 }

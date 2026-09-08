@@ -583,8 +583,8 @@ func (w *Neo4jOpsRequestCustomWebhook) validateNeo4jReconfigurationOpsRequest(re
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
 
-	if !configurationSpec.RemoveCustomConfig && configurationSpec.ConfigSecret == nil && len(configurationSpec.ApplyConfig) == 0 {
-		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, or `ApplyConfig` must be specified")
+	if !configurationSpec.RemoveCustomConfig && configurationSpec.ConfigSecret == nil && len(configurationSpec.ApplyConfig) == 0 && configurationSpec.RemoteAliasKeystore == nil {
+		return errors.New("at least one of `RemoveCustomConfig`, `ConfigSecret`, `ApplyConfig`, or `RemoteAliasKeystore` must be specified")
 	}
 	return nil
 }

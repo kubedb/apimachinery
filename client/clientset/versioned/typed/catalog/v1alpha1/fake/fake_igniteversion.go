@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeIgniteVersions implements IgniteVersionInterface
-type FakeIgniteVersions struct {
+// fakeIgniteVersions implements IgniteVersionInterface
+type fakeIgniteVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.IgniteVersion, *v1alpha1.IgniteVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var igniteversionsResource = v1alpha1.SchemeGroupVersion.WithResource("igniteversions")
-
-var igniteversionsKind = v1alpha1.SchemeGroupVersion.WithKind("IgniteVersion")
-
-// Get takes name of the igniteVersion, and returns the corresponding igniteVersion object, and an error if there is any.
-func (c *FakeIgniteVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.IgniteVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(igniteversionsResource, name), &v1alpha1.IgniteVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeIgniteVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.IgniteVersionInterface {
+	return &fakeIgniteVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.IgniteVersion, *v1alpha1.IgniteVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("igniteversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("IgniteVersion"),
+			func() *v1alpha1.IgniteVersion { return &v1alpha1.IgniteVersion{} },
+			func() *v1alpha1.IgniteVersionList { return &v1alpha1.IgniteVersionList{} },
+			func(dst, src *v1alpha1.IgniteVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.IgniteVersionList) []*v1alpha1.IgniteVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.IgniteVersionList, items []*v1alpha1.IgniteVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.IgniteVersion), err
-}
-
-// List takes label and field selectors, and returns the list of IgniteVersions that match those selectors.
-func (c *FakeIgniteVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.IgniteVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(igniteversionsResource, igniteversionsKind, opts), &v1alpha1.IgniteVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.IgniteVersionList{ListMeta: obj.(*v1alpha1.IgniteVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.IgniteVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested igniteVersions.
-func (c *FakeIgniteVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(igniteversionsResource, opts))
-}
-
-// Create takes the representation of a igniteVersion and creates it.  Returns the server's representation of the igniteVersion, and an error, if there is any.
-func (c *FakeIgniteVersions) Create(ctx context.Context, igniteVersion *v1alpha1.IgniteVersion, opts v1.CreateOptions) (result *v1alpha1.IgniteVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(igniteversionsResource, igniteVersion), &v1alpha1.IgniteVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.IgniteVersion), err
-}
-
-// Update takes the representation of a igniteVersion and updates it. Returns the server's representation of the igniteVersion, and an error, if there is any.
-func (c *FakeIgniteVersions) Update(ctx context.Context, igniteVersion *v1alpha1.IgniteVersion, opts v1.UpdateOptions) (result *v1alpha1.IgniteVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(igniteversionsResource, igniteVersion), &v1alpha1.IgniteVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.IgniteVersion), err
-}
-
-// Delete takes name of the igniteVersion and deletes it. Returns an error if one occurs.
-func (c *FakeIgniteVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(igniteversionsResource, name, opts), &v1alpha1.IgniteVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeIgniteVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(igniteversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.IgniteVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched igniteVersion.
-func (c *FakeIgniteVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.IgniteVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(igniteversionsResource, name, pt, data, subresources...), &v1alpha1.IgniteVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.IgniteVersion), err
 }

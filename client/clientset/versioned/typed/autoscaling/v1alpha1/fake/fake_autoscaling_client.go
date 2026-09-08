@@ -30,131 +30,135 @@ type FakeAutoscalingV1alpha1 struct {
 }
 
 func (c *FakeAutoscalingV1alpha1) AerospikeAutoscalers(namespace string) v1alpha1.AerospikeAutoscalerInterface {
-	return &FakeAerospikeAutoscalers{c, namespace}
+	return newFakeAerospikeAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) CassandraAutoscalers(namespace string) v1alpha1.CassandraAutoscalerInterface {
-	return &FakeCassandraAutoscalers{c, namespace}
+	return newFakeCassandraAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) ClickHouseAutoscalers(namespace string) v1alpha1.ClickHouseAutoscalerInterface {
-	return &FakeClickHouseAutoscalers{c, namespace}
+	return newFakeClickHouseAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) DB2Autoscalers(namespace string) v1alpha1.DB2AutoscalerInterface {
-	return &FakeDB2Autoscalers{c, namespace}
+	return newFakeDB2Autoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) DocumentDBAutoscalers(namespace string) v1alpha1.DocumentDBAutoscalerInterface {
-	return &FakeDocumentDBAutoscalers{c, namespace}
+	return newFakeDocumentDBAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) DruidAutoscalers(namespace string) v1alpha1.DruidAutoscalerInterface {
-	return &FakeDruidAutoscalers{c, namespace}
+	return newFakeDruidAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) ElasticsearchAutoscalers(namespace string) v1alpha1.ElasticsearchAutoscalerInterface {
-	return &FakeElasticsearchAutoscalers{c, namespace}
+	return newFakeElasticsearchAutoscalers(c, namespace)
+}
+
+func (c *FakeAutoscalingV1alpha1) EtcdAutoscalers(namespace string) v1alpha1.EtcdAutoscalerInterface {
+	return newFakeEtcdAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) HanaDBAutoscalers(namespace string) v1alpha1.HanaDBAutoscalerInterface {
-	return &FakeHanaDBAutoscalers{c, namespace}
+	return newFakeHanaDBAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) HazelcastAutoscalers(namespace string) v1alpha1.HazelcastAutoscalerInterface {
-	return &FakeHazelcastAutoscalers{c, namespace}
+	return newFakeHazelcastAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) IgniteAutoscalers(namespace string) v1alpha1.IgniteAutoscalerInterface {
-	return &FakeIgniteAutoscalers{c, namespace}
+	return newFakeIgniteAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) KafkaAutoscalers(namespace string) v1alpha1.KafkaAutoscalerInterface {
-	return &FakeKafkaAutoscalers{c, namespace}
+	return newFakeKafkaAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) MSSQLServerAutoscalers(namespace string) v1alpha1.MSSQLServerAutoscalerInterface {
-	return &FakeMSSQLServerAutoscalers{c, namespace}
+	return newFakeMSSQLServerAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) MariaDBAutoscalers(namespace string) v1alpha1.MariaDBAutoscalerInterface {
-	return &FakeMariaDBAutoscalers{c, namespace}
+	return newFakeMariaDBAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) MemcachedAutoscalers(namespace string) v1alpha1.MemcachedAutoscalerInterface {
-	return &FakeMemcachedAutoscalers{c, namespace}
+	return newFakeMemcachedAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) MilvusAutoscalers(namespace string) v1alpha1.MilvusAutoscalerInterface {
-	return &FakeMilvusAutoscalers{c, namespace}
+	return newFakeMilvusAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) MongoDBAutoscalers(namespace string) v1alpha1.MongoDBAutoscalerInterface {
-	return &FakeMongoDBAutoscalers{c, namespace}
+	return newFakeMongoDBAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) MySQLAutoscalers(namespace string) v1alpha1.MySQLAutoscalerInterface {
-	return &FakeMySQLAutoscalers{c, namespace}
+	return newFakeMySQLAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) Neo4jAutoscalers(namespace string) v1alpha1.Neo4jAutoscalerInterface {
-	return &FakeNeo4jAutoscalers{c, namespace}
+	return newFakeNeo4jAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) OracleAutoscalers(namespace string) v1alpha1.OracleAutoscalerInterface {
-	return &FakeOracleAutoscalers{c, namespace}
+	return newFakeOracleAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) PerconaXtraDBAutoscalers(namespace string) v1alpha1.PerconaXtraDBAutoscalerInterface {
-	return &FakePerconaXtraDBAutoscalers{c, namespace}
+	return newFakePerconaXtraDBAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) PgBouncerAutoscalers(namespace string) v1alpha1.PgBouncerAutoscalerInterface {
-	return &FakePgBouncerAutoscalers{c, namespace}
+	return newFakePgBouncerAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) PgpoolAutoscalers(namespace string) v1alpha1.PgpoolAutoscalerInterface {
-	return &FakePgpoolAutoscalers{c, namespace}
+	return newFakePgpoolAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) PostgresAutoscalers(namespace string) v1alpha1.PostgresAutoscalerInterface {
-	return &FakePostgresAutoscalers{c, namespace}
+	return newFakePostgresAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) ProxySQLAutoscalers(namespace string) v1alpha1.ProxySQLAutoscalerInterface {
-	return &FakeProxySQLAutoscalers{c, namespace}
+	return newFakeProxySQLAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) QdrantAutoscalers(namespace string) v1alpha1.QdrantAutoscalerInterface {
-	return &FakeQdrantAutoscalers{c, namespace}
+	return newFakeQdrantAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) RabbitMQAutoscalers(namespace string) v1alpha1.RabbitMQAutoscalerInterface {
-	return &FakeRabbitMQAutoscalers{c, namespace}
+	return newFakeRabbitMQAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) RedisAutoscalers(namespace string) v1alpha1.RedisAutoscalerInterface {
-	return &FakeRedisAutoscalers{c, namespace}
+	return newFakeRedisAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) RedisSentinelAutoscalers(namespace string) v1alpha1.RedisSentinelAutoscalerInterface {
-	return &FakeRedisSentinelAutoscalers{c, namespace}
+	return newFakeRedisSentinelAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) SinglestoreAutoscalers(namespace string) v1alpha1.SinglestoreAutoscalerInterface {
-	return &FakeSinglestoreAutoscalers{c, namespace}
+	return newFakeSinglestoreAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) SolrAutoscalers(namespace string) v1alpha1.SolrAutoscalerInterface {
-	return &FakeSolrAutoscalers{c, namespace}
+	return newFakeSolrAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) WeaviateAutoscalers(namespace string) v1alpha1.WeaviateAutoscalerInterface {
-	return &FakeWeaviateAutoscalers{c, namespace}
+	return newFakeWeaviateAutoscalers(c, namespace)
 }
 
 func (c *FakeAutoscalingV1alpha1) ZooKeeperAutoscalers(namespace string) v1alpha1.ZooKeeperAutoscalerInterface {
-	return &FakeZooKeeperAutoscalers{c, namespace}
+	return newFakeZooKeeperAutoscalers(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

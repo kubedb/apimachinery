@@ -57,6 +57,9 @@ var _ webhook.CustomDefaulter = &AerospikeCustomWebhook{}
 
 // Default implements webhook.Defaulter so a webhook will be registered for the type
 func (w *AerospikeCustomWebhook) Default(ctx context.Context, obj runtime.Object) error {
+	if isDeletionInProgress(obj) {
+		return nil
+	}
 	ar, ok := obj.(*olddbapi.Aerospike)
 	if !ok {
 		return fmt.Errorf("expected an aerospike object but got %T", obj)
@@ -72,6 +75,9 @@ var _ webhook.CustomValidator = &AerospikeCustomWebhook{}
 
 // ValidateCreate implements webhook.Validator so a webhook will be registered for the type
 func (w *AerospikeCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(obj) {
+		return nil, nil
+	}
 	ar, ok := obj.(*olddbapi.Aerospike)
 	if !ok {
 		return nil, fmt.Errorf("expected an aerospike object but got %T", obj)
@@ -82,6 +88,9 @@ func (w *AerospikeCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
 func (w *AerospikeCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runtime.Object) (admission.Warnings, error) {
+	if isDeletionInProgress(newObj) {
+		return nil, nil
+	}
 	ar, ok := newObj.(*olddbapi.Aerospike)
 	if !ok {
 		return nil, fmt.Errorf("expected an aerospike object but got %T", ar)

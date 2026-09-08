@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DatabaseConnectionLister helps list DatabaseConnections.
@@ -31,7 +31,7 @@ import (
 type DatabaseConnectionLister interface {
 	// List lists all DatabaseConnections in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DatabaseConnection, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.DatabaseConnection, err error)
 	// DatabaseConnections returns an object that can list and get DatabaseConnections.
 	DatabaseConnections(namespace string) DatabaseConnectionNamespaceLister
 	DatabaseConnectionListerExpansion
@@ -39,25 +39,17 @@ type DatabaseConnectionLister interface {
 
 // databaseConnectionLister implements the DatabaseConnectionLister interface.
 type databaseConnectionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.DatabaseConnection]
 }
 
 // NewDatabaseConnectionLister returns a new DatabaseConnectionLister.
 func NewDatabaseConnectionLister(indexer cache.Indexer) DatabaseConnectionLister {
-	return &databaseConnectionLister{indexer: indexer}
-}
-
-// List lists all DatabaseConnections in the indexer.
-func (s *databaseConnectionLister) List(selector labels.Selector) (ret []*v1alpha1.DatabaseConnection, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DatabaseConnection))
-	})
-	return ret, err
+	return &databaseConnectionLister{listers.New[*uiv1alpha1.DatabaseConnection](indexer, uiv1alpha1.Resource("databaseconnection"))}
 }
 
 // DatabaseConnections returns an object that can list and get DatabaseConnections.
 func (s *databaseConnectionLister) DatabaseConnections(namespace string) DatabaseConnectionNamespaceLister {
-	return databaseConnectionNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return databaseConnectionNamespaceLister{listers.NewNamespaced[*uiv1alpha1.DatabaseConnection](s.ResourceIndexer, namespace)}
 }
 
 // DatabaseConnectionNamespaceLister helps list and get DatabaseConnections.
@@ -65,36 +57,15 @@ func (s *databaseConnectionLister) DatabaseConnections(namespace string) Databas
 type DatabaseConnectionNamespaceLister interface {
 	// List lists all DatabaseConnections in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DatabaseConnection, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.DatabaseConnection, err error)
 	// Get retrieves the DatabaseConnection from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DatabaseConnection, error)
+	Get(name string) (*uiv1alpha1.DatabaseConnection, error)
 	DatabaseConnectionNamespaceListerExpansion
 }
 
 // databaseConnectionNamespaceLister implements the DatabaseConnectionNamespaceLister
 // interface.
 type databaseConnectionNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all DatabaseConnections in the indexer for a given namespace.
-func (s databaseConnectionNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.DatabaseConnection, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DatabaseConnection))
-	})
-	return ret, err
-}
-
-// Get retrieves the DatabaseConnection from the indexer for a given namespace and name.
-func (s databaseConnectionNamespaceLister) Get(name string) (*v1alpha1.DatabaseConnection, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("databaseconnection"), name)
-	}
-	return obj.(*v1alpha1.DatabaseConnection), nil
+	listers.ResourceIndexer[*uiv1alpha1.DatabaseConnection]
 }

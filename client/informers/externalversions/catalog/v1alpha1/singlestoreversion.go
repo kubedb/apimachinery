@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // SinglestoreVersions.
 type SinglestoreVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.SinglestoreVersionLister
+	Lister() catalogv1alpha1.SinglestoreVersionLister
 }
 
 type singlestoreVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredSinglestoreVersionInformer(client versioned.Interface, resyncPer
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().SinglestoreVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().SinglestoreVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().SinglestoreVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().SinglestoreVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().SinglestoreVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().SinglestoreVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.SinglestoreVersion{},
+		&apiscatalogv1alpha1.SinglestoreVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *singlestoreVersionInformer) defaultInformer(client versioned.Interface,
 }
 
 func (f *singlestoreVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.SinglestoreVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.SinglestoreVersion{}, f.defaultInformer)
 }
 
-func (f *singlestoreVersionInformer) Lister() v1alpha1.SinglestoreVersionLister {
-	return v1alpha1.NewSinglestoreVersionLister(f.Informer().GetIndexer())
+func (f *singlestoreVersionInformer) Lister() catalogv1alpha1.SinglestoreVersionLister {
+	return catalogv1alpha1.NewSinglestoreVersionLister(f.Informer().GetIndexer())
 }

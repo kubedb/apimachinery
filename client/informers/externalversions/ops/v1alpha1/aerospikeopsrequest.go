@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	apisopsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/listers/ops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // AerospikeOpsRequests.
 type AerospikeOpsRequestInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.AerospikeOpsRequestLister
+	Lister() opsv1alpha1.AerospikeOpsRequestLister
 }
 
 type aerospikeOpsRequestInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredAerospikeOpsRequestInformer(client versioned.Interface, namespac
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().AerospikeOpsRequests(namespace).List(context.TODO(), options)
+				return client.OpsV1alpha1().AerospikeOpsRequests(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.OpsV1alpha1().AerospikeOpsRequests(namespace).Watch(context.TODO(), options)
+				return client.OpsV1alpha1().AerospikeOpsRequests(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.OpsV1alpha1().AerospikeOpsRequests(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.OpsV1alpha1().AerospikeOpsRequests(namespace).Watch(ctx, options)
 			},
 		},
-		&opsv1alpha1.AerospikeOpsRequest{},
+		&apisopsv1alpha1.AerospikeOpsRequest{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *aerospikeOpsRequestInformer) defaultInformer(client versioned.Interface
 }
 
 func (f *aerospikeOpsRequestInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&opsv1alpha1.AerospikeOpsRequest{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisopsv1alpha1.AerospikeOpsRequest{}, f.defaultInformer)
 }
 
-func (f *aerospikeOpsRequestInformer) Lister() v1alpha1.AerospikeOpsRequestLister {
-	return v1alpha1.NewAerospikeOpsRequestLister(f.Informer().GetIndexer())
+func (f *aerospikeOpsRequestInformer) Lister() opsv1alpha1.AerospikeOpsRequestLister {
+	return opsv1alpha1.NewAerospikeOpsRequestLister(f.Informer().GetIndexer())
 }

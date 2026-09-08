@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	apisgitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Pgpools.
 type PgpoolInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PgpoolLister
+	Lister() gitopsv1alpha1.PgpoolLister
 }
 
 type pgpoolInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredPgpoolInformer(client versioned.Interface, namespace string, res
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Pgpools(namespace).List(context.TODO(), options)
+				return client.GitopsV1alpha1().Pgpools(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Pgpools(namespace).Watch(context.TODO(), options)
+				return client.GitopsV1alpha1().Pgpools(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Pgpools(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Pgpools(namespace).Watch(ctx, options)
 			},
 		},
-		&gitopsv1alpha1.Pgpool{},
+		&apisgitopsv1alpha1.Pgpool{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *pgpoolInformer) defaultInformer(client versioned.Interface, resyncPerio
 }
 
 func (f *pgpoolInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&gitopsv1alpha1.Pgpool{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisgitopsv1alpha1.Pgpool{}, f.defaultInformer)
 }
 
-func (f *pgpoolInformer) Lister() v1alpha1.PgpoolLister {
-	return v1alpha1.NewPgpoolLister(f.Informer().GetIndexer())
+func (f *pgpoolInformer) Lister() gitopsv1alpha1.PgpoolLister {
+	return gitopsv1alpha1.NewPgpoolLister(f.Informer().GetIndexer())
 }

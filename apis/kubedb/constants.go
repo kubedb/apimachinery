@@ -555,11 +555,18 @@ const (
 	PostgresSharedTlsVolumeName      = "certs"
 	PostgresSharedTlsVolumeMountPath = "/tls/certs"
 	PostgresCustomConfigFile         = "user.conf"
-	PostgresTuningConfigFile         = "pgtune.conf"
-	PostgresKeyFileSecretSuffix      = "key"
-	PostgresPEMSecretSuffix          = "pem"
-	PostgresDefaultUsername          = "postgres"
-	PostgresPgCoordinatorStatus      = "Coordinator/Status"
+	// PostgresCustomHBAFile is the optional configSecret key whose content is
+	// surfaced to the DB pod as /etc/config/user_hba.conf. postgres-init-docker
+	// splices it into the generated pg_hba.conf between the operator-essential
+	// local/loopback rules and the world-CIDR catch-alls, so user rules can
+	// override the catch-alls (pg_hba.conf is first-match-wins) but cannot lock
+	// the operator out.
+	PostgresCustomHBAFile       = "user_hba.conf"
+	PostgresTuningConfigFile    = "pgtune.conf"
+	PostgresKeyFileSecretSuffix = "key"
+	PostgresPEMSecretSuffix     = "pem"
+	PostgresDefaultUsername     = "postgres"
+	PostgresPgCoordinatorStatus = "Coordinator/Status"
 	// to pause the failover for postgres. this is helpful for ops request
 	PostgresPgCoordinatorStatusPause = "Pause"
 	// to resume the failover for postgres. this is helpful for ops request
@@ -1129,11 +1136,14 @@ const (
 	SolrZkDigest          = "zk-digest"
 	SolrZkReadonlyDigest  = "zk-digest-readonly"
 
-	SolrVolumeDefaultConfig = "default-config"
-	SolrVolumeCustomConfig  = "custom-config"
-	SolrVolumeAuthConfig    = "auth-config"
-	SolrVolumeData          = "data"
-	SolrVolumeConfig        = "slconfig"
+	SolrVolumeDefaultConfig           = "default-config"
+	SolrVolumeCustomConfig            = "custom-config"
+	SolrVolumeAuthConfig              = "auth-config"
+	SolrVolumeData                    = "data"
+	SolrVolumeConfig                  = "slconfig"
+	SolrVolumeBackupCredentials       = "backup-credentials"
+	SolrVolumeMergedTruststore        = "solr-merged-truststore"
+	SolrBackupCredentialsSecretSuffix = "backup-credentials"
 
 	DistLibs              = "/opt/solr/dist"
 	ContribLibs           = "/opt/solr/contrib/%s/lib"
@@ -1145,6 +1155,11 @@ const (
 	SolrSecurityConfigDir = "/var/security"
 	SolrZkReadyCondition  = "SolrZkReady"
 	SolrZkReady           = "ZookeeperReady"
+
+	// Must stay under SolrHomeDir; the Java SecurityManager policy denies reads elsewhere.
+	SolrBackupCredentialsDir    = "/var/solr/backup-credentials"
+	SolrAWSCredentialsFileName  = "aws-credentials"
+	SolrAWSSharedCredentialsEnv = "AWS_SHARED_CREDENTIALS_FILE"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""
@@ -1191,6 +1206,8 @@ const (
 	SolrKeystorePassKey            = "keystore-secret"
 	SolrServerKeystorePath         = "/var/solr/etc/keystore.p12"
 	SolrServerTruststorePath       = "/var/solr/etc/truststore.p12"
+	SolrMergedTruststoreMountPath  = "/var/solr/merged-tls"
+	SolrMergedTruststorePath       = SolrMergedTruststoreMountPath + "/truststore.p12"
 	SolrTLSMountPath               = "/var/solr/etc"
 
 	ProxyDeploymentName = "s3proxy"
@@ -1885,6 +1902,16 @@ const (
 	ClickHouseInternalServerListFile     = "server_list.yaml"
 	ClickHouseKeeperServerIdNo           = "serverid"
 	ClickHouseKeeperServerID             = "KEEPERID"
+
+	// The raft membership lives in its own overlay file inside the keeper_config.d
+	// directory (ClickHouse merges <config>.d/*.xml into the main config). The
+	// overlay is mounted straight from the config Secret into the running keeper
+	// container, so a membership change written by the ops-manager is picked up by
+	// ClickHouse's config reloader and applied via add_srv/remove_srv without
+	// restarting any keeper pod.
+	ClickHouseKeeperRaftConfigFileName   = "raft_configuration.xml"
+	ClickHouseKeeperRaftConfigVolumeName = "keeper-raft-config"
+	ClickHouseKeeperRaftConfigDir        = "/etc/clickhouse-keeper/keeper_config.d"
 )
 
 // =========================== Neo4j Constants ============================
@@ -2097,6 +2124,18 @@ var (
 		},
 		Limits: core.ResourceList{
 			core.ResourceMemory: resource.MustParse("4Gi"),
+		},
+	}
+
+	// EtcdDefaultResources keeps a modest footprint: etcd is latency sensitive but
+	// its working set is bounded by the backend quota, not by the dataset size.
+	EtcdDefaultResources = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("1Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("2Gi"),
 		},
 	}
 
@@ -2325,6 +2364,9 @@ const (
 	OracleCustomConfigFileName = "oracle.cnf"
 
 	OracleBackupWalletCreatedCondition = "Backup-wallet-created"
+	
+  OracleDefaultOSBWSPFilePath = OracleDataDir + "/osbws" + OracleDatabaseServiceName + ".ora"
+	OracleOsbwsPFilePathFormat  = OracleDataDir + "/osbws%s.ora"
 )
 
 // =========================== DB2 Constants ============================
@@ -2522,4 +2564,63 @@ const (
 	DistributedCommandPodMetric          = "kubedb_autoscaler_get_pod_metrics"
 	DistributedCommandVolumeUsage        = "kubedb_autoscaler_volume_usage"
 	DistributedCommandVolumeCapacity     = "kubedb_autoscaler_volume_capacity"
+)
+
+// =========================== Etcd Constants ============================
+const (
+	// Container names
+	EtcdContainerName         = "etcd"
+	EtcdInitContainerName     = "etcd-init"
+	EtcdExporterContainerName = "exporter"
+
+	// Volume names
+	EtcdDataVolumeName         = "data"
+	EtcdConfigVolumeName       = "etcd-config"
+	EtcdCustomConfigVolumeName = "custom-config"
+	EtcdInitScriptVolumeName   = "init-scripts"
+	EtcdServerTLSVolumeName    = "tls-server"
+	EtcdClientTLSVolumeName    = "tls-client"
+	EtcdPeerTLSVolumeName      = "tls-peer"
+	EtcdExporterTLSVolumeName  = "tls-exporter"
+
+	// Mount paths
+	EtcdDataDir              = "/var/lib/etcd"
+	EtcdConfigDir            = "/etc/etcd"
+	EtcdCustomConfigDir      = "/etc/etcd/custom-config"
+	EtcdInitScriptDir        = "/scripts"
+	EtcdServerTLSMountPath   = "/var/run/etcd/tls/server"
+	EtcdClientTLSMountPath   = "/var/run/etcd/tls/client"
+	EtcdPeerTLSMountPath     = "/var/run/etcd/tls/peer"
+	EtcdExporterTLSMountPath = "/var/run/etcd/tls/exporter"
+
+	// Ports
+	EtcdClientPortName   = "client"
+	EtcdClientPort       = 2379
+	EtcdPeerPortName     = "peer"
+	EtcdPeerPort         = 2380
+	EtcdExporterPortName = "metrics"
+	EtcdExporterPort     = 2381
+
+	// Auth
+	EtcdRootUser = "root"
+
+	// Etcd config file name mounted from the config secret
+	EtcdConfigFileName = "etcd.conf.yaml"
+
+	// User and Group IDs. The upstream gcr.io/etcd-development/etcd image runs as
+	// uid/gid 1000.
+	EtcdUserID  int64 = 1000
+	EtcdGroupID int64 = 1000
+
+	// Environment variables owned by the operator. Users may not override these,
+	// they are derived from the PetSet ordinal, the governing service and the
+	// membership state of the cluster.
+	EtcdEnvName                     = "ETCD_NAME"
+	EtcdEnvDataDir                  = "ETCD_DATA_DIR"
+	EtcdEnvInitialCluster           = "ETCD_INITIAL_CLUSTER"
+	EtcdEnvInitialClusterState      = "ETCD_INITIAL_CLUSTER_STATE"
+	EtcdEnvInitialAdvertisePeerURLs = "ETCD_INITIAL_ADVERTISE_PEER_URLS"
+	EtcdEnvListenPeerURLs           = "ETCD_LISTEN_PEER_URLS"
+	EtcdEnvListenClientURLs         = "ETCD_LISTEN_CLIENT_URLS"
+	EtcdEnvAdvertiseClientURLs      = "ETCD_ADVERTISE_CLIENT_URLS"
 )
