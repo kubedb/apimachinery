@@ -91,6 +91,9 @@ func (w ProxySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.O
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	proxysql := obj.(*dbapi.ProxySQL)
 	proxyLog.Info("validating", "name", proxysql.Name)
 	err = w.ValidateProxySQL(proxysql)

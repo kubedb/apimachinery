@@ -609,6 +609,9 @@ func (wh *PostgresCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, wh.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	postgres, ok := obj.(*dbapi.Postgres)
 	if !ok {
 		return nil, fmt.Errorf("expected a Postgres but got a %T", obj)

@@ -111,6 +111,9 @@ func (w *EtcdCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obje
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Etcd)
 	if !ok {
 		return nil, fmt.Errorf("expected an Etcd object, got a %T", obj)

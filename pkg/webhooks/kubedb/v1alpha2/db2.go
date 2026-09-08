@@ -81,6 +81,9 @@ func (w *DB2CustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Objec
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.DB2)
 	if !ok {
 		return nil, fmt.Errorf("expected an DB2 object but got %T", obj)
