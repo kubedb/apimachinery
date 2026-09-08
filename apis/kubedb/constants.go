@@ -2363,6 +2363,8 @@ const (
 
 	OracleCustomConfigFileName = "oracle.cnf"
 
+	OracleBackupWalletCreatedCondition = "Backup-wallet-created"
+
 	OracleDefaultOSBWSPFilePath = OracleDataDir + "/osbws" + OracleDatabaseServiceName + ".ora"
 	OracleOsbwsPFilePathFormat  = OracleDataDir + "/osbws%s.ora"
 )
