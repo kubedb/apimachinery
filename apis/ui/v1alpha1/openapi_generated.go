@@ -613,6 +613,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MariaDBQuerySpec":                                  schema_apimachinery_apis_ui_v1alpha1_MariaDBQuerySpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MariaDBSchemaOverview":                             schema_apimachinery_apis_ui_v1alpha1_MariaDBSchemaOverview(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MariaDBSchemaOverviewList":                         schema_apimachinery_apis_ui_v1alpha1_MariaDBSchemaOverviewList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusCollectionSpec":                              schema_apimachinery_apis_ui_v1alpha1_MilvusCollectionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusInsight":                                     schema_apimachinery_apis_ui_v1alpha1_MilvusInsight(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusInsightList":                                 schema_apimachinery_apis_ui_v1alpha1_MilvusInsightList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusInsightSpec":                                 schema_apimachinery_apis_ui_v1alpha1_MilvusInsightSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusNodeStat":                                    schema_apimachinery_apis_ui_v1alpha1_MilvusNodeStat(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusSchemaOverview":                              schema_apimachinery_apis_ui_v1alpha1_MilvusSchemaOverview(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusSchemaOverviewList":                          schema_apimachinery_apis_ui_v1alpha1_MilvusSchemaOverviewList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusSchemaOverviewSpec":                          schema_apimachinery_apis_ui_v1alpha1_MilvusSchemaOverviewSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MongoDBCollectionSpec":                             schema_apimachinery_apis_ui_v1alpha1_MongoDBCollectionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MongoDBConnectionsInfo":                            schema_apimachinery_apis_ui_v1alpha1_MongoDBConnectionsInfo(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.MongoDBDatabaseStats":                              schema_apimachinery_apis_ui_v1alpha1_MongoDBDatabaseStats(ref),
@@ -35385,6 +35393,470 @@ func schema_apimachinery_apis_ui_v1alpha1_MariaDBSchemaOverviewList(ref common.R
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.MariaDBSchemaOverview"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_MilvusCollectionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusCollectionSpec describes one Milvus collection.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"rowCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RowCount is the number of entities in the collection, from GetCollectionStats.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"storageSizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageSizeBytes is the size of the collection's flushed binlogs in object storage. It excludes growing segments that have not been flushed yet, so it lags recent writes. Unset when the server does not report it.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"loaded": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Loaded reports whether the collection is loaded into memory. Only loaded collections can be searched.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"loadProgress": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LoadProgress is the percentage of the collection loaded into memory. It is reported while a load is in progress or has not started, and omitted once the collection is fully loaded.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"shardNum": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"consistencyLevel": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"partitions": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"indexes": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"databaseName", "name", "loaded"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_MilvusInsight(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusInsightSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusStatus", "kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusInsightSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_MilvusInsightList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusInsight"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusInsight"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_MilvusInsightSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusInsightSpec defines the desired state of MilvusInsight",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"healthy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Healthy reports the outcome of the CheckHealth RPC against the Milvus proxy.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"unhealthyReasons": {
+						SchemaProps: spec.SchemaProps{
+							Description: "UnhealthyReasons carries the reasons returned by CheckHealth when Healthy is false.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"deployMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeployMode is reported by the running server, e.g. STANDALONE or DISTRIBUTED. It is read from the system_info metrics and may disagree with spec.topology.mode while a mode change is in flight.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nodes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Nodes reports, per Milvus component role, how many members the server currently sees against how many the Milvus object asks for.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusNodeStat"),
+									},
+								},
+							},
+						},
+					},
+					"totalDatabases": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"totalCollections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"loadedCollections": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LoadedCollections counts the collections currently loaded into memory. Only loaded collections are searchable.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"totalRows": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"totalResourceGroups": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"version", "type", "status", "healthy"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusNodeStat"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_MilvusNodeStat(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusNodeStat reports the observed and desired member count of one Milvus component role.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type is the Milvus node role: proxy, mixcoord, querynode, datanode or streamingnode.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ready": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ready is the number of members of this role the server reports as alive.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"desired": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Desired is read from the Milvus object. It is unset in Standalone mode, where the object declares no per-role replica counts.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"hasError": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HasError is true when at least one member of this role reported an error while collecting its metrics.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type", "ready"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_MilvusSchemaOverview(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusSchemaOverviewSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusSchemaOverviewSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_MilvusSchemaOverviewList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusSchemaOverview"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusSchemaOverview"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_MilvusSchemaOverviewSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusSchemaOverviewSpec defines the desired state of MilvusSchemaOverview.\n\nMilvus organises data as databases -> collections, so this does not reuse GenericSchemaOverviewSpec: a collection carries load state, shard count, partitions and indexes, none of which fit the generic {databaseName, tableName, tableSizeBytes} triple.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"collections": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusCollectionSpec"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"collections"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.MilvusCollectionSpec"},
 	}
 }
 

@@ -510,6 +510,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MariaDBQuerieses().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("mariadbschemaoverviews"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MariaDBSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("milvusinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MilvusInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("milvusschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MilvusSchemaOverviews().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("mongodbinsights"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().MongoDBInsights().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("mongodbquerieses"):

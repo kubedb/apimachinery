@@ -44,13 +44,19 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 		func(s *v1alpha1.MariaDBQueries, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
+		func(s *v1alpha1.MilvusInsight, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.MilvusSchemaOverview, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
 		func(s *v1alpha1.MongoDBQueries, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.MongoDBSchemaOverview, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MongoDBQueries, c randfill.Continue) {
+		func(s *v1alpha1.MongoDBInsight, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.MySQLInsight, c randfill.Continue) {

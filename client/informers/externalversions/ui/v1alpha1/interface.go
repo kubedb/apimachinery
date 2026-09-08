@@ -38,6 +38,10 @@ type Interface interface {
 	MariaDBQuerieses() MariaDBQueriesInformer
 	// MariaDBSchemaOverviews returns a MariaDBSchemaOverviewInformer.
 	MariaDBSchemaOverviews() MariaDBSchemaOverviewInformer
+	// MilvusInsights returns a MilvusInsightInformer.
+	MilvusInsights() MilvusInsightInformer
+	// MilvusSchemaOverviews returns a MilvusSchemaOverviewInformer.
+	MilvusSchemaOverviews() MilvusSchemaOverviewInformer
 	// MongoDBInsights returns a MongoDBInsightInformer.
 	MongoDBInsights() MongoDBInsightInformer
 	// MongoDBQuerieses returns a MongoDBQueriesInformer.
@@ -124,6 +128,16 @@ func (v *version) MariaDBQuerieses() MariaDBQueriesInformer {
 // MariaDBSchemaOverviews returns a MariaDBSchemaOverviewInformer.
 func (v *version) MariaDBSchemaOverviews() MariaDBSchemaOverviewInformer {
 	return &mariaDBSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MilvusInsights returns a MilvusInsightInformer.
+func (v *version) MilvusInsights() MilvusInsightInformer {
+	return &milvusInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MilvusSchemaOverviews returns a MilvusSchemaOverviewInformer.
+func (v *version) MilvusSchemaOverviews() MilvusSchemaOverviewInformer {
+	return &milvusSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBInsights returns a MongoDBInsightInformer.

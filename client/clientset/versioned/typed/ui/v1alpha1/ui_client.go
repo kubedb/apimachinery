@@ -38,6 +38,8 @@ type UiV1alpha1Interface interface {
 	MariaDBInsightsGetter
 	MariaDBQueriesesGetter
 	MariaDBSchemaOverviewsGetter
+	MilvusInsightsGetter
+	MilvusSchemaOverviewsGetter
 	MongoDBInsightsGetter
 	MongoDBQueriesesGetter
 	MongoDBSchemaOverviewsGetter
@@ -99,6 +101,14 @@ func (c *UiV1alpha1Client) MariaDBQuerieses(namespace string) MariaDBQueriesInte
 
 func (c *UiV1alpha1Client) MariaDBSchemaOverviews(namespace string) MariaDBSchemaOverviewInterface {
 	return newMariaDBSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) MilvusInsights(namespace string) MilvusInsightInterface {
+	return newMilvusInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) MilvusSchemaOverviews(namespace string) MilvusSchemaOverviewInterface {
+	return newMilvusSchemaOverviews(c, namespace)
 }
 
 func (c *UiV1alpha1Client) MongoDBInsights(namespace string) MongoDBInsightInterface {
