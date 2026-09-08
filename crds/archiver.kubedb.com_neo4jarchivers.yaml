@@ -123,6 +123,10 @@ spec:
                 properties:
                   backupInterval:
                     type: string
+                  failedLogHistoryLimit:
+                    default: 5
+                    format: int32
+                    type: integer
                   runtimeSettings:
                     properties:
                       container:
@@ -1290,6 +1294,10 @@ spec:
                             x-kubernetes-list-type: map
                         type: object
                     type: object
+                  successfulLogHistoryLimit:
+                    default: 5
+                    format: int32
+                    type: integer
                   task:
                     properties:
                       params:

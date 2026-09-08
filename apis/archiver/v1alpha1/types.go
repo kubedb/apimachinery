@@ -274,4 +274,16 @@ type Neo4jDifferentialBackupOptions struct {
 	// RuntimeSettings specifies the runtime settings for a differential backup.
 	// +optional
 	RuntimeSettings *ofst.RuntimeSettings `json:"runtimeSettings,omitempty"`
+
+	// SuccessfulLogHistoryLimit defines the number of successful Logs backup status that the differential snapshot will retain
+	// The default value is 5.
+	// +kubebuilder:default=5
+	// +optional
+	SuccessfulLogHistoryLimit int32 `json:"successfulLogHistoryLimit,omitempty"`
+
+	// FailedLogHistoryLimit defines the number of failed Logs backup that the differential snapshot will retain for debugging purposes.
+	// The default value is 5.
+	// +kubebuilder:default=5
+	// +optional
+	FailedLogHistoryLimit int32 `json:"failedLogHistoryLimit,omitempty"`
 }

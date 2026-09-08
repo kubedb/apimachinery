@@ -35075,6 +35075,20 @@ func schema_apimachinery_apis_archiver_v1alpha1_Neo4jDifferentialBackupOptions(r
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v1.RuntimeSettings"),
 						},
 					},
+					"successfulLogHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SuccessfulLogHistoryLimit defines the number of successful Logs backup status that the differential snapshot will retain The default value is 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"failedLogHistoryLimit": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FailedLogHistoryLimit defines the number of failed Logs backup that the differential snapshot will retain for debugging purposes. The default value is 5.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},
