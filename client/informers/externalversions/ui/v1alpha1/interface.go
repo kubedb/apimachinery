@@ -90,6 +90,12 @@ type Interface interface {
 	RedisQuerieses() RedisQueriesInformer
 	// RedisSchemaOverviews returns a RedisSchemaOverviewInformer.
 	RedisSchemaOverviews() RedisSchemaOverviewInformer
+	// SinglestoreInsights returns a SinglestoreInsightInformer.
+	SinglestoreInsights() SinglestoreInsightInformer
+	// SinglestoreQuerieses returns a SinglestoreQueriesInformer.
+	SinglestoreQuerieses() SinglestoreQueriesInformer
+	// SinglestoreSchemaOverviews returns a SinglestoreSchemaOverviewInformer.
+	SinglestoreSchemaOverviews() SinglestoreSchemaOverviewInformer
 }
 
 type version struct {
@@ -266,4 +272,19 @@ func (v *version) RedisQuerieses() RedisQueriesInformer {
 // RedisSchemaOverviews returns a RedisSchemaOverviewInformer.
 func (v *version) RedisSchemaOverviews() RedisSchemaOverviewInformer {
 	return &redisSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// SinglestoreInsights returns a SinglestoreInsightInformer.
+func (v *version) SinglestoreInsights() SinglestoreInsightInformer {
+	return &singlestoreInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// SinglestoreQuerieses returns a SinglestoreQueriesInformer.
+func (v *version) SinglestoreQuerieses() SinglestoreQueriesInformer {
+	return &singlestoreQueriesInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// SinglestoreSchemaOverviews returns a SinglestoreSchemaOverviewInformer.
+func (v *version) SinglestoreSchemaOverviews() SinglestoreSchemaOverviewInformer {
+	return &singlestoreSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
