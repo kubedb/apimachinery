@@ -26,6 +26,15 @@ import (
 // Funcs returns the fuzzer functions for this api group.
 var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 	return []any{
+		func(s *v1alpha1.DruidInsight, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.DruidTasks, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.DruidSchemaOverview, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
 		func(s *v1alpha1.ElasticsearchInsight, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},

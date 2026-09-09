@@ -41,6 +41,18 @@ func (c *FakeUiV1alpha1) DatabaseSummaries() v1alpha1.DatabaseSummaryInterface {
 	return newFakeDatabaseSummaries(c)
 }
 
+func (c *FakeUiV1alpha1) DruidInsights(namespace string) v1alpha1.DruidInsightInterface {
+	return newFakeDruidInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) DruidSchemaOverviews(namespace string) v1alpha1.DruidSchemaOverviewInterface {
+	return newFakeDruidSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) DruidTaskses(namespace string) v1alpha1.DruidTasksInterface {
+	return newFakeDruidTaskses(c, namespace)
+}
+
 func (c *FakeUiV1alpha1) ElasticsearchInsights(namespace string) v1alpha1.ElasticsearchInsightInterface {
 	return newFakeElasticsearchInsights(c, namespace)
 }

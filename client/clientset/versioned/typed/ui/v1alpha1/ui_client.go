@@ -32,6 +32,9 @@ type UiV1alpha1Interface interface {
 	DatabaseConfigurationsGetter
 	DatabaseConnectionsGetter
 	DatabaseSummariesGetter
+	DruidInsightsGetter
+	DruidSchemaOverviewsGetter
+	DruidTasksesGetter
 	ElasticsearchInsightsGetter
 	ElasticsearchNodesStatsesGetter
 	ElasticsearchSchemaOverviewsGetter
@@ -84,6 +87,18 @@ func (c *UiV1alpha1Client) DatabaseConnections(namespace string) DatabaseConnect
 
 func (c *UiV1alpha1Client) DatabaseSummaries() DatabaseSummaryInterface {
 	return newDatabaseSummaries(c)
+}
+
+func (c *UiV1alpha1Client) DruidInsights(namespace string) DruidInsightInterface {
+	return newDruidInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) DruidSchemaOverviews(namespace string) DruidSchemaOverviewInterface {
+	return newDruidSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) DruidTaskses(namespace string) DruidTasksInterface {
+	return newDruidTaskses(c, namespace)
 }
 
 func (c *UiV1alpha1Client) ElasticsearchInsights(namespace string) ElasticsearchInsightInterface {

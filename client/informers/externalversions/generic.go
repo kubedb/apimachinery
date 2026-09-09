@@ -498,6 +498,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		// Group=ui.kubedb.com, Version=v1alpha1
 	case uiv1alpha1.SchemeGroupVersion.WithResource("databaseconnections"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DatabaseConnections().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("druidinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DruidInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("druidschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DruidSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("druidtaskses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DruidTaskses().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("elasticsearchinsights"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().ElasticsearchInsights().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("elasticsearchnodesstatses"):

@@ -24,6 +24,12 @@ type DatabaseConnectionExpansion interface{}
 
 type DatabaseSummaryExpansion interface{}
 
+type DruidInsightExpansion interface{}
+
+type DruidSchemaOverviewExpansion interface{}
+
+type DruidTasksExpansion interface{}
+
 type ElasticsearchInsightExpansion interface{}
 
 type ElasticsearchNodesStatsExpansion interface{}

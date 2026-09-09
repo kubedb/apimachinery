@@ -34,6 +34,30 @@ type DatabaseConnectionListerExpansion interface{}
 // DatabaseConnectionNamespaceLister.
 type DatabaseConnectionNamespaceListerExpansion interface{}
 
+// DruidInsightListerExpansion allows custom methods to be added to
+// DruidInsightLister.
+type DruidInsightListerExpansion interface{}
+
+// DruidInsightNamespaceListerExpansion allows custom methods to be added to
+// DruidInsightNamespaceLister.
+type DruidInsightNamespaceListerExpansion interface{}
+
+// DruidSchemaOverviewListerExpansion allows custom methods to be added to
+// DruidSchemaOverviewLister.
+type DruidSchemaOverviewListerExpansion interface{}
+
+// DruidSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// DruidSchemaOverviewNamespaceLister.
+type DruidSchemaOverviewNamespaceListerExpansion interface{}
+
+// DruidTasksListerExpansion allows custom methods to be added to
+// DruidTasksLister.
+type DruidTasksListerExpansion interface{}
+
+// DruidTasksNamespaceListerExpansion allows custom methods to be added to
+// DruidTasksNamespaceLister.
+type DruidTasksNamespaceListerExpansion interface{}
+
 // ElasticsearchInsightListerExpansion allows custom methods to be added to
 // ElasticsearchInsightLister.
 type ElasticsearchInsightListerExpansion interface{}
