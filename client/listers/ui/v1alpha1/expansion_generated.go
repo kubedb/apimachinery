@@ -106,6 +106,22 @@ type MariaDBSchemaOverviewListerExpansion interface{}
 // MariaDBSchemaOverviewNamespaceLister.
 type MariaDBSchemaOverviewNamespaceListerExpansion interface{}
 
+// MilvusInsightListerExpansion allows custom methods to be added to
+// MilvusInsightLister.
+type MilvusInsightListerExpansion interface{}
+
+// MilvusInsightNamespaceListerExpansion allows custom methods to be added to
+// MilvusInsightNamespaceLister.
+type MilvusInsightNamespaceListerExpansion interface{}
+
+// MilvusSchemaOverviewListerExpansion allows custom methods to be added to
+// MilvusSchemaOverviewLister.
+type MilvusSchemaOverviewListerExpansion interface{}
+
+// MilvusSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// MilvusSchemaOverviewNamespaceLister.
+type MilvusSchemaOverviewNamespaceListerExpansion interface{}
+
 // MongoDBInsightListerExpansion allows custom methods to be added to
 // MongoDBInsightLister.
 type MongoDBInsightListerExpansion interface{}

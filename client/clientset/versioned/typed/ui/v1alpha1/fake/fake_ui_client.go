@@ -77,6 +77,14 @@ func (c *FakeUiV1alpha1) MariaDBSchemaOverviews(namespace string) v1alpha1.Maria
 	return newFakeMariaDBSchemaOverviews(c, namespace)
 }
 
+func (c *FakeUiV1alpha1) MilvusInsights(namespace string) v1alpha1.MilvusInsightInterface {
+	return newFakeMilvusInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) MilvusSchemaOverviews(namespace string) v1alpha1.MilvusSchemaOverviewInterface {
+	return newFakeMilvusSchemaOverviews(c, namespace)
+}
+
 func (c *FakeUiV1alpha1) MongoDBInsights(namespace string) v1alpha1.MongoDBInsightInterface {
 	return newFakeMongoDBInsights(c, namespace)
 }

@@ -119,6 +119,11 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,E
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,ElasticsearchSchemaOverviewSpec,Indices
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,GenericSchemaOverviewSpec,Databases
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MariaDBQueriesSpec,Queries
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MilvusCollectionSpec,Indexes
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MilvusCollectionSpec,Partitions
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MilvusInsightSpec,Nodes
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MilvusInsightSpec,UnhealthyReasons
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MilvusSchemaOverviewSpec,Collections
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBCollectionSpec,TotalSize
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBQueriesSpec,Queries
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,MongoDBSchemaOverviewSpec,Collections

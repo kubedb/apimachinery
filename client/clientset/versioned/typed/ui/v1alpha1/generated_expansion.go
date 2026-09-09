@@ -42,6 +42,10 @@ type MariaDBQueriesExpansion interface{}
 
 type MariaDBSchemaOverviewExpansion interface{}
 
+type MilvusInsightExpansion interface{}
+
+type MilvusSchemaOverviewExpansion interface{}
+
 type MongoDBInsightExpansion interface{}
 
 type MongoDBQueriesExpansion interface{}
