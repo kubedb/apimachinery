@@ -62,6 +62,12 @@ type Interface interface {
 	Neo4jInsights() Neo4jInsightInformer
 	// Neo4jSchemaOverviews returns a Neo4jSchemaOverviewInformer.
 	Neo4jSchemaOverviews() Neo4jSchemaOverviewInformer
+	// PerconaXtraDBInsights returns a PerconaXtraDBInsightInformer.
+	PerconaXtraDBInsights() PerconaXtraDBInsightInformer
+	// PerconaXtraDBQuerieses returns a PerconaXtraDBQueriesInformer.
+	PerconaXtraDBQuerieses() PerconaXtraDBQueriesInformer
+	// PerconaXtraDBSchemaOverviews returns a PerconaXtraDBSchemaOverviewInformer.
+	PerconaXtraDBSchemaOverviews() PerconaXtraDBSchemaOverviewInformer
 	// PgBouncerInsights returns a PgBouncerInsightInformer.
 	PgBouncerInsights() PgBouncerInsightInformer
 	// PgBouncerPoolOverviews returns a PgBouncerPoolOverviewInformer.
@@ -90,6 +96,12 @@ type Interface interface {
 	RedisQuerieses() RedisQueriesInformer
 	// RedisSchemaOverviews returns a RedisSchemaOverviewInformer.
 	RedisSchemaOverviews() RedisSchemaOverviewInformer
+	// SinglestoreInsights returns a SinglestoreInsightInformer.
+	SinglestoreInsights() SinglestoreInsightInformer
+	// SinglestoreQuerieses returns a SinglestoreQueriesInformer.
+	SinglestoreQuerieses() SinglestoreQueriesInformer
+	// SinglestoreSchemaOverviews returns a SinglestoreSchemaOverviewInformer.
+	SinglestoreSchemaOverviews() SinglestoreSchemaOverviewInformer
 }
 
 type version struct {
@@ -198,6 +210,21 @@ func (v *version) Neo4jSchemaOverviews() Neo4jSchemaOverviewInformer {
 	return &neo4jSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// PerconaXtraDBInsights returns a PerconaXtraDBInsightInformer.
+func (v *version) PerconaXtraDBInsights() PerconaXtraDBInsightInformer {
+	return &perconaXtraDBInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PerconaXtraDBQuerieses returns a PerconaXtraDBQueriesInformer.
+func (v *version) PerconaXtraDBQuerieses() PerconaXtraDBQueriesInformer {
+	return &perconaXtraDBQueriesInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PerconaXtraDBSchemaOverviews returns a PerconaXtraDBSchemaOverviewInformer.
+func (v *version) PerconaXtraDBSchemaOverviews() PerconaXtraDBSchemaOverviewInformer {
+	return &perconaXtraDBSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // PgBouncerInsights returns a PgBouncerInsightInformer.
 func (v *version) PgBouncerInsights() PgBouncerInsightInformer {
 	return &pgBouncerInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -266,4 +293,19 @@ func (v *version) RedisQuerieses() RedisQueriesInformer {
 // RedisSchemaOverviews returns a RedisSchemaOverviewInformer.
 func (v *version) RedisSchemaOverviews() RedisSchemaOverviewInformer {
 	return &redisSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// SinglestoreInsights returns a SinglestoreInsightInformer.
+func (v *version) SinglestoreInsights() SinglestoreInsightInformer {
+	return &singlestoreInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// SinglestoreQuerieses returns a SinglestoreQueriesInformer.
+func (v *version) SinglestoreQuerieses() SinglestoreQueriesInformer {
+	return &singlestoreQueriesInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// SinglestoreSchemaOverviews returns a SinglestoreSchemaOverviewInformer.
+func (v *version) SinglestoreSchemaOverviews() SinglestoreSchemaOverviewInformer {
+	return &singlestoreSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

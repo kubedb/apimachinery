@@ -113,6 +113,18 @@ func (c *FakeUiV1alpha1) Neo4jSchemaOverviews(namespace string) v1alpha1.Neo4jSc
 	return newFakeNeo4jSchemaOverviews(c, namespace)
 }
 
+func (c *FakeUiV1alpha1) PerconaXtraDBInsights(namespace string) v1alpha1.PerconaXtraDBInsightInterface {
+	return newFakePerconaXtraDBInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) PerconaXtraDBQuerieses(namespace string) v1alpha1.PerconaXtraDBQueriesInterface {
+	return newFakePerconaXtraDBQuerieses(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) PerconaXtraDBSchemaOverviews(namespace string) v1alpha1.PerconaXtraDBSchemaOverviewInterface {
+	return newFakePerconaXtraDBSchemaOverviews(c, namespace)
+}
+
 func (c *FakeUiV1alpha1) PgBouncerInsights(namespace string) v1alpha1.PgBouncerInsightInterface {
 	return newFakePgBouncerInsights(c, namespace)
 }
@@ -167,6 +179,18 @@ func (c *FakeUiV1alpha1) RedisQuerieses(namespace string) v1alpha1.RedisQueriesI
 
 func (c *FakeUiV1alpha1) RedisSchemaOverviews(namespace string) v1alpha1.RedisSchemaOverviewInterface {
 	return newFakeRedisSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreInsights(namespace string) v1alpha1.SinglestoreInsightInterface {
+	return newFakeSinglestoreInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreQuerieses(namespace string) v1alpha1.SinglestoreQueriesInterface {
+	return newFakeSinglestoreQuerieses(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreSchemaOverviews(namespace string) v1alpha1.SinglestoreSchemaOverviewInterface {
+	return newFakeSinglestoreSchemaOverviews(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

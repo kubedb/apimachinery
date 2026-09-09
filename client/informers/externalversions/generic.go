@@ -534,6 +534,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().Neo4jInsights().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("neo4jschemaoverviews"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().Neo4jSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("perconaxtradbinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PerconaXtraDBInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("perconaxtradbquerieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PerconaXtraDBQuerieses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("perconaxtradbschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PerconaXtraDBSchemaOverviews().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("pgbouncerinsights"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().PgBouncerInsights().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("pgbouncerpooloverviews"):
@@ -562,6 +568,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().RedisQuerieses().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("redisschemaoverviews"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().RedisSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("singlestoreinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().SinglestoreInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("singlestorequerieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().SinglestoreQuerieses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("singlestoreschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().SinglestoreSchemaOverviews().Informer()}, nil
 
 	}
 

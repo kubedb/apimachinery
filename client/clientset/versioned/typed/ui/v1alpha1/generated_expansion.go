@@ -60,6 +60,12 @@ type Neo4jInsightExpansion interface{}
 
 type Neo4jSchemaOverviewExpansion interface{}
 
+type PerconaXtraDBInsightExpansion interface{}
+
+type PerconaXtraDBQueriesExpansion interface{}
+
+type PerconaXtraDBSchemaOverviewExpansion interface{}
+
 type PgBouncerInsightExpansion interface{}
 
 type PgBouncerPoolOverviewExpansion interface{}
@@ -87,3 +93,9 @@ type RedisInsightExpansion interface{}
 type RedisQueriesExpansion interface{}
 
 type RedisSchemaOverviewExpansion interface{}
+
+type SinglestoreInsightExpansion interface{}
+
+type SinglestoreQueriesExpansion interface{}
+
+type SinglestoreSchemaOverviewExpansion interface{}

@@ -178,6 +178,30 @@ type Neo4jSchemaOverviewListerExpansion interface{}
 // Neo4jSchemaOverviewNamespaceLister.
 type Neo4jSchemaOverviewNamespaceListerExpansion interface{}
 
+// PerconaXtraDBInsightListerExpansion allows custom methods to be added to
+// PerconaXtraDBInsightLister.
+type PerconaXtraDBInsightListerExpansion interface{}
+
+// PerconaXtraDBInsightNamespaceListerExpansion allows custom methods to be added to
+// PerconaXtraDBInsightNamespaceLister.
+type PerconaXtraDBInsightNamespaceListerExpansion interface{}
+
+// PerconaXtraDBQueriesListerExpansion allows custom methods to be added to
+// PerconaXtraDBQueriesLister.
+type PerconaXtraDBQueriesListerExpansion interface{}
+
+// PerconaXtraDBQueriesNamespaceListerExpansion allows custom methods to be added to
+// PerconaXtraDBQueriesNamespaceLister.
+type PerconaXtraDBQueriesNamespaceListerExpansion interface{}
+
+// PerconaXtraDBSchemaOverviewListerExpansion allows custom methods to be added to
+// PerconaXtraDBSchemaOverviewLister.
+type PerconaXtraDBSchemaOverviewListerExpansion interface{}
+
+// PerconaXtraDBSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// PerconaXtraDBSchemaOverviewNamespaceLister.
+type PerconaXtraDBSchemaOverviewNamespaceListerExpansion interface{}
+
 // PgBouncerInsightListerExpansion allows custom methods to be added to
 // PgBouncerInsightLister.
 type PgBouncerInsightListerExpansion interface{}
@@ -289,3 +313,27 @@ type RedisSchemaOverviewListerExpansion interface{}
 // RedisSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
 // RedisSchemaOverviewNamespaceLister.
 type RedisSchemaOverviewNamespaceListerExpansion interface{}
+
+// SinglestoreInsightListerExpansion allows custom methods to be added to
+// SinglestoreInsightLister.
+type SinglestoreInsightListerExpansion interface{}
+
+// SinglestoreInsightNamespaceListerExpansion allows custom methods to be added to
+// SinglestoreInsightNamespaceLister.
+type SinglestoreInsightNamespaceListerExpansion interface{}
+
+// SinglestoreQueriesListerExpansion allows custom methods to be added to
+// SinglestoreQueriesLister.
+type SinglestoreQueriesListerExpansion interface{}
+
+// SinglestoreQueriesNamespaceListerExpansion allows custom methods to be added to
+// SinglestoreQueriesNamespaceLister.
+type SinglestoreQueriesNamespaceListerExpansion interface{}
+
+// SinglestoreSchemaOverviewListerExpansion allows custom methods to be added to
+// SinglestoreSchemaOverviewLister.
+type SinglestoreSchemaOverviewListerExpansion interface{}
+
+// SinglestoreSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// SinglestoreSchemaOverviewNamespaceLister.
+type SinglestoreSchemaOverviewNamespaceListerExpansion interface{}

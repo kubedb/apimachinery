@@ -100,6 +100,12 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MySQLQueriesList{},
 		&MySQLSchemaOverview{},
 		&MySQLSchemaOverviewList{},
+		&PerconaXtraDBInsight{},
+		&PerconaXtraDBInsightList{},
+		&PerconaXtraDBQueries{},
+		&PerconaXtraDBQueriesList{},
+		&PerconaXtraDBSchemaOverview{},
+		&PerconaXtraDBSchemaOverviewList{},
 		&PgBouncerInsight{},
 		&PgBouncerInsightList{},
 		&PgBouncerPoolOverview{},
@@ -128,6 +134,12 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&RedisQueriesList{},
 		&RedisSchemaOverview{},
 		&RedisSchemaOverviewList{},
+		&SinglestoreInsight{},
+		&SinglestoreInsightList{},
+		&SinglestoreQueries{},
+		&SinglestoreQueriesList{},
+		&SinglestoreSchemaOverview{},
+		&SinglestoreSchemaOverviewList{},
 	)
 
 	scheme.AddKnownTypes(

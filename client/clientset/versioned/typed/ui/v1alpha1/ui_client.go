@@ -50,6 +50,9 @@ type UiV1alpha1Interface interface {
 	Neo4jActivitiesGetter
 	Neo4jInsightsGetter
 	Neo4jSchemaOverviewsGetter
+	PerconaXtraDBInsightsGetter
+	PerconaXtraDBQueriesesGetter
+	PerconaXtraDBSchemaOverviewsGetter
 	PgBouncerInsightsGetter
 	PgBouncerPoolOverviewsGetter
 	PgBouncerServerOverviewsGetter
@@ -64,6 +67,9 @@ type UiV1alpha1Interface interface {
 	RedisInsightsGetter
 	RedisQueriesesGetter
 	RedisSchemaOverviewsGetter
+	SinglestoreInsightsGetter
+	SinglestoreQueriesesGetter
+	SinglestoreSchemaOverviewsGetter
 }
 
 // UiV1alpha1Client is used to interact with features provided by the ui.kubedb.com group.
@@ -155,6 +161,18 @@ func (c *UiV1alpha1Client) Neo4jSchemaOverviews(namespace string) Neo4jSchemaOve
 	return newNeo4jSchemaOverviews(c, namespace)
 }
 
+func (c *UiV1alpha1Client) PerconaXtraDBInsights(namespace string) PerconaXtraDBInsightInterface {
+	return newPerconaXtraDBInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBQuerieses(namespace string) PerconaXtraDBQueriesInterface {
+	return newPerconaXtraDBQuerieses(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBSchemaOverviews(namespace string) PerconaXtraDBSchemaOverviewInterface {
+	return newPerconaXtraDBSchemaOverviews(c, namespace)
+}
+
 func (c *UiV1alpha1Client) PgBouncerInsights(namespace string) PgBouncerInsightInterface {
 	return newPgBouncerInsights(c, namespace)
 }
@@ -209,6 +227,18 @@ func (c *UiV1alpha1Client) RedisQuerieses(namespace string) RedisQueriesInterfac
 
 func (c *UiV1alpha1Client) RedisSchemaOverviews(namespace string) RedisSchemaOverviewInterface {
 	return newRedisSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) SinglestoreInsights(namespace string) SinglestoreInsightInterface {
+	return newSinglestoreInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) SinglestoreQuerieses(namespace string) SinglestoreQueriesInterface {
+	return newSinglestoreQuerieses(c, namespace)
+}
+
+func (c *UiV1alpha1Client) SinglestoreSchemaOverviews(namespace string) SinglestoreSchemaOverviewInterface {
+	return newSinglestoreSchemaOverviews(c, namespace)
 }
 
 // NewForConfig creates a new UiV1alpha1Client for the given config.
