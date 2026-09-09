@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // Neo4jArchiverLister helps list Neo4jArchivers.
@@ -31,7 +31,7 @@ import (
 type Neo4jArchiverLister interface {
 	// List lists all Neo4jArchivers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jArchiver, err error)
+	List(selector labels.Selector) (ret []*archiverv1alpha1.Neo4jArchiver, err error)
 	// Neo4jArchivers returns an object that can list and get Neo4jArchivers.
 	Neo4jArchivers(namespace string) Neo4jArchiverNamespaceLister
 	Neo4jArchiverListerExpansion
@@ -39,25 +39,17 @@ type Neo4jArchiverLister interface {
 
 // neo4jArchiverLister implements the Neo4jArchiverLister interface.
 type neo4jArchiverLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*archiverv1alpha1.Neo4jArchiver]
 }
 
 // NewNeo4jArchiverLister returns a new Neo4jArchiverLister.
 func NewNeo4jArchiverLister(indexer cache.Indexer) Neo4jArchiverLister {
-	return &neo4jArchiverLister{indexer: indexer}
-}
-
-// List lists all Neo4jArchivers in the indexer.
-func (s *neo4jArchiverLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jArchiver, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jArchiver))
-	})
-	return ret, err
+	return &neo4jArchiverLister{listers.New[*archiverv1alpha1.Neo4jArchiver](indexer, archiverv1alpha1.Resource("neo4jarchiver"))}
 }
 
 // Neo4jArchivers returns an object that can list and get Neo4jArchivers.
 func (s *neo4jArchiverLister) Neo4jArchivers(namespace string) Neo4jArchiverNamespaceLister {
-	return neo4jArchiverNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return neo4jArchiverNamespaceLister{listers.NewNamespaced[*archiverv1alpha1.Neo4jArchiver](s.ResourceIndexer, namespace)}
 }
 
 // Neo4jArchiverNamespaceLister helps list and get Neo4jArchivers.
@@ -65,36 +57,15 @@ func (s *neo4jArchiverLister) Neo4jArchivers(namespace string) Neo4jArchiverName
 type Neo4jArchiverNamespaceLister interface {
 	// List lists all Neo4jArchivers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Neo4jArchiver, err error)
+	List(selector labels.Selector) (ret []*archiverv1alpha1.Neo4jArchiver, err error)
 	// Get retrieves the Neo4jArchiver from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Neo4jArchiver, error)
+	Get(name string) (*archiverv1alpha1.Neo4jArchiver, error)
 	Neo4jArchiverNamespaceListerExpansion
 }
 
 // neo4jArchiverNamespaceLister implements the Neo4jArchiverNamespaceLister
 // interface.
 type neo4jArchiverNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Neo4jArchivers in the indexer for a given namespace.
-func (s neo4jArchiverNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Neo4jArchiver, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Neo4jArchiver))
-	})
-	return ret, err
-}
-
-// Get retrieves the Neo4jArchiver from the indexer for a given namespace and name.
-func (s neo4jArchiverNamespaceLister) Get(name string) (*v1alpha1.Neo4jArchiver, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("neo4jarchiver"), name)
-	}
-	return obj.(*v1alpha1.Neo4jArchiver), nil
+	listers.ResourceIndexer[*archiverv1alpha1.Neo4jArchiver]
 }
