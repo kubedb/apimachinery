@@ -47,6 +47,9 @@ type UiV1alpha1Interface interface {
 	Neo4jActivitiesGetter
 	Neo4jInsightsGetter
 	Neo4jSchemaOverviewsGetter
+	PerconaXtraDBInsightsGetter
+	PerconaXtraDBQueriesesGetter
+	PerconaXtraDBSchemaOverviewsGetter
 	PgBouncerInsightsGetter
 	PgBouncerPoolOverviewsGetter
 	PgBouncerServerOverviewsGetter
@@ -138,6 +141,18 @@ func (c *UiV1alpha1Client) Neo4jInsights(namespace string) Neo4jInsightInterface
 
 func (c *UiV1alpha1Client) Neo4jSchemaOverviews(namespace string) Neo4jSchemaOverviewInterface {
 	return newNeo4jSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBInsights(namespace string) PerconaXtraDBInsightInterface {
+	return newPerconaXtraDBInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBQuerieses(namespace string) PerconaXtraDBQueriesInterface {
+	return newPerconaXtraDBQuerieses(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBSchemaOverviews(namespace string) PerconaXtraDBSchemaOverviewInterface {
+	return newPerconaXtraDBSchemaOverviews(c, namespace)
 }
 
 func (c *UiV1alpha1Client) PgBouncerInsights(namespace string) PgBouncerInsightInterface {

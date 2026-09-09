@@ -56,6 +56,12 @@ type Interface interface {
 	Neo4jInsights() Neo4jInsightInformer
 	// Neo4jSchemaOverviews returns a Neo4jSchemaOverviewInformer.
 	Neo4jSchemaOverviews() Neo4jSchemaOverviewInformer
+	// PerconaXtraDBInsights returns a PerconaXtraDBInsightInformer.
+	PerconaXtraDBInsights() PerconaXtraDBInsightInformer
+	// PerconaXtraDBQuerieses returns a PerconaXtraDBQueriesInformer.
+	PerconaXtraDBQuerieses() PerconaXtraDBQueriesInformer
+	// PerconaXtraDBSchemaOverviews returns a PerconaXtraDBSchemaOverviewInformer.
+	PerconaXtraDBSchemaOverviews() PerconaXtraDBSchemaOverviewInformer
 	// PgBouncerInsights returns a PgBouncerInsightInformer.
 	PgBouncerInsights() PgBouncerInsightInformer
 	// PgBouncerPoolOverviews returns a PgBouncerPoolOverviewInformer.
@@ -175,6 +181,21 @@ func (v *version) Neo4jInsights() Neo4jInsightInformer {
 // Neo4jSchemaOverviews returns a Neo4jSchemaOverviewInformer.
 func (v *version) Neo4jSchemaOverviews() Neo4jSchemaOverviewInformer {
 	return &neo4jSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PerconaXtraDBInsights returns a PerconaXtraDBInsightInformer.
+func (v *version) PerconaXtraDBInsights() PerconaXtraDBInsightInformer {
+	return &perconaXtraDBInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PerconaXtraDBQuerieses returns a PerconaXtraDBQueriesInformer.
+func (v *version) PerconaXtraDBQuerieses() PerconaXtraDBQueriesInformer {
+	return &perconaXtraDBQueriesInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// PerconaXtraDBSchemaOverviews returns a PerconaXtraDBSchemaOverviewInformer.
+func (v *version) PerconaXtraDBSchemaOverviews() PerconaXtraDBSchemaOverviewInformer {
+	return &perconaXtraDBSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PgBouncerInsights returns a PgBouncerInsightInformer.
