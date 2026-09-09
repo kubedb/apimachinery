@@ -25,13 +25,13 @@ import (
 
 	"go.etcd.io/etcd/client/pkg/v3/fileutil"
 	"go.etcd.io/etcd/client/pkg/v3/types"
-	"go.etcd.io/etcd/raft/v3"
-	"go.etcd.io/etcd/raft/v3/raftpb"
 	"go.etcd.io/etcd/server/v3/etcdserver/api/rafthttp"
 	"go.etcd.io/etcd/server/v3/etcdserver/api/snap"
 	stats "go.etcd.io/etcd/server/v3/etcdserver/api/v2stats"
 	"go.etcd.io/etcd/server/v3/storage/wal"
 	"go.etcd.io/etcd/server/v3/storage/wal/walpb"
+	"go.etcd.io/raft/v3"
+	"go.etcd.io/raft/v3/raftpb"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"k8s.io/klog/v2"
@@ -71,8 +71,6 @@ type RaftNode struct {
 	httpdonec chan struct{} // signals http server shutdown complete
 	logger    *zap.Logger
 
-	// keyList contains keys that will be stored in raft
-	keyList []string
 	// transferLeadershipTimeout is the timeout for transfer leadership
 	transferLeadershipTimeout time.Duration
 }
@@ -81,15 +79,17 @@ var defaultSnapshotCount uint64 = 10000
 
 // RaftNodeConfig holds configuration for creating a new RaftNode
 type RaftNodeConfig struct {
-	ID                        int
-	Period                    time.Duration
-	ElectionTick              uint64
-	HeartbeatTick             uint64
-	Peers                     []string
-	Join                      bool
-	WalDir                    string
-	SnapDir                   string
-	GetSnapshot               func() ([]byte, error)
+	ID            int
+	Period        time.Duration
+	ElectionTick  uint64
+	HeartbeatTick uint64
+	Peers         []string
+	Join          bool
+	WalDir        string
+	SnapDir       string
+	GetSnapshot   func() ([]byte, error)
+	// Deprecated: KeyList is ignored. Upstream Raft does not support the old fork
+	// recovery hook that rewrote these keys after log corruption.
 	KeyList                   []string
 	TransferLeadershipTimeout time.Duration
 }
@@ -132,7 +132,6 @@ func NewRaftNode(cfg RaftNodeConfig, proposeC <-chan string,
 		httpdonec:                 make(chan struct{}),
 		logger:                    logger,
 		snapshotterReady:          make(chan *snap.Snapshotter, 1),
-		keyList:                   cfg.KeyList,
 		transferLeadershipTimeout: cfg.TransferLeadershipTimeout,
 	}
 	go rc.startRaft(cfg.Period, cfg.ElectionTick, cfg.HeartbeatTick)
@@ -343,9 +342,9 @@ func (rc *RaftNode) startRaft(period time.Duration, electionTick uint64, heartbe
 	}
 
 	if oldwal || rc.join {
-		rc.Node = raft.RestartNode(c, rc.keyList)
+		rc.Node = raft.RestartNode(c)
 	} else {
-		rc.Node = raft.StartNode(c, rpeers, rc.keyList)
+		rc.Node = raft.StartNode(c, rpeers)
 	}
 
 	rc.Transport = &rafthttp.Transport{
