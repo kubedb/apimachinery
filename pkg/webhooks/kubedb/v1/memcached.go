@@ -287,6 +287,9 @@ func (mv MemcachedCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, mv.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	memcached := obj.(*dbapi.Memcached)
 	memLog.Info("validating", "name", memcached.Name)
 	return mv.validate(ctx, obj)

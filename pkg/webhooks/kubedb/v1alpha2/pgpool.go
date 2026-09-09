@@ -90,6 +90,9 @@ func (w *PgpoolCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	pp, ok := obj.(*olddbapi.Pgpool)
 	if !ok {
 		return nil, fmt.Errorf("expected an pgpool object but got %T", obj)

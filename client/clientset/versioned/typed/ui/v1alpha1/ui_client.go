@@ -32,18 +32,29 @@ type UiV1alpha1Interface interface {
 	DatabaseConfigurationsGetter
 	DatabaseConnectionsGetter
 	DatabaseSummariesGetter
+	DruidInsightsGetter
+	DruidSchemaOverviewsGetter
+	DruidTasksesGetter
 	ElasticsearchInsightsGetter
 	ElasticsearchNodesStatsesGetter
 	ElasticsearchSchemaOverviewsGetter
 	MariaDBInsightsGetter
 	MariaDBQueriesesGetter
 	MariaDBSchemaOverviewsGetter
+	MilvusInsightsGetter
+	MilvusSchemaOverviewsGetter
 	MongoDBInsightsGetter
 	MongoDBQueriesesGetter
 	MongoDBSchemaOverviewsGetter
 	MySQLInsightsGetter
 	MySQLQueriesesGetter
 	MySQLSchemaOverviewsGetter
+	Neo4jActivitiesGetter
+	Neo4jInsightsGetter
+	Neo4jSchemaOverviewsGetter
+	PerconaXtraDBInsightsGetter
+	PerconaXtraDBQueriesesGetter
+	PerconaXtraDBSchemaOverviewsGetter
 	PgBouncerInsightsGetter
 	PgBouncerPoolOverviewsGetter
 	PgBouncerServerOverviewsGetter
@@ -58,6 +69,9 @@ type UiV1alpha1Interface interface {
 	RedisInsightsGetter
 	RedisQueriesesGetter
 	RedisSchemaOverviewsGetter
+	SinglestoreInsightsGetter
+	SinglestoreQueriesesGetter
+	SinglestoreSchemaOverviewsGetter
 }
 
 // UiV1alpha1Client is used to interact with features provided by the ui.kubedb.com group.
@@ -75,6 +89,18 @@ func (c *UiV1alpha1Client) DatabaseConnections(namespace string) DatabaseConnect
 
 func (c *UiV1alpha1Client) DatabaseSummaries() DatabaseSummaryInterface {
 	return newDatabaseSummaries(c)
+}
+
+func (c *UiV1alpha1Client) DruidInsights(namespace string) DruidInsightInterface {
+	return newDruidInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) DruidSchemaOverviews(namespace string) DruidSchemaOverviewInterface {
+	return newDruidSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) DruidTaskses(namespace string) DruidTasksInterface {
+	return newDruidTaskses(c, namespace)
 }
 
 func (c *UiV1alpha1Client) ElasticsearchInsights(namespace string) ElasticsearchInsightInterface {
@@ -101,6 +127,14 @@ func (c *UiV1alpha1Client) MariaDBSchemaOverviews(namespace string) MariaDBSchem
 	return newMariaDBSchemaOverviews(c, namespace)
 }
 
+func (c *UiV1alpha1Client) MilvusInsights(namespace string) MilvusInsightInterface {
+	return newMilvusInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) MilvusSchemaOverviews(namespace string) MilvusSchemaOverviewInterface {
+	return newMilvusSchemaOverviews(c, namespace)
+}
+
 func (c *UiV1alpha1Client) MongoDBInsights(namespace string) MongoDBInsightInterface {
 	return newMongoDBInsights(c, namespace)
 }
@@ -123,6 +157,30 @@ func (c *UiV1alpha1Client) MySQLQuerieses(namespace string) MySQLQueriesInterfac
 
 func (c *UiV1alpha1Client) MySQLSchemaOverviews(namespace string) MySQLSchemaOverviewInterface {
 	return newMySQLSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) Neo4jActivities(namespace string) Neo4jActivityInterface {
+	return newNeo4jActivities(c, namespace)
+}
+
+func (c *UiV1alpha1Client) Neo4jInsights(namespace string) Neo4jInsightInterface {
+	return newNeo4jInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) Neo4jSchemaOverviews(namespace string) Neo4jSchemaOverviewInterface {
+	return newNeo4jSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBInsights(namespace string) PerconaXtraDBInsightInterface {
+	return newPerconaXtraDBInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBQuerieses(namespace string) PerconaXtraDBQueriesInterface {
+	return newPerconaXtraDBQuerieses(c, namespace)
+}
+
+func (c *UiV1alpha1Client) PerconaXtraDBSchemaOverviews(namespace string) PerconaXtraDBSchemaOverviewInterface {
+	return newPerconaXtraDBSchemaOverviews(c, namespace)
 }
 
 func (c *UiV1alpha1Client) PgBouncerInsights(namespace string) PgBouncerInsightInterface {
@@ -179,6 +237,18 @@ func (c *UiV1alpha1Client) RedisQuerieses(namespace string) RedisQueriesInterfac
 
 func (c *UiV1alpha1Client) RedisSchemaOverviews(namespace string) RedisSchemaOverviewInterface {
 	return newRedisSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) SinglestoreInsights(namespace string) SinglestoreInsightInterface {
+	return newSinglestoreInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) SinglestoreQuerieses(namespace string) SinglestoreQueriesInterface {
+	return newSinglestoreQuerieses(c, namespace)
+}
+
+func (c *UiV1alpha1Client) SinglestoreSchemaOverviews(namespace string) SinglestoreSchemaOverviewInterface {
+	return newSinglestoreSchemaOverviews(c, namespace)
 }
 
 // NewForConfig creates a new UiV1alpha1Client for the given config.

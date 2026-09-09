@@ -41,6 +41,18 @@ func (c *FakeUiV1alpha1) DatabaseSummaries() v1alpha1.DatabaseSummaryInterface {
 	return newFakeDatabaseSummaries(c)
 }
 
+func (c *FakeUiV1alpha1) DruidInsights(namespace string) v1alpha1.DruidInsightInterface {
+	return newFakeDruidInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) DruidSchemaOverviews(namespace string) v1alpha1.DruidSchemaOverviewInterface {
+	return newFakeDruidSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) DruidTaskses(namespace string) v1alpha1.DruidTasksInterface {
+	return newFakeDruidTaskses(c, namespace)
+}
+
 func (c *FakeUiV1alpha1) ElasticsearchInsights(namespace string) v1alpha1.ElasticsearchInsightInterface {
 	return newFakeElasticsearchInsights(c, namespace)
 }
@@ -65,6 +77,14 @@ func (c *FakeUiV1alpha1) MariaDBSchemaOverviews(namespace string) v1alpha1.Maria
 	return newFakeMariaDBSchemaOverviews(c, namespace)
 }
 
+func (c *FakeUiV1alpha1) MilvusInsights(namespace string) v1alpha1.MilvusInsightInterface {
+	return newFakeMilvusInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) MilvusSchemaOverviews(namespace string) v1alpha1.MilvusSchemaOverviewInterface {
+	return newFakeMilvusSchemaOverviews(c, namespace)
+}
+
 func (c *FakeUiV1alpha1) MongoDBInsights(namespace string) v1alpha1.MongoDBInsightInterface {
 	return newFakeMongoDBInsights(c, namespace)
 }
@@ -87,6 +107,30 @@ func (c *FakeUiV1alpha1) MySQLQuerieses(namespace string) v1alpha1.MySQLQueriesI
 
 func (c *FakeUiV1alpha1) MySQLSchemaOverviews(namespace string) v1alpha1.MySQLSchemaOverviewInterface {
 	return newFakeMySQLSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) Neo4jActivities(namespace string) v1alpha1.Neo4jActivityInterface {
+	return newFakeNeo4jActivities(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) Neo4jInsights(namespace string) v1alpha1.Neo4jInsightInterface {
+	return newFakeNeo4jInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) Neo4jSchemaOverviews(namespace string) v1alpha1.Neo4jSchemaOverviewInterface {
+	return newFakeNeo4jSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) PerconaXtraDBInsights(namespace string) v1alpha1.PerconaXtraDBInsightInterface {
+	return newFakePerconaXtraDBInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) PerconaXtraDBQuerieses(namespace string) v1alpha1.PerconaXtraDBQueriesInterface {
+	return newFakePerconaXtraDBQuerieses(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) PerconaXtraDBSchemaOverviews(namespace string) v1alpha1.PerconaXtraDBSchemaOverviewInterface {
+	return newFakePerconaXtraDBSchemaOverviews(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) PgBouncerInsights(namespace string) v1alpha1.PgBouncerInsightInterface {
@@ -143,6 +187,18 @@ func (c *FakeUiV1alpha1) RedisQuerieses(namespace string) v1alpha1.RedisQueriesI
 
 func (c *FakeUiV1alpha1) RedisSchemaOverviews(namespace string) v1alpha1.RedisSchemaOverviewInterface {
 	return newFakeRedisSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreInsights(namespace string) v1alpha1.SinglestoreInsightInterface {
+	return newFakeSinglestoreInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreQuerieses(namespace string) v1alpha1.SinglestoreQueriesInterface {
+	return newFakeSinglestoreQuerieses(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreSchemaOverviews(namespace string) v1alpha1.SinglestoreSchemaOverviewInterface {
+	return newFakeSinglestoreSchemaOverviews(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate
