@@ -21,8 +21,8 @@ import (
 	"fmt"
 	"sync"
 
+	"go.etcd.io/etcd/raft/v3/raftpb"
 	"go.etcd.io/etcd/server/v3/etcdserver/api/snap"
-	"go.etcd.io/raft/v3/raftpb"
 	"k8s.io/klog/v2"
 )
 

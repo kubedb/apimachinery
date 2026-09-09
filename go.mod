@@ -21,8 +21,8 @@ require (
 	go.bytebuilders.dev/audit v0.0.52
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	go.etcd.io/etcd/client/pkg/v3 v3.6.14
+	go.etcd.io/etcd/raft/v3 v3.5.27
 	go.etcd.io/etcd/server/v3 v3.6.4
-	go.etcd.io/raft/v3 v3.6.0
 	go.uber.org/zap v1.27.0
 	go.virtual-secrets.dev/apimachinery v0.2.0
 	gomodules.xyz/encoding v0.0.8
@@ -125,6 +125,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudevents/sdk-go/v2 v2.15.2 // indirect
 	github.com/cncf/xds/go v0.0.0-20260202195803-dba9d589def2 // indirect
+	github.com/cockroachdb/datadriven v1.0.2 // indirect
 	github.com/containerd/stargz-snapshotter/estargz v0.18.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.5.0 // indirect
 	github.com/cyphar/filepath-securejoin v0.6.1 // indirect
@@ -286,3 +287,9 @@ require (
 	sigs.k8s.io/structured-merge-diff/v6 v6.3.0 // indirect
 	x-helm.dev/apimachinery v0.0.18 // indirect
 )
+
+replace go.etcd.io/etcd/raft/v3 => github.com/kubedb/etcd-io/raft/v3 v3.5.0-beta.4.0.20220324050626-a6b4ef27cbc9
+
+replace go.etcd.io/etcd/server/v3 => go.etcd.io/etcd/server/v3 v3.5.27
+
+replace go.etcd.io/etcd/pkg/v3 => go.etcd.io/etcd/pkg/v3 v3.5.27

@@ -23,7 +23,7 @@ import (
 	"strconv"
 	"strings"
 
-	"go.etcd.io/raft/v3/raftpb"
+	"go.etcd.io/etcd/raft/v3/raftpb"
 	"k8s.io/klog/v2"
 )
 
