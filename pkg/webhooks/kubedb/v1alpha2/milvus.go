@@ -94,11 +94,11 @@ func (m *MilvusCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 
 	milvuslog.Info("validate create", "name", db.Name)
 
-	allErr := m.ValidateCreateOrUpdate(db)
+	warnings, allErr := m.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
-		return nil, nil
+		return warnings, nil
 	}
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMilvus}, db.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMilvus}, db.Name, allErr)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -113,12 +113,12 @@ func (m *MilvusCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 
 	milvuslog.Info("validate update", "name", db.Name)
 
-	allErr := m.ValidateCreateOrUpdate(db)
+	warnings, allErr := m.ValidateCreateOrUpdate(db)
 	if len(allErr) == 0 {
-		return nil, nil
+		return warnings, nil
 	}
 
-	return nil, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMilvus}, db.Name, allErr)
+	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: kubedb.GroupName, Kind: olddbapi.ResourceKindMilvus}, db.Name, allErr)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
@@ -140,15 +140,22 @@ func (m *MilvusCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Ob
 	return nil, nil
 }
 
-func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.ErrorList {
+func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admission.Warnings, field.ErrorList) {
 	var allErr field.ErrorList
+	var warnings admission.Warnings
 
-	err := m.milvusValidateVersion(db)
+	milvusVersion, err := m.milvusValidateVersion(db)
 	if err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("version"),
 			db.Name,
 			err.Error()))
+	} else if err := milvusValidateGPU(db, milvusVersion); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("gpu"),
+			db.Name,
+			err.Error()))
 	}
+
+	warnings = append(warnings, milvusWarnSRIOVTopology(db)...)
 
 	if db.Spec.PodTemplate != nil {
 		if err = ValidateMilvusEnvVar(getMilvusContainerEnvs(db), forbiddenMilvusEnvVars, db.ResourceKind()); err != nil {
@@ -225,10 +232,10 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 	}
 
 	if len(allErr) == 0 {
-		return nil
+		return warnings, nil
 	}
 
-	return allErr
+	return warnings, allErr
 }
 
 // reserved volume and volumes mounts for milvus
@@ -243,12 +250,77 @@ var milvusReservedVolumesMountPaths = []string{
 	kubedb.MilvusConfigVolDir,
 }
 
-func (m *MilvusCustomWebhook) milvusValidateVersion(db *olddbapi.Milvus) error {
+func (m *MilvusCustomWebhook) milvusValidateVersion(db *olddbapi.Milvus) (*catalog.MilvusVersion, error) {
 	var milvusVersion catalog.MilvusVersion
 
-	return m.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	err := m.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
 	}, &milvusVersion)
+	if err != nil {
+		return nil, err
+	}
+	return &milvusVersion, nil
+}
+
+// milvusValidateGPU rejects a Milvus CR that requests a GPU (via the typed
+// spec.gpu/spec.topology.distributed.<role>.gpu field, or a hand-written
+// nvidia.com/gpu resource request/limit on any podTemplate container)
+// against a MilvusVersion that isn't declared GPU-capable. Runs on both
+// CREATE and UPDATE, so downgrading spec.version out from under a live GPU
+// request is caught too.
+func milvusValidateGPU(db *olddbapi.Milvus, milvusVersion *catalog.MilvusVersion) error {
+	if !db.RequestsGPU() {
+		return nil
+	}
+	if milvusVersion.Spec.DB.GPU != nil && milvusVersion.Spec.DB.GPU.Supported {
+		return nil
+	}
+	return fmt.Errorf(
+		"a GPU resource is requested (spec.gpu, a distributed role's .gpu, or a hand-written "+
+			"nvidia.com/gpu podTemplate resource) but MilvusVersion %q does not declare "+
+			"spec.db.gpu.supported: true; use a GPU-capable MilvusVersion instead",
+		db.Spec.Version)
+}
+
+// milvusWarnSRIOVTopology warns, rather than rejects, if spec.network.sriov
+// is set on some but not all five Distributed roles. Every Distributed role
+// dials, or is dialed by, at least one other role directly by its
+// etcd-advertised address (never through a Service), so a role left off
+// network.sriov may become unreachable from, or unable to reach, whichever
+// roles do have it once their advertise-IP patch applies. This can't be a
+// hard rejection: the webhook has no way to confirm the customer's actual
+// NAD/subnet is (or isn't) routable from a role without network.sriov.
+func milvusWarnSRIOVTopology(db *olddbapi.Milvus) admission.Warnings {
+	if !db.IsDistributed() {
+		return nil
+	}
+	withSRIOV := db.DistributedNodeRolesWithSRIOV()
+	if len(withSRIOV) == 0 || len(withSRIOV) == 5 {
+		return nil
+	}
+
+	allRoles := []olddbapi.MilvusNodeRoleType{
+		olddbapi.MilvusNodeRoleMixCoord, olddbapi.MilvusNodeRoleDataNode, olddbapi.MilvusNodeRoleProxy,
+		olddbapi.MilvusNodeRoleQueryNode, olddbapi.MilvusNodeRoleStreamingNode,
+	}
+	withSet := make(map[olddbapi.MilvusNodeRoleType]bool, len(withSRIOV))
+	for _, r := range withSRIOV {
+		withSet[r] = true
+	}
+	var missing []string
+	for _, r := range allRoles {
+		if !withSet[r] {
+			missing = append(missing, string(r))
+		}
+	}
+
+	return admission.Warnings{fmt.Sprintf(
+		"spec.network.sriov is set on some Distributed roles but not %v; every role dials, or is "+
+			"dialed by, at least one other role directly by its advertised address, so these roles may "+
+			"be unable to reach, or be reached by, the roles that do have it once the advertise-IP patch "+
+			"applies. Set spec.network.sriov on all five Distributed roles (mixcoord, datanode, proxy, "+
+			"querynode, streamingnode), or none.", missing,
+	)}
 }
 
 func milvusValidateVolumes(podTemplate *ofstv2.PodTemplateSpec) error {

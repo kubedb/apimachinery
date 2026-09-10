@@ -116,6 +116,75 @@ type MilvusSpec struct {
 	// TLS contains tls configurations
 	// +optional
 	TLS *MilvusTLSConfig `json:"tls,omitempty"`
+
+	// Network configures secondary networking (e.g. SR-IOV via Multus) for
+	// this component. Only meaningful in Standalone mode; Distributed roles
+	// configure this per-role under spec.topology.distributed.<role>.network.
+	// +optional
+	Network *MilvusNetworkSpec `json:"network,omitempty"`
+
+	// GPU configures GPU device scheduling for this component. Only
+	// meaningful in Standalone mode; Distributed roles configure this
+	// per-role under spec.topology.distributed.<role>.gpu.
+	// +optional
+	GPU *MilvusGPUSpec `json:"gpu,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+// MilvusNetworkSpec configures secondary networking for a Milvus component.
+type MilvusNetworkSpec struct {
+	// SRIOV attaches an SR-IOV virtual function to the pod via Multus CNI.
+	// +optional
+	SRIOV *MilvusSRIOVSpec `json:"sriov,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+// MilvusSRIOVSpec requests a Multus/SR-IOV secondary network attachment.
+type MilvusSRIOVSpec struct {
+	// AttachmentRef names a cluster-admin-authored NetworkAttachmentDefinition
+	// (k8s.cni.cncf.io/v1) in the same namespace as this Milvus.
+	AttachmentRef string `json:"attachmentRef"`
+
+	// ResourceName must match the SR-IOV device plugin's advertised extended
+	// resource for the requested VF (e.g. intel.com/sriov_net_A,
+	// nvidia.com/hostdev).
+	ResourceName string `json:"resourceName"`
+
+	// RDMAResourceName optionally requests an additional RDMA device resource
+	// (e.g. rdma/rdma_shared_device_a) alongside ResourceName, for GPUDirect
+	// RDMA setups. Most deployments do not need this.
+	// +optional
+	RDMAResourceName string `json:"rdmaResourceName,omitempty"`
+
+	// Interface names the secondary interface Multus should attach this
+	// network as. Defaults to Multus's own convention ("net1") when unset.
+	// Setting a non-default value requires the rendered
+	// k8s.v1.cni.cncf.io/networks annotation to use the JSON-array form
+	// naming this interface explicitly, not just AttachmentRef by itself.
+	// +optional
+	Interface string `json:"interface,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+// MilvusGPUSpec configures GPU device scheduling for a Milvus component.
+type MilvusGPUSpec struct {
+	// ResourceName is the extended resource name to request (default
+	// nvidia.com/gpu). Override only for vGPU/MIG resource names.
+	// +optional
+	ResourceName string `json:"resourceName,omitempty"`
+
+	// Count is the number of GPU devices to request. Must be a positive
+	// integer if set.
+	// +optional
+	Count int64 `json:"count,omitempty"`
+
+	// NodeSelector is merged into the pod's node selector.
+	// +optional
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+
+	// Tolerations is merged into the pod's tolerations.
+	// +optional
+	Tolerations []core.Toleration `json:"tolerations,omitempty"`
 }
 
 type MilvusTLSConfig struct {
@@ -175,6 +244,20 @@ type MilvusNode struct {
 	// PodTemplate is an optional configuration for pods used to expose database
 	// +optional
 	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// Network configures secondary networking (e.g. SR-IOV via Multus) for
+	// this component. Every Distributed role dials, or is dialed by, at
+	// least one other role directly by its advertised address, so setting
+	// this on some roles but not others is very likely a connectivity bug,
+	// not a deliberate choice; the admission webhook warns accordingly.
+	// +optional
+	Network *MilvusNetworkSpec `json:"network,omitempty"`
+
+	// GPU configures GPU device scheduling for this component. Meaningful
+	// on QueryNode (search) and DataNode (index build); harmless if set on
+	// other roles.
+	// +optional
+	GPU *MilvusGPUSpec `json:"gpu,omitempty"`
 }
 type MilvusDataNode struct {
 	// MilvusDataNode has all the characteristics of MilvusNode
@@ -269,6 +352,14 @@ const (
 	MilvusNodeRoleStreamingNode MilvusNodeRoleType = "streamingnode"
 	MilvusNodeRoleProxy         MilvusNodeRoleType = "proxy"
 )
+
+// MilvusGPUDefaultResourceName is the extended resource requested when
+// MilvusGPUSpec.ResourceName is left unset.
+const MilvusGPUDefaultResourceName core.ResourceName = "nvidia.com/gpu"
+
+// MilvusSRIOVDefaultInterface is the secondary interface name Multus attaches
+// as when MilvusSRIOVSpec.Interface is left unset.
+const MilvusSRIOVDefaultInterface = "net1"
 
 var _ Accessor = &Milvus{}
 
