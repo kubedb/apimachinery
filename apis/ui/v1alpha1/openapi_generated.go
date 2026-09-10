@@ -427,7 +427,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.WebhookClientConfig":               schema_pkg_apis_apiextensions_v1_WebhookClientConfig(ref),
 		"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.WebhookConversion":                 schema_pkg_apis_apiextensions_v1_WebhookConversion(ref),
 		"k8s.io/apimachinery/pkg/api/resource.Quantity":                                              schema_apimachinery_pkg_api_resource_Quantity(ref),
-		"k8s.io/apimachinery/pkg/api/resource.int64Amount":                                           schema_apimachinery_pkg_api_resource_int64Amount(ref),
 		"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroup":                                              schema_pkg_apis_meta_v1_APIGroup(ref),
 		"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroupList":                                          schema_pkg_apis_meta_v1_APIGroupList(ref),
 		"k8s.io/apimachinery/pkg/apis/meta/v1.APIResource":                                           schema_pkg_apis_meta_v1_APIResource(ref),
@@ -504,7 +503,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/client-go/api/v1.TypeReference":                                                schema_kmodulesxyz_client_go_api_v1_TypeReference(ref),
 		"kmodules.xyz/client-go/api/v1.TypedObjectReference":                                         schema_kmodulesxyz_client_go_api_v1_TypedObjectReference(ref),
 		"kmodules.xyz/client-go/api/v1.X509Subject":                                                  schema_kmodulesxyz_client_go_api_v1_X509Subject(ref),
-		"kmodules.xyz/client-go/api/v1.stringSetMerger":                                              schema_kmodulesxyz_client_go_api_v1_stringSetMerger(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeyTransform":                     schema_custom_resources_apis_appcatalog_v1alpha1_AddKeyTransform(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeysFromTransform":                schema_custom_resources_apis_appcatalog_v1alpha1_AddKeysFromTransform(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppBinding":                          schema_custom_resources_apis_appcatalog_v1alpha1_AppBinding(ref),
@@ -575,6 +573,28 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/offshoot-api/api/v1.Volume":                                                    schema_kmodulesxyz_offshoot_api_api_v1_Volume(ref),
 		"kmodules.xyz/offshoot-api/api/v1.VolumeSource":                                              schema_kmodulesxyz_offshoot_api_api_v1_VolumeSource(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.AggregatedStats":                                   schema_apimachinery_apis_ui_v1alpha1_AggregatedStats(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraInsight":                                  schema_apimachinery_apis_ui_v1alpha1_CassandraInsight(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraInsightList":                              schema_apimachinery_apis_ui_v1alpha1_CassandraInsightList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraInsightSpec":                              schema_apimachinery_apis_ui_v1alpha1_CassandraInsightSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraKeyspaceSpec":                             schema_apimachinery_apis_ui_v1alpha1_CassandraKeyspaceSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraNodeStat":                                 schema_apimachinery_apis_ui_v1alpha1_CassandraNodeStat(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraRackStat":                                 schema_apimachinery_apis_ui_v1alpha1_CassandraRackStat(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraSchemaOverview":                           schema_apimachinery_apis_ui_v1alpha1_CassandraSchemaOverview(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraSchemaOverviewList":                       schema_apimachinery_apis_ui_v1alpha1_CassandraSchemaOverviewList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraSchemaOverviewSpec":                       schema_apimachinery_apis_ui_v1alpha1_CassandraSchemaOverviewSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2ConnectionInfo":                                 schema_apimachinery_apis_ui_v1alpha1_DB2ConnectionInfo(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2Insight":                                        schema_apimachinery_apis_ui_v1alpha1_DB2Insight(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2InsightList":                                    schema_apimachinery_apis_ui_v1alpha1_DB2InsightList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2InsightSpec":                                    schema_apimachinery_apis_ui_v1alpha1_DB2InsightSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2Queries":                                        schema_apimachinery_apis_ui_v1alpha1_DB2Queries(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2QueriesList":                                    schema_apimachinery_apis_ui_v1alpha1_DB2QueriesList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2QueriesSpec":                                    schema_apimachinery_apis_ui_v1alpha1_DB2QueriesSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2QuerySpec":                                      schema_apimachinery_apis_ui_v1alpha1_DB2QuerySpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2ReplicaStat":                                    schema_apimachinery_apis_ui_v1alpha1_DB2ReplicaStat(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2SchemaOverview":                                 schema_apimachinery_apis_ui_v1alpha1_DB2SchemaOverview(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2SchemaOverviewList":                             schema_apimachinery_apis_ui_v1alpha1_DB2SchemaOverviewList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2SchemaOverviewSpec":                             schema_apimachinery_apis_ui_v1alpha1_DB2SchemaOverviewSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2TableSpec":                                      schema_apimachinery_apis_ui_v1alpha1_DB2TableSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseConfiguration":                             schema_apimachinery_apis_ui_v1alpha1_DatabaseConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseConfigurationList":                         schema_apimachinery_apis_ui_v1alpha1_DatabaseConfigurationList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseConfigurationOptions":                      schema_apimachinery_apis_ui_v1alpha1_DatabaseConfigurationOptions(ref),
@@ -587,6 +607,20 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummary":                                   schema_apimachinery_apis_ui_v1alpha1_DatabaseSummary(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummaryRequest":                            schema_apimachinery_apis_ui_v1alpha1_DatabaseSummaryRequest(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummaryResponse":                           schema_apimachinery_apis_ui_v1alpha1_DatabaseSummaryResponse(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBCollectionSpec":                          schema_apimachinery_apis_ui_v1alpha1_DocumentDBCollectionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBConnectionInfo":                          schema_apimachinery_apis_ui_v1alpha1_DocumentDBConnectionInfo(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsight":                                 schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsight(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsightList":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsightList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsightSpec":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsightSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueries":                                 schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueries(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueriesList":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueriesList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueriesSpec":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueriesSpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQuerySpec":                               schema_apimachinery_apis_ui_v1alpha1_DocumentDBQuerySpec(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBReplicaStat":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBReplicaStat(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBReplicationStatus":                       schema_apimachinery_apis_ui_v1alpha1_DocumentDBReplicationStatus(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverview":                          schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverview(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverviewList":                      schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverviewSpec":                      schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidColumn":                                       schema_apimachinery_apis_ui_v1alpha1_DruidColumn(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidDatasourceSchema":                             schema_apimachinery_apis_ui_v1alpha1_DruidDatasourceSchema(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidDatasourceStatus":                             schema_apimachinery_apis_ui_v1alpha1_DruidDatasourceStatus(ref),
@@ -27056,15 +27090,12 @@ func schema_pkg_apis_meta_v1_InternalEvent(ref common.ReferenceCallback) common.
 					"Object": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Object is:\n * If Type is Added or Modified: the new state of the object.\n * If Type is Deleted: the state of the object immediately before deletion.\n * If Type is Bookmark: the object (instance of a type being watched) where\n   only ResourceVersion field is set. On successful restart of watch from a\n   bookmark resourceVersion, client is guaranteed to not get repeat event\n   nor miss any events.\n * If Type is Error: *api.Status is recommended; other types may make sense\n   depending on context.",
-							Ref:         ref("k8s.io/apimachinery/pkg/runtime.Object"),
 						},
 					},
 				},
 				Required: []string{"Type", "Object"},
 			},
 		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/runtime.Object"},
 	}
 }
 
@@ -33548,6 +33579,1082 @@ func schema_apimachinery_apis_ui_v1alpha1_AggregatedStats(ref common.ReferenceCa
 	}
 }
 
+func schema_apimachinery_apis_ui_v1alpha1_CassandraInsight(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraInsightSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CassandraStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CassandraStatus", "kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraInsightSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_CassandraInsightList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraInsight"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraInsight"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_CassandraInsightSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CassandraInsightSpec defines the desired state of CassandraInsight",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the cluster name the nodes agree on, from system.local.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"partitioner": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Partitioner in use, e.g. org.apache.cassandra.dht.Murmur3Partitioner.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"cqlVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CQLVersion reported by the contacted node.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"nativeProtocolVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NativeProtocolVersion reported by the contacted node.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"schemaAgreement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SchemaAgreement is true when every reachable node reports the same schema_version. A false value means a schema change is still propagating.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"nodes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Nodes is one entry per declared replica, each read from that node's own system.local. An unreachable node is absent rather than failing the resource.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraNodeStat"),
+									},
+								},
+							},
+						},
+					},
+					"racks": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Racks reflects spec.topology.rack: how many replicas each rack asks for against how many pods are Ready.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraRackStat"),
+									},
+								},
+							},
+						},
+					},
+					"totalNodes": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"totalKeyspaces": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"totalTables": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"version", "type", "status"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraNodeStat", "kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraRackStat"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_CassandraKeyspaceSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CassandraKeyspaceSpec describes one keyspace and the tables it holds.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"replicationClass": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReplicationClass is the replication strategy, e.g. SimpleStrategy or NetworkTopologyStrategy, from system_schema.keyspaces.replication['class'].",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicationFactors": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReplicationFactors maps each remaining replication option to its value: for SimpleStrategy that is replication_factor, for NetworkTopologyStrategy one entry per datacenter. Cassandra stores these as strings.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"durableWrites": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"tables": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Tables lists the table names in the keyspace, sorted.\n\nNo per-table size is reported: Cassandra's catalog carries none, and a real size needs nodetool tablestats or JMX, which is a different transport than CQL.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_CassandraNodeStat(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CassandraNodeStat describes one node of the ring.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"address": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Address is the node's rpc_address, read from that node's own system.local.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dataCenter": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"rack": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"releaseVersion": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"hostID": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"schemaVersion": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+				Required: []string{"address"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_CassandraRackStat(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CassandraRackStat compares a rack's requested replicas against Ready pods.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"ready": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ready is the number of Ready pods in the rack's PetSet.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"desired": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Desired is spec.topology.rack[].replicas. Unset for a Standalone object, which declares no racks.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"name", "ready"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_CassandraSchemaOverview(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraSchemaOverviewSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraSchemaOverviewSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_CassandraSchemaOverviewList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraSchemaOverview"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraSchemaOverview"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_CassandraSchemaOverviewSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "CassandraSchemaOverviewSpec defines the desired state of CassandraSchemaOverview.\n\nCassandra's unit is a keyspace containing tables, and a keyspace carries replication settings that have no equivalent in GenericSchemaOverviewSpec, so this does not alias it.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"keyspaces": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraKeyspaceSpec"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"keyspaces"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.CassandraKeyspaceSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2ConnectionInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"currentConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"totalConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2Insight(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2InsightSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2Status"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2Status", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2InsightSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2InsightList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2Insight"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2Insight"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2InsightSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DB2InsightSpec defines the desired state of DB2Insight.\n\nThe IBM DB2 Go driver is cgo and cannot be linked into the ui-server image, so every live value here is read over HTTP from the db2-coordinator sidecar rather than from a direct SQL connection.\n\nDB2Spec has no TLS, topology, monitor or disableSecurity field, so this reports no TLS/mode information: there is none to report.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"serviceLevel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceLevel is the DB2 service level string, e.g. \"DB2 v11.5.8.0\", from SYSIBMADM.ENV_INST_INFO.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"instanceName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InstanceName is the DB2 instance owner, normally db2inst1.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"databaseName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseName is the database the coordinator is connected to.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"reachable": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Reachable is the outcome of the coordinator's own readiness probe against DB2.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas compares spec.replicas against Ready pods.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2ReplicaStat"),
+						},
+					},
+					"connections": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2ConnectionInfo"),
+						},
+					},
+					"bufferPoolHitRatioPercent": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BufferPoolHitRatioPercent is the overall buffer pool hit ratio, derived from MON_GET_BUFFERPOOL logical and physical reads.",
+							Type:        []string{"number"},
+							Format:      "double",
+						},
+					},
+					"totalTablespaces": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"totalSchemas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"totalTables": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"version", "status"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2ConnectionInfo", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2ReplicaStat"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2Queries(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2QueriesSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2QueriesSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2QueriesList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2Queries"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2Queries"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2QueriesSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DB2QueriesSpec defines the desired state of DB2Queries.\n\nRows come from MON_GET_PKG_CACHE_STMT, DB2's package cache of recently executed statements. It is a cache, not a permanent digest: entries age out, so an empty list on a quiet database is a legitimate result.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"queries": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2QuerySpec"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"queries"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2QuerySpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2QuerySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"statementText": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StatementText is STMT_TEXT.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"numExecutions": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"totalCPUTimeMicroSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"totalActTimeMilliSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"avgExecutionTimeMilliSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"rowsRead": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"rowsReturned": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+				},
+				Required: []string{"statementText"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2ReplicaStat(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ready": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"desired": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"ready"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2SchemaOverview(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2SchemaOverviewSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2SchemaOverviewSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2SchemaOverviewList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2SchemaOverview"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2SchemaOverview"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2SchemaOverviewSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DB2SchemaOverviewSpec defines the desired state of DB2SchemaOverview.\n\nDB2's unit is schema.table, which maps onto GenericSchemaOverviewSpec's databaseName/tableName pair, but DB2 also reports separate data and index sizes that the generic triple cannot hold, so this defines its own shape.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tables": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2TableSpec"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"tables"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DB2TableSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DB2TableSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DB2TableSpec describes one table. System schemas (SYS*) are excluded.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"schemaName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SchemaName is TABSCHEMA. DB2 upper-cases identifiers by default, so expect upper-case values here.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tableName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TableName is TABNAME.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type is the TYPE column: T for table, V for view, and so on.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"rowCount": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"dataSizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataSizeBytes is DATA_OBJECT_L_SIZE converted from KB.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"indexSizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IndexSizeBytes is INDEX_OBJECT_L_SIZE converted from KB.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"columnCount": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"schemaName", "tableName"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ui_v1alpha1_DatabaseConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34081,6 +35188,666 @@ func schema_apimachinery_apis_ui_v1alpha1_DatabaseSummaryResponse(ref common.Ref
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/ui/v1alpha1.AggregatedStats", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseIndexEntry", "kubedb.dev/apimachinery/apis/ui/v1alpha1.StatForSpecificDB"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBCollectionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DocumentDBCollectionSpec describes one collection.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseName": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"documentCount": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"sizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SizeBytes is the size of the collection's documents.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"storageSizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageSizeBytes is the on-disk size including padding and free space.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"totalIndexSizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"indexCount": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"databaseName", "name"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBConnectionInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"maxConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"activeConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"idleConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsight(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsightSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDBStatus", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsightSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsightList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsight"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsight"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsightSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DocumentDBInsightSpec defines the desired state of DocumentDBInsight.\n\nDocumentDB is PostgreSQL with the pg_documentdb extensions behind a gateway that speaks the MongoDB wire protocol. Everything here is read over the PostgreSQL side (port 9712) as the admin user, which is the path the operator itself uses and therefore the proven one.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"serverVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerVersion is the PostgreSQL backend version reported by version(). spec.version is the DocumentDB catalog version, which is a different thing.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"inRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InRecovery is pg_is_in_recovery(). The primary Service pins to the primary pod, so this is expected to be false; true means the connection landed on a standby.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"connectionInfo": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBConnectionInfo"),
+						},
+					},
+					"replicationStatus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReplicationStatus is one entry per connected standby, from pg_stat_replication. Empty on a standalone object.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBReplicationStatus"),
+									},
+								},
+							},
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas compares spec.replicas against Ready pods.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBReplicaStat"),
+						},
+					},
+					"totalDatabases": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"totalCollections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"version", "type", "status"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBConnectionInfo", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBReplicaStat", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBReplicationStatus"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueries(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueriesSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueriesSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueriesList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueries"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueries"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueriesSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DocumentDBQueriesSpec defines the desired state of DocumentDBQueries.\n\nRows come from pg_stat_statements on the PostgreSQL backend. Two caveats a reviewer should know: the statements are the rewritten SQL the gateway and the pg_documentdb extension emit (documentdb_api.*, documentdb_api_internal.*), not the Mongo commands the user typed; and the view is only present if the extension has been created, so an empty list is a legitimate result rather than an error.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"queries": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQuerySpec"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"queries"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQuerySpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBQuerySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseName": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"query": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"calls": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"rows": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"totalTimeMilliSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"number"},
+							Format: "double",
+						},
+					},
+					"meanTimeMilliSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"number"},
+							Format: "double",
+						},
+					},
+					"minTimeMilliSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"number"},
+							Format: "double",
+						},
+					},
+					"maxTimeMilliSeconds": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"number"},
+							Format: "double",
+						},
+					},
+					"sharedBlksHit": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+					"sharedBlksRead": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+				},
+				Required: []string{"query"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBReplicaStat(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"ready": {
+						SchemaProps: spec.SchemaProps{
+							Default: 0,
+							Type:    []string{"integer"},
+							Format:  "int32",
+						},
+					},
+					"desired": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"ready"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBReplicationStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"applicationName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplicationName is the standby's pod name: the operator sets application_name=$HOSTNAME in primary_conninfo.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"state": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"syncState": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"clientAddr": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"writeLagBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WriteLagBytes is the primary's WAL position minus the standby's write position.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"replayLagBytes": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int64",
+						},
+					},
+				},
+				Required: []string{"applicationName"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverview(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverviewSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverviewSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverview"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverview"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DocumentDBSchemaOverviewSpec defines the desired state of DocumentDBSchemaOverview.\n\nDocumentDB presents collections over the MongoDB wire protocol, so the unit here is a collection, mirroring MongoDBSchemaOverview rather than the generic table shape. Unlike MongoDBSchemaOverview, sizes are scalars: DocumentDB is not sharded, so there is no per-shard array to report.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"collections": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBCollectionSpec"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"collections"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBCollectionSpec"},
 	}
 }
 

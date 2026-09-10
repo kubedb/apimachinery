@@ -26,6 +26,30 @@ import (
 // Funcs returns the fuzzer functions for this api group.
 var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 	return []any{
+		func(s *v1alpha1.CassandraInsight, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.CassandraSchemaOverview, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.DB2Insight, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.DB2Queries, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.DB2SchemaOverview, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.DocumentDBInsight, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.DocumentDBQueries, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.DocumentDBSchemaOverview, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
 		func(s *v1alpha1.DruidInsight, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
