@@ -115,6 +115,7 @@ spec:
                     - kind
                     - name
                     type: object
+                    x-kubernetes-map-type: atomic
                   endpoints:
                     items:
                       type: string
