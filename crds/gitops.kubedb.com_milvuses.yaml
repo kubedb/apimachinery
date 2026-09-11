@@ -67,6 +67,34 @@ spec:
                 type: string
               disableSecurity:
                 type: boolean
+              gpu:
+                properties:
+                  count:
+                    format: int64
+                    type: integer
+                  nodeSelector:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  resourceName:
+                    type: string
+                  tolerations:
+                    items:
+                      properties:
+                        effect:
+                          type: string
+                        key:
+                          type: string
+                        operator:
+                          type: string
+                        tolerationSeconds:
+                          format: int64
+                          type: integer
+                        value:
+                          type: string
+                      type: object
+                    type: array
+                type: object
               halted:
                 type: boolean
               healthChecker:
@@ -646,6 +674,23 @@ spec:
                               type: string
                             type: array
                         type: object
+                    type: object
+                type: object
+              network:
+                properties:
+                  sriov:
+                    properties:
+                      attachmentRef:
+                        type: string
+                      interface:
+                        type: string
+                      rdmaResourceName:
+                        type: string
+                      resourceName:
+                        type: string
+                    required:
+                    - attachmentRef
+                    - resourceName
                     type: object
                 type: object
               objectStorage:
@@ -4184,6 +4229,51 @@ spec:
                     properties:
                       datanode:
                         properties:
+                          gpu:
+                            properties:
+                              count:
+                                format: int64
+                                type: integer
+                              nodeSelector:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                              resourceName:
+                                type: string
+                              tolerations:
+                                items:
+                                  properties:
+                                    effect:
+                                      type: string
+                                    key:
+                                      type: string
+                                    operator:
+                                      type: string
+                                    tolerationSeconds:
+                                      format: int64
+                                      type: integer
+                                    value:
+                                      type: string
+                                  type: object
+                                type: array
+                            type: object
+                          network:
+                            properties:
+                              sriov:
+                                properties:
+                                  attachmentRef:
+                                    type: string
+                                  interface:
+                                    type: string
+                                  rdmaResourceName:
+                                    type: string
+                                  resourceName:
+                                    type: string
+                                required:
+                                - attachmentRef
+                                - resourceName
+                                type: object
+                            type: object
                           podTemplate:
                             properties:
                               controller:
@@ -7426,6 +7516,51 @@ spec:
                         type: object
                       mixcoord:
                         properties:
+                          gpu:
+                            properties:
+                              count:
+                                format: int64
+                                type: integer
+                              nodeSelector:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                              resourceName:
+                                type: string
+                              tolerations:
+                                items:
+                                  properties:
+                                    effect:
+                                      type: string
+                                    key:
+                                      type: string
+                                    operator:
+                                      type: string
+                                    tolerationSeconds:
+                                      format: int64
+                                      type: integer
+                                    value:
+                                      type: string
+                                  type: object
+                                type: array
+                            type: object
+                          network:
+                            properties:
+                              sriov:
+                                properties:
+                                  attachmentRef:
+                                    type: string
+                                  interface:
+                                    type: string
+                                  rdmaResourceName:
+                                    type: string
+                                  resourceName:
+                                    type: string
+                                required:
+                                - attachmentRef
+                                - resourceName
+                                type: object
+                            type: object
                           podTemplate:
                             properties:
                               controller:
@@ -10668,6 +10803,51 @@ spec:
                         type: object
                       proxy:
                         properties:
+                          gpu:
+                            properties:
+                              count:
+                                format: int64
+                                type: integer
+                              nodeSelector:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                              resourceName:
+                                type: string
+                              tolerations:
+                                items:
+                                  properties:
+                                    effect:
+                                      type: string
+                                    key:
+                                      type: string
+                                    operator:
+                                      type: string
+                                    tolerationSeconds:
+                                      format: int64
+                                      type: integer
+                                    value:
+                                      type: string
+                                  type: object
+                                type: array
+                            type: object
+                          network:
+                            properties:
+                              sriov:
+                                properties:
+                                  attachmentRef:
+                                    type: string
+                                  interface:
+                                    type: string
+                                  rdmaResourceName:
+                                    type: string
+                                  resourceName:
+                                    type: string
+                                required:
+                                - attachmentRef
+                                - resourceName
+                                type: object
+                            type: object
                           podTemplate:
                             properties:
                               controller:
@@ -13910,6 +14090,51 @@ spec:
                         type: object
                       querynode:
                         properties:
+                          gpu:
+                            properties:
+                              count:
+                                format: int64
+                                type: integer
+                              nodeSelector:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                              resourceName:
+                                type: string
+                              tolerations:
+                                items:
+                                  properties:
+                                    effect:
+                                      type: string
+                                    key:
+                                      type: string
+                                    operator:
+                                      type: string
+                                    tolerationSeconds:
+                                      format: int64
+                                      type: integer
+                                    value:
+                                      type: string
+                                  type: object
+                                type: array
+                            type: object
+                          network:
+                            properties:
+                              sriov:
+                                properties:
+                                  attachmentRef:
+                                    type: string
+                                  interface:
+                                    type: string
+                                  rdmaResourceName:
+                                    type: string
+                                  resourceName:
+                                    type: string
+                                required:
+                                - attachmentRef
+                                - resourceName
+                                type: object
+                            type: object
                           podTemplate:
                             properties:
                               controller:
@@ -17152,6 +17377,51 @@ spec:
                         type: object
                       streamingnode:
                         properties:
+                          gpu:
+                            properties:
+                              count:
+                                format: int64
+                                type: integer
+                              nodeSelector:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                              resourceName:
+                                type: string
+                              tolerations:
+                                items:
+                                  properties:
+                                    effect:
+                                      type: string
+                                    key:
+                                      type: string
+                                    operator:
+                                      type: string
+                                    tolerationSeconds:
+                                      format: int64
+                                      type: integer
+                                    value:
+                                      type: string
+                                  type: object
+                                type: array
+                            type: object
+                          network:
+                            properties:
+                              sriov:
+                                properties:
+                                  attachmentRef:
+                                    type: string
+                                  interface:
+                                    type: string
+                                  rdmaResourceName:
+                                    type: string
+                                  resourceName:
+                                    type: string
+                                required:
+                                - attachmentRef
+                                - resourceName
+                                type: object
+                            type: object
                           podTemplate:
                             properties:
                               controller:

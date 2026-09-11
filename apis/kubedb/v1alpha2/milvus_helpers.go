@@ -120,6 +120,107 @@ func (m *Milvus) GetNodeSpec(nodeType MilvusNodeRoleType) (*MilvusNode, *MilvusD
 	}
 }
 
+// GetNodeGPUSpec returns the effective *MilvusGPUSpec for the given role in
+// Distributed mode, or nil if unset or the role has no such spec.
+func (m *Milvus) GetNodeGPUSpec(nodeType MilvusNodeRoleType) *MilvusGPUSpec {
+	nodeSpec, dataNodeSpec := m.GetNodeSpec(nodeType)
+	if nodeSpec != nil {
+		return nodeSpec.GPU
+	}
+	if dataNodeSpec != nil {
+		return dataNodeSpec.GPU
+	}
+	return nil
+}
+
+// GetNodeNetworkSpec returns the effective *MilvusNetworkSpec for the given
+// role in Distributed mode, or nil if unset or the role has no such spec.
+func (m *Milvus) GetNodeNetworkSpec(nodeType MilvusNodeRoleType) *MilvusNetworkSpec {
+	nodeSpec, dataNodeSpec := m.GetNodeSpec(nodeType)
+	if nodeSpec != nil {
+		return nodeSpec.Network
+	}
+	if dataNodeSpec != nil {
+		return dataNodeSpec.Network
+	}
+	return nil
+}
+
+// podTemplateRequestsGPU reports whether any container in podTemplate has a
+// resources.requests or resources.limits entry for MilvusGPUDefaultResourceName.
+// This catches a user hand-writing "nvidia.com/gpu" directly under
+// podTemplate.spec.containers[].resources, independent of whether the typed
+// GPU field is also set.
+func podTemplateRequestsGPU(podTemplate *ofstv2.PodTemplateSpec) bool {
+	if podTemplate == nil {
+		return false
+	}
+	containsGPU := func(rl core.ResourceList) bool {
+		if rl == nil {
+			return false
+		}
+		_, ok := rl[MilvusGPUDefaultResourceName]
+		return ok
+	}
+	for _, c := range podTemplate.Spec.Containers {
+		if containsGPU(c.Resources.Requests) || containsGPU(c.Resources.Limits) {
+			return true
+		}
+	}
+	return false
+}
+
+// RequestsGPU reports whether this Milvus, in whichever mode it's configured
+// for, requests a GPU anywhere -- via the typed GPU field (Standalone's
+// spec.gpu, or any Distributed role's .gpu), or via a hand-written
+// nvidia.com/gpu resource request/limit on a podTemplate container. Used by
+// the admission webhook to decide whether spec.version's MilvusVersion must
+// declare GPU support.
+func (m *Milvus) RequestsGPU() bool {
+	if m.Spec.GPU != nil || podTemplateRequestsGPU(m.Spec.PodTemplate) {
+		return true
+	}
+	if !m.IsDistributed() || m.Spec.Topology.Distributed == nil {
+		return false
+	}
+	for _, nodeType := range []MilvusNodeRoleType{
+		MilvusNodeRoleMixCoord, MilvusNodeRoleDataNode, MilvusNodeRoleProxy,
+		MilvusNodeRoleQueryNode, MilvusNodeRoleStreamingNode,
+	} {
+		nodeSpec, dataNodeSpec := m.GetNodeSpec(nodeType)
+		switch {
+		case nodeSpec != nil:
+			if nodeSpec.GPU != nil || podTemplateRequestsGPU(nodeSpec.PodTemplate) {
+				return true
+			}
+		case dataNodeSpec != nil:
+			if dataNodeSpec.GPU != nil || podTemplateRequestsGPU(dataNodeSpec.PodTemplate) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// DistributedNodeRolesWithSRIOV returns the Distributed roles whose
+// .network.sriov is set. Used by the admission webhook's topology-coupling
+// check (warn if some but not all five roles have it).
+func (m *Milvus) DistributedNodeRolesWithSRIOV() []MilvusNodeRoleType {
+	if !m.IsDistributed() || m.Spec.Topology.Distributed == nil {
+		return nil
+	}
+	var withSRIOV []MilvusNodeRoleType
+	for _, nodeType := range []MilvusNodeRoleType{
+		MilvusNodeRoleMixCoord, MilvusNodeRoleDataNode, MilvusNodeRoleProxy,
+		MilvusNodeRoleQueryNode, MilvusNodeRoleStreamingNode,
+	} {
+		if net := m.GetNodeNetworkSpec(nodeType); net != nil && net.SRIOV != nil {
+			withSRIOV = append(withSRIOV, nodeType)
+		}
+	}
+	return withSRIOV
+}
+
 func (m *Milvus) PodControllerLabels(nodeType MilvusNodeRoleType, extraLabels ...map[string]string) map[string]string {
 	nodeSpec, dataNodeSpec := m.GetNodeSpec(nodeType)
 	var labels map[string]string
@@ -312,6 +413,8 @@ func (m *Milvus) setDistributedDefaults(kc client.Client) {
 func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any) {
 	var replicas **int32
 	var podTemplate **ofstv2.PodTemplateSpec
+	var gpu **MilvusGPUSpec
+	var network **MilvusNetworkSpec
 
 	switch n := node.(type) {
 	case **MilvusNode:
@@ -320,6 +423,8 @@ func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any
 		}
 		replicas = &(*n).Replicas
 		podTemplate = &(*n).PodTemplate
+		gpu = &(*n).GPU
+		network = &(*n).Network
 
 	case **MilvusDataNode:
 		if *n == nil {
@@ -328,6 +433,8 @@ func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any
 		}
 		replicas = &(*n).Replicas
 		podTemplate = &(*n).PodTemplate
+		gpu = &(*n).GPU
+		network = &(*n).Network
 		if (*n).StorageType == "" {
 			(*n).StorageType = StorageTypeDurable
 		}
@@ -343,6 +450,29 @@ func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any
 	m.setDefaultContainerSecurityContext(mvVersion, *podTemplate)
 	m.setDefaultContainerResourceLimits(*podTemplate)
 	apis.SetDefaultResizePolicy((*podTemplate).Spec.Containers, (*podTemplate).Spec.InitContainers)
+	setDefaultGPUAndNetwork(*gpu, *network)
+}
+
+// setDefaultGPUAndNetwork fills in ResourceName/Interface defaults on an
+// already-set GPU/Network spec. A nil gpu/network (the field wasn't set at
+// all) is left nil -- this only defaults sub-fields of a spec the user (or
+// an earlier defaulting pass) already opted into.
+func setDefaultGPUAndNetwork(gpu *MilvusGPUSpec, network *MilvusNetworkSpec) {
+	if gpu != nil {
+		if gpu.ResourceName == "" {
+			gpu.ResourceName = string(MilvusGPUDefaultResourceName)
+		}
+		// Count is a plain int64 (not a pointer), so an explicit 0 and "never
+		// set" are indistinguishable on the wire; either way, requesting a
+		// GPU with a count of 0 is meaningless, so default it to 1 rather
+		// than trying to reject it at admission.
+		if gpu.Count <= 0 {
+			gpu.Count = 1
+		}
+	}
+	if network != nil && network.SRIOV != nil && network.SRIOV.Interface == "" {
+		network.SRIOV.Interface = MilvusSRIOVDefaultInterface
+	}
 }
 
 func (m *Milvus) SetDefaults(kc client.Client) {
@@ -384,6 +514,7 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 		m.setDefaultContainerSecurityContext(&mvVersion, m.Spec.PodTemplate)
 		m.setDefaultContainerResourceLimits(m.Spec.PodTemplate)
 		apis.SetDefaultResizePolicy(m.Spec.PodTemplate.Spec.Containers, m.Spec.PodTemplate.Spec.InitContainers)
+		setDefaultGPUAndNetwork(m.Spec.GPU, m.Spec.Network)
 	}
 
 	m.setMetaStorageDefaults()
