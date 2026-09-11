@@ -272,6 +272,88 @@ type MSSQLServerStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed MSSQLServer.
+	// +optional
+	DisasterRecovery *MSSQLServerDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// MSSQLServerDRPhase is the cross data center DR phase of a distributed MSSQLServer.
+type MSSQLServerDRPhase string
+
+const (
+	MSSQLServerDRPhaseSteady      MSSQLServerDRPhase = "Steady"
+	MSSQLServerDRPhaseFailingOver MSSQLServerDRPhase = "FailingOver"
+	MSSQLServerDRPhaseFailingBack MSSQLServerDRPhase = "FailingBack"
+	MSSQLServerDRPhaseDegraded    MSSQLServerDRPhase = "Degraded"
+)
+
+// MSSQLServerDisasterRecoveryStatus reports the per data center DC-DR view of a
+// distributed MSSQLServer. The cross-DC decision is owned by the dr-controlplane
+// primary-DC Lease, which drives the underlying Distributed Availability Group
+// (DAG) role; this status reflects it on the single MSSQLServer object.
+type MSSQLServerDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and
+	// runs the DAG primary AG (the writable Availability Group).
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase MSSQLServerDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []MSSQLServerDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// MSSQLServerDCStatus is one data center's local view inside a distributed MSSQLServer.
+type MSSQLServerDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member or Arbiter.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// AGPrimary is this DC's local Availability Group primary replica pod (the
+	// pod elected primary by this DC's mssql-coordinator raft).
+	// +optional
+	AGPrimary string `json:"agPrimary,omitempty"`
+
+	// DAGRole is this DC's role in the Distributed Availability Group, Primary or Secondary.
+	// +optional
+	DAGRole DistributedAGRole `json:"dagRole,omitempty"`
+
+	// Writable is true when this DC's AG is the DAG primary (the cluster's writable AG).
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// SynchronizationHealth is the DAG synchronization health for this DC's AG,
+	// from sys.dm_hadr_database_replica_states (HEALTHY, PARTIALLY_HEALTHY, NOT_HEALTHY).
+	// +optional
+	SynchronizationHealth string `json:"synchronizationHealth,omitempty"`
+
+	// RedoQueueBytes is the redo queue size on this DC's DAG forwarder, in bytes.
+	// +optional
+	RedoQueueBytes *int64 `json:"redoQueueBytes,omitempty"`
+
+	// LogSendQueueBytes is the un-shipped log send queue from the active AG to this DC, in bytes.
+	// +optional
+	LogSendQueueBytes *int64 `json:"logSendQueueBytes,omitempty"`
+
+	// LastHardenedLSN is the last hardened LSN on this DC's AG, used for the
+	// LSN-equality switchover gate.
+	// +optional
+	LastHardenedLSN string `json:"lastHardenedLSN,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 // MSSQLServerLeaderElectionConfig contains essential attributes of leader election.
