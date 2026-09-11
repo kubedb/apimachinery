@@ -215,6 +215,18 @@ type MetaStorageSpec struct {
 	// Storage to specify how storage shall be used.
 	// +optional
 	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
+
+	// TLS configures certificates issued from spec.metaStorage.tls.issuerRef for
+	// the internally-managed meta etcd's client, server and peer traffic.
+	// Only used when ExternallyManaged is false.
+	// +optional
+	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
+
+	// AuthSecret is the root credential for the internally-managed meta etcd.
+	// If omitted, the etcd operator auto-generates one. Only used when
+	// ExternallyManaged is false.
+	// +optional
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

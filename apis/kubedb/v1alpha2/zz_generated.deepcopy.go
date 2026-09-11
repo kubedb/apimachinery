@@ -4236,6 +4236,16 @@ func (in *MetaStorageSpec) DeepCopyInto(out *MetaStorageSpec) {
 		*out = new(corev1.PersistentVolumeClaimSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.TLS != nil {
+		in, out := &in.TLS, &out.TLS
+		*out = new(apiv1.TLSConfig)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.AuthSecret != nil {
+		in, out := &in.AuthSecret, &out.AuthSecret
+		*out = new(SecretReference)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
