@@ -612,14 +612,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsight":                                 schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsight(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsightList":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsightList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsightSpec":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsightSpec(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueries":                                 schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueries(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueriesList":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueriesList(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueriesSpec":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueriesSpec(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQuerySpec":                               schema_apimachinery_apis_ui_v1alpha1_DocumentDBQuerySpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBReplicaStat":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBReplicaStat(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBReplicationStatus":                       schema_apimachinery_apis_ui_v1alpha1_DocumentDBReplicationStatus(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverview":                          schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverview(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverviewList":                      schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewList(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBDatabaseSpec":                            schema_apimachinery_apis_ui_v1alpha1_DocumentDBDatabaseSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverviewSpec":                      schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidColumn":                                       schema_apimachinery_apis_ui_v1alpha1_DruidColumn(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidDatasourceSchema":                             schema_apimachinery_apis_ui_v1alpha1_DruidDatasourceSchema(ref),
@@ -35465,197 +35462,6 @@ func schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsightSpec(ref common.Refer
 	}
 }
 
-func schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueries(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
-						},
-					},
-					"spec": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueriesSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueriesSpec"},
-	}
-}
-
-func schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueriesList(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"metadata": {
-						SchemaProps: spec.SchemaProps{
-							Default: map[string]interface{}{},
-							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
-						},
-					},
-					"items": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueries"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"items"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQueries"},
-	}
-}
-
-func schema_apimachinery_apis_ui_v1alpha1_DocumentDBQueriesSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DocumentDBQueriesSpec defines the desired state of DocumentDBQueries.\n\nRows come from pg_stat_statements on the PostgreSQL backend. Two caveats a reviewer should know: the statements are the rewritten SQL the gateway and the pg_documentdb extension emit (documentdb_api.*, documentdb_api_internal.*), not the Mongo commands the user typed; and the view is only present if the extension has been created, so an empty list is a legitimate result rather than an error.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"queries": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQuerySpec"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"queries"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBQuerySpec"},
-	}
-}
-
-func schema_apimachinery_apis_ui_v1alpha1_DocumentDBQuerySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"databaseName": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
-						},
-					},
-					"query": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"calls": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"rows": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"totalTimeMilliSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"number"},
-							Format: "double",
-						},
-					},
-					"meanTimeMilliSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"number"},
-							Format: "double",
-						},
-					},
-					"minTimeMilliSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"number"},
-							Format: "double",
-						},
-					},
-					"maxTimeMilliSeconds": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"number"},
-							Format: "double",
-						},
-					},
-					"sharedBlksHit": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-					"sharedBlksRead": {
-						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int64",
-						},
-					},
-				},
-				Required: []string{"query"},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_ui_v1alpha1_DocumentDBReplicaStat(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -35822,13 +35628,55 @@ func schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewList(ref commo
 	}
 }
 
-func schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBDatabaseSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DocumentDBSchemaOverviewSpec defines the desired state of DocumentDBSchemaOverview.\n\nDocumentDB presents collections over the MongoDB wire protocol, so the unit here is a collection, mirroring MongoDBSchemaOverview rather than the generic table shape. Unlike MongoDBSchemaOverview, sizes are scalars: DocumentDB is not sharded, so there is no per-shard array to report.",
+				Description: "DocumentDBDatabaseSpec describes one database and the collections it holds.\n\nThe rollup fields come from the gateway's dbStats, except DocumentCount, which is summed from the collections: dbStats reports objects as 0 on DocumentDB regardless of the real count. dbStats sizes are page-based and would contradict the BSON sizes reported per collection, so only the index and storage figures are taken from it.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"collectionCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CollectionCount is the number of collections in this database, as dbStats reports it.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"documentCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DocumentCount is the total number of documents across this database's collections.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"indexCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IndexCount is the number of indexes across this database's collections.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"storageSizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageSizeBytes is the on-disk size of this database.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"indexSizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IndexSizeBytes is the on-disk size of this database's indexes.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
 					"collections": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
@@ -35843,11 +35691,40 @@ func schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewSpec(ref commo
 						},
 					},
 				},
-				Required: []string{"collections"},
+				Required: []string{"name"},
 			},
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBCollectionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DocumentDBSchemaOverviewSpec defines the desired state of DocumentDBSchemaOverview.\n\nDocumentDB presents collections over the MongoDB wire protocol, so the unit here is a collection, mirroring MongoDBSchemaOverview rather than the generic table shape. Unlike MongoDBSchemaOverview, sizes are scalars: DocumentDB is not sharded, so there is no per-shard array to report.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databases": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBDatabaseSpec"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"databases"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBDatabaseSpec"},
 	}
 }
 

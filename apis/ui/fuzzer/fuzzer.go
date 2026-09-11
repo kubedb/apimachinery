@@ -44,9 +44,6 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 		func(s *v1alpha1.DocumentDBInsight, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.DocumentDBQueries, c randfill.Continue) {
-			c.Fill(s) // fuzz self without calling this function again
-		},
 		func(s *v1alpha1.DocumentDBSchemaOverview, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},

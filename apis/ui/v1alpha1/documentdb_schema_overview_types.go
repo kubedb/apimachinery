@@ -33,13 +33,42 @@ const (
 // MongoDBSchemaOverview, sizes are scalars: DocumentDB is not sharded, so there is no
 // per-shard array to report.
 type DocumentDBSchemaOverviewSpec struct {
-	Collections []DocumentDBCollectionSpec `json:"collections"`
+	Databases []DocumentDBDatabaseSpec `json:"databases"`
 }
 
-// DocumentDBCollectionSpec describes one collection.
+// DocumentDBDatabaseSpec describes one database and the collections it holds.
+//
+// The rollup fields come from the gateway's dbStats, except DocumentCount, which is summed
+// from the collections: dbStats reports objects as 0 on DocumentDB regardless of the real
+// count. dbStats sizes are page-based and would contradict the BSON sizes reported per
+// collection, so only the index and storage figures are taken from it.
+type DocumentDBDatabaseSpec struct {
+	Name string `json:"name"`
+
+	// CollectionCount is the number of collections in this database, as dbStats reports it.
+	// +optional
+	CollectionCount *int32 `json:"collectionCount,omitempty"`
+	// DocumentCount is the total number of documents across this database's collections.
+	// +optional
+	DocumentCount *int64 `json:"documentCount,omitempty"`
+	// IndexCount is the number of indexes across this database's collections.
+	// +optional
+	IndexCount *int32 `json:"indexCount,omitempty"`
+	// StorageSizeBytes is the on-disk size of this database.
+	// +optional
+	StorageSizeBytes *int64 `json:"storageSizeBytes,omitempty"`
+	// IndexSizeBytes is the on-disk size of this database's indexes.
+	// +optional
+	IndexSizeBytes *int64 `json:"indexSizeBytes,omitempty"`
+
+	// +optional
+	Collections []DocumentDBCollectionSpec `json:"collections,omitempty"`
+}
+
+// DocumentDBCollectionSpec describes one collection. The database it belongs to is the
+// DocumentDBDatabaseSpec that holds it.
 type DocumentDBCollectionSpec struct {
-	DatabaseName string `json:"databaseName"`
-	Name         string `json:"name"`
+	Name string `json:"name"`
 
 	// +optional
 	DocumentCount *int64 `json:"documentCount,omitempty"`

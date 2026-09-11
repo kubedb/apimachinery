@@ -80,8 +80,6 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&DruidTasksList{},
 		&DocumentDBInsight{},
 		&DocumentDBInsightList{},
-		&DocumentDBQueries{},
-		&DocumentDBQueriesList{},
 		&DocumentDBSchemaOverview{},
 		&DocumentDBSchemaOverviewList{},
 		&DruidSchemaOverview{},
