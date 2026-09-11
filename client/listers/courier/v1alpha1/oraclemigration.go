@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // OracleMigrationLister helps list OracleMigrations.
@@ -31,7 +31,7 @@ import (
 type OracleMigrationLister interface {
 	// List lists all OracleMigrations in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.OracleMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.OracleMigration, err error)
 	// OracleMigrations returns an object that can list and get OracleMigrations.
 	OracleMigrations(namespace string) OracleMigrationNamespaceLister
 	OracleMigrationListerExpansion
@@ -39,25 +39,17 @@ type OracleMigrationLister interface {
 
 // oracleMigrationLister implements the OracleMigrationLister interface.
 type oracleMigrationLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*courierv1alpha1.OracleMigration]
 }
 
 // NewOracleMigrationLister returns a new OracleMigrationLister.
 func NewOracleMigrationLister(indexer cache.Indexer) OracleMigrationLister {
-	return &oracleMigrationLister{indexer: indexer}
-}
-
-// List lists all OracleMigrations in the indexer.
-func (s *oracleMigrationLister) List(selector labels.Selector) (ret []*v1alpha1.OracleMigration, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.OracleMigration))
-	})
-	return ret, err
+	return &oracleMigrationLister{listers.New[*courierv1alpha1.OracleMigration](indexer, courierv1alpha1.Resource("oraclemigration"))}
 }
 
 // OracleMigrations returns an object that can list and get OracleMigrations.
 func (s *oracleMigrationLister) OracleMigrations(namespace string) OracleMigrationNamespaceLister {
-	return oracleMigrationNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return oracleMigrationNamespaceLister{listers.NewNamespaced[*courierv1alpha1.OracleMigration](s.ResourceIndexer, namespace)}
 }
 
 // OracleMigrationNamespaceLister helps list and get OracleMigrations.
@@ -65,36 +57,15 @@ func (s *oracleMigrationLister) OracleMigrations(namespace string) OracleMigrati
 type OracleMigrationNamespaceLister interface {
 	// List lists all OracleMigrations in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.OracleMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.OracleMigration, err error)
 	// Get retrieves the OracleMigration from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.OracleMigration, error)
+	Get(name string) (*courierv1alpha1.OracleMigration, error)
 	OracleMigrationNamespaceListerExpansion
 }
 
 // oracleMigrationNamespaceLister implements the OracleMigrationNamespaceLister
 // interface.
 type oracleMigrationNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all OracleMigrations in the indexer for a given namespace.
-func (s oracleMigrationNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.OracleMigration, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.OracleMigration))
-	})
-	return ret, err
-}
-
-// Get retrieves the OracleMigration from the indexer for a given namespace and name.
-func (s oracleMigrationNamespaceLister) Get(name string) (*v1alpha1.OracleMigration, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("oraclemigration"), name)
-	}
-	return obj.(*v1alpha1.OracleMigration), nil
+	listers.ResourceIndexer[*courierv1alpha1.OracleMigration]
 }

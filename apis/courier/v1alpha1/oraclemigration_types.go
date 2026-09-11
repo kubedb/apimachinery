@@ -68,6 +68,10 @@ type OracleMigrationSpec struct {
 	// Target defines the target Oracle database configuration
 	Target OracleTarget `json:"target"`
 
+	// Precheck validates Oracle source and target readiness only and does not start a migration.
+	// +optional
+	Precheck bool `json:"precheck,omitempty"`
+
 	// JobDefaults specifies default settings for migration jobs
 	// +optional
 	JobDefaults *JobDefaults `json:"jobDefaults,omitempty"`

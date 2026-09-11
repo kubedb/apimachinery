@@ -36216,6 +36216,13 @@ func schema_apimachinery_apis_courier_v1alpha1_OracleMigrationSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.OracleTarget"),
 						},
 					},
+					"precheck": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Precheck validates Oracle source and target readiness only and does not start a migration.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"jobDefaults": {
 						SchemaProps: spec.SchemaProps{
 							Description: "JobDefaults specifies default settings for migration jobs",

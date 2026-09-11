@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	apiscourierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/listers/courier/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // OracleMigrations.
 type OracleMigrationInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.OracleMigrationLister
+	Lister() courierv1alpha1.OracleMigrationLister
 }
 
 type oracleMigrationInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredOracleMigrationInformer(client versioned.Interface, namespace st
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().OracleMigrations(namespace).List(context.TODO(), options)
+				return client.CourierV1alpha1().OracleMigrations(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().OracleMigrations(namespace).Watch(context.TODO(), options)
+				return client.CourierV1alpha1().OracleMigrations(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CourierV1alpha1().OracleMigrations(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CourierV1alpha1().OracleMigrations(namespace).Watch(ctx, options)
 			},
 		},
-		&courierv1alpha1.OracleMigration{},
+		&apiscourierv1alpha1.OracleMigration{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *oracleMigrationInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *oracleMigrationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&courierv1alpha1.OracleMigration{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscourierv1alpha1.OracleMigration{}, f.defaultInformer)
 }
 
-func (f *oracleMigrationInformer) Lister() v1alpha1.OracleMigrationLister {
-	return v1alpha1.NewOracleMigrationLister(f.Informer().GetIndexer())
+func (f *oracleMigrationInformer) Lister() courierv1alpha1.OracleMigrationLister {
+	return courierv1alpha1.NewOracleMigrationLister(f.Informer().GetIndexer())
 }
