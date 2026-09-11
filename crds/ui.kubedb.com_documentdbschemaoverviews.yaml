@@ -25,35 +25,56 @@ spec:
             type: object
           spec:
             properties:
-              collections:
+              databases:
                 items:
                   properties:
-                    databaseName:
-                      type: string
+                    collectionCount:
+                      format: int32
+                      type: integer
+                    collections:
+                      items:
+                        properties:
+                          documentCount:
+                            format: int64
+                            type: integer
+                          indexCount:
+                            format: int32
+                            type: integer
+                          name:
+                            type: string
+                          sizeBytes:
+                            format: int64
+                            type: integer
+                          storageSizeBytes:
+                            format: int64
+                            type: integer
+                          totalIndexSizeBytes:
+                            format: int64
+                            type: integer
+                        required:
+                        - name
+                        type: object
+                      type: array
                     documentCount:
                       format: int64
                       type: integer
                     indexCount:
                       format: int32
                       type: integer
-                    name:
-                      type: string
-                    sizeBytes:
+                    indexSizeBytes:
                       format: int64
                       type: integer
+                    name:
+                      type: string
                     storageSizeBytes:
                       format: int64
                       type: integer
-                    totalIndexSizeBytes:
-                      format: int64
-                      type: integer
                   required:
-                  - databaseName
                   - name
                   type: object
                 type: array
             required:
-            - collections
+            - databases
             type: object
         type: object
     served: true
