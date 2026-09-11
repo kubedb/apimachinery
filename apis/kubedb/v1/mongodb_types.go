@@ -56,6 +56,9 @@ type MongoDBSpec struct {
 	// +optional
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
 
+	// Distributed if set true, manifestwork objects will be created instead of raw resources
+	Distributed bool `json:"distributed,omitempty"`
+
 	// Version of MongoDB to be deployed.
 	Version string `json:"version"`
 
@@ -159,6 +162,11 @@ type MongoDBSpec struct {
 	// Archiver controls database backup using Archiver CR
 	// +optional
 	Archiver *Archiver `json:"archiver,omitempty"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy
+	// +kubebuilder:default={name:"default"}
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
@@ -354,6 +362,67 @@ type MongoDBStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	AuthSecret *Age `json:"authSecret,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed MongoDB.
+	// +optional
+	DisasterRecovery *MongoDBDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// MongoDBDRPhase is the cross data center DR phase of a distributed MongoDB.
+type MongoDBDRPhase string
+
+const (
+	MongoDBDRPhaseSteady      MongoDBDRPhase = "Steady"
+	MongoDBDRPhaseFailingOver MongoDBDRPhase = "FailingOver"
+	MongoDBDRPhaseFailingBack MongoDBDRPhase = "FailingBack"
+	MongoDBDRPhaseDegraded    MongoDBDRPhase = "Degraded"
+)
+
+// MongoDBDisasterRecoveryStatus reports the per data center DC-DR view of a
+// distributed MongoDB. The cross-DC decision is owned by the dr-controlplane
+// primary-DC Lease; this status reflects it on the single Database object.
+type MongoDBDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and runs the writable primary.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase MongoDBDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []MongoDBDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// MongoDBDCStatus is one data center's local view inside a distributed MongoDB.
+type MongoDBDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member or Arbiter.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Primary is this DC's locally elected primary pod.
+	// +optional
+	Primary string `json:"primary,omitempty"`
+
+	// Writable is true when this DC's primary is the cluster's writable primary.
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// OplogLagSeconds is this DC's cross-DC oplog replication lag behind the active DC, in seconds.
+	// +optional
+	OplogLagSeconds *int64 `json:"oplogLagSeconds,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
