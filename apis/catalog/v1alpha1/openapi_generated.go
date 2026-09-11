@@ -35033,6 +35033,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionSpec(ref common.
 							Format:      "",
 						},
 					},
+					"addonPostgresVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AddonPostgresVersion is the Postgres version string published as spec.version on the <db>-admin AppBinding, which describes the backend Postgres endpoint for backup and restore. KubeStash substitutes it into the addon Function's image tag, so it must name a Postgres version the plugin image is actually published for - e.g. \"17.2\", not the major \"17\" carried by PostgresVersion.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"ui": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
