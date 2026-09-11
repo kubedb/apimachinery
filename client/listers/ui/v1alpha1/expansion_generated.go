@@ -18,6 +18,46 @@ limitations under the License.
 
 package v1alpha1
 
+// CassandraInsightListerExpansion allows custom methods to be added to
+// CassandraInsightLister.
+type CassandraInsightListerExpansion interface{}
+
+// CassandraInsightNamespaceListerExpansion allows custom methods to be added to
+// CassandraInsightNamespaceLister.
+type CassandraInsightNamespaceListerExpansion interface{}
+
+// CassandraSchemaOverviewListerExpansion allows custom methods to be added to
+// CassandraSchemaOverviewLister.
+type CassandraSchemaOverviewListerExpansion interface{}
+
+// CassandraSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// CassandraSchemaOverviewNamespaceLister.
+type CassandraSchemaOverviewNamespaceListerExpansion interface{}
+
+// DB2InsightListerExpansion allows custom methods to be added to
+// DB2InsightLister.
+type DB2InsightListerExpansion interface{}
+
+// DB2InsightNamespaceListerExpansion allows custom methods to be added to
+// DB2InsightNamespaceLister.
+type DB2InsightNamespaceListerExpansion interface{}
+
+// DB2QueriesListerExpansion allows custom methods to be added to
+// DB2QueriesLister.
+type DB2QueriesListerExpansion interface{}
+
+// DB2QueriesNamespaceListerExpansion allows custom methods to be added to
+// DB2QueriesNamespaceLister.
+type DB2QueriesNamespaceListerExpansion interface{}
+
+// DB2SchemaOverviewListerExpansion allows custom methods to be added to
+// DB2SchemaOverviewLister.
+type DB2SchemaOverviewListerExpansion interface{}
+
+// DB2SchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// DB2SchemaOverviewNamespaceLister.
+type DB2SchemaOverviewNamespaceListerExpansion interface{}
+
 // DatabaseConfigurationListerExpansion allows custom methods to be added to
 // DatabaseConfigurationLister.
 type DatabaseConfigurationListerExpansion interface{}
@@ -33,6 +73,22 @@ type DatabaseConnectionListerExpansion interface{}
 // DatabaseConnectionNamespaceListerExpansion allows custom methods to be added to
 // DatabaseConnectionNamespaceLister.
 type DatabaseConnectionNamespaceListerExpansion interface{}
+
+// DocumentDBInsightListerExpansion allows custom methods to be added to
+// DocumentDBInsightLister.
+type DocumentDBInsightListerExpansion interface{}
+
+// DocumentDBInsightNamespaceListerExpansion allows custom methods to be added to
+// DocumentDBInsightNamespaceLister.
+type DocumentDBInsightNamespaceListerExpansion interface{}
+
+// DocumentDBSchemaOverviewListerExpansion allows custom methods to be added to
+// DocumentDBSchemaOverviewLister.
+type DocumentDBSchemaOverviewListerExpansion interface{}
+
+// DocumentDBSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// DocumentDBSchemaOverviewNamespaceLister.
+type DocumentDBSchemaOverviewNamespaceListerExpansion interface{}
 
 // DruidInsightListerExpansion allows custom methods to be added to
 // DruidInsightLister.

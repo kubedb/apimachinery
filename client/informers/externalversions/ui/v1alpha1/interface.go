@@ -24,8 +24,22 @@ import (
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
+	// CassandraInsights returns a CassandraInsightInformer.
+	CassandraInsights() CassandraInsightInformer
+	// CassandraSchemaOverviews returns a CassandraSchemaOverviewInformer.
+	CassandraSchemaOverviews() CassandraSchemaOverviewInformer
+	// DB2Insights returns a DB2InsightInformer.
+	DB2Insights() DB2InsightInformer
+	// DB2Querieses returns a DB2QueriesInformer.
+	DB2Querieses() DB2QueriesInformer
+	// DB2SchemaOverviews returns a DB2SchemaOverviewInformer.
+	DB2SchemaOverviews() DB2SchemaOverviewInformer
 	// DatabaseConnections returns a DatabaseConnectionInformer.
 	DatabaseConnections() DatabaseConnectionInformer
+	// DocumentDBInsights returns a DocumentDBInsightInformer.
+	DocumentDBInsights() DocumentDBInsightInformer
+	// DocumentDBSchemaOverviews returns a DocumentDBSchemaOverviewInformer.
+	DocumentDBSchemaOverviews() DocumentDBSchemaOverviewInformer
 	// DruidInsights returns a DruidInsightInformer.
 	DruidInsights() DruidInsightInformer
 	// DruidSchemaOverviews returns a DruidSchemaOverviewInformer.
@@ -119,9 +133,44 @@ func New(f internalinterfaces.SharedInformerFactory, namespace string, tweakList
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
+// CassandraInsights returns a CassandraInsightInformer.
+func (v *version) CassandraInsights() CassandraInsightInformer {
+	return &cassandraInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// CassandraSchemaOverviews returns a CassandraSchemaOverviewInformer.
+func (v *version) CassandraSchemaOverviews() CassandraSchemaOverviewInformer {
+	return &cassandraSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DB2Insights returns a DB2InsightInformer.
+func (v *version) DB2Insights() DB2InsightInformer {
+	return &dB2InsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DB2Querieses returns a DB2QueriesInformer.
+func (v *version) DB2Querieses() DB2QueriesInformer {
+	return &dB2QueriesInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DB2SchemaOverviews returns a DB2SchemaOverviewInformer.
+func (v *version) DB2SchemaOverviews() DB2SchemaOverviewInformer {
+	return &dB2SchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // DatabaseConnections returns a DatabaseConnectionInformer.
 func (v *version) DatabaseConnections() DatabaseConnectionInformer {
 	return &databaseConnectionInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DocumentDBInsights returns a DocumentDBInsightInformer.
+func (v *version) DocumentDBInsights() DocumentDBInsightInformer {
+	return &documentDBInsightInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DocumentDBSchemaOverviews returns a DocumentDBSchemaOverviewInformer.
+func (v *version) DocumentDBSchemaOverviews() DocumentDBSchemaOverviewInformer {
+	return &documentDBSchemaOverviewInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // DruidInsights returns a DruidInsightInformer.
