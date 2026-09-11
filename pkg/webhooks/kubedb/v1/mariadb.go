@@ -218,9 +218,6 @@ func (w MariaDBCustomWebhook) validateCluster(db *dbapi.MariaDB) error {
 }
 
 func validateMariaDBReplicationSpec(db *dbapi.MariaDB) error {
-	// MaxScale is optional in the type but every check below dereferences it, so a
-	// MariaDBReplication database submitted without one used to crash the webhook with a
-	// nil pointer dereference rather than being told what was wrong.
 	if db.Spec.Topology.MaxScale == nil {
 		return fmt.Errorf("spec.topology.maxscale must be set when spec.topology.mode is %s", dbapi.MariaDBModeReplication)
 	}

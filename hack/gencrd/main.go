@@ -67,10 +67,6 @@ func generateSwaggerJson() {
 			},
 		},
 		OpenAPIDefinitions: []common.GetOpenAPIDefinitions{
-			// ops/v1alpha1 reuses kubedb/v1 types directly (MySQLOpsRequest's
-			// spec.archiver embeds kubedb/v1.ArchiverRecovery, which refers to
-			// kubedb/v1.ManifestOptions). Without kubedb/v1 in the definition set the
-			// renderer cannot resolve those $refs and swagger generation fails.
 			kubedbv1.GetOpenAPIDefinitions,
 			kubedbv1alpha2.GetOpenAPIDefinitions,
 			catalogv1alpha1.GetOpenAPIDefinitions,

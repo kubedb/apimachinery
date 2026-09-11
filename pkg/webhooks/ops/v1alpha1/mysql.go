@@ -419,13 +419,6 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLStorageMigrationOpsRequest(d
 	return nil
 }
 
-// validateMySQLArchiverRestoreOpsRequest validates an in-place archiver restore.
-//
-// The request wipes the database's data volumes and re-initializes it through the
-// provisioner's normal archiver-recovery path, so everything the provisioner needs
-// in order to reach that path has to be present up front: an archiver payload, a
-// data repository to restore from, durable storage, and a topology whose entrypoint
-// script actually honours PITR_RESTORE.
 func (w *MySQLOpsRequestCustomWebhook) validateMySQLArchiverRestoreOpsRequest(db *dbapi.MySQL, req *opsapi.MySQLOpsRequest) error {
 	archiver := req.Spec.Archiver
 	if archiver == nil {
@@ -436,9 +429,6 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLArchiverRestoreOpsRequest(db
 		return errors.New("spec.archiver.recoveryTimestamp is required for an ArchiverRestore ops request")
 	}
 
-	// The physical data (base backup + binlogs) is restored from fullDBRepository.
-	// manifestRepository alone only restores the KubeDB manifests, which would leave
-	// the wiped data directory empty.
 	if archiver.FullDBRepository == nil {
 		return errors.New("spec.archiver.fullDBRepository is required for an ArchiverRestore ops request; a manifest-only restore cannot repopulate the wiped data directory")
 	}
@@ -454,18 +444,11 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLArchiverRestoreOpsRequest(db
 		}
 	}
 
-	// The restore replaces the contents of the data PVCs. An ephemeral database has
-	// none, so there is nothing to restore into.
 	if db.Spec.StorageType == dbapi.StorageTypeEphemeral {
 		return fmt.Errorf("database %s/%s uses %q storage: an archiver restore requires durable storage",
 			db.Namespace, db.Name, dbapi.StorageTypeEphemeral)
 	}
 
-	// Only the entrypoints that wait on /tmp/recovery.done can be restored into:
-	// standalone-run.sh (Standalone), run.sh (GroupReplication) and run_innodb.sh
-	// (InnoDBCluster). run_semi_sync.sh has no PITR_RESTORE gate, so a SemiSync member
-	// would start mysqld on top of a half-restored data directory. A RemoteReplica has
-	// no restore path at all — it is seeded from its source.
 	if db.IsRemoteReplica() {
 		return fmt.Errorf("database %s/%s is a remote replica: an archiver restore is not supported, restore the source database instead",
 			db.Namespace, db.Name)
@@ -483,17 +466,10 @@ func (w *MySQLOpsRequestCustomWebhook) validateMySQLArchiverRestoreOpsRequest(db
 			db.Namespace, db.Name, mode, dbapi.MySQLModeGroupReplication, dbapi.MySQLModeInnoDBCluster)
 	}
 
-	// The restore is a multi-stage, data-sized operation (base backup restore, binlog
-	// replay, then re-seeding the remaining members). The default per-step budget of
-	// 5 minutes per pod is unrelated to how long that actually takes.
 	if req.Spec.Timeout == nil {
 		return errors.New("spec.timeout is required for an ArchiverRestore ops request, adjust it according to the size of your database")
 	}
 
-	// The default apply option, IfReady, holds the request Pending until the database
-	// reaches phase Ready. This request wipes the database, so on a rerun against one
-	// that a previous attempt already wiped, Ready never arrives and the request waits
-	// forever. Always swaps that for a Provisioned check, which survives the wipe.
 	if req.Spec.Apply != opsapi.ApplyOptionAlways {
 		return fmt.Errorf("spec.apply must be %q for an ArchiverRestore ops request; the default %q waits for the database to be Ready, which never happens once its volumes have been wiped",
 			opsapi.ApplyOptionAlways, opsapi.ApplyOptionIfReady)
