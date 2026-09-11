@@ -20,16 +20,16 @@ import (
 	"sync"
 	"time"
 
+	"go.etcd.io/etcd/client/pkg/v3/transport"
+	"go.etcd.io/etcd/client/pkg/v3/types"
+	"go.etcd.io/etcd/raft/v3"
+	"go.etcd.io/etcd/raft/v3/raftpb"
+	"go.etcd.io/etcd/server/v3/etcdserver/api/snap"
+	stats "go.etcd.io/etcd/server/v3/etcdserver/api/v2stats"
+
 	"github.com/xiang90/probing"
 	"go.uber.org/zap"
 	"golang.org/x/time/rate"
-
-	"go.etcd.io/etcd/client/pkg/v3/transport"
-	"go.etcd.io/etcd/client/pkg/v3/types"
-	"go.etcd.io/etcd/server/v3/etcdserver/api/snap"
-	stats "go.etcd.io/etcd/server/v3/etcdserver/api/v2stats"
-	"go.etcd.io/raft/v3"
-	"go.etcd.io/raft/v3/raftpb"
 )
 
 type Raft interface {
@@ -110,7 +110,7 @@ type Transport struct {
 	Raft        Raft       // raft state machine, to which the Transport forwards received messages and reports status
 	Snapshotter *snap.Snapshotter
 	ServerStats *stats.ServerStats // used to record general transportation statistics
-	// LeaderStats records transportation statistics with followers when
+	// LeaderStats is used to record transportation statistics with followers when
 	// performing as leader in raft protocol
 	LeaderStats *stats.LeaderStats
 	// ErrorC is used to report detected critical errors, e.g.,
@@ -186,7 +186,7 @@ func (t *Transport) Send(msgs []raftpb.Message) {
 		t.mu.RUnlock()
 
 		if pok {
-			if isMsgApp(m) {
+			if m.Type == raftpb.MsgApp {
 				t.ServerStats.SendAppendReq(m.Size())
 			}
 			p.send(m)
@@ -339,30 +339,24 @@ func (t *Transport) RemoveAllPeers() {
 
 // the caller of this function must have the peers mutex.
 func (t *Transport) removePeer(id types.ID) {
-	// etcd may remove a member again on startup due to WAL files replaying.
-	peer, ok := t.peers[id]
-	if ok {
+	if peer, ok := t.peers[id]; ok {
 		peer.stop()
-		delete(t.peers, id)
-		delete(t.LeaderStats.Followers, id.String())
-		t.pipelineProber.Remove(id.String())
-		t.streamProber.Remove(id.String())
+	} else {
+		if t.Logger != nil {
+			t.Logger.Panic("unexpected removal of unknown remote peer", zap.String("remote-peer-id", id.String()))
+		}
 	}
+	delete(t.peers, id)
+	delete(t.LeaderStats.Followers, id.String())
+	t.pipelineProber.Remove(id.String())
+	t.streamProber.Remove(id.String())
 
 	if t.Logger != nil {
-		if ok {
-			t.Logger.Info(
-				"removed remote peer",
-				zap.String("local-member-id", t.ID.String()),
-				zap.String("removed-remote-peer-id", id.String()),
-			)
-		} else {
-			t.Logger.Warn(
-				"skipped removing already removed peer",
-				zap.String("local-member-id", t.ID.String()),
-				zap.String("removed-remote-peer-id", id.String()),
-			)
-		}
+		t.Logger.Info(
+			"removed remote peer",
+			zap.String("local-member-id", t.ID.String()),
+			zap.String("removed-remote-peer-id", id.String()),
+		)
 	}
 }
 

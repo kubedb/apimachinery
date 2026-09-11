@@ -14,18 +14,18 @@
 
 package walpb
 
-import (
-	"errors"
-	"fmt"
-)
+import "errors"
 
-var ErrCRCMismatch = errors.New("walpb: crc mismatch")
+var (
+	ErrCRCMismatch = errors.New("walpb: crc mismatch")
+)
 
 func (rec *Record) Validate(crc uint32) error {
 	if rec.Crc == crc {
 		return nil
 	}
-	return fmt.Errorf("%w: expected: %x computed: %x", ErrCRCMismatch, rec.Crc, crc)
+	rec.Reset()
+	return ErrCRCMismatch
 }
 
 // ValidateSnapshotForWrite ensures the Snapshot the newly written snapshot is valid.
