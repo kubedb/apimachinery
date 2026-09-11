@@ -2,9 +2,7 @@ syntax = "proto2";
 package walpb;
 
 import "gogoproto/gogo.proto";
-import "raftpb/raft.proto";
-
-option go_package = "go.etcd.io/etcd/server/v3/storage/wal/walpb";
+import "raft/raftpb/raft.proto";
 
 option (gogoproto.marshaler_all) = true;
 option (gogoproto.sizer_all) = true;

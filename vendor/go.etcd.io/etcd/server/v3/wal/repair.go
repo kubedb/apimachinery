@@ -21,10 +21,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"go.uber.org/zap"
-
 	"go.etcd.io/etcd/client/pkg/v3/fileutil"
-	"go.etcd.io/etcd/server/v3/storage/wal/walpb"
+	"go.etcd.io/etcd/server/v3/wal/walpb"
+	"go.uber.org/zap"
 )
 
 // Repair tries to repair ErrUnexpectedEOF in the
@@ -42,22 +41,22 @@ func Repair(lg *zap.Logger, dirpath string) bool {
 	lg.Info("repairing", zap.String("path", f.Name()))
 
 	rec := &walpb.Record{}
-	decoder := NewDecoder(fileutil.NewFileReader(f.File))
+	decoder := newDecoder(fileutil.NewFileReader(f.File))
 	for {
-		lastOffset := decoder.LastOffset()
-		err := decoder.Decode(rec)
+		lastOffset := decoder.lastOffset()
+		err := decoder.decode(rec)
 		switch {
 		case err == nil:
 			// update crc of the decoder when necessary
 			switch rec.Type {
-			case CrcType:
-				crc := decoder.LastCRC()
+			case crcType:
+				crc := decoder.crc.Sum32()
 				// current crc of decoder must match the crc of the record.
 				// do no need to match 0 crc, since the decoder is a new one at this case.
 				if crc != 0 && rec.Validate(crc) != nil {
 					return false
 				}
-				decoder.UpdateCRC(rec.Crc)
+				decoder.updateCRC(rec.Crc)
 			}
 			continue
 
@@ -66,10 +65,9 @@ func Repair(lg *zap.Logger, dirpath string) bool {
 			return true
 
 		case errors.Is(err, io.ErrUnexpectedEOF):
-			brokenName := f.Name() + ".broken"
-			bf, bferr := createNewWALFile[*os.File](brokenName, true)
+			bf, bferr := os.Create(f.Name() + ".broken")
 			if bferr != nil {
-				lg.Warn("failed to create backup file", zap.String("path", brokenName), zap.Error(bferr))
+				lg.Warn("failed to create backup file", zap.String("path", f.Name()+".broken"), zap.Error(bferr))
 				return false
 			}
 			defer bf.Close()
@@ -80,7 +78,7 @@ func Repair(lg *zap.Logger, dirpath string) bool {
 			}
 
 			if _, err = io.Copy(bf, f); err != nil {
-				lg.Warn("failed to copy", zap.String("from", f.Name()), zap.String("to", brokenName), zap.Error(err))
+				lg.Warn("failed to copy", zap.String("from", f.Name()+".broken"), zap.String("to", f.Name()), zap.Error(err))
 				return false
 			}
 
