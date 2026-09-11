@@ -26,6 +26,15 @@ import (
 // Funcs returns the fuzzer functions for this api group.
 var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 	return []any{
+		func(s *v1alpha1.DruidInsight, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.DruidTasks, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.DruidSchemaOverview, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
 		func(s *v1alpha1.ElasticsearchInsight, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
@@ -44,13 +53,28 @@ var Funcs = func(codecs runtimeserializer.CodecFactory) []any {
 		func(s *v1alpha1.MariaDBQueries, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
+		func(s *v1alpha1.MilvusInsight, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.MilvusSchemaOverview, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
 		func(s *v1alpha1.MongoDBQueries, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.MongoDBSchemaOverview, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
-		func(s *v1alpha1.MongoDBQueries, c randfill.Continue) {
+		func(s *v1alpha1.MongoDBInsight, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.Neo4jInsight, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.Neo4jActivity, c randfill.Continue) {
+			c.Fill(s) // fuzz self without calling this function again
+		},
+		func(s *v1alpha1.Neo4jSchemaOverview, c randfill.Continue) {
 			c.Fill(s) // fuzz self without calling this function again
 		},
 		func(s *v1alpha1.MySQLInsight, c randfill.Continue) {

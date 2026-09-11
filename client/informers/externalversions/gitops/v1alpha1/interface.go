@@ -38,6 +38,8 @@ type Interface interface {
 	Druids() DruidInformer
 	// Elasticsearches returns a ElasticsearchInformer.
 	Elasticsearches() ElasticsearchInformer
+	// Etcds returns a EtcdInformer.
+	Etcds() EtcdInformer
 	// HanaDBs returns a HanaDBInformer.
 	HanaDBs() HanaDBInformer
 	// Hazelcasts returns a HazelcastInformer.
@@ -134,6 +136,11 @@ func (v *version) Druids() DruidInformer {
 // Elasticsearches returns a ElasticsearchInformer.
 func (v *version) Elasticsearches() ElasticsearchInformer {
 	return &elasticsearchInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Etcds returns a EtcdInformer.
+func (v *version) Etcds() EtcdInformer {
+	return &etcdInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // HanaDBs returns a HanaDBInformer.

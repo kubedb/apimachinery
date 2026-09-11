@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MariaDBOpsRequestLister helps list MariaDBOpsRequests.
@@ -31,7 +31,7 @@ import (
 type MariaDBOpsRequestLister interface {
 	// List lists all MariaDBOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MariaDBOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.MariaDBOpsRequest, err error)
 	// MariaDBOpsRequests returns an object that can list and get MariaDBOpsRequests.
 	MariaDBOpsRequests(namespace string) MariaDBOpsRequestNamespaceLister
 	MariaDBOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type MariaDBOpsRequestLister interface {
 
 // mariaDBOpsRequestLister implements the MariaDBOpsRequestLister interface.
 type mariaDBOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.MariaDBOpsRequest]
 }
 
 // NewMariaDBOpsRequestLister returns a new MariaDBOpsRequestLister.
 func NewMariaDBOpsRequestLister(indexer cache.Indexer) MariaDBOpsRequestLister {
-	return &mariaDBOpsRequestLister{indexer: indexer}
-}
-
-// List lists all MariaDBOpsRequests in the indexer.
-func (s *mariaDBOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.MariaDBOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MariaDBOpsRequest))
-	})
-	return ret, err
+	return &mariaDBOpsRequestLister{listers.New[*opsv1alpha1.MariaDBOpsRequest](indexer, opsv1alpha1.Resource("mariadbopsrequest"))}
 }
 
 // MariaDBOpsRequests returns an object that can list and get MariaDBOpsRequests.
 func (s *mariaDBOpsRequestLister) MariaDBOpsRequests(namespace string) MariaDBOpsRequestNamespaceLister {
-	return mariaDBOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mariaDBOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.MariaDBOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // MariaDBOpsRequestNamespaceLister helps list and get MariaDBOpsRequests.
@@ -65,36 +57,15 @@ func (s *mariaDBOpsRequestLister) MariaDBOpsRequests(namespace string) MariaDBOp
 type MariaDBOpsRequestNamespaceLister interface {
 	// List lists all MariaDBOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MariaDBOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.MariaDBOpsRequest, err error)
 	// Get retrieves the MariaDBOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MariaDBOpsRequest, error)
+	Get(name string) (*opsv1alpha1.MariaDBOpsRequest, error)
 	MariaDBOpsRequestNamespaceListerExpansion
 }
 
 // mariaDBOpsRequestNamespaceLister implements the MariaDBOpsRequestNamespaceLister
 // interface.
 type mariaDBOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MariaDBOpsRequests in the indexer for a given namespace.
-func (s mariaDBOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MariaDBOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MariaDBOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the MariaDBOpsRequest from the indexer for a given namespace and name.
-func (s mariaDBOpsRequestNamespaceLister) Get(name string) (*v1alpha1.MariaDBOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mariadbopsrequest"), name)
-	}
-	return obj.(*v1alpha1.MariaDBOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.MariaDBOpsRequest]
 }

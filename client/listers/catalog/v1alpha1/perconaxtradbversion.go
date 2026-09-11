@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PerconaXtraDBVersionLister helps list PerconaXtraDBVersions.
@@ -31,39 +31,19 @@ import (
 type PerconaXtraDBVersionLister interface {
 	// List lists all PerconaXtraDBVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDBVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.PerconaXtraDBVersion, err error)
 	// Get retrieves the PerconaXtraDBVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PerconaXtraDBVersion, error)
+	Get(name string) (*catalogv1alpha1.PerconaXtraDBVersion, error)
 	PerconaXtraDBVersionListerExpansion
 }
 
 // perconaXtraDBVersionLister implements the PerconaXtraDBVersionLister interface.
 type perconaXtraDBVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.PerconaXtraDBVersion]
 }
 
 // NewPerconaXtraDBVersionLister returns a new PerconaXtraDBVersionLister.
 func NewPerconaXtraDBVersionLister(indexer cache.Indexer) PerconaXtraDBVersionLister {
-	return &perconaXtraDBVersionLister{indexer: indexer}
-}
-
-// List lists all PerconaXtraDBVersions in the indexer.
-func (s *perconaXtraDBVersionLister) List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDBVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PerconaXtraDBVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the PerconaXtraDBVersion from the index for a given name.
-func (s *perconaXtraDBVersionLister) Get(name string) (*v1alpha1.PerconaXtraDBVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("perconaxtradbversion"), name)
-	}
-	return obj.(*v1alpha1.PerconaXtraDBVersion), nil
+	return &perconaXtraDBVersionLister{listers.New[*catalogv1alpha1.PerconaXtraDBVersion](indexer, catalogv1alpha1.Resource("perconaxtradbversion"))}
 }

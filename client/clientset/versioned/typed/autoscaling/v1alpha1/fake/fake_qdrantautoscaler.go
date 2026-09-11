@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeQdrantAutoscalers implements QdrantAutoscalerInterface
-type FakeQdrantAutoscalers struct {
+// fakeQdrantAutoscalers implements QdrantAutoscalerInterface
+type fakeQdrantAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.QdrantAutoscaler, *v1alpha1.QdrantAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var qdrantautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("qdrantautoscalers")
-
-var qdrantautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("QdrantAutoscaler")
-
-// Get takes name of the qdrantAutoscaler, and returns the corresponding qdrantAutoscaler object, and an error if there is any.
-func (c *FakeQdrantAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.QdrantAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(qdrantautoscalersResource, c.ns, name), &v1alpha1.QdrantAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeQdrantAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.QdrantAutoscalerInterface {
+	return &fakeQdrantAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.QdrantAutoscaler, *v1alpha1.QdrantAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("qdrantautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("QdrantAutoscaler"),
+			func() *v1alpha1.QdrantAutoscaler { return &v1alpha1.QdrantAutoscaler{} },
+			func() *v1alpha1.QdrantAutoscalerList { return &v1alpha1.QdrantAutoscalerList{} },
+			func(dst, src *v1alpha1.QdrantAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.QdrantAutoscalerList) []*v1alpha1.QdrantAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.QdrantAutoscalerList, items []*v1alpha1.QdrantAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.QdrantAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of QdrantAutoscalers that match those selectors.
-func (c *FakeQdrantAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.QdrantAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(qdrantautoscalersResource, qdrantautoscalersKind, c.ns, opts), &v1alpha1.QdrantAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.QdrantAutoscalerList{ListMeta: obj.(*v1alpha1.QdrantAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.QdrantAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested qdrantAutoscalers.
-func (c *FakeQdrantAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(qdrantautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a qdrantAutoscaler and creates it.  Returns the server's representation of the qdrantAutoscaler, and an error, if there is any.
-func (c *FakeQdrantAutoscalers) Create(ctx context.Context, qdrantAutoscaler *v1alpha1.QdrantAutoscaler, opts v1.CreateOptions) (result *v1alpha1.QdrantAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(qdrantautoscalersResource, c.ns, qdrantAutoscaler), &v1alpha1.QdrantAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.QdrantAutoscaler), err
-}
-
-// Update takes the representation of a qdrantAutoscaler and updates it. Returns the server's representation of the qdrantAutoscaler, and an error, if there is any.
-func (c *FakeQdrantAutoscalers) Update(ctx context.Context, qdrantAutoscaler *v1alpha1.QdrantAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.QdrantAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(qdrantautoscalersResource, c.ns, qdrantAutoscaler), &v1alpha1.QdrantAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.QdrantAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeQdrantAutoscalers) UpdateStatus(ctx context.Context, qdrantAutoscaler *v1alpha1.QdrantAutoscaler, opts v1.UpdateOptions) (*v1alpha1.QdrantAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(qdrantautoscalersResource, "status", c.ns, qdrantAutoscaler), &v1alpha1.QdrantAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.QdrantAutoscaler), err
-}
-
-// Delete takes name of the qdrantAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeQdrantAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(qdrantautoscalersResource, c.ns, name, opts), &v1alpha1.QdrantAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeQdrantAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(qdrantautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.QdrantAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched qdrantAutoscaler.
-func (c *FakeQdrantAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.QdrantAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(qdrantautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.QdrantAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.QdrantAutoscaler), err
 }

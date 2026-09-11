@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDocumentDBAutoscalers implements DocumentDBAutoscalerInterface
-type FakeDocumentDBAutoscalers struct {
+// fakeDocumentDBAutoscalers implements DocumentDBAutoscalerInterface
+type fakeDocumentDBAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.DocumentDBAutoscaler, *v1alpha1.DocumentDBAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var documentdbautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("documentdbautoscalers")
-
-var documentdbautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("DocumentDBAutoscaler")
-
-// Get takes name of the documentDBAutoscaler, and returns the corresponding documentDBAutoscaler object, and an error if there is any.
-func (c *FakeDocumentDBAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DocumentDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(documentdbautoscalersResource, c.ns, name), &v1alpha1.DocumentDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeDocumentDBAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.DocumentDBAutoscalerInterface {
+	return &fakeDocumentDBAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.DocumentDBAutoscaler, *v1alpha1.DocumentDBAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("documentdbautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("DocumentDBAutoscaler"),
+			func() *v1alpha1.DocumentDBAutoscaler { return &v1alpha1.DocumentDBAutoscaler{} },
+			func() *v1alpha1.DocumentDBAutoscalerList { return &v1alpha1.DocumentDBAutoscalerList{} },
+			func(dst, src *v1alpha1.DocumentDBAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.DocumentDBAutoscalerList) []*v1alpha1.DocumentDBAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.DocumentDBAutoscalerList, items []*v1alpha1.DocumentDBAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DocumentDBAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of DocumentDBAutoscalers that match those selectors.
-func (c *FakeDocumentDBAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DocumentDBAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(documentdbautoscalersResource, documentdbautoscalersKind, c.ns, opts), &v1alpha1.DocumentDBAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.DocumentDBAutoscalerList{ListMeta: obj.(*v1alpha1.DocumentDBAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.DocumentDBAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested documentDBAutoscalers.
-func (c *FakeDocumentDBAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(documentdbautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a documentDBAutoscaler and creates it.  Returns the server's representation of the documentDBAutoscaler, and an error, if there is any.
-func (c *FakeDocumentDBAutoscalers) Create(ctx context.Context, documentDBAutoscaler *v1alpha1.DocumentDBAutoscaler, opts v1.CreateOptions) (result *v1alpha1.DocumentDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(documentdbautoscalersResource, c.ns, documentDBAutoscaler), &v1alpha1.DocumentDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBAutoscaler), err
-}
-
-// Update takes the representation of a documentDBAutoscaler and updates it. Returns the server's representation of the documentDBAutoscaler, and an error, if there is any.
-func (c *FakeDocumentDBAutoscalers) Update(ctx context.Context, documentDBAutoscaler *v1alpha1.DocumentDBAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.DocumentDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(documentdbautoscalersResource, c.ns, documentDBAutoscaler), &v1alpha1.DocumentDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeDocumentDBAutoscalers) UpdateStatus(ctx context.Context, documentDBAutoscaler *v1alpha1.DocumentDBAutoscaler, opts v1.UpdateOptions) (*v1alpha1.DocumentDBAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(documentdbautoscalersResource, "status", c.ns, documentDBAutoscaler), &v1alpha1.DocumentDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBAutoscaler), err
-}
-
-// Delete takes name of the documentDBAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeDocumentDBAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(documentdbautoscalersResource, c.ns, name, opts), &v1alpha1.DocumentDBAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeDocumentDBAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(documentdbautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.DocumentDBAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched documentDBAutoscaler.
-func (c *FakeDocumentDBAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DocumentDBAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(documentdbautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.DocumentDBAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DocumentDBAutoscaler), err
 }

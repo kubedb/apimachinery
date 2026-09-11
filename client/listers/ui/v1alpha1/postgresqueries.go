@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PostgresQueriesLister helps list PostgresQuerieses.
@@ -31,7 +31,7 @@ import (
 type PostgresQueriesLister interface {
 	// List lists all PostgresQuerieses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PostgresQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.PostgresQueries, err error)
 	// PostgresQuerieses returns an object that can list and get PostgresQuerieses.
 	PostgresQuerieses(namespace string) PostgresQueriesNamespaceLister
 	PostgresQueriesListerExpansion
@@ -39,25 +39,17 @@ type PostgresQueriesLister interface {
 
 // postgresQueriesLister implements the PostgresQueriesLister interface.
 type postgresQueriesLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.PostgresQueries]
 }
 
 // NewPostgresQueriesLister returns a new PostgresQueriesLister.
 func NewPostgresQueriesLister(indexer cache.Indexer) PostgresQueriesLister {
-	return &postgresQueriesLister{indexer: indexer}
-}
-
-// List lists all PostgresQuerieses in the indexer.
-func (s *postgresQueriesLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresQueries, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PostgresQueries))
-	})
-	return ret, err
+	return &postgresQueriesLister{listers.New[*uiv1alpha1.PostgresQueries](indexer, uiv1alpha1.Resource("postgresqueries"))}
 }
 
 // PostgresQuerieses returns an object that can list and get PostgresQuerieses.
 func (s *postgresQueriesLister) PostgresQuerieses(namespace string) PostgresQueriesNamespaceLister {
-	return postgresQueriesNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return postgresQueriesNamespaceLister{listers.NewNamespaced[*uiv1alpha1.PostgresQueries](s.ResourceIndexer, namespace)}
 }
 
 // PostgresQueriesNamespaceLister helps list and get PostgresQuerieses.
@@ -65,36 +57,15 @@ func (s *postgresQueriesLister) PostgresQuerieses(namespace string) PostgresQuer
 type PostgresQueriesNamespaceLister interface {
 	// List lists all PostgresQuerieses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PostgresQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.PostgresQueries, err error)
 	// Get retrieves the PostgresQueries from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PostgresQueries, error)
+	Get(name string) (*uiv1alpha1.PostgresQueries, error)
 	PostgresQueriesNamespaceListerExpansion
 }
 
 // postgresQueriesNamespaceLister implements the PostgresQueriesNamespaceLister
 // interface.
 type postgresQueriesNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PostgresQuerieses in the indexer for a given namespace.
-func (s postgresQueriesNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresQueries, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PostgresQueries))
-	})
-	return ret, err
-}
-
-// Get retrieves the PostgresQueries from the indexer for a given namespace and name.
-func (s postgresQueriesNamespaceLister) Get(name string) (*v1alpha1.PostgresQueries, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("postgresqueries"), name)
-	}
-	return obj.(*v1alpha1.PostgresQueries), nil
+	listers.ResourceIndexer[*uiv1alpha1.PostgresQueries]
 }

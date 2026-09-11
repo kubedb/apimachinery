@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DB2AutoscalerLister helps list DB2Autoscalers.
@@ -31,7 +31,7 @@ import (
 type DB2AutoscalerLister interface {
 	// List lists all DB2Autoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DB2Autoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.DB2Autoscaler, err error)
 	// DB2Autoscalers returns an object that can list and get DB2Autoscalers.
 	DB2Autoscalers(namespace string) DB2AutoscalerNamespaceLister
 	DB2AutoscalerListerExpansion
@@ -39,25 +39,17 @@ type DB2AutoscalerLister interface {
 
 // dB2AutoscalerLister implements the DB2AutoscalerLister interface.
 type dB2AutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.DB2Autoscaler]
 }
 
 // NewDB2AutoscalerLister returns a new DB2AutoscalerLister.
 func NewDB2AutoscalerLister(indexer cache.Indexer) DB2AutoscalerLister {
-	return &dB2AutoscalerLister{indexer: indexer}
-}
-
-// List lists all DB2Autoscalers in the indexer.
-func (s *dB2AutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.DB2Autoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DB2Autoscaler))
-	})
-	return ret, err
+	return &dB2AutoscalerLister{listers.New[*autoscalingv1alpha1.DB2Autoscaler](indexer, autoscalingv1alpha1.Resource("db2autoscaler"))}
 }
 
 // DB2Autoscalers returns an object that can list and get DB2Autoscalers.
 func (s *dB2AutoscalerLister) DB2Autoscalers(namespace string) DB2AutoscalerNamespaceLister {
-	return dB2AutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return dB2AutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.DB2Autoscaler](s.ResourceIndexer, namespace)}
 }
 
 // DB2AutoscalerNamespaceLister helps list and get DB2Autoscalers.
@@ -65,36 +57,15 @@ func (s *dB2AutoscalerLister) DB2Autoscalers(namespace string) DB2AutoscalerName
 type DB2AutoscalerNamespaceLister interface {
 	// List lists all DB2Autoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DB2Autoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.DB2Autoscaler, err error)
 	// Get retrieves the DB2Autoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DB2Autoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.DB2Autoscaler, error)
 	DB2AutoscalerNamespaceListerExpansion
 }
 
 // dB2AutoscalerNamespaceLister implements the DB2AutoscalerNamespaceLister
 // interface.
 type dB2AutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all DB2Autoscalers in the indexer for a given namespace.
-func (s dB2AutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.DB2Autoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DB2Autoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the DB2Autoscaler from the indexer for a given namespace and name.
-func (s dB2AutoscalerNamespaceLister) Get(name string) (*v1alpha1.DB2Autoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("db2autoscaler"), name)
-	}
-	return obj.(*v1alpha1.DB2Autoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.DB2Autoscaler]
 }

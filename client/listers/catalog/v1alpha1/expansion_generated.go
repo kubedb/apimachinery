@@ -46,6 +46,10 @@ type DruidVersionListerExpansion interface{}
 // ElasticsearchVersionLister.
 type ElasticsearchVersionListerExpansion interface{}
 
+// EtcdVersionListerExpansion allows custom methods to be added to
+// EtcdVersionLister.
+type EtcdVersionListerExpansion interface{}
+
 // HanaDBVersionListerExpansion allows custom methods to be added to
 // HanaDBVersionLister.
 type HanaDBVersionListerExpansion interface{}

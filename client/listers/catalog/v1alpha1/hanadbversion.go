@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // HanaDBVersionLister helps list HanaDBVersions.
@@ -31,39 +31,19 @@ import (
 type HanaDBVersionLister interface {
 	// List lists all HanaDBVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.HanaDBVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.HanaDBVersion, err error)
 	// Get retrieves the HanaDBVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.HanaDBVersion, error)
+	Get(name string) (*catalogv1alpha1.HanaDBVersion, error)
 	HanaDBVersionListerExpansion
 }
 
 // hanaDBVersionLister implements the HanaDBVersionLister interface.
 type hanaDBVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.HanaDBVersion]
 }
 
 // NewHanaDBVersionLister returns a new HanaDBVersionLister.
 func NewHanaDBVersionLister(indexer cache.Indexer) HanaDBVersionLister {
-	return &hanaDBVersionLister{indexer: indexer}
-}
-
-// List lists all HanaDBVersions in the indexer.
-func (s *hanaDBVersionLister) List(selector labels.Selector) (ret []*v1alpha1.HanaDBVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.HanaDBVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the HanaDBVersion from the index for a given name.
-func (s *hanaDBVersionLister) Get(name string) (*v1alpha1.HanaDBVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("hanadbversion"), name)
-	}
-	return obj.(*v1alpha1.HanaDBVersion), nil
+	return &hanaDBVersionLister{listers.New[*catalogv1alpha1.HanaDBVersion](indexer, catalogv1alpha1.Resource("hanadbversion"))}
 }

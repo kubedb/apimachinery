@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/courier/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeBranchWorks implements BranchWorkInterface
-type FakeBranchWorks struct {
+// fakeBranchWorks implements BranchWorkInterface
+type fakeBranchWorks struct {
+	*gentype.FakeClientWithList[*v1alpha1.BranchWork, *v1alpha1.BranchWorkList]
 	Fake *FakeCourierV1alpha1
-	ns   string
 }
 
-var branchworksResource = v1alpha1.SchemeGroupVersion.WithResource("branchworks")
-
-var branchworksKind = v1alpha1.SchemeGroupVersion.WithKind("BranchWork")
-
-// Get takes name of the branchWork, and returns the corresponding branchWork object, and an error if there is any.
-func (c *FakeBranchWorks) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.BranchWork, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(branchworksResource, c.ns, name), &v1alpha1.BranchWork{})
-
-	if obj == nil {
-		return nil, err
+func newFakeBranchWorks(fake *FakeCourierV1alpha1, namespace string) courierv1alpha1.BranchWorkInterface {
+	return &fakeBranchWorks{
+		gentype.NewFakeClientWithList[*v1alpha1.BranchWork, *v1alpha1.BranchWorkList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("branchworks"),
+			v1alpha1.SchemeGroupVersion.WithKind("BranchWork"),
+			func() *v1alpha1.BranchWork { return &v1alpha1.BranchWork{} },
+			func() *v1alpha1.BranchWorkList { return &v1alpha1.BranchWorkList{} },
+			func(dst, src *v1alpha1.BranchWorkList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.BranchWorkList) []*v1alpha1.BranchWork { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.BranchWorkList, items []*v1alpha1.BranchWork) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.BranchWork), err
-}
-
-// List takes label and field selectors, and returns the list of BranchWorks that match those selectors.
-func (c *FakeBranchWorks) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.BranchWorkList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(branchworksResource, branchworksKind, c.ns, opts), &v1alpha1.BranchWorkList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.BranchWorkList{ListMeta: obj.(*v1alpha1.BranchWorkList).ListMeta}
-	for _, item := range obj.(*v1alpha1.BranchWorkList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested branchWorks.
-func (c *FakeBranchWorks) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(branchworksResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a branchWork and creates it.  Returns the server's representation of the branchWork, and an error, if there is any.
-func (c *FakeBranchWorks) Create(ctx context.Context, branchWork *v1alpha1.BranchWork, opts v1.CreateOptions) (result *v1alpha1.BranchWork, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(branchworksResource, c.ns, branchWork), &v1alpha1.BranchWork{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.BranchWork), err
-}
-
-// Update takes the representation of a branchWork and updates it. Returns the server's representation of the branchWork, and an error, if there is any.
-func (c *FakeBranchWorks) Update(ctx context.Context, branchWork *v1alpha1.BranchWork, opts v1.UpdateOptions) (result *v1alpha1.BranchWork, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(branchworksResource, c.ns, branchWork), &v1alpha1.BranchWork{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.BranchWork), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeBranchWorks) UpdateStatus(ctx context.Context, branchWork *v1alpha1.BranchWork, opts v1.UpdateOptions) (*v1alpha1.BranchWork, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(branchworksResource, "status", c.ns, branchWork), &v1alpha1.BranchWork{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.BranchWork), err
-}
-
-// Delete takes name of the branchWork and deletes it. Returns an error if one occurs.
-func (c *FakeBranchWorks) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(branchworksResource, c.ns, name, opts), &v1alpha1.BranchWork{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeBranchWorks) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(branchworksResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.BranchWorkList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched branchWork.
-func (c *FakeBranchWorks) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.BranchWork, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(branchworksResource, c.ns, name, pt, data, subresources...), &v1alpha1.BranchWork{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.BranchWork), err
 }

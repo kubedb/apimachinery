@@ -24,6 +24,12 @@ type DatabaseConnectionExpansion interface{}
 
 type DatabaseSummaryExpansion interface{}
 
+type DruidInsightExpansion interface{}
+
+type DruidSchemaOverviewExpansion interface{}
+
+type DruidTasksExpansion interface{}
+
 type ElasticsearchInsightExpansion interface{}
 
 type ElasticsearchNodesStatsExpansion interface{}
@@ -36,6 +42,10 @@ type MariaDBQueriesExpansion interface{}
 
 type MariaDBSchemaOverviewExpansion interface{}
 
+type MilvusInsightExpansion interface{}
+
+type MilvusSchemaOverviewExpansion interface{}
+
 type MongoDBInsightExpansion interface{}
 
 type MongoDBQueriesExpansion interface{}
@@ -47,6 +57,18 @@ type MySQLInsightExpansion interface{}
 type MySQLQueriesExpansion interface{}
 
 type MySQLSchemaOverviewExpansion interface{}
+
+type Neo4jActivityExpansion interface{}
+
+type Neo4jInsightExpansion interface{}
+
+type Neo4jSchemaOverviewExpansion interface{}
+
+type PerconaXtraDBInsightExpansion interface{}
+
+type PerconaXtraDBQueriesExpansion interface{}
+
+type PerconaXtraDBSchemaOverviewExpansion interface{}
 
 type PgBouncerInsightExpansion interface{}
 
@@ -75,3 +97,9 @@ type RedisInsightExpansion interface{}
 type RedisQueriesExpansion interface{}
 
 type RedisSchemaOverviewExpansion interface{}
+
+type SinglestoreInsightExpansion interface{}
+
+type SinglestoreQueriesExpansion interface{}
+
+type SinglestoreSchemaOverviewExpansion interface{}

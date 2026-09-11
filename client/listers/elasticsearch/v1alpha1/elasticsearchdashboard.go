@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
+	elasticsearchv1alpha1 "kubedb.dev/apimachinery/apis/elasticsearch/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ElasticsearchDashboardLister helps list ElasticsearchDashboards.
@@ -31,7 +31,7 @@ import (
 type ElasticsearchDashboardLister interface {
 	// List lists all ElasticsearchDashboards in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchDashboard, err error)
+	List(selector labels.Selector) (ret []*elasticsearchv1alpha1.ElasticsearchDashboard, err error)
 	// ElasticsearchDashboards returns an object that can list and get ElasticsearchDashboards.
 	ElasticsearchDashboards(namespace string) ElasticsearchDashboardNamespaceLister
 	ElasticsearchDashboardListerExpansion
@@ -39,25 +39,17 @@ type ElasticsearchDashboardLister interface {
 
 // elasticsearchDashboardLister implements the ElasticsearchDashboardLister interface.
 type elasticsearchDashboardLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*elasticsearchv1alpha1.ElasticsearchDashboard]
 }
 
 // NewElasticsearchDashboardLister returns a new ElasticsearchDashboardLister.
 func NewElasticsearchDashboardLister(indexer cache.Indexer) ElasticsearchDashboardLister {
-	return &elasticsearchDashboardLister{indexer: indexer}
-}
-
-// List lists all ElasticsearchDashboards in the indexer.
-func (s *elasticsearchDashboardLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchDashboard, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ElasticsearchDashboard))
-	})
-	return ret, err
+	return &elasticsearchDashboardLister{listers.New[*elasticsearchv1alpha1.ElasticsearchDashboard](indexer, elasticsearchv1alpha1.Resource("elasticsearchdashboard"))}
 }
 
 // ElasticsearchDashboards returns an object that can list and get ElasticsearchDashboards.
 func (s *elasticsearchDashboardLister) ElasticsearchDashboards(namespace string) ElasticsearchDashboardNamespaceLister {
-	return elasticsearchDashboardNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return elasticsearchDashboardNamespaceLister{listers.NewNamespaced[*elasticsearchv1alpha1.ElasticsearchDashboard](s.ResourceIndexer, namespace)}
 }
 
 // ElasticsearchDashboardNamespaceLister helps list and get ElasticsearchDashboards.
@@ -65,36 +57,15 @@ func (s *elasticsearchDashboardLister) ElasticsearchDashboards(namespace string)
 type ElasticsearchDashboardNamespaceLister interface {
 	// List lists all ElasticsearchDashboards in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchDashboard, err error)
+	List(selector labels.Selector) (ret []*elasticsearchv1alpha1.ElasticsearchDashboard, err error)
 	// Get retrieves the ElasticsearchDashboard from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ElasticsearchDashboard, error)
+	Get(name string) (*elasticsearchv1alpha1.ElasticsearchDashboard, error)
 	ElasticsearchDashboardNamespaceListerExpansion
 }
 
 // elasticsearchDashboardNamespaceLister implements the ElasticsearchDashboardNamespaceLister
 // interface.
 type elasticsearchDashboardNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ElasticsearchDashboards in the indexer for a given namespace.
-func (s elasticsearchDashboardNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchDashboard, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ElasticsearchDashboard))
-	})
-	return ret, err
-}
-
-// Get retrieves the ElasticsearchDashboard from the indexer for a given namespace and name.
-func (s elasticsearchDashboardNamespaceLister) Get(name string) (*v1alpha1.ElasticsearchDashboard, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("elasticsearchdashboard"), name)
-	}
-	return obj.(*v1alpha1.ElasticsearchDashboard), nil
+	listers.ResourceIndexer[*elasticsearchv1alpha1.ElasticsearchDashboard]
 }

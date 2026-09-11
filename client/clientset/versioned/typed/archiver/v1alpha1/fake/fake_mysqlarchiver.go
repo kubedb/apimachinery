@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/archiver/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMySQLArchivers implements MySQLArchiverInterface
-type FakeMySQLArchivers struct {
+// fakeMySQLArchivers implements MySQLArchiverInterface
+type fakeMySQLArchivers struct {
+	*gentype.FakeClientWithList[*v1alpha1.MySQLArchiver, *v1alpha1.MySQLArchiverList]
 	Fake *FakeArchiverV1alpha1
-	ns   string
 }
 
-var mysqlarchiversResource = v1alpha1.SchemeGroupVersion.WithResource("mysqlarchivers")
-
-var mysqlarchiversKind = v1alpha1.SchemeGroupVersion.WithKind("MySQLArchiver")
-
-// Get takes name of the mySQLArchiver, and returns the corresponding mySQLArchiver object, and an error if there is any.
-func (c *FakeMySQLArchivers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MySQLArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mysqlarchiversResource, c.ns, name), &v1alpha1.MySQLArchiver{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMySQLArchivers(fake *FakeArchiverV1alpha1, namespace string) archiverv1alpha1.MySQLArchiverInterface {
+	return &fakeMySQLArchivers{
+		gentype.NewFakeClientWithList[*v1alpha1.MySQLArchiver, *v1alpha1.MySQLArchiverList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mysqlarchivers"),
+			v1alpha1.SchemeGroupVersion.WithKind("MySQLArchiver"),
+			func() *v1alpha1.MySQLArchiver { return &v1alpha1.MySQLArchiver{} },
+			func() *v1alpha1.MySQLArchiverList { return &v1alpha1.MySQLArchiverList{} },
+			func(dst, src *v1alpha1.MySQLArchiverList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MySQLArchiverList) []*v1alpha1.MySQLArchiver {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MySQLArchiverList, items []*v1alpha1.MySQLArchiver) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MySQLArchiver), err
-}
-
-// List takes label and field selectors, and returns the list of MySQLArchivers that match those selectors.
-func (c *FakeMySQLArchivers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MySQLArchiverList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mysqlarchiversResource, mysqlarchiversKind, c.ns, opts), &v1alpha1.MySQLArchiverList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MySQLArchiverList{ListMeta: obj.(*v1alpha1.MySQLArchiverList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MySQLArchiverList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mySQLArchivers.
-func (c *FakeMySQLArchivers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mysqlarchiversResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mySQLArchiver and creates it.  Returns the server's representation of the mySQLArchiver, and an error, if there is any.
-func (c *FakeMySQLArchivers) Create(ctx context.Context, mySQLArchiver *v1alpha1.MySQLArchiver, opts v1.CreateOptions) (result *v1alpha1.MySQLArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mysqlarchiversResource, c.ns, mySQLArchiver), &v1alpha1.MySQLArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLArchiver), err
-}
-
-// Update takes the representation of a mySQLArchiver and updates it. Returns the server's representation of the mySQLArchiver, and an error, if there is any.
-func (c *FakeMySQLArchivers) Update(ctx context.Context, mySQLArchiver *v1alpha1.MySQLArchiver, opts v1.UpdateOptions) (result *v1alpha1.MySQLArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mysqlarchiversResource, c.ns, mySQLArchiver), &v1alpha1.MySQLArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLArchiver), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMySQLArchivers) UpdateStatus(ctx context.Context, mySQLArchiver *v1alpha1.MySQLArchiver, opts v1.UpdateOptions) (*v1alpha1.MySQLArchiver, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mysqlarchiversResource, "status", c.ns, mySQLArchiver), &v1alpha1.MySQLArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLArchiver), err
-}
-
-// Delete takes name of the mySQLArchiver and deletes it. Returns an error if one occurs.
-func (c *FakeMySQLArchivers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mysqlarchiversResource, c.ns, name, opts), &v1alpha1.MySQLArchiver{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMySQLArchivers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mysqlarchiversResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MySQLArchiverList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mySQLArchiver.
-func (c *FakeMySQLArchivers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MySQLArchiver, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mysqlarchiversResource, c.ns, name, pt, data, subresources...), &v1alpha1.MySQLArchiver{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLArchiver), err
 }

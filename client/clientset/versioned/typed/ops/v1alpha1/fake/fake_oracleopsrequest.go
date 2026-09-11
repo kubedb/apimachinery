@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeOracleOpsRequests implements OracleOpsRequestInterface
-type FakeOracleOpsRequests struct {
+// fakeOracleOpsRequests implements OracleOpsRequestInterface
+type fakeOracleOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.OracleOpsRequest, *v1alpha1.OracleOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var oracleopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("oracleopsrequests")
-
-var oracleopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("OracleOpsRequest")
-
-// Get takes name of the oracleOpsRequest, and returns the corresponding oracleOpsRequest object, and an error if there is any.
-func (c *FakeOracleOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.OracleOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(oracleopsrequestsResource, c.ns, name), &v1alpha1.OracleOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeOracleOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.OracleOpsRequestInterface {
+	return &fakeOracleOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.OracleOpsRequest, *v1alpha1.OracleOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("oracleopsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("OracleOpsRequest"),
+			func() *v1alpha1.OracleOpsRequest { return &v1alpha1.OracleOpsRequest{} },
+			func() *v1alpha1.OracleOpsRequestList { return &v1alpha1.OracleOpsRequestList{} },
+			func(dst, src *v1alpha1.OracleOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.OracleOpsRequestList) []*v1alpha1.OracleOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.OracleOpsRequestList, items []*v1alpha1.OracleOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.OracleOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of OracleOpsRequests that match those selectors.
-func (c *FakeOracleOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.OracleOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(oracleopsrequestsResource, oracleopsrequestsKind, c.ns, opts), &v1alpha1.OracleOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.OracleOpsRequestList{ListMeta: obj.(*v1alpha1.OracleOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.OracleOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested oracleOpsRequests.
-func (c *FakeOracleOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(oracleopsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a oracleOpsRequest and creates it.  Returns the server's representation of the oracleOpsRequest, and an error, if there is any.
-func (c *FakeOracleOpsRequests) Create(ctx context.Context, oracleOpsRequest *v1alpha1.OracleOpsRequest, opts v1.CreateOptions) (result *v1alpha1.OracleOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(oracleopsrequestsResource, c.ns, oracleOpsRequest), &v1alpha1.OracleOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleOpsRequest), err
-}
-
-// Update takes the representation of a oracleOpsRequest and updates it. Returns the server's representation of the oracleOpsRequest, and an error, if there is any.
-func (c *FakeOracleOpsRequests) Update(ctx context.Context, oracleOpsRequest *v1alpha1.OracleOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.OracleOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(oracleopsrequestsResource, c.ns, oracleOpsRequest), &v1alpha1.OracleOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeOracleOpsRequests) UpdateStatus(ctx context.Context, oracleOpsRequest *v1alpha1.OracleOpsRequest, opts v1.UpdateOptions) (*v1alpha1.OracleOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(oracleopsrequestsResource, "status", c.ns, oracleOpsRequest), &v1alpha1.OracleOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleOpsRequest), err
-}
-
-// Delete takes name of the oracleOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeOracleOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(oracleopsrequestsResource, c.ns, name, opts), &v1alpha1.OracleOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeOracleOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(oracleopsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.OracleOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched oracleOpsRequest.
-func (c *FakeOracleOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.OracleOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(oracleopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.OracleOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleOpsRequest), err
 }

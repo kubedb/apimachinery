@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDruidVersions implements DruidVersionInterface
-type FakeDruidVersions struct {
+// fakeDruidVersions implements DruidVersionInterface
+type fakeDruidVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.DruidVersion, *v1alpha1.DruidVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var druidversionsResource = v1alpha1.SchemeGroupVersion.WithResource("druidversions")
-
-var druidversionsKind = v1alpha1.SchemeGroupVersion.WithKind("DruidVersion")
-
-// Get takes name of the druidVersion, and returns the corresponding druidVersion object, and an error if there is any.
-func (c *FakeDruidVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DruidVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(druidversionsResource, name), &v1alpha1.DruidVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeDruidVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.DruidVersionInterface {
+	return &fakeDruidVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.DruidVersion, *v1alpha1.DruidVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("druidversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("DruidVersion"),
+			func() *v1alpha1.DruidVersion { return &v1alpha1.DruidVersion{} },
+			func() *v1alpha1.DruidVersionList { return &v1alpha1.DruidVersionList{} },
+			func(dst, src *v1alpha1.DruidVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.DruidVersionList) []*v1alpha1.DruidVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.DruidVersionList, items []*v1alpha1.DruidVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DruidVersion), err
-}
-
-// List takes label and field selectors, and returns the list of DruidVersions that match those selectors.
-func (c *FakeDruidVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DruidVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(druidversionsResource, druidversionsKind, opts), &v1alpha1.DruidVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.DruidVersionList{ListMeta: obj.(*v1alpha1.DruidVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.DruidVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested druidVersions.
-func (c *FakeDruidVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(druidversionsResource, opts))
-}
-
-// Create takes the representation of a druidVersion and creates it.  Returns the server's representation of the druidVersion, and an error, if there is any.
-func (c *FakeDruidVersions) Create(ctx context.Context, druidVersion *v1alpha1.DruidVersion, opts v1.CreateOptions) (result *v1alpha1.DruidVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(druidversionsResource, druidVersion), &v1alpha1.DruidVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DruidVersion), err
-}
-
-// Update takes the representation of a druidVersion and updates it. Returns the server's representation of the druidVersion, and an error, if there is any.
-func (c *FakeDruidVersions) Update(ctx context.Context, druidVersion *v1alpha1.DruidVersion, opts v1.UpdateOptions) (result *v1alpha1.DruidVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(druidversionsResource, druidVersion), &v1alpha1.DruidVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DruidVersion), err
-}
-
-// Delete takes name of the druidVersion and deletes it. Returns an error if one occurs.
-func (c *FakeDruidVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(druidversionsResource, name, opts), &v1alpha1.DruidVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeDruidVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(druidversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.DruidVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched druidVersion.
-func (c *FakeDruidVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DruidVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(druidversionsResource, name, pt, data, subresources...), &v1alpha1.DruidVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DruidVersion), err
 }

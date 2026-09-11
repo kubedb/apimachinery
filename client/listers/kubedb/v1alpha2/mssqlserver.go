@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MSSQLServerLister helps list MSSQLServers.
@@ -31,7 +31,7 @@ import (
 type MSSQLServerLister interface {
 	// List lists all MSSQLServers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.MSSQLServer, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.MSSQLServer, err error)
 	// MSSQLServers returns an object that can list and get MSSQLServers.
 	MSSQLServers(namespace string) MSSQLServerNamespaceLister
 	MSSQLServerListerExpansion
@@ -39,25 +39,17 @@ type MSSQLServerLister interface {
 
 // mSSQLServerLister implements the MSSQLServerLister interface.
 type mSSQLServerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.MSSQLServer]
 }
 
 // NewMSSQLServerLister returns a new MSSQLServerLister.
 func NewMSSQLServerLister(indexer cache.Indexer) MSSQLServerLister {
-	return &mSSQLServerLister{indexer: indexer}
-}
-
-// List lists all MSSQLServers in the indexer.
-func (s *mSSQLServerLister) List(selector labels.Selector) (ret []*v1alpha2.MSSQLServer, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.MSSQLServer))
-	})
-	return ret, err
+	return &mSSQLServerLister{listers.New[*kubedbv1alpha2.MSSQLServer](indexer, kubedbv1alpha2.Resource("mssqlserver"))}
 }
 
 // MSSQLServers returns an object that can list and get MSSQLServers.
 func (s *mSSQLServerLister) MSSQLServers(namespace string) MSSQLServerNamespaceLister {
-	return mSSQLServerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mSSQLServerNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.MSSQLServer](s.ResourceIndexer, namespace)}
 }
 
 // MSSQLServerNamespaceLister helps list and get MSSQLServers.
@@ -65,36 +57,15 @@ func (s *mSSQLServerLister) MSSQLServers(namespace string) MSSQLServerNamespaceL
 type MSSQLServerNamespaceLister interface {
 	// List lists all MSSQLServers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.MSSQLServer, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.MSSQLServer, err error)
 	// Get retrieves the MSSQLServer from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.MSSQLServer, error)
+	Get(name string) (*kubedbv1alpha2.MSSQLServer, error)
 	MSSQLServerNamespaceListerExpansion
 }
 
 // mSSQLServerNamespaceLister implements the MSSQLServerNamespaceLister
 // interface.
 type mSSQLServerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MSSQLServers in the indexer for a given namespace.
-func (s mSSQLServerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.MSSQLServer, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.MSSQLServer))
-	})
-	return ret, err
-}
-
-// Get retrieves the MSSQLServer from the indexer for a given namespace and name.
-func (s mSSQLServerNamespaceLister) Get(name string) (*v1alpha2.MSSQLServer, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("mssqlserver"), name)
-	}
-	return obj.(*v1alpha2.MSSQLServer), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.MSSQLServer]
 }

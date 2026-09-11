@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	apisautoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ElasticsearchAutoscalers.
 type ElasticsearchAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ElasticsearchAutoscalerLister
+	Lister() autoscalingv1alpha1.ElasticsearchAutoscalerLister
 }
 
 type elasticsearchAutoscalerInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredElasticsearchAutoscalerInformer(client versioned.Interface, name
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().ElasticsearchAutoscalers(namespace).List(context.TODO(), options)
+				return client.AutoscalingV1alpha1().ElasticsearchAutoscalers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().ElasticsearchAutoscalers(namespace).Watch(context.TODO(), options)
+				return client.AutoscalingV1alpha1().ElasticsearchAutoscalers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().ElasticsearchAutoscalers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().ElasticsearchAutoscalers(namespace).Watch(ctx, options)
 			},
 		},
-		&autoscalingv1alpha1.ElasticsearchAutoscaler{},
+		&apisautoscalingv1alpha1.ElasticsearchAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *elasticsearchAutoscalerInformer) defaultInformer(client versioned.Inter
 }
 
 func (f *elasticsearchAutoscalerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&autoscalingv1alpha1.ElasticsearchAutoscaler{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisautoscalingv1alpha1.ElasticsearchAutoscaler{}, f.defaultInformer)
 }
 
-func (f *elasticsearchAutoscalerInformer) Lister() v1alpha1.ElasticsearchAutoscalerLister {
-	return v1alpha1.NewElasticsearchAutoscalerLister(f.Informer().GetIndexer())
+func (f *elasticsearchAutoscalerInformer) Lister() autoscalingv1alpha1.ElasticsearchAutoscalerLister {
+	return autoscalingv1alpha1.NewElasticsearchAutoscalerLister(f.Informer().GetIndexer())
 }

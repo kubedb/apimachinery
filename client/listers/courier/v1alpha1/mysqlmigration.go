@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MySQLMigrationLister helps list MySQLMigrations.
@@ -31,7 +31,7 @@ import (
 type MySQLMigrationLister interface {
 	// List lists all MySQLMigrations in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.MySQLMigration, err error)
 	// MySQLMigrations returns an object that can list and get MySQLMigrations.
 	MySQLMigrations(namespace string) MySQLMigrationNamespaceLister
 	MySQLMigrationListerExpansion
@@ -39,25 +39,17 @@ type MySQLMigrationLister interface {
 
 // mySQLMigrationLister implements the MySQLMigrationLister interface.
 type mySQLMigrationLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*courierv1alpha1.MySQLMigration]
 }
 
 // NewMySQLMigrationLister returns a new MySQLMigrationLister.
 func NewMySQLMigrationLister(indexer cache.Indexer) MySQLMigrationLister {
-	return &mySQLMigrationLister{indexer: indexer}
-}
-
-// List lists all MySQLMigrations in the indexer.
-func (s *mySQLMigrationLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLMigration, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLMigration))
-	})
-	return ret, err
+	return &mySQLMigrationLister{listers.New[*courierv1alpha1.MySQLMigration](indexer, courierv1alpha1.Resource("mysqlmigration"))}
 }
 
 // MySQLMigrations returns an object that can list and get MySQLMigrations.
 func (s *mySQLMigrationLister) MySQLMigrations(namespace string) MySQLMigrationNamespaceLister {
-	return mySQLMigrationNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mySQLMigrationNamespaceLister{listers.NewNamespaced[*courierv1alpha1.MySQLMigration](s.ResourceIndexer, namespace)}
 }
 
 // MySQLMigrationNamespaceLister helps list and get MySQLMigrations.
@@ -65,36 +57,15 @@ func (s *mySQLMigrationLister) MySQLMigrations(namespace string) MySQLMigrationN
 type MySQLMigrationNamespaceLister interface {
 	// List lists all MySQLMigrations in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQLMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.MySQLMigration, err error)
 	// Get retrieves the MySQLMigration from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MySQLMigration, error)
+	Get(name string) (*courierv1alpha1.MySQLMigration, error)
 	MySQLMigrationNamespaceListerExpansion
 }
 
 // mySQLMigrationNamespaceLister implements the MySQLMigrationNamespaceLister
 // interface.
 type mySQLMigrationNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MySQLMigrations in the indexer for a given namespace.
-func (s mySQLMigrationNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MySQLMigration, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQLMigration))
-	})
-	return ret, err
-}
-
-// Get retrieves the MySQLMigration from the indexer for a given namespace and name.
-func (s mySQLMigrationNamespaceLister) Get(name string) (*v1alpha1.MySQLMigration, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mysqlmigration"), name)
-	}
-	return obj.(*v1alpha1.MySQLMigration), nil
+	listers.ResourceIndexer[*courierv1alpha1.MySQLMigration]
 }

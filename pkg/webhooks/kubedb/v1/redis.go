@@ -100,6 +100,9 @@ func (w RedisCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obje
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	redis, ok := obj.(*dbapi.Redis)
 	if !ok {
 		return nil, fmt.Errorf("expected a Redis but got a %T", obj)

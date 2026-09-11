@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // CassandraAutoscalerLister helps list CassandraAutoscalers.
@@ -31,7 +31,7 @@ import (
 type CassandraAutoscalerLister interface {
 	// List lists all CassandraAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.CassandraAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.CassandraAutoscaler, err error)
 	// CassandraAutoscalers returns an object that can list and get CassandraAutoscalers.
 	CassandraAutoscalers(namespace string) CassandraAutoscalerNamespaceLister
 	CassandraAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type CassandraAutoscalerLister interface {
 
 // cassandraAutoscalerLister implements the CassandraAutoscalerLister interface.
 type cassandraAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.CassandraAutoscaler]
 }
 
 // NewCassandraAutoscalerLister returns a new CassandraAutoscalerLister.
 func NewCassandraAutoscalerLister(indexer cache.Indexer) CassandraAutoscalerLister {
-	return &cassandraAutoscalerLister{indexer: indexer}
-}
-
-// List lists all CassandraAutoscalers in the indexer.
-func (s *cassandraAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.CassandraAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.CassandraAutoscaler))
-	})
-	return ret, err
+	return &cassandraAutoscalerLister{listers.New[*autoscalingv1alpha1.CassandraAutoscaler](indexer, autoscalingv1alpha1.Resource("cassandraautoscaler"))}
 }
 
 // CassandraAutoscalers returns an object that can list and get CassandraAutoscalers.
 func (s *cassandraAutoscalerLister) CassandraAutoscalers(namespace string) CassandraAutoscalerNamespaceLister {
-	return cassandraAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return cassandraAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.CassandraAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // CassandraAutoscalerNamespaceLister helps list and get CassandraAutoscalers.
@@ -65,36 +57,15 @@ func (s *cassandraAutoscalerLister) CassandraAutoscalers(namespace string) Cassa
 type CassandraAutoscalerNamespaceLister interface {
 	// List lists all CassandraAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.CassandraAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.CassandraAutoscaler, err error)
 	// Get retrieves the CassandraAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.CassandraAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.CassandraAutoscaler, error)
 	CassandraAutoscalerNamespaceListerExpansion
 }
 
 // cassandraAutoscalerNamespaceLister implements the CassandraAutoscalerNamespaceLister
 // interface.
 type cassandraAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all CassandraAutoscalers in the indexer for a given namespace.
-func (s cassandraAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.CassandraAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.CassandraAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the CassandraAutoscaler from the indexer for a given namespace and name.
-func (s cassandraAutoscalerNamespaceLister) Get(name string) (*v1alpha1.CassandraAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("cassandraautoscaler"), name)
-	}
-	return obj.(*v1alpha1.CassandraAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.CassandraAutoscaler]
 }

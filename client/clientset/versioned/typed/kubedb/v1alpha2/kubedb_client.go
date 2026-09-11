@@ -19,10 +19,10 @@ limitations under the License.
 package v1alpha2
 
 import (
-	"net/http"
+	http "net/http"
 
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
-	"kubedb.dev/apimachinery/client/clientset/versioned/scheme"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	scheme "kubedb.dev/apimachinery/client/clientset/versioned/scheme"
 
 	rest "k8s.io/client-go/rest"
 )
@@ -36,6 +36,7 @@ type KubedbV1alpha2Interface interface {
 	DocumentDBsGetter
 	DruidsGetter
 	ElasticsearchesGetter
+	EtcdsGetter
 	HanaDBsGetter
 	HazelcastsGetter
 	IgnitesGetter
@@ -94,6 +95,10 @@ func (c *KubedbV1alpha2Client) Druids(namespace string) DruidInterface {
 
 func (c *KubedbV1alpha2Client) Elasticsearches(namespace string) ElasticsearchInterface {
 	return newElasticsearches(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) Etcds(namespace string) EtcdInterface {
+	return newEtcds(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) HanaDBs(namespace string) HanaDBInterface {
@@ -201,9 +206,7 @@ func (c *KubedbV1alpha2Client) ZooKeepers(namespace string) ZooKeeperInterface {
 // where httpClient was generated with rest.HTTPClientFor(c).
 func NewForConfig(c *rest.Config) (*KubedbV1alpha2Client, error) {
 	config := *c
-	if err := setConfigDefaults(&config); err != nil {
-		return nil, err
-	}
+	setConfigDefaults(&config)
 	httpClient, err := rest.HTTPClientFor(&config)
 	if err != nil {
 		return nil, err
@@ -215,9 +218,7 @@ func NewForConfig(c *rest.Config) (*KubedbV1alpha2Client, error) {
 // Note the http client provided takes precedence over the configured transport values.
 func NewForConfigAndClient(c *rest.Config, h *http.Client) (*KubedbV1alpha2Client, error) {
 	config := *c
-	if err := setConfigDefaults(&config); err != nil {
-		return nil, err
-	}
+	setConfigDefaults(&config)
 	client, err := rest.RESTClientForConfigAndClient(&config, h)
 	if err != nil {
 		return nil, err
@@ -240,17 +241,15 @@ func New(c rest.Interface) *KubedbV1alpha2Client {
 	return &KubedbV1alpha2Client{c}
 }
 
-func setConfigDefaults(config *rest.Config) error {
-	gv := v1alpha2.SchemeGroupVersion
+func setConfigDefaults(config *rest.Config) {
+	gv := kubedbv1alpha2.SchemeGroupVersion
 	config.GroupVersion = &gv
 	config.APIPath = "/apis"
-	config.NegotiatedSerializer = scheme.Codecs.WithoutConversion()
+	config.NegotiatedSerializer = rest.CodecFactoryForGeneratedClient(scheme.Scheme, scheme.Codecs).WithoutConversion()
 
 	if config.UserAgent == "" {
 		config.UserAgent = rest.DefaultKubernetesUserAgent()
 	}
-
-	return nil
 }
 
 // RESTClient returns a RESTClient that is used to communicate

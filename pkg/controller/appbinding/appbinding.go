@@ -39,9 +39,10 @@ type DB interface {
 }
 
 type Options struct {
-	KBClient client.Client
-	DB       DB
-	Version  string
+	KBClient       client.Client
+	DB             DB
+	Version        string
+	AppBindingMeta appcat.AppBindingMeta
 	// Customize runs inside the CreateOrPatch mutate function to layer on everything DB-specific:
 	// ClientConfig, Secret, TLSSecret, Parameters.
 	Customize func(in *appcat.AppBinding)
@@ -53,7 +54,10 @@ func (o Options) Ensure(ctx context.Context) (kutil.VerbType, error) {
 		return kutil.VerbUnchanged, err
 	}
 
-	appmeta := o.DB.AppBindingMeta()
+	appmeta := o.AppBindingMeta
+	if appmeta == nil {
+		appmeta = o.DB.AppBindingMeta()
+	}
 	ab := &appcat.AppBinding{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      appmeta.Name(),

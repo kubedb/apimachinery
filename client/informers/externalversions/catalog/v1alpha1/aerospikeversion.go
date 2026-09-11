@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // AerospikeVersions.
 type AerospikeVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.AerospikeVersionLister
+	Lister() catalogv1alpha1.AerospikeVersionLister
 }
 
 type aerospikeVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredAerospikeVersionInformer(client versioned.Interface, resyncPerio
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().AerospikeVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().AerospikeVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().AerospikeVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().AerospikeVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().AerospikeVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().AerospikeVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.AerospikeVersion{},
+		&apiscatalogv1alpha1.AerospikeVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *aerospikeVersionInformer) defaultInformer(client versioned.Interface, r
 }
 
 func (f *aerospikeVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.AerospikeVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.AerospikeVersion{}, f.defaultInformer)
 }
 
-func (f *aerospikeVersionInformer) Lister() v1alpha1.AerospikeVersionLister {
-	return v1alpha1.NewAerospikeVersionLister(f.Informer().GetIndexer())
+func (f *aerospikeVersionInformer) Lister() catalogv1alpha1.AerospikeVersionLister {
+	return catalogv1alpha1.NewAerospikeVersionLister(f.Informer().GetIndexer())
 }
