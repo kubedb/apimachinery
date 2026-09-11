@@ -74,6 +74,12 @@ type MySQLSpec struct {
 	// +optional
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`
 
+	// Distributed if set true, manifestwork objects will be created instead of raw
+	// resources. A distributed MySQL is expanded by the operator into one self
+	// contained Group Replication cluster per Member data center for cross data
+	// center disaster recovery (DC-DR).
+	Distributed bool `json:"distributed,omitempty"`
+
 	// Version of MySQL to be deployed.
 	Version string `json:"version"`
 
@@ -263,6 +269,76 @@ type MySQLStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	AuthSecret *Age `json:"authSecret,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed MySQL.
+	// +optional
+	DisasterRecovery *MySQLDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// MySQLDRPhase is the cross data center DR phase of a distributed MySQL.
+type MySQLDRPhase string
+
+const (
+	MySQLDRPhaseSteady      MySQLDRPhase = "Steady"
+	MySQLDRPhaseFailingOver MySQLDRPhase = "FailingOver"
+	MySQLDRPhaseFailingBack MySQLDRPhase = "FailingBack"
+	MySQLDRPhaseDegraded    MySQLDRPhase = "Degraded"
+)
+
+// MySQLDisasterRecoveryStatus reports the per data center DC-DR view of a
+// distributed MySQL. The cross-DC decision is owned by the dr-controlplane
+// primary-DC Lease; this status reflects it on the single Database object. Each
+// Member DC runs its own self contained Group Replication cluster; only the
+// active DC is writable and every standby DC streams the cross-DC async channel.
+type MySQLDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and runs the writable GR primary.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase MySQLDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []MySQLDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// MySQLDCStatus is one data center's local view inside a distributed MySQL.
+type MySQLDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member or Arbiter.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Primary is this DC's local Group Replication primary pod.
+	// +optional
+	Primary string `json:"primary,omitempty"`
+
+	// Writable is true when this DC's GR primary is the cluster's writable primary
+	// (the active DC). A standby DC is held super_read_only.
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// LagBytes is this DC's cross-DC replication lag behind the active DC, by the
+	// GTID gap, in bytes.
+	// +optional
+	LagBytes *int64 `json:"lagBytes,omitempty"`
+
+	// SecondsBehindSource is this DC's cross-DC replication lag behind the active
+	// DC, from Seconds_Behind_Source on its GR primary's async channel.
+	// +optional
+	SecondsBehindSource *int64 `json:"secondsBehindSource,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
