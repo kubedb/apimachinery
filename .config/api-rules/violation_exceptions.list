@@ -115,8 +115,8 @@ API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,D
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseConnectionSpec,Public
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseIndexEntry,Indices
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DatabaseSummaryResponse,Stats
-API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DocumentDBInsightSpec,ReplicationStatus
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DocumentDBDatabaseSpec,Collections
+API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DocumentDBInsightSpec,ReplicationStatus
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DocumentDBSchemaOverviewSpec,Databases
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DruidDatasourceSchema,Columns
 API rule violation: list_type_missing,kubedb.dev/apimachinery/apis/ui/v1alpha1,DruidInsightSpec,Datasources

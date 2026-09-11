@@ -427,6 +427,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.WebhookClientConfig":               schema_pkg_apis_apiextensions_v1_WebhookClientConfig(ref),
 		"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.WebhookConversion":                 schema_pkg_apis_apiextensions_v1_WebhookConversion(ref),
 		"k8s.io/apimachinery/pkg/api/resource.Quantity":                                              schema_apimachinery_pkg_api_resource_Quantity(ref),
+		"k8s.io/apimachinery/pkg/api/resource.int64Amount":                                           schema_apimachinery_pkg_api_resource_int64Amount(ref),
 		"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroup":                                              schema_pkg_apis_meta_v1_APIGroup(ref),
 		"k8s.io/apimachinery/pkg/apis/meta/v1.APIGroupList":                                          schema_pkg_apis_meta_v1_APIGroupList(ref),
 		"k8s.io/apimachinery/pkg/apis/meta/v1.APIResource":                                           schema_pkg_apis_meta_v1_APIResource(ref),
@@ -503,6 +504,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/client-go/api/v1.TypeReference":                                                schema_kmodulesxyz_client_go_api_v1_TypeReference(ref),
 		"kmodules.xyz/client-go/api/v1.TypedObjectReference":                                         schema_kmodulesxyz_client_go_api_v1_TypedObjectReference(ref),
 		"kmodules.xyz/client-go/api/v1.X509Subject":                                                  schema_kmodulesxyz_client_go_api_v1_X509Subject(ref),
+		"kmodules.xyz/client-go/api/v1.stringSetMerger":                                              schema_kmodulesxyz_client_go_api_v1_stringSetMerger(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeyTransform":                     schema_custom_resources_apis_appcatalog_v1alpha1_AddKeyTransform(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AddKeysFromTransform":                schema_custom_resources_apis_appcatalog_v1alpha1_AddKeysFromTransform(ref),
 		"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.AppBinding":                          schema_custom_resources_apis_appcatalog_v1alpha1_AppBinding(ref),
@@ -609,6 +611,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DatabaseSummaryResponse":                           schema_apimachinery_apis_ui_v1alpha1_DatabaseSummaryResponse(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBCollectionSpec":                          schema_apimachinery_apis_ui_v1alpha1_DocumentDBCollectionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBConnectionInfo":                          schema_apimachinery_apis_ui_v1alpha1_DocumentDBConnectionInfo(ref),
+		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBDatabaseSpec":                            schema_apimachinery_apis_ui_v1alpha1_DocumentDBDatabaseSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsight":                                 schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsight(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsightList":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsightList(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBInsightSpec":                             schema_apimachinery_apis_ui_v1alpha1_DocumentDBInsightSpec(ref),
@@ -616,7 +619,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBReplicationStatus":                       schema_apimachinery_apis_ui_v1alpha1_DocumentDBReplicationStatus(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverview":                          schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverview(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverviewList":                      schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewList(ref),
-		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBDatabaseSpec":                            schema_apimachinery_apis_ui_v1alpha1_DocumentDBDatabaseSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverviewSpec":                      schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewSpec(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidColumn":                                       schema_apimachinery_apis_ui_v1alpha1_DruidColumn(ref),
 		"kubedb.dev/apimachinery/apis/ui/v1alpha1.DruidDatasourceSchema":                             schema_apimachinery_apis_ui_v1alpha1_DruidDatasourceSchema(ref),
@@ -27087,12 +27089,15 @@ func schema_pkg_apis_meta_v1_InternalEvent(ref common.ReferenceCallback) common.
 					"Object": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Object is:\n * If Type is Added or Modified: the new state of the object.\n * If Type is Deleted: the state of the object immediately before deletion.\n * If Type is Bookmark: the object (instance of a type being watched) where\n   only ResourceVersion field is set. On successful restart of watch from a\n   bookmark resourceVersion, client is guaranteed to not get repeat event\n   nor miss any events.\n * If Type is Error: *api.Status is recommended; other types may make sense\n   depending on context.",
+							Ref:         ref("k8s.io/apimachinery/pkg/runtime.Object"),
 						},
 					},
 				},
 				Required: []string{"Type", "Object"},
 			},
 		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/runtime.Object"},
 	}
 }
 
@@ -35192,16 +35197,9 @@ func schema_apimachinery_apis_ui_v1alpha1_DocumentDBCollectionSpec(ref common.Re
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DocumentDBCollectionSpec describes one collection.",
+				Description: "DocumentDBCollectionSpec describes one collection. The database it belongs to is the DocumentDBDatabaseSpec that holds it.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"databaseName": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
 							Default: "",
@@ -35242,7 +35240,7 @@ func schema_apimachinery_apis_ui_v1alpha1_DocumentDBCollectionSpec(ref common.Re
 						},
 					},
 				},
-				Required: []string{"databaseName", "name"},
+				Required: []string{"name"},
 			},
 		},
 	}
@@ -35275,6 +35273,77 @@ func schema_apimachinery_apis_ui_v1alpha1_DocumentDBConnectionInfo(ref common.Re
 				},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_ui_v1alpha1_DocumentDBDatabaseSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DocumentDBDatabaseSpec describes one database and the collections it holds.\n\nThe rollup fields come from the gateway's dbStats, except DocumentCount, which is summed from the collections: dbStats reports objects as 0 on DocumentDB regardless of the real count. dbStats sizes are page-based and would contradict the BSON sizes reported per collection, so only the index and storage figures are taken from it.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"collectionCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CollectionCount is the number of collections in this database, as dbStats reports it.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"documentCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DocumentCount is the total number of documents across this database's collections.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"indexCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IndexCount is the number of indexes across this database's collections.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"storageSizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageSizeBytes is the on-disk size of this database.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"indexSizeBytes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IndexSizeBytes is the on-disk size of this database's indexes.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"collections": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBCollectionSpec"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBCollectionSpec"},
 	}
 }
 
@@ -35625,77 +35694,6 @@ func schema_apimachinery_apis_ui_v1alpha1_DocumentDBSchemaOverviewList(ref commo
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBSchemaOverview"},
-	}
-}
-
-func schema_apimachinery_apis_ui_v1alpha1_DocumentDBDatabaseSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "DocumentDBDatabaseSpec describes one database and the collections it holds.\n\nThe rollup fields come from the gateway's dbStats, except DocumentCount, which is summed from the collections: dbStats reports objects as 0 on DocumentDB regardless of the real count. dbStats sizes are page-based and would contradict the BSON sizes reported per collection, so only the index and storage figures are taken from it.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
-						},
-					},
-					"collectionCount": {
-						SchemaProps: spec.SchemaProps{
-							Description: "CollectionCount is the number of collections in this database, as dbStats reports it.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"documentCount": {
-						SchemaProps: spec.SchemaProps{
-							Description: "DocumentCount is the total number of documents across this database's collections.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"indexCount": {
-						SchemaProps: spec.SchemaProps{
-							Description: "IndexCount is the number of indexes across this database's collections.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"storageSizeBytes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "StorageSizeBytes is the on-disk size of this database.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"indexSizeBytes": {
-						SchemaProps: spec.SchemaProps{
-							Description: "IndexSizeBytes is the on-disk size of this database's indexes.",
-							Type:        []string{"integer"},
-							Format:      "int64",
-						},
-					},
-					"collections": {
-						SchemaProps: spec.SchemaProps{
-							Type: []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBCollectionSpec"),
-									},
-								},
-							},
-						},
-					},
-				},
-				Required: []string{"name"},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ui/v1alpha1.DocumentDBCollectionSpec"},
 	}
 }
 
