@@ -6184,6 +6184,9 @@ spec:
                     type: object
                   timeout:
                     type: string
+                    x-kubernetes-validations:
+                    - message: must be a Go duration such as 30s, 5m or 1h30m
+                      rule: self.matches('^([0-9]+(ns|us|ms|s|m|h))+$')
                 required:
                 - driver
                 type: object
@@ -13426,6 +13429,9 @@ spec:
                     type: integer
                   timeout:
                     type: string
+                    x-kubernetes-validations:
+                    - message: must be a Go duration such as 30s, 5m or 1h30m
+                      rule: self.matches('^([0-9]+(ns|us|ms|s|m|h))+$')
                 type: object
               pause:
                 type: boolean
