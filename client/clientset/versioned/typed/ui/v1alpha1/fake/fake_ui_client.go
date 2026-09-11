@@ -29,6 +29,26 @@ type FakeUiV1alpha1 struct {
 	*testing.Fake
 }
 
+func (c *FakeUiV1alpha1) CassandraInsights(namespace string) v1alpha1.CassandraInsightInterface {
+	return newFakeCassandraInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) CassandraSchemaOverviews(namespace string) v1alpha1.CassandraSchemaOverviewInterface {
+	return newFakeCassandraSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) DB2Insights(namespace string) v1alpha1.DB2InsightInterface {
+	return newFakeDB2Insights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) DB2Querieses(namespace string) v1alpha1.DB2QueriesInterface {
+	return newFakeDB2Querieses(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) DB2SchemaOverviews(namespace string) v1alpha1.DB2SchemaOverviewInterface {
+	return newFakeDB2SchemaOverviews(c, namespace)
+}
+
 func (c *FakeUiV1alpha1) DatabaseConfigurations(namespace string) v1alpha1.DatabaseConfigurationInterface {
 	return newFakeDatabaseConfigurations(c, namespace)
 }
@@ -39,6 +59,14 @@ func (c *FakeUiV1alpha1) DatabaseConnections(namespace string) v1alpha1.Database
 
 func (c *FakeUiV1alpha1) DatabaseSummaries() v1alpha1.DatabaseSummaryInterface {
 	return newFakeDatabaseSummaries(c)
+}
+
+func (c *FakeUiV1alpha1) DocumentDBInsights(namespace string) v1alpha1.DocumentDBInsightInterface {
+	return newFakeDocumentDBInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) DocumentDBSchemaOverviews(namespace string) v1alpha1.DocumentDBSchemaOverviewInterface {
+	return newFakeDocumentDBSchemaOverviews(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) DruidInsights(namespace string) v1alpha1.DruidInsightInterface {

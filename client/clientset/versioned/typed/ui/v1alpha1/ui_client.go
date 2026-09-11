@@ -29,9 +29,16 @@ import (
 
 type UiV1alpha1Interface interface {
 	RESTClient() rest.Interface
+	CassandraInsightsGetter
+	CassandraSchemaOverviewsGetter
+	DB2InsightsGetter
+	DB2QueriesesGetter
+	DB2SchemaOverviewsGetter
 	DatabaseConfigurationsGetter
 	DatabaseConnectionsGetter
 	DatabaseSummariesGetter
+	DocumentDBInsightsGetter
+	DocumentDBSchemaOverviewsGetter
 	DruidInsightsGetter
 	DruidSchemaOverviewsGetter
 	DruidTasksesGetter
@@ -79,6 +86,26 @@ type UiV1alpha1Client struct {
 	restClient rest.Interface
 }
 
+func (c *UiV1alpha1Client) CassandraInsights(namespace string) CassandraInsightInterface {
+	return newCassandraInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) CassandraSchemaOverviews(namespace string) CassandraSchemaOverviewInterface {
+	return newCassandraSchemaOverviews(c, namespace)
+}
+
+func (c *UiV1alpha1Client) DB2Insights(namespace string) DB2InsightInterface {
+	return newDB2Insights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) DB2Querieses(namespace string) DB2QueriesInterface {
+	return newDB2Querieses(c, namespace)
+}
+
+func (c *UiV1alpha1Client) DB2SchemaOverviews(namespace string) DB2SchemaOverviewInterface {
+	return newDB2SchemaOverviews(c, namespace)
+}
+
 func (c *UiV1alpha1Client) DatabaseConfigurations(namespace string) DatabaseConfigurationInterface {
 	return newDatabaseConfigurations(c, namespace)
 }
@@ -89,6 +116,14 @@ func (c *UiV1alpha1Client) DatabaseConnections(namespace string) DatabaseConnect
 
 func (c *UiV1alpha1Client) DatabaseSummaries() DatabaseSummaryInterface {
 	return newDatabaseSummaries(c)
+}
+
+func (c *UiV1alpha1Client) DocumentDBInsights(namespace string) DocumentDBInsightInterface {
+	return newDocumentDBInsights(c, namespace)
+}
+
+func (c *UiV1alpha1Client) DocumentDBSchemaOverviews(namespace string) DocumentDBSchemaOverviewInterface {
+	return newDocumentDBSchemaOverviews(c, namespace)
 }
 
 func (c *UiV1alpha1Client) DruidInsights(namespace string) DruidInsightInterface {
