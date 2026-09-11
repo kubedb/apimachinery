@@ -35,6 +35,7 @@ type ArchiverV1alpha1Interface interface {
 	MariaDBArchiversGetter
 	MongoDBArchiversGetter
 	MySQLArchiversGetter
+	Neo4jArchiversGetter
 	PostgresArchiversGetter
 }
 
@@ -65,6 +66,10 @@ func (c *ArchiverV1alpha1Client) MongoDBArchivers(namespace string) MongoDBArchi
 
 func (c *ArchiverV1alpha1Client) MySQLArchivers(namespace string) MySQLArchiverInterface {
 	return newMySQLArchivers(c, namespace)
+}
+
+func (c *ArchiverV1alpha1Client) Neo4jArchivers(namespace string) Neo4jArchiverInterface {
+	return newNeo4jArchivers(c, namespace)
 }
 
 func (c *ArchiverV1alpha1Client) PostgresArchivers(namespace string) PostgresArchiverInterface {
