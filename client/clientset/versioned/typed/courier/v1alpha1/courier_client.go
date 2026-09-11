@@ -35,6 +35,7 @@ type CourierV1alpha1Interface interface {
 	MariaDBMigrationsGetter
 	MongoDBMigrationsGetter
 	MySQLMigrationsGetter
+	OracleMigrationsGetter
 	PostgresMigrationsGetter
 }
 
@@ -65,6 +66,10 @@ func (c *CourierV1alpha1Client) MongoDBMigrations(namespace string) MongoDBMigra
 
 func (c *CourierV1alpha1Client) MySQLMigrations(namespace string) MySQLMigrationInterface {
 	return newMySQLMigrations(c, namespace)
+}
+
+func (c *CourierV1alpha1Client) OracleMigrations(namespace string) OracleMigrationInterface {
+	return newOracleMigrations(c, namespace)
 }
 
 func (c *CourierV1alpha1Client) PostgresMigrations(namespace string) PostgresMigrationInterface {

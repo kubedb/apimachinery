@@ -66,6 +66,14 @@ type MySQLMigrationListerExpansion interface{}
 // MySQLMigrationNamespaceLister.
 type MySQLMigrationNamespaceListerExpansion interface{}
 
+// OracleMigrationListerExpansion allows custom methods to be added to
+// OracleMigrationLister.
+type OracleMigrationListerExpansion interface{}
+
+// OracleMigrationNamespaceListerExpansion allows custom methods to be added to
+// OracleMigrationNamespaceLister.
+type OracleMigrationNamespaceListerExpansion interface{}
+
 // PostgresMigrationListerExpansion allows custom methods to be added to
 // PostgresMigrationLister.
 type PostgresMigrationListerExpansion interface{}

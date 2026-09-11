@@ -39647,12 +39647,19 @@ func schema_apimachinery_apis_catalog_v1alpha1_OracleVersionSpec(ref common.Refe
 							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer"),
 						},
 					},
+					"courier": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Courier defines the courier related CLI/Tools images for this Oracle version",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "exporter", "coordinator"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleDataGuard", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleDataGuard", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"},
 	}
 }
 
