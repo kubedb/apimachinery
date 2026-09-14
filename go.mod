@@ -288,10 +288,6 @@ require (
 	x-helm.dev/apimachinery v0.0.18 // indirect
 )
 
-replace go.etcd.io/etcd/server/v3 => go.etcd.io/etcd/server/v3 v3.5.27
-
-replace go.etcd.io/etcd/pkg/v3 => go.etcd.io/etcd/pkg/v3 v3.5.27
-
 replace go.etcd.io/etcd/raft/v3 => github.com/kubedb/etcd-io/raft/v3 v3.5.0-beta.4.0.20220324050626-a6b4ef27cbc9
 
 replace go.etcd.io/etcd/server/v3 => go.etcd.io/etcd/server/v3 v3.5.27
