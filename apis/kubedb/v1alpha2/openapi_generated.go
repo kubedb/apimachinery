@@ -48387,7 +48387,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_documentDBAdminApp(ref common.Refe
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "documentDBAdminApp is the AppBindingMeta for the backend Postgres endpoint. The name stays engine-neutral, but the type must be kubedb.com/postgres: that is the discriminator KubeStash addons and the restic plugin dispatch on, and the backend genuinely is a Postgres.",
+				Description: "documentDBAdminApp types <db>-admin as kubedb.com/postgres, matching its postgresql scheme and port: the endpoint speaks the Postgres wire protocol, whatever the gateway in front of it does.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"DocumentDB": {
