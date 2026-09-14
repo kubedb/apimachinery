@@ -30,11 +30,11 @@ type FakePostgresV1alpha1 struct {
 }
 
 func (c *FakePostgresV1alpha1) Publishers(namespace string) v1alpha1.PublisherInterface {
-	return &FakePublishers{c, namespace}
+	return newFakePublishers(c, namespace)
 }
 
 func (c *FakePostgresV1alpha1) Subscribers(namespace string) v1alpha1.SubscriberInterface {
-	return &FakeSubscribers{c, namespace}
+	return newFakeSubscribers(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

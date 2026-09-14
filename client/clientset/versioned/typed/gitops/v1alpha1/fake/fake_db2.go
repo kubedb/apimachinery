@@ -19,124 +19,31 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/gitops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeDB2s implements DB2Interface
-type FakeDB2s struct {
+// fakeDB2s implements DB2Interface
+type fakeDB2s struct {
+	*gentype.FakeClientWithList[*v1alpha1.DB2, *v1alpha1.DB2List]
 	Fake *FakeGitopsV1alpha1
-	ns   string
 }
 
-var db2sResource = v1alpha1.SchemeGroupVersion.WithResource("db2s")
-
-var db2sKind = v1alpha1.SchemeGroupVersion.WithKind("DB2")
-
-// Get takes name of the dB2, and returns the corresponding dB2 object, and an error if there is any.
-func (c *FakeDB2s) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.DB2, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(db2sResource, c.ns, name), &v1alpha1.DB2{})
-
-	if obj == nil {
-		return nil, err
+func newFakeDB2s(fake *FakeGitopsV1alpha1, namespace string) gitopsv1alpha1.DB2Interface {
+	return &fakeDB2s{
+		gentype.NewFakeClientWithList[*v1alpha1.DB2, *v1alpha1.DB2List](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("db2s"),
+			v1alpha1.SchemeGroupVersion.WithKind("DB2"),
+			func() *v1alpha1.DB2 { return &v1alpha1.DB2{} },
+			func() *v1alpha1.DB2List { return &v1alpha1.DB2List{} },
+			func(dst, src *v1alpha1.DB2List) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.DB2List) []*v1alpha1.DB2 { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.DB2List, items []*v1alpha1.DB2) { list.Items = gentype.FromPointerSlice(items) },
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.DB2), err
-}
-
-// List takes label and field selectors, and returns the list of DB2s that match those selectors.
-func (c *FakeDB2s) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.DB2List, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(db2sResource, db2sKind, c.ns, opts), &v1alpha1.DB2List{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.DB2List{ListMeta: obj.(*v1alpha1.DB2List).ListMeta}
-	for _, item := range obj.(*v1alpha1.DB2List).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested dB2s.
-func (c *FakeDB2s) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(db2sResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a dB2 and creates it.  Returns the server's representation of the dB2, and an error, if there is any.
-func (c *FakeDB2s) Create(ctx context.Context, dB2 *v1alpha1.DB2, opts v1.CreateOptions) (result *v1alpha1.DB2, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(db2sResource, c.ns, dB2), &v1alpha1.DB2{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2), err
-}
-
-// Update takes the representation of a dB2 and updates it. Returns the server's representation of the dB2, and an error, if there is any.
-func (c *FakeDB2s) Update(ctx context.Context, dB2 *v1alpha1.DB2, opts v1.UpdateOptions) (result *v1alpha1.DB2, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(db2sResource, c.ns, dB2), &v1alpha1.DB2{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeDB2s) UpdateStatus(ctx context.Context, dB2 *v1alpha1.DB2, opts v1.UpdateOptions) (*v1alpha1.DB2, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(db2sResource, "status", c.ns, dB2), &v1alpha1.DB2{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2), err
-}
-
-// Delete takes name of the dB2 and deletes it. Returns an error if one occurs.
-func (c *FakeDB2s) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(db2sResource, c.ns, name, opts), &v1alpha1.DB2{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeDB2s) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(db2sResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.DB2List{})
-	return err
-}
-
-// Patch applies the patch and returns the patched dB2.
-func (c *FakeDB2s) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.DB2, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(db2sResource, c.ns, name, pt, data, subresources...), &v1alpha1.DB2{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.DB2), err
 }

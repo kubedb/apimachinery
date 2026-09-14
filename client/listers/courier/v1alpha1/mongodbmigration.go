@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MongoDBMigrationLister helps list MongoDBMigrations.
@@ -31,7 +31,7 @@ import (
 type MongoDBMigrationLister interface {
 	// List lists all MongoDBMigrations in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MongoDBMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.MongoDBMigration, err error)
 	// MongoDBMigrations returns an object that can list and get MongoDBMigrations.
 	MongoDBMigrations(namespace string) MongoDBMigrationNamespaceLister
 	MongoDBMigrationListerExpansion
@@ -39,25 +39,17 @@ type MongoDBMigrationLister interface {
 
 // mongoDBMigrationLister implements the MongoDBMigrationLister interface.
 type mongoDBMigrationLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*courierv1alpha1.MongoDBMigration]
 }
 
 // NewMongoDBMigrationLister returns a new MongoDBMigrationLister.
 func NewMongoDBMigrationLister(indexer cache.Indexer) MongoDBMigrationLister {
-	return &mongoDBMigrationLister{indexer: indexer}
-}
-
-// List lists all MongoDBMigrations in the indexer.
-func (s *mongoDBMigrationLister) List(selector labels.Selector) (ret []*v1alpha1.MongoDBMigration, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MongoDBMigration))
-	})
-	return ret, err
+	return &mongoDBMigrationLister{listers.New[*courierv1alpha1.MongoDBMigration](indexer, courierv1alpha1.Resource("mongodbmigration"))}
 }
 
 // MongoDBMigrations returns an object that can list and get MongoDBMigrations.
 func (s *mongoDBMigrationLister) MongoDBMigrations(namespace string) MongoDBMigrationNamespaceLister {
-	return mongoDBMigrationNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mongoDBMigrationNamespaceLister{listers.NewNamespaced[*courierv1alpha1.MongoDBMigration](s.ResourceIndexer, namespace)}
 }
 
 // MongoDBMigrationNamespaceLister helps list and get MongoDBMigrations.
@@ -65,36 +57,15 @@ func (s *mongoDBMigrationLister) MongoDBMigrations(namespace string) MongoDBMigr
 type MongoDBMigrationNamespaceLister interface {
 	// List lists all MongoDBMigrations in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MongoDBMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.MongoDBMigration, err error)
 	// Get retrieves the MongoDBMigration from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MongoDBMigration, error)
+	Get(name string) (*courierv1alpha1.MongoDBMigration, error)
 	MongoDBMigrationNamespaceListerExpansion
 }
 
 // mongoDBMigrationNamespaceLister implements the MongoDBMigrationNamespaceLister
 // interface.
 type mongoDBMigrationNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MongoDBMigrations in the indexer for a given namespace.
-func (s mongoDBMigrationNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MongoDBMigration, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MongoDBMigration))
-	})
-	return ret, err
-}
-
-// Get retrieves the MongoDBMigration from the indexer for a given namespace and name.
-func (s mongoDBMigrationNamespaceLister) Get(name string) (*v1alpha1.MongoDBMigration, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mongodbmigration"), name)
-	}
-	return obj.(*v1alpha1.MongoDBMigration), nil
+	listers.ResourceIndexer[*courierv1alpha1.MongoDBMigration]
 }

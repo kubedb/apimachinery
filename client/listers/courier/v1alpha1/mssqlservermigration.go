@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MSSQLServerMigrationLister helps list MSSQLServerMigrations.
@@ -31,7 +31,7 @@ import (
 type MSSQLServerMigrationLister interface {
 	// List lists all MSSQLServerMigrations in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MSSQLServerMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.MSSQLServerMigration, err error)
 	// MSSQLServerMigrations returns an object that can list and get MSSQLServerMigrations.
 	MSSQLServerMigrations(namespace string) MSSQLServerMigrationNamespaceLister
 	MSSQLServerMigrationListerExpansion
@@ -39,25 +39,17 @@ type MSSQLServerMigrationLister interface {
 
 // mSSQLServerMigrationLister implements the MSSQLServerMigrationLister interface.
 type mSSQLServerMigrationLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*courierv1alpha1.MSSQLServerMigration]
 }
 
 // NewMSSQLServerMigrationLister returns a new MSSQLServerMigrationLister.
 func NewMSSQLServerMigrationLister(indexer cache.Indexer) MSSQLServerMigrationLister {
-	return &mSSQLServerMigrationLister{indexer: indexer}
-}
-
-// List lists all MSSQLServerMigrations in the indexer.
-func (s *mSSQLServerMigrationLister) List(selector labels.Selector) (ret []*v1alpha1.MSSQLServerMigration, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MSSQLServerMigration))
-	})
-	return ret, err
+	return &mSSQLServerMigrationLister{listers.New[*courierv1alpha1.MSSQLServerMigration](indexer, courierv1alpha1.Resource("mssqlservermigration"))}
 }
 
 // MSSQLServerMigrations returns an object that can list and get MSSQLServerMigrations.
 func (s *mSSQLServerMigrationLister) MSSQLServerMigrations(namespace string) MSSQLServerMigrationNamespaceLister {
-	return mSSQLServerMigrationNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mSSQLServerMigrationNamespaceLister{listers.NewNamespaced[*courierv1alpha1.MSSQLServerMigration](s.ResourceIndexer, namespace)}
 }
 
 // MSSQLServerMigrationNamespaceLister helps list and get MSSQLServerMigrations.
@@ -65,36 +57,15 @@ func (s *mSSQLServerMigrationLister) MSSQLServerMigrations(namespace string) MSS
 type MSSQLServerMigrationNamespaceLister interface {
 	// List lists all MSSQLServerMigrations in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MSSQLServerMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.MSSQLServerMigration, err error)
 	// Get retrieves the MSSQLServerMigration from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MSSQLServerMigration, error)
+	Get(name string) (*courierv1alpha1.MSSQLServerMigration, error)
 	MSSQLServerMigrationNamespaceListerExpansion
 }
 
 // mSSQLServerMigrationNamespaceLister implements the MSSQLServerMigrationNamespaceLister
 // interface.
 type mSSQLServerMigrationNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MSSQLServerMigrations in the indexer for a given namespace.
-func (s mSSQLServerMigrationNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MSSQLServerMigration, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MSSQLServerMigration))
-	})
-	return ret, err
-}
-
-// Get retrieves the MSSQLServerMigration from the indexer for a given namespace and name.
-func (s mSSQLServerMigrationNamespaceLister) Get(name string) (*v1alpha1.MSSQLServerMigration, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mssqlservermigration"), name)
-	}
-	return obj.(*v1alpha1.MSSQLServerMigration), nil
+	listers.ResourceIndexer[*courierv1alpha1.MSSQLServerMigration]
 }

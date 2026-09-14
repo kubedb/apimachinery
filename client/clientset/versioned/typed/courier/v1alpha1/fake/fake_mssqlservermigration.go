@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/courier/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMSSQLServerMigrations implements MSSQLServerMigrationInterface
-type FakeMSSQLServerMigrations struct {
+// fakeMSSQLServerMigrations implements MSSQLServerMigrationInterface
+type fakeMSSQLServerMigrations struct {
+	*gentype.FakeClientWithList[*v1alpha1.MSSQLServerMigration, *v1alpha1.MSSQLServerMigrationList]
 	Fake *FakeCourierV1alpha1
-	ns   string
 }
 
-var mssqlservermigrationsResource = v1alpha1.SchemeGroupVersion.WithResource("mssqlservermigrations")
-
-var mssqlservermigrationsKind = v1alpha1.SchemeGroupVersion.WithKind("MSSQLServerMigration")
-
-// Get takes name of the mSSQLServerMigration, and returns the corresponding mSSQLServerMigration object, and an error if there is any.
-func (c *FakeMSSQLServerMigrations) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MSSQLServerMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mssqlservermigrationsResource, c.ns, name), &v1alpha1.MSSQLServerMigration{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMSSQLServerMigrations(fake *FakeCourierV1alpha1, namespace string) courierv1alpha1.MSSQLServerMigrationInterface {
+	return &fakeMSSQLServerMigrations{
+		gentype.NewFakeClientWithList[*v1alpha1.MSSQLServerMigration, *v1alpha1.MSSQLServerMigrationList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("mssqlservermigrations"),
+			v1alpha1.SchemeGroupVersion.WithKind("MSSQLServerMigration"),
+			func() *v1alpha1.MSSQLServerMigration { return &v1alpha1.MSSQLServerMigration{} },
+			func() *v1alpha1.MSSQLServerMigrationList { return &v1alpha1.MSSQLServerMigrationList{} },
+			func(dst, src *v1alpha1.MSSQLServerMigrationList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MSSQLServerMigrationList) []*v1alpha1.MSSQLServerMigration {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MSSQLServerMigrationList, items []*v1alpha1.MSSQLServerMigration) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MSSQLServerMigration), err
-}
-
-// List takes label and field selectors, and returns the list of MSSQLServerMigrations that match those selectors.
-func (c *FakeMSSQLServerMigrations) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MSSQLServerMigrationList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mssqlservermigrationsResource, mssqlservermigrationsKind, c.ns, opts), &v1alpha1.MSSQLServerMigrationList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MSSQLServerMigrationList{ListMeta: obj.(*v1alpha1.MSSQLServerMigrationList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MSSQLServerMigrationList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mSSQLServerMigrations.
-func (c *FakeMSSQLServerMigrations) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mssqlservermigrationsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mSSQLServerMigration and creates it.  Returns the server's representation of the mSSQLServerMigration, and an error, if there is any.
-func (c *FakeMSSQLServerMigrations) Create(ctx context.Context, mSSQLServerMigration *v1alpha1.MSSQLServerMigration, opts v1.CreateOptions) (result *v1alpha1.MSSQLServerMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mssqlservermigrationsResource, c.ns, mSSQLServerMigration), &v1alpha1.MSSQLServerMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerMigration), err
-}
-
-// Update takes the representation of a mSSQLServerMigration and updates it. Returns the server's representation of the mSSQLServerMigration, and an error, if there is any.
-func (c *FakeMSSQLServerMigrations) Update(ctx context.Context, mSSQLServerMigration *v1alpha1.MSSQLServerMigration, opts v1.UpdateOptions) (result *v1alpha1.MSSQLServerMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mssqlservermigrationsResource, c.ns, mSSQLServerMigration), &v1alpha1.MSSQLServerMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerMigration), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMSSQLServerMigrations) UpdateStatus(ctx context.Context, mSSQLServerMigration *v1alpha1.MSSQLServerMigration, opts v1.UpdateOptions) (*v1alpha1.MSSQLServerMigration, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mssqlservermigrationsResource, "status", c.ns, mSSQLServerMigration), &v1alpha1.MSSQLServerMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerMigration), err
-}
-
-// Delete takes name of the mSSQLServerMigration and deletes it. Returns an error if one occurs.
-func (c *FakeMSSQLServerMigrations) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mssqlservermigrationsResource, c.ns, name, opts), &v1alpha1.MSSQLServerMigration{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMSSQLServerMigrations) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mssqlservermigrationsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MSSQLServerMigrationList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mSSQLServerMigration.
-func (c *FakeMSSQLServerMigrations) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MSSQLServerMigration, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mssqlservermigrationsResource, c.ns, name, pt, data, subresources...), &v1alpha1.MSSQLServerMigration{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MSSQLServerMigration), err
 }

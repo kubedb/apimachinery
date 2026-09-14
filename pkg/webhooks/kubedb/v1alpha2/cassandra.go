@@ -83,6 +83,9 @@ func (w *CassandraCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Cassandra)
 	if !ok {
 		return nil, fmt.Errorf("expected an Cassandra object but got %T", obj)

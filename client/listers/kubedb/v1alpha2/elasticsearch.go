@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ElasticsearchLister helps list Elasticsearches.
@@ -31,7 +31,7 @@ import (
 type ElasticsearchLister interface {
 	// List lists all Elasticsearches in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Elasticsearch, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Elasticsearch, err error)
 	// Elasticsearches returns an object that can list and get Elasticsearches.
 	Elasticsearches(namespace string) ElasticsearchNamespaceLister
 	ElasticsearchListerExpansion
@@ -39,25 +39,17 @@ type ElasticsearchLister interface {
 
 // elasticsearchLister implements the ElasticsearchLister interface.
 type elasticsearchLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.Elasticsearch]
 }
 
 // NewElasticsearchLister returns a new ElasticsearchLister.
 func NewElasticsearchLister(indexer cache.Indexer) ElasticsearchLister {
-	return &elasticsearchLister{indexer: indexer}
-}
-
-// List lists all Elasticsearches in the indexer.
-func (s *elasticsearchLister) List(selector labels.Selector) (ret []*v1alpha2.Elasticsearch, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Elasticsearch))
-	})
-	return ret, err
+	return &elasticsearchLister{listers.New[*kubedbv1alpha2.Elasticsearch](indexer, kubedbv1alpha2.Resource("elasticsearch"))}
 }
 
 // Elasticsearches returns an object that can list and get Elasticsearches.
 func (s *elasticsearchLister) Elasticsearches(namespace string) ElasticsearchNamespaceLister {
-	return elasticsearchNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return elasticsearchNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.Elasticsearch](s.ResourceIndexer, namespace)}
 }
 
 // ElasticsearchNamespaceLister helps list and get Elasticsearches.
@@ -65,36 +57,15 @@ func (s *elasticsearchLister) Elasticsearches(namespace string) ElasticsearchNam
 type ElasticsearchNamespaceLister interface {
 	// List lists all Elasticsearches in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Elasticsearch, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Elasticsearch, err error)
 	// Get retrieves the Elasticsearch from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.Elasticsearch, error)
+	Get(name string) (*kubedbv1alpha2.Elasticsearch, error)
 	ElasticsearchNamespaceListerExpansion
 }
 
 // elasticsearchNamespaceLister implements the ElasticsearchNamespaceLister
 // interface.
 type elasticsearchNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Elasticsearches in the indexer for a given namespace.
-func (s elasticsearchNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.Elasticsearch, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Elasticsearch))
-	})
-	return ret, err
-}
-
-// Get retrieves the Elasticsearch from the indexer for a given namespace and name.
-func (s elasticsearchNamespaceLister) Get(name string) (*v1alpha2.Elasticsearch, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("elasticsearch"), name)
-	}
-	return obj.(*v1alpha2.Elasticsearch), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.Elasticsearch]
 }

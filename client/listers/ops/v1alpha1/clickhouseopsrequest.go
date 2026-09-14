@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ClickHouseOpsRequestLister helps list ClickHouseOpsRequests.
@@ -31,7 +31,7 @@ import (
 type ClickHouseOpsRequestLister interface {
 	// List lists all ClickHouseOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ClickHouseOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.ClickHouseOpsRequest, err error)
 	// ClickHouseOpsRequests returns an object that can list and get ClickHouseOpsRequests.
 	ClickHouseOpsRequests(namespace string) ClickHouseOpsRequestNamespaceLister
 	ClickHouseOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type ClickHouseOpsRequestLister interface {
 
 // clickHouseOpsRequestLister implements the ClickHouseOpsRequestLister interface.
 type clickHouseOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.ClickHouseOpsRequest]
 }
 
 // NewClickHouseOpsRequestLister returns a new ClickHouseOpsRequestLister.
 func NewClickHouseOpsRequestLister(indexer cache.Indexer) ClickHouseOpsRequestLister {
-	return &clickHouseOpsRequestLister{indexer: indexer}
-}
-
-// List lists all ClickHouseOpsRequests in the indexer.
-func (s *clickHouseOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.ClickHouseOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ClickHouseOpsRequest))
-	})
-	return ret, err
+	return &clickHouseOpsRequestLister{listers.New[*opsv1alpha1.ClickHouseOpsRequest](indexer, opsv1alpha1.Resource("clickhouseopsrequest"))}
 }
 
 // ClickHouseOpsRequests returns an object that can list and get ClickHouseOpsRequests.
 func (s *clickHouseOpsRequestLister) ClickHouseOpsRequests(namespace string) ClickHouseOpsRequestNamespaceLister {
-	return clickHouseOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return clickHouseOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.ClickHouseOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // ClickHouseOpsRequestNamespaceLister helps list and get ClickHouseOpsRequests.
@@ -65,36 +57,15 @@ func (s *clickHouseOpsRequestLister) ClickHouseOpsRequests(namespace string) Cli
 type ClickHouseOpsRequestNamespaceLister interface {
 	// List lists all ClickHouseOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ClickHouseOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.ClickHouseOpsRequest, err error)
 	// Get retrieves the ClickHouseOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ClickHouseOpsRequest, error)
+	Get(name string) (*opsv1alpha1.ClickHouseOpsRequest, error)
 	ClickHouseOpsRequestNamespaceListerExpansion
 }
 
 // clickHouseOpsRequestNamespaceLister implements the ClickHouseOpsRequestNamespaceLister
 // interface.
 type clickHouseOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ClickHouseOpsRequests in the indexer for a given namespace.
-func (s clickHouseOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ClickHouseOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ClickHouseOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the ClickHouseOpsRequest from the indexer for a given namespace and name.
-func (s clickHouseOpsRequestNamespaceLister) Get(name string) (*v1alpha1.ClickHouseOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("clickhouseopsrequest"), name)
-	}
-	return obj.(*v1alpha1.ClickHouseOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.ClickHouseOpsRequest]
 }

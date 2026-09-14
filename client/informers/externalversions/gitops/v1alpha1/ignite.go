@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	apisgitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/client/listers/gitops/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Ignites.
 type IgniteInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.IgniteLister
+	Lister() gitopsv1alpha1.IgniteLister
 }
 
 type igniteInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredIgniteInformer(client versioned.Interface, namespace string, res
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Ignites(namespace).List(context.TODO(), options)
+				return client.GitopsV1alpha1().Ignites(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.GitopsV1alpha1().Ignites(namespace).Watch(context.TODO(), options)
+				return client.GitopsV1alpha1().Ignites(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Ignites(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.GitopsV1alpha1().Ignites(namespace).Watch(ctx, options)
 			},
 		},
-		&gitopsv1alpha1.Ignite{},
+		&apisgitopsv1alpha1.Ignite{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *igniteInformer) defaultInformer(client versioned.Interface, resyncPerio
 }
 
 func (f *igniteInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&gitopsv1alpha1.Ignite{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisgitopsv1alpha1.Ignite{}, f.defaultInformer)
 }
 
-func (f *igniteInformer) Lister() v1alpha1.IgniteLister {
-	return v1alpha1.NewIgniteLister(f.Informer().GetIndexer())
+func (f *igniteInformer) Lister() gitopsv1alpha1.IgniteLister {
+	return gitopsv1alpha1.NewIgniteLister(f.Informer().GetIndexer())
 }

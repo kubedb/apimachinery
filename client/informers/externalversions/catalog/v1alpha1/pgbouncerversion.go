@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // PgBouncerVersions.
 type PgBouncerVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PgBouncerVersionLister
+	Lister() catalogv1alpha1.PgBouncerVersionLister
 }
 
 type pgBouncerVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredPgBouncerVersionInformer(client versioned.Interface, resyncPerio
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().PgBouncerVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().PgBouncerVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().PgBouncerVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().PgBouncerVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().PgBouncerVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().PgBouncerVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.PgBouncerVersion{},
+		&apiscatalogv1alpha1.PgBouncerVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *pgBouncerVersionInformer) defaultInformer(client versioned.Interface, r
 }
 
 func (f *pgBouncerVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.PgBouncerVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.PgBouncerVersion{}, f.defaultInformer)
 }
 
-func (f *pgBouncerVersionInformer) Lister() v1alpha1.PgBouncerVersionLister {
-	return v1alpha1.NewPgBouncerVersionLister(f.Informer().GetIndexer())
+func (f *pgBouncerVersionInformer) Lister() catalogv1alpha1.PgBouncerVersionLister {
+	return catalogv1alpha1.NewPgBouncerVersionLister(f.Informer().GetIndexer())
 }

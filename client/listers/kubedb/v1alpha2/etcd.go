@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // EtcdLister helps list Etcds.
@@ -31,7 +31,7 @@ import (
 type EtcdLister interface {
 	// List lists all Etcds in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Etcd, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Etcd, err error)
 	// Etcds returns an object that can list and get Etcds.
 	Etcds(namespace string) EtcdNamespaceLister
 	EtcdListerExpansion
@@ -39,25 +39,17 @@ type EtcdLister interface {
 
 // etcdLister implements the EtcdLister interface.
 type etcdLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.Etcd]
 }
 
 // NewEtcdLister returns a new EtcdLister.
 func NewEtcdLister(indexer cache.Indexer) EtcdLister {
-	return &etcdLister{indexer: indexer}
-}
-
-// List lists all Etcds in the indexer.
-func (s *etcdLister) List(selector labels.Selector) (ret []*v1alpha2.Etcd, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Etcd))
-	})
-	return ret, err
+	return &etcdLister{listers.New[*kubedbv1alpha2.Etcd](indexer, kubedbv1alpha2.Resource("etcd"))}
 }
 
 // Etcds returns an object that can list and get Etcds.
 func (s *etcdLister) Etcds(namespace string) EtcdNamespaceLister {
-	return etcdNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return etcdNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.Etcd](s.ResourceIndexer, namespace)}
 }
 
 // EtcdNamespaceLister helps list and get Etcds.
@@ -65,36 +57,15 @@ func (s *etcdLister) Etcds(namespace string) EtcdNamespaceLister {
 type EtcdNamespaceLister interface {
 	// List lists all Etcds in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Etcd, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Etcd, err error)
 	// Get retrieves the Etcd from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.Etcd, error)
+	Get(name string) (*kubedbv1alpha2.Etcd, error)
 	EtcdNamespaceListerExpansion
 }
 
 // etcdNamespaceLister implements the EtcdNamespaceLister
 // interface.
 type etcdNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Etcds in the indexer for a given namespace.
-func (s etcdNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.Etcd, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Etcd))
-	})
-	return ret, err
-}
-
-// Get retrieves the Etcd from the indexer for a given namespace and name.
-func (s etcdNamespaceLister) Get(name string) (*v1alpha2.Etcd, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("etcd"), name)
-	}
-	return obj.(*v1alpha2.Etcd), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.Etcd]
 }

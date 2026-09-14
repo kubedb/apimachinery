@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PerconaXtraDBAutoscalerLister helps list PerconaXtraDBAutoscalers.
@@ -31,7 +31,7 @@ import (
 type PerconaXtraDBAutoscalerLister interface {
 	// List lists all PerconaXtraDBAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDBAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.PerconaXtraDBAutoscaler, err error)
 	// PerconaXtraDBAutoscalers returns an object that can list and get PerconaXtraDBAutoscalers.
 	PerconaXtraDBAutoscalers(namespace string) PerconaXtraDBAutoscalerNamespaceLister
 	PerconaXtraDBAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type PerconaXtraDBAutoscalerLister interface {
 
 // perconaXtraDBAutoscalerLister implements the PerconaXtraDBAutoscalerLister interface.
 type perconaXtraDBAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.PerconaXtraDBAutoscaler]
 }
 
 // NewPerconaXtraDBAutoscalerLister returns a new PerconaXtraDBAutoscalerLister.
 func NewPerconaXtraDBAutoscalerLister(indexer cache.Indexer) PerconaXtraDBAutoscalerLister {
-	return &perconaXtraDBAutoscalerLister{indexer: indexer}
-}
-
-// List lists all PerconaXtraDBAutoscalers in the indexer.
-func (s *perconaXtraDBAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDBAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PerconaXtraDBAutoscaler))
-	})
-	return ret, err
+	return &perconaXtraDBAutoscalerLister{listers.New[*autoscalingv1alpha1.PerconaXtraDBAutoscaler](indexer, autoscalingv1alpha1.Resource("perconaxtradbautoscaler"))}
 }
 
 // PerconaXtraDBAutoscalers returns an object that can list and get PerconaXtraDBAutoscalers.
 func (s *perconaXtraDBAutoscalerLister) PerconaXtraDBAutoscalers(namespace string) PerconaXtraDBAutoscalerNamespaceLister {
-	return perconaXtraDBAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return perconaXtraDBAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.PerconaXtraDBAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // PerconaXtraDBAutoscalerNamespaceLister helps list and get PerconaXtraDBAutoscalers.
@@ -65,36 +57,15 @@ func (s *perconaXtraDBAutoscalerLister) PerconaXtraDBAutoscalers(namespace strin
 type PerconaXtraDBAutoscalerNamespaceLister interface {
 	// List lists all PerconaXtraDBAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDBAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.PerconaXtraDBAutoscaler, err error)
 	// Get retrieves the PerconaXtraDBAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PerconaXtraDBAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.PerconaXtraDBAutoscaler, error)
 	PerconaXtraDBAutoscalerNamespaceListerExpansion
 }
 
 // perconaXtraDBAutoscalerNamespaceLister implements the PerconaXtraDBAutoscalerNamespaceLister
 // interface.
 type perconaXtraDBAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PerconaXtraDBAutoscalers in the indexer for a given namespace.
-func (s perconaXtraDBAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDBAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PerconaXtraDBAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the PerconaXtraDBAutoscaler from the indexer for a given namespace and name.
-func (s perconaXtraDBAutoscalerNamespaceLister) Get(name string) (*v1alpha1.PerconaXtraDBAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("perconaxtradbautoscaler"), name)
-	}
-	return obj.(*v1alpha1.PerconaXtraDBAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.PerconaXtraDBAutoscaler]
 }

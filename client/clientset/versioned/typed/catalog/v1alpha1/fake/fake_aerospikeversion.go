@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeAerospikeVersions implements AerospikeVersionInterface
-type FakeAerospikeVersions struct {
+// fakeAerospikeVersions implements AerospikeVersionInterface
+type fakeAerospikeVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.AerospikeVersion, *v1alpha1.AerospikeVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var aerospikeversionsResource = v1alpha1.SchemeGroupVersion.WithResource("aerospikeversions")
-
-var aerospikeversionsKind = v1alpha1.SchemeGroupVersion.WithKind("AerospikeVersion")
-
-// Get takes name of the aerospikeVersion, and returns the corresponding aerospikeVersion object, and an error if there is any.
-func (c *FakeAerospikeVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.AerospikeVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(aerospikeversionsResource, name), &v1alpha1.AerospikeVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeAerospikeVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.AerospikeVersionInterface {
+	return &fakeAerospikeVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.AerospikeVersion, *v1alpha1.AerospikeVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("aerospikeversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("AerospikeVersion"),
+			func() *v1alpha1.AerospikeVersion { return &v1alpha1.AerospikeVersion{} },
+			func() *v1alpha1.AerospikeVersionList { return &v1alpha1.AerospikeVersionList{} },
+			func(dst, src *v1alpha1.AerospikeVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.AerospikeVersionList) []*v1alpha1.AerospikeVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.AerospikeVersionList, items []*v1alpha1.AerospikeVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.AerospikeVersion), err
-}
-
-// List takes label and field selectors, and returns the list of AerospikeVersions that match those selectors.
-func (c *FakeAerospikeVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.AerospikeVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(aerospikeversionsResource, aerospikeversionsKind, opts), &v1alpha1.AerospikeVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.AerospikeVersionList{ListMeta: obj.(*v1alpha1.AerospikeVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.AerospikeVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested aerospikeVersions.
-func (c *FakeAerospikeVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(aerospikeversionsResource, opts))
-}
-
-// Create takes the representation of a aerospikeVersion and creates it.  Returns the server's representation of the aerospikeVersion, and an error, if there is any.
-func (c *FakeAerospikeVersions) Create(ctx context.Context, aerospikeVersion *v1alpha1.AerospikeVersion, opts v1.CreateOptions) (result *v1alpha1.AerospikeVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(aerospikeversionsResource, aerospikeVersion), &v1alpha1.AerospikeVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.AerospikeVersion), err
-}
-
-// Update takes the representation of a aerospikeVersion and updates it. Returns the server's representation of the aerospikeVersion, and an error, if there is any.
-func (c *FakeAerospikeVersions) Update(ctx context.Context, aerospikeVersion *v1alpha1.AerospikeVersion, opts v1.UpdateOptions) (result *v1alpha1.AerospikeVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(aerospikeversionsResource, aerospikeVersion), &v1alpha1.AerospikeVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.AerospikeVersion), err
-}
-
-// Delete takes name of the aerospikeVersion and deletes it. Returns an error if one occurs.
-func (c *FakeAerospikeVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(aerospikeversionsResource, name, opts), &v1alpha1.AerospikeVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeAerospikeVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(aerospikeversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.AerospikeVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched aerospikeVersion.
-func (c *FakeAerospikeVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.AerospikeVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(aerospikeversionsResource, name, pt, data, subresources...), &v1alpha1.AerospikeVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.AerospikeVersion), err
 }

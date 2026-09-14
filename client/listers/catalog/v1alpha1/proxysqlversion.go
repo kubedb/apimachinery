@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ProxySQLVersionLister helps list ProxySQLVersions.
@@ -31,39 +31,19 @@ import (
 type ProxySQLVersionLister interface {
 	// List lists all ProxySQLVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ProxySQLVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.ProxySQLVersion, err error)
 	// Get retrieves the ProxySQLVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ProxySQLVersion, error)
+	Get(name string) (*catalogv1alpha1.ProxySQLVersion, error)
 	ProxySQLVersionListerExpansion
 }
 
 // proxySQLVersionLister implements the ProxySQLVersionLister interface.
 type proxySQLVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.ProxySQLVersion]
 }
 
 // NewProxySQLVersionLister returns a new ProxySQLVersionLister.
 func NewProxySQLVersionLister(indexer cache.Indexer) ProxySQLVersionLister {
-	return &proxySQLVersionLister{indexer: indexer}
-}
-
-// List lists all ProxySQLVersions in the indexer.
-func (s *proxySQLVersionLister) List(selector labels.Selector) (ret []*v1alpha1.ProxySQLVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ProxySQLVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the ProxySQLVersion from the index for a given name.
-func (s *proxySQLVersionLister) Get(name string) (*v1alpha1.ProxySQLVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("proxysqlversion"), name)
-	}
-	return obj.(*v1alpha1.ProxySQLVersion), nil
+	return &proxySQLVersionLister{listers.New[*catalogv1alpha1.ProxySQLVersion](indexer, catalogv1alpha1.Resource("proxysqlversion"))}
 }

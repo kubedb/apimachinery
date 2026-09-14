@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MilvusAutoscalerLister helps list MilvusAutoscalers.
@@ -31,7 +31,7 @@ import (
 type MilvusAutoscalerLister interface {
 	// List lists all MilvusAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MilvusAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.MilvusAutoscaler, err error)
 	// MilvusAutoscalers returns an object that can list and get MilvusAutoscalers.
 	MilvusAutoscalers(namespace string) MilvusAutoscalerNamespaceLister
 	MilvusAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type MilvusAutoscalerLister interface {
 
 // milvusAutoscalerLister implements the MilvusAutoscalerLister interface.
 type milvusAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.MilvusAutoscaler]
 }
 
 // NewMilvusAutoscalerLister returns a new MilvusAutoscalerLister.
 func NewMilvusAutoscalerLister(indexer cache.Indexer) MilvusAutoscalerLister {
-	return &milvusAutoscalerLister{indexer: indexer}
-}
-
-// List lists all MilvusAutoscalers in the indexer.
-func (s *milvusAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.MilvusAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MilvusAutoscaler))
-	})
-	return ret, err
+	return &milvusAutoscalerLister{listers.New[*autoscalingv1alpha1.MilvusAutoscaler](indexer, autoscalingv1alpha1.Resource("milvusautoscaler"))}
 }
 
 // MilvusAutoscalers returns an object that can list and get MilvusAutoscalers.
 func (s *milvusAutoscalerLister) MilvusAutoscalers(namespace string) MilvusAutoscalerNamespaceLister {
-	return milvusAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return milvusAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.MilvusAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // MilvusAutoscalerNamespaceLister helps list and get MilvusAutoscalers.
@@ -65,36 +57,15 @@ func (s *milvusAutoscalerLister) MilvusAutoscalers(namespace string) MilvusAutos
 type MilvusAutoscalerNamespaceLister interface {
 	// List lists all MilvusAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MilvusAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.MilvusAutoscaler, err error)
 	// Get retrieves the MilvusAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MilvusAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.MilvusAutoscaler, error)
 	MilvusAutoscalerNamespaceListerExpansion
 }
 
 // milvusAutoscalerNamespaceLister implements the MilvusAutoscalerNamespaceLister
 // interface.
 type milvusAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MilvusAutoscalers in the indexer for a given namespace.
-func (s milvusAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MilvusAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MilvusAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the MilvusAutoscaler from the indexer for a given namespace and name.
-func (s milvusAutoscalerNamespaceLister) Get(name string) (*v1alpha1.MilvusAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("milvusautoscaler"), name)
-	}
-	return obj.(*v1alpha1.MilvusAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.MilvusAutoscaler]
 }

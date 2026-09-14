@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DocumentDBAutoscalerLister helps list DocumentDBAutoscalers.
@@ -31,7 +31,7 @@ import (
 type DocumentDBAutoscalerLister interface {
 	// List lists all DocumentDBAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DocumentDBAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.DocumentDBAutoscaler, err error)
 	// DocumentDBAutoscalers returns an object that can list and get DocumentDBAutoscalers.
 	DocumentDBAutoscalers(namespace string) DocumentDBAutoscalerNamespaceLister
 	DocumentDBAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type DocumentDBAutoscalerLister interface {
 
 // documentDBAutoscalerLister implements the DocumentDBAutoscalerLister interface.
 type documentDBAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.DocumentDBAutoscaler]
 }
 
 // NewDocumentDBAutoscalerLister returns a new DocumentDBAutoscalerLister.
 func NewDocumentDBAutoscalerLister(indexer cache.Indexer) DocumentDBAutoscalerLister {
-	return &documentDBAutoscalerLister{indexer: indexer}
-}
-
-// List lists all DocumentDBAutoscalers in the indexer.
-func (s *documentDBAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.DocumentDBAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DocumentDBAutoscaler))
-	})
-	return ret, err
+	return &documentDBAutoscalerLister{listers.New[*autoscalingv1alpha1.DocumentDBAutoscaler](indexer, autoscalingv1alpha1.Resource("documentdbautoscaler"))}
 }
 
 // DocumentDBAutoscalers returns an object that can list and get DocumentDBAutoscalers.
 func (s *documentDBAutoscalerLister) DocumentDBAutoscalers(namespace string) DocumentDBAutoscalerNamespaceLister {
-	return documentDBAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return documentDBAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.DocumentDBAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // DocumentDBAutoscalerNamespaceLister helps list and get DocumentDBAutoscalers.
@@ -65,36 +57,15 @@ func (s *documentDBAutoscalerLister) DocumentDBAutoscalers(namespace string) Doc
 type DocumentDBAutoscalerNamespaceLister interface {
 	// List lists all DocumentDBAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DocumentDBAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.DocumentDBAutoscaler, err error)
 	// Get retrieves the DocumentDBAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DocumentDBAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.DocumentDBAutoscaler, error)
 	DocumentDBAutoscalerNamespaceListerExpansion
 }
 
 // documentDBAutoscalerNamespaceLister implements the DocumentDBAutoscalerNamespaceLister
 // interface.
 type documentDBAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all DocumentDBAutoscalers in the indexer for a given namespace.
-func (s documentDBAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.DocumentDBAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DocumentDBAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the DocumentDBAutoscaler from the indexer for a given namespace and name.
-func (s documentDBAutoscalerNamespaceLister) Get(name string) (*v1alpha1.DocumentDBAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("documentdbautoscaler"), name)
-	}
-	return obj.(*v1alpha1.DocumentDBAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.DocumentDBAutoscaler]
 }

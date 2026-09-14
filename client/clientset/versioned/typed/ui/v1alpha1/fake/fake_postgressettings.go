@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePostgresSettingses implements PostgresSettingsInterface
-type FakePostgresSettingses struct {
+// fakePostgresSettingses implements PostgresSettingsInterface
+type fakePostgresSettingses struct {
+	*gentype.FakeClientWithList[*v1alpha1.PostgresSettings, *v1alpha1.PostgresSettingsList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var postgressettingsesResource = v1alpha1.SchemeGroupVersion.WithResource("postgressettingses")
-
-var postgressettingsesKind = v1alpha1.SchemeGroupVersion.WithKind("PostgresSettings")
-
-// Get takes name of the postgresSettings, and returns the corresponding postgresSettings object, and an error if there is any.
-func (c *FakePostgresSettingses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.PostgresSettings, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(postgressettingsesResource, c.ns, name), &v1alpha1.PostgresSettings{})
-
-	if obj == nil {
-		return nil, err
+func newFakePostgresSettingses(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.PostgresSettingsInterface {
+	return &fakePostgresSettingses{
+		gentype.NewFakeClientWithList[*v1alpha1.PostgresSettings, *v1alpha1.PostgresSettingsList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("postgressettingses"),
+			v1alpha1.SchemeGroupVersion.WithKind("PostgresSettings"),
+			func() *v1alpha1.PostgresSettings { return &v1alpha1.PostgresSettings{} },
+			func() *v1alpha1.PostgresSettingsList { return &v1alpha1.PostgresSettingsList{} },
+			func(dst, src *v1alpha1.PostgresSettingsList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.PostgresSettingsList) []*v1alpha1.PostgresSettings {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.PostgresSettingsList, items []*v1alpha1.PostgresSettings) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.PostgresSettings), err
-}
-
-// List takes label and field selectors, and returns the list of PostgresSettingses that match those selectors.
-func (c *FakePostgresSettingses) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.PostgresSettingsList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(postgressettingsesResource, postgressettingsesKind, c.ns, opts), &v1alpha1.PostgresSettingsList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.PostgresSettingsList{ListMeta: obj.(*v1alpha1.PostgresSettingsList).ListMeta}
-	for _, item := range obj.(*v1alpha1.PostgresSettingsList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested postgresSettingses.
-func (c *FakePostgresSettingses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(postgressettingsesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a postgresSettings and creates it.  Returns the server's representation of the postgresSettings, and an error, if there is any.
-func (c *FakePostgresSettingses) Create(ctx context.Context, postgresSettings *v1alpha1.PostgresSettings, opts v1.CreateOptions) (result *v1alpha1.PostgresSettings, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(postgressettingsesResource, c.ns, postgresSettings), &v1alpha1.PostgresSettings{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresSettings), err
-}
-
-// Update takes the representation of a postgresSettings and updates it. Returns the server's representation of the postgresSettings, and an error, if there is any.
-func (c *FakePostgresSettingses) Update(ctx context.Context, postgresSettings *v1alpha1.PostgresSettings, opts v1.UpdateOptions) (result *v1alpha1.PostgresSettings, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(postgressettingsesResource, c.ns, postgresSettings), &v1alpha1.PostgresSettings{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresSettings), err
-}
-
-// Delete takes name of the postgresSettings and deletes it. Returns an error if one occurs.
-func (c *FakePostgresSettingses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(postgressettingsesResource, c.ns, name, opts), &v1alpha1.PostgresSettings{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePostgresSettingses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(postgressettingsesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.PostgresSettingsList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched postgresSettings.
-func (c *FakePostgresSettingses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.PostgresSettings, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(postgressettingsesResource, c.ns, name, pt, data, subresources...), &v1alpha1.PostgresSettings{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.PostgresSettings), err
 }

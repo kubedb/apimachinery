@@ -114,6 +114,9 @@ func (w *DocumentDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtim
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.DocumentDB)
 	if !ok {
 		return nil, fmt.Errorf("expected an DocumentDB object but got %T", obj)

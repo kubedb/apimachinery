@@ -27203,6 +27203,36 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.courier.v1alpha1.MSSQLServerDatabaseSelection": {
+      "description": "MSSQLServerDatabaseSelection defines table filters for one source database. An empty Table list selects every eligible table after the global Schema and ExcludeSchema filters are applied. ExcludeTable takes precedence over Table.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "excludeTable": {
+          "description": "ExcludeTable is the list of schema-qualified tables to exclude.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "name": {
+          "description": "Name is the source database name.",
+          "type": "string",
+          "default": ""
+        },
+        "table": {
+          "description": "Table is the list of schema-qualified tables (e.g. \"dbo.Users\") to include.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.courier.v1alpha1.MSSQLServerMigration": {
       "type": "object",
       "required": [
@@ -27292,6 +27322,10 @@
           "description": "JobTemplate specifies runtime configurations for the migration Job",
           "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.PodTemplateSpec"
         },
+        "precheck": {
+          "description": "Precheck runs MSSQL source compatibility checks only and does not start a migration.",
+          "type": "boolean"
+        },
         "source": {
           "description": "Source defines the source MSSQL Server database configuration",
           "default": {},
@@ -27310,13 +27344,17 @@
         "enabled"
       ],
       "properties": {
-        "database": {
-          "description": "Database is the list of databases to migrate.",
+        "databases": {
+          "description": "Databases defines database-specific table selection.",
           "type": "array",
           "items": {
-            "type": "string",
-            "default": ""
-          }
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.courier.v1alpha1.MSSQLServerDatabaseSelection"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map"
         },
         "enabled": {
           "description": "Enabled controls whether the Schema Phase should be executed.",
@@ -27331,24 +27369,8 @@
             "default": ""
           }
         },
-        "excludeTable": {
-          "description": "ExcludeTable is the list of schema-qualified tables to exclude.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
         "schema": {
           "description": "Schema is the list of SQL Server schemas (e.g. \"dbo\") to include.",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "default": ""
-          }
-        },
-        "table": {
-          "description": "Table is the list of schema-qualified tables (e.g. \"dbo.Users\") to include.",
           "type": "array",
           "items": {
             "type": "string",
@@ -34712,6 +34734,9 @@
     "io.k8s.api.core.v1.ContainerRestartRule": {
       "description": "ContainerRestartRule describes how a container exit is handled.",
       "type": "object",
+      "required": [
+        "action"
+      ],
       "properties": {
         "action": {
           "description": "Specifies the action taken on a container exit if the requirements are satisfied. The only possible value is \"Restart\" to restart the container.",
@@ -34726,6 +34751,9 @@
     "io.k8s.api.core.v1.ContainerRestartRuleOnExitCodes": {
       "description": "ContainerRestartRuleOnExitCodes describes the condition for handling an exited container based on its exit codes.",
       "type": "object",
+      "required": [
+        "operator"
+      ],
       "properties": {
         "operator": {
           "description": "Represents the relationship between the container exit code(s) and the specified values. Possible values are: - In: the requirement is satisfied if the container exit code is in the\n  set of specified values.\n- NotIn: the requirement is satisfied if the container exit code is\n  not in the set of specified values.",
@@ -35621,7 +35649,13 @@
           "type": "array",
           "items": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "enum": [
+              "ReadOnlyMany",
+              "ReadWriteMany",
+              "ReadWriteOnce",
+              "ReadWriteOncePod"
+            ]
           },
           "x-kubernetes-list-type": "atomic"
         },
@@ -35819,6 +35853,10 @@
     "io.k8s.api.core.v1.PodCertificateProjection": {
       "description": "PodCertificateProjection provides a private key and X.509 certificate in the pod filesystem.",
       "type": "object",
+      "required": [
+        "signerName",
+        "keyType"
+      ],
       "properties": {
         "certificateChainPath": {
           "description": "Write the certificate chain at this path in the projected volume.\n\nMost applications should use credentialBundlePath.  When using keyPath and certificateChainPath, your application needs to check that the key and leaf certificate are consistent, because it is possible to read the files mid-rotation.",
@@ -38790,12 +38828,10 @@
           }
         },
         "externalTrafficPolicy": {
-          "description": "externalTrafficPolicy denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints. \"Local\" preserves the client source IP and avoids a second hop for LoadBalancer and Nodeport type services, but risks potentially imbalanced traffic spreading. \"Cluster\" obscures the client source IP and may cause a second hop to another node, but should have good overall load-spreading.\n\nPossible enum values:\n - `\"Cluster\"`\n - `\"Cluster\"` routes traffic to all endpoints.\n - `\"Local\"`\n - `\"Local\"` preserves the source IP of the traffic by routing only to endpoints on the same node as the traffic was received on (dropping the traffic if there are no local endpoints).",
+          "description": "externalTrafficPolicy denotes if this Service desires to route external traffic to node-local or cluster-wide endpoints. \"Local\" preserves the client source IP and avoids a second hop for LoadBalancer and Nodeport type services, but risks potentially imbalanced traffic spreading. \"Cluster\" obscures the client source IP and may cause a second hop to another node, but should have good overall load-spreading.\n\nPossible enum values:\n - `\"Cluster\"` routes traffic to all endpoints.\n - `\"Local\"` preserves the source IP of the traffic by routing only to endpoints on the same node as the traffic was received on (dropping the traffic if there are no local endpoints).",
           "type": "string",
           "enum": [
             "Cluster",
-            "Cluster",
-            "Local",
             "Local"
           ]
         },

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ConnectClusterLister helps list ConnectClusters.
@@ -31,7 +31,7 @@ import (
 type ConnectClusterLister interface {
 	// List lists all ConnectClusters in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ConnectCluster, err error)
+	List(selector labels.Selector) (ret []*kafkav1alpha1.ConnectCluster, err error)
 	// ConnectClusters returns an object that can list and get ConnectClusters.
 	ConnectClusters(namespace string) ConnectClusterNamespaceLister
 	ConnectClusterListerExpansion
@@ -39,25 +39,17 @@ type ConnectClusterLister interface {
 
 // connectClusterLister implements the ConnectClusterLister interface.
 type connectClusterLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kafkav1alpha1.ConnectCluster]
 }
 
 // NewConnectClusterLister returns a new ConnectClusterLister.
 func NewConnectClusterLister(indexer cache.Indexer) ConnectClusterLister {
-	return &connectClusterLister{indexer: indexer}
-}
-
-// List lists all ConnectClusters in the indexer.
-func (s *connectClusterLister) List(selector labels.Selector) (ret []*v1alpha1.ConnectCluster, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ConnectCluster))
-	})
-	return ret, err
+	return &connectClusterLister{listers.New[*kafkav1alpha1.ConnectCluster](indexer, kafkav1alpha1.Resource("connectcluster"))}
 }
 
 // ConnectClusters returns an object that can list and get ConnectClusters.
 func (s *connectClusterLister) ConnectClusters(namespace string) ConnectClusterNamespaceLister {
-	return connectClusterNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return connectClusterNamespaceLister{listers.NewNamespaced[*kafkav1alpha1.ConnectCluster](s.ResourceIndexer, namespace)}
 }
 
 // ConnectClusterNamespaceLister helps list and get ConnectClusters.
@@ -65,36 +57,15 @@ func (s *connectClusterLister) ConnectClusters(namespace string) ConnectClusterN
 type ConnectClusterNamespaceLister interface {
 	// List lists all ConnectClusters in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ConnectCluster, err error)
+	List(selector labels.Selector) (ret []*kafkav1alpha1.ConnectCluster, err error)
 	// Get retrieves the ConnectCluster from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ConnectCluster, error)
+	Get(name string) (*kafkav1alpha1.ConnectCluster, error)
 	ConnectClusterNamespaceListerExpansion
 }
 
 // connectClusterNamespaceLister implements the ConnectClusterNamespaceLister
 // interface.
 type connectClusterNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ConnectClusters in the indexer for a given namespace.
-func (s connectClusterNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ConnectCluster, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ConnectCluster))
-	})
-	return ret, err
-}
-
-// Get retrieves the ConnectCluster from the indexer for a given namespace and name.
-func (s connectClusterNamespaceLister) Get(name string) (*v1alpha1.ConnectCluster, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("connectcluster"), name)
-	}
-	return obj.(*v1alpha1.ConnectCluster), nil
+	listers.ResourceIndexer[*kafkav1alpha1.ConnectCluster]
 }

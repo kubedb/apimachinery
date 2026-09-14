@@ -124,6 +124,9 @@ func (pw PgBouncerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, pw.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	pgBouncer, ok := obj.(*dbapi.PgBouncer)
 	if !ok {
 		return nil, fmt.Errorf("expected a PgBouncer but got a %T", pgBouncer)

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // WeaviateAutoscalerLister helps list WeaviateAutoscalers.
@@ -31,7 +31,7 @@ import (
 type WeaviateAutoscalerLister interface {
 	// List lists all WeaviateAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.WeaviateAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.WeaviateAutoscaler, err error)
 	// WeaviateAutoscalers returns an object that can list and get WeaviateAutoscalers.
 	WeaviateAutoscalers(namespace string) WeaviateAutoscalerNamespaceLister
 	WeaviateAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type WeaviateAutoscalerLister interface {
 
 // weaviateAutoscalerLister implements the WeaviateAutoscalerLister interface.
 type weaviateAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.WeaviateAutoscaler]
 }
 
 // NewWeaviateAutoscalerLister returns a new WeaviateAutoscalerLister.
 func NewWeaviateAutoscalerLister(indexer cache.Indexer) WeaviateAutoscalerLister {
-	return &weaviateAutoscalerLister{indexer: indexer}
-}
-
-// List lists all WeaviateAutoscalers in the indexer.
-func (s *weaviateAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.WeaviateAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.WeaviateAutoscaler))
-	})
-	return ret, err
+	return &weaviateAutoscalerLister{listers.New[*autoscalingv1alpha1.WeaviateAutoscaler](indexer, autoscalingv1alpha1.Resource("weaviateautoscaler"))}
 }
 
 // WeaviateAutoscalers returns an object that can list and get WeaviateAutoscalers.
 func (s *weaviateAutoscalerLister) WeaviateAutoscalers(namespace string) WeaviateAutoscalerNamespaceLister {
-	return weaviateAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return weaviateAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.WeaviateAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // WeaviateAutoscalerNamespaceLister helps list and get WeaviateAutoscalers.
@@ -65,36 +57,15 @@ func (s *weaviateAutoscalerLister) WeaviateAutoscalers(namespace string) Weaviat
 type WeaviateAutoscalerNamespaceLister interface {
 	// List lists all WeaviateAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.WeaviateAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.WeaviateAutoscaler, err error)
 	// Get retrieves the WeaviateAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.WeaviateAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.WeaviateAutoscaler, error)
 	WeaviateAutoscalerNamespaceListerExpansion
 }
 
 // weaviateAutoscalerNamespaceLister implements the WeaviateAutoscalerNamespaceLister
 // interface.
 type weaviateAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all WeaviateAutoscalers in the indexer for a given namespace.
-func (s weaviateAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.WeaviateAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.WeaviateAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the WeaviateAutoscaler from the indexer for a given namespace and name.
-func (s weaviateAutoscalerNamespaceLister) Get(name string) (*v1alpha1.WeaviateAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("weaviateautoscaler"), name)
-	}
-	return obj.(*v1alpha1.WeaviateAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.WeaviateAutoscaler]
 }

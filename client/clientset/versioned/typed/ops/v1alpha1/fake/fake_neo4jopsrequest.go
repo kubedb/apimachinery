@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeNeo4jOpsRequests implements Neo4jOpsRequestInterface
-type FakeNeo4jOpsRequests struct {
+// fakeNeo4jOpsRequests implements Neo4jOpsRequestInterface
+type fakeNeo4jOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.Neo4jOpsRequest, *v1alpha1.Neo4jOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var neo4jopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("neo4jopsrequests")
-
-var neo4jopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("Neo4jOpsRequest")
-
-// Get takes name of the neo4jOpsRequest, and returns the corresponding neo4jOpsRequest object, and an error if there is any.
-func (c *FakeNeo4jOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Neo4jOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(neo4jopsrequestsResource, c.ns, name), &v1alpha1.Neo4jOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeNeo4jOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.Neo4jOpsRequestInterface {
+	return &fakeNeo4jOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.Neo4jOpsRequest, *v1alpha1.Neo4jOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("neo4jopsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("Neo4jOpsRequest"),
+			func() *v1alpha1.Neo4jOpsRequest { return &v1alpha1.Neo4jOpsRequest{} },
+			func() *v1alpha1.Neo4jOpsRequestList { return &v1alpha1.Neo4jOpsRequestList{} },
+			func(dst, src *v1alpha1.Neo4jOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.Neo4jOpsRequestList) []*v1alpha1.Neo4jOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.Neo4jOpsRequestList, items []*v1alpha1.Neo4jOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Neo4jOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of Neo4jOpsRequests that match those selectors.
-func (c *FakeNeo4jOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.Neo4jOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(neo4jopsrequestsResource, neo4jopsrequestsKind, c.ns, opts), &v1alpha1.Neo4jOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.Neo4jOpsRequestList{ListMeta: obj.(*v1alpha1.Neo4jOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.Neo4jOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested neo4jOpsRequests.
-func (c *FakeNeo4jOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(neo4jopsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a neo4jOpsRequest and creates it.  Returns the server's representation of the neo4jOpsRequest, and an error, if there is any.
-func (c *FakeNeo4jOpsRequests) Create(ctx context.Context, neo4jOpsRequest *v1alpha1.Neo4jOpsRequest, opts v1.CreateOptions) (result *v1alpha1.Neo4jOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(neo4jopsrequestsResource, c.ns, neo4jOpsRequest), &v1alpha1.Neo4jOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jOpsRequest), err
-}
-
-// Update takes the representation of a neo4jOpsRequest and updates it. Returns the server's representation of the neo4jOpsRequest, and an error, if there is any.
-func (c *FakeNeo4jOpsRequests) Update(ctx context.Context, neo4jOpsRequest *v1alpha1.Neo4jOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.Neo4jOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(neo4jopsrequestsResource, c.ns, neo4jOpsRequest), &v1alpha1.Neo4jOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeNeo4jOpsRequests) UpdateStatus(ctx context.Context, neo4jOpsRequest *v1alpha1.Neo4jOpsRequest, opts v1.UpdateOptions) (*v1alpha1.Neo4jOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(neo4jopsrequestsResource, "status", c.ns, neo4jOpsRequest), &v1alpha1.Neo4jOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jOpsRequest), err
-}
-
-// Delete takes name of the neo4jOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeNeo4jOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(neo4jopsrequestsResource, c.ns, name, opts), &v1alpha1.Neo4jOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeNeo4jOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(neo4jopsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.Neo4jOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched neo4jOpsRequest.
-func (c *FakeNeo4jOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Neo4jOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(neo4jopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.Neo4jOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Neo4jOpsRequest), err
 }

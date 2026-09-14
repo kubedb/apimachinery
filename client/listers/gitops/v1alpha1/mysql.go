@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MySQLLister helps list MySQLs.
@@ -31,7 +31,7 @@ import (
 type MySQLLister interface {
 	// List lists all MySQLs in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQL, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.MySQL, err error)
 	// MySQLs returns an object that can list and get MySQLs.
 	MySQLs(namespace string) MySQLNamespaceLister
 	MySQLListerExpansion
@@ -39,25 +39,17 @@ type MySQLLister interface {
 
 // mySQLLister implements the MySQLLister interface.
 type mySQLLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*gitopsv1alpha1.MySQL]
 }
 
 // NewMySQLLister returns a new MySQLLister.
 func NewMySQLLister(indexer cache.Indexer) MySQLLister {
-	return &mySQLLister{indexer: indexer}
-}
-
-// List lists all MySQLs in the indexer.
-func (s *mySQLLister) List(selector labels.Selector) (ret []*v1alpha1.MySQL, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQL))
-	})
-	return ret, err
+	return &mySQLLister{listers.New[*gitopsv1alpha1.MySQL](indexer, gitopsv1alpha1.Resource("mysql"))}
 }
 
 // MySQLs returns an object that can list and get MySQLs.
 func (s *mySQLLister) MySQLs(namespace string) MySQLNamespaceLister {
-	return mySQLNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mySQLNamespaceLister{listers.NewNamespaced[*gitopsv1alpha1.MySQL](s.ResourceIndexer, namespace)}
 }
 
 // MySQLNamespaceLister helps list and get MySQLs.
@@ -65,36 +57,15 @@ func (s *mySQLLister) MySQLs(namespace string) MySQLNamespaceLister {
 type MySQLNamespaceLister interface {
 	// List lists all MySQLs in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MySQL, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.MySQL, err error)
 	// Get retrieves the MySQL from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MySQL, error)
+	Get(name string) (*gitopsv1alpha1.MySQL, error)
 	MySQLNamespaceListerExpansion
 }
 
 // mySQLNamespaceLister implements the MySQLNamespaceLister
 // interface.
 type mySQLNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MySQLs in the indexer for a given namespace.
-func (s mySQLNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MySQL, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MySQL))
-	})
-	return ret, err
-}
-
-// Get retrieves the MySQL from the indexer for a given namespace and name.
-func (s mySQLNamespaceLister) Get(name string) (*v1alpha1.MySQL, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mysql"), name)
-	}
-	return obj.(*v1alpha1.MySQL), nil
+	listers.ResourceIndexer[*gitopsv1alpha1.MySQL]
 }

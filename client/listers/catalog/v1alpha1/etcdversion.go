@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // EtcdVersionLister helps list EtcdVersions.
@@ -31,39 +31,19 @@ import (
 type EtcdVersionLister interface {
 	// List lists all EtcdVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.EtcdVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.EtcdVersion, err error)
 	// Get retrieves the EtcdVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.EtcdVersion, error)
+	Get(name string) (*catalogv1alpha1.EtcdVersion, error)
 	EtcdVersionListerExpansion
 }
 
 // etcdVersionLister implements the EtcdVersionLister interface.
 type etcdVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.EtcdVersion]
 }
 
 // NewEtcdVersionLister returns a new EtcdVersionLister.
 func NewEtcdVersionLister(indexer cache.Indexer) EtcdVersionLister {
-	return &etcdVersionLister{indexer: indexer}
-}
-
-// List lists all EtcdVersions in the indexer.
-func (s *etcdVersionLister) List(selector labels.Selector) (ret []*v1alpha1.EtcdVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.EtcdVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the EtcdVersion from the index for a given name.
-func (s *etcdVersionLister) Get(name string) (*v1alpha1.EtcdVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("etcdversion"), name)
-	}
-	return obj.(*v1alpha1.EtcdVersion), nil
+	return &etcdVersionLister{listers.New[*catalogv1alpha1.EtcdVersion](indexer, catalogv1alpha1.Resource("etcdversion"))}
 }

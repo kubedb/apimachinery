@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DocumentDBLister helps list DocumentDBs.
@@ -31,7 +31,7 @@ import (
 type DocumentDBLister interface {
 	// List lists all DocumentDBs in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DocumentDB, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.DocumentDB, err error)
 	// DocumentDBs returns an object that can list and get DocumentDBs.
 	DocumentDBs(namespace string) DocumentDBNamespaceLister
 	DocumentDBListerExpansion
@@ -39,25 +39,17 @@ type DocumentDBLister interface {
 
 // documentDBLister implements the DocumentDBLister interface.
 type documentDBLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*gitopsv1alpha1.DocumentDB]
 }
 
 // NewDocumentDBLister returns a new DocumentDBLister.
 func NewDocumentDBLister(indexer cache.Indexer) DocumentDBLister {
-	return &documentDBLister{indexer: indexer}
-}
-
-// List lists all DocumentDBs in the indexer.
-func (s *documentDBLister) List(selector labels.Selector) (ret []*v1alpha1.DocumentDB, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DocumentDB))
-	})
-	return ret, err
+	return &documentDBLister{listers.New[*gitopsv1alpha1.DocumentDB](indexer, gitopsv1alpha1.Resource("documentdb"))}
 }
 
 // DocumentDBs returns an object that can list and get DocumentDBs.
 func (s *documentDBLister) DocumentDBs(namespace string) DocumentDBNamespaceLister {
-	return documentDBNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return documentDBNamespaceLister{listers.NewNamespaced[*gitopsv1alpha1.DocumentDB](s.ResourceIndexer, namespace)}
 }
 
 // DocumentDBNamespaceLister helps list and get DocumentDBs.
@@ -65,36 +57,15 @@ func (s *documentDBLister) DocumentDBs(namespace string) DocumentDBNamespaceList
 type DocumentDBNamespaceLister interface {
 	// List lists all DocumentDBs in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DocumentDB, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.DocumentDB, err error)
 	// Get retrieves the DocumentDB from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DocumentDB, error)
+	Get(name string) (*gitopsv1alpha1.DocumentDB, error)
 	DocumentDBNamespaceListerExpansion
 }
 
 // documentDBNamespaceLister implements the DocumentDBNamespaceLister
 // interface.
 type documentDBNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all DocumentDBs in the indexer for a given namespace.
-func (s documentDBNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.DocumentDB, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DocumentDB))
-	})
-	return ret, err
-}
-
-// Get retrieves the DocumentDB from the indexer for a given namespace and name.
-func (s documentDBNamespaceLister) Get(name string) (*v1alpha1.DocumentDB, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("documentdb"), name)
-	}
-	return obj.(*v1alpha1.DocumentDB), nil
+	listers.ResourceIndexer[*gitopsv1alpha1.DocumentDB]
 }

@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMySQLVersions implements MySQLVersionInterface
-type FakeMySQLVersions struct {
+// fakeMySQLVersions implements MySQLVersionInterface
+type fakeMySQLVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.MySQLVersion, *v1alpha1.MySQLVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var mysqlversionsResource = v1alpha1.SchemeGroupVersion.WithResource("mysqlversions")
-
-var mysqlversionsKind = v1alpha1.SchemeGroupVersion.WithKind("MySQLVersion")
-
-// Get takes name of the mySQLVersion, and returns the corresponding mySQLVersion object, and an error if there is any.
-func (c *FakeMySQLVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MySQLVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(mysqlversionsResource, name), &v1alpha1.MySQLVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeMySQLVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.MySQLVersionInterface {
+	return &fakeMySQLVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.MySQLVersion, *v1alpha1.MySQLVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("mysqlversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("MySQLVersion"),
+			func() *v1alpha1.MySQLVersion { return &v1alpha1.MySQLVersion{} },
+			func() *v1alpha1.MySQLVersionList { return &v1alpha1.MySQLVersionList{} },
+			func(dst, src *v1alpha1.MySQLVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MySQLVersionList) []*v1alpha1.MySQLVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MySQLVersionList, items []*v1alpha1.MySQLVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MySQLVersion), err
-}
-
-// List takes label and field selectors, and returns the list of MySQLVersions that match those selectors.
-func (c *FakeMySQLVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MySQLVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(mysqlversionsResource, mysqlversionsKind, opts), &v1alpha1.MySQLVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MySQLVersionList{ListMeta: obj.(*v1alpha1.MySQLVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MySQLVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mySQLVersions.
-func (c *FakeMySQLVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(mysqlversionsResource, opts))
-}
-
-// Create takes the representation of a mySQLVersion and creates it.  Returns the server's representation of the mySQLVersion, and an error, if there is any.
-func (c *FakeMySQLVersions) Create(ctx context.Context, mySQLVersion *v1alpha1.MySQLVersion, opts v1.CreateOptions) (result *v1alpha1.MySQLVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(mysqlversionsResource, mySQLVersion), &v1alpha1.MySQLVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLVersion), err
-}
-
-// Update takes the representation of a mySQLVersion and updates it. Returns the server's representation of the mySQLVersion, and an error, if there is any.
-func (c *FakeMySQLVersions) Update(ctx context.Context, mySQLVersion *v1alpha1.MySQLVersion, opts v1.UpdateOptions) (result *v1alpha1.MySQLVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(mysqlversionsResource, mySQLVersion), &v1alpha1.MySQLVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLVersion), err
-}
-
-// Delete takes name of the mySQLVersion and deletes it. Returns an error if one occurs.
-func (c *FakeMySQLVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(mysqlversionsResource, name, opts), &v1alpha1.MySQLVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMySQLVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(mysqlversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MySQLVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mySQLVersion.
-func (c *FakeMySQLVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MySQLVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(mysqlversionsResource, name, pt, data, subresources...), &v1alpha1.MySQLVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MySQLVersion), err
 }

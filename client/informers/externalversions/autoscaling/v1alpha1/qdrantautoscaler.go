@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	apisautoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // QdrantAutoscalers.
 type QdrantAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.QdrantAutoscalerLister
+	Lister() autoscalingv1alpha1.QdrantAutoscalerLister
 }
 
 type qdrantAutoscalerInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredQdrantAutoscalerInformer(client versioned.Interface, namespace s
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().QdrantAutoscalers(namespace).List(context.TODO(), options)
+				return client.AutoscalingV1alpha1().QdrantAutoscalers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().QdrantAutoscalers(namespace).Watch(context.TODO(), options)
+				return client.AutoscalingV1alpha1().QdrantAutoscalers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().QdrantAutoscalers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().QdrantAutoscalers(namespace).Watch(ctx, options)
 			},
 		},
-		&autoscalingv1alpha1.QdrantAutoscaler{},
+		&apisautoscalingv1alpha1.QdrantAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *qdrantAutoscalerInformer) defaultInformer(client versioned.Interface, r
 }
 
 func (f *qdrantAutoscalerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&autoscalingv1alpha1.QdrantAutoscaler{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisautoscalingv1alpha1.QdrantAutoscaler{}, f.defaultInformer)
 }
 
-func (f *qdrantAutoscalerInformer) Lister() v1alpha1.QdrantAutoscalerLister {
-	return v1alpha1.NewQdrantAutoscalerLister(f.Informer().GetIndexer())
+func (f *qdrantAutoscalerInformer) Lister() autoscalingv1alpha1.QdrantAutoscalerLister {
+	return autoscalingv1alpha1.NewQdrantAutoscalerLister(f.Informer().GetIndexer())
 }

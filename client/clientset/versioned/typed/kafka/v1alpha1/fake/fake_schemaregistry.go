@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	kafkav1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kafka/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSchemaRegistries implements SchemaRegistryInterface
-type FakeSchemaRegistries struct {
+// fakeSchemaRegistries implements SchemaRegistryInterface
+type fakeSchemaRegistries struct {
+	*gentype.FakeClientWithList[*v1alpha1.SchemaRegistry, *v1alpha1.SchemaRegistryList]
 	Fake *FakeKafkaV1alpha1
-	ns   string
 }
 
-var schemaregistriesResource = v1alpha1.SchemeGroupVersion.WithResource("schemaregistries")
-
-var schemaregistriesKind = v1alpha1.SchemeGroupVersion.WithKind("SchemaRegistry")
-
-// Get takes name of the schemaRegistry, and returns the corresponding schemaRegistry object, and an error if there is any.
-func (c *FakeSchemaRegistries) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.SchemaRegistry, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(schemaregistriesResource, c.ns, name), &v1alpha1.SchemaRegistry{})
-
-	if obj == nil {
-		return nil, err
+func newFakeSchemaRegistries(fake *FakeKafkaV1alpha1, namespace string) kafkav1alpha1.SchemaRegistryInterface {
+	return &fakeSchemaRegistries{
+		gentype.NewFakeClientWithList[*v1alpha1.SchemaRegistry, *v1alpha1.SchemaRegistryList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("schemaregistries"),
+			v1alpha1.SchemeGroupVersion.WithKind("SchemaRegistry"),
+			func() *v1alpha1.SchemaRegistry { return &v1alpha1.SchemaRegistry{} },
+			func() *v1alpha1.SchemaRegistryList { return &v1alpha1.SchemaRegistryList{} },
+			func(dst, src *v1alpha1.SchemaRegistryList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.SchemaRegistryList) []*v1alpha1.SchemaRegistry {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.SchemaRegistryList, items []*v1alpha1.SchemaRegistry) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.SchemaRegistry), err
-}
-
-// List takes label and field selectors, and returns the list of SchemaRegistries that match those selectors.
-func (c *FakeSchemaRegistries) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.SchemaRegistryList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(schemaregistriesResource, schemaregistriesKind, c.ns, opts), &v1alpha1.SchemaRegistryList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.SchemaRegistryList{ListMeta: obj.(*v1alpha1.SchemaRegistryList).ListMeta}
-	for _, item := range obj.(*v1alpha1.SchemaRegistryList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested schemaRegistries.
-func (c *FakeSchemaRegistries) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(schemaregistriesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a schemaRegistry and creates it.  Returns the server's representation of the schemaRegistry, and an error, if there is any.
-func (c *FakeSchemaRegistries) Create(ctx context.Context, schemaRegistry *v1alpha1.SchemaRegistry, opts v1.CreateOptions) (result *v1alpha1.SchemaRegistry, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(schemaregistriesResource, c.ns, schemaRegistry), &v1alpha1.SchemaRegistry{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SchemaRegistry), err
-}
-
-// Update takes the representation of a schemaRegistry and updates it. Returns the server's representation of the schemaRegistry, and an error, if there is any.
-func (c *FakeSchemaRegistries) Update(ctx context.Context, schemaRegistry *v1alpha1.SchemaRegistry, opts v1.UpdateOptions) (result *v1alpha1.SchemaRegistry, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(schemaregistriesResource, c.ns, schemaRegistry), &v1alpha1.SchemaRegistry{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SchemaRegistry), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeSchemaRegistries) UpdateStatus(ctx context.Context, schemaRegistry *v1alpha1.SchemaRegistry, opts v1.UpdateOptions) (*v1alpha1.SchemaRegistry, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(schemaregistriesResource, "status", c.ns, schemaRegistry), &v1alpha1.SchemaRegistry{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SchemaRegistry), err
-}
-
-// Delete takes name of the schemaRegistry and deletes it. Returns an error if one occurs.
-func (c *FakeSchemaRegistries) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(schemaregistriesResource, c.ns, name, opts), &v1alpha1.SchemaRegistry{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSchemaRegistries) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(schemaregistriesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.SchemaRegistryList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched schemaRegistry.
-func (c *FakeSchemaRegistries) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SchemaRegistry, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(schemaregistriesResource, c.ns, name, pt, data, subresources...), &v1alpha1.SchemaRegistry{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SchemaRegistry), err
 }

@@ -30,119 +30,175 @@ type FakeUiV1alpha1 struct {
 }
 
 func (c *FakeUiV1alpha1) DatabaseConfigurations(namespace string) v1alpha1.DatabaseConfigurationInterface {
-	return &FakeDatabaseConfigurations{c, namespace}
+	return newFakeDatabaseConfigurations(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) DatabaseConnections(namespace string) v1alpha1.DatabaseConnectionInterface {
-	return &FakeDatabaseConnections{c, namespace}
+	return newFakeDatabaseConnections(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) DatabaseSummaries() v1alpha1.DatabaseSummaryInterface {
-	return &FakeDatabaseSummaries{c}
+	return newFakeDatabaseSummaries(c)
+}
+
+func (c *FakeUiV1alpha1) DruidInsights(namespace string) v1alpha1.DruidInsightInterface {
+	return newFakeDruidInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) DruidSchemaOverviews(namespace string) v1alpha1.DruidSchemaOverviewInterface {
+	return newFakeDruidSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) DruidTaskses(namespace string) v1alpha1.DruidTasksInterface {
+	return newFakeDruidTaskses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) ElasticsearchInsights(namespace string) v1alpha1.ElasticsearchInsightInterface {
-	return &FakeElasticsearchInsights{c, namespace}
+	return newFakeElasticsearchInsights(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) ElasticsearchNodesStatses(namespace string) v1alpha1.ElasticsearchNodesStatsInterface {
-	return &FakeElasticsearchNodesStatses{c, namespace}
+	return newFakeElasticsearchNodesStatses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) ElasticsearchSchemaOverviews(namespace string) v1alpha1.ElasticsearchSchemaOverviewInterface {
-	return &FakeElasticsearchSchemaOverviews{c, namespace}
+	return newFakeElasticsearchSchemaOverviews(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) MariaDBInsights(namespace string) v1alpha1.MariaDBInsightInterface {
-	return &FakeMariaDBInsights{c, namespace}
+	return newFakeMariaDBInsights(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) MariaDBQuerieses(namespace string) v1alpha1.MariaDBQueriesInterface {
-	return &FakeMariaDBQuerieses{c, namespace}
+	return newFakeMariaDBQuerieses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) MariaDBSchemaOverviews(namespace string) v1alpha1.MariaDBSchemaOverviewInterface {
-	return &FakeMariaDBSchemaOverviews{c, namespace}
+	return newFakeMariaDBSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) MilvusInsights(namespace string) v1alpha1.MilvusInsightInterface {
+	return newFakeMilvusInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) MilvusSchemaOverviews(namespace string) v1alpha1.MilvusSchemaOverviewInterface {
+	return newFakeMilvusSchemaOverviews(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) MongoDBInsights(namespace string) v1alpha1.MongoDBInsightInterface {
-	return &FakeMongoDBInsights{c, namespace}
+	return newFakeMongoDBInsights(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) MongoDBQuerieses(namespace string) v1alpha1.MongoDBQueriesInterface {
-	return &FakeMongoDBQuerieses{c, namespace}
+	return newFakeMongoDBQuerieses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) MongoDBSchemaOverviews(namespace string) v1alpha1.MongoDBSchemaOverviewInterface {
-	return &FakeMongoDBSchemaOverviews{c, namespace}
+	return newFakeMongoDBSchemaOverviews(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) MySQLInsights(namespace string) v1alpha1.MySQLInsightInterface {
-	return &FakeMySQLInsights{c, namespace}
+	return newFakeMySQLInsights(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) MySQLQuerieses(namespace string) v1alpha1.MySQLQueriesInterface {
-	return &FakeMySQLQuerieses{c, namespace}
+	return newFakeMySQLQuerieses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) MySQLSchemaOverviews(namespace string) v1alpha1.MySQLSchemaOverviewInterface {
-	return &FakeMySQLSchemaOverviews{c, namespace}
+	return newFakeMySQLSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) Neo4jActivities(namespace string) v1alpha1.Neo4jActivityInterface {
+	return newFakeNeo4jActivities(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) Neo4jInsights(namespace string) v1alpha1.Neo4jInsightInterface {
+	return newFakeNeo4jInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) Neo4jSchemaOverviews(namespace string) v1alpha1.Neo4jSchemaOverviewInterface {
+	return newFakeNeo4jSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) PerconaXtraDBInsights(namespace string) v1alpha1.PerconaXtraDBInsightInterface {
+	return newFakePerconaXtraDBInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) PerconaXtraDBQuerieses(namespace string) v1alpha1.PerconaXtraDBQueriesInterface {
+	return newFakePerconaXtraDBQuerieses(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) PerconaXtraDBSchemaOverviews(namespace string) v1alpha1.PerconaXtraDBSchemaOverviewInterface {
+	return newFakePerconaXtraDBSchemaOverviews(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) PgBouncerInsights(namespace string) v1alpha1.PgBouncerInsightInterface {
-	return &FakePgBouncerInsights{c, namespace}
+	return newFakePgBouncerInsights(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) PgBouncerPoolOverviews(namespace string) v1alpha1.PgBouncerPoolOverviewInterface {
-	return &FakePgBouncerPoolOverviews{c, namespace}
+	return newFakePgBouncerPoolOverviews(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) PgBouncerServerOverviews(namespace string) v1alpha1.PgBouncerServerOverviewInterface {
-	return &FakePgBouncerServerOverviews{c, namespace}
+	return newFakePgBouncerServerOverviews(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) PgBouncerSettingses(namespace string) v1alpha1.PgBouncerSettingsInterface {
-	return &FakePgBouncerSettingses{c, namespace}
+	return newFakePgBouncerSettingses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) PostgresInsights(namespace string) v1alpha1.PostgresInsightInterface {
-	return &FakePostgresInsights{c, namespace}
+	return newFakePostgresInsights(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) PostgresQuerieses(namespace string) v1alpha1.PostgresQueriesInterface {
-	return &FakePostgresQuerieses{c, namespace}
+	return newFakePostgresQuerieses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) PostgresSchemaOverviews(namespace string) v1alpha1.PostgresSchemaOverviewInterface {
-	return &FakePostgresSchemaOverviews{c, namespace}
+	return newFakePostgresSchemaOverviews(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) PostgresSettingses(namespace string) v1alpha1.PostgresSettingsInterface {
-	return &FakePostgresSettingses{c, namespace}
+	return newFakePostgresSettingses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) ProxySQLInsights(namespace string) v1alpha1.ProxySQLInsightInterface {
-	return &FakeProxySQLInsights{c, namespace}
+	return newFakeProxySQLInsights(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) ProxySQLQuerieses(namespace string) v1alpha1.ProxySQLQueriesInterface {
-	return &FakeProxySQLQuerieses{c, namespace}
+	return newFakeProxySQLQuerieses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) ProxySQLSettingses(namespace string) v1alpha1.ProxySQLSettingsInterface {
-	return &FakeProxySQLSettingses{c, namespace}
+	return newFakeProxySQLSettingses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) RedisInsights(namespace string) v1alpha1.RedisInsightInterface {
-	return &FakeRedisInsights{c, namespace}
+	return newFakeRedisInsights(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) RedisQuerieses(namespace string) v1alpha1.RedisQueriesInterface {
-	return &FakeRedisQuerieses{c, namespace}
+	return newFakeRedisQuerieses(c, namespace)
 }
 
 func (c *FakeUiV1alpha1) RedisSchemaOverviews(namespace string) v1alpha1.RedisSchemaOverviewInterface {
-	return &FakeRedisSchemaOverviews{c, namespace}
+	return newFakeRedisSchemaOverviews(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreInsights(namespace string) v1alpha1.SinglestoreInsightInterface {
+	return newFakeSinglestoreInsights(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreQuerieses(namespace string) v1alpha1.SinglestoreQueriesInterface {
+	return newFakeSinglestoreQuerieses(c, namespace)
+}
+
+func (c *FakeUiV1alpha1) SinglestoreSchemaOverviews(namespace string) v1alpha1.SinglestoreSchemaOverviewInterface {
+	return newFakeSinglestoreSchemaOverviews(c, namespace)
 }
 
 // RESTClient returns a RESTClient that is used to communicate

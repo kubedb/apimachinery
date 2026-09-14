@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // HazelcastOpsRequestLister helps list HazelcastOpsRequests.
@@ -31,7 +31,7 @@ import (
 type HazelcastOpsRequestLister interface {
 	// List lists all HazelcastOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.HazelcastOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.HazelcastOpsRequest, err error)
 	// HazelcastOpsRequests returns an object that can list and get HazelcastOpsRequests.
 	HazelcastOpsRequests(namespace string) HazelcastOpsRequestNamespaceLister
 	HazelcastOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type HazelcastOpsRequestLister interface {
 
 // hazelcastOpsRequestLister implements the HazelcastOpsRequestLister interface.
 type hazelcastOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.HazelcastOpsRequest]
 }
 
 // NewHazelcastOpsRequestLister returns a new HazelcastOpsRequestLister.
 func NewHazelcastOpsRequestLister(indexer cache.Indexer) HazelcastOpsRequestLister {
-	return &hazelcastOpsRequestLister{indexer: indexer}
-}
-
-// List lists all HazelcastOpsRequests in the indexer.
-func (s *hazelcastOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.HazelcastOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.HazelcastOpsRequest))
-	})
-	return ret, err
+	return &hazelcastOpsRequestLister{listers.New[*opsv1alpha1.HazelcastOpsRequest](indexer, opsv1alpha1.Resource("hazelcastopsrequest"))}
 }
 
 // HazelcastOpsRequests returns an object that can list and get HazelcastOpsRequests.
 func (s *hazelcastOpsRequestLister) HazelcastOpsRequests(namespace string) HazelcastOpsRequestNamespaceLister {
-	return hazelcastOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return hazelcastOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.HazelcastOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // HazelcastOpsRequestNamespaceLister helps list and get HazelcastOpsRequests.
@@ -65,36 +57,15 @@ func (s *hazelcastOpsRequestLister) HazelcastOpsRequests(namespace string) Hazel
 type HazelcastOpsRequestNamespaceLister interface {
 	// List lists all HazelcastOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.HazelcastOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.HazelcastOpsRequest, err error)
 	// Get retrieves the HazelcastOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.HazelcastOpsRequest, error)
+	Get(name string) (*opsv1alpha1.HazelcastOpsRequest, error)
 	HazelcastOpsRequestNamespaceListerExpansion
 }
 
 // hazelcastOpsRequestNamespaceLister implements the HazelcastOpsRequestNamespaceLister
 // interface.
 type hazelcastOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all HazelcastOpsRequests in the indexer for a given namespace.
-func (s hazelcastOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.HazelcastOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.HazelcastOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the HazelcastOpsRequest from the indexer for a given namespace and name.
-func (s hazelcastOpsRequestNamespaceLister) Get(name string) (*v1alpha1.HazelcastOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("hazelcastopsrequest"), name)
-	}
-	return obj.(*v1alpha1.HazelcastOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.HazelcastOpsRequest]
 }

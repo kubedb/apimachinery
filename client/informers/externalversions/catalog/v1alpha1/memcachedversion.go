@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MemcachedVersions.
 type MemcachedVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MemcachedVersionLister
+	Lister() catalogv1alpha1.MemcachedVersionLister
 }
 
 type memcachedVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredMemcachedVersionInformer(client versioned.Interface, resyncPerio
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().MemcachedVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().MemcachedVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().MemcachedVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().MemcachedVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().MemcachedVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().MemcachedVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.MemcachedVersion{},
+		&apiscatalogv1alpha1.MemcachedVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *memcachedVersionInformer) defaultInformer(client versioned.Interface, r
 }
 
 func (f *memcachedVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.MemcachedVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.MemcachedVersion{}, f.defaultInformer)
 }
 
-func (f *memcachedVersionInformer) Lister() v1alpha1.MemcachedVersionLister {
-	return v1alpha1.NewMemcachedVersionLister(f.Informer().GetIndexer())
+func (f *memcachedVersionInformer) Lister() catalogv1alpha1.MemcachedVersionLister {
+	return catalogv1alpha1.NewMemcachedVersionLister(f.Informer().GetIndexer())
 }

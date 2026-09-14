@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	apiscourierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/listers/courier/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MSSQLServerMigrations.
 type MSSQLServerMigrationInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MSSQLServerMigrationLister
+	Lister() courierv1alpha1.MSSQLServerMigrationLister
 }
 
 type mSSQLServerMigrationInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredMSSQLServerMigrationInformer(client versioned.Interface, namespa
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().MSSQLServerMigrations(namespace).List(context.TODO(), options)
+				return client.CourierV1alpha1().MSSQLServerMigrations(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CourierV1alpha1().MSSQLServerMigrations(namespace).Watch(context.TODO(), options)
+				return client.CourierV1alpha1().MSSQLServerMigrations(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CourierV1alpha1().MSSQLServerMigrations(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CourierV1alpha1().MSSQLServerMigrations(namespace).Watch(ctx, options)
 			},
 		},
-		&courierv1alpha1.MSSQLServerMigration{},
+		&apiscourierv1alpha1.MSSQLServerMigration{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *mSSQLServerMigrationInformer) defaultInformer(client versioned.Interfac
 }
 
 func (f *mSSQLServerMigrationInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&courierv1alpha1.MSSQLServerMigration{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscourierv1alpha1.MSSQLServerMigration{}, f.defaultInformer)
 }
 
-func (f *mSSQLServerMigrationInformer) Lister() v1alpha1.MSSQLServerMigrationLister {
-	return v1alpha1.NewMSSQLServerMigrationLister(f.Informer().GetIndexer())
+func (f *mSSQLServerMigrationInformer) Lister() courierv1alpha1.MSSQLServerMigrationLister {
+	return courierv1alpha1.NewMSSQLServerMigrationLister(f.Informer().GetIndexer())
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // RabbitMQOpsRequestLister helps list RabbitMQOpsRequests.
@@ -31,7 +31,7 @@ import (
 type RabbitMQOpsRequestLister interface {
 	// List lists all RabbitMQOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RabbitMQOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.RabbitMQOpsRequest, err error)
 	// RabbitMQOpsRequests returns an object that can list and get RabbitMQOpsRequests.
 	RabbitMQOpsRequests(namespace string) RabbitMQOpsRequestNamespaceLister
 	RabbitMQOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type RabbitMQOpsRequestLister interface {
 
 // rabbitMQOpsRequestLister implements the RabbitMQOpsRequestLister interface.
 type rabbitMQOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.RabbitMQOpsRequest]
 }
 
 // NewRabbitMQOpsRequestLister returns a new RabbitMQOpsRequestLister.
 func NewRabbitMQOpsRequestLister(indexer cache.Indexer) RabbitMQOpsRequestLister {
-	return &rabbitMQOpsRequestLister{indexer: indexer}
-}
-
-// List lists all RabbitMQOpsRequests in the indexer.
-func (s *rabbitMQOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.RabbitMQOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RabbitMQOpsRequest))
-	})
-	return ret, err
+	return &rabbitMQOpsRequestLister{listers.New[*opsv1alpha1.RabbitMQOpsRequest](indexer, opsv1alpha1.Resource("rabbitmqopsrequest"))}
 }
 
 // RabbitMQOpsRequests returns an object that can list and get RabbitMQOpsRequests.
 func (s *rabbitMQOpsRequestLister) RabbitMQOpsRequests(namespace string) RabbitMQOpsRequestNamespaceLister {
-	return rabbitMQOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return rabbitMQOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.RabbitMQOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // RabbitMQOpsRequestNamespaceLister helps list and get RabbitMQOpsRequests.
@@ -65,36 +57,15 @@ func (s *rabbitMQOpsRequestLister) RabbitMQOpsRequests(namespace string) RabbitM
 type RabbitMQOpsRequestNamespaceLister interface {
 	// List lists all RabbitMQOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RabbitMQOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.RabbitMQOpsRequest, err error)
 	// Get retrieves the RabbitMQOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.RabbitMQOpsRequest, error)
+	Get(name string) (*opsv1alpha1.RabbitMQOpsRequest, error)
 	RabbitMQOpsRequestNamespaceListerExpansion
 }
 
 // rabbitMQOpsRequestNamespaceLister implements the RabbitMQOpsRequestNamespaceLister
 // interface.
 type rabbitMQOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all RabbitMQOpsRequests in the indexer for a given namespace.
-func (s rabbitMQOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.RabbitMQOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RabbitMQOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the RabbitMQOpsRequest from the indexer for a given namespace and name.
-func (s rabbitMQOpsRequestNamespaceLister) Get(name string) (*v1alpha1.RabbitMQOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("rabbitmqopsrequest"), name)
-	}
-	return obj.(*v1alpha1.RabbitMQOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.RabbitMQOpsRequest]
 }

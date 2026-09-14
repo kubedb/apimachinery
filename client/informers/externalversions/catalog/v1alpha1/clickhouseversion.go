@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ClickHouseVersions.
 type ClickHouseVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ClickHouseVersionLister
+	Lister() catalogv1alpha1.ClickHouseVersionLister
 }
 
 type clickHouseVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredClickHouseVersionInformer(client versioned.Interface, resyncPeri
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().ClickHouseVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().ClickHouseVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().ClickHouseVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().ClickHouseVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().ClickHouseVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().ClickHouseVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.ClickHouseVersion{},
+		&apiscatalogv1alpha1.ClickHouseVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *clickHouseVersionInformer) defaultInformer(client versioned.Interface, 
 }
 
 func (f *clickHouseVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.ClickHouseVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.ClickHouseVersion{}, f.defaultInformer)
 }
 
-func (f *clickHouseVersionInformer) Lister() v1alpha1.ClickHouseVersionLister {
-	return v1alpha1.NewClickHouseVersionLister(f.Informer().GetIndexer())
+func (f *clickHouseVersionInformer) Lister() catalogv1alpha1.ClickHouseVersionLister {
+	return catalogv1alpha1.NewClickHouseVersionLister(f.Informer().GetIndexer())
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	apisautoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ClickHouseAutoscalers.
 type ClickHouseAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ClickHouseAutoscalerLister
+	Lister() autoscalingv1alpha1.ClickHouseAutoscalerLister
 }
 
 type clickHouseAutoscalerInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredClickHouseAutoscalerInformer(client versioned.Interface, namespa
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().ClickHouseAutoscalers(namespace).List(context.TODO(), options)
+				return client.AutoscalingV1alpha1().ClickHouseAutoscalers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().ClickHouseAutoscalers(namespace).Watch(context.TODO(), options)
+				return client.AutoscalingV1alpha1().ClickHouseAutoscalers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().ClickHouseAutoscalers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().ClickHouseAutoscalers(namespace).Watch(ctx, options)
 			},
 		},
-		&autoscalingv1alpha1.ClickHouseAutoscaler{},
+		&apisautoscalingv1alpha1.ClickHouseAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *clickHouseAutoscalerInformer) defaultInformer(client versioned.Interfac
 }
 
 func (f *clickHouseAutoscalerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&autoscalingv1alpha1.ClickHouseAutoscaler{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisautoscalingv1alpha1.ClickHouseAutoscaler{}, f.defaultInformer)
 }
 
-func (f *clickHouseAutoscalerInformer) Lister() v1alpha1.ClickHouseAutoscalerLister {
-	return v1alpha1.NewClickHouseAutoscalerLister(f.Informer().GetIndexer())
+func (f *clickHouseAutoscalerInformer) Lister() autoscalingv1alpha1.ClickHouseAutoscalerLister {
+	return autoscalingv1alpha1.NewClickHouseAutoscalerLister(f.Informer().GetIndexer())
 }

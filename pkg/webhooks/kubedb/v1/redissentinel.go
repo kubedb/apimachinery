@@ -98,6 +98,9 @@ func (w RedisSentinelCustomWebhook) ValidateCreate(ctx context.Context, obj runt
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	sentinel, ok := obj.(*dbapi.RedisSentinel)
 	if !ok {
 		return nil, fmt.Errorf("expected a RedisSentinel but got a %T", obj)

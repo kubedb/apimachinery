@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeHazelcastAutoscalers implements HazelcastAutoscalerInterface
-type FakeHazelcastAutoscalers struct {
+// fakeHazelcastAutoscalers implements HazelcastAutoscalerInterface
+type fakeHazelcastAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.HazelcastAutoscaler, *v1alpha1.HazelcastAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var hazelcastautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("hazelcastautoscalers")
-
-var hazelcastautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("HazelcastAutoscaler")
-
-// Get takes name of the hazelcastAutoscaler, and returns the corresponding hazelcastAutoscaler object, and an error if there is any.
-func (c *FakeHazelcastAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.HazelcastAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(hazelcastautoscalersResource, c.ns, name), &v1alpha1.HazelcastAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeHazelcastAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.HazelcastAutoscalerInterface {
+	return &fakeHazelcastAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.HazelcastAutoscaler, *v1alpha1.HazelcastAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("hazelcastautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("HazelcastAutoscaler"),
+			func() *v1alpha1.HazelcastAutoscaler { return &v1alpha1.HazelcastAutoscaler{} },
+			func() *v1alpha1.HazelcastAutoscalerList { return &v1alpha1.HazelcastAutoscalerList{} },
+			func(dst, src *v1alpha1.HazelcastAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.HazelcastAutoscalerList) []*v1alpha1.HazelcastAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.HazelcastAutoscalerList, items []*v1alpha1.HazelcastAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.HazelcastAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of HazelcastAutoscalers that match those selectors.
-func (c *FakeHazelcastAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.HazelcastAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(hazelcastautoscalersResource, hazelcastautoscalersKind, c.ns, opts), &v1alpha1.HazelcastAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.HazelcastAutoscalerList{ListMeta: obj.(*v1alpha1.HazelcastAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.HazelcastAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested hazelcastAutoscalers.
-func (c *FakeHazelcastAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(hazelcastautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a hazelcastAutoscaler and creates it.  Returns the server's representation of the hazelcastAutoscaler, and an error, if there is any.
-func (c *FakeHazelcastAutoscalers) Create(ctx context.Context, hazelcastAutoscaler *v1alpha1.HazelcastAutoscaler, opts v1.CreateOptions) (result *v1alpha1.HazelcastAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(hazelcastautoscalersResource, c.ns, hazelcastAutoscaler), &v1alpha1.HazelcastAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastAutoscaler), err
-}
-
-// Update takes the representation of a hazelcastAutoscaler and updates it. Returns the server's representation of the hazelcastAutoscaler, and an error, if there is any.
-func (c *FakeHazelcastAutoscalers) Update(ctx context.Context, hazelcastAutoscaler *v1alpha1.HazelcastAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.HazelcastAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(hazelcastautoscalersResource, c.ns, hazelcastAutoscaler), &v1alpha1.HazelcastAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeHazelcastAutoscalers) UpdateStatus(ctx context.Context, hazelcastAutoscaler *v1alpha1.HazelcastAutoscaler, opts v1.UpdateOptions) (*v1alpha1.HazelcastAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(hazelcastautoscalersResource, "status", c.ns, hazelcastAutoscaler), &v1alpha1.HazelcastAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastAutoscaler), err
-}
-
-// Delete takes name of the hazelcastAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeHazelcastAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(hazelcastautoscalersResource, c.ns, name, opts), &v1alpha1.HazelcastAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeHazelcastAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(hazelcastautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.HazelcastAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched hazelcastAutoscaler.
-func (c *FakeHazelcastAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.HazelcastAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(hazelcastautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.HazelcastAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.HazelcastAutoscaler), err
 }

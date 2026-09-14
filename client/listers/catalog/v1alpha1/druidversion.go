@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DruidVersionLister helps list DruidVersions.
@@ -31,39 +31,19 @@ import (
 type DruidVersionLister interface {
 	// List lists all DruidVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DruidVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.DruidVersion, err error)
 	// Get retrieves the DruidVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DruidVersion, error)
+	Get(name string) (*catalogv1alpha1.DruidVersion, error)
 	DruidVersionListerExpansion
 }
 
 // druidVersionLister implements the DruidVersionLister interface.
 type druidVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.DruidVersion]
 }
 
 // NewDruidVersionLister returns a new DruidVersionLister.
 func NewDruidVersionLister(indexer cache.Indexer) DruidVersionLister {
-	return &druidVersionLister{indexer: indexer}
-}
-
-// List lists all DruidVersions in the indexer.
-func (s *druidVersionLister) List(selector labels.Selector) (ret []*v1alpha1.DruidVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DruidVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the DruidVersion from the index for a given name.
-func (s *druidVersionLister) Get(name string) (*v1alpha1.DruidVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("druidversion"), name)
-	}
-	return obj.(*v1alpha1.DruidVersion), nil
+	return &druidVersionLister{listers.New[*catalogv1alpha1.DruidVersion](indexer, catalogv1alpha1.Resource("druidversion"))}
 }

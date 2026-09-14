@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/autoscaling/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMemcachedAutoscalers implements MemcachedAutoscalerInterface
-type FakeMemcachedAutoscalers struct {
+// fakeMemcachedAutoscalers implements MemcachedAutoscalerInterface
+type fakeMemcachedAutoscalers struct {
+	*gentype.FakeClientWithList[*v1alpha1.MemcachedAutoscaler, *v1alpha1.MemcachedAutoscalerList]
 	Fake *FakeAutoscalingV1alpha1
-	ns   string
 }
 
-var memcachedautoscalersResource = v1alpha1.SchemeGroupVersion.WithResource("memcachedautoscalers")
-
-var memcachedautoscalersKind = v1alpha1.SchemeGroupVersion.WithKind("MemcachedAutoscaler")
-
-// Get takes name of the memcachedAutoscaler, and returns the corresponding memcachedAutoscaler object, and an error if there is any.
-func (c *FakeMemcachedAutoscalers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.MemcachedAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(memcachedautoscalersResource, c.ns, name), &v1alpha1.MemcachedAutoscaler{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMemcachedAutoscalers(fake *FakeAutoscalingV1alpha1, namespace string) autoscalingv1alpha1.MemcachedAutoscalerInterface {
+	return &fakeMemcachedAutoscalers{
+		gentype.NewFakeClientWithList[*v1alpha1.MemcachedAutoscaler, *v1alpha1.MemcachedAutoscalerList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("memcachedautoscalers"),
+			v1alpha1.SchemeGroupVersion.WithKind("MemcachedAutoscaler"),
+			func() *v1alpha1.MemcachedAutoscaler { return &v1alpha1.MemcachedAutoscaler{} },
+			func() *v1alpha1.MemcachedAutoscalerList { return &v1alpha1.MemcachedAutoscalerList{} },
+			func(dst, src *v1alpha1.MemcachedAutoscalerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.MemcachedAutoscalerList) []*v1alpha1.MemcachedAutoscaler {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.MemcachedAutoscalerList, items []*v1alpha1.MemcachedAutoscaler) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.MemcachedAutoscaler), err
-}
-
-// List takes label and field selectors, and returns the list of MemcachedAutoscalers that match those selectors.
-func (c *FakeMemcachedAutoscalers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.MemcachedAutoscalerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(memcachedautoscalersResource, memcachedautoscalersKind, c.ns, opts), &v1alpha1.MemcachedAutoscalerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.MemcachedAutoscalerList{ListMeta: obj.(*v1alpha1.MemcachedAutoscalerList).ListMeta}
-	for _, item := range obj.(*v1alpha1.MemcachedAutoscalerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested memcachedAutoscalers.
-func (c *FakeMemcachedAutoscalers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(memcachedautoscalersResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a memcachedAutoscaler and creates it.  Returns the server's representation of the memcachedAutoscaler, and an error, if there is any.
-func (c *FakeMemcachedAutoscalers) Create(ctx context.Context, memcachedAutoscaler *v1alpha1.MemcachedAutoscaler, opts v1.CreateOptions) (result *v1alpha1.MemcachedAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(memcachedautoscalersResource, c.ns, memcachedAutoscaler), &v1alpha1.MemcachedAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MemcachedAutoscaler), err
-}
-
-// Update takes the representation of a memcachedAutoscaler and updates it. Returns the server's representation of the memcachedAutoscaler, and an error, if there is any.
-func (c *FakeMemcachedAutoscalers) Update(ctx context.Context, memcachedAutoscaler *v1alpha1.MemcachedAutoscaler, opts v1.UpdateOptions) (result *v1alpha1.MemcachedAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(memcachedautoscalersResource, c.ns, memcachedAutoscaler), &v1alpha1.MemcachedAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MemcachedAutoscaler), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMemcachedAutoscalers) UpdateStatus(ctx context.Context, memcachedAutoscaler *v1alpha1.MemcachedAutoscaler, opts v1.UpdateOptions) (*v1alpha1.MemcachedAutoscaler, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(memcachedautoscalersResource, "status", c.ns, memcachedAutoscaler), &v1alpha1.MemcachedAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MemcachedAutoscaler), err
-}
-
-// Delete takes name of the memcachedAutoscaler and deletes it. Returns an error if one occurs.
-func (c *FakeMemcachedAutoscalers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(memcachedautoscalersResource, c.ns, name, opts), &v1alpha1.MemcachedAutoscaler{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMemcachedAutoscalers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(memcachedautoscalersResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.MemcachedAutoscalerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched memcachedAutoscaler.
-func (c *FakeMemcachedAutoscalers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.MemcachedAutoscaler, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(memcachedautoscalersResource, c.ns, name, pt, data, subresources...), &v1alpha1.MemcachedAutoscaler{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.MemcachedAutoscaler), err
 }

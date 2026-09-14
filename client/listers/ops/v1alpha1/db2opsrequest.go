@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DB2OpsRequestLister helps list DB2OpsRequests.
@@ -31,7 +31,7 @@ import (
 type DB2OpsRequestLister interface {
 	// List lists all DB2OpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DB2OpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.DB2OpsRequest, err error)
 	// DB2OpsRequests returns an object that can list and get DB2OpsRequests.
 	DB2OpsRequests(namespace string) DB2OpsRequestNamespaceLister
 	DB2OpsRequestListerExpansion
@@ -39,25 +39,17 @@ type DB2OpsRequestLister interface {
 
 // dB2OpsRequestLister implements the DB2OpsRequestLister interface.
 type dB2OpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.DB2OpsRequest]
 }
 
 // NewDB2OpsRequestLister returns a new DB2OpsRequestLister.
 func NewDB2OpsRequestLister(indexer cache.Indexer) DB2OpsRequestLister {
-	return &dB2OpsRequestLister{indexer: indexer}
-}
-
-// List lists all DB2OpsRequests in the indexer.
-func (s *dB2OpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.DB2OpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DB2OpsRequest))
-	})
-	return ret, err
+	return &dB2OpsRequestLister{listers.New[*opsv1alpha1.DB2OpsRequest](indexer, opsv1alpha1.Resource("db2opsrequest"))}
 }
 
 // DB2OpsRequests returns an object that can list and get DB2OpsRequests.
 func (s *dB2OpsRequestLister) DB2OpsRequests(namespace string) DB2OpsRequestNamespaceLister {
-	return dB2OpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return dB2OpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.DB2OpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // DB2OpsRequestNamespaceLister helps list and get DB2OpsRequests.
@@ -65,36 +57,15 @@ func (s *dB2OpsRequestLister) DB2OpsRequests(namespace string) DB2OpsRequestName
 type DB2OpsRequestNamespaceLister interface {
 	// List lists all DB2OpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DB2OpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.DB2OpsRequest, err error)
 	// Get retrieves the DB2OpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DB2OpsRequest, error)
+	Get(name string) (*opsv1alpha1.DB2OpsRequest, error)
 	DB2OpsRequestNamespaceListerExpansion
 }
 
 // dB2OpsRequestNamespaceLister implements the DB2OpsRequestNamespaceLister
 // interface.
 type dB2OpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all DB2OpsRequests in the indexer for a given namespace.
-func (s dB2OpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.DB2OpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DB2OpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the DB2OpsRequest from the indexer for a given namespace and name.
-func (s dB2OpsRequestNamespaceLister) Get(name string) (*v1alpha1.DB2OpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("db2opsrequest"), name)
-	}
-	return obj.(*v1alpha1.DB2OpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.DB2OpsRequest]
 }

@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeOracleVersions implements OracleVersionInterface
-type FakeOracleVersions struct {
+// fakeOracleVersions implements OracleVersionInterface
+type fakeOracleVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.OracleVersion, *v1alpha1.OracleVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var oracleversionsResource = v1alpha1.SchemeGroupVersion.WithResource("oracleversions")
-
-var oracleversionsKind = v1alpha1.SchemeGroupVersion.WithKind("OracleVersion")
-
-// Get takes name of the oracleVersion, and returns the corresponding oracleVersion object, and an error if there is any.
-func (c *FakeOracleVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.OracleVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(oracleversionsResource, name), &v1alpha1.OracleVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeOracleVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.OracleVersionInterface {
+	return &fakeOracleVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.OracleVersion, *v1alpha1.OracleVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("oracleversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("OracleVersion"),
+			func() *v1alpha1.OracleVersion { return &v1alpha1.OracleVersion{} },
+			func() *v1alpha1.OracleVersionList { return &v1alpha1.OracleVersionList{} },
+			func(dst, src *v1alpha1.OracleVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.OracleVersionList) []*v1alpha1.OracleVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.OracleVersionList, items []*v1alpha1.OracleVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.OracleVersion), err
-}
-
-// List takes label and field selectors, and returns the list of OracleVersions that match those selectors.
-func (c *FakeOracleVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.OracleVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(oracleversionsResource, oracleversionsKind, opts), &v1alpha1.OracleVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.OracleVersionList{ListMeta: obj.(*v1alpha1.OracleVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.OracleVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested oracleVersions.
-func (c *FakeOracleVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(oracleversionsResource, opts))
-}
-
-// Create takes the representation of a oracleVersion and creates it.  Returns the server's representation of the oracleVersion, and an error, if there is any.
-func (c *FakeOracleVersions) Create(ctx context.Context, oracleVersion *v1alpha1.OracleVersion, opts v1.CreateOptions) (result *v1alpha1.OracleVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(oracleversionsResource, oracleVersion), &v1alpha1.OracleVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleVersion), err
-}
-
-// Update takes the representation of a oracleVersion and updates it. Returns the server's representation of the oracleVersion, and an error, if there is any.
-func (c *FakeOracleVersions) Update(ctx context.Context, oracleVersion *v1alpha1.OracleVersion, opts v1.UpdateOptions) (result *v1alpha1.OracleVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(oracleversionsResource, oracleVersion), &v1alpha1.OracleVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleVersion), err
-}
-
-// Delete takes name of the oracleVersion and deletes it. Returns an error if one occurs.
-func (c *FakeOracleVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(oracleversionsResource, name, opts), &v1alpha1.OracleVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeOracleVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(oracleversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.OracleVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched oracleVersion.
-func (c *FakeOracleVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.OracleVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(oracleversionsResource, name, pt, data, subresources...), &v1alpha1.OracleVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.OracleVersion), err
 }

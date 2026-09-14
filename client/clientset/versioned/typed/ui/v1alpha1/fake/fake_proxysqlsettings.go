@@ -19,112 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeProxySQLSettingses implements ProxySQLSettingsInterface
-type FakeProxySQLSettingses struct {
+// fakeProxySQLSettingses implements ProxySQLSettingsInterface
+type fakeProxySQLSettingses struct {
+	*gentype.FakeClientWithList[*v1alpha1.ProxySQLSettings, *v1alpha1.ProxySQLSettingsList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var proxysqlsettingsesResource = v1alpha1.SchemeGroupVersion.WithResource("proxysqlsettingses")
-
-var proxysqlsettingsesKind = v1alpha1.SchemeGroupVersion.WithKind("ProxySQLSettings")
-
-// Get takes name of the proxySQLSettings, and returns the corresponding proxySQLSettings object, and an error if there is any.
-func (c *FakeProxySQLSettingses) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ProxySQLSettings, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(proxysqlsettingsesResource, c.ns, name), &v1alpha1.ProxySQLSettings{})
-
-	if obj == nil {
-		return nil, err
+func newFakeProxySQLSettingses(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.ProxySQLSettingsInterface {
+	return &fakeProxySQLSettingses{
+		gentype.NewFakeClientWithList[*v1alpha1.ProxySQLSettings, *v1alpha1.ProxySQLSettingsList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("proxysqlsettingses"),
+			v1alpha1.SchemeGroupVersion.WithKind("ProxySQLSettings"),
+			func() *v1alpha1.ProxySQLSettings { return &v1alpha1.ProxySQLSettings{} },
+			func() *v1alpha1.ProxySQLSettingsList { return &v1alpha1.ProxySQLSettingsList{} },
+			func(dst, src *v1alpha1.ProxySQLSettingsList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ProxySQLSettingsList) []*v1alpha1.ProxySQLSettings {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ProxySQLSettingsList, items []*v1alpha1.ProxySQLSettings) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ProxySQLSettings), err
-}
-
-// List takes label and field selectors, and returns the list of ProxySQLSettingses that match those selectors.
-func (c *FakeProxySQLSettingses) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ProxySQLSettingsList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(proxysqlsettingsesResource, proxysqlsettingsesKind, c.ns, opts), &v1alpha1.ProxySQLSettingsList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ProxySQLSettingsList{ListMeta: obj.(*v1alpha1.ProxySQLSettingsList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ProxySQLSettingsList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested proxySQLSettingses.
-func (c *FakeProxySQLSettingses) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(proxysqlsettingsesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a proxySQLSettings and creates it.  Returns the server's representation of the proxySQLSettings, and an error, if there is any.
-func (c *FakeProxySQLSettingses) Create(ctx context.Context, proxySQLSettings *v1alpha1.ProxySQLSettings, opts v1.CreateOptions) (result *v1alpha1.ProxySQLSettings, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(proxysqlsettingsesResource, c.ns, proxySQLSettings), &v1alpha1.ProxySQLSettings{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ProxySQLSettings), err
-}
-
-// Update takes the representation of a proxySQLSettings and updates it. Returns the server's representation of the proxySQLSettings, and an error, if there is any.
-func (c *FakeProxySQLSettingses) Update(ctx context.Context, proxySQLSettings *v1alpha1.ProxySQLSettings, opts v1.UpdateOptions) (result *v1alpha1.ProxySQLSettings, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(proxysqlsettingsesResource, c.ns, proxySQLSettings), &v1alpha1.ProxySQLSettings{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ProxySQLSettings), err
-}
-
-// Delete takes name of the proxySQLSettings and deletes it. Returns an error if one occurs.
-func (c *FakeProxySQLSettingses) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(proxysqlsettingsesResource, c.ns, name, opts), &v1alpha1.ProxySQLSettings{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeProxySQLSettingses) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(proxysqlsettingsesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ProxySQLSettingsList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched proxySQLSettings.
-func (c *FakeProxySQLSettingses) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ProxySQLSettings, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(proxysqlsettingsesResource, c.ns, name, pt, data, subresources...), &v1alpha1.ProxySQLSettings{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ProxySQLSettings), err
 }

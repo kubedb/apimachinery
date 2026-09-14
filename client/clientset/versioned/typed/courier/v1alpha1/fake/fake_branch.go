@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/courier/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeBranches implements BranchInterface
-type FakeBranches struct {
+// fakeBranches implements BranchInterface
+type fakeBranches struct {
+	*gentype.FakeClientWithList[*v1alpha1.Branch, *v1alpha1.BranchList]
 	Fake *FakeCourierV1alpha1
-	ns   string
 }
 
-var branchesResource = v1alpha1.SchemeGroupVersion.WithResource("branches")
-
-var branchesKind = v1alpha1.SchemeGroupVersion.WithKind("Branch")
-
-// Get takes name of the branch, and returns the corresponding branch object, and an error if there is any.
-func (c *FakeBranches) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.Branch, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(branchesResource, c.ns, name), &v1alpha1.Branch{})
-
-	if obj == nil {
-		return nil, err
+func newFakeBranches(fake *FakeCourierV1alpha1, namespace string) courierv1alpha1.BranchInterface {
+	return &fakeBranches{
+		gentype.NewFakeClientWithList[*v1alpha1.Branch, *v1alpha1.BranchList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("branches"),
+			v1alpha1.SchemeGroupVersion.WithKind("Branch"),
+			func() *v1alpha1.Branch { return &v1alpha1.Branch{} },
+			func() *v1alpha1.BranchList { return &v1alpha1.BranchList{} },
+			func(dst, src *v1alpha1.BranchList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.BranchList) []*v1alpha1.Branch { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha1.BranchList, items []*v1alpha1.Branch) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.Branch), err
-}
-
-// List takes label and field selectors, and returns the list of Branches that match those selectors.
-func (c *FakeBranches) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.BranchList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(branchesResource, branchesKind, c.ns, opts), &v1alpha1.BranchList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.BranchList{ListMeta: obj.(*v1alpha1.BranchList).ListMeta}
-	for _, item := range obj.(*v1alpha1.BranchList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested branches.
-func (c *FakeBranches) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(branchesResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a branch and creates it.  Returns the server's representation of the branch, and an error, if there is any.
-func (c *FakeBranches) Create(ctx context.Context, branch *v1alpha1.Branch, opts v1.CreateOptions) (result *v1alpha1.Branch, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(branchesResource, c.ns, branch), &v1alpha1.Branch{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Branch), err
-}
-
-// Update takes the representation of a branch and updates it. Returns the server's representation of the branch, and an error, if there is any.
-func (c *FakeBranches) Update(ctx context.Context, branch *v1alpha1.Branch, opts v1.UpdateOptions) (result *v1alpha1.Branch, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(branchesResource, c.ns, branch), &v1alpha1.Branch{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Branch), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeBranches) UpdateStatus(ctx context.Context, branch *v1alpha1.Branch, opts v1.UpdateOptions) (*v1alpha1.Branch, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(branchesResource, "status", c.ns, branch), &v1alpha1.Branch{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Branch), err
-}
-
-// Delete takes name of the branch and deletes it. Returns an error if one occurs.
-func (c *FakeBranches) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(branchesResource, c.ns, name, opts), &v1alpha1.Branch{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeBranches) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(branchesResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.BranchList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched branch.
-func (c *FakeBranches) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.Branch, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(branchesResource, c.ns, name, pt, data, subresources...), &v1alpha1.Branch{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.Branch), err
 }

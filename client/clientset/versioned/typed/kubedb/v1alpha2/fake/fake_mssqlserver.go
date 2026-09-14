@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeMSSQLServers implements MSSQLServerInterface
-type FakeMSSQLServers struct {
+// fakeMSSQLServers implements MSSQLServerInterface
+type fakeMSSQLServers struct {
+	*gentype.FakeClientWithList[*v1alpha2.MSSQLServer, *v1alpha2.MSSQLServerList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var mssqlserversResource = v1alpha2.SchemeGroupVersion.WithResource("mssqlservers")
-
-var mssqlserversKind = v1alpha2.SchemeGroupVersion.WithKind("MSSQLServer")
-
-// Get takes name of the mSSQLServer, and returns the corresponding mSSQLServer object, and an error if there is any.
-func (c *FakeMSSQLServers) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.MSSQLServer, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(mssqlserversResource, c.ns, name), &v1alpha2.MSSQLServer{})
-
-	if obj == nil {
-		return nil, err
+func newFakeMSSQLServers(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.MSSQLServerInterface {
+	return &fakeMSSQLServers{
+		gentype.NewFakeClientWithList[*v1alpha2.MSSQLServer, *v1alpha2.MSSQLServerList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("mssqlservers"),
+			v1alpha2.SchemeGroupVersion.WithKind("MSSQLServer"),
+			func() *v1alpha2.MSSQLServer { return &v1alpha2.MSSQLServer{} },
+			func() *v1alpha2.MSSQLServerList { return &v1alpha2.MSSQLServerList{} },
+			func(dst, src *v1alpha2.MSSQLServerList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.MSSQLServerList) []*v1alpha2.MSSQLServer {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha2.MSSQLServerList, items []*v1alpha2.MSSQLServer) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.MSSQLServer), err
-}
-
-// List takes label and field selectors, and returns the list of MSSQLServers that match those selectors.
-func (c *FakeMSSQLServers) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.MSSQLServerList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(mssqlserversResource, mssqlserversKind, c.ns, opts), &v1alpha2.MSSQLServerList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.MSSQLServerList{ListMeta: obj.(*v1alpha2.MSSQLServerList).ListMeta}
-	for _, item := range obj.(*v1alpha2.MSSQLServerList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested mSSQLServers.
-func (c *FakeMSSQLServers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(mssqlserversResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a mSSQLServer and creates it.  Returns the server's representation of the mSSQLServer, and an error, if there is any.
-func (c *FakeMSSQLServers) Create(ctx context.Context, mSSQLServer *v1alpha2.MSSQLServer, opts v1.CreateOptions) (result *v1alpha2.MSSQLServer, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(mssqlserversResource, c.ns, mSSQLServer), &v1alpha2.MSSQLServer{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MSSQLServer), err
-}
-
-// Update takes the representation of a mSSQLServer and updates it. Returns the server's representation of the mSSQLServer, and an error, if there is any.
-func (c *FakeMSSQLServers) Update(ctx context.Context, mSSQLServer *v1alpha2.MSSQLServer, opts v1.UpdateOptions) (result *v1alpha2.MSSQLServer, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(mssqlserversResource, c.ns, mSSQLServer), &v1alpha2.MSSQLServer{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MSSQLServer), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeMSSQLServers) UpdateStatus(ctx context.Context, mSSQLServer *v1alpha2.MSSQLServer, opts v1.UpdateOptions) (*v1alpha2.MSSQLServer, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(mssqlserversResource, "status", c.ns, mSSQLServer), &v1alpha2.MSSQLServer{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MSSQLServer), err
-}
-
-// Delete takes name of the mSSQLServer and deletes it. Returns an error if one occurs.
-func (c *FakeMSSQLServers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(mssqlserversResource, c.ns, name, opts), &v1alpha2.MSSQLServer{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeMSSQLServers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(mssqlserversResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.MSSQLServerList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched mSSQLServer.
-func (c *FakeMSSQLServers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.MSSQLServer, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(mssqlserversResource, c.ns, name, pt, data, subresources...), &v1alpha2.MSSQLServer{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.MSSQLServer), err
 }

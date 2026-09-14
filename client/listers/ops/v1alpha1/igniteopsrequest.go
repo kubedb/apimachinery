@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // IgniteOpsRequestLister helps list IgniteOpsRequests.
@@ -31,7 +31,7 @@ import (
 type IgniteOpsRequestLister interface {
 	// List lists all IgniteOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.IgniteOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.IgniteOpsRequest, err error)
 	// IgniteOpsRequests returns an object that can list and get IgniteOpsRequests.
 	IgniteOpsRequests(namespace string) IgniteOpsRequestNamespaceLister
 	IgniteOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type IgniteOpsRequestLister interface {
 
 // igniteOpsRequestLister implements the IgniteOpsRequestLister interface.
 type igniteOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.IgniteOpsRequest]
 }
 
 // NewIgniteOpsRequestLister returns a new IgniteOpsRequestLister.
 func NewIgniteOpsRequestLister(indexer cache.Indexer) IgniteOpsRequestLister {
-	return &igniteOpsRequestLister{indexer: indexer}
-}
-
-// List lists all IgniteOpsRequests in the indexer.
-func (s *igniteOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.IgniteOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.IgniteOpsRequest))
-	})
-	return ret, err
+	return &igniteOpsRequestLister{listers.New[*opsv1alpha1.IgniteOpsRequest](indexer, opsv1alpha1.Resource("igniteopsrequest"))}
 }
 
 // IgniteOpsRequests returns an object that can list and get IgniteOpsRequests.
 func (s *igniteOpsRequestLister) IgniteOpsRequests(namespace string) IgniteOpsRequestNamespaceLister {
-	return igniteOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return igniteOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.IgniteOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // IgniteOpsRequestNamespaceLister helps list and get IgniteOpsRequests.
@@ -65,36 +57,15 @@ func (s *igniteOpsRequestLister) IgniteOpsRequests(namespace string) IgniteOpsRe
 type IgniteOpsRequestNamespaceLister interface {
 	// List lists all IgniteOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.IgniteOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.IgniteOpsRequest, err error)
 	// Get retrieves the IgniteOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.IgniteOpsRequest, error)
+	Get(name string) (*opsv1alpha1.IgniteOpsRequest, error)
 	IgniteOpsRequestNamespaceListerExpansion
 }
 
 // igniteOpsRequestNamespaceLister implements the IgniteOpsRequestNamespaceLister
 // interface.
 type igniteOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all IgniteOpsRequests in the indexer for a given namespace.
-func (s igniteOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.IgniteOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.IgniteOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the IgniteOpsRequest from the indexer for a given namespace and name.
-func (s igniteOpsRequestNamespaceLister) Get(name string) (*v1alpha1.IgniteOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("igniteopsrequest"), name)
-	}
-	return obj.(*v1alpha1.IgniteOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.IgniteOpsRequest]
 }

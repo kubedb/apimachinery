@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	apisautoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // DocumentDBAutoscalers.
 type DocumentDBAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.DocumentDBAutoscalerLister
+	Lister() autoscalingv1alpha1.DocumentDBAutoscalerLister
 }
 
 type documentDBAutoscalerInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredDocumentDBAutoscalerInformer(client versioned.Interface, namespa
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().DocumentDBAutoscalers(namespace).List(context.TODO(), options)
+				return client.AutoscalingV1alpha1().DocumentDBAutoscalers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().DocumentDBAutoscalers(namespace).Watch(context.TODO(), options)
+				return client.AutoscalingV1alpha1().DocumentDBAutoscalers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().DocumentDBAutoscalers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().DocumentDBAutoscalers(namespace).Watch(ctx, options)
 			},
 		},
-		&autoscalingv1alpha1.DocumentDBAutoscaler{},
+		&apisautoscalingv1alpha1.DocumentDBAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *documentDBAutoscalerInformer) defaultInformer(client versioned.Interfac
 }
 
 func (f *documentDBAutoscalerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&autoscalingv1alpha1.DocumentDBAutoscaler{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisautoscalingv1alpha1.DocumentDBAutoscaler{}, f.defaultInformer)
 }
 
-func (f *documentDBAutoscalerInformer) Lister() v1alpha1.DocumentDBAutoscalerLister {
-	return v1alpha1.NewDocumentDBAutoscalerLister(f.Informer().GetIndexer())
+func (f *documentDBAutoscalerInformer) Lister() autoscalingv1alpha1.DocumentDBAutoscalerLister {
+	return autoscalingv1alpha1.NewDocumentDBAutoscalerLister(f.Informer().GetIndexer())
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // CassandraVersionLister helps list CassandraVersions.
@@ -31,39 +31,19 @@ import (
 type CassandraVersionLister interface {
 	// List lists all CassandraVersions in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.CassandraVersion, err error)
+	List(selector labels.Selector) (ret []*catalogv1alpha1.CassandraVersion, err error)
 	// Get retrieves the CassandraVersion from the index for a given name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.CassandraVersion, error)
+	Get(name string) (*catalogv1alpha1.CassandraVersion, error)
 	CassandraVersionListerExpansion
 }
 
 // cassandraVersionLister implements the CassandraVersionLister interface.
 type cassandraVersionLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*catalogv1alpha1.CassandraVersion]
 }
 
 // NewCassandraVersionLister returns a new CassandraVersionLister.
 func NewCassandraVersionLister(indexer cache.Indexer) CassandraVersionLister {
-	return &cassandraVersionLister{indexer: indexer}
-}
-
-// List lists all CassandraVersions in the indexer.
-func (s *cassandraVersionLister) List(selector labels.Selector) (ret []*v1alpha1.CassandraVersion, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.CassandraVersion))
-	})
-	return ret, err
-}
-
-// Get retrieves the CassandraVersion from the index for a given name.
-func (s *cassandraVersionLister) Get(name string) (*v1alpha1.CassandraVersion, error) {
-	obj, exists, err := s.indexer.GetByKey(name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("cassandraversion"), name)
-	}
-	return obj.(*v1alpha1.CassandraVersion), nil
+	return &cassandraVersionLister{listers.New[*catalogv1alpha1.CassandraVersion](indexer, catalogv1alpha1.Resource("cassandraversion"))}
 }

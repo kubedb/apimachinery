@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Neo4jVersions.
 type Neo4jVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.Neo4jVersionLister
+	Lister() catalogv1alpha1.Neo4jVersionLister
 }
 
 type neo4jVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredNeo4jVersionInformer(client versioned.Interface, resyncPeriod ti
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().Neo4jVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().Neo4jVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().Neo4jVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().Neo4jVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().Neo4jVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().Neo4jVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.Neo4jVersion{},
+		&apiscatalogv1alpha1.Neo4jVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *neo4jVersionInformer) defaultInformer(client versioned.Interface, resyn
 }
 
 func (f *neo4jVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.Neo4jVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.Neo4jVersion{}, f.defaultInformer)
 }
 
-func (f *neo4jVersionInformer) Lister() v1alpha1.Neo4jVersionLister {
-	return v1alpha1.NewNeo4jVersionLister(f.Informer().GetIndexer())
+func (f *neo4jVersionInformer) Lister() catalogv1alpha1.Neo4jVersionLister {
+	return catalogv1alpha1.NewNeo4jVersionLister(f.Informer().GetIndexer())
 }

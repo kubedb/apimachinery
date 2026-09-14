@@ -87,6 +87,9 @@ func (w *Neo4jCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obj
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Neo4j)
 	if !ok {
 		return nil, fmt.Errorf("expected an Neo4j object but got %T", obj)

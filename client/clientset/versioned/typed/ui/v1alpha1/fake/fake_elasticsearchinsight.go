@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ui/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeElasticsearchInsights implements ElasticsearchInsightInterface
-type FakeElasticsearchInsights struct {
+// fakeElasticsearchInsights implements ElasticsearchInsightInterface
+type fakeElasticsearchInsights struct {
+	*gentype.FakeClientWithList[*v1alpha1.ElasticsearchInsight, *v1alpha1.ElasticsearchInsightList]
 	Fake *FakeUiV1alpha1
-	ns   string
 }
 
-var elasticsearchinsightsResource = v1alpha1.SchemeGroupVersion.WithResource("elasticsearchinsights")
-
-var elasticsearchinsightsKind = v1alpha1.SchemeGroupVersion.WithKind("ElasticsearchInsight")
-
-// Get takes name of the elasticsearchInsight, and returns the corresponding elasticsearchInsight object, and an error if there is any.
-func (c *FakeElasticsearchInsights) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ElasticsearchInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(elasticsearchinsightsResource, c.ns, name), &v1alpha1.ElasticsearchInsight{})
-
-	if obj == nil {
-		return nil, err
+func newFakeElasticsearchInsights(fake *FakeUiV1alpha1, namespace string) uiv1alpha1.ElasticsearchInsightInterface {
+	return &fakeElasticsearchInsights{
+		gentype.NewFakeClientWithList[*v1alpha1.ElasticsearchInsight, *v1alpha1.ElasticsearchInsightList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("elasticsearchinsights"),
+			v1alpha1.SchemeGroupVersion.WithKind("ElasticsearchInsight"),
+			func() *v1alpha1.ElasticsearchInsight { return &v1alpha1.ElasticsearchInsight{} },
+			func() *v1alpha1.ElasticsearchInsightList { return &v1alpha1.ElasticsearchInsightList{} },
+			func(dst, src *v1alpha1.ElasticsearchInsightList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ElasticsearchInsightList) []*v1alpha1.ElasticsearchInsight {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ElasticsearchInsightList, items []*v1alpha1.ElasticsearchInsight) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ElasticsearchInsight), err
-}
-
-// List takes label and field selectors, and returns the list of ElasticsearchInsights that match those selectors.
-func (c *FakeElasticsearchInsights) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ElasticsearchInsightList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(elasticsearchinsightsResource, elasticsearchinsightsKind, c.ns, opts), &v1alpha1.ElasticsearchInsightList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ElasticsearchInsightList{ListMeta: obj.(*v1alpha1.ElasticsearchInsightList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ElasticsearchInsightList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested elasticsearchInsights.
-func (c *FakeElasticsearchInsights) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(elasticsearchinsightsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a elasticsearchInsight and creates it.  Returns the server's representation of the elasticsearchInsight, and an error, if there is any.
-func (c *FakeElasticsearchInsights) Create(ctx context.Context, elasticsearchInsight *v1alpha1.ElasticsearchInsight, opts v1.CreateOptions) (result *v1alpha1.ElasticsearchInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(elasticsearchinsightsResource, c.ns, elasticsearchInsight), &v1alpha1.ElasticsearchInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchInsight), err
-}
-
-// Update takes the representation of a elasticsearchInsight and updates it. Returns the server's representation of the elasticsearchInsight, and an error, if there is any.
-func (c *FakeElasticsearchInsights) Update(ctx context.Context, elasticsearchInsight *v1alpha1.ElasticsearchInsight, opts v1.UpdateOptions) (result *v1alpha1.ElasticsearchInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(elasticsearchinsightsResource, c.ns, elasticsearchInsight), &v1alpha1.ElasticsearchInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchInsight), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeElasticsearchInsights) UpdateStatus(ctx context.Context, elasticsearchInsight *v1alpha1.ElasticsearchInsight, opts v1.UpdateOptions) (*v1alpha1.ElasticsearchInsight, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(elasticsearchinsightsResource, "status", c.ns, elasticsearchInsight), &v1alpha1.ElasticsearchInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchInsight), err
-}
-
-// Delete takes name of the elasticsearchInsight and deletes it. Returns an error if one occurs.
-func (c *FakeElasticsearchInsights) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(elasticsearchinsightsResource, c.ns, name, opts), &v1alpha1.ElasticsearchInsight{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeElasticsearchInsights) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(elasticsearchinsightsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ElasticsearchInsightList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched elasticsearchInsight.
-func (c *FakeElasticsearchInsights) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ElasticsearchInsight, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(elasticsearchinsightsResource, c.ns, name, pt, data, subresources...), &v1alpha1.ElasticsearchInsight{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ElasticsearchInsight), err
 }

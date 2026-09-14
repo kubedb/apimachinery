@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ProxySQLInsightLister helps list ProxySQLInsights.
@@ -31,7 +31,7 @@ import (
 type ProxySQLInsightLister interface {
 	// List lists all ProxySQLInsights in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ProxySQLInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ProxySQLInsight, err error)
 	// ProxySQLInsights returns an object that can list and get ProxySQLInsights.
 	ProxySQLInsights(namespace string) ProxySQLInsightNamespaceLister
 	ProxySQLInsightListerExpansion
@@ -39,25 +39,17 @@ type ProxySQLInsightLister interface {
 
 // proxySQLInsightLister implements the ProxySQLInsightLister interface.
 type proxySQLInsightLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.ProxySQLInsight]
 }
 
 // NewProxySQLInsightLister returns a new ProxySQLInsightLister.
 func NewProxySQLInsightLister(indexer cache.Indexer) ProxySQLInsightLister {
-	return &proxySQLInsightLister{indexer: indexer}
-}
-
-// List lists all ProxySQLInsights in the indexer.
-func (s *proxySQLInsightLister) List(selector labels.Selector) (ret []*v1alpha1.ProxySQLInsight, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ProxySQLInsight))
-	})
-	return ret, err
+	return &proxySQLInsightLister{listers.New[*uiv1alpha1.ProxySQLInsight](indexer, uiv1alpha1.Resource("proxysqlinsight"))}
 }
 
 // ProxySQLInsights returns an object that can list and get ProxySQLInsights.
 func (s *proxySQLInsightLister) ProxySQLInsights(namespace string) ProxySQLInsightNamespaceLister {
-	return proxySQLInsightNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return proxySQLInsightNamespaceLister{listers.NewNamespaced[*uiv1alpha1.ProxySQLInsight](s.ResourceIndexer, namespace)}
 }
 
 // ProxySQLInsightNamespaceLister helps list and get ProxySQLInsights.
@@ -65,36 +57,15 @@ func (s *proxySQLInsightLister) ProxySQLInsights(namespace string) ProxySQLInsig
 type ProxySQLInsightNamespaceLister interface {
 	// List lists all ProxySQLInsights in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ProxySQLInsight, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ProxySQLInsight, err error)
 	// Get retrieves the ProxySQLInsight from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ProxySQLInsight, error)
+	Get(name string) (*uiv1alpha1.ProxySQLInsight, error)
 	ProxySQLInsightNamespaceListerExpansion
 }
 
 // proxySQLInsightNamespaceLister implements the ProxySQLInsightNamespaceLister
 // interface.
 type proxySQLInsightNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ProxySQLInsights in the indexer for a given namespace.
-func (s proxySQLInsightNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ProxySQLInsight, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ProxySQLInsight))
-	})
-	return ret, err
-}
-
-// Get retrieves the ProxySQLInsight from the indexer for a given namespace and name.
-func (s proxySQLInsightNamespaceLister) Get(name string) (*v1alpha1.ProxySQLInsight, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("proxysqlinsight"), name)
-	}
-	return obj.(*v1alpha1.ProxySQLInsight), nil
+	listers.ResourceIndexer[*uiv1alpha1.ProxySQLInsight]
 }

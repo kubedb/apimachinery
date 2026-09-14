@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // AerospikeLister helps list Aerospikes.
@@ -31,7 +31,7 @@ import (
 type AerospikeLister interface {
 	// List lists all Aerospikes in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Aerospike, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Aerospike, err error)
 	// Aerospikes returns an object that can list and get Aerospikes.
 	Aerospikes(namespace string) AerospikeNamespaceLister
 	AerospikeListerExpansion
@@ -39,25 +39,17 @@ type AerospikeLister interface {
 
 // aerospikeLister implements the AerospikeLister interface.
 type aerospikeLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*gitopsv1alpha1.Aerospike]
 }
 
 // NewAerospikeLister returns a new AerospikeLister.
 func NewAerospikeLister(indexer cache.Indexer) AerospikeLister {
-	return &aerospikeLister{indexer: indexer}
-}
-
-// List lists all Aerospikes in the indexer.
-func (s *aerospikeLister) List(selector labels.Selector) (ret []*v1alpha1.Aerospike, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Aerospike))
-	})
-	return ret, err
+	return &aerospikeLister{listers.New[*gitopsv1alpha1.Aerospike](indexer, gitopsv1alpha1.Resource("aerospike"))}
 }
 
 // Aerospikes returns an object that can list and get Aerospikes.
 func (s *aerospikeLister) Aerospikes(namespace string) AerospikeNamespaceLister {
-	return aerospikeNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return aerospikeNamespaceLister{listers.NewNamespaced[*gitopsv1alpha1.Aerospike](s.ResourceIndexer, namespace)}
 }
 
 // AerospikeNamespaceLister helps list and get Aerospikes.
@@ -65,36 +57,15 @@ func (s *aerospikeLister) Aerospikes(namespace string) AerospikeNamespaceLister 
 type AerospikeNamespaceLister interface {
 	// List lists all Aerospikes in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.Aerospike, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.Aerospike, err error)
 	// Get retrieves the Aerospike from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.Aerospike, error)
+	Get(name string) (*gitopsv1alpha1.Aerospike, error)
 	AerospikeNamespaceListerExpansion
 }
 
 // aerospikeNamespaceLister implements the AerospikeNamespaceLister
 // interface.
 type aerospikeNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Aerospikes in the indexer for a given namespace.
-func (s aerospikeNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.Aerospike, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.Aerospike))
-	})
-	return ret, err
-}
-
-// Get retrieves the Aerospike from the indexer for a given namespace and name.
-func (s aerospikeNamespaceLister) Get(name string) (*v1alpha1.Aerospike, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("aerospike"), name)
-	}
-	return obj.(*v1alpha1.Aerospike), nil
+	listers.ResourceIndexer[*gitopsv1alpha1.Aerospike]
 }

@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	archiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	apisarchiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/listers/archiver/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ClickHouseArchivers.
 type ClickHouseArchiverInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ClickHouseArchiverLister
+	Lister() archiverv1alpha1.ClickHouseArchiverLister
 }
 
 type clickHouseArchiverInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredClickHouseArchiverInformer(client versioned.Interface, namespace
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ArchiverV1alpha1().ClickHouseArchivers(namespace).List(context.TODO(), options)
+				return client.ArchiverV1alpha1().ClickHouseArchivers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ArchiverV1alpha1().ClickHouseArchivers(namespace).Watch(context.TODO(), options)
+				return client.ArchiverV1alpha1().ClickHouseArchivers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ArchiverV1alpha1().ClickHouseArchivers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ArchiverV1alpha1().ClickHouseArchivers(namespace).Watch(ctx, options)
 			},
 		},
-		&archiverv1alpha1.ClickHouseArchiver{},
+		&apisarchiverv1alpha1.ClickHouseArchiver{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *clickHouseArchiverInformer) defaultInformer(client versioned.Interface,
 }
 
 func (f *clickHouseArchiverInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&archiverv1alpha1.ClickHouseArchiver{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisarchiverv1alpha1.ClickHouseArchiver{}, f.defaultInformer)
 }
 
-func (f *clickHouseArchiverInformer) Lister() v1alpha1.ClickHouseArchiverLister {
-	return v1alpha1.NewClickHouseArchiverLister(f.Informer().GetIndexer())
+func (f *clickHouseArchiverInformer) Lister() archiverv1alpha1.ClickHouseArchiverLister {
+	return archiverv1alpha1.NewClickHouseArchiverLister(f.Informer().GetIndexer())
 }

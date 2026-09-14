@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DocumentDBOpsRequestLister helps list DocumentDBOpsRequests.
@@ -31,7 +31,7 @@ import (
 type DocumentDBOpsRequestLister interface {
 	// List lists all DocumentDBOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DocumentDBOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.DocumentDBOpsRequest, err error)
 	// DocumentDBOpsRequests returns an object that can list and get DocumentDBOpsRequests.
 	DocumentDBOpsRequests(namespace string) DocumentDBOpsRequestNamespaceLister
 	DocumentDBOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type DocumentDBOpsRequestLister interface {
 
 // documentDBOpsRequestLister implements the DocumentDBOpsRequestLister interface.
 type documentDBOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.DocumentDBOpsRequest]
 }
 
 // NewDocumentDBOpsRequestLister returns a new DocumentDBOpsRequestLister.
 func NewDocumentDBOpsRequestLister(indexer cache.Indexer) DocumentDBOpsRequestLister {
-	return &documentDBOpsRequestLister{indexer: indexer}
-}
-
-// List lists all DocumentDBOpsRequests in the indexer.
-func (s *documentDBOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.DocumentDBOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DocumentDBOpsRequest))
-	})
-	return ret, err
+	return &documentDBOpsRequestLister{listers.New[*opsv1alpha1.DocumentDBOpsRequest](indexer, opsv1alpha1.Resource("documentdbopsrequest"))}
 }
 
 // DocumentDBOpsRequests returns an object that can list and get DocumentDBOpsRequests.
 func (s *documentDBOpsRequestLister) DocumentDBOpsRequests(namespace string) DocumentDBOpsRequestNamespaceLister {
-	return documentDBOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return documentDBOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.DocumentDBOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // DocumentDBOpsRequestNamespaceLister helps list and get DocumentDBOpsRequests.
@@ -65,36 +57,15 @@ func (s *documentDBOpsRequestLister) DocumentDBOpsRequests(namespace string) Doc
 type DocumentDBOpsRequestNamespaceLister interface {
 	// List lists all DocumentDBOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DocumentDBOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.DocumentDBOpsRequest, err error)
 	// Get retrieves the DocumentDBOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DocumentDBOpsRequest, error)
+	Get(name string) (*opsv1alpha1.DocumentDBOpsRequest, error)
 	DocumentDBOpsRequestNamespaceListerExpansion
 }
 
 // documentDBOpsRequestNamespaceLister implements the DocumentDBOpsRequestNamespaceLister
 // interface.
 type documentDBOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all DocumentDBOpsRequests in the indexer for a given namespace.
-func (s documentDBOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.DocumentDBOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DocumentDBOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the DocumentDBOpsRequest from the indexer for a given namespace and name.
-func (s documentDBOpsRequestNamespaceLister) Get(name string) (*v1alpha1.DocumentDBOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("documentdbopsrequest"), name)
-	}
-	return obj.(*v1alpha1.DocumentDBOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.DocumentDBOpsRequest]
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // EtcdAutoscalerLister helps list EtcdAutoscalers.
@@ -31,7 +31,7 @@ import (
 type EtcdAutoscalerLister interface {
 	// List lists all EtcdAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.EtcdAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.EtcdAutoscaler, err error)
 	// EtcdAutoscalers returns an object that can list and get EtcdAutoscalers.
 	EtcdAutoscalers(namespace string) EtcdAutoscalerNamespaceLister
 	EtcdAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type EtcdAutoscalerLister interface {
 
 // etcdAutoscalerLister implements the EtcdAutoscalerLister interface.
 type etcdAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.EtcdAutoscaler]
 }
 
 // NewEtcdAutoscalerLister returns a new EtcdAutoscalerLister.
 func NewEtcdAutoscalerLister(indexer cache.Indexer) EtcdAutoscalerLister {
-	return &etcdAutoscalerLister{indexer: indexer}
-}
-
-// List lists all EtcdAutoscalers in the indexer.
-func (s *etcdAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.EtcdAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.EtcdAutoscaler))
-	})
-	return ret, err
+	return &etcdAutoscalerLister{listers.New[*autoscalingv1alpha1.EtcdAutoscaler](indexer, autoscalingv1alpha1.Resource("etcdautoscaler"))}
 }
 
 // EtcdAutoscalers returns an object that can list and get EtcdAutoscalers.
 func (s *etcdAutoscalerLister) EtcdAutoscalers(namespace string) EtcdAutoscalerNamespaceLister {
-	return etcdAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return etcdAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.EtcdAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // EtcdAutoscalerNamespaceLister helps list and get EtcdAutoscalers.
@@ -65,36 +57,15 @@ func (s *etcdAutoscalerLister) EtcdAutoscalers(namespace string) EtcdAutoscalerN
 type EtcdAutoscalerNamespaceLister interface {
 	// List lists all EtcdAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.EtcdAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.EtcdAutoscaler, err error)
 	// Get retrieves the EtcdAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.EtcdAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.EtcdAutoscaler, error)
 	EtcdAutoscalerNamespaceListerExpansion
 }
 
 // etcdAutoscalerNamespaceLister implements the EtcdAutoscalerNamespaceLister
 // interface.
 type etcdAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all EtcdAutoscalers in the indexer for a given namespace.
-func (s etcdAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.EtcdAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.EtcdAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the EtcdAutoscaler from the indexer for a given namespace and name.
-func (s etcdAutoscalerNamespaceLister) Get(name string) (*v1alpha1.EtcdAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("etcdautoscaler"), name)
-	}
-	return obj.(*v1alpha1.EtcdAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.EtcdAutoscaler]
 }

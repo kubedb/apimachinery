@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // RabbitMQAutoscalerLister helps list RabbitMQAutoscalers.
@@ -31,7 +31,7 @@ import (
 type RabbitMQAutoscalerLister interface {
 	// List lists all RabbitMQAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RabbitMQAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.RabbitMQAutoscaler, err error)
 	// RabbitMQAutoscalers returns an object that can list and get RabbitMQAutoscalers.
 	RabbitMQAutoscalers(namespace string) RabbitMQAutoscalerNamespaceLister
 	RabbitMQAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type RabbitMQAutoscalerLister interface {
 
 // rabbitMQAutoscalerLister implements the RabbitMQAutoscalerLister interface.
 type rabbitMQAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.RabbitMQAutoscaler]
 }
 
 // NewRabbitMQAutoscalerLister returns a new RabbitMQAutoscalerLister.
 func NewRabbitMQAutoscalerLister(indexer cache.Indexer) RabbitMQAutoscalerLister {
-	return &rabbitMQAutoscalerLister{indexer: indexer}
-}
-
-// List lists all RabbitMQAutoscalers in the indexer.
-func (s *rabbitMQAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.RabbitMQAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RabbitMQAutoscaler))
-	})
-	return ret, err
+	return &rabbitMQAutoscalerLister{listers.New[*autoscalingv1alpha1.RabbitMQAutoscaler](indexer, autoscalingv1alpha1.Resource("rabbitmqautoscaler"))}
 }
 
 // RabbitMQAutoscalers returns an object that can list and get RabbitMQAutoscalers.
 func (s *rabbitMQAutoscalerLister) RabbitMQAutoscalers(namespace string) RabbitMQAutoscalerNamespaceLister {
-	return rabbitMQAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return rabbitMQAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.RabbitMQAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // RabbitMQAutoscalerNamespaceLister helps list and get RabbitMQAutoscalers.
@@ -65,36 +57,15 @@ func (s *rabbitMQAutoscalerLister) RabbitMQAutoscalers(namespace string) RabbitM
 type RabbitMQAutoscalerNamespaceLister interface {
 	// List lists all RabbitMQAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RabbitMQAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.RabbitMQAutoscaler, err error)
 	// Get retrieves the RabbitMQAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.RabbitMQAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.RabbitMQAutoscaler, error)
 	RabbitMQAutoscalerNamespaceListerExpansion
 }
 
 // rabbitMQAutoscalerNamespaceLister implements the RabbitMQAutoscalerNamespaceLister
 // interface.
 type rabbitMQAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all RabbitMQAutoscalers in the indexer for a given namespace.
-func (s rabbitMQAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.RabbitMQAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RabbitMQAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the RabbitMQAutoscaler from the indexer for a given namespace and name.
-func (s rabbitMQAutoscalerNamespaceLister) Get(name string) (*v1alpha1.RabbitMQAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("rabbitmqautoscaler"), name)
-	}
-	return obj.(*v1alpha1.RabbitMQAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.RabbitMQAutoscaler]
 }

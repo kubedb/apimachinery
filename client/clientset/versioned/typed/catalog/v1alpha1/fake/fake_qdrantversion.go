@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeQdrantVersions implements QdrantVersionInterface
-type FakeQdrantVersions struct {
+// fakeQdrantVersions implements QdrantVersionInterface
+type fakeQdrantVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.QdrantVersion, *v1alpha1.QdrantVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var qdrantversionsResource = v1alpha1.SchemeGroupVersion.WithResource("qdrantversions")
-
-var qdrantversionsKind = v1alpha1.SchemeGroupVersion.WithKind("QdrantVersion")
-
-// Get takes name of the qdrantVersion, and returns the corresponding qdrantVersion object, and an error if there is any.
-func (c *FakeQdrantVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.QdrantVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(qdrantversionsResource, name), &v1alpha1.QdrantVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeQdrantVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.QdrantVersionInterface {
+	return &fakeQdrantVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.QdrantVersion, *v1alpha1.QdrantVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("qdrantversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("QdrantVersion"),
+			func() *v1alpha1.QdrantVersion { return &v1alpha1.QdrantVersion{} },
+			func() *v1alpha1.QdrantVersionList { return &v1alpha1.QdrantVersionList{} },
+			func(dst, src *v1alpha1.QdrantVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.QdrantVersionList) []*v1alpha1.QdrantVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.QdrantVersionList, items []*v1alpha1.QdrantVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.QdrantVersion), err
-}
-
-// List takes label and field selectors, and returns the list of QdrantVersions that match those selectors.
-func (c *FakeQdrantVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.QdrantVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(qdrantversionsResource, qdrantversionsKind, opts), &v1alpha1.QdrantVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.QdrantVersionList{ListMeta: obj.(*v1alpha1.QdrantVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.QdrantVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested qdrantVersions.
-func (c *FakeQdrantVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(qdrantversionsResource, opts))
-}
-
-// Create takes the representation of a qdrantVersion and creates it.  Returns the server's representation of the qdrantVersion, and an error, if there is any.
-func (c *FakeQdrantVersions) Create(ctx context.Context, qdrantVersion *v1alpha1.QdrantVersion, opts v1.CreateOptions) (result *v1alpha1.QdrantVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(qdrantversionsResource, qdrantVersion), &v1alpha1.QdrantVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.QdrantVersion), err
-}
-
-// Update takes the representation of a qdrantVersion and updates it. Returns the server's representation of the qdrantVersion, and an error, if there is any.
-func (c *FakeQdrantVersions) Update(ctx context.Context, qdrantVersion *v1alpha1.QdrantVersion, opts v1.UpdateOptions) (result *v1alpha1.QdrantVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(qdrantversionsResource, qdrantVersion), &v1alpha1.QdrantVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.QdrantVersion), err
-}
-
-// Delete takes name of the qdrantVersion and deletes it. Returns an error if one occurs.
-func (c *FakeQdrantVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(qdrantversionsResource, name, opts), &v1alpha1.QdrantVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeQdrantVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(qdrantversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.QdrantVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched qdrantVersion.
-func (c *FakeQdrantVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.QdrantVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(qdrantversionsResource, name, pt, data, subresources...), &v1alpha1.QdrantVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.QdrantVersion), err
 }

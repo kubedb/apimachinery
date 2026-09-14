@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MariaDBMigrationLister helps list MariaDBMigrations.
@@ -31,7 +31,7 @@ import (
 type MariaDBMigrationLister interface {
 	// List lists all MariaDBMigrations in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MariaDBMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.MariaDBMigration, err error)
 	// MariaDBMigrations returns an object that can list and get MariaDBMigrations.
 	MariaDBMigrations(namespace string) MariaDBMigrationNamespaceLister
 	MariaDBMigrationListerExpansion
@@ -39,25 +39,17 @@ type MariaDBMigrationLister interface {
 
 // mariaDBMigrationLister implements the MariaDBMigrationLister interface.
 type mariaDBMigrationLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*courierv1alpha1.MariaDBMigration]
 }
 
 // NewMariaDBMigrationLister returns a new MariaDBMigrationLister.
 func NewMariaDBMigrationLister(indexer cache.Indexer) MariaDBMigrationLister {
-	return &mariaDBMigrationLister{indexer: indexer}
-}
-
-// List lists all MariaDBMigrations in the indexer.
-func (s *mariaDBMigrationLister) List(selector labels.Selector) (ret []*v1alpha1.MariaDBMigration, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MariaDBMigration))
-	})
-	return ret, err
+	return &mariaDBMigrationLister{listers.New[*courierv1alpha1.MariaDBMigration](indexer, courierv1alpha1.Resource("mariadbmigration"))}
 }
 
 // MariaDBMigrations returns an object that can list and get MariaDBMigrations.
 func (s *mariaDBMigrationLister) MariaDBMigrations(namespace string) MariaDBMigrationNamespaceLister {
-	return mariaDBMigrationNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mariaDBMigrationNamespaceLister{listers.NewNamespaced[*courierv1alpha1.MariaDBMigration](s.ResourceIndexer, namespace)}
 }
 
 // MariaDBMigrationNamespaceLister helps list and get MariaDBMigrations.
@@ -65,36 +57,15 @@ func (s *mariaDBMigrationLister) MariaDBMigrations(namespace string) MariaDBMigr
 type MariaDBMigrationNamespaceLister interface {
 	// List lists all MariaDBMigrations in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MariaDBMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.MariaDBMigration, err error)
 	// Get retrieves the MariaDBMigration from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MariaDBMigration, error)
+	Get(name string) (*courierv1alpha1.MariaDBMigration, error)
 	MariaDBMigrationNamespaceListerExpansion
 }
 
 // mariaDBMigrationNamespaceLister implements the MariaDBMigrationNamespaceLister
 // interface.
 type mariaDBMigrationNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MariaDBMigrations in the indexer for a given namespace.
-func (s mariaDBMigrationNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MariaDBMigration, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MariaDBMigration))
-	})
-	return ret, err
-}
-
-// Get retrieves the MariaDBMigration from the indexer for a given namespace and name.
-func (s mariaDBMigrationNamespaceLister) Get(name string) (*v1alpha1.MariaDBMigration, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mariadbmigration"), name)
-	}
-	return obj.(*v1alpha1.MariaDBMigration), nil
+	listers.ResourceIndexer[*courierv1alpha1.MariaDBMigration]
 }

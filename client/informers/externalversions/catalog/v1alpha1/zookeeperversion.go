@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ZooKeeperVersions.
 type ZooKeeperVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ZooKeeperVersionLister
+	Lister() catalogv1alpha1.ZooKeeperVersionLister
 }
 
 type zooKeeperVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredZooKeeperVersionInformer(client versioned.Interface, resyncPerio
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().ZooKeeperVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().ZooKeeperVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().ZooKeeperVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().ZooKeeperVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().ZooKeeperVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().ZooKeeperVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.ZooKeeperVersion{},
+		&apiscatalogv1alpha1.ZooKeeperVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *zooKeeperVersionInformer) defaultInformer(client versioned.Interface, r
 }
 
 func (f *zooKeeperVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.ZooKeeperVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.ZooKeeperVersion{}, f.defaultInformer)
 }
 
-func (f *zooKeeperVersionInformer) Lister() v1alpha1.ZooKeeperVersionLister {
-	return v1alpha1.NewZooKeeperVersionLister(f.Informer().GetIndexer())
+func (f *zooKeeperVersionInformer) Lister() catalogv1alpha1.ZooKeeperVersionLister {
+	return catalogv1alpha1.NewZooKeeperVersionLister(f.Informer().GetIndexer())
 }

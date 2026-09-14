@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeEtcdVersions implements EtcdVersionInterface
-type FakeEtcdVersions struct {
+// fakeEtcdVersions implements EtcdVersionInterface
+type fakeEtcdVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.EtcdVersion, *v1alpha1.EtcdVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var etcdversionsResource = v1alpha1.SchemeGroupVersion.WithResource("etcdversions")
-
-var etcdversionsKind = v1alpha1.SchemeGroupVersion.WithKind("EtcdVersion")
-
-// Get takes name of the etcdVersion, and returns the corresponding etcdVersion object, and an error if there is any.
-func (c *FakeEtcdVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.EtcdVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(etcdversionsResource, name), &v1alpha1.EtcdVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeEtcdVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.EtcdVersionInterface {
+	return &fakeEtcdVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.EtcdVersion, *v1alpha1.EtcdVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("etcdversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("EtcdVersion"),
+			func() *v1alpha1.EtcdVersion { return &v1alpha1.EtcdVersion{} },
+			func() *v1alpha1.EtcdVersionList { return &v1alpha1.EtcdVersionList{} },
+			func(dst, src *v1alpha1.EtcdVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.EtcdVersionList) []*v1alpha1.EtcdVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.EtcdVersionList, items []*v1alpha1.EtcdVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.EtcdVersion), err
-}
-
-// List takes label and field selectors, and returns the list of EtcdVersions that match those selectors.
-func (c *FakeEtcdVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.EtcdVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(etcdversionsResource, etcdversionsKind, opts), &v1alpha1.EtcdVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.EtcdVersionList{ListMeta: obj.(*v1alpha1.EtcdVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.EtcdVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested etcdVersions.
-func (c *FakeEtcdVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(etcdversionsResource, opts))
-}
-
-// Create takes the representation of a etcdVersion and creates it.  Returns the server's representation of the etcdVersion, and an error, if there is any.
-func (c *FakeEtcdVersions) Create(ctx context.Context, etcdVersion *v1alpha1.EtcdVersion, opts v1.CreateOptions) (result *v1alpha1.EtcdVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(etcdversionsResource, etcdVersion), &v1alpha1.EtcdVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdVersion), err
-}
-
-// Update takes the representation of a etcdVersion and updates it. Returns the server's representation of the etcdVersion, and an error, if there is any.
-func (c *FakeEtcdVersions) Update(ctx context.Context, etcdVersion *v1alpha1.EtcdVersion, opts v1.UpdateOptions) (result *v1alpha1.EtcdVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(etcdversionsResource, etcdVersion), &v1alpha1.EtcdVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdVersion), err
-}
-
-// Delete takes name of the etcdVersion and deletes it. Returns an error if one occurs.
-func (c *FakeEtcdVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(etcdversionsResource, name, opts), &v1alpha1.EtcdVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeEtcdVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(etcdversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.EtcdVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched etcdVersion.
-func (c *FakeEtcdVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.EtcdVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(etcdversionsResource, name, pt, data, subresources...), &v1alpha1.EtcdVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.EtcdVersion), err
 }

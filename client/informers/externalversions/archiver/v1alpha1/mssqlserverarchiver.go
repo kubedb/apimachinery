@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	archiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
+	apisarchiverv1alpha1 "kubedb.dev/apimachinery/apis/archiver/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/archiver/v1alpha1"
+	archiverv1alpha1 "kubedb.dev/apimachinery/client/listers/archiver/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // MSSQLServerArchivers.
 type MSSQLServerArchiverInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.MSSQLServerArchiverLister
+	Lister() archiverv1alpha1.MSSQLServerArchiverLister
 }
 
 type mSSQLServerArchiverInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredMSSQLServerArchiverInformer(client versioned.Interface, namespac
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ArchiverV1alpha1().MSSQLServerArchivers(namespace).List(context.TODO(), options)
+				return client.ArchiverV1alpha1().MSSQLServerArchivers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ArchiverV1alpha1().MSSQLServerArchivers(namespace).Watch(context.TODO(), options)
+				return client.ArchiverV1alpha1().MSSQLServerArchivers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ArchiverV1alpha1().MSSQLServerArchivers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.ArchiverV1alpha1().MSSQLServerArchivers(namespace).Watch(ctx, options)
 			},
 		},
-		&archiverv1alpha1.MSSQLServerArchiver{},
+		&apisarchiverv1alpha1.MSSQLServerArchiver{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *mSSQLServerArchiverInformer) defaultInformer(client versioned.Interface
 }
 
 func (f *mSSQLServerArchiverInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&archiverv1alpha1.MSSQLServerArchiver{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisarchiverv1alpha1.MSSQLServerArchiver{}, f.defaultInformer)
 }
 
-func (f *mSSQLServerArchiverInformer) Lister() v1alpha1.MSSQLServerArchiverLister {
-	return v1alpha1.NewMSSQLServerArchiverLister(f.Informer().GetIndexer())
+func (f *mSSQLServerArchiverInformer) Lister() archiverv1alpha1.MSSQLServerArchiverLister {
+	return archiverv1alpha1.NewMSSQLServerArchiverLister(f.Informer().GetIndexer())
 }

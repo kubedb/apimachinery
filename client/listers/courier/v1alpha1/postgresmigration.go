@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
+	courierv1alpha1 "kubedb.dev/apimachinery/apis/courier/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PostgresMigrationLister helps list PostgresMigrations.
@@ -31,7 +31,7 @@ import (
 type PostgresMigrationLister interface {
 	// List lists all PostgresMigrations in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PostgresMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.PostgresMigration, err error)
 	// PostgresMigrations returns an object that can list and get PostgresMigrations.
 	PostgresMigrations(namespace string) PostgresMigrationNamespaceLister
 	PostgresMigrationListerExpansion
@@ -39,25 +39,17 @@ type PostgresMigrationLister interface {
 
 // postgresMigrationLister implements the PostgresMigrationLister interface.
 type postgresMigrationLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*courierv1alpha1.PostgresMigration]
 }
 
 // NewPostgresMigrationLister returns a new PostgresMigrationLister.
 func NewPostgresMigrationLister(indexer cache.Indexer) PostgresMigrationLister {
-	return &postgresMigrationLister{indexer: indexer}
-}
-
-// List lists all PostgresMigrations in the indexer.
-func (s *postgresMigrationLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresMigration, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PostgresMigration))
-	})
-	return ret, err
+	return &postgresMigrationLister{listers.New[*courierv1alpha1.PostgresMigration](indexer, courierv1alpha1.Resource("postgresmigration"))}
 }
 
 // PostgresMigrations returns an object that can list and get PostgresMigrations.
 func (s *postgresMigrationLister) PostgresMigrations(namespace string) PostgresMigrationNamespaceLister {
-	return postgresMigrationNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return postgresMigrationNamespaceLister{listers.NewNamespaced[*courierv1alpha1.PostgresMigration](s.ResourceIndexer, namespace)}
 }
 
 // PostgresMigrationNamespaceLister helps list and get PostgresMigrations.
@@ -65,36 +57,15 @@ func (s *postgresMigrationLister) PostgresMigrations(namespace string) PostgresM
 type PostgresMigrationNamespaceLister interface {
 	// List lists all PostgresMigrations in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PostgresMigration, err error)
+	List(selector labels.Selector) (ret []*courierv1alpha1.PostgresMigration, err error)
 	// Get retrieves the PostgresMigration from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PostgresMigration, error)
+	Get(name string) (*courierv1alpha1.PostgresMigration, error)
 	PostgresMigrationNamespaceListerExpansion
 }
 
 // postgresMigrationNamespaceLister implements the PostgresMigrationNamespaceLister
 // interface.
 type postgresMigrationNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PostgresMigrations in the indexer for a given namespace.
-func (s postgresMigrationNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PostgresMigration, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PostgresMigration))
-	})
-	return ret, err
-}
-
-// Get retrieves the PostgresMigration from the indexer for a given namespace and name.
-func (s postgresMigrationNamespaceLister) Get(name string) (*v1alpha1.PostgresMigration, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("postgresmigration"), name)
-	}
-	return obj.(*v1alpha1.PostgresMigration), nil
+	listers.ResourceIndexer[*courierv1alpha1.PostgresMigration]
 }

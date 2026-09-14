@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	apisuiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // RedisInsights.
 type RedisInsightInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.RedisInsightLister
+	Lister() uiv1alpha1.RedisInsightLister
 }
 
 type redisInsightInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredRedisInsightInformer(client versioned.Interface, namespace strin
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().RedisInsights(namespace).List(context.TODO(), options)
+				return client.UiV1alpha1().RedisInsights(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().RedisInsights(namespace).Watch(context.TODO(), options)
+				return client.UiV1alpha1().RedisInsights(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().RedisInsights(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().RedisInsights(namespace).Watch(ctx, options)
 			},
 		},
-		&uiv1alpha1.RedisInsight{},
+		&apisuiv1alpha1.RedisInsight{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *redisInsightInformer) defaultInformer(client versioned.Interface, resyn
 }
 
 func (f *redisInsightInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&uiv1alpha1.RedisInsight{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisuiv1alpha1.RedisInsight{}, f.defaultInformer)
 }
 
-func (f *redisInsightInformer) Lister() v1alpha1.RedisInsightLister {
-	return v1alpha1.NewRedisInsightLister(f.Informer().GetIndexer())
+func (f *redisInsightInformer) Lister() uiv1alpha1.RedisInsightLister {
+	return uiv1alpha1.NewRedisInsightLister(f.Informer().GetIndexer())
 }

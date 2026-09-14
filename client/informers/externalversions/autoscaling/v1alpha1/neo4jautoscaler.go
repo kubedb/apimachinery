@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	apisautoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/client/listers/autoscaling/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // Neo4jAutoscalers.
 type Neo4jAutoscalerInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.Neo4jAutoscalerLister
+	Lister() autoscalingv1alpha1.Neo4jAutoscalerLister
 }
 
 type neo4jAutoscalerInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredNeo4jAutoscalerInformer(client versioned.Interface, namespace st
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().Neo4jAutoscalers(namespace).List(context.TODO(), options)
+				return client.AutoscalingV1alpha1().Neo4jAutoscalers(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AutoscalingV1alpha1().Neo4jAutoscalers(namespace).Watch(context.TODO(), options)
+				return client.AutoscalingV1alpha1().Neo4jAutoscalers(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().Neo4jAutoscalers(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.AutoscalingV1alpha1().Neo4jAutoscalers(namespace).Watch(ctx, options)
 			},
 		},
-		&autoscalingv1alpha1.Neo4jAutoscaler{},
+		&apisautoscalingv1alpha1.Neo4jAutoscaler{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *neo4jAutoscalerInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *neo4jAutoscalerInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&autoscalingv1alpha1.Neo4jAutoscaler{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisautoscalingv1alpha1.Neo4jAutoscaler{}, f.defaultInformer)
 }
 
-func (f *neo4jAutoscalerInformer) Lister() v1alpha1.Neo4jAutoscalerLister {
-	return v1alpha1.NewNeo4jAutoscalerLister(f.Informer().GetIndexer())
+func (f *neo4jAutoscalerInformer) Lister() autoscalingv1alpha1.Neo4jAutoscalerLister {
+	return autoscalingv1alpha1.NewNeo4jAutoscalerLister(f.Informer().GetIndexer())
 }

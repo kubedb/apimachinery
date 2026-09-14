@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	catalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	apiscatalogv1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/listers/catalog/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // PostgresVersions.
 type PostgresVersionInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.PostgresVersionLister
+	Lister() catalogv1alpha1.PostgresVersionLister
 }
 
 type postgresVersionInformer struct {
@@ -62,16 +62,28 @@ func NewFilteredPostgresVersionInformer(client versioned.Interface, resyncPeriod
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().PostgresVersions().List(context.TODO(), options)
+				return client.CatalogV1alpha1().PostgresVersions().List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.CatalogV1alpha1().PostgresVersions().Watch(context.TODO(), options)
+				return client.CatalogV1alpha1().PostgresVersions().Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().PostgresVersions().List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.CatalogV1alpha1().PostgresVersions().Watch(ctx, options)
 			},
 		},
-		&catalogv1alpha1.PostgresVersion{},
+		&apiscatalogv1alpha1.PostgresVersion{},
 		resyncPeriod,
 		indexers,
 	)
@@ -82,9 +94,9 @@ func (f *postgresVersionInformer) defaultInformer(client versioned.Interface, re
 }
 
 func (f *postgresVersionInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&catalogv1alpha1.PostgresVersion{}, f.defaultInformer)
+	return f.factory.InformerFor(&apiscatalogv1alpha1.PostgresVersion{}, f.defaultInformer)
 }
 
-func (f *postgresVersionInformer) Lister() v1alpha1.PostgresVersionLister {
-	return v1alpha1.NewPostgresVersionLister(f.Informer().GetIndexer())
+func (f *postgresVersionInformer) Lister() catalogv1alpha1.PostgresVersionLister {
+	return catalogv1alpha1.NewPostgresVersionLister(f.Informer().GetIndexer())
 }

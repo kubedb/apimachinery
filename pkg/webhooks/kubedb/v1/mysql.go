@@ -100,6 +100,9 @@ func (w MySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Obje
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	mysql := obj.(*dbapi.MySQL)
 	err = w.ValidateMySQL(mysql)
 	mysqlLog.Info("validating", "name", mysql.Name)

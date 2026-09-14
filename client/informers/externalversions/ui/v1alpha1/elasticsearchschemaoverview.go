@@ -19,13 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
 	time "time"
 
-	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	apisuiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 	versioned "kubedb.dev/apimachinery/client/clientset/versioned"
 	internalinterfaces "kubedb.dev/apimachinery/client/informers/externalversions/internalinterfaces"
-	v1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/client/listers/ui/v1alpha1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -37,7 +37,7 @@ import (
 // ElasticsearchSchemaOverviews.
 type ElasticsearchSchemaOverviewInformer interface {
 	Informer() cache.SharedIndexInformer
-	Lister() v1alpha1.ElasticsearchSchemaOverviewLister
+	Lister() uiv1alpha1.ElasticsearchSchemaOverviewLister
 }
 
 type elasticsearchSchemaOverviewInformer struct {
@@ -63,16 +63,28 @@ func NewFilteredElasticsearchSchemaOverviewInformer(client versioned.Interface, 
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().ElasticsearchSchemaOverviews(namespace).List(context.TODO(), options)
+				return client.UiV1alpha1().ElasticsearchSchemaOverviews(namespace).List(context.Background(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.UiV1alpha1().ElasticsearchSchemaOverviews(namespace).Watch(context.TODO(), options)
+				return client.UiV1alpha1().ElasticsearchSchemaOverviews(namespace).Watch(context.Background(), options)
+			},
+			ListWithContextFunc: func(ctx context.Context, options v1.ListOptions) (runtime.Object, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().ElasticsearchSchemaOverviews(namespace).List(ctx, options)
+			},
+			WatchFuncWithContext: func(ctx context.Context, options v1.ListOptions) (watch.Interface, error) {
+				if tweakListOptions != nil {
+					tweakListOptions(&options)
+				}
+				return client.UiV1alpha1().ElasticsearchSchemaOverviews(namespace).Watch(ctx, options)
 			},
 		},
-		&uiv1alpha1.ElasticsearchSchemaOverview{},
+		&apisuiv1alpha1.ElasticsearchSchemaOverview{},
 		resyncPeriod,
 		indexers,
 	)
@@ -83,9 +95,9 @@ func (f *elasticsearchSchemaOverviewInformer) defaultInformer(client versioned.I
 }
 
 func (f *elasticsearchSchemaOverviewInformer) Informer() cache.SharedIndexInformer {
-	return f.factory.InformerFor(&uiv1alpha1.ElasticsearchSchemaOverview{}, f.defaultInformer)
+	return f.factory.InformerFor(&apisuiv1alpha1.ElasticsearchSchemaOverview{}, f.defaultInformer)
 }
 
-func (f *elasticsearchSchemaOverviewInformer) Lister() v1alpha1.ElasticsearchSchemaOverviewLister {
-	return v1alpha1.NewElasticsearchSchemaOverviewLister(f.Informer().GetIndexer())
+func (f *elasticsearchSchemaOverviewInformer) Lister() uiv1alpha1.ElasticsearchSchemaOverviewLister {
+	return uiv1alpha1.NewElasticsearchSchemaOverviewLister(f.Informer().GetIndexer())
 }

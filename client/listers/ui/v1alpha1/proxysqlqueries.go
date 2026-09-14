@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ProxySQLQueriesLister helps list ProxySQLQuerieses.
@@ -31,7 +31,7 @@ import (
 type ProxySQLQueriesLister interface {
 	// List lists all ProxySQLQuerieses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ProxySQLQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ProxySQLQueries, err error)
 	// ProxySQLQuerieses returns an object that can list and get ProxySQLQuerieses.
 	ProxySQLQuerieses(namespace string) ProxySQLQueriesNamespaceLister
 	ProxySQLQueriesListerExpansion
@@ -39,25 +39,17 @@ type ProxySQLQueriesLister interface {
 
 // proxySQLQueriesLister implements the ProxySQLQueriesLister interface.
 type proxySQLQueriesLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.ProxySQLQueries]
 }
 
 // NewProxySQLQueriesLister returns a new ProxySQLQueriesLister.
 func NewProxySQLQueriesLister(indexer cache.Indexer) ProxySQLQueriesLister {
-	return &proxySQLQueriesLister{indexer: indexer}
-}
-
-// List lists all ProxySQLQuerieses in the indexer.
-func (s *proxySQLQueriesLister) List(selector labels.Selector) (ret []*v1alpha1.ProxySQLQueries, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ProxySQLQueries))
-	})
-	return ret, err
+	return &proxySQLQueriesLister{listers.New[*uiv1alpha1.ProxySQLQueries](indexer, uiv1alpha1.Resource("proxysqlqueries"))}
 }
 
 // ProxySQLQuerieses returns an object that can list and get ProxySQLQuerieses.
 func (s *proxySQLQueriesLister) ProxySQLQuerieses(namespace string) ProxySQLQueriesNamespaceLister {
-	return proxySQLQueriesNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return proxySQLQueriesNamespaceLister{listers.NewNamespaced[*uiv1alpha1.ProxySQLQueries](s.ResourceIndexer, namespace)}
 }
 
 // ProxySQLQueriesNamespaceLister helps list and get ProxySQLQuerieses.
@@ -65,36 +57,15 @@ func (s *proxySQLQueriesLister) ProxySQLQuerieses(namespace string) ProxySQLQuer
 type ProxySQLQueriesNamespaceLister interface {
 	// List lists all ProxySQLQuerieses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ProxySQLQueries, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ProxySQLQueries, err error)
 	// Get retrieves the ProxySQLQueries from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ProxySQLQueries, error)
+	Get(name string) (*uiv1alpha1.ProxySQLQueries, error)
 	ProxySQLQueriesNamespaceListerExpansion
 }
 
 // proxySQLQueriesNamespaceLister implements the ProxySQLQueriesNamespaceLister
 // interface.
 type proxySQLQueriesNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ProxySQLQuerieses in the indexer for a given namespace.
-func (s proxySQLQueriesNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ProxySQLQueries, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ProxySQLQueries))
-	})
-	return ret, err
-}
-
-// Get retrieves the ProxySQLQueries from the indexer for a given namespace and name.
-func (s proxySQLQueriesNamespaceLister) Get(name string) (*v1alpha1.ProxySQLQueries, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("proxysqlqueries"), name)
-	}
-	return obj.(*v1alpha1.ProxySQLQueries), nil
+	listers.ResourceIndexer[*uiv1alpha1.ProxySQLQueries]
 }

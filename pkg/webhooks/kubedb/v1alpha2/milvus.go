@@ -84,6 +84,9 @@ func (m *MilvusCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, m.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	db, ok := obj.(*olddbapi.Milvus)
 	if !ok {
 		return nil, fmt.Errorf("expected a Milvus object, got a %T", obj)

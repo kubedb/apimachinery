@@ -101,6 +101,9 @@ func (w MongoDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	log := logf.FromContext(ctx)
 	log.Info("creating MongoDB")
 	return nil, w.ValidateMongoDB(obj.(*dbapi.MongoDB))

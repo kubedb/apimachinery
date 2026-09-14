@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
+	gitopsv1alpha1 "kubedb.dev/apimachinery/apis/gitops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PerconaXtraDBLister helps list PerconaXtraDBs.
@@ -31,7 +31,7 @@ import (
 type PerconaXtraDBLister interface {
 	// List lists all PerconaXtraDBs in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDB, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.PerconaXtraDB, err error)
 	// PerconaXtraDBs returns an object that can list and get PerconaXtraDBs.
 	PerconaXtraDBs(namespace string) PerconaXtraDBNamespaceLister
 	PerconaXtraDBListerExpansion
@@ -39,25 +39,17 @@ type PerconaXtraDBLister interface {
 
 // perconaXtraDBLister implements the PerconaXtraDBLister interface.
 type perconaXtraDBLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*gitopsv1alpha1.PerconaXtraDB]
 }
 
 // NewPerconaXtraDBLister returns a new PerconaXtraDBLister.
 func NewPerconaXtraDBLister(indexer cache.Indexer) PerconaXtraDBLister {
-	return &perconaXtraDBLister{indexer: indexer}
-}
-
-// List lists all PerconaXtraDBs in the indexer.
-func (s *perconaXtraDBLister) List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDB, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PerconaXtraDB))
-	})
-	return ret, err
+	return &perconaXtraDBLister{listers.New[*gitopsv1alpha1.PerconaXtraDB](indexer, gitopsv1alpha1.Resource("perconaxtradb"))}
 }
 
 // PerconaXtraDBs returns an object that can list and get PerconaXtraDBs.
 func (s *perconaXtraDBLister) PerconaXtraDBs(namespace string) PerconaXtraDBNamespaceLister {
-	return perconaXtraDBNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return perconaXtraDBNamespaceLister{listers.NewNamespaced[*gitopsv1alpha1.PerconaXtraDB](s.ResourceIndexer, namespace)}
 }
 
 // PerconaXtraDBNamespaceLister helps list and get PerconaXtraDBs.
@@ -65,36 +57,15 @@ func (s *perconaXtraDBLister) PerconaXtraDBs(namespace string) PerconaXtraDBName
 type PerconaXtraDBNamespaceLister interface {
 	// List lists all PerconaXtraDBs in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDB, err error)
+	List(selector labels.Selector) (ret []*gitopsv1alpha1.PerconaXtraDB, err error)
 	// Get retrieves the PerconaXtraDB from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PerconaXtraDB, error)
+	Get(name string) (*gitopsv1alpha1.PerconaXtraDB, error)
 	PerconaXtraDBNamespaceListerExpansion
 }
 
 // perconaXtraDBNamespaceLister implements the PerconaXtraDBNamespaceLister
 // interface.
 type perconaXtraDBNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PerconaXtraDBs in the indexer for a given namespace.
-func (s perconaXtraDBNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PerconaXtraDB, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PerconaXtraDB))
-	})
-	return ret, err
-}
-
-// Get retrieves the PerconaXtraDB from the indexer for a given namespace and name.
-func (s perconaXtraDBNamespaceLister) Get(name string) (*v1alpha1.PerconaXtraDB, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("perconaxtradb"), name)
-	}
-	return obj.(*v1alpha1.PerconaXtraDB), nil
+	listers.ResourceIndexer[*gitopsv1alpha1.PerconaXtraDB]
 }

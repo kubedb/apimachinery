@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ElasticsearchNodesStatsLister helps list ElasticsearchNodesStatses.
@@ -31,7 +31,7 @@ import (
 type ElasticsearchNodesStatsLister interface {
 	// List lists all ElasticsearchNodesStatses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchNodesStats, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ElasticsearchNodesStats, err error)
 	// ElasticsearchNodesStatses returns an object that can list and get ElasticsearchNodesStatses.
 	ElasticsearchNodesStatses(namespace string) ElasticsearchNodesStatsNamespaceLister
 	ElasticsearchNodesStatsListerExpansion
@@ -39,25 +39,17 @@ type ElasticsearchNodesStatsLister interface {
 
 // elasticsearchNodesStatsLister implements the ElasticsearchNodesStatsLister interface.
 type elasticsearchNodesStatsLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.ElasticsearchNodesStats]
 }
 
 // NewElasticsearchNodesStatsLister returns a new ElasticsearchNodesStatsLister.
 func NewElasticsearchNodesStatsLister(indexer cache.Indexer) ElasticsearchNodesStatsLister {
-	return &elasticsearchNodesStatsLister{indexer: indexer}
-}
-
-// List lists all ElasticsearchNodesStatses in the indexer.
-func (s *elasticsearchNodesStatsLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchNodesStats, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ElasticsearchNodesStats))
-	})
-	return ret, err
+	return &elasticsearchNodesStatsLister{listers.New[*uiv1alpha1.ElasticsearchNodesStats](indexer, uiv1alpha1.Resource("elasticsearchnodesstats"))}
 }
 
 // ElasticsearchNodesStatses returns an object that can list and get ElasticsearchNodesStatses.
 func (s *elasticsearchNodesStatsLister) ElasticsearchNodesStatses(namespace string) ElasticsearchNodesStatsNamespaceLister {
-	return elasticsearchNodesStatsNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return elasticsearchNodesStatsNamespaceLister{listers.NewNamespaced[*uiv1alpha1.ElasticsearchNodesStats](s.ResourceIndexer, namespace)}
 }
 
 // ElasticsearchNodesStatsNamespaceLister helps list and get ElasticsearchNodesStatses.
@@ -65,36 +57,15 @@ func (s *elasticsearchNodesStatsLister) ElasticsearchNodesStatses(namespace stri
 type ElasticsearchNodesStatsNamespaceLister interface {
 	// List lists all ElasticsearchNodesStatses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchNodesStats, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ElasticsearchNodesStats, err error)
 	// Get retrieves the ElasticsearchNodesStats from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ElasticsearchNodesStats, error)
+	Get(name string) (*uiv1alpha1.ElasticsearchNodesStats, error)
 	ElasticsearchNodesStatsNamespaceListerExpansion
 }
 
 // elasticsearchNodesStatsNamespaceLister implements the ElasticsearchNodesStatsNamespaceLister
 // interface.
 type elasticsearchNodesStatsNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ElasticsearchNodesStatses in the indexer for a given namespace.
-func (s elasticsearchNodesStatsNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ElasticsearchNodesStats, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ElasticsearchNodesStats))
-	})
-	return ret, err
-}
-
-// Get retrieves the ElasticsearchNodesStats from the indexer for a given namespace and name.
-func (s elasticsearchNodesStatsNamespaceLister) Get(name string) (*v1alpha1.ElasticsearchNodesStats, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("elasticsearchnodesstats"), name)
-	}
-	return obj.(*v1alpha1.ElasticsearchNodesStats), nil
+	listers.ResourceIndexer[*uiv1alpha1.ElasticsearchNodesStats]
 }

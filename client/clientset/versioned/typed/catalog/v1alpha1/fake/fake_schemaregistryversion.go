@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeSchemaRegistryVersions implements SchemaRegistryVersionInterface
-type FakeSchemaRegistryVersions struct {
+// fakeSchemaRegistryVersions implements SchemaRegistryVersionInterface
+type fakeSchemaRegistryVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.SchemaRegistryVersion, *v1alpha1.SchemaRegistryVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var schemaregistryversionsResource = v1alpha1.SchemeGroupVersion.WithResource("schemaregistryversions")
-
-var schemaregistryversionsKind = v1alpha1.SchemeGroupVersion.WithKind("SchemaRegistryVersion")
-
-// Get takes name of the schemaRegistryVersion, and returns the corresponding schemaRegistryVersion object, and an error if there is any.
-func (c *FakeSchemaRegistryVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.SchemaRegistryVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(schemaregistryversionsResource, name), &v1alpha1.SchemaRegistryVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeSchemaRegistryVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.SchemaRegistryVersionInterface {
+	return &fakeSchemaRegistryVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.SchemaRegistryVersion, *v1alpha1.SchemaRegistryVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("schemaregistryversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("SchemaRegistryVersion"),
+			func() *v1alpha1.SchemaRegistryVersion { return &v1alpha1.SchemaRegistryVersion{} },
+			func() *v1alpha1.SchemaRegistryVersionList { return &v1alpha1.SchemaRegistryVersionList{} },
+			func(dst, src *v1alpha1.SchemaRegistryVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.SchemaRegistryVersionList) []*v1alpha1.SchemaRegistryVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.SchemaRegistryVersionList, items []*v1alpha1.SchemaRegistryVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.SchemaRegistryVersion), err
-}
-
-// List takes label and field selectors, and returns the list of SchemaRegistryVersions that match those selectors.
-func (c *FakeSchemaRegistryVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.SchemaRegistryVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(schemaregistryversionsResource, schemaregistryversionsKind, opts), &v1alpha1.SchemaRegistryVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.SchemaRegistryVersionList{ListMeta: obj.(*v1alpha1.SchemaRegistryVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.SchemaRegistryVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested schemaRegistryVersions.
-func (c *FakeSchemaRegistryVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(schemaregistryversionsResource, opts))
-}
-
-// Create takes the representation of a schemaRegistryVersion and creates it.  Returns the server's representation of the schemaRegistryVersion, and an error, if there is any.
-func (c *FakeSchemaRegistryVersions) Create(ctx context.Context, schemaRegistryVersion *v1alpha1.SchemaRegistryVersion, opts v1.CreateOptions) (result *v1alpha1.SchemaRegistryVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(schemaregistryversionsResource, schemaRegistryVersion), &v1alpha1.SchemaRegistryVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SchemaRegistryVersion), err
-}
-
-// Update takes the representation of a schemaRegistryVersion and updates it. Returns the server's representation of the schemaRegistryVersion, and an error, if there is any.
-func (c *FakeSchemaRegistryVersions) Update(ctx context.Context, schemaRegistryVersion *v1alpha1.SchemaRegistryVersion, opts v1.UpdateOptions) (result *v1alpha1.SchemaRegistryVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(schemaregistryversionsResource, schemaRegistryVersion), &v1alpha1.SchemaRegistryVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SchemaRegistryVersion), err
-}
-
-// Delete takes name of the schemaRegistryVersion and deletes it. Returns an error if one occurs.
-func (c *FakeSchemaRegistryVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(schemaregistryversionsResource, name, opts), &v1alpha1.SchemaRegistryVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeSchemaRegistryVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(schemaregistryversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.SchemaRegistryVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched schemaRegistryVersion.
-func (c *FakeSchemaRegistryVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.SchemaRegistryVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(schemaregistryversionsResource, name, pt, data, subresources...), &v1alpha1.SchemaRegistryVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.SchemaRegistryVersion), err
 }

@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
+	uiv1alpha1 "kubedb.dev/apimachinery/apis/ui/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // ProxySQLSettingsLister helps list ProxySQLSettingses.
@@ -31,7 +31,7 @@ import (
 type ProxySQLSettingsLister interface {
 	// List lists all ProxySQLSettingses in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ProxySQLSettings, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ProxySQLSettings, err error)
 	// ProxySQLSettingses returns an object that can list and get ProxySQLSettingses.
 	ProxySQLSettingses(namespace string) ProxySQLSettingsNamespaceLister
 	ProxySQLSettingsListerExpansion
@@ -39,25 +39,17 @@ type ProxySQLSettingsLister interface {
 
 // proxySQLSettingsLister implements the ProxySQLSettingsLister interface.
 type proxySQLSettingsLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*uiv1alpha1.ProxySQLSettings]
 }
 
 // NewProxySQLSettingsLister returns a new ProxySQLSettingsLister.
 func NewProxySQLSettingsLister(indexer cache.Indexer) ProxySQLSettingsLister {
-	return &proxySQLSettingsLister{indexer: indexer}
-}
-
-// List lists all ProxySQLSettingses in the indexer.
-func (s *proxySQLSettingsLister) List(selector labels.Selector) (ret []*v1alpha1.ProxySQLSettings, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ProxySQLSettings))
-	})
-	return ret, err
+	return &proxySQLSettingsLister{listers.New[*uiv1alpha1.ProxySQLSettings](indexer, uiv1alpha1.Resource("proxysqlsettings"))}
 }
 
 // ProxySQLSettingses returns an object that can list and get ProxySQLSettingses.
 func (s *proxySQLSettingsLister) ProxySQLSettingses(namespace string) ProxySQLSettingsNamespaceLister {
-	return proxySQLSettingsNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return proxySQLSettingsNamespaceLister{listers.NewNamespaced[*uiv1alpha1.ProxySQLSettings](s.ResourceIndexer, namespace)}
 }
 
 // ProxySQLSettingsNamespaceLister helps list and get ProxySQLSettingses.
@@ -65,36 +57,15 @@ func (s *proxySQLSettingsLister) ProxySQLSettingses(namespace string) ProxySQLSe
 type ProxySQLSettingsNamespaceLister interface {
 	// List lists all ProxySQLSettingses in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.ProxySQLSettings, err error)
+	List(selector labels.Selector) (ret []*uiv1alpha1.ProxySQLSettings, err error)
 	// Get retrieves the ProxySQLSettings from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.ProxySQLSettings, error)
+	Get(name string) (*uiv1alpha1.ProxySQLSettings, error)
 	ProxySQLSettingsNamespaceListerExpansion
 }
 
 // proxySQLSettingsNamespaceLister implements the ProxySQLSettingsNamespaceLister
 // interface.
 type proxySQLSettingsNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all ProxySQLSettingses in the indexer for a given namespace.
-func (s proxySQLSettingsNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.ProxySQLSettings, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.ProxySQLSettings))
-	})
-	return ret, err
-}
-
-// Get retrieves the ProxySQLSettings from the indexer for a given namespace and name.
-func (s proxySQLSettingsNamespaceLister) Get(name string) (*v1alpha1.ProxySQLSettings, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("proxysqlsettings"), name)
-	}
-	return obj.(*v1alpha1.ProxySQLSettings), nil
+	listers.ResourceIndexer[*uiv1alpha1.ProxySQLSettings]
 }

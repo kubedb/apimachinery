@@ -316,6 +316,9 @@ func (w *ElasticsearchCustomWebhook) ValidateCreate(ctx context.Context, obj run
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	es := obj.(*dbapi.Elasticsearch)
 	err := w.ValidateElasticsearch(es)
 	mysqlLog.Info("validating", "name", es.Name)

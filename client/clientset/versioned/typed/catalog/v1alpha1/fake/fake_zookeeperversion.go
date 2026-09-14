@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeZooKeeperVersions implements ZooKeeperVersionInterface
-type FakeZooKeeperVersions struct {
+// fakeZooKeeperVersions implements ZooKeeperVersionInterface
+type fakeZooKeeperVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.ZooKeeperVersion, *v1alpha1.ZooKeeperVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var zookeeperversionsResource = v1alpha1.SchemeGroupVersion.WithResource("zookeeperversions")
-
-var zookeeperversionsKind = v1alpha1.SchemeGroupVersion.WithKind("ZooKeeperVersion")
-
-// Get takes name of the zooKeeperVersion, and returns the corresponding zooKeeperVersion object, and an error if there is any.
-func (c *FakeZooKeeperVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ZooKeeperVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(zookeeperversionsResource, name), &v1alpha1.ZooKeeperVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeZooKeeperVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.ZooKeeperVersionInterface {
+	return &fakeZooKeeperVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.ZooKeeperVersion, *v1alpha1.ZooKeeperVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("zookeeperversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("ZooKeeperVersion"),
+			func() *v1alpha1.ZooKeeperVersion { return &v1alpha1.ZooKeeperVersion{} },
+			func() *v1alpha1.ZooKeeperVersionList { return &v1alpha1.ZooKeeperVersionList{} },
+			func(dst, src *v1alpha1.ZooKeeperVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.ZooKeeperVersionList) []*v1alpha1.ZooKeeperVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.ZooKeeperVersionList, items []*v1alpha1.ZooKeeperVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.ZooKeeperVersion), err
-}
-
-// List takes label and field selectors, and returns the list of ZooKeeperVersions that match those selectors.
-func (c *FakeZooKeeperVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.ZooKeeperVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(zookeeperversionsResource, zookeeperversionsKind, opts), &v1alpha1.ZooKeeperVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.ZooKeeperVersionList{ListMeta: obj.(*v1alpha1.ZooKeeperVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.ZooKeeperVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested zooKeeperVersions.
-func (c *FakeZooKeeperVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(zookeeperversionsResource, opts))
-}
-
-// Create takes the representation of a zooKeeperVersion and creates it.  Returns the server's representation of the zooKeeperVersion, and an error, if there is any.
-func (c *FakeZooKeeperVersions) Create(ctx context.Context, zooKeeperVersion *v1alpha1.ZooKeeperVersion, opts v1.CreateOptions) (result *v1alpha1.ZooKeeperVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(zookeeperversionsResource, zooKeeperVersion), &v1alpha1.ZooKeeperVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ZooKeeperVersion), err
-}
-
-// Update takes the representation of a zooKeeperVersion and updates it. Returns the server's representation of the zooKeeperVersion, and an error, if there is any.
-func (c *FakeZooKeeperVersions) Update(ctx context.Context, zooKeeperVersion *v1alpha1.ZooKeeperVersion, opts v1.UpdateOptions) (result *v1alpha1.ZooKeeperVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(zookeeperversionsResource, zooKeeperVersion), &v1alpha1.ZooKeeperVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ZooKeeperVersion), err
-}
-
-// Delete takes name of the zooKeeperVersion and deletes it. Returns an error if one occurs.
-func (c *FakeZooKeeperVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(zookeeperversionsResource, name, opts), &v1alpha1.ZooKeeperVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeZooKeeperVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(zookeeperversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.ZooKeeperVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched zooKeeperVersion.
-func (c *FakeZooKeeperVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ZooKeeperVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(zookeeperversionsResource, name, pt, data, subresources...), &v1alpha1.ZooKeeperVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.ZooKeeperVersion), err
 }

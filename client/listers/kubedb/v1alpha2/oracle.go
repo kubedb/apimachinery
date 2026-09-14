@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha2
 
 import (
-	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // OracleLister helps list Oracles.
@@ -31,7 +31,7 @@ import (
 type OracleLister interface {
 	// List lists all Oracles in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Oracle, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Oracle, err error)
 	// Oracles returns an object that can list and get Oracles.
 	Oracles(namespace string) OracleNamespaceLister
 	OracleListerExpansion
@@ -39,25 +39,17 @@ type OracleLister interface {
 
 // oracleLister implements the OracleLister interface.
 type oracleLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kubedbv1alpha2.Oracle]
 }
 
 // NewOracleLister returns a new OracleLister.
 func NewOracleLister(indexer cache.Indexer) OracleLister {
-	return &oracleLister{indexer: indexer}
-}
-
-// List lists all Oracles in the indexer.
-func (s *oracleLister) List(selector labels.Selector) (ret []*v1alpha2.Oracle, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Oracle))
-	})
-	return ret, err
+	return &oracleLister{listers.New[*kubedbv1alpha2.Oracle](indexer, kubedbv1alpha2.Resource("oracle"))}
 }
 
 // Oracles returns an object that can list and get Oracles.
 func (s *oracleLister) Oracles(namespace string) OracleNamespaceLister {
-	return oracleNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return oracleNamespaceLister{listers.NewNamespaced[*kubedbv1alpha2.Oracle](s.ResourceIndexer, namespace)}
 }
 
 // OracleNamespaceLister helps list and get Oracles.
@@ -65,36 +57,15 @@ func (s *oracleLister) Oracles(namespace string) OracleNamespaceLister {
 type OracleNamespaceLister interface {
 	// List lists all Oracles in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha2.Oracle, err error)
+	List(selector labels.Selector) (ret []*kubedbv1alpha2.Oracle, err error)
 	// Get retrieves the Oracle from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha2.Oracle, error)
+	Get(name string) (*kubedbv1alpha2.Oracle, error)
 	OracleNamespaceListerExpansion
 }
 
 // oracleNamespaceLister implements the OracleNamespaceLister
 // interface.
 type oracleNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all Oracles in the indexer for a given namespace.
-func (s oracleNamespaceLister) List(selector labels.Selector) (ret []*v1alpha2.Oracle, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.Oracle))
-	})
-	return ret, err
-}
-
-// Get retrieves the Oracle from the indexer for a given namespace and name.
-func (s oracleNamespaceLister) Get(name string) (*v1alpha2.Oracle, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha2.Resource("oracle"), name)
-	}
-	return obj.(*v1alpha2.Oracle), nil
+	listers.ResourceIndexer[*kubedbv1alpha2.Oracle]
 }

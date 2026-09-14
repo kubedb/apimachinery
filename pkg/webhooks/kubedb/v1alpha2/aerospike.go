@@ -21,6 +21,7 @@ import (
 	"fmt"
 
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -77,6 +78,9 @@ var _ webhook.CustomValidator = &AerospikeCustomWebhook{}
 func (w *AerospikeCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	ar, ok := obj.(*olddbapi.Aerospike)
 	if !ok {

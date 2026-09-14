@@ -19,124 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/ops/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeRedisOpsRequests implements RedisOpsRequestInterface
-type FakeRedisOpsRequests struct {
+// fakeRedisOpsRequests implements RedisOpsRequestInterface
+type fakeRedisOpsRequests struct {
+	*gentype.FakeClientWithList[*v1alpha1.RedisOpsRequest, *v1alpha1.RedisOpsRequestList]
 	Fake *FakeOpsV1alpha1
-	ns   string
 }
 
-var redisopsrequestsResource = v1alpha1.SchemeGroupVersion.WithResource("redisopsrequests")
-
-var redisopsrequestsKind = v1alpha1.SchemeGroupVersion.WithKind("RedisOpsRequest")
-
-// Get takes name of the redisOpsRequest, and returns the corresponding redisOpsRequest object, and an error if there is any.
-func (c *FakeRedisOpsRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.RedisOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(redisopsrequestsResource, c.ns, name), &v1alpha1.RedisOpsRequest{})
-
-	if obj == nil {
-		return nil, err
+func newFakeRedisOpsRequests(fake *FakeOpsV1alpha1, namespace string) opsv1alpha1.RedisOpsRequestInterface {
+	return &fakeRedisOpsRequests{
+		gentype.NewFakeClientWithList[*v1alpha1.RedisOpsRequest, *v1alpha1.RedisOpsRequestList](
+			fake.Fake,
+			namespace,
+			v1alpha1.SchemeGroupVersion.WithResource("redisopsrequests"),
+			v1alpha1.SchemeGroupVersion.WithKind("RedisOpsRequest"),
+			func() *v1alpha1.RedisOpsRequest { return &v1alpha1.RedisOpsRequest{} },
+			func() *v1alpha1.RedisOpsRequestList { return &v1alpha1.RedisOpsRequestList{} },
+			func(dst, src *v1alpha1.RedisOpsRequestList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.RedisOpsRequestList) []*v1alpha1.RedisOpsRequest {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.RedisOpsRequestList, items []*v1alpha1.RedisOpsRequest) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.RedisOpsRequest), err
-}
-
-// List takes label and field selectors, and returns the list of RedisOpsRequests that match those selectors.
-func (c *FakeRedisOpsRequests) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.RedisOpsRequestList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(redisopsrequestsResource, redisopsrequestsKind, c.ns, opts), &v1alpha1.RedisOpsRequestList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.RedisOpsRequestList{ListMeta: obj.(*v1alpha1.RedisOpsRequestList).ListMeta}
-	for _, item := range obj.(*v1alpha1.RedisOpsRequestList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested redisOpsRequests.
-func (c *FakeRedisOpsRequests) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(redisopsrequestsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a redisOpsRequest and creates it.  Returns the server's representation of the redisOpsRequest, and an error, if there is any.
-func (c *FakeRedisOpsRequests) Create(ctx context.Context, redisOpsRequest *v1alpha1.RedisOpsRequest, opts v1.CreateOptions) (result *v1alpha1.RedisOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(redisopsrequestsResource, c.ns, redisOpsRequest), &v1alpha1.RedisOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RedisOpsRequest), err
-}
-
-// Update takes the representation of a redisOpsRequest and updates it. Returns the server's representation of the redisOpsRequest, and an error, if there is any.
-func (c *FakeRedisOpsRequests) Update(ctx context.Context, redisOpsRequest *v1alpha1.RedisOpsRequest, opts v1.UpdateOptions) (result *v1alpha1.RedisOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(redisopsrequestsResource, c.ns, redisOpsRequest), &v1alpha1.RedisOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RedisOpsRequest), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeRedisOpsRequests) UpdateStatus(ctx context.Context, redisOpsRequest *v1alpha1.RedisOpsRequest, opts v1.UpdateOptions) (*v1alpha1.RedisOpsRequest, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(redisopsrequestsResource, "status", c.ns, redisOpsRequest), &v1alpha1.RedisOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RedisOpsRequest), err
-}
-
-// Delete takes name of the redisOpsRequest and deletes it. Returns an error if one occurs.
-func (c *FakeRedisOpsRequests) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(redisopsrequestsResource, c.ns, name, opts), &v1alpha1.RedisOpsRequest{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeRedisOpsRequests) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(redisopsrequestsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.RedisOpsRequestList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched redisOpsRequest.
-func (c *FakeRedisOpsRequests) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.RedisOpsRequest, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(redisopsrequestsResource, c.ns, name, pt, data, subresources...), &v1alpha1.RedisOpsRequest{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RedisOpsRequest), err
 }

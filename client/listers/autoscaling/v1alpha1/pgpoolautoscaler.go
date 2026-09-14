@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
+	autoscalingv1alpha1 "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // PgpoolAutoscalerLister helps list PgpoolAutoscalers.
@@ -31,7 +31,7 @@ import (
 type PgpoolAutoscalerLister interface {
 	// List lists all PgpoolAutoscalers in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgpoolAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.PgpoolAutoscaler, err error)
 	// PgpoolAutoscalers returns an object that can list and get PgpoolAutoscalers.
 	PgpoolAutoscalers(namespace string) PgpoolAutoscalerNamespaceLister
 	PgpoolAutoscalerListerExpansion
@@ -39,25 +39,17 @@ type PgpoolAutoscalerLister interface {
 
 // pgpoolAutoscalerLister implements the PgpoolAutoscalerLister interface.
 type pgpoolAutoscalerLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*autoscalingv1alpha1.PgpoolAutoscaler]
 }
 
 // NewPgpoolAutoscalerLister returns a new PgpoolAutoscalerLister.
 func NewPgpoolAutoscalerLister(indexer cache.Indexer) PgpoolAutoscalerLister {
-	return &pgpoolAutoscalerLister{indexer: indexer}
-}
-
-// List lists all PgpoolAutoscalers in the indexer.
-func (s *pgpoolAutoscalerLister) List(selector labels.Selector) (ret []*v1alpha1.PgpoolAutoscaler, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgpoolAutoscaler))
-	})
-	return ret, err
+	return &pgpoolAutoscalerLister{listers.New[*autoscalingv1alpha1.PgpoolAutoscaler](indexer, autoscalingv1alpha1.Resource("pgpoolautoscaler"))}
 }
 
 // PgpoolAutoscalers returns an object that can list and get PgpoolAutoscalers.
 func (s *pgpoolAutoscalerLister) PgpoolAutoscalers(namespace string) PgpoolAutoscalerNamespaceLister {
-	return pgpoolAutoscalerNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return pgpoolAutoscalerNamespaceLister{listers.NewNamespaced[*autoscalingv1alpha1.PgpoolAutoscaler](s.ResourceIndexer, namespace)}
 }
 
 // PgpoolAutoscalerNamespaceLister helps list and get PgpoolAutoscalers.
@@ -65,36 +57,15 @@ func (s *pgpoolAutoscalerLister) PgpoolAutoscalers(namespace string) PgpoolAutos
 type PgpoolAutoscalerNamespaceLister interface {
 	// List lists all PgpoolAutoscalers in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.PgpoolAutoscaler, err error)
+	List(selector labels.Selector) (ret []*autoscalingv1alpha1.PgpoolAutoscaler, err error)
 	// Get retrieves the PgpoolAutoscaler from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.PgpoolAutoscaler, error)
+	Get(name string) (*autoscalingv1alpha1.PgpoolAutoscaler, error)
 	PgpoolAutoscalerNamespaceListerExpansion
 }
 
 // pgpoolAutoscalerNamespaceLister implements the PgpoolAutoscalerNamespaceLister
 // interface.
 type pgpoolAutoscalerNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all PgpoolAutoscalers in the indexer for a given namespace.
-func (s pgpoolAutoscalerNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.PgpoolAutoscaler, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.PgpoolAutoscaler))
-	})
-	return ret, err
-}
-
-// Get retrieves the PgpoolAutoscaler from the indexer for a given namespace and name.
-func (s pgpoolAutoscalerNamespaceLister) Get(name string) (*v1alpha1.PgpoolAutoscaler, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("pgpoolautoscaler"), name)
-	}
-	return obj.(*v1alpha1.PgpoolAutoscaler), nil
+	listers.ResourceIndexer[*autoscalingv1alpha1.PgpoolAutoscaler]
 }

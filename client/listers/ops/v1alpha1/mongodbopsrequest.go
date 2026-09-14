@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // MongoDBOpsRequestLister helps list MongoDBOpsRequests.
@@ -31,7 +31,7 @@ import (
 type MongoDBOpsRequestLister interface {
 	// List lists all MongoDBOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MongoDBOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.MongoDBOpsRequest, err error)
 	// MongoDBOpsRequests returns an object that can list and get MongoDBOpsRequests.
 	MongoDBOpsRequests(namespace string) MongoDBOpsRequestNamespaceLister
 	MongoDBOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type MongoDBOpsRequestLister interface {
 
 // mongoDBOpsRequestLister implements the MongoDBOpsRequestLister interface.
 type mongoDBOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.MongoDBOpsRequest]
 }
 
 // NewMongoDBOpsRequestLister returns a new MongoDBOpsRequestLister.
 func NewMongoDBOpsRequestLister(indexer cache.Indexer) MongoDBOpsRequestLister {
-	return &mongoDBOpsRequestLister{indexer: indexer}
-}
-
-// List lists all MongoDBOpsRequests in the indexer.
-func (s *mongoDBOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.MongoDBOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MongoDBOpsRequest))
-	})
-	return ret, err
+	return &mongoDBOpsRequestLister{listers.New[*opsv1alpha1.MongoDBOpsRequest](indexer, opsv1alpha1.Resource("mongodbopsrequest"))}
 }
 
 // MongoDBOpsRequests returns an object that can list and get MongoDBOpsRequests.
 func (s *mongoDBOpsRequestLister) MongoDBOpsRequests(namespace string) MongoDBOpsRequestNamespaceLister {
-	return mongoDBOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return mongoDBOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.MongoDBOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // MongoDBOpsRequestNamespaceLister helps list and get MongoDBOpsRequests.
@@ -65,36 +57,15 @@ func (s *mongoDBOpsRequestLister) MongoDBOpsRequests(namespace string) MongoDBOp
 type MongoDBOpsRequestNamespaceLister interface {
 	// List lists all MongoDBOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.MongoDBOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.MongoDBOpsRequest, err error)
 	// Get retrieves the MongoDBOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.MongoDBOpsRequest, error)
+	Get(name string) (*opsv1alpha1.MongoDBOpsRequest, error)
 	MongoDBOpsRequestNamespaceListerExpansion
 }
 
 // mongoDBOpsRequestNamespaceLister implements the MongoDBOpsRequestNamespaceLister
 // interface.
 type mongoDBOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all MongoDBOpsRequests in the indexer for a given namespace.
-func (s mongoDBOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.MongoDBOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.MongoDBOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the MongoDBOpsRequest from the indexer for a given namespace and name.
-func (s mongoDBOpsRequestNamespaceLister) Get(name string) (*v1alpha1.MongoDBOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("mongodbopsrequest"), name)
-	}
-	return obj.(*v1alpha1.MongoDBOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.MongoDBOpsRequest]
 }

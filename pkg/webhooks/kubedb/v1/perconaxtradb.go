@@ -93,6 +93,9 @@ func (w PerconaXtraDBCustomWebhook) ValidateCreate(ctx context.Context, obj runt
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	perconaxtradb := obj.(*dbapi.PerconaXtraDB)
 	err = w.ValidatePerconaXtraDB(perconaxtradb)
 	pxlLog.Info("validating", "name", perconaxtradb.GetName())

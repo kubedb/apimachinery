@@ -34,6 +34,30 @@ type DatabaseConnectionListerExpansion interface{}
 // DatabaseConnectionNamespaceLister.
 type DatabaseConnectionNamespaceListerExpansion interface{}
 
+// DruidInsightListerExpansion allows custom methods to be added to
+// DruidInsightLister.
+type DruidInsightListerExpansion interface{}
+
+// DruidInsightNamespaceListerExpansion allows custom methods to be added to
+// DruidInsightNamespaceLister.
+type DruidInsightNamespaceListerExpansion interface{}
+
+// DruidSchemaOverviewListerExpansion allows custom methods to be added to
+// DruidSchemaOverviewLister.
+type DruidSchemaOverviewListerExpansion interface{}
+
+// DruidSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// DruidSchemaOverviewNamespaceLister.
+type DruidSchemaOverviewNamespaceListerExpansion interface{}
+
+// DruidTasksListerExpansion allows custom methods to be added to
+// DruidTasksLister.
+type DruidTasksListerExpansion interface{}
+
+// DruidTasksNamespaceListerExpansion allows custom methods to be added to
+// DruidTasksNamespaceLister.
+type DruidTasksNamespaceListerExpansion interface{}
+
 // ElasticsearchInsightListerExpansion allows custom methods to be added to
 // ElasticsearchInsightLister.
 type ElasticsearchInsightListerExpansion interface{}
@@ -82,6 +106,22 @@ type MariaDBSchemaOverviewListerExpansion interface{}
 // MariaDBSchemaOverviewNamespaceLister.
 type MariaDBSchemaOverviewNamespaceListerExpansion interface{}
 
+// MilvusInsightListerExpansion allows custom methods to be added to
+// MilvusInsightLister.
+type MilvusInsightListerExpansion interface{}
+
+// MilvusInsightNamespaceListerExpansion allows custom methods to be added to
+// MilvusInsightNamespaceLister.
+type MilvusInsightNamespaceListerExpansion interface{}
+
+// MilvusSchemaOverviewListerExpansion allows custom methods to be added to
+// MilvusSchemaOverviewLister.
+type MilvusSchemaOverviewListerExpansion interface{}
+
+// MilvusSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// MilvusSchemaOverviewNamespaceLister.
+type MilvusSchemaOverviewNamespaceListerExpansion interface{}
+
 // MongoDBInsightListerExpansion allows custom methods to be added to
 // MongoDBInsightLister.
 type MongoDBInsightListerExpansion interface{}
@@ -129,6 +169,54 @@ type MySQLSchemaOverviewListerExpansion interface{}
 // MySQLSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
 // MySQLSchemaOverviewNamespaceLister.
 type MySQLSchemaOverviewNamespaceListerExpansion interface{}
+
+// Neo4jActivityListerExpansion allows custom methods to be added to
+// Neo4jActivityLister.
+type Neo4jActivityListerExpansion interface{}
+
+// Neo4jActivityNamespaceListerExpansion allows custom methods to be added to
+// Neo4jActivityNamespaceLister.
+type Neo4jActivityNamespaceListerExpansion interface{}
+
+// Neo4jInsightListerExpansion allows custom methods to be added to
+// Neo4jInsightLister.
+type Neo4jInsightListerExpansion interface{}
+
+// Neo4jInsightNamespaceListerExpansion allows custom methods to be added to
+// Neo4jInsightNamespaceLister.
+type Neo4jInsightNamespaceListerExpansion interface{}
+
+// Neo4jSchemaOverviewListerExpansion allows custom methods to be added to
+// Neo4jSchemaOverviewLister.
+type Neo4jSchemaOverviewListerExpansion interface{}
+
+// Neo4jSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// Neo4jSchemaOverviewNamespaceLister.
+type Neo4jSchemaOverviewNamespaceListerExpansion interface{}
+
+// PerconaXtraDBInsightListerExpansion allows custom methods to be added to
+// PerconaXtraDBInsightLister.
+type PerconaXtraDBInsightListerExpansion interface{}
+
+// PerconaXtraDBInsightNamespaceListerExpansion allows custom methods to be added to
+// PerconaXtraDBInsightNamespaceLister.
+type PerconaXtraDBInsightNamespaceListerExpansion interface{}
+
+// PerconaXtraDBQueriesListerExpansion allows custom methods to be added to
+// PerconaXtraDBQueriesLister.
+type PerconaXtraDBQueriesListerExpansion interface{}
+
+// PerconaXtraDBQueriesNamespaceListerExpansion allows custom methods to be added to
+// PerconaXtraDBQueriesNamespaceLister.
+type PerconaXtraDBQueriesNamespaceListerExpansion interface{}
+
+// PerconaXtraDBSchemaOverviewListerExpansion allows custom methods to be added to
+// PerconaXtraDBSchemaOverviewLister.
+type PerconaXtraDBSchemaOverviewListerExpansion interface{}
+
+// PerconaXtraDBSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// PerconaXtraDBSchemaOverviewNamespaceLister.
+type PerconaXtraDBSchemaOverviewNamespaceListerExpansion interface{}
 
 // PgBouncerInsightListerExpansion allows custom methods to be added to
 // PgBouncerInsightLister.
@@ -241,3 +329,27 @@ type RedisSchemaOverviewListerExpansion interface{}
 // RedisSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
 // RedisSchemaOverviewNamespaceLister.
 type RedisSchemaOverviewNamespaceListerExpansion interface{}
+
+// SinglestoreInsightListerExpansion allows custom methods to be added to
+// SinglestoreInsightLister.
+type SinglestoreInsightListerExpansion interface{}
+
+// SinglestoreInsightNamespaceListerExpansion allows custom methods to be added to
+// SinglestoreInsightNamespaceLister.
+type SinglestoreInsightNamespaceListerExpansion interface{}
+
+// SinglestoreQueriesListerExpansion allows custom methods to be added to
+// SinglestoreQueriesLister.
+type SinglestoreQueriesListerExpansion interface{}
+
+// SinglestoreQueriesNamespaceListerExpansion allows custom methods to be added to
+// SinglestoreQueriesNamespaceLister.
+type SinglestoreQueriesNamespaceListerExpansion interface{}
+
+// SinglestoreSchemaOverviewListerExpansion allows custom methods to be added to
+// SinglestoreSchemaOverviewLister.
+type SinglestoreSchemaOverviewListerExpansion interface{}
+
+// SinglestoreSchemaOverviewNamespaceListerExpansion allows custom methods to be added to
+// SinglestoreSchemaOverviewNamespaceLister.
+type SinglestoreSchemaOverviewNamespaceListerExpansion interface{}

@@ -142,6 +142,9 @@ func (w MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 	if isDeletionInProgress(obj) {
 		return nil, nil
 	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
+	}
 	mariadb := obj.(*dbapi.MariaDB)
 	mariadbLog.Info("validating", "name", mariadb.Name)
 

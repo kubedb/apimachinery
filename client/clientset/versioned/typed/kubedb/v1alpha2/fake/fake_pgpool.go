@@ -19,124 +19,33 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha2 "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	kubedbv1alpha2 "kubedb.dev/apimachinery/client/clientset/versioned/typed/kubedb/v1alpha2"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakePgpools implements PgpoolInterface
-type FakePgpools struct {
+// fakePgpools implements PgpoolInterface
+type fakePgpools struct {
+	*gentype.FakeClientWithList[*v1alpha2.Pgpool, *v1alpha2.PgpoolList]
 	Fake *FakeKubedbV1alpha2
-	ns   string
 }
 
-var pgpoolsResource = v1alpha2.SchemeGroupVersion.WithResource("pgpools")
-
-var pgpoolsKind = v1alpha2.SchemeGroupVersion.WithKind("Pgpool")
-
-// Get takes name of the pgpool, and returns the corresponding pgpool object, and an error if there is any.
-func (c *FakePgpools) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha2.Pgpool, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(pgpoolsResource, c.ns, name), &v1alpha2.Pgpool{})
-
-	if obj == nil {
-		return nil, err
+func newFakePgpools(fake *FakeKubedbV1alpha2, namespace string) kubedbv1alpha2.PgpoolInterface {
+	return &fakePgpools{
+		gentype.NewFakeClientWithList[*v1alpha2.Pgpool, *v1alpha2.PgpoolList](
+			fake.Fake,
+			namespace,
+			v1alpha2.SchemeGroupVersion.WithResource("pgpools"),
+			v1alpha2.SchemeGroupVersion.WithKind("Pgpool"),
+			func() *v1alpha2.Pgpool { return &v1alpha2.Pgpool{} },
+			func() *v1alpha2.PgpoolList { return &v1alpha2.PgpoolList{} },
+			func(dst, src *v1alpha2.PgpoolList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha2.PgpoolList) []*v1alpha2.Pgpool { return gentype.ToPointerSlice(list.Items) },
+			func(list *v1alpha2.PgpoolList, items []*v1alpha2.Pgpool) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha2.Pgpool), err
-}
-
-// List takes label and field selectors, and returns the list of Pgpools that match those selectors.
-func (c *FakePgpools) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha2.PgpoolList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewListAction(pgpoolsResource, pgpoolsKind, c.ns, opts), &v1alpha2.PgpoolList{})
-
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha2.PgpoolList{ListMeta: obj.(*v1alpha2.PgpoolList).ListMeta}
-	for _, item := range obj.(*v1alpha2.PgpoolList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested pgpools.
-func (c *FakePgpools) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewWatchAction(pgpoolsResource, c.ns, opts))
-
-}
-
-// Create takes the representation of a pgpool and creates it.  Returns the server's representation of the pgpool, and an error, if there is any.
-func (c *FakePgpools) Create(ctx context.Context, pgpool *v1alpha2.Pgpool, opts v1.CreateOptions) (result *v1alpha2.Pgpool, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(pgpoolsResource, c.ns, pgpool), &v1alpha2.Pgpool{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Pgpool), err
-}
-
-// Update takes the representation of a pgpool and updates it. Returns the server's representation of the pgpool, and an error, if there is any.
-func (c *FakePgpools) Update(ctx context.Context, pgpool *v1alpha2.Pgpool, opts v1.UpdateOptions) (result *v1alpha2.Pgpool, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(pgpoolsResource, c.ns, pgpool), &v1alpha2.Pgpool{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Pgpool), err
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakePgpools) UpdateStatus(ctx context.Context, pgpool *v1alpha2.Pgpool, opts v1.UpdateOptions) (*v1alpha2.Pgpool, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(pgpoolsResource, "status", c.ns, pgpool), &v1alpha2.Pgpool{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Pgpool), err
-}
-
-// Delete takes name of the pgpool and deletes it. Returns an error if one occurs.
-func (c *FakePgpools) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(pgpoolsResource, c.ns, name, opts), &v1alpha2.Pgpool{})
-
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakePgpools) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewDeleteCollectionAction(pgpoolsResource, c.ns, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha2.PgpoolList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched pgpool.
-func (c *FakePgpools) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha2.Pgpool, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(pgpoolsResource, c.ns, name, pt, data, subresources...), &v1alpha2.Pgpool{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha2.Pgpool), err
 }

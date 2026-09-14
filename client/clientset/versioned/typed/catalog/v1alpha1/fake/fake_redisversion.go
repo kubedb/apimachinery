@@ -19,104 +19,35 @@ limitations under the License.
 package fake
 
 import (
-	"context"
-
 	v1alpha1 "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	catalogv1alpha1 "kubedb.dev/apimachinery/client/clientset/versioned/typed/catalog/v1alpha1"
 
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	labels "k8s.io/apimachinery/pkg/labels"
-	types "k8s.io/apimachinery/pkg/types"
-	watch "k8s.io/apimachinery/pkg/watch"
-	testing "k8s.io/client-go/testing"
+	gentype "k8s.io/client-go/gentype"
 )
 
-// FakeRedisVersions implements RedisVersionInterface
-type FakeRedisVersions struct {
+// fakeRedisVersions implements RedisVersionInterface
+type fakeRedisVersions struct {
+	*gentype.FakeClientWithList[*v1alpha1.RedisVersion, *v1alpha1.RedisVersionList]
 	Fake *FakeCatalogV1alpha1
 }
 
-var redisversionsResource = v1alpha1.SchemeGroupVersion.WithResource("redisversions")
-
-var redisversionsKind = v1alpha1.SchemeGroupVersion.WithKind("RedisVersion")
-
-// Get takes name of the redisVersion, and returns the corresponding redisVersion object, and an error if there is any.
-func (c *FakeRedisVersions) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.RedisVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootGetAction(redisversionsResource, name), &v1alpha1.RedisVersion{})
-	if obj == nil {
-		return nil, err
+func newFakeRedisVersions(fake *FakeCatalogV1alpha1) catalogv1alpha1.RedisVersionInterface {
+	return &fakeRedisVersions{
+		gentype.NewFakeClientWithList[*v1alpha1.RedisVersion, *v1alpha1.RedisVersionList](
+			fake.Fake,
+			"",
+			v1alpha1.SchemeGroupVersion.WithResource("redisversions"),
+			v1alpha1.SchemeGroupVersion.WithKind("RedisVersion"),
+			func() *v1alpha1.RedisVersion { return &v1alpha1.RedisVersion{} },
+			func() *v1alpha1.RedisVersionList { return &v1alpha1.RedisVersionList{} },
+			func(dst, src *v1alpha1.RedisVersionList) { dst.ListMeta = src.ListMeta },
+			func(list *v1alpha1.RedisVersionList) []*v1alpha1.RedisVersion {
+				return gentype.ToPointerSlice(list.Items)
+			},
+			func(list *v1alpha1.RedisVersionList, items []*v1alpha1.RedisVersion) {
+				list.Items = gentype.FromPointerSlice(items)
+			},
+		),
+		fake,
 	}
-	return obj.(*v1alpha1.RedisVersion), err
-}
-
-// List takes label and field selectors, and returns the list of RedisVersions that match those selectors.
-func (c *FakeRedisVersions) List(ctx context.Context, opts v1.ListOptions) (result *v1alpha1.RedisVersionList, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootListAction(redisversionsResource, redisversionsKind, opts), &v1alpha1.RedisVersionList{})
-	if obj == nil {
-		return nil, err
-	}
-
-	label, _, _ := testing.ExtractFromListOptions(opts)
-	if label == nil {
-		label = labels.Everything()
-	}
-	list := &v1alpha1.RedisVersionList{ListMeta: obj.(*v1alpha1.RedisVersionList).ListMeta}
-	for _, item := range obj.(*v1alpha1.RedisVersionList).Items {
-		if label.Matches(labels.Set(item.Labels)) {
-			list.Items = append(list.Items, item)
-		}
-	}
-	return list, err
-}
-
-// Watch returns a watch.Interface that watches the requested redisVersions.
-func (c *FakeRedisVersions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
-	return c.Fake.
-		InvokesWatch(testing.NewRootWatchAction(redisversionsResource, opts))
-}
-
-// Create takes the representation of a redisVersion and creates it.  Returns the server's representation of the redisVersion, and an error, if there is any.
-func (c *FakeRedisVersions) Create(ctx context.Context, redisVersion *v1alpha1.RedisVersion, opts v1.CreateOptions) (result *v1alpha1.RedisVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootCreateAction(redisversionsResource, redisVersion), &v1alpha1.RedisVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RedisVersion), err
-}
-
-// Update takes the representation of a redisVersion and updates it. Returns the server's representation of the redisVersion, and an error, if there is any.
-func (c *FakeRedisVersions) Update(ctx context.Context, redisVersion *v1alpha1.RedisVersion, opts v1.UpdateOptions) (result *v1alpha1.RedisVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootUpdateAction(redisversionsResource, redisVersion), &v1alpha1.RedisVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RedisVersion), err
-}
-
-// Delete takes name of the redisVersion and deletes it. Returns an error if one occurs.
-func (c *FakeRedisVersions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
-	_, err := c.Fake.
-		Invokes(testing.NewRootDeleteActionWithOptions(redisversionsResource, name, opts), &v1alpha1.RedisVersion{})
-	return err
-}
-
-// DeleteCollection deletes a collection of objects.
-func (c *FakeRedisVersions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
-	action := testing.NewRootDeleteCollectionAction(redisversionsResource, listOpts)
-
-	_, err := c.Fake.Invokes(action, &v1alpha1.RedisVersionList{})
-	return err
-}
-
-// Patch applies the patch and returns the patched redisVersion.
-func (c *FakeRedisVersions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.RedisVersion, err error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewRootPatchSubresourceAction(redisversionsResource, name, pt, data, subresources...), &v1alpha1.RedisVersion{})
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*v1alpha1.RedisVersion), err
 }

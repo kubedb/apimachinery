@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	opsv1alpha1 "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // DruidOpsRequestLister helps list DruidOpsRequests.
@@ -31,7 +31,7 @@ import (
 type DruidOpsRequestLister interface {
 	// List lists all DruidOpsRequests in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DruidOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.DruidOpsRequest, err error)
 	// DruidOpsRequests returns an object that can list and get DruidOpsRequests.
 	DruidOpsRequests(namespace string) DruidOpsRequestNamespaceLister
 	DruidOpsRequestListerExpansion
@@ -39,25 +39,17 @@ type DruidOpsRequestLister interface {
 
 // druidOpsRequestLister implements the DruidOpsRequestLister interface.
 type druidOpsRequestLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*opsv1alpha1.DruidOpsRequest]
 }
 
 // NewDruidOpsRequestLister returns a new DruidOpsRequestLister.
 func NewDruidOpsRequestLister(indexer cache.Indexer) DruidOpsRequestLister {
-	return &druidOpsRequestLister{indexer: indexer}
-}
-
-// List lists all DruidOpsRequests in the indexer.
-func (s *druidOpsRequestLister) List(selector labels.Selector) (ret []*v1alpha1.DruidOpsRequest, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DruidOpsRequest))
-	})
-	return ret, err
+	return &druidOpsRequestLister{listers.New[*opsv1alpha1.DruidOpsRequest](indexer, opsv1alpha1.Resource("druidopsrequest"))}
 }
 
 // DruidOpsRequests returns an object that can list and get DruidOpsRequests.
 func (s *druidOpsRequestLister) DruidOpsRequests(namespace string) DruidOpsRequestNamespaceLister {
-	return druidOpsRequestNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return druidOpsRequestNamespaceLister{listers.NewNamespaced[*opsv1alpha1.DruidOpsRequest](s.ResourceIndexer, namespace)}
 }
 
 // DruidOpsRequestNamespaceLister helps list and get DruidOpsRequests.
@@ -65,36 +57,15 @@ func (s *druidOpsRequestLister) DruidOpsRequests(namespace string) DruidOpsReque
 type DruidOpsRequestNamespaceLister interface {
 	// List lists all DruidOpsRequests in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.DruidOpsRequest, err error)
+	List(selector labels.Selector) (ret []*opsv1alpha1.DruidOpsRequest, err error)
 	// Get retrieves the DruidOpsRequest from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.DruidOpsRequest, error)
+	Get(name string) (*opsv1alpha1.DruidOpsRequest, error)
 	DruidOpsRequestNamespaceListerExpansion
 }
 
 // druidOpsRequestNamespaceLister implements the DruidOpsRequestNamespaceLister
 // interface.
 type druidOpsRequestNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all DruidOpsRequests in the indexer for a given namespace.
-func (s druidOpsRequestNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.DruidOpsRequest, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.DruidOpsRequest))
-	})
-	return ret, err
-}
-
-// Get retrieves the DruidOpsRequest from the indexer for a given namespace and name.
-func (s druidOpsRequestNamespaceLister) Get(name string) (*v1alpha1.DruidOpsRequest, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("druidopsrequest"), name)
-	}
-	return obj.(*v1alpha1.DruidOpsRequest), nil
+	listers.ResourceIndexer[*opsv1alpha1.DruidOpsRequest]
 }

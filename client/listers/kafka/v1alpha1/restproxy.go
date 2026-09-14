@@ -19,11 +19,11 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
+	kafkav1alpha1 "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/client-go/tools/cache"
+	labels "k8s.io/apimachinery/pkg/labels"
+	listers "k8s.io/client-go/listers"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // RestProxyLister helps list RestProxies.
@@ -31,7 +31,7 @@ import (
 type RestProxyLister interface {
 	// List lists all RestProxies in the indexer.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RestProxy, err error)
+	List(selector labels.Selector) (ret []*kafkav1alpha1.RestProxy, err error)
 	// RestProxies returns an object that can list and get RestProxies.
 	RestProxies(namespace string) RestProxyNamespaceLister
 	RestProxyListerExpansion
@@ -39,25 +39,17 @@ type RestProxyLister interface {
 
 // restProxyLister implements the RestProxyLister interface.
 type restProxyLister struct {
-	indexer cache.Indexer
+	listers.ResourceIndexer[*kafkav1alpha1.RestProxy]
 }
 
 // NewRestProxyLister returns a new RestProxyLister.
 func NewRestProxyLister(indexer cache.Indexer) RestProxyLister {
-	return &restProxyLister{indexer: indexer}
-}
-
-// List lists all RestProxies in the indexer.
-func (s *restProxyLister) List(selector labels.Selector) (ret []*v1alpha1.RestProxy, err error) {
-	err = cache.ListAll(s.indexer, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RestProxy))
-	})
-	return ret, err
+	return &restProxyLister{listers.New[*kafkav1alpha1.RestProxy](indexer, kafkav1alpha1.Resource("restproxy"))}
 }
 
 // RestProxies returns an object that can list and get RestProxies.
 func (s *restProxyLister) RestProxies(namespace string) RestProxyNamespaceLister {
-	return restProxyNamespaceLister{indexer: s.indexer, namespace: namespace}
+	return restProxyNamespaceLister{listers.NewNamespaced[*kafkav1alpha1.RestProxy](s.ResourceIndexer, namespace)}
 }
 
 // RestProxyNamespaceLister helps list and get RestProxies.
@@ -65,36 +57,15 @@ func (s *restProxyLister) RestProxies(namespace string) RestProxyNamespaceLister
 type RestProxyNamespaceLister interface {
 	// List lists all RestProxies in the indexer for a given namespace.
 	// Objects returned here must be treated as read-only.
-	List(selector labels.Selector) (ret []*v1alpha1.RestProxy, err error)
+	List(selector labels.Selector) (ret []*kafkav1alpha1.RestProxy, err error)
 	// Get retrieves the RestProxy from the indexer for a given namespace and name.
 	// Objects returned here must be treated as read-only.
-	Get(name string) (*v1alpha1.RestProxy, error)
+	Get(name string) (*kafkav1alpha1.RestProxy, error)
 	RestProxyNamespaceListerExpansion
 }
 
 // restProxyNamespaceLister implements the RestProxyNamespaceLister
 // interface.
 type restProxyNamespaceLister struct {
-	indexer   cache.Indexer
-	namespace string
-}
-
-// List lists all RestProxies in the indexer for a given namespace.
-func (s restProxyNamespaceLister) List(selector labels.Selector) (ret []*v1alpha1.RestProxy, err error) {
-	err = cache.ListAllByNamespace(s.indexer, s.namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha1.RestProxy))
-	})
-	return ret, err
-}
-
-// Get retrieves the RestProxy from the indexer for a given namespace and name.
-func (s restProxyNamespaceLister) Get(name string) (*v1alpha1.RestProxy, error) {
-	obj, exists, err := s.indexer.GetByKey(s.namespace + "/" + name)
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, errors.NewNotFound(v1alpha1.Resource("restproxy"), name)
-	}
-	return obj.(*v1alpha1.RestProxy), nil
+	listers.ResourceIndexer[*kafkav1alpha1.RestProxy]
 }

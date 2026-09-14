@@ -23,6 +23,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -80,6 +81,9 @@ var _ webhook.CustomValidator = &SinglestoreCustomWebhook{}
 func (w *SinglestoreCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	db, ok := obj.(*olddbapi.Singlestore)
 	if !ok {
