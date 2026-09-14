@@ -1160,6 +1160,7 @@ const (
 	SolrBackupCredentialsDir    = "/var/solr/backup-credentials"
 	SolrAWSCredentialsFileName  = "aws-credentials"
 	SolrAWSSharedCredentialsEnv = "AWS_SHARED_CREDENTIALS_FILE"
+	SolrSSLTrustStoreSourceEnv  = "KUBEDB_SOLR_SSL_TRUST_STORE_SOURCE"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""
