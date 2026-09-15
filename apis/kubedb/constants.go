@@ -1691,6 +1691,7 @@ const (
 	DocumentDBDefaultUsername       = "default_user"
 	DocumentDBAdminUsername         = "documentdb"
 	DocumentDBAdminAuthSecretSuffix = "admin-auth"
+	DocumentDBAdminAppBindingSuffix = "admin"
 
 	DefaultDocumentDBDatabase = "sampledb"
 

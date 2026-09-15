@@ -35033,6 +35033,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_DocumentDBVersionSpec(ref common.
 							Format:      "",
 						},
 					},
+					"postgresPluginVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Postgres version of the backup plugin image to use, published as spec.version on the <db>-admin AppBinding - e.g. \"17.2\", not the major \"17\" in PostgresVersion.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"ui": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
