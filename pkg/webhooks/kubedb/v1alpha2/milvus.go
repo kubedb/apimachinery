@@ -157,6 +157,12 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 
 	warnings = append(warnings, milvusWarnSRIOVTopology(db)...)
 
+	if err := milvusValidateNodeGroups(db); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("distributed"),
+			db.Name,
+			err.Error()))
+	}
+
 	if db.Spec.PodTemplate != nil {
 		if err = ValidateMilvusEnvVar(getMilvusContainerEnvs(db), forbiddenMilvusEnvVars, db.ResourceKind()); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("podTemplate"),
@@ -321,6 +327,33 @@ func milvusWarnSRIOVTopology(db *olddbapi.Milvus) admission.Warnings {
 			"applies. Set spec.network.sriov on all five Distributed roles (mixcoord, datanode, proxy, "+
 			"querynode, streamingnode), or none.", missing,
 	)}
+}
+
+// milvusValidateNodeGroups rejects duplicate group names within a single
+// Distributed role's spec.topology.distributed.<role>.groups -- the PetSet
+// name and label selector are both derived from (role, group name)
+// (design doc § 13.5), so a collision would mean two groups fighting over
+// the same PetSet/pods.
+func milvusValidateNodeGroups(db *olddbapi.Milvus) error {
+	if !db.IsDistributed() {
+		return nil
+	}
+	for _, nodeType := range []olddbapi.MilvusNodeRoleType{
+		olddbapi.MilvusNodeRoleMixCoord, olddbapi.MilvusNodeRoleDataNode, olddbapi.MilvusNodeRoleProxy,
+		olddbapi.MilvusNodeRoleQueryNode, olddbapi.MilvusNodeRoleStreamingNode,
+	} {
+		seen := map[string]bool{}
+		for _, group := range db.GetNodeGroups(nodeType) {
+			if group.Name == "" {
+				return fmt.Errorf("topology.distributed.%s.groups[]: group name must not be empty", nodeType)
+			}
+			if seen[group.Name] {
+				return fmt.Errorf("topology.distributed.%s.groups[]: duplicate group name %q", nodeType, group.Name)
+			}
+			seen[group.Name] = true
+		}
+	}
+	return nil
 }
 
 func milvusValidateVolumes(podTemplate *ofstv2.PodTemplateSpec) error {

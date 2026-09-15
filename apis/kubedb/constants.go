@@ -35,6 +35,7 @@ const (
 	StatefulSetPodNameLabelKey = "statefulset.kubernetes.io/pod-name"
 	LabelRole                  = GroupName + "/role"
 	LabelPetSet                = GroupName + "/petset"
+	LabelNodeGroup             = GroupName + "/node-group"
 
 	PrometheusAddressFile     = "/var/prometheus-data/address"
 	PrometheusCaFile          = "/var/prometheus-data/ca.crt"

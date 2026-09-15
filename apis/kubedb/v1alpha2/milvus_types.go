@@ -163,6 +163,37 @@ type MilvusSRIOVSpec struct {
 	// naming this interface explicitly, not just AttachmentRef by itself.
 	// +optional
 	Interface string `json:"interface,omitempty"`
+
+	// GDS optionally attaches a second, independent SR-IOV network for GPU
+	// Direct Storage to object storage -- confirmed as a real requirement
+	// on data-plane roles (QueryNode, DataNode, StreamingNode) by a
+	// customer reference implementation
+	// (pl2/milvus-fixes/sriov-gpu-design.md § 13.4); Proxy/MixCoord only
+	// need the RDMA attachment above. When set, the rendered
+	// k8s.v1.cni.cncf.io/networks annotation always uses the JSON-array
+	// form (two entries), regardless of whether Interface above is at its
+	// default.
+	// +optional
+	GDS *MilvusSRIOVAttachmentSpec `json:"gds,omitempty"`
+}
+
+// +k8s:deepcopy-gen=true
+// MilvusSRIOVAttachmentSpec requests one additional Multus/SR-IOV secondary
+// network attachment, alongside the primary one in MilvusSRIOVSpec.
+type MilvusSRIOVAttachmentSpec struct {
+	// AttachmentRef names a cluster-admin-authored NetworkAttachmentDefinition
+	// (k8s.cni.cncf.io/v1) in the same namespace as this Milvus.
+	AttachmentRef string `json:"attachmentRef"`
+
+	// ResourceName must match the SR-IOV device plugin's advertised extended
+	// resource for the requested VF.
+	ResourceName string `json:"resourceName"`
+
+	// Interface names the secondary interface Multus should attach this
+	// network as. Defaults to "net2" when unset (net1 is MilvusSRIOVSpec's
+	// own default interface, above).
+	// +optional
+	Interface string `json:"interface,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
@@ -258,7 +289,52 @@ type MilvusNode struct {
 	// other roles.
 	// +optional
 	GPU *MilvusGPUSpec `json:"gpu,omitempty"`
+
+	// Groups optionally splits this role into multiple named,
+	// independently scheduled sub-pools -- e.g. two GPU classes of
+	// QueryNode in one cluster, each with its own network/gpu/podTemplate
+	// (pl2/milvus-fixes/sriov-gpu-design.md § 13.5). When set, the
+	// operator creates one PetSet per group, named <db>-<role>-<group
+	// name>, instead of one PetSet for the whole role, and the
+	// Replicas/PodTemplate/Network/GPU fields above are ignored for
+	// pod-building purposes (each group carries its own). When unset (the
+	// default), behavior is unchanged: one PetSet named <db>-<role>, built
+	// from the fields above.
+	//
+	// Group names must be unique within this role. For StreamingNode
+	// (MilvusDataNode), every group shares the single top-level
+	// StorageType/Storage template below -- per-group storage is not
+	// supported.
+	// +optional
+	Groups []MilvusNodeGroup `json:"groups,omitempty"`
 }
+
+// +k8s:deepcopy-gen=true
+// MilvusNodeGroup is one named sub-pool within a Distributed role's
+// MilvusNode.Groups.
+type MilvusNodeGroup struct {
+	// Name distinguishes this group from others in the same role. Must be
+	// a valid DNS label segment; used in the PetSet/pod names as
+	// <db>-<role>-<name>.
+	Name string `json:"name"`
+
+	// Replicas represents number of replicas for this group.
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// PodTemplate is an optional configuration for pods in this group.
+	// +optional
+	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
+
+	// Network configures secondary networking for this group.
+	// +optional
+	Network *MilvusNetworkSpec `json:"network,omitempty"`
+
+	// GPU configures GPU device scheduling for this group.
+	// +optional
+	GPU *MilvusGPUSpec `json:"gpu,omitempty"`
+}
+
 type MilvusDataNode struct {
 	// MilvusDataNode has all the characteristics of MilvusNode
 	MilvusNode `json:",inline"`

@@ -102,6 +102,32 @@ func (m *Milvus) PetSetName(nodeRole MilvusNodeRoleType) string {
 	return m.OffshootName()
 }
 
+// PetSetNameForGroup returns the PetSet name for one MilvusNodeGroup within
+// a Distributed role -- <db>-<role>-<group>. When groupName is empty, this
+// is identical to PetSetName(nodeRole), covering the role's default
+// (ungrouped) PetSet.
+func (m *Milvus) PetSetNameForGroup(nodeRole MilvusNodeRoleType, groupName string) string {
+	if groupName == "" {
+		return m.PetSetName(nodeRole)
+	}
+	return meta_util.NameWithSuffix(m.PetSetName(nodeRole), groupName)
+}
+
+// GetNodeGroups returns the MilvusNodeGroup list for the given Distributed
+// role, or nil if the role has no groups configured (the common case --
+// one PetSet per role, built from the role-level Replicas/PodTemplate/
+// Network/GPU fields instead).
+func (m *Milvus) GetNodeGroups(nodeType MilvusNodeRoleType) []MilvusNodeGroup {
+	nodeSpec, dataNodeSpec := m.GetNodeSpec(nodeType)
+	if nodeSpec != nil {
+		return nodeSpec.Groups
+	}
+	if dataNodeSpec != nil {
+		return dataNodeSpec.Groups
+	}
+	return nil
+}
+
 func (m *Milvus) GetNodeSpec(nodeType MilvusNodeRoleType) (*MilvusNode, *MilvusDataNode) {
 	switch nodeType {
 	case MilvusNodeRoleMixCoord:
@@ -198,6 +224,11 @@ func (m *Milvus) RequestsGPU() bool {
 				return true
 			}
 		}
+		for _, group := range m.GetNodeGroups(nodeType) {
+			if group.GPU != nil || podTemplateRequestsGPU(group.PodTemplate) {
+				return true
+			}
+		}
 	}
 	return false
 }
@@ -214,7 +245,20 @@ func (m *Milvus) DistributedNodeRolesWithSRIOV() []MilvusNodeRoleType {
 		MilvusNodeRoleMixCoord, MilvusNodeRoleDataNode, MilvusNodeRoleProxy,
 		MilvusNodeRoleQueryNode, MilvusNodeRoleStreamingNode,
 	} {
+		has := false
 		if net := m.GetNodeNetworkSpec(nodeType); net != nil && net.SRIOV != nil {
+			has = true
+		}
+		// A role counts as "has SR-IOV" if any single group does -- this
+		// feeds the webhook's topology-coupling warning (§ 10), which is
+		// necessarily approximate once groups exist: it can't know whether
+		// an ungrouped peer role needs to reach every group or just some.
+		for _, group := range m.GetNodeGroups(nodeType) {
+			if group.Network != nil && group.Network.SRIOV != nil {
+				has = true
+			}
+		}
+		if has {
 			withSRIOV = append(withSRIOV, nodeType)
 		}
 	}
@@ -230,6 +274,38 @@ func (m *Milvus) PodControllerLabels(nodeType MilvusNodeRoleType, extraLabels ..
 		labels = dataNodeSpec.PodTemplate.Controller.Labels
 	}
 	return m.OffshootLabel(meta_util.OverwriteKeys(m.OffshootSelectors(), extraLabels...), labels)
+}
+
+// PodControllerLabelsForGroup is PodControllerLabels, plus a
+// kubedb.com/node-group label distinguishing this group's pods from every
+// other group's (and the ungrouped default's) pods of the same role -- each
+// group's PetSet needs a selector that matches only its own pods, or two
+// PetSets end up adopting each other's. groupTemplate is the specific
+// MilvusNodeGroup's own PodTemplate (its Controller.Labels are honored the
+// same way the role-level PodTemplate's are above); pass a zero value if the
+// group has none.
+func (m *Milvus) PodControllerLabelsForGroup(nodeType MilvusNodeRoleType, groupName string, groupTemplate *ofstv2.PodTemplateSpec, extraLabels ...map[string]string) map[string]string {
+	if groupName == "" {
+		return m.PodControllerLabels(nodeType, extraLabels...)
+	}
+	var templateLabels map[string]string
+	if groupTemplate != nil {
+		templateLabels = groupTemplate.Controller.Labels
+	}
+	groupLabel := map[string]string{kubedb.LabelNodeGroup: groupName}
+	selectors := meta_util.OverwriteKeys(m.OffshootSelectors(), append([]map[string]string{groupLabel}, extraLabels...)...)
+	return m.OffshootLabel(selectors, templateLabels)
+}
+
+// GroupSelectors is the label selector for one MilvusNodeGroup's PetSet --
+// OffshootSelectors() (role-agnostic base) plus the role and group-name
+// labels, matching exactly the labels PodControllerLabelsForGroup stamps.
+func (m *Milvus) GroupSelectors(nodeType MilvusNodeRoleType, groupName string) map[string]string {
+	roleLabels := map[string]string{kubedb.LabelRole: string(nodeType)}
+	if groupName == "" {
+		return m.OffshootSelectors(roleLabels)
+	}
+	return m.OffshootSelectors(roleLabels, map[string]string{kubedb.LabelNodeGroup: groupName})
 }
 
 func (m *Milvus) ServiceAccountName() string {
@@ -451,6 +527,31 @@ func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any
 	m.setDefaultContainerResourceLimits(*podTemplate)
 	apis.SetDefaultResizePolicy((*podTemplate).Spec.Containers, (*podTemplate).Spec.InitContainers)
 	setDefaultGPUAndNetwork(*gpu, *network)
+
+	// Groups (if any) get the same replicas/podTemplate/GPU/network
+	// defaulting as the role-level fields above, independently per group.
+	var groups *[]MilvusNodeGroup
+	switch n := node.(type) {
+	case **MilvusNode:
+		groups = &(*n).Groups
+	case **MilvusDataNode:
+		groups = &(*n).Groups
+	}
+	if groups != nil {
+		for i := range *groups {
+			g := &(*groups)[i]
+			if g.Replicas == nil {
+				g.Replicas = pointer.Int32P(1)
+			}
+			if g.PodTemplate == nil {
+				g.PodTemplate = &ofstv2.PodTemplateSpec{}
+			}
+			m.setDefaultContainerSecurityContext(mvVersion, g.PodTemplate)
+			m.setDefaultContainerResourceLimits(g.PodTemplate)
+			apis.SetDefaultResizePolicy(g.PodTemplate.Spec.Containers, g.PodTemplate.Spec.InitContainers)
+			setDefaultGPUAndNetwork(g.GPU, g.Network)
+		}
+	}
 }
 
 // setDefaultGPUAndNetwork fills in ResourceName/Interface defaults on an
