@@ -695,6 +695,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MemcachedVersionSpec":                         schema_apimachinery_apis_catalog_v1alpha1_MemcachedVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusDatabase":                               schema_apimachinery_apis_catalog_v1alpha1_MilvusDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersion":                                schema_apimachinery_apis_catalog_v1alpha1_MilvusVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersionGPUSpec":                         schema_apimachinery_apis_catalog_v1alpha1_MilvusVersionGPUSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersionList":                            schema_apimachinery_apis_catalog_v1alpha1_MilvusVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersionSpec":                            schema_apimachinery_apis_catalog_v1alpha1_MilvusVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MongoDBSecurityContext":                       schema_apimachinery_apis_catalog_v1alpha1_MongoDBSecurityContext(ref),
@@ -38100,10 +38101,18 @@ func schema_apimachinery_apis_catalog_v1alpha1_MilvusDatabase(ref common.Referen
 							Format:  "",
 						},
 					},
+					"gpu": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GPU declares this image's GPU-acceleration capability, i.e. whether it was built with GPU-enabled knowhere (CUDA) support. Nil/absent is treated the same as unsupported (CPU-only). Consumed by the Milvus admission webhook to reject a GPU resource/scheduling request against a MilvusVersion that cannot serve it.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersionGPUSpec"),
+						},
+					},
 				},
 				Required: []string{"image"},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersionGPUSpec"},
 	}
 }
 
@@ -38144,6 +38153,42 @@ func schema_apimachinery_apis_catalog_v1alpha1_MilvusVersion(ref common.Referenc
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MilvusVersionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MilvusVersionGPUSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"supported": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Supported reports whether DB.Image was built with GPU-accelerated knowhere/CUDA support.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"computeCapabilities": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ComputeCapabilities optionally lists the CUDA compute-capability values this image's compiled kernels target (e.g. \"7.0\", \"7.5\", \"8.0\"). Advisory only; not enforced against actual node GPU hardware.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"supported"},
+			},
+		},
 	}
 }
 

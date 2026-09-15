@@ -35,6 +35,7 @@ const (
 	StatefulSetPodNameLabelKey = "statefulset.kubernetes.io/pod-name"
 	LabelRole                  = GroupName + "/role"
 	LabelPetSet                = GroupName + "/petset"
+	LabelNodeGroup             = GroupName + "/node-group"
 
 	PrometheusAddressFile     = "/var/prometheus-data/address"
 	PrometheusCaFile          = "/var/prometheus-data/ca.crt"
@@ -858,6 +859,19 @@ const (
 	DatabaseDataRestored = "DataRestored"
 	// used for Databases whose pods are ready
 	DatabaseReplicaReady = "ReplicaReady"
+	// used for Milvus Distributed deployments with spec.network.sriov set on
+	// at least one role/group: reports whether Multus actually attached the
+	// requested secondary network to every pod of every SR-IOV-enabled
+	// (role, group), verified by reading each pod's own
+	// k8s.v1.cni.cncf.io/network-status annotation rather than trusting the
+	// request alone (pl2/milvus-fixes/sriov-gpu-design.md § 13.6, point 2 --
+	// "no verification the advertised address is actually correct").
+	// Observational only: unlike DatabaseReplicaReady, this never gates
+	// DatabaseProvisioned/the phase computation, since a missing attachment
+	// is something a cluster admin needs to go fix (the NAD, the device
+	// plugin, node capacity), not something the operator can resolve by
+	// waiting longer.
+	MilvusSRIOVNetworkAttached = "SRIOVNetworkAttached"
 	// used for Databases that are currently accepting connection
 	DatabaseAcceptingConnection = "AcceptingConnection"
 	// used for Databases that report status OK (also implies that we can connect to it)
@@ -890,6 +904,8 @@ const (
 	FailedToRestoreData                        = "FailedToRestoreData"
 	AllReplicasAreReady                        = "AllReplicasReady"
 	SomeReplicasAreNotReady                    = "SomeReplicasNotReady"
+	AllSRIOVNetworksAttached                   = "AllSRIOVNetworksAttached"
+	SomeSRIOVNetworksNotAttached               = "SomeSRIOVNetworksNotAttached"
 	DatabaseAcceptingConnectionRequest         = "DatabaseAcceptingConnectionRequest"
 	DatabaseNotAcceptingConnectionRequest      = "DatabaseNotAcceptingConnectionRequest"
 	ReadinessCheckSucceeded                    = "ReadinessCheckSucceeded"
