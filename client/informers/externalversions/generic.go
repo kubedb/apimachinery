@@ -496,8 +496,22 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Schema().V1alpha1().PostgresDatabases().Informer()}, nil
 
 		// Group=ui.kubedb.com, Version=v1alpha1
+	case uiv1alpha1.SchemeGroupVersion.WithResource("cassandrainsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().CassandraInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("cassandraschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().CassandraSchemaOverviews().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("db2insights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DB2Insights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("db2querieses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DB2Querieses().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("db2schemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DB2SchemaOverviews().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("databaseconnections"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DatabaseConnections().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("documentdbinsights"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DocumentDBInsights().Informer()}, nil
+	case uiv1alpha1.SchemeGroupVersion.WithResource("documentdbschemaoverviews"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DocumentDBSchemaOverviews().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("druidinsights"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ui().V1alpha1().DruidInsights().Informer()}, nil
 	case uiv1alpha1.SchemeGroupVersion.WithResource("druidschemaoverviews"):
