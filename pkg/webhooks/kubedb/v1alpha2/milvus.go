@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -32,6 +33,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/validation"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ofstv2 "kmodules.xyz/offshoot-api/api/v2"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -347,6 +349,16 @@ func milvusValidateNodeGroups(db *olddbapi.Milvus) error {
 		for _, group := range db.GetNodeGroups(nodeType) {
 			if group.Name == "" {
 				return fmt.Errorf("topology.distributed.%s.groups[]: group name must not be empty", nodeType)
+			}
+			// PetSetNameForGroup feeds group.Name straight into
+			// meta_util.NameWithSuffix to build the child PetSet's name --
+			// unlike a Kubernetes object name, that helper does not itself
+			// reject characters (e.g. "_") that are invalid in a PetSet/pod
+			// name, so an otherwise-valid string here can still produce a
+			// name Kubernetes rejects at PetSet-creation time instead of at
+			// admission.
+			if errs := validation.IsDNS1123Label(group.Name); len(errs) > 0 {
+				return fmt.Errorf("topology.distributed.%s.groups[]: invalid group name %q: %s", nodeType, group.Name, strings.Join(errs, "; "))
 			}
 			if seen[group.Name] {
 				return fmt.Errorf("topology.distributed.%s.groups[]: duplicate group name %q", nodeType, group.Name)

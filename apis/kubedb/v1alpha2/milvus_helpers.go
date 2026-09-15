@@ -193,6 +193,15 @@ func podTemplateRequestsGPU(podTemplate *ofstv2.PodTemplateSpec) bool {
 			return true
 		}
 	}
+	// Kubernetes permits GPU resources on init containers too (they're
+	// counted against the node's allocatable the same as any other
+	// container's); skipping them here would let an init-container GPU
+	// request slip past milvusValidateGPU undetected.
+	for _, c := range podTemplate.Spec.InitContainers {
+		if containsGPU(c.Resources.Requests) || containsGPU(c.Resources.Limits) {
+			return true
+		}
+	}
 	return false
 }
 
@@ -213,6 +222,20 @@ func (m *Milvus) RequestsGPU() bool {
 		MilvusNodeRoleMixCoord, MilvusNodeRoleDataNode, MilvusNodeRoleProxy,
 		MilvusNodeRoleQueryNode, MilvusNodeRoleStreamingNode,
 	} {
+		// When Groups is set, the role-level GPU/PodTemplate fields are
+		// ignored for pod-building (nodes.go's ensureNodeOrGroups never
+		// reads them) -- checking them here too would let a stale
+		// role-level GPU setting force a CPU-only MilvusVersion to be
+		// rejected even though every rendered group is CPU-only.
+		groups := m.GetNodeGroups(nodeType)
+		if len(groups) > 0 {
+			for _, group := range groups {
+				if group.GPU != nil || podTemplateRequestsGPU(group.PodTemplate) {
+					return true
+				}
+			}
+			continue
+		}
 		nodeSpec, dataNodeSpec := m.GetNodeSpec(nodeType)
 		switch {
 		case nodeSpec != nil:
@@ -221,11 +244,6 @@ func (m *Milvus) RequestsGPU() bool {
 			}
 		case dataNodeSpec != nil:
 			if dataNodeSpec.GPU != nil || podTemplateRequestsGPU(dataNodeSpec.PodTemplate) {
-				return true
-			}
-		}
-		for _, group := range m.GetNodeGroups(nodeType) {
-			if group.GPU != nil || podTemplateRequestsGPU(group.PodTemplate) {
 				return true
 			}
 		}
@@ -246,17 +264,24 @@ func (m *Milvus) DistributedNodeRolesWithSRIOV() []MilvusNodeRoleType {
 		MilvusNodeRoleQueryNode, MilvusNodeRoleStreamingNode,
 	} {
 		has := false
-		if net := m.GetNodeNetworkSpec(nodeType); net != nil && net.SRIOV != nil {
-			has = true
-		}
-		// A role counts as "has SR-IOV" if any single group does -- this
-		// feeds the webhook's topology-coupling warning (§ 10), which is
-		// necessarily approximate once groups exist: it can't know whether
-		// an ungrouped peer role needs to reach every group or just some.
-		for _, group := range m.GetNodeGroups(nodeType) {
-			if group.Network != nil && group.Network.SRIOV != nil {
-				has = true
+		// When Groups is set, the role-level Network field is ignored for
+		// pod-building -- evaluating it here too could mark the role as
+		// SR-IOV-enabled (and trigger the partial-topology warning below)
+		// for a stale setting no rendered pod actually uses. A role counts
+		// as "has SR-IOV" if any single group does -- this feeds the
+		// webhook's topology-coupling warning (§ 10), which is necessarily
+		// approximate once groups exist: it can't know whether an
+		// ungrouped peer role needs to reach every group or just some.
+		groups := m.GetNodeGroups(nodeType)
+		if len(groups) > 0 {
+			for _, group := range groups {
+				if group.Network != nil && group.Network.SRIOV != nil {
+					has = true
+					break
+				}
 			}
+		} else if net := m.GetNodeNetworkSpec(nodeType); net != nil && net.SRIOV != nil {
+			has = true
 		}
 		if has {
 			withSRIOV = append(withSRIOV, nodeType)

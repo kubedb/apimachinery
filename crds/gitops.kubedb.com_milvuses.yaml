@@ -681,14 +681,17 @@ spec:
                   sriov:
                     properties:
                       attachmentRef:
+                        minLength: 1
                         type: string
                       gds:
                         properties:
                           attachmentRef:
+                            minLength: 1
                             type: string
                           interface:
                             type: string
                           resourceName:
+                            minLength: 1
                             type: string
                         required:
                         - attachmentRef
@@ -699,6 +702,7 @@ spec:
                       rdmaResourceName:
                         type: string
                       resourceName:
+                        minLength: 1
                         type: string
                     required:
                     - attachmentRef
@@ -4307,14 +4311,17 @@ spec:
                                     sriov:
                                       properties:
                                         attachmentRef:
+                                          minLength: 1
                                           type: string
                                         gds:
                                           properties:
                                             attachmentRef:
+                                              minLength: 1
                                               type: string
                                             interface:
                                               type: string
                                             resourceName:
+                                              minLength: 1
                                               type: string
                                           required:
                                           - attachmentRef
@@ -4325,6 +4332,7 @@ spec:
                                         rdmaResourceName:
                                           type: string
                                         resourceName:
+                                          minLength: 1
                                           type: string
                                       required:
                                       - attachmentRef
@@ -7579,14 +7587,17 @@ spec:
                               sriov:
                                 properties:
                                   attachmentRef:
+                                    minLength: 1
                                     type: string
                                   gds:
                                     properties:
                                       attachmentRef:
+                                        minLength: 1
                                         type: string
                                       interface:
                                         type: string
                                       resourceName:
+                                        minLength: 1
                                         type: string
                                     required:
                                     - attachmentRef
@@ -7597,6 +7608,7 @@ spec:
                                   rdmaResourceName:
                                     type: string
                                   resourceName:
+                                    minLength: 1
                                     type: string
                                 required:
                                 - attachmentRef
@@ -10911,14 +10923,17 @@ spec:
                                     sriov:
                                       properties:
                                         attachmentRef:
+                                          minLength: 1
                                           type: string
                                         gds:
                                           properties:
                                             attachmentRef:
+                                              minLength: 1
                                               type: string
                                             interface:
                                               type: string
                                             resourceName:
+                                              minLength: 1
                                               type: string
                                           required:
                                           - attachmentRef
@@ -10929,6 +10944,7 @@ spec:
                                         rdmaResourceName:
                                           type: string
                                         resourceName:
+                                          minLength: 1
                                           type: string
                                       required:
                                       - attachmentRef
@@ -14183,14 +14199,17 @@ spec:
                               sriov:
                                 properties:
                                   attachmentRef:
+                                    minLength: 1
                                     type: string
                                   gds:
                                     properties:
                                       attachmentRef:
+                                        minLength: 1
                                         type: string
                                       interface:
                                         type: string
                                       resourceName:
+                                        minLength: 1
                                         type: string
                                     required:
                                     - attachmentRef
@@ -14201,6 +14220,7 @@ spec:
                                   rdmaResourceName:
                                     type: string
                                   resourceName:
+                                    minLength: 1
                                     type: string
                                 required:
                                 - attachmentRef
@@ -17515,14 +17535,17 @@ spec:
                                     sriov:
                                       properties:
                                         attachmentRef:
+                                          minLength: 1
                                           type: string
                                         gds:
                                           properties:
                                             attachmentRef:
+                                              minLength: 1
                                               type: string
                                             interface:
                                               type: string
                                             resourceName:
+                                              minLength: 1
                                               type: string
                                           required:
                                           - attachmentRef
@@ -17533,6 +17556,7 @@ spec:
                                         rdmaResourceName:
                                           type: string
                                         resourceName:
+                                          minLength: 1
                                           type: string
                                       required:
                                       - attachmentRef
@@ -20787,14 +20811,17 @@ spec:
                               sriov:
                                 properties:
                                   attachmentRef:
+                                    minLength: 1
                                     type: string
                                   gds:
                                     properties:
                                       attachmentRef:
+                                        minLength: 1
                                         type: string
                                       interface:
                                         type: string
                                       resourceName:
+                                        minLength: 1
                                         type: string
                                     required:
                                     - attachmentRef
@@ -20805,6 +20832,7 @@ spec:
                                   rdmaResourceName:
                                     type: string
                                   resourceName:
+                                    minLength: 1
                                     type: string
                                 required:
                                 - attachmentRef
@@ -24119,14 +24147,17 @@ spec:
                                     sriov:
                                       properties:
                                         attachmentRef:
+                                          minLength: 1
                                           type: string
                                         gds:
                                           properties:
                                             attachmentRef:
+                                              minLength: 1
                                               type: string
                                             interface:
                                               type: string
                                             resourceName:
+                                              minLength: 1
                                               type: string
                                           required:
                                           - attachmentRef
@@ -24137,6 +24168,7 @@ spec:
                                         rdmaResourceName:
                                           type: string
                                         resourceName:
+                                          minLength: 1
                                           type: string
                                       required:
                                       - attachmentRef
@@ -27391,14 +27423,17 @@ spec:
                               sriov:
                                 properties:
                                   attachmentRef:
+                                    minLength: 1
                                     type: string
                                   gds:
                                     properties:
                                       attachmentRef:
+                                        minLength: 1
                                         type: string
                                       interface:
                                         type: string
                                       resourceName:
+                                        minLength: 1
                                         type: string
                                     required:
                                     - attachmentRef
@@ -27409,6 +27444,7 @@ spec:
                                   rdmaResourceName:
                                     type: string
                                   resourceName:
+                                    minLength: 1
                                     type: string
                                 required:
                                 - attachmentRef
@@ -30723,14 +30759,17 @@ spec:
                                     sriov:
                                       properties:
                                         attachmentRef:
+                                          minLength: 1
                                           type: string
                                         gds:
                                           properties:
                                             attachmentRef:
+                                              minLength: 1
                                               type: string
                                             interface:
                                               type: string
                                             resourceName:
+                                              minLength: 1
                                               type: string
                                           required:
                                           - attachmentRef
@@ -30741,6 +30780,7 @@ spec:
                                         rdmaResourceName:
                                           type: string
                                         resourceName:
+                                          minLength: 1
                                           type: string
                                       required:
                                       - attachmentRef
@@ -33995,14 +34035,17 @@ spec:
                               sriov:
                                 properties:
                                   attachmentRef:
+                                    minLength: 1
                                     type: string
                                   gds:
                                     properties:
                                       attachmentRef:
+                                        minLength: 1
                                         type: string
                                       interface:
                                         type: string
                                       resourceName:
+                                        minLength: 1
                                         type: string
                                     required:
                                     - attachmentRef
@@ -34013,6 +34056,7 @@ spec:
                                   rdmaResourceName:
                                     type: string
                                   resourceName:
+                                    minLength: 1
                                     type: string
                                 required:
                                 - attachmentRef

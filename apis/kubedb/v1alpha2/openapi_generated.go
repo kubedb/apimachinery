@@ -713,6 +713,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusList":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_MilvusNetworkSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNode":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNodeGroup":                               schema_apimachinery_apis_kubedb_v1alpha2_MilvusNodeGroup(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSRIOVAttachmentSpec":                     schema_apimachinery_apis_kubedb_v1alpha2_MilvusSRIOVAttachmentSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSRIOVSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_MilvusSRIOVSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_MilvusStatus(ref),
@@ -40711,6 +40713,20 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref common.Referenc
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec"),
 						},
 					},
+					"groups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Groups optionally splits this role into multiple named, independently scheduled sub-pools -- e.g. two GPU classes of QueryNode in one cluster, each with its own network/gpu/podTemplate (pl2/milvus-fixes/sriov-gpu-design.md § 13.5). When set, the operator creates one PetSet per group, named <db>-<role>-<group name>, instead of one PetSet for the whole role, and the Replicas/PodTemplate/Network/GPU fields above are ignored for pod-building purposes (each group carries its own). When unset (the default), behavior is unchanged: one PetSet named <db>-<role>, built from the fields above.\n\nGroup names must be unique within this role. For StreamingNode (MilvusDataNode), every group shares the single top-level StorageType/Storage template below -- per-group storage is not supported.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNodeGroup"),
+									},
+								},
+							},
+						},
+					},
 					"storageType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "StorageType specifies if the storage of this node is durable (default) or ephemeral.",
@@ -40728,7 +40744,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNodeGroup"},
 	}
 }
 
@@ -40931,11 +40947,111 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusNode(ref common.ReferenceCal
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec"),
 						},
 					},
+					"groups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Groups optionally splits this role into multiple named, independently scheduled sub-pools -- e.g. two GPU classes of QueryNode in one cluster, each with its own network/gpu/podTemplate (pl2/milvus-fixes/sriov-gpu-design.md § 13.5). When set, the operator creates one PetSet per group, named <db>-<role>-<group name>, instead of one PetSet for the whole role, and the Replicas/PodTemplate/Network/GPU fields above are ignored for pod-building purposes (each group carries its own). When unset (the default), behavior is unchanged: one PetSet named <db>-<role>, built from the fields above.\n\nGroup names must be unique within this role. For StreamingNode (MilvusDataNode), every group shares the single top-level StorageType/Storage template below -- per-group storage is not supported.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNodeGroup"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNodeGroup"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusNodeGroup(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusNodeGroup is one named sub-pool within a Distributed role's MilvusNode.Groups.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name distinguishes this group from others in the same role. Must be a valid DNS label segment; used in the PetSet/pod names as <db>-<role>-<name>.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas represents number of replicas for this group.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods in this group.",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+					"network": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Network configures secondary networking for this group.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec"),
+						},
+					},
+					"gpu": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GPU configures GPU device scheduling for this group.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
 			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSRIOVAttachmentSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusSRIOVAttachmentSpec requests one additional Multus/SR-IOV secondary network attachment, alongside the primary one in MilvusSRIOVSpec.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"attachmentRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AttachmentRef names a cluster-admin-authored NetworkAttachmentDefinition (k8s.cni.cncf.io/v1) in the same namespace as this Milvus.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resourceName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ResourceName must match the SR-IOV device plugin's advertised extended resource for the requested VF.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"interface": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Interface names the secondary interface Multus should attach this network as. Defaults to \"net2\" when unset (net1 is MilvusSRIOVSpec's own default interface, above).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"attachmentRef", "resourceName"},
+			},
+		},
 	}
 }
 
@@ -40976,10 +41092,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSRIOVSpec(ref common.Referen
 							Format:      "",
 						},
 					},
+					"gds": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GDS optionally attaches a second, independent SR-IOV network for GPU Direct Storage to object storage -- confirmed as a real requirement on data-plane roles (QueryNode, DataNode, StreamingNode) by a customer reference implementation (pl2/milvus-fixes/sriov-gpu-design.md § 13.4); Proxy/MixCoord only need the RDMA attachment above. When set, the rendered k8s.v1.cni.cncf.io/networks annotation always uses the JSON-array form (two entries), regardless of whether Interface above is at its default.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSRIOVAttachmentSpec"),
+						},
+					},
 				},
 				Required: []string{"attachmentRef", "resourceName"},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSRIOVAttachmentSpec"},
 	}
 }
 

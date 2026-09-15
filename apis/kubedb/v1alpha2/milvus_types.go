@@ -143,11 +143,13 @@ type MilvusNetworkSpec struct {
 type MilvusSRIOVSpec struct {
 	// AttachmentRef names a cluster-admin-authored NetworkAttachmentDefinition
 	// (k8s.cni.cncf.io/v1) in the same namespace as this Milvus.
+	// +kubebuilder:validation:MinLength=1
 	AttachmentRef string `json:"attachmentRef"`
 
 	// ResourceName must match the SR-IOV device plugin's advertised extended
 	// resource for the requested VF (e.g. intel.com/sriov_net_A,
 	// nvidia.com/hostdev).
+	// +kubebuilder:validation:MinLength=1
 	ResourceName string `json:"resourceName"`
 
 	// RDMAResourceName optionally requests an additional RDMA device resource
@@ -183,10 +185,12 @@ type MilvusSRIOVSpec struct {
 type MilvusSRIOVAttachmentSpec struct {
 	// AttachmentRef names a cluster-admin-authored NetworkAttachmentDefinition
 	// (k8s.cni.cncf.io/v1) in the same namespace as this Milvus.
+	// +kubebuilder:validation:MinLength=1
 	AttachmentRef string `json:"attachmentRef"`
 
 	// ResourceName must match the SR-IOV device plugin's advertised extended
 	// resource for the requested VF.
+	// +kubebuilder:validation:MinLength=1
 	ResourceName string `json:"resourceName"`
 
 	// Interface names the secondary interface Multus should attach this
