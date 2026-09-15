@@ -100,6 +100,23 @@ type ElasticsearchHorizontalScalingSpec struct {
 	Node *int32 `json:"node,omitempty"`
 	// Node topology specification
 	Topology *ElasticsearchHorizontalScalingTopologySpec `json:"topology,omitempty"`
+
+	// DataCenters scales individual data centers of a distributed DC-DR Elasticsearch.
+	// Each entry sets that data center's local node count; data centers not listed are
+	// left unchanged. Use this instead of Node for a DC-DR cluster, where each data center
+	// runs its own self-contained Elasticsearch cluster and is scaled independently.
+	// +optional
+	DataCenters []ElasticsearchHorizontalScalingDC `json:"dataCenters,omitempty"`
+}
+
+// ElasticsearchHorizontalScalingDC is a per data center node-count target for scaling a
+// distributed DC-DR Elasticsearch.
+type ElasticsearchHorizontalScalingDC struct {
+	// ClusterName is the data center, named by its OCM managed cluster, matching a
+	// Member distributionRule in the Elasticsearch PlacementPolicy.
+	ClusterName string `json:"clusterName"`
+	// Replicas is the desired local node count for this data center.
+	Replicas int32 `json:"replicas"`
 }
 
 // ElasticsearchHorizontalScalingTopologySpec contains the horizontal scaling information in cluster topology mode
