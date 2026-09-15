@@ -925,10 +925,23 @@ const (
 	MilvusContainerName = "milvus"
 
 	EtcdEndpointsName = "ETCD_ENDPOINTS"
-	EtcdAPIVersion    = "operator.etcd.io/v1alpha1"
-	EtcdKind          = "EtcdCluster"
 	ControllerName    = "milvus-controller"
 	EtcdName          = "etcd"
+
+	// MilvusMetaEtcdTLSVolName / MilvusMetaEtcdTLSMountPath mount the internally
+	// managed meta etcd's client certificate (ca.crt/tls.crt/tls.key) into the
+	// milvus containers when spec.metaStorage.tls is configured.
+	MilvusMetaEtcdTLSVolName   = "meta-etcd-tls"
+	MilvusMetaEtcdTLSMountPath = "/milvus/etcd-tls"
+
+	// VirtualSecretsMetaEtcdVolume / VirtualSecretsMetaEtcdVolumeMountPath surface
+	// the internally managed meta etcd's virtual auth secret (when
+	// spec.metaStorage.authSecret is a virtual secret) as files, mirroring
+	// VirtualSecretsVolume but keyed off the meta etcd's own SecretProviderClass.
+	VirtualSecretsMetaEtcdVolume          = "virtual-secrets-meta-etcd"
+	VirtualSecretsMetaEtcdVolumeMountPath = "/var/run/secrets/virtual-secrets-meta-etcd"
+	VirtualSecretsMetaEtcdKeyUsername     = "vs://" + VirtualSecretsMetaEtcdVolumeMountPath + "/" + core.BasicAuthUsernameKey
+	VirtualSecretsMetaEtcdKeyPassword     = "vs://" + VirtualSecretsMetaEtcdVolumeMountPath + "/" + core.BasicAuthPasswordKey
 
 	MinioAddressName   = "MINIO_ADDRESS"
 	MinioAddressKey    = "address"

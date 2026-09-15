@@ -219,6 +219,44 @@ func (m *Milvus) EtcdServiceName() string {
 	return fmt.Sprintf("%s-%s", m.Name, kubedb.EtcdName)
 }
 
+// internalMetaEtcd returns a throwaway Etcd value describing the internally
+// managed meta-storage etcd cluster this Milvus creates (see
+// pkg/controller/dependency.go in the milvus operator). Milvus and Etcd live in
+// the same v1alpha2 package, so its own naming/URL helpers are reused here
+// instead of duplicating DNS-building logic.
+func (m *Milvus) internalMetaEtcd() *Etcd {
+	e := &Etcd{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      m.EtcdServiceName(),
+			Namespace: m.Namespace,
+		},
+	}
+	if m.Spec.MetaStorage != nil {
+		e.Spec.TLS = m.Spec.MetaStorage.TLS
+		e.Spec.AuthSecret = m.Spec.MetaStorage.AuthSecret
+	}
+	return e
+}
+
+// MetaStorageTLSEnabled reports whether the internally-managed meta etcd has
+// TLS configured. Always false when meta storage is externally managed.
+func (m *Milvus) MetaStorageTLSEnabled() bool {
+	return m.Spec.MetaStorage != nil && !m.Spec.MetaStorage.ExternallyManaged && m.Spec.MetaStorage.TLS != nil
+}
+
+// MetaStorageClientCertSecretName returns the internally-managed meta etcd's
+// client certificate secret name, or "" if TLS is disabled.
+func (m *Milvus) MetaStorageClientCertSecretName() string {
+	return m.internalMetaEtcd().GetCertSecretName(EtcdClientCert)
+}
+
+// MetaStorageAuthSecretName returns the internally-managed meta etcd's root
+// auth secret name (BYO name if spec.metaStorage.authSecret.name is set, else
+// the conventional "<etcd-name>-auth").
+func (m *Milvus) MetaStorageAuthSecretName() string {
+	return m.internalMetaEtcd().GetAuthSecretName()
+}
+
 func (m *Milvus) MetaStorageEndpoints() []string {
 	if m.Spec.MetaStorage.ExternallyManaged {
 		if len(m.Spec.MetaStorage.Endpoints) == 0 {
@@ -228,16 +266,12 @@ func (m *Milvus) MetaStorageEndpoints() []string {
 		return m.Spec.MetaStorage.Endpoints
 	}
 
+	e := m.internalMetaEtcd()
 	size := m.Spec.MetaStorage.Size
 
 	endpoints := make([]string, size)
 	for i := range size {
-		endpoints[i] = fmt.Sprintf(
-			"http://%s-%d.%s.%s.svc.cluster.local:%d",
-			m.EtcdServiceName(), i,
-			m.EtcdServiceName(), m.Namespace,
-			2379,
-		)
+		endpoints[i] = e.ClientURL(e.PodName(i))
 	}
 
 	return endpoints

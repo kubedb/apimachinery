@@ -205,6 +205,25 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) field.
 		}
 	}
 
+	if meta := db.Spec.MetaStorage; meta != nil {
+		if meta.ExternallyManaged {
+			if meta.TLS != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("metaStorage").Child("tls"),
+					db.Name, "spec.metaStorage.tls is only used when metaStorage is not externally managed"))
+			}
+			if meta.AuthSecret != nil {
+				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("metaStorage").Child("authSecret"),
+					db.Name, "spec.metaStorage.authSecret is only used when metaStorage is not externally managed"))
+			}
+		} else if meta.TLS != nil && meta.TLS.IssuerRef == nil {
+			allErr = append(allErr, field.Invalid(
+				field.NewPath("spec").Child("metaStorage").Child("tls").Child("issuerRef"),
+				db.Name,
+				"spec.metaStorage.tls.issuerRef is required when metaStorage.tls is configured",
+			))
+		}
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}
