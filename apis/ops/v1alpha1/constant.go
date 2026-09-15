@@ -333,6 +333,29 @@ const (
 	DBPatchSucceeded             = "DBPatchSucceeded"
 	RestartMaxscale              = "RestartMaxscale"
 	RestartMaxscalePodsSucceeded = "RestartMaxscalePodsSucceeded"
+
+	ArchiverRestoreRetainPV     = "ArchiverRestoreRetainPV"
+	ArchiverRestoreWipeVolumes  = "ArchiverRestoreWipeVolumes"
+	ArchiverRestoreTriggered    = "ArchiverRestoreTriggered"
+	ArchiverRestoreDataRestored = "ArchiverRestoreDataRestored"
+
+	ArchiverRestoreRetainPVSucceeded      = "ArchiverRestoreRetainPVSucceeded"
+	ArchiverRestoreWipeVolumesSucceeded   = "ArchiverRestoreWipeVolumesSucceeded"
+	ArchiverRestoreTriggeredSucceeded     = "ArchiverRestoreTriggeredSucceeded"
+	ArchiverRestoreDataRestoredSucceeded  = "ArchiverRestoreDataRestoredSucceeded"
+	ArchiverRestoreDatabaseReadySucceeded = "ArchiverRestoreDatabaseReadySucceeded"
+
+	ArchiverRestoreRetainPVFailed      = "ArchiverRestoreRetainPVFailed"
+	ArchiverRestoreWipeVolumesFailed   = "ArchiverRestoreWipeVolumesFailed"
+	ArchiverRestoreTriggeredFailed     = "ArchiverRestoreTriggeredFailed"
+	ArchiverRestoreDataRestoredFailed  = "ArchiverRestoreDataRestoredFailed"
+	ArchiverRestoreDatabaseReadyFailed = "ArchiverRestoreDatabaseReadyFailed"
+
+	ArchiverRestoreManualCleanupRequired = "ArchiverRestoreManualCleanupRequired"
+
+	ArchiverRestoreSuspendArchiver          = "ArchiverRestoreSuspendArchiver"
+	ArchiverRestoreSuspendArchiverSucceeded = "ArchiverRestoreSuspendArchiverSucceeded"
+	ArchiverRestoreSuspendArchiverFailed    = "ArchiverRestoreSuspendArchiverFailed"
 )
 
 // Postgres Constants
