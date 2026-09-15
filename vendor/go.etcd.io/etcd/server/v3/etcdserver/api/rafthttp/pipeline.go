@@ -18,18 +18,18 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"io"
+	"io/ioutil"
 	"runtime"
 	"sync"
 	"time"
 
-	"go.uber.org/zap"
-
 	"go.etcd.io/etcd/client/pkg/v3/types"
 	"go.etcd.io/etcd/pkg/v3/pbutil"
+	"go.etcd.io/etcd/raft/v3"
+	"go.etcd.io/etcd/raft/v3/raftpb"
 	stats "go.etcd.io/etcd/server/v3/etcdserver/api/v2stats"
-	"go.etcd.io/raft/v3"
-	"go.etcd.io/raft/v3/raftpb"
+
+	"go.uber.org/zap"
 )
 
 const (
@@ -103,7 +103,7 @@ func (p *pipeline) handle() {
 			if err != nil {
 				p.status.deactivate(failureType{source: pipelineMsg, action: "write"}, err.Error())
 
-				if isMsgApp(m) && p.followerStats != nil {
+				if m.Type == raftpb.MsgApp && p.followerStats != nil {
 					p.followerStats.Fail()
 				}
 				p.raft.ReportUnreachable(m.To)
@@ -115,7 +115,7 @@ func (p *pipeline) handle() {
 			}
 
 			p.status.activate()
-			if isMsgApp(m) && p.followerStats != nil {
+			if m.Type == raftpb.MsgApp && p.followerStats != nil {
 				p.followerStats.Succ(end.Sub(start))
 			}
 			if isMsgSnap(m) {
@@ -154,7 +154,7 @@ func (p *pipeline) post(data []byte) (err error) {
 		return err
 	}
 	defer resp.Body.Close()
-	b, err := io.ReadAll(resp.Body)
+	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		p.picker.unreachable(u)
 		return err
@@ -165,7 +165,7 @@ func (p *pipeline) post(data []byte) (err error) {
 		p.picker.unreachable(u)
 		// errMemberRemoved is a critical error since a removed member should
 		// always be stopped. So we use reportCriticalError to report it to errorc.
-		if errors.Is(err, errMemberRemoved) {
+		if err == errMemberRemoved {
 			reportCriticalError(err, p.errorc)
 		}
 		return err

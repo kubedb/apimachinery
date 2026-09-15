@@ -1173,6 +1173,7 @@ const (
 	SolrBackupCredentialsDir    = "/var/solr/backup-credentials"
 	SolrAWSCredentialsFileName  = "aws-credentials"
 	SolrAWSSharedCredentialsEnv = "AWS_SHARED_CREDENTIALS_FILE"
+	SolrSSLTrustStoreSourceEnv  = "KUBEDB_SOLR_SSL_TRUST_STORE_SOURCE"
 
 	SolrCloudHostKey                       = "host"
 	SolrCloudHostValue                     = ""
@@ -1690,6 +1691,7 @@ const (
 	DocumentDBDefaultUsername       = "default_user"
 	DocumentDBAdminUsername         = "documentdb"
 	DocumentDBAdminAuthSecretSuffix = "admin-auth"
+	DocumentDBAdminAppBindingSuffix = "admin"
 
 	DefaultDocumentDBDatabase = "sampledb"
 
@@ -1958,7 +1960,14 @@ const (
 
 	Neo4jContainerName     = "neo4j"
 	Neo4jInitContainerName = "neo4j-init"
+
+	// Config files Neo4j reads from its config directory, alongside neo4j.conf.
 	Neo4jConfigFileName    = "neo4j.conf"
+	Neo4jApocConfFile      = "apoc.conf"
+	Neo4jAdminConfFile     = "neo4j-admin.conf"
+	Neo4jServerLogsFile    = "server-logs.xml"
+	Neo4jUserLogsFile      = "user-logs.xml"
+	Neo4jStartupScriptName = "startup.sh"
 )
 
 // =========================== Cassandra Constants ============================

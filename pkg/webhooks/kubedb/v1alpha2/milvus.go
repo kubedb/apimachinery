@@ -279,7 +279,8 @@ func milvusValidateGPU(db *olddbapi.Milvus, milvusVersion *catalog.MilvusVersion
 		"a GPU resource is requested (spec.gpu, a distributed role's .gpu, or a hand-written "+
 			"nvidia.com/gpu podTemplate resource) but MilvusVersion %q does not declare "+
 			"spec.db.gpu.supported: true; use a GPU-capable MilvusVersion instead",
-		db.Spec.Version)
+		db.Spec.Version,
+	)
 }
 
 // milvusWarnSRIOVTopology warns, rather than rejects, if spec.network.sriov
