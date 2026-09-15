@@ -305,10 +305,7 @@ type MilvusNode struct {
 	// default), behavior is unchanged: one PetSet named <db>-<role>, built
 	// from the fields above.
 	//
-	// Group names must be unique within this role. For StreamingNode
-	// (MilvusDataNode), every group shares the single top-level
-	// StorageType/Storage template below -- per-group storage is not
-	// supported.
+	// Group names must be unique within this role.
 	// +optional
 	Groups []MilvusNodeGroup `json:"groups,omitempty"`
 }
@@ -337,6 +334,17 @@ type MilvusNodeGroup struct {
 	// GPU configures GPU device scheduling for this group.
 	// +optional
 	GPU *MilvusGPUSpec `json:"gpu,omitempty"`
+
+	// StorageType and Storage optionally override this group's own storage.
+	// Meaningful only for StreamingNode groups (spec.topology.distributed.
+	// streamingnode.groups[]) -- the only Distributed role with storage at
+	// all; harmless no-ops on every other role's groups. When unset, a
+	// StreamingNode group falls back to MilvusDataNode's top-level
+	// StorageType/Storage (the pre-Groups default).
+	// +optional
+	StorageType StorageType `json:"storageType,omitempty"`
+	// +optional
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 }
 
 type MilvusDataNode struct {

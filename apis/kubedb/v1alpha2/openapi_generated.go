@@ -40715,7 +40715,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref common.Referenc
 					},
 					"groups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Groups optionally splits this role into multiple named, independently scheduled sub-pools -- e.g. two GPU classes of QueryNode in one cluster, each with its own network/gpu/podTemplate (pl2/milvus-fixes/sriov-gpu-design.md § 13.5). When set, the operator creates one PetSet per group, named <db>-<role>-<group name>, instead of one PetSet for the whole role, and the Replicas/PodTemplate/Network/GPU fields above are ignored for pod-building purposes (each group carries its own). When unset (the default), behavior is unchanged: one PetSet named <db>-<role>, built from the fields above.\n\nGroup names must be unique within this role. For StreamingNode (MilvusDataNode), every group shares the single top-level StorageType/Storage template below -- per-group storage is not supported.",
+							Description: "Groups optionally splits this role into multiple named, independently scheduled sub-pools -- e.g. two GPU classes of QueryNode in one cluster, each with its own network/gpu/podTemplate (pl2/milvus-fixes/sriov-gpu-design.md § 13.5). When set, the operator creates one PetSet per group, named <db>-<role>-<group name>, instead of one PetSet for the whole role, and the Replicas/PodTemplate/Network/GPU fields above are ignored for pod-building purposes (each group carries its own). When unset (the default), behavior is unchanged: one PetSet named <db>-<role>, built from the fields above.\n\nGroup names must be unique within this role.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -40949,7 +40949,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusNode(ref common.ReferenceCal
 					},
 					"groups": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Groups optionally splits this role into multiple named, independently scheduled sub-pools -- e.g. two GPU classes of QueryNode in one cluster, each with its own network/gpu/podTemplate (pl2/milvus-fixes/sriov-gpu-design.md § 13.5). When set, the operator creates one PetSet per group, named <db>-<role>-<group name>, instead of one PetSet for the whole role, and the Replicas/PodTemplate/Network/GPU fields above are ignored for pod-building purposes (each group carries its own). When unset (the default), behavior is unchanged: one PetSet named <db>-<role>, built from the fields above.\n\nGroup names must be unique within this role. For StreamingNode (MilvusDataNode), every group shares the single top-level StorageType/Storage template below -- per-group storage is not supported.",
+							Description: "Groups optionally splits this role into multiple named, independently scheduled sub-pools -- e.g. two GPU classes of QueryNode in one cluster, each with its own network/gpu/podTemplate (pl2/milvus-fixes/sriov-gpu-design.md § 13.5). When set, the operator creates one PetSet per group, named <db>-<role>-<group name>, instead of one PetSet for the whole role, and the Replicas/PodTemplate/Network/GPU fields above are ignored for pod-building purposes (each group carries its own). When unset (the default), behavior is unchanged: one PetSet named <db>-<role>, built from the fields above.\n\nGroup names must be unique within this role.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
@@ -41009,12 +41009,24 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusNodeGroup(ref common.Referen
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec"),
 						},
 					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType and Storage optionally override this group's own storage. Meaningful only for StreamingNode groups (spec.topology.distributed. streamingnode.groups[]) -- the only Distributed role with storage at all; harmless no-ops on every other role's groups. When unset, a StreamingNode group falls back to MilvusDataNode's top-level StorageType/Storage (the pre-Groups default).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
 				},
 				Required: []string{"name"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec"},
 	}
 }
 
