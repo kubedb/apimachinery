@@ -18,11 +18,25 @@ limitations under the License.
 
 package v1alpha1
 
+type CassandraInsightExpansion interface{}
+
+type CassandraSchemaOverviewExpansion interface{}
+
+type DB2InsightExpansion interface{}
+
+type DB2QueriesExpansion interface{}
+
+type DB2SchemaOverviewExpansion interface{}
+
 type DatabaseConfigurationExpansion interface{}
 
 type DatabaseConnectionExpansion interface{}
 
 type DatabaseSummaryExpansion interface{}
+
+type DocumentDBInsightExpansion interface{}
+
+type DocumentDBSchemaOverviewExpansion interface{}
 
 type DruidInsightExpansion interface{}
 

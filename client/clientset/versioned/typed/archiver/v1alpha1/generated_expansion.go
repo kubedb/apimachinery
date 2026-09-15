@@ -30,4 +30,6 @@ type MongoDBArchiverExpansion interface{}
 
 type MySQLArchiverExpansion interface{}
 
+type Neo4jArchiverExpansion interface{}
+
 type PostgresArchiverExpansion interface{}

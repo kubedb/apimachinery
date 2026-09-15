@@ -709,8 +709,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusBind":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDataNode":                                schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDistributedSpec":                         schema_apimachinery_apis_kubedb_v1alpha2_MilvusDistributedSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_MilvusGPUSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusList":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_MilvusNetworkSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNode":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSRIOVSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_MilvusSRIOVSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSpec":                                    schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_MilvusStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig":                               schema_apimachinery_apis_kubedb_v1alpha2_MilvusTLSConfig(ref),
@@ -851,6 +854,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.aerospikeStatsService":                         schema_apimachinery_apis_kubedb_v1alpha2_aerospikeStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.db2App":                                        schema_apimachinery_apis_kubedb_v1alpha2_db2App(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.db2StatsService":                               schema_apimachinery_apis_kubedb_v1alpha2_db2StatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBAdminApp":                            schema_apimachinery_apis_kubedb_v1alpha2_documentDBAdminApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBApp":                                 schema_apimachinery_apis_kubedb_v1alpha2_documentDBApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBStatsService":                        schema_apimachinery_apis_kubedb_v1alpha2_documentDBStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchApp":                              schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchApp(ref),
@@ -40695,6 +40699,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref common.Referenc
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
+					"network": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Network configures secondary networking (e.g. SR-IOV via Multus) for this component. Every Distributed role dials, or is dialed by, at least one other role directly by its advertised address, so setting this on some roles but not others is very likely a connectivity bug, not a deliberate choice; the admission webhook warns accordingly.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec"),
+						},
+					},
+					"gpu": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GPU configures GPU device scheduling for this component. Meaningful on QueryNode (search) and DataNode (index build); harmless if set on other roles.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec"),
+						},
+					},
 					"storageType": {
 						SchemaProps: spec.SchemaProps{
 							Description: "StorageType specifies if the storage of this node is durable (default) or ephemeral.",
@@ -40712,7 +40728,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDataNode(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec"},
 	}
 }
 
@@ -40752,6 +40768,65 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusDistributedSpec(ref common.R
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDataNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNode"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusGPUSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusGPUSpec configures GPU device scheduling for a Milvus component.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"resourceName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ResourceName is the extended resource name to request (default nvidia.com/gpu). Override only for vGPU/MIG resource names.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"count": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Count is the number of GPU devices to request. Must be a positive integer if set.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"nodeSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeSelector is merged into the pod's node selector.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"tolerations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Tolerations is merged into the pod's tolerations.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.Toleration"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.Toleration"},
 	}
 }
 
@@ -40804,6 +40879,27 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusList(ref common.ReferenceCal
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusNetworkSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusNetworkSpec configures secondary networking for a Milvus component.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"sriov": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SRIOV attaches an SR-IOV virtual function to the pod via Multus CNI.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSRIOVSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusSRIOVSpec"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_MilvusNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40823,11 +40919,67 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusNode(ref common.ReferenceCal
 							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
 						},
 					},
+					"network": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Network configures secondary networking (e.g. SR-IOV via Multus) for this component. Every Distributed role dials, or is dialed by, at least one other role directly by its advertised address, so setting this on some roles but not others is very likely a connectivity bug, not a deliberate choice; the admission webhook warns accordingly.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec"),
+						},
+					},
+					"gpu": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GPU configures GPU device scheduling for this component. Meaningful on QueryNode (search) and DataNode (index build); harmless if set on other roles.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSRIOVSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusSRIOVSpec requests a Multus/SR-IOV secondary network attachment.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"attachmentRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AttachmentRef names a cluster-admin-authored NetworkAttachmentDefinition (k8s.cni.cncf.io/v1) in the same namespace as this Milvus.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resourceName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ResourceName must match the SR-IOV device plugin's advertised extended resource for the requested VF (e.g. intel.com/sriov_net_A, nvidia.com/hostdev).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"rdmaResourceName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RDMAResourceName optionally requests an additional RDMA device resource (e.g. rdma/rdma_shared_device_a) alongside ResourceName, for GPUDirect RDMA setups. Most deployments do not need this.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"interface": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Interface names the secondary interface Multus should attach this network as. Defaults to Multus's own convention (\"net1\") when unset. Setting a non-default value requires the rendered k8s.v1.cni.cncf.io/networks annotation to use the JSON-array form naming this interface explicitly, not just AttachmentRef by itself.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"attachmentRef", "resourceName"},
+			},
+		},
 	}
 }
 
@@ -40948,12 +41100,24 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref common.ReferenceCal
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig"),
 						},
 					},
+					"network": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Network configures secondary networking (e.g. SR-IOV via Multus) for this component. Only meaningful in Standalone mode; Distributed roles configure this per-role under spec.topology.distributed.<role>.network.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec"),
+						},
+					},
+					"gpu": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GPU configures GPU device scheduling for this component. Only meaningful in Standalone mode; Distributed roles configure this per-role under spec.topology.distributed.<role>.gpu.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec"),
+						},
+					},
 				},
 				Required: []string{"version", "objectStorage"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -42640,12 +42804,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Neo4jSpec(ref common.ReferenceCall
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec"),
 						},
 					},
+					"archiver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Archiver controls database backup using Archiver CR",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -48436,6 +48606,27 @@ func schema_apimachinery_apis_kubedb_v1alpha2_db2StatsService(ref common.Referen
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DB2"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_documentDBAdminApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "documentDBAdminApp types <db>-admin as kubedb.com/postgres, matching its postgresql scheme and port: the endpoint speaks the Postgres wire protocol, whatever the gateway in front of it does.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"DocumentDB": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"),
+						},
+					},
+				},
+				Required: []string{"DocumentDB"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"},
 	}
 }
 
