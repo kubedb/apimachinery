@@ -72,7 +72,8 @@ func (p *SiteInfoPublisher) OnUpdate(oldObj, newObj any) {
 	if alreadySentHourly &&
 		uOld.GetUID() == uNew.GetUID() && uOld.GetGeneration() == uNew.GetGeneration() {
 		if klog.V(8).Enabled() {
-			klog.V(8).InfoS("skipping update event",
+			klog.V(8).InfoS(
+				"skipping update event",
 				"gvk", uNew.GetObjectKind().GroupVersionKind(),
 				"namespace", uNew.GetNamespace(),
 				"name", uNew.GetName(),

@@ -18,7 +18,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring v0.87.1
 	github.com/prometheus-operator/prometheus-operator/pkg/client v0.87.1
-	go.bytebuilders.dev/audit v0.0.52
+	go.bytebuilders.dev/audit v0.0.53
 	go.bytebuilders.dev/license-verifier/kubernetes v0.15.0
 	go.etcd.io/etcd/client/pkg/v3 v3.6.14
 	go.etcd.io/etcd/raft/v3 v3.5.27
@@ -31,7 +31,7 @@ require (
 	gomodules.xyz/runtime v0.3.0
 	gomodules.xyz/stow v0.2.4
 	gomodules.xyz/wait v0.2.0
-	gomodules.xyz/x v0.0.17
+	gomodules.xyz/x v0.0.18
 	google.golang.org/grpc v1.83.1
 	google.golang.org/protobuf v1.36.11
 	gopkg.in/op/go-logging.v1 v1.0.0-20160211212156-b2cb9fa56473
@@ -47,13 +47,13 @@ require (
 	k8s.io/kube-openapi v0.0.0-20250910181357-589584f1c912
 	k8s.io/metrics v0.34.3
 	k8s.io/utils v0.0.0-20251002143259-bc988d571ff4
-	kmodules.xyz/client-go v0.34.6
+	kmodules.xyz/client-go v0.34.7-0.20260916091548-45e2a0e7782d
 	kmodules.xyz/crd-schema-fuzz v0.34.1
 	kmodules.xyz/custom-resources v0.34.0
 	kmodules.xyz/monitoring-agent-api v0.34.1
 	kmodules.xyz/objectstore-api v0.34.0
 	kmodules.xyz/offshoot-api v0.34.0
-	kmodules.xyz/resource-metadata v0.46.1
+	kmodules.xyz/resource-metadata v0.49.1-0.20260916091615-a7e699f904a2
 	kmodules.xyz/webhook-runtime v0.34.0
 	kubeops.dev/csi-driver-cacerts v0.5.1-0.20260418091014-4f539f46235c
 	kubeops.dev/operator-shard-manager v0.0.6-0.20260418091213-65daf7da824d

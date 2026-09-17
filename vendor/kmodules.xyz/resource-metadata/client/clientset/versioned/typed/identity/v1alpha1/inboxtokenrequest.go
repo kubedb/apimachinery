@@ -19,12 +19,13 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"context"
+	context "context"
+
+	identityv1alpha1 "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
+	scheme "kmodules.xyz/resource-metadata/client/clientset/versioned/scheme"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	rest "k8s.io/client-go/rest"
-	v1alpha1 "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
-	scheme "kmodules.xyz/resource-metadata/client/clientset/versioned/scheme"
+	gentype "kmodules.xyz/client-go/gentype"
 )
 
 // InboxTokenRequestsGetter has a method to return a InboxTokenRequestInterface.
@@ -35,30 +36,24 @@ type InboxTokenRequestsGetter interface {
 
 // InboxTokenRequestInterface has methods to work with InboxTokenRequest resources.
 type InboxTokenRequestInterface interface {
-	Create(ctx context.Context, inboxTokenRequest *v1alpha1.InboxTokenRequest, opts v1.CreateOptions) (*v1alpha1.InboxTokenRequest, error)
+	Create(ctx context.Context, inboxTokenRequest *identityv1alpha1.InboxTokenRequest, opts v1.CreateOptions) (*identityv1alpha1.InboxTokenRequest, error)
 	InboxTokenRequestExpansion
 }
 
 // inboxTokenRequests implements InboxTokenRequestInterface
 type inboxTokenRequests struct {
-	client rest.Interface
+	*gentype.Client[*identityv1alpha1.InboxTokenRequest]
 }
 
 // newInboxTokenRequests returns a InboxTokenRequests
 func newInboxTokenRequests(c *IdentityV1alpha1Client) *inboxTokenRequests {
 	return &inboxTokenRequests{
-		client: c.RESTClient(),
+		gentype.NewClient[*identityv1alpha1.InboxTokenRequest](
+			"inboxtokenrequests",
+			c.RESTClient(),
+			scheme.ParameterCodec,
+			"",
+			func() *identityv1alpha1.InboxTokenRequest { return &identityv1alpha1.InboxTokenRequest{} },
+		),
 	}
-}
-
-// Create takes the representation of a inboxTokenRequest and creates it.  Returns the server's representation of the inboxTokenRequest, and an error, if there is any.
-func (c *inboxTokenRequests) Create(ctx context.Context, inboxTokenRequest *v1alpha1.InboxTokenRequest, opts v1.CreateOptions) (result *v1alpha1.InboxTokenRequest, err error) {
-	result = &v1alpha1.InboxTokenRequest{}
-	err = c.client.Post().
-		Resource("inboxtokenrequests").
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(inboxTokenRequest).
-		Do(ctx).
-		Into(result)
-	return
 }
