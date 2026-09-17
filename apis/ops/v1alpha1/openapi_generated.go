@@ -725,8 +725,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusReplicaReadinessCriteria":                   schema_apimachinery_apis_ops_v1alpha1_MilvusReplicaReadinessCriteria(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusScalingGroupTarget":                         schema_apimachinery_apis_ops_v1alpha1_MilvusScalingGroupTarget(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusTLSSpec":                                    schema_apimachinery_apis_ops_v1alpha1_MilvusTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusUpdateVersionSpec":                          schema_apimachinery_apis_ops_v1alpha1_MilvusUpdateVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingGroupTarget":                 schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingGroupTarget(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVolumeExpansionSpec":                        schema_apimachinery_apis_ops_v1alpha1_MilvusVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBHorizontalScalingSpec":                     schema_apimachinery_apis_ops_v1alpha1_MongoDBHorizontalScalingSpec(ref),
@@ -39976,9 +39978,25 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingTopologySpec(r
 							Format:      "int32",
 						},
 					},
+					"groups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Groups optionally horizontally scales one or more MilvusNodeGroup sub-pools (pl2/milvus-fixes/sriov-gpu-design.md § 13.5) instead of a whole role above. A role whose spec.topology.distributed.<role>.groups is set is only addressable through this field -- the flat per-role fields above target that role's own (ungrouped) PetSet, which doesn't exist once Groups is in use.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusScalingGroupTarget"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusScalingGroupTarget"},
 	}
 }
 
@@ -40192,6 +40210,44 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusReplicaReadinessCriteria(ref co
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MilvusScalingGroupTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusScalingGroupTarget identifies one MilvusNodeGroup (by role + group name) and its desired replica count, for horizontal-scaling a group individually.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeType is the Distributed role the target group belongs to.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Group is the MilvusNodeGroup name (spec.topology.distributed.<nodeType>.groups[].name).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas is the desired replica count for this group's PetSet.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"nodeType", "group", "replicas"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MilvusTLSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40272,6 +40328,45 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusUpdateVersionSpec(ref common.Re
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingGroupTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusVerticalScalingGroupTarget identifies one MilvusNodeGroup (by role + group name) and its desired resources, for vertical-scaling a group individually.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeType is the Distributed role the target group belongs to.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Group is the MilvusNodeGroup name (spec.topology.distributed.<nodeType>.groups[].name).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resources is the desired resource/scheduling spec for this group.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+				},
+				Required: []string{"nodeType", "group", "resources"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40318,11 +40413,25 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingSpec(ref common.
 							Format:      "",
 						},
 					},
+					"groups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Groups optionally vertically scales one or more MilvusNodeGroup sub-pools (pl2/milvus-fixes/sriov-gpu-design.md § 13.5) instead of a whole role above. A role whose spec.topology.distributed.<role>.groups is set is only addressable through this field -- the flat per-role fields above target that role's own (ungrouped) PetSet, which doesn't exist once Groups is in use.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingGroupTarget"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingGroupTarget", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
 	}
 }
 
