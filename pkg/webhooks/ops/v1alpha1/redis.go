@@ -280,11 +280,7 @@ func (w *RedisOpsRequestCustomWebhook) validateRedisUpdateVersionOpsRequest(db *
 		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: redis.Spec.SentinelRef.Name, Namespace: redis.Spec.SentinelRef.Namespace}, currentSentinel); err != nil {
 			return err
 		}
-		currentSentinelVersion := &catalog.RedisVersion{}
-		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: currentSentinel.Spec.Version}, currentSentinelVersion); err != nil {
-			return err
-		}
-		if currentSentinelVersion.Spec.Version != updatedVersion.Spec.Version {
+		if currentSentinel.Spec.Version != updatedVersion.Spec.Version {
 			return fmt.Errorf("RedisOpsRequest %s/%s: can't upgrade to a different version of sentinel", req.Namespace, req.Name)
 		}
 	}
