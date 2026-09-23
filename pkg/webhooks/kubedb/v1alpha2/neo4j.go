@@ -210,10 +210,87 @@ func (w *Neo4jCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Neo4j) error {
 	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), Neo4jReservedVolumeMountPaths); err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.GetName(), err.Error()))
 	}
+
+	allErr = append(allErr, w.validateLogForwarder(db)...)
+
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Neo4j.kubedb.com", Kind: "Neo4j"}, db.GetName(), allErr)
+}
+
+// validateLogForwarder validates the native log-forwarder feature. It is a no-op when the feature
+// is absent, so an unconfigured Neo4j is unaffected.
+func (w *Neo4jCustomWebhook) validateLogForwarder(db *olddbapi.Neo4j) field.ErrorList {
+	lf := db.Spec.LogForwarder
+	if lf == nil {
+		return nil
+	}
+	var errs field.ErrorList
+	lfPath := field.NewPath("spec").Child("logForwarder")
+
+	// Only enforce the heavier rules when forwarding is actually enabled; a disabled forwarder may
+	// legitimately retain a partial configuration and its state PVCs.
+	enabled := lf.Enabled == nil || *lf.Enabled
+	if !enabled {
+		return errs
+	}
+
+	// Destination: exactly one of profile / exporterConfig (also enforced by CEL; repeated here for a
+	// clear message and because CEL is unavailable on older clusters).
+	dstPath := lfPath.Child("destination")
+	hasProfile := lf.Destination.Profile != ""
+	hasRaw := lf.Destination.ExporterConfig != ""
+	if hasProfile == hasRaw {
+		errs = append(errs, field.Invalid(dstPath, db.GetName(),
+			"exactly one of destination.profile or destination.exporterConfig must be set"))
+	}
+
+	// State storage must be a filesystem, ReadWriteOnce volume with a positive capacity request.
+	ssPath := lfPath.Child("stateStorage")
+	modes := lf.StateStorage.AccessModes
+	if len(modes) != 1 || modes[0] != core.ReadWriteOnce {
+		errs = append(errs, field.Invalid(ssPath.Child("accessModes"), db.GetName(),
+			"stateStorage must use exactly [ReadWriteOnce]"))
+	}
+	if lf.StateStorage.VolumeMode != nil && *lf.StateStorage.VolumeMode != core.PersistentVolumeFilesystem {
+		errs = append(errs, field.Invalid(ssPath.Child("volumeMode"), db.GetName(),
+			"stateStorage must use the Filesystem volumeMode"))
+	}
+	if qty, ok := lf.StateStorage.Resources.Requests[core.ResourceStorage]; !ok || qty.IsZero() {
+		errs = append(errs, field.Invalid(ssPath.Child("resources").Child("requests").Child("storage"),
+			db.GetName(), "stateStorage must request a positive storage capacity"))
+	}
+
+	// Sources must be advertised by the version's log capabilities.
+	if len(lf.Sources) > 0 {
+		version := catalog.Neo4jVersion{}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &version); err == nil {
+			supported := map[string]bool{}
+			for _, c := range version.Spec.LogCapabilities {
+				supported[c.Name] = true
+			}
+			// Only enforce when the version actually advertises capabilities; empty means unknown.
+			if len(supported) > 0 {
+				for i, s := range lf.Sources {
+					if !supported[s.Name] {
+						errs = append(errs, field.Invalid(lfPath.Child("sources").Index(i).Child("name"),
+							s.Name, fmt.Sprintf("log source %q is not supported by Neo4jVersion %q", s.Name, db.Spec.Version)))
+					}
+				}
+			}
+		}
+	}
+
+	// Reject collisions with the reserved sidecar container name; native forwarding owns it.
+	for i, c := range db.Spec.PodTemplate.Spec.Containers {
+		if c.Name == kubedb.LogForwarderContainerName {
+			errs = append(errs, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Index(i).Child("name"),
+				c.Name, "container name is reserved by native logForwarder; remove the manual sidecar or disable logForwarder"))
+		}
+	}
+
+	return errs
 }
 
 func (w *Neo4jCustomWebhook) ValidateVersion(db *olddbapi.Neo4j) error {
