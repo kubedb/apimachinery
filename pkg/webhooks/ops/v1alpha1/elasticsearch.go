@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
@@ -29,6 +30,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	"gomodules.xyz/x/arrays"
+	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -196,6 +198,12 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsap
 		warnings = append(warnings, warns...)
 		if err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("verticalScaling"),
+				req.Name,
+				err.Error()))
+		}
+	case opsapi.ElasticsearchOpsRequestTypeRotateLicense:
+		if err := w.validateElasticsearchRotateLicenseOpsRequest(req, db); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("license"),
 				req.Name,
 				err.Error()))
 		}
@@ -370,6 +378,39 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchReconfigureO
 		return fmt.Errorf("configuration can not be empty for %s/%s", req.Namespace, req.Name)
 	}
 
+	return nil
+}
+
+func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchRotateLicenseOpsRequest(req *opsapi.ElasticsearchOpsRequest, db *dbapi.Elasticsearch) error {
+	license := req.Spec.License
+	if license == nil {
+		return errors.New("spec.license nil not supported in RotateLicense type")
+	}
+	if license.SecretRef == nil && !license.Trial {
+		return errors.New("spec.license must set either 'secretRef' or 'trial'")
+	}
+	if license.SecretRef != nil && license.Trial {
+		return errors.New("spec.license cannot set both 'secretRef' and 'trial'")
+	}
+	if license.SecretRef != nil {
+		if license.SecretRef.Name == "" {
+			return errors.New("spec.license.secretRef.name is missing")
+		}
+		var secret core.Secret
+		err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+			Name:      license.SecretRef.Name,
+			Namespace: req.Namespace,
+		}, &secret)
+		if err != nil {
+			return errors.Wrapf(err, "failed to get license secret: %s/%s", req.Namespace, license.SecretRef.Name)
+		}
+		if _, ok := secret.Data[kubedb.ElasticsearchLicenseSecretKey]; !ok {
+			return fmt.Errorf("license secret %q must have key %q", license.SecretRef.Name, kubedb.ElasticsearchLicenseSecretKey)
+		}
+	}
+	if db.Spec.Halted {
+		return fmt.Errorf("can not rotate license for halted database %s/%s", db.Namespace, db.Name)
+	}
 	return nil
 }
 

@@ -136,6 +136,12 @@ const (
 	ElasticsearchScriptFileName                  = "startup.sh"
 	ElasticsearchVolumeScriptFileName            = "startup-script"
 	ElasticsearchVolumeScriptDir                 = "/script"
+	ElasticsearchLicenseSecretKey                = "license.json"
+
+	// Elasticsearch subscription license status.conditions types.
+	ElasticsearchLicenseActive       = "LicenseActive"
+	ElasticsearchLicenseExpiringSoon = "LicenseExpiringSoon"
+	ElasticsearchLicenseSyncFailed   = "LicenseSyncFailed"
 
 	// Ref:
 	//	- https://www.elastic.co/guide/en/elasticsearch/reference/7.6/heap-size.html#heap-size

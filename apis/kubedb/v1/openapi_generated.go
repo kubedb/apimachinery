@@ -589,6 +589,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Database":                                            schema_apimachinery_apis_kubedb_v1_Database(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Elasticsearch":                                       schema_apimachinery_apis_kubedb_v1_Elasticsearch(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology":                        schema_apimachinery_apis_kubedb_v1_ElasticsearchClusterTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchLicenseSpec":                            schema_apimachinery_apis_kubedb_v1_ElasticsearchLicenseSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchList":                                   schema_apimachinery_apis_kubedb_v1_ElasticsearchList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchNode":                                   schema_apimachinery_apis_kubedb_v1_ElasticsearchNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchRoleMapSpec":                            schema_apimachinery_apis_kubedb_v1_ElasticsearchRoleMapSpec(ref),
@@ -34330,6 +34331,12 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Description: "License configures Elastic subscription license activation for this cluster. When nil, no license is managed and the cluster runs on the free Basic tier.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchLicenseSpec"),
+						},
+					},
 					"podTemplate": {
 						SchemaProps: spec.SchemaProps{
 							Description: "PodTemplate is an optional configuration for pods used to expose database",
@@ -34432,7 +34439,35 @@ func schema_apimachinery_apis_kubedb_v1_ElasticsearchSpec(ref common.ReferenceCa
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/util/intstr.IntOrString", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchClusterTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchLicenseSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchRoleMapSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchUserSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1_ElasticsearchLicenseSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchLicenseSpec configures Elastic subscription license activation.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretRef references a Secret in the same namespace holding the signed license file content under key \"license.json\". Mutually exclusive with Trial.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"trial": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Trial requests Elastic's built-in one-time 30-day trial license (POST _license/start_trial) instead of a user-supplied license. Mutually exclusive with SecretRef.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
 	}
 }
 
