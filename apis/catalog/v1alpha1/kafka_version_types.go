@@ -38,6 +38,7 @@ const (
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=kafkaversions,singular=kafkaversion,scope=Cluster,shortName=kfversion,categories={catalog,kubedb,appscode}
 // +kubebuilder:printcolumn:name="Version",type="string",JSONPath=".spec.version"
+// +kubebuilder:printcolumn:name="Distribution",type="string",JSONPath=".spec.distribution"
 // +kubebuilder:printcolumn:name="DB_IMAGE",type="string",JSONPath=".spec.db.image"
 // +kubebuilder:printcolumn:name="Deprecated",type="boolean",JSONPath=".spec.deprecated"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
@@ -55,6 +56,13 @@ type KafkaVersionSpec struct {
 	// EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/
 	// +optional
 	EndOfLife bool `json:"endOfLife"`
+
+	// Distribution determines the type of the database (KubeDB or Confluent).
+	// KubeDB is the default: kubedb's own Apache Kafka based image. Confluent
+	// references Confluent Server (Enterprise) directly from Confluent's own
+	// registry; it requires an enterprise license (see Kafka.Spec.License).
+	// +optional
+	Distribution KafkaDistro `json:"distribution,omitempty"`
 
 	// Init Container Image
 	// From kafka version 4.0.0, we have introduced an init container to handle the database initialization.
@@ -93,6 +101,18 @@ type KafkaVersionSpec struct {
 type KafkaVersionDatabase struct {
 	Image string `json:"image"`
 }
+
+// KafkaDistro determines the type of the database (KubeDB or Confluent)
+// +kubebuilder:validation:Enum=KubeDB;Confluent
+type KafkaDistro string
+
+const (
+	// KafkaDistroKubeDB is kubedb's own Apache Kafka based image (default).
+	KafkaDistroKubeDB KafkaDistro = "KubeDB"
+	// KafkaDistroConfluent is Confluent Server (Enterprise), referenced directly
+	// from Confluent's own image registry. Requires an enterprise license.
+	KafkaDistroConfluent KafkaDistro = "Confluent"
+)
 
 // KafkaInitContainer is the Kafka Init Container image
 type KafkaInitContainer struct {

@@ -3415,6 +3415,16 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+              license:
+                properties:
+                  key:
+                    default: license
+                    type: string
+                  secretName:
+                    type: string
+                required:
+                - secretName
+                type: object
               monitor:
                 properties:
                   agent:
@@ -18251,6 +18261,16 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+              license:
+                properties:
+                  key:
+                    default: license
+                    type: string
+                  secretName:
+                    type: string
+                required:
+                - secretName
+                type: object
               monitor:
                 properties:
                   agent:

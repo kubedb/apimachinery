@@ -107,6 +107,11 @@ type KafkaSpec struct {
 	// +optional
 	KeystoreCredSecret *SecretReference `json:"keystoreCredSecret,omitempty"`
 
+	// License holds the enterprise license for a licensed Kafka distribution
+	// (e.g. Confluent Server, KafkaVersion.Spec.Distribution=Confluent).
+	// +optional
+	License *KafkaLicenseSpec `json:"license,omitempty"`
+
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional
 	Halted bool `json:"halted,omitempty"`
@@ -170,6 +175,18 @@ type KafkaNode struct {
 type BrokerRack struct {
 	// TopologyKey is the node label key which is used to identify the rack of a broker
 	TopologyKey string `json:"topologyKey,omitempty"`
+}
+
+// KafkaLicenseSpec references a Secret holding an enterprise license key
+type KafkaLicenseSpec struct {
+	// SecretName is the name of a Secret (same namespace as the Kafka CR)
+	// holding the license key.
+	SecretName string `json:"secretName"`
+
+	// Key is the Secret data key holding the license value.
+	// +optional
+	// +kubebuilder:default=license
+	Key string `json:"key,omitempty"`
 }
 
 // KafkaStatus defines the observed state of Kafka

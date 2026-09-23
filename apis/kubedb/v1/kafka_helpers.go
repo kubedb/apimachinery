@@ -354,6 +354,10 @@ func (k *Kafka) SetDefaults(kc client.Client) {
 		}
 	}
 
+	if k.Spec.License != nil && k.Spec.License.Key == "" {
+		k.Spec.License.Key = "license"
+	}
+
 	var kfVersion catalog.KafkaVersion
 	err := kc.Get(context.TODO(), types.NamespacedName{Name: k.Spec.Version}, &kfVersion)
 	if err != nil {

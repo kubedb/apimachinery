@@ -276,6 +276,12 @@ func (w *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 			err.Error()))
 	}
 
+	if db.Spec.License != nil && db.Spec.License.SecretName == "" {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("license").Child("secretName"),
+			db.Name,
+			"secretName can not be empty when spec.license is set"))
+	}
+
 	if len(allErr) == 0 {
 		return nil
 	}
