@@ -633,6 +633,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfiguration":                 schema_apimachinery_apis_ops_v1alpha1_ElasticsearchCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec":               schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingTopologySpec":       schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingTopologySpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchLicenseOpsSpec":                      schema_apimachinery_apis_ops_v1alpha1_ElasticsearchLicenseOpsSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchMigrationSpec":                       schema_apimachinery_apis_ops_v1alpha1_ElasticsearchMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchOpsRequest":                          schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchOpsRequestList":                      schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestList(ref),
@@ -36242,6 +36243,34 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingTopolog
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchLicenseOpsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchLicenseOpsSpec drives an explicit license (re)activation. It has the same SecretRef/Trial shape as kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchLicenseSpec; applying it also patches spec.license on the Elasticsearch CR so the CR stays the source of truth for future reconciles.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretRef references a Secret holding the signed license file content under a single key, \"license.json\". Mutually exclusive with Trial.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"trial": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Trial requests Elastic's built-in one-time 30-day trial license (POST _license/start_trial) instead of a user-supplied license. Mutually exclusive with SecretRef.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -36500,6 +36529,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestSpec(ref commo
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchMigrationSpec"),
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for activating/rotating an Elastic subscription license",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchLicenseOpsSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -36524,7 +36559,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestSpec(ref commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchLicenseOpsSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 

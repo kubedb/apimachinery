@@ -31579,6 +31579,20 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchLicenseOpsSpec": {
+      "description": "ElasticsearchLicenseOpsSpec drives an explicit license (re)activation. It has the same SecretRef/Trial shape as kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchLicenseSpec; applying it also patches spec.license on the Elasticsearch CR so the CR stays the source of truth for future reconciles.",
+      "type": "object",
+      "properties": {
+        "secretRef": {
+          "description": "SecretRef references a Secret holding the signed license file content under a single key, \"license.json\". Mutually exclusive with Trial.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "trial": {
+          "description": "Trial requests Elastic's built-in one-time 30-day trial license (POST _license/start_trial) instead of a user-supplied license. Mutually exclusive with SecretRef.",
+          "type": "boolean"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchMigrationSpec": {
       "description": "ElasticsearchMigrationSpec is the spec for storage migration of an Elasticsearch database. Set Node for combined mode, or per-role fields for topology mode.",
       "type": "object",
@@ -31726,6 +31740,10 @@
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingSpec"
+        },
+        "license": {
+          "description": "Specifies information necessary for activating/rotating an Elastic subscription license",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchLicenseOpsSpec"
         },
         "maxRetries": {
           "type": "integer",
