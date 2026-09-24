@@ -386,6 +386,14 @@ func (w *ElasticsearchOpsRequestCustomWebhook) validateElasticsearchRotateLicens
 	if license == nil {
 		return errors.New("spec.license nil not supported in RotateLicense type")
 	}
+	esVersion := &catalog.ElasticsearchVersion{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, esVersion); err != nil {
+		return errors.Wrapf(err, "failed to get ElasticsearchVersion %s", db.Spec.Version)
+	}
+	if esVersion.Spec.Distribution != catalog.ElasticsearchDistroElasticStack {
+		return fmt.Errorf("'spec.license' is only supported for ElasticsearchVersion with distribution %s, ElasticsearchVersion %s uses %s",
+			catalog.ElasticsearchDistroElasticStack, esVersion.Name, esVersion.Spec.Distribution)
+	}
 	if license.SecretRef == nil && !license.Trial {
 		return errors.New("spec.license must set either 'secretRef' or 'trial'")
 	}
