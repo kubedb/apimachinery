@@ -276,6 +276,12 @@ func (w *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 			err.Error()))
 	}
 
+	if err := w.validateConfluentTieredStorage(db); err != nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("tieredStorage"),
+			db.Name,
+			err.Error()))
+	}
+
 	if db.Spec.License != nil && db.Spec.License.SecretName == "" {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("license").Child("secretName"),
 			db.Name,
@@ -286,6 +292,27 @@ func (w *KafkaCustomWebhook) ValidateCreateOrUpdate(db *dbapi.Kafka) error {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "kafka.kubedb.com", Kind: "Kafka"}, db.Name, allErr)
+}
+
+// validateConfluentTieredStorage rejects spec.tieredStorage on a Confluent
+// distribution Kafka: those config keys are KubeDB's own Aiven-plugin-based
+// tiered storage mechanism, which doesn't apply to Confluent Server -- it
+// has its own, differently-configured, licensed tiered storage feature.
+// Silently forwarding KubeDB's tiered-storage properties as KAFKA_* env
+// vars would be meaningless (or break broker startup) rather than doing
+// what the user asked for.
+func (w *KafkaCustomWebhook) validateConfluentTieredStorage(db *dbapi.Kafka) error {
+	if db.Spec.TieredStorage == nil {
+		return nil
+	}
+	kfVersion := &catalog.KafkaVersion{}
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, kfVersion); err != nil {
+		return nil // validateVersion already reports an unresolvable version
+	}
+	if kfVersion.Spec.Distribution == catalog.KafkaDistroConfluent {
+		return errors.New("spec.tieredStorage is not supported for the Confluent distribution; configure Confluent Server's own tiered storage instead")
+	}
+	return nil
 }
 
 func (w *KafkaCustomWebhook) validateVersion(db *dbapi.Kafka) error {
