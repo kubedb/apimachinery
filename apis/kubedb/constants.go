@@ -1977,6 +1977,18 @@ const (
 	Neo4jContainerName     = "neo4j"
 	Neo4jInitContainerName = "neo4j-init"
 
+	// Log-forwarder sidecar (native spec.logForwarder). These names are reserved when the
+	// feature is enabled and must not collide with user-supplied podTemplate containers/volumes.
+	LogForwarderContainerName   = "log-forwarder"
+	LogForwarderConfigVolName   = "log-forwarder-config"
+	LogForwarderStateVolName    = "log-forwarder-state"
+	LogForwarderCAVolName       = "log-forwarder-ca"
+	LogForwarderConfigMountPath = "/etc/otelcol"
+	LogForwarderStateMountPath  = "/var/lib/otelcol"
+	LogForwarderSourceMountPath = "/var/log/neo4j"
+	LogForwarderConfigFileName  = "collector.yaml"
+	LogForwarderCASecretMount   = "/etc/otelcol/ca"
+
 	// Config files Neo4j reads from its config directory, alongside neo4j.conf.
 	Neo4jConfigFileName    = "neo4j.conf"
 	Neo4jApocConfFile      = "apoc.conf"

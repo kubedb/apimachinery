@@ -670,6 +670,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionList":                             schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionPodSecurityPolicy":                schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.KafkaVersionSpec":                             schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.LogSourceCapability":                          schema_apimachinery_apis_catalog_v1alpha1_LogSourceCapability(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerCoordinator":                       schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerCoordinator(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerDatabase":                          schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MSSQLServerInitContainer":                     schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerInitContainer(ref),
@@ -723,6 +724,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersion":                                 schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersion(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionDatabase":                         schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionList":                             schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionLogForwarder":                     schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionLogForwarder(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionSpec":                             schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleDataGuard":                              schema_apimachinery_apis_catalog_v1alpha1_OracleDataGuard(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.OracleSecurityContext":                        schema_apimachinery_apis_catalog_v1alpha1_OracleSecurityContext(ref),
@@ -764,6 +766,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer":                 schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionLicense":                       schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionLicense(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionList":                          schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionLogForwarder":                  schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionLogForwarder(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy":             schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionSpec":                          schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTDE":                           schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionTDE(ref),
@@ -37202,6 +37205,42 @@ func schema_apimachinery_apis_catalog_v1alpha1_KafkaVersionSpec(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_LogSourceCapability(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogSourceCapability describes a forwardable log source for a database version.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the log source (for example \"query\" or \"security\").",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"format": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Format identifies the on-disk log format so the renderer can select the right parser profile (for example \"neo4j-text\").",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"requiresEnterprise": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RequiresEnterprise marks sources that are only available on an Enterprise edition/entitlement.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_MSSQLServerCoordinator(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -39307,6 +39346,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionList(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionLogForwarder(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Neo4jVersionLogForwarder is the OpenTelemetry Collector image for the log-forwarder sidecar.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -39384,12 +39444,33 @@ func schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersionSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec"),
 						},
 					},
+					"logForwarder": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogForwarder holds the OpenTelemetry Collector image used by the operator-managed log-forwarder sidecar for this version.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionLogForwarder"),
+						},
+					},
+					"logCapabilities": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogCapabilities describes which log sources this version can forward. Missing capability metadata means a source is unknown/unsupported for automatic enablement.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.LogSourceCapability"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"version", "db"},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.LogSourceCapability", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersionLogForwarder", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
 	}
 }
 
@@ -40819,6 +40900,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionList(ref common.Re
 	}
 }
 
+func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionLogForwarder(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PostgresVersionLogForwarder is the OpenTelemetry Collector image for the log-forwarder sidecar.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionPodSecurityPolicy(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40952,6 +41054,27 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref common.Re
 							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec"),
 						},
 					},
+					"logForwarder": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogForwarder holds the OpenTelemetry Collector image used by the operator-managed log-forwarder sidecar for this version.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionLogForwarder"),
+						},
+					},
+					"logCapabilities": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogCapabilities describes which log sources this version can forward.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.LogSourceCapability"),
+									},
+								},
+							},
+						},
+					},
 					"ui": {
 						SchemaProps: spec.SchemaProps{
 							Type: []string{"array"},
@@ -40989,7 +41112,7 @@ func schema_apimachinery_apis_catalog_v1alpha1_PostgresVersionSpec(ref common.Re
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionLicense", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTDE", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTLSSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.LogSourceCapability", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresSecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionLicense", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionLogForwarder", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTDE", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.PostgresVersionTLSSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"},
 	}
 }
 

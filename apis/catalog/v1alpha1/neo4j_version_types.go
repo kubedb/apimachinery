@@ -73,11 +73,39 @@ type Neo4jVersionSpec struct {
 	// Archiver defines the walg & stash-addon related specifications
 	// +optional
 	Archiver ArchiverSpec `json:"archiver,omitempty"`
+
+	// LogForwarder holds the OpenTelemetry Collector image used by the operator-managed
+	// log-forwarder sidecar for this version.
+	// +optional
+	LogForwarder Neo4jVersionLogForwarder `json:"logForwarder,omitempty"`
+
+	// LogCapabilities describes which log sources this version can forward. Missing capability
+	// metadata means a source is unknown/unsupported for automatic enablement.
+	// +optional
+	LogCapabilities []LogSourceCapability `json:"logCapabilities,omitempty"`
 }
 
 // Neo4jVersionDatabase is the Neo4j Database image
 type Neo4jVersionDatabase struct {
 	Image string `json:"image"`
+}
+
+// Neo4jVersionLogForwarder is the OpenTelemetry Collector image for the log-forwarder sidecar.
+type Neo4jVersionLogForwarder struct {
+	Image string `json:"image"`
+}
+
+// LogSourceCapability describes a forwardable log source for a database version.
+type LogSourceCapability struct {
+	// Name of the log source (for example "query" or "security").
+	Name string `json:"name"`
+	// Format identifies the on-disk log format so the renderer can select the right parser
+	// profile (for example "neo4j-text").
+	// +optional
+	Format string `json:"format,omitempty"`
+	// RequiresEnterprise marks sources that are only available on an Enterprise edition/entitlement.
+	// +optional
+	RequiresEnterprise bool `json:"requiresEnterprise,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

@@ -467,6 +467,7 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 	p.SetArbiterDefault()
 	p.SetTLSDefaults()
 	p.SetHealthCheckerDefaults()
+	p.setLogForwarderDefaults()
 
 	p.Spec.Monitor.SetDefaults()
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
@@ -856,4 +857,53 @@ func (d *PostgresDCStatus) WritablePrimaryConfirmed(now time.Time) bool {
 		return false // never probed: the true is the placement default, not an observation
 	}
 	return now.Sub(d.WritableObservedAt.Time) <= WritableObservationTTL
+}
+
+// setLogForwarderDefaults fills safe defaults for an enabled log-forwarder; no-op when absent so an
+// unconfigured Postgres renders exactly as before.
+func (p *Postgres) setLogForwarderDefaults() {
+	lf := p.Spec.LogForwarder
+	if lf == nil {
+		return
+	}
+	if lf.Enabled == nil {
+		lf.Enabled = ptr.To(true)
+	}
+	if lf.Destination.Name == "" {
+		lf.Destination.Name = "primary"
+	}
+	if lf.Destination.TLS == nil {
+		lf.Destination.TLS = &LogForwarderTLS{Mode: LogForwarderTLSModeVerify}
+	} else if lf.Destination.TLS.Mode == "" {
+		lf.Destination.TLS.Mode = LogForwarderTLSModeVerify
+	}
+	for i := range lf.Sources {
+		if lf.Sources[i].InitialPosition == "" {
+			lf.Sources[i].InitialPosition = LogInitialPositionEnd
+		}
+	}
+	if lf.Delivery == nil {
+		lf.Delivery = &LogDeliverySpec{}
+	}
+	if lf.Delivery.QueueCapacityRequests == nil {
+		lf.Delivery.QueueCapacityRequests = ptr.To(int32(1000))
+	}
+	if lf.Delivery.Workers == nil {
+		lf.Delivery.Workers = ptr.To(int32(2))
+	}
+	if lf.Delivery.RetryInitialInterval == nil {
+		lf.Delivery.RetryInitialInterval = &metav1.Duration{Duration: 2 * time.Second}
+	}
+	if lf.Delivery.RetryMaxInterval == nil {
+		lf.Delivery.RetryMaxInterval = &metav1.Duration{Duration: 30 * time.Second}
+	}
+	if lf.Delivery.RetryMaxElapsedTime == nil {
+		lf.Delivery.RetryMaxElapsedTime = &metav1.Duration{Duration: 0}
+	}
+	if lf.Delivery.OnQueueFull == "" {
+		lf.Delivery.OnQueueFull = LogQueueFullBackpressure
+	}
+	if lf.RolloutPolicy == "" {
+		lf.RolloutPolicy = LogForwarderRolloutManual
+	}
 }
