@@ -203,6 +203,8 @@ func (w *DB2CustomWebhook) validateCreateOrUpdate(db *olddbapi.DB2) field.ErrorL
 		}
 	}
 
+	allErr = append(allErr, validateDB2HADR(db)...)
+
 	// Validate that the git-sync clone root path does not collide with any reserved mount path.
 	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), DB2ReservedVolumesMountPaths); err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.Name, err.Error()))
@@ -210,6 +212,66 @@ func (w *DB2CustomWebhook) validateCreateOrUpdate(db *olddbapi.DB2) field.ErrorL
 	if len(allErr) == 0 {
 		return nil
 	}
+	return allErr
+}
+
+// validateDB2HADR enforces the replica-count contract. spec.replicas alone
+// decides standalone versus clustered; there is no mode field, so the
+// combinations that cannot work have to be rejected here rather than half-built
+// by the operator.
+func validateDB2HADR(db *olddbapi.DB2) field.ErrorList {
+	var allErr field.ErrorList
+	replicas := int32(1)
+	if db.Spec.Replicas != nil {
+		replicas = *db.Spec.Replicas
+	}
+
+	if replicas < 1 {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+			replicas, "spec.replicas must be at least 1"))
+	}
+	// Db2 HADR supports at most three standbys: one principal and two
+	// auxiliaries.
+	if replicas > 4 {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("replicas"),
+			replicas, "DB2 HADR supports at most 3 standbys, so spec.replicas cannot exceed 4"))
+	}
+
+	if db.Spec.HADR == nil {
+		return allErr
+	}
+	hadrPath := field.NewPath("spec").Child("hadr")
+
+	// A single replica has nothing to replicate to. Silently ignoring spec.hadr
+	// here would leave the user believing they had HADR when nothing was
+	// configured, so it is an error rather than a no-op.
+	if replicas == 1 {
+		allErr = append(allErr, field.Invalid(hadrPath, db.Spec.HADR,
+			"spec.hadr cannot be set when spec.replicas is 1; a standalone DB2 has no standby to replicate to"))
+	}
+
+	switch db.Spec.HADR.SyncMode {
+	case "", olddbapi.DB2HADRSyncModeSync, olddbapi.DB2HADRSyncModeNearSync:
+		// Peer window is what makes a lossless failover possible: at 0 the
+		// standby drops straight to REMOTE_CATCHUP_PENDING when the primary dies
+		// and TAKEOVER ... BY FORCE PEER WINDOW ONLY can no longer succeed.
+		if db.Spec.HADR.PeerWindowSeconds == 0 {
+			allErr = append(allErr, field.Invalid(hadrPath.Child("peerWindowSeconds"),
+				db.Spec.HADR.PeerWindowSeconds,
+				"peerWindowSeconds must be greater than 0 for SYNC and NEARSYNC, otherwise a lossless takeover is impossible"))
+		}
+	case olddbapi.DB2HADRSyncModeAsync, olddbapi.DB2HADRSyncModeSuperAsync:
+		// Db2 ignores the peer window in these modes.
+	default:
+		allErr = append(allErr, field.Invalid(hadrPath.Child("syncMode"),
+			db.Spec.HADR.SyncMode, "syncMode must be one of SYNC, NEARSYNC, ASYNC, SUPERASYNC"))
+	}
+
+	if db.Spec.HADR.TimeoutSeconds < 0 {
+		allErr = append(allErr, field.Invalid(hadrPath.Child("timeoutSeconds"),
+			db.Spec.HADR.TimeoutSeconds, "timeoutSeconds cannot be negative"))
+	}
+
 	return allErr
 }
 
@@ -228,12 +290,14 @@ func (w *DB2CustomWebhook) DB2ValidateVersion(db *olddbapi.DB2) error {
 var DB2ReservedVolumes = []string{
 	kubedb.DB2DataVolume,
 	kubedb.DB2VolumeScripts,
+	kubedb.DB2ScriptsVolume,
 	kubedb.GitSecretVolume,
 }
 
 var DB2ReservedVolumesMountPaths = []string{
 	kubedb.DB2DataDir,
 	kubedb.DB2VolumeMountScripts,
+	kubedb.DB2ScriptsDir,
 	kubedb.GitSecretMountPath,
 }
 

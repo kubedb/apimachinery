@@ -2364,14 +2364,40 @@ const (
 const (
 	DB2DatabaseServiceName = "DB2"
 	DB2SqlNetPortName      = "db2-port"
-	DB2SqlNetPort          = 50001
+	// The container port must be the port the DB2 image actually listens on.
+	// It was declared as 50001 while the Service targeted 50000, so the named
+	// targetPort resolved to a port nothing was bound to.
+	DB2SqlNetPort = 50000
+
+	DB2CoordinatorPortName = "coordinator"
+	DB2CoordinatorPort     = 8080
 
 	DB2EditionEnterprise = "enterprise"
 
 	DB2PrimaryRole = "primary"
 	DB2StandbyRole = "standby"
 
-	DB2DatabasePort = 1521
+	// DB2DatabasePort is the port DB2 actually listens on. It was 1521 (Oracle's
+	// port), which meant neither Service could reach the database.
+	DB2DatabasePort = 50000
+
+	// HADR replication endpoint. Distinct from the SQL port.
+	DB2HadrPortName = "hadr"
+	DB2HadrPort     = 55000
+
+	// HADR condition types. Absent (not False) when replicas == 1.
+	DB2HADRConfiguredCondition    = "HADRConfigured"
+	DB2HADRStandbySeededCondition = "HADRStandbySeeded"
+	DB2HADRPeerCondition          = "HADRPeer"
+	// DB2HADRPrimaryCondition records which pod the operator currently regards as
+	// primary. It is what breaks the tie when a returning old primary and the
+	// standby that replaced it both still report PRIMARY.
+	DB2HADRPrimaryCondition = "HADRPrimary"
+
+	// Role values written onto pods so the primary/standby Services can select them.
+	DB2RolePrimary   = "primary"
+	DB2RolePrincipal = "principal"
+	DB2RoleAuxiliary = "auxiliary"
 
 	DB2SysDbaUser = "db2inst1"
 
@@ -2387,7 +2413,25 @@ const (
 	DB2VolumeMountScripts = "db2-data"
 	DB2DataDir            = "/database"
 
+	// The init container copies the HADR step scripts into this emptyDir, which
+	// the db2 and coordinator containers both mount. Keeping them on a volume
+	// rather than baking them into the DB2 image lets DB2Version pin the script
+	// set per version, and leaves them readable in-pod for debugging.
+	DB2ScriptsVolume = "db2-scripts"
+	DB2ScriptsDir    = "/scripts"
+
+	// Seed FIFOs live on the data volume because it is the only filesystem the
+	// db2 container and the coordinator sidecar share. A named pipe only works
+	// when reader and writer are on the same machine, so both ends must see the
+	// same inode.
+	DB2SeedSendFifo    = DB2DataDir + "/db2-seed-send.fifo"
+	DB2SeedReceiveFifo = DB2DataDir + "/db2-seed-recv.fifo"
+
 	DB2StandbyServiceSuffix = "standby"
+
+	// DB2DefaultDatabase is the database the image creates via DBNAME when the
+	// user has not named one.
+	DB2DefaultDatabase = "TESTDB"
 
 	DB2DatabaseRoleKey      = "db2.db/role"
 	DB2DatabaseRoleObserver = "observer"

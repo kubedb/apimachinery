@@ -180,6 +180,39 @@ func (d *DB2) GetPersistentSecrets() []string {
 	return secrets
 }
 
+// StandbyServiceName is the Service selecting standby pods. Only created when
+// HADR is enabled.
+func (d *DB2) StandbyServiceName() string {
+	return fmt.Sprintf("%s-%s", d.OffshootName(), kubedb.DB2StandbyServiceSuffix)
+}
+
+// PodName returns the PetSet pod name for an ordinal.
+func (d *DB2) PodName(ordinal int) string {
+	return fmt.Sprintf("%s-%d", d.OffshootName(), ordinal)
+}
+
+// PodFQDN is the stable per-pod DNS name via the governing headless Service.
+// HADR_LOCAL_HOST and HADR_REMOTE_HOST must both use this form: DB2 binds
+// HADR_LOCAL_HOST's resolved address specifically, and a ClusterIP Service is
+// rejected by the HADR handshake even though it is TCP-reachable.
+func (d *DB2) PodFQDN(ordinal int) string {
+	return fmt.Sprintf("%s.%s.%s.svc", d.PodName(ordinal), d.GoverningServiceName(), d.Namespace)
+}
+
+// IsClustered reports whether this DB2 runs HADR. Replica count alone decides it:
+// 1 is standalone, more is a cluster.
+func (d *DB2) IsClustered() bool {
+	return d.Spec.Replicas != nil && *d.Spec.Replicas > 1
+}
+
+// HADRDatabaseName is the database HADR replicates.
+func (d *DB2) HADRDatabaseName() string {
+	if d.Spec.HADR != nil && d.Spec.HADR.DatabaseName != "" {
+		return d.Spec.HADR.DatabaseName
+	}
+	return kubedb.DB2DefaultDatabase
+}
+
 func (d *DB2) Finalizer() string {
 	return fmt.Sprintf("%s/%s", apis.Finalizer, d.ResourceSingular())
 }

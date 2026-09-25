@@ -89,7 +89,69 @@ type DB2Spec struct {
 	// Init is used to initialize the database from a script or git repo.
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
+
+	// HADR configures High Availability Disaster Recovery replication.
+	// Only meaningful when Replicas > 1; setting it with Replicas == 1 is rejected.
+	// +optional
+	HADR *DB2HADRSpec `json:"hadr,omitempty"`
 }
+
+// DB2HADRSpec configures Db2 HADR. HADR is per-database, so exactly one database
+// is replicated. Pod ordinal 0 is the primary, ordinal 1 the principal standby and
+// ordinals 2+ auxiliary standbys, which Db2 forces to SUPERASYNC.
+type DB2HADRSpec struct {
+	// DatabaseName is the database to replicate.
+	DatabaseName string `json:"databaseName"`
+
+	// SyncMode applies to the principal standby. Auxiliary standbys are always
+	// SUPERASYNC regardless of this value.
+	// +kubebuilder:validation:Enum=SYNC;NEARSYNC;ASYNC;SUPERASYNC
+	// +kubebuilder:default=NEARSYNC
+	// +optional
+	SyncMode DB2HADRSyncMode `json:"syncMode,omitempty"`
+
+	// TimeoutSeconds is HADR_TIMEOUT.
+	// +kubebuilder:default=120
+	// +optional
+	TimeoutSeconds int32 `json:"timeoutSeconds,omitempty"`
+
+	// PeerWindowSeconds is HADR_PEER_WINDOW. Must be > 0 for SYNC/NEARSYNC: at 0 a
+	// standby drops straight to REMOTE_CATCHUP_PENDING when the primary dies and a
+	// lossless forced takeover becomes impossible.
+	// +kubebuilder:default=120
+	// +optional
+	PeerWindowSeconds int32 `json:"peerWindowSeconds,omitempty"`
+
+	// Seed controls how a standby is initialized from the primary.
+	// +optional
+	Seed DB2HADRSeedSpec `json:"seed,omitempty"`
+}
+
+type DB2HADRSyncMode string
+
+const (
+	DB2HADRSyncModeSync       DB2HADRSyncMode = "SYNC"
+	DB2HADRSyncModeNearSync   DB2HADRSyncMode = "NEARSYNC"
+	DB2HADRSyncModeAsync      DB2HADRSyncMode = "ASYNC"
+	DB2HADRSyncModeSuperAsync DB2HADRSyncMode = "SUPERASYNC"
+)
+
+type DB2HADRSeedSpec struct {
+	// Method is the seed transport. Only Stream is implemented; SharedVolume and
+	// ObjectStorage are deliberately absent from the enum until they are built,
+	// because accepting a method the operator cannot act on is worse than not
+	// offering it.
+	// +kubebuilder:validation:Enum=Stream
+	// +kubebuilder:default=Stream
+	// +optional
+	Method DB2HADRSeedMethod `json:"method,omitempty"`
+}
+
+type DB2HADRSeedMethod string
+
+const (
+	DB2HADRSeedMethodStream DB2HADRSeedMethod = "Stream"
+)
 
 // DB2Status defines the observed state of DB2.
 type DB2Status struct {
