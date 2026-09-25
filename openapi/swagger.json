@@ -24843,6 +24843,28 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.LogSourceCapability": {
+      "description": "LogSourceCapability describes a forwardable log source for a database version.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "format": {
+          "description": "Format identifies the on-disk log format so the renderer can select the right parser profile (for example \"neo4j-text\").",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the log source (for example \"query\" or \"security\").",
+          "type": "string",
+          "default": ""
+        },
+        "requiresEnterprise": {
+          "description": "RequiresEnterprise marks sources that are only available on an Enterprise edition/entitlement.",
+          "type": "boolean"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestBackup": {
       "type": "object",
       "required": [
@@ -25913,6 +25935,19 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionLogForwarder": {
+      "description": "PostgresVersionLogForwarder is the OpenTelemetry Collector image for the log-forwarder sidecar.",
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionPodSecurityPolicy": {
       "description": "PostgresVersionPodSecurityPolicy is the Postgres pod security policies",
       "type": "object",
@@ -25987,6 +26022,19 @@
         "license": {
           "description": "License describes whether this version's image requires an AppsCode Postgres Enterprise license file to start.",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionLicense"
+        },
+        "logCapabilities": {
+          "description": "LogCapabilities describes which log sources this version can forward.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.LogSourceCapability"
+          }
+        },
+        "logForwarder": {
+          "description": "LogForwarder holds the OpenTelemetry Collector image used by the operator-managed log-forwarder sidecar for this version.",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.PostgresVersionLogForwarder"
         },
         "podSecurityPolicies": {
           "description": "PSP names",

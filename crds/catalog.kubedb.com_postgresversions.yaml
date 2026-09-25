@@ -191,6 +191,26 @@ spec:
                 required:
                 - required
                 type: object
+              logCapabilities:
+                items:
+                  properties:
+                    format:
+                      type: string
+                    name:
+                      type: string
+                    requiresEnterprise:
+                      type: boolean
+                  required:
+                  - name
+                  type: object
+                type: array
+              logForwarder:
+                properties:
+                  image:
+                    type: string
+                required:
+                - image
+                type: object
               podSecurityPolicies:
                 properties:
                   databasePolicyName:

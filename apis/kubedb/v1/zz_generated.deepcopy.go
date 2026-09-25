@@ -3099,6 +3099,11 @@ func (in *PostgresSpec) DeepCopyInto(out *PostgresSpec) {
 		*out = new(Archiver)
 		**out = **in
 	}
+	if in.LogForwarder != nil {
+		in, out := &in.LogForwarder, &out.LogForwarder
+		*out = new(LogForwarderSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Arbiter != nil {
 		in, out := &in.Arbiter, &out.Arbiter
 		*out = new(ArbiterSpec)

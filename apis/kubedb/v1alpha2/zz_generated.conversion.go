@@ -4059,6 +4059,7 @@ func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, o
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
+	// WARNING: in.LogForwarder requires manual conversion: does not exist in peer-type
 	out.Arbiter = (*ArbiterSpec)(unsafe.Pointer(in.Arbiter))
 	if in.Replication != nil {
 		in, out := &in.Replication, &out.Replication

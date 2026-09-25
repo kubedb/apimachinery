@@ -91,6 +91,13 @@ type PostgresVersionSpec struct {
 	// Archiver defines the walg & kube-stash-addon related specifications
 	// +optional
 	Archiver ArchiverSpec `json:"archiver,omitempty"`
+	// LogForwarder holds the OpenTelemetry Collector image used by the operator-managed
+	// log-forwarder sidecar for this version.
+	// +optional
+	LogForwarder PostgresVersionLogForwarder `json:"logForwarder,omitempty"`
+	// LogCapabilities describes which log sources this version can forward.
+	// +optional
+	LogCapabilities []LogSourceCapability `json:"logCapabilities,omitempty"`
 	// +optional
 	UI []ChartInfo `json:"ui,omitempty"`
 	// Courier defines the courier related CLI/Tools images for this Postgres version
@@ -201,3 +208,8 @@ const (
 	// repo's AC_<major>_<minor> branch. See PostgresVersionLicense.
 	PostgresDistroAppsCode PostgresDistro = "AppsCode"
 )
+
+// PostgresVersionLogForwarder is the OpenTelemetry Collector image for the log-forwarder sidecar.
+type PostgresVersionLogForwarder struct {
+	Image string `json:"image"`
+}

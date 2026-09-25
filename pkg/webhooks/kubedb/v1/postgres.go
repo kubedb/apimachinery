@@ -29,6 +29,7 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	"gomodules.xyz/pointer"
+	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -294,6 +295,9 @@ func (wh *PostgresCustomWebhook) validateSpecForDB(postgres *dbapi.Postgres, pgV
 		return err
 	}
 	if err := wh.validateLicense(postgres, pgVersion); err != nil {
+		return err
+	}
+	if err := wh.validateLogForwarder(postgres, pgVersion); err != nil {
 		return err
 	}
 	return nil
@@ -737,6 +741,46 @@ func validatePostgresInlineConfig(inline map[string]string) error {
 		default:
 			return fmt.Errorf("invalid configuration source %q found in spec.configuration.inline; only %q and %q are allowed",
 				key, kubedb.PostgresCustomConfigFile, kubedb.PostgresCustomHBAFile)
+		}
+	}
+	return nil
+}
+
+// validateLogForwarder validates the native log-forwarder feature; no-op when absent/disabled.
+func (wh *PostgresCustomWebhook) validateLogForwarder(postgres *dbapi.Postgres, pgVersion *catalogapi.PostgresVersion) error {
+	lf := postgres.Spec.LogForwarder
+	if lf == nil || (lf.Enabled != nil && !*lf.Enabled) {
+		return nil
+	}
+	if lf.RolloutPolicy == dbapi.LogForwarderRolloutAutomatic {
+		return fmt.Errorf("spec.logForwarder.rolloutPolicy Automatic is not supported; use Manual and a restart OpsRequest")
+	}
+	if (lf.Destination.Profile != "") == (lf.Destination.ExporterConfig != "") {
+		return fmt.Errorf("spec.logForwarder.destination: exactly one of profile or exporterConfig must be set")
+	}
+	if m := lf.StateStorage.AccessModes; len(m) != 1 || m[0] != core.ReadWriteOnce {
+		return fmt.Errorf("spec.logForwarder.stateStorage must use exactly [ReadWriteOnce]")
+	}
+	if lf.StateStorage.VolumeMode != nil && *lf.StateStorage.VolumeMode != core.PersistentVolumeFilesystem {
+		return fmt.Errorf("spec.logForwarder.stateStorage must use the Filesystem volumeMode")
+	}
+	if qty, ok := lf.StateStorage.Resources.Requests[core.ResourceStorage]; !ok || qty.IsZero() {
+		return fmt.Errorf("spec.logForwarder.stateStorage must request a positive storage capacity")
+	}
+	if len(pgVersion.Spec.LogCapabilities) > 0 {
+		supported := map[string]bool{}
+		for _, c := range pgVersion.Spec.LogCapabilities {
+			supported[c.Name] = true
+		}
+		for _, s := range lf.Sources {
+			if !supported[s.Name] {
+				return fmt.Errorf("spec.logForwarder: log source %q is not supported by PostgresVersion %q", s.Name, pgVersion.Name)
+			}
+		}
+	}
+	for _, c := range postgres.Spec.PodTemplate.Spec.Containers {
+		if c.Name == kubedb.LogForwarderContainerName {
+			return fmt.Errorf("spec.podTemplate: container name %q is reserved by native logForwarder", kubedb.LogForwarderContainerName)
 		}
 	}
 	return nil
