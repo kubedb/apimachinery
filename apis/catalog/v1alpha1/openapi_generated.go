@@ -684,6 +684,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionDatabase":                       schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionExporter":                       schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionExporter(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionInitContainer":                  schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionInitContainer(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionLicense":                        schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionLicense(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionList":                           schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionMaxscale":                       schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionMaxscale(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionPodSecurityPolicy":              schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionPodSecurityPolicy(ref),
@@ -37886,12 +37887,40 @@ func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionSpec(ref common.Ref
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"),
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Description: "License describes whether this version's image is gated behind a commercial license (e.g. MariaDB Enterprise Server, distributed via docker.mariadb.com under a Customer Download Token). mariadbd itself does not enforce a license file at runtime; access is gated at the image registry level. This field exists so KubeDB can require the user to explicitly reference their license/subscription via spec.license on every MariaDB using this version.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionLicense"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "exporter", "coordinator", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionMaxscale", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionLicense", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionMaxscale", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MariaDBVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionLicense(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MariaDBVersionLicense describes whether a MariaDBVersion's image is only accessible under a commercial license/subscription (e.g. MariaDB Enterprise Server via docker.mariadb.com).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"required": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Required is true when this version's image is gated behind a commercial license/subscription. When true, spec.license must be set on every MariaDB using this version.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"required"},
+			},
+		},
 	}
 }
 

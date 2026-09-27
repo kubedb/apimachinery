@@ -120,6 +120,15 @@ type MariaDBSpec struct {
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 
+	// License references the Secret holding license/subscription information
+	// required to use a licensed MariaDBVersion (e.g. MariaDB Enterprise
+	// Server). Only valid, and required, when the referenced MariaDBVersion
+	// has spec.license.required = true. This is not consumed by mariadbd at
+	// runtime; it is an administrative record of the license/subscription
+	// backing this deployment.
+	// +optional
+	License *MariaDBLicenseSpec `json:"license,omitempty"`
+
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional
 	Halted bool `json:"halted,omitempty"`
@@ -148,6 +157,15 @@ type MariaDBSpec struct {
 	// specify if the database deployment distributed or not
 	// +optional
 	Distributed bool `json:"distributed,omitempty"`
+}
+
+// MariaDBLicenseSpec references the Secret holding license/subscription
+// information for a licensed MariaDB distribution (e.g. MariaDB Enterprise
+// Server).
+type MariaDBLicenseSpec struct {
+	// SecretRef selects the key of a Secret holding the license/subscription
+	// information. Key defaults to "license" if left unset.
+	SecretRef core.SecretKeySelector `json:"secretRef"`
 }
 
 // +kubebuilder:validation:Enum=server;archiver;metrics-exporter

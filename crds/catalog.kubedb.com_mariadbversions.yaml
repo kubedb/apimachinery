@@ -173,6 +173,13 @@ spec:
                 required:
                 - image
                 type: object
+              license:
+                properties:
+                  required:
+                    type: boolean
+                required:
+                - required
+                type: object
               maxscale:
                 properties:
                   image:
