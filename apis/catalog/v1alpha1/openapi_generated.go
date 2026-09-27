@@ -37811,6 +37811,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_MariaDBVersionSpec(ref common.Ref
 							Format:      "",
 						},
 					},
+					"distribution": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distribution determines the vendor/type of the MariaDB database image (e.g. community vs MariaDB Enterprise Server)",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 					"initContainer": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Init container Image",

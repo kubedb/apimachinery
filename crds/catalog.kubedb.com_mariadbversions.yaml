@@ -145,6 +145,11 @@ spec:
                 type: object
               deprecated:
                 type: boolean
+              distribution:
+                enum:
+                - Official
+                - Enterprise
+                type: string
               endOfLife:
                 type: boolean
               exporter:

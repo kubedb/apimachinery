@@ -71,6 +71,9 @@ type MariaDBVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
+	// Distribution determines the vendor/type of the MariaDB database image (e.g. community vs MariaDB Enterprise Server)
+	// +optional
+	Distribution MariaDBDistro `json:"distribution,omitempty"`
 	// Init container Image
 	// TODO: remove if not needed
 	InitContainer MariaDBVersionInitContainer `json:"initContainer"`
@@ -94,6 +97,14 @@ type MariaDBVersionSpec struct {
 	// +optional
 	Courier v1alpha1.DBCourierImages `json:"courier,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=Official;Enterprise
+type MariaDBDistro string
+
+const (
+	MariaDBDistroOfficial   MariaDBDistro = "Official"
+	MariaDBDistroEnterprise MariaDBDistro = "Enterprise"
+)
 
 // MariaDBVersionDatabase is the mariadb image
 type MariaDBVersionDatabase struct {
