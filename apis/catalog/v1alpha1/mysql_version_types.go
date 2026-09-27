@@ -177,4 +177,8 @@ const (
 	MySQLDistroMySQL    MySQLDistro = "MySQL"
 	MySQLDistroPercona  MySQLDistro = "Percona"
 	MySQLDistroKubeDB   MySQLDistro = "KubeDB"
+	// MySQLDistroOracle refers to Oracle's MySQL Enterprise Edition, distributed via the
+	// Oracle Container Registry under a BYOL subscription. No additional in-cluster
+	// license key/Secret is required; access is gated at image-pull time.
+	MySQLDistroOracle MySQLDistro = "Oracle"
 )
