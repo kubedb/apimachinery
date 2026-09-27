@@ -635,6 +635,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQL":                                               schema_apimachinery_apis_kubedb_v1_MySQL(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLGroupSpec":                                      schema_apimachinery_apis_kubedb_v1_MySQLGroupSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLInnoDBClusterSpec":                              schema_apimachinery_apis_kubedb_v1_MySQLInnoDBClusterSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLLicenseSpec":                                    schema_apimachinery_apis_kubedb_v1_MySQLLicenseSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLList":                                           schema_apimachinery_apis_kubedb_v1_MySQLList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLRouterSpec":                                     schema_apimachinery_apis_kubedb_v1_MySQLRouterSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MySQLSpec":                                           schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref),
@@ -36764,6 +36765,29 @@ func schema_apimachinery_apis_kubedb_v1_MySQLInnoDBClusterSpec(ref common.Refere
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_MySQLLicenseSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLLicenseSpec references the Secret holding license/subscription information for a licensed MySQL distribution (e.g. Oracle MySQL Enterprise Edition).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretRef selects the key of a Secret holding the license/subscription information. Key defaults to \"license\" if left unset.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+				},
+				Required: []string{"secretRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_MySQLList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -36948,6 +36972,12 @@ func schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref common.ReferenceCallback) 
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Description: "License references the Secret holding license/subscription information required to use a licensed MySQLVersion (e.g. Oracle MySQL Enterprise Edition). Only valid, and required, when the referenced MySQLVersion has spec.license.required = true. Unlike AppsCode's Postgres Enterprise build, this is not consumed by mysqld at runtime; it is an administrative record of the license/subscription backing this deployment.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.MySQLLicenseSpec"),
+						},
+					},
 					"halted": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -37000,7 +37030,7 @@ func schema_apimachinery_apis_kubedb_v1_MySQLSpec(ref common.ReferenceCallback) 
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLLicenseSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MySQLTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
