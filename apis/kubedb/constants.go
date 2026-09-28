@@ -1940,9 +1940,10 @@ const (
 	// container, so a membership change written by the ops-manager is picked up by
 	// ClickHouse's config reloader and applied via add_srv/remove_srv without
 	// restarting any keeper pod.
-	ClickHouseKeeperRaftConfigFileName   = "raft_configuration.xml"
-	ClickHouseKeeperRaftConfigVolumeName = "keeper-raft-config"
-	ClickHouseKeeperRaftConfigDir        = "/etc/clickhouse-keeper/keeper_config.d"
+	ClickHouseKeeperRaftConfigFileName     = "raft_configuration.xml"
+	ClickHouseKeeperRaftConfigVolumeName   = "keeper-raft-config"
+	ClickHouseKeeperRaftConfigDir          = "/etc/clickhouse-keeper/keeper_config.d"
+	ClickHouseInternalKeeperRaftConfigFile = "raft_configuration.yaml"
 )
 
 // =========================== Neo4j Constants ============================
