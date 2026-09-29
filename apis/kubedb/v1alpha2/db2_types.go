@@ -96,12 +96,28 @@ type DB2Spec struct {
 	HADR *DB2HADRSpec `json:"hadr,omitempty"`
 }
 
-// DB2HADRSpec configures Db2 HADR. HADR is per-database, so exactly one database
-// is replicated. Pod ordinal 0 is the primary, ordinal 1 the principal standby and
-// ordinals 2+ auxiliary standbys, which Db2 forces to SUPERASYNC.
+// DB2HADRSpec configures Db2 HADR. Pod ordinal 0 is the first primary, ordinal 1
+// the principal standby and ordinals 2+ auxiliary standbys, which Db2 forces to
+// SUPERASYNC.
+//
+// HADR is per-database in Db2, not per-instance: every database is configured,
+// seeded, started and taken over on its own. Only the databases listed in
+// Databases are protected. A database created by hand on the primary is not
+// replicated and would not survive a failover; the operator reports such
+// databases in the HADRUnreplicatedDatabases condition rather than enrolling
+// them behind the user's back.
 type DB2HADRSpec struct {
-	// DatabaseName is the database to replicate.
-	DatabaseName string `json:"databaseName"`
+	// Databases are the databases to replicate. All of them fail over together,
+	// so every one is always primary on the same pod.
+	// +optional
+	Databases []DB2HADRDatabase `json:"databases,omitempty"`
+
+	// DatabaseName is the single database to replicate.
+	//
+	// Deprecated: use Databases. When Databases is empty this is treated as a
+	// one-entry list; when Databases is set it is ignored.
+	// +optional
+	DatabaseName string `json:"databaseName,omitempty"`
 
 	// SyncMode applies to the principal standby. Auxiliary standbys are always
 	// SUPERASYNC regardless of this value.
@@ -110,14 +126,19 @@ type DB2HADRSpec struct {
 	// +optional
 	SyncMode DB2HADRSyncMode `json:"syncMode,omitempty"`
 
-	// TimeoutSeconds is HADR_TIMEOUT.
-	// +kubebuilder:default=120
+	// TimeoutSeconds is HADR_TIMEOUT: how long a member waits without hearing
+	// from its peer before it treats the connection as lost. A node that dies
+	// silently is only noticed this long after its last heartbeat.
+	// +kubebuilder:default=60
 	// +optional
 	TimeoutSeconds int32 `json:"timeoutSeconds,omitempty"`
 
-	// PeerWindowSeconds is HADR_PEER_WINDOW. Must be > 0 for SYNC/NEARSYNC: at 0 a
-	// standby drops straight to REMOTE_CATCHUP_PENDING when the primary dies and a
-	// lossless forced takeover becomes impossible.
+	// PeerWindowSeconds is HADR_PEER_WINDOW. For SYNC/NEARSYNC it must be at
+	// least timeoutSeconds + 60. Db2 counts the peer window from the last
+	// heartbeat, but notices a silent failure only timeoutSeconds later: with a
+	// shorter window the standby goes straight to REMOTE_CATCHUP_PENDING, and a
+	// lossless takeover is no longer possible. The extra 60 seconds cover the
+	// primary lease running out and the operator promoting the standby.
 	// +kubebuilder:default=120
 	// +optional
 	PeerWindowSeconds int32 `json:"peerWindowSeconds,omitempty"`
@@ -125,6 +146,20 @@ type DB2HADRSpec struct {
 	// Seed controls how a standby is initialized from the primary.
 	// +optional
 	Seed DB2HADRSeedSpec `json:"seed,omitempty"`
+}
+
+// DB2HADRDatabase is one HADR-replicated database.
+type DB2HADRDatabase struct {
+	// Name is the Db2 database name: a letter followed by up to 7 letters or
+	// digits. It is stored upper-case, as Db2 reports it.
+	Name string `json:"name"`
+
+	// Port is this database's HADR_LOCAL_SVC / HADR_REMOTE_SVC. Db2 needs a
+	// distinct port for every HADR database in an instance. Defaulted to the
+	// lowest free port from 55000, and immutable once set: moving a running
+	// database to another port would disconnect its standbys.
+	// +optional
+	Port int32 `json:"port,omitempty"`
 }
 
 type DB2HADRSyncMode string

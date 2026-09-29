@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"regexp"
 	"unsafe"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -104,8 +105,12 @@ func (w *DB2CustomWebhook) ValidateUpdate(ctx context.Context, old, newObj runti
 	}
 
 	db2log.Info("validate update", "name", db.Name)
-	_ = old.(*olddbapi.DB2)
+	oldDB, ok := old.(*olddbapi.DB2)
+	if !ok {
+		return nil, fmt.Errorf("expected an DB2 object but got %T", old)
+	}
 	allErr := w.validateCreateOrUpdate(db)
+	allErr = append(allErr, validateDB2HADRPortsImmutable(oldDB, db)...)
 	if len(allErr) == 0 {
 		return nil, nil
 	}
@@ -255,10 +260,27 @@ func validateDB2HADR(db *olddbapi.DB2) field.ErrorList {
 		// Peer window is what makes a lossless failover possible: at 0 the
 		// standby drops straight to REMOTE_CATCHUP_PENDING when the primary dies
 		// and TAKEOVER ... BY FORCE PEER WINDOW ONLY can no longer succeed.
-		if db.Spec.HADR.PeerWindowSeconds == 0 {
+		//
+		// It also has to outlast the primary lease. A standby is promoted only
+		// once the old primary's lease has run out, and the takeover must still
+		// land inside the peer window after that, with time left to detect the
+		// loss and run the takeover itself.
+		//
+		// And it has to outlast HADR_TIMEOUT. Db2 counts the peer window from the
+		// last heartbeat, but a member that dies silently - a lost node, a
+		// partition - is noticed only HADR_TIMEOUT later. With a window no longer
+		// than the timeout, the standby goes straight to REMOTE_CATCHUP_PENDING
+		// and a lossless takeover is impossible. Observed with 120/120.
+		timeout := db.Spec.HADR.TimeoutSeconds
+		if timeout == 0 {
+			timeout = kubedb.DB2HADRDefaultTimeoutSeconds
+		}
+		minWindow := max(int32(kubedb.DB2HADRMinPeerWindowSeconds), timeout+kubedb.DB2HADRPeerWindowMarginSeconds)
+		if db.Spec.HADR.PeerWindowSeconds < minWindow {
 			allErr = append(allErr, field.Invalid(hadrPath.Child("peerWindowSeconds"),
 				db.Spec.HADR.PeerWindowSeconds,
-				"peerWindowSeconds must be greater than 0 for SYNC and NEARSYNC, otherwise a lossless takeover is impossible"))
+				fmt.Sprintf("peerWindowSeconds must be at least %d for SYNC and NEARSYNC (timeoutSeconds %d + %d): a silent failure is only noticed timeoutSeconds after the last heartbeat, and the old primary's %ds lease must expire and the standby be promoted before the peer window closes",
+					minWindow, timeout, kubedb.DB2HADRPeerWindowMarginSeconds, kubedb.DB2HADRLeaseDurationSeconds)))
 		}
 	case olddbapi.DB2HADRSyncModeAsync, olddbapi.DB2HADRSyncModeSuperAsync:
 		// Db2 ignores the peer window in these modes.
@@ -272,6 +294,70 @@ func validateDB2HADR(db *olddbapi.DB2) field.ErrorList {
 			db.Spec.HADR.TimeoutSeconds, "timeoutSeconds cannot be negative"))
 	}
 
+	allErr = append(allErr, validateDB2HADRDatabases(db, hadrPath.Child("databases"))...)
+	return allErr
+}
+
+// db2DatabaseName is a Db2 database name as the operator accepts it: a letter
+// then up to 7 letters or digits. Db2 itself also allows @, # and $, but these
+// names are passed through shell commands inside the pod, and $ in particular is
+// not worth the quoting risk.
+var db2DatabaseName = regexp.MustCompile(`^[A-Z][A-Z0-9]{0,7}$`)
+
+// validateDB2HADRDatabases checks the replicated databases: valid, unique
+// names, and unique HADR ports that do not collide with the database or
+// coordinator ports.
+func validateDB2HADRDatabases(db *olddbapi.DB2, path *field.Path) field.ErrorList {
+	var allErr field.ErrorList
+	names := map[string]int{}
+	ports := map[int32]string{}
+	for i, d := range db.HADRDatabases() {
+		p := path.Index(i)
+		if !db2DatabaseName.MatchString(d.Name) {
+			allErr = append(allErr, field.Invalid(p.Child("name"), d.Name,
+				"must be a letter followed by up to 7 letters or digits"))
+		}
+		if j, dup := names[d.Name]; dup {
+			allErr = append(allErr, field.Duplicate(p.Child("name"),
+				fmt.Sprintf("%s (also at index %d)", d.Name, j)))
+		}
+		names[d.Name] = i
+
+		switch {
+		case d.Port < 1024 || d.Port > 65535:
+			allErr = append(allErr, field.Invalid(p.Child("port"), d.Port, "must be between 1024 and 65535"))
+		case d.Port == kubedb.DB2DatabasePort || d.Port == kubedb.DB2CoordinatorPort:
+			allErr = append(allErr, field.Invalid(p.Child("port"), d.Port,
+				"is already used by the database or the coordinator"))
+		}
+		if other, dup := ports[d.Port]; dup {
+			allErr = append(allErr, field.Invalid(p.Child("port"), d.Port,
+				fmt.Sprintf("is already the HADR port of %s; every HADR database needs its own port", other)))
+		}
+		ports[d.Port] = d.Name
+	}
+	return allErr
+}
+
+// validateDB2HADRPortsImmutable rejects moving a database that stays in the
+// list to a different HADR port. Changing a running database's port disconnects
+// its standbys; it is a migration, not an edit.
+func validateDB2HADRPortsImmutable(oldDB, newDB *olddbapi.DB2) field.ErrorList {
+	if oldDB.Spec.HADR == nil || newDB.Spec.HADR == nil {
+		return nil
+	}
+	var allErr field.ErrorList
+	was := map[string]int32{}
+	for _, d := range oldDB.HADRDatabases() {
+		was[d.Name] = d.Port
+	}
+	path := field.NewPath("spec").Child("hadr").Child("databases")
+	for i, d := range newDB.HADRDatabases() {
+		if port, ok := was[d.Name]; ok && port != d.Port {
+			allErr = append(allErr, field.Invalid(path.Index(i).Child("port"), d.Port,
+				fmt.Sprintf("cannot change the HADR port of %s from %d; remove the database and add it back to move it", d.Name, port)))
+		}
+	}
 	return allErr
 }
 

@@ -2393,6 +2393,35 @@ const (
 	// primary. It is what breaks the tie when a returning old primary and the
 	// standby that replaced it both still report PRIMARY.
 	DB2HADRPrimaryCondition = "HADRPrimary"
+	// DB2HADRUnreplicatedDatabasesCondition is True when the primary holds
+	// databases that are not in spec.hadr.databases. Those are not replicated and
+	// would not survive a failover.
+	DB2HADRUnreplicatedDatabasesCondition = "HADRUnreplicatedDatabases"
+	// DB2HADRDataLossAcceptedCondition records a promotion that was forced
+	// through DB2HADRForceFailoverAnnotation, outside the peer window, and may
+	// therefore have lost committed transactions.
+	DB2HADRDataLossAcceptedCondition = "HADRDataLossAccepted"
+
+	// DB2HADRForceFailoverAnnotation names the pod to promote when no standby
+	// can be promoted without loss. It is the only way the operator will run
+	// TAKEOVER ... BY FORCE without PEER WINDOW ONLY, and it is removed once acted
+	// on.
+	DB2HADRForceFailoverAnnotation = "kubedb.com/db2-hadr-force-failover-to"
+
+	// The primary lease (coordination.k8s.io/v1 Lease <db2>-hadr-primary) is the
+	// fence against a split brain. The coordinator on the primary pod renews it;
+	// if it cannot, the db2 container stops the instance before the lease runs
+	// out, and the operator promotes a standby only after it has run out.
+	DB2HADRLeaseSuffix               = "hadr-primary"
+	DB2HADRLeaseDurationSeconds      = 20
+	DB2HADRLeaseRenewIntervalSeconds = 5
+	DB2HADRLeaseFenceMarginSeconds   = 5
+	DB2HADRLeaseClockSkewSeconds     = 5
+	DB2HADRMinPeerWindowSeconds      = 3 * DB2HADRLeaseDurationSeconds
+	// DB2HADRPeerWindowMarginSeconds is how much longer than HADR_TIMEOUT the
+	// peer window must be. See DB2HADRSpec.PeerWindowSeconds.
+	DB2HADRPeerWindowMarginSeconds = 60
+	DB2HADRDefaultTimeoutSeconds   = 60
 
 	// Role values written onto pods so the primary/standby Services can select them.
 	DB2RolePrimary   = "primary"

@@ -81,6 +81,18 @@ spec:
                 properties:
                   databaseName:
                     type: string
+                  databases:
+                    items:
+                      properties:
+                        name:
+                          type: string
+                        port:
+                          format: int32
+                          type: integer
+                      required:
+                      - name
+                      type: object
+                    type: array
                   peerWindowSeconds:
                     default: 120
                     format: int32
@@ -102,11 +114,9 @@ spec:
                     - SUPERASYNC
                     type: string
                   timeoutSeconds:
-                    default: 120
+                    default: 60
                     format: int32
                     type: integer
-                required:
-                - databaseName
                 type: object
               healthChecker:
                 default:
