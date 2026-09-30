@@ -4035,7 +4035,8 @@ func autoConvert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, o
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	if in.Backend != nil {
-		out.Backend = &in.Backend.LocalObjectReference
+		ref := in.Backend.LocalObjectReference
+		out.Backend = &ref
 	} else {
 		out.Backend = nil
 	}

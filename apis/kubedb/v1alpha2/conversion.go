@@ -1209,7 +1209,8 @@ func Convert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, out *
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
 	if in.Backend != nil {
 		// v1alpha2 has no concept of Backend.Aurora; that policy is dropped on downgrade.
-		out.Backend = &in.Backend.LocalObjectReference
+		ref := in.Backend.LocalObjectReference
+		out.Backend = &ref
 	} else {
 		out.Backend = nil
 	}
