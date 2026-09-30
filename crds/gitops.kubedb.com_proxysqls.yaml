@@ -55,36 +55,19 @@ spec:
                     type: boolean
                 type: object
               backend:
-                description: Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB/AWS-Aurora
-                  server
                 properties:
                   aurora:
-                    description: Aurora contains AWS Aurora-specific routing/tuning
-                      policy for this ProxySQL instance, via ProxySQL's native
-                      mysql_aws_aurora_hostgroups mechanism. Only meaningful when
-                      the referenced AppBinding's spec.type is the AWS Aurora
-                      AppType; ignored otherwise. Two different ProxySQL instances
-                      fronting the same Aurora cluster may set this differently.
                     properties:
                       checkIntervalMs:
                         default: 1000
-                        description: CheckIntervalMs controls how often ProxySQL
-                          polls Aurora's replica_host_status for topology/role
-                          changes. Lower values detect a failover faster at the
-                          cost of more frequent checks.
                         format: int32
                         type: integer
                       maxLagMs:
                         default: 600000
-                        description: MaxLagMs excludes an Aurora reader instance
-                          from the read pool once its measured replication lag
-                          exceeds this many milliseconds.
                         format: int32
                         type: integer
                       newReaderWeight:
                         default: 1000
-                        description: NewReaderWeight sets the ProxySQL mysql_servers.weight
-                          assigned to each Aurora reader instance ProxySQL auto-discovers.
                         format: int32
                         type: integer
                     type: object
@@ -92,6 +75,7 @@ spec:
                     default: ""
                     type: string
                 type: object
+                x-kubernetes-map-type: atomic
               configSecret:
                 properties:
                   name:
