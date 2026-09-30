@@ -106,8 +106,8 @@ type ProxySQLSpec struct {
 	// Number of instances to deploy for ProxySQL. If replicas > 1, ProxySQL servers will be clustered.
 	Replicas *int32 `json:"replicas,omitempty"`
 
-	// Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB server
-	Backend *core.LocalObjectReference `json:"backend,omitempty"`
+	// Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB/AWS-Aurora server
+	Backend *ProxySQLBackendSpec `json:"backend,omitempty"`
 
 	// ProxySQL secret containing username and password for root user and proxysql user
 	// +optional
@@ -141,6 +141,38 @@ type ProxySQLSpec struct {
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional
 	Halted bool `json:"halted,omitempty"`
+}
+
+// ProxySQLBackendSpec refers to the AppBinding of the backend server, plus any backend-specific
+// routing/tuning policy for this ProxySQL instance.
+type ProxySQLBackendSpec struct {
+	core.LocalObjectReference `json:",inline"`
+
+	// Aurora contains AWS Aurora-specific routing/tuning policy for this ProxySQL instance. Only
+	// meaningful when the referenced AppBinding's spec.type is the AWS Aurora AppType; ignored
+	// otherwise. Two different ProxySQL instances fronting the same Aurora cluster may set this
+	// differently.
+	// +optional
+	Aurora *AuroraBackendSpec `json:"aurora,omitempty"`
+}
+
+// AuroraBackendSpec configures how this ProxySQL instance routes to an AWS Aurora backend.
+type AuroraBackendSpec struct {
+	// WriterWeight sets the ProxySQL mysql_servers.weight for the writer/cluster endpoint entry.
+	// +optional
+	// +kubebuilder:default=1000
+	WriterWeight *int32 `json:"writerWeight,omitempty"`
+
+	// ReaderWeight sets the ProxySQL mysql_servers.weight for the reader endpoint entry.
+	// +optional
+	// +kubebuilder:default=1000
+	ReaderWeight *int32 `json:"readerWeight,omitempty"`
+
+	// MaxReplicationLag maps to ProxySQL mysql_servers.max_replication_lag: the reader endpoint
+	// is excluded from the read pool once its measured lag exceeds this many seconds. 0
+	// (default) disables the check.
+	// +optional
+	MaxReplicationLag *int32 `json:"maxReplicationLag,omitempty"`
 }
 
 type ProxySQLConfigurationSpec struct {

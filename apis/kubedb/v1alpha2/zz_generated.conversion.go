@@ -4005,7 +4005,11 @@ func autoConvert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec(in *ProxySQLSpec, out 
 	out.InitConfiguration = (*v1.ProxySQLConfiguration)(unsafe.Pointer(in.InitConfiguration))
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.Backend = (*corev1.LocalObjectReference)(unsafe.Pointer(in.Backend))
+	if in.Backend != nil {
+		out.Backend = &v1.ProxySQLBackendSpec{LocalObjectReference: *in.Backend}
+	} else {
+		out.Backend = nil
+	}
 	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
@@ -4030,7 +4034,11 @@ func autoConvert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, o
 	// WARNING: in.Configuration requires manual conversion: does not exist in peer-type
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	out.Backend = (*corev1.LocalObjectReference)(unsafe.Pointer(in.Backend))
+	if in.Backend != nil {
+		out.Backend = &in.Backend.LocalObjectReference
+	} else {
+		out.Backend = nil
+	}
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {

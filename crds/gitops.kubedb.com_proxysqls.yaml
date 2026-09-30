@@ -55,12 +55,40 @@ spec:
                     type: boolean
                 type: object
               backend:
+                description: Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB/AWS-Aurora
+                  server
                 properties:
+                  aurora:
+                    description: Aurora contains AWS Aurora-specific routing/tuning
+                      policy for this ProxySQL instance. Only meaningful when the
+                      referenced AppBinding's spec.type is the AWS Aurora AppType;
+                      ignored otherwise. Two different ProxySQL instances fronting
+                      the same Aurora cluster may set this differently.
+                    properties:
+                      maxReplicationLag:
+                        description: MaxReplicationLag maps to ProxySQL mysql_servers.max_replication_lag;
+                          the reader endpoint is excluded from the read pool once
+                          its measured lag exceeds this many seconds. 0 (default)
+                          disables the check.
+                        format: int32
+                        type: integer
+                      readerWeight:
+                        default: 1000
+                        description: ReaderWeight sets the ProxySQL mysql_servers.weight
+                          for the reader endpoint entry.
+                        format: int32
+                        type: integer
+                      writerWeight:
+                        default: 1000
+                        description: WriterWeight sets the ProxySQL mysql_servers.weight
+                          for the writer/cluster endpoint entry.
+                        format: int32
+                        type: integer
+                    type: object
                   name:
                     default: ""
                     type: string
                 type: object
-                x-kubernetes-map-type: atomic
               configSecret:
                 properties:
                   name:
