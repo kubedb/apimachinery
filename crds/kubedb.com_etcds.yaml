@@ -16,7 +16,7 @@ spec:
     listKind: EtcdList
     plural: etcds
     shortNames:
-    - etcd
+    - et
     singular: etcd
   scope: Namespaced
   versions:

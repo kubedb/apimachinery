@@ -15,7 +15,7 @@ spec:
     listKind: EtcdVersionList
     plural: etcdversions
     shortNames:
-    - etcdversion
+    - etversion
     singular: etcdversion
   scope: Cluster
   versions:
