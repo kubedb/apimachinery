@@ -45064,7 +45064,8 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLSpec(ref common.ReferenceC
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
+				Description: "ProxySQLSpec.Backend is *core.LocalObjectReference here but *v1.ProxySQLBackendSpec in the peer v1 package (added for the Aurora backend, see AuroraBackendSpec), so conversion-gen cannot auto-convert this field and would otherwise emit a permanently-broken autoConvert stub on every regeneration. Convert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec and its reverse in conversion.go are fully hand-written and already used directly by the top-level ProxySQL conversion, so no autoConvert_* variant for this type is needed.",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"autoOps": {
 						SchemaProps: spec.SchemaProps{

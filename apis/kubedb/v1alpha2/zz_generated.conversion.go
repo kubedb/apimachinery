@@ -3997,61 +3997,6 @@ func Convert_v1_ProxySQLList_To_v1alpha2_ProxySQLList(in *v1.ProxySQLList, out *
 	return autoConvert_v1_ProxySQLList_To_v1alpha2_ProxySQLList(in, out, s)
 }
 
-func autoConvert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec(in *ProxySQLSpec, out *v1.ProxySQLSpec, s conversion.Scope) error {
-	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
-		return err
-	}
-	out.SyncUsers = in.SyncUsers
-	out.InitConfiguration = (*v1.ProxySQLConfiguration)(unsafe.Pointer(in.InitConfiguration))
-	out.Version = in.Version
-	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	if in.Backend != nil {
-		out.Backend = &v1.ProxySQLBackendSpec{LocalObjectReference: *in.Backend}
-	} else {
-		out.Backend = nil
-	}
-	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
-	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
-	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	if err := Convert_v1_PodTemplateSpec_To_v2_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
-		return err
-	}
-	out.ServiceTemplates = *(*[]v1.NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
-	// WARNING: in.TerminationPolicy requires manual conversion: does not exist in peer-type
-	out.HealthChecker = in.HealthChecker
-	out.Halted = in.Halted
-	return nil
-}
-
-func autoConvert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, out *ProxySQLSpec, s conversion.Scope) error {
-	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
-		return err
-	}
-	out.SyncUsers = in.SyncUsers
-	out.InitConfiguration = (*ProxySQLConfiguration)(unsafe.Pointer(in.InitConfiguration))
-	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
-	// WARNING: in.Configuration requires manual conversion: does not exist in peer-type
-	out.Version = in.Version
-	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	if in.Backend != nil {
-		out.Backend = &in.Backend.LocalObjectReference
-	} else {
-		out.Backend = nil
-	}
-	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
-	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
-	if err := Convert_v2_PodTemplateSpec_To_v1_PodTemplateSpec(&in.PodTemplate, &out.PodTemplate, s); err != nil {
-		return err
-	}
-	out.ServiceTemplates = *(*[]NamedServiceTemplateSpec)(unsafe.Pointer(&in.ServiceTemplates))
-	out.TLS = (*clientgoapiv1.TLSConfig)(unsafe.Pointer(in.TLS))
-	// WARNING: in.DeletionPolicy requires manual conversion: does not exist in peer-type
-	out.HealthChecker = in.HealthChecker
-	out.Halted = in.Halted
-	return nil
-}
-
 func autoConvert_v1alpha2_ProxySQLStatus_To_v1_ProxySQLStatus(in *ProxySQLStatus, out *v1.ProxySQLStatus, s conversion.Scope) error {
 	out.Phase = v1.DatabasePhase(in.Phase)
 	out.ObservedGeneration = in.ObservedGeneration
