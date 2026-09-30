@@ -156,23 +156,29 @@ type ProxySQLBackendSpec struct {
 	Aurora *AuroraBackendSpec `json:"aurora,omitempty"`
 }
 
-// AuroraBackendSpec configures how this ProxySQL instance routes to an AWS Aurora backend.
+// AuroraBackendSpec configures how this ProxySQL instance routes to an AWS Aurora backend, via
+// ProxySQL's native mysql_aws_aurora_hostgroups mechanism (auto-discovers cluster instances and
+// tracks writer/reader role from Aurora's own information_schema.replica_host_status, rather
+// than polling innodb_read_only through Aurora's floating cluster/reader DNS endpoints).
 type AuroraBackendSpec struct {
-	// WriterWeight sets the ProxySQL mysql_servers.weight for the writer/cluster endpoint entry.
+	// NewReaderWeight sets the ProxySQL mysql_servers.weight assigned to each Aurora reader
+	// instance ProxySQL auto-discovers (mysql_aws_aurora_hostgroups.new_reader_weight).
 	// +optional
 	// +kubebuilder:default=1000
-	WriterWeight *int32 `json:"writerWeight,omitempty"`
+	NewReaderWeight *int32 `json:"newReaderWeight,omitempty"`
 
-	// ReaderWeight sets the ProxySQL mysql_servers.weight for the reader endpoint entry.
+	// MaxLagMs excludes an Aurora reader instance from the read pool once its measured
+	// replication lag exceeds this many milliseconds (mysql_aws_aurora_hostgroups.max_lag_ms).
+	// +optional
+	// +kubebuilder:default=600000
+	MaxLagMs *int32 `json:"maxLagMs,omitempty"`
+
+	// CheckIntervalMs controls how often ProxySQL polls Aurora's replica_host_status for
+	// topology/role changes (mysql_aws_aurora_hostgroups.check_interval_ms). Lower values
+	// detect a failover faster at the cost of more frequent checks.
 	// +optional
 	// +kubebuilder:default=1000
-	ReaderWeight *int32 `json:"readerWeight,omitempty"`
-
-	// MaxReplicationLag maps to ProxySQL mysql_servers.max_replication_lag: the reader endpoint
-	// is excluded from the read pool once its measured lag exceeds this many seconds. 0
-	// (default) disables the check.
-	// +optional
-	MaxReplicationLag *int32 `json:"maxReplicationLag,omitempty"`
+	CheckIntervalMs *int32 `json:"checkIntervalMs,omitempty"`
 }
 
 type ProxySQLConfigurationSpec struct {

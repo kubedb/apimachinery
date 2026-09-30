@@ -60,28 +60,31 @@ spec:
                 properties:
                   aurora:
                     description: Aurora contains AWS Aurora-specific routing/tuning
-                      policy for this ProxySQL instance. Only meaningful when the
-                      referenced AppBinding's spec.type is the AWS Aurora AppType;
-                      ignored otherwise. Two different ProxySQL instances fronting
-                      the same Aurora cluster may set this differently.
+                      policy for this ProxySQL instance, via ProxySQL's native
+                      mysql_aws_aurora_hostgroups mechanism. Only meaningful when
+                      the referenced AppBinding's spec.type is the AWS Aurora
+                      AppType; ignored otherwise. Two different ProxySQL instances
+                      fronting the same Aurora cluster may set this differently.
                     properties:
-                      maxReplicationLag:
-                        description: MaxReplicationLag maps to ProxySQL mysql_servers.max_replication_lag;
-                          the reader endpoint is excluded from the read pool once
-                          its measured lag exceeds this many seconds. 0 (default)
-                          disables the check.
+                      checkIntervalMs:
+                        default: 1000
+                        description: CheckIntervalMs controls how often ProxySQL
+                          polls Aurora's replica_host_status for topology/role
+                          changes. Lower values detect a failover faster at the
+                          cost of more frequent checks.
                         format: int32
                         type: integer
-                      readerWeight:
-                        default: 1000
-                        description: ReaderWeight sets the ProxySQL mysql_servers.weight
-                          for the reader endpoint entry.
+                      maxLagMs:
+                        default: 600000
+                        description: MaxLagMs excludes an Aurora reader instance
+                          from the read pool once its measured replication lag
+                          exceeds this many milliseconds.
                         format: int32
                         type: integer
-                      writerWeight:
+                      newReaderWeight:
                         default: 1000
-                        description: WriterWeight sets the ProxySQL mysql_servers.weight
-                          for the writer/cluster endpoint entry.
+                        description: NewReaderWeight sets the ProxySQL mysql_servers.weight
+                          assigned to each Aurora reader instance ProxySQL auto-discovers.
                         format: int32
                         type: integer
                     type: object

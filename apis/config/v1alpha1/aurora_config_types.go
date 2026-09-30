@@ -39,12 +39,13 @@ const (
 type AuroraConfiguration struct {
 	metav1.TypeMeta `json:",inline"`
 
-	// ReaderEndpoint is the Aurora cluster's reader endpoint (DNS name), used for read-only
-	// query routing. If empty, consumers derive it from the AppBinding's own clientConfig host
-	// (the writer/cluster endpoint) using AWS's stable
-	// "xxx.cluster-XXXX.<region>.rds.amazonaws.com" -> "xxx.cluster-ro-XXXX.<region>.rds.amazonaws.com"
-	// naming convention. Set this explicitly for Aurora Global Database secondary regions or
-	// custom endpoints that don't follow that convention.
+	// DomainName is the FQDN suffix (starting with a dot, e.g.
+	// ".xxxxx.<region>.rds.amazonaws.com") ProxySQL's native Aurora monitor appends to each
+	// discovered instance identifier to build its hostname — see mysql_aws_aurora_hostgroups.
+	// If empty, consumers derive it from the AppBinding's own clientConfig host (the
+	// writer/cluster endpoint) by stripping the leading "<cluster-id>.cluster-" label. Set this
+	// explicitly for Aurora Global Database secondary regions or custom endpoints that don't
+	// follow that convention.
 	// +optional
-	ReaderEndpoint string `json:"readerEndpoint,omitempty"`
+	DomainName string `json:"domainName,omitempty"`
 }
