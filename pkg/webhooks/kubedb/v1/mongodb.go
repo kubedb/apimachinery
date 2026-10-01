@@ -106,7 +106,8 @@ func (w MongoDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 	}
 	log := logf.FromContext(ctx)
 	log.Info("creating MongoDB")
-	return nil, w.ValidateMongoDB(obj.(*dbapi.MongoDB))
+	db := obj.(*dbapi.MongoDB)
+	return mongoDBServiceTemplateWarnings(db), w.ValidateMongoDB(db)
 }
 
 func (w MongoDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
@@ -138,7 +139,11 @@ func (w MongoDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj
 	if err := w.validateUpdate(mongodb, oldMongoDB); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return nil, w.ValidateMongoDB(mongodb)
+	return mongoDBServiceTemplateWarnings(mongodb), w.ValidateMongoDB(mongodb)
+}
+
+func mongoDBServiceTemplateWarnings(db *dbapi.MongoDB) admission.Warnings {
+	return amv.ServiceTemplateAliasWarnings(db.Spec.ServiceTemplates, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)
 }
 
 func (w MongoDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {

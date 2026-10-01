@@ -87,7 +87,7 @@ func (w *ClickHouseCustomWebhook) ValidateCreate(ctx context.Context, obj runtim
 		return nil, fmt.Errorf("expected an ClickHouse object but got %T", obj)
 	}
 	clickhouselog.Info("validate create", "name", db.Name)
-	return nil, w.ValidateCreateOrUpdate(db)
+	return clickHouseServiceTemplateWarnings(db), w.ValidateCreateOrUpdate(db)
 }
 
 // ValidateUpdate implements webhook.Validator so a webhook will be registered for the type
@@ -100,7 +100,11 @@ func (w *ClickHouseCustomWebhook) ValidateUpdate(ctx context.Context, old, newOb
 		return nil, fmt.Errorf("expected an ClickHouse object but got %T", newObj)
 	}
 	clickhouselog.Info("validate update", "name", db.Name)
-	return nil, w.ValidateCreateOrUpdate(db)
+	return clickHouseServiceTemplateWarnings(db), w.ValidateCreateOrUpdate(db)
+}
+
+func clickHouseServiceTemplateWarnings(db *olddbapi.ClickHouse) admission.Warnings {
+	return amv.ServiceTemplateAliasWarnings(*(*[]dbapi.NamedServiceTemplateSpec)(unsafe.Pointer(&db.Spec.ServiceTemplates)), dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)
 }
 
 // ValidateDelete implements webhook.Validator so a webhook will be registered for the type
