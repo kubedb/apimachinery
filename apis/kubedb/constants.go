@@ -2662,3 +2662,32 @@ const (
 	EtcdEnvListenClientURLs         = "ETCD_LISTEN_CLIENT_URLS"
 	EtcdEnvAdvertiseClientURLs      = "ETCD_ADVERTISE_CLIENT_URLS"
 )
+
+// Milvus archiver (base backup and point-in-time recovery).
+const (
+	MilvusSidekickSuffix             = "sidekick"
+	MilvusArchiverBackupConfigSuffix = "archiver"
+	MilvusIncrementalSnapshotSuffix  = "incremental-snapshot"
+	// ArchiverSkipLabel opts a database out of archiver auto-attachment when set to "true".
+	ArchiverSkipLabel = GroupName + "/archiver-skip"
+	// MilvusArchiverSkipLabel is set on the Etcd owned by a Milvus so that a user
+	// EtcdArchiver never auto-attaches to it: its data is only consistent together
+	// with the object storage and is captured by the MilvusArchiver.
+	MilvusArchiverSkipLabel = ArchiverSkipLabel
+
+	MilvusArchiverLastArchivedRevAnnotation = "archiver." + GroupName + "/last-archived-rev"
+	MilvusArchiverFullBackupRunning         = "archiver." + GroupName + "/full-backup-running"
+
+	// Snapshot components written by the Milvus physical backup.
+	MilvusComponentMeta     = "meta"
+	MilvusComponentObjects  = "objects"
+	MilvusComponentLocalWAL = "local-wal"
+
+	// Condition types.
+	MilvusLogBackupLagging        = "LogBackupLagging"
+	MilvusLogBackupDegraded       = "LogBackupDegraded"
+	MilvusLogBackupGap            = "LogBackupGap"
+	MilvusArchiverRecoveryPlanned = "ArchiverRecoveryPlanned"
+	MilvusManifestRestored        = "ManifestRestored"
+	MilvusPITRUnsupported         = "PITRUnsupported"
+)

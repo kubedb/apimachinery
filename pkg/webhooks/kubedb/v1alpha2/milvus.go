@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -116,6 +117,9 @@ func (m *MilvusCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 	milvuslog.Info("validate update", "name", db.Name)
 
 	warnings, allErr := m.ValidateCreateOrUpdate(db)
+	if oldDB, ok := old.(*olddbapi.Milvus); ok {
+		allErr = append(allErr, milvusValidateArchiverImmutability(oldDB, db)...)
+	}
 	if len(allErr) == 0 {
 		return warnings, nil
 	}
@@ -239,11 +243,81 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 		}
 	}
 
+	allErr = append(allErr, milvusValidateArchiver(db)...)
+
 	if len(allErr) == 0 {
 		return warnings, nil
 	}
 
 	return warnings, allErr
+}
+
+// milvusValidateArchiver validates the WAL selection, the archiver reference
+// and the restore (init.archiver) request.
+func milvusValidateArchiver(db *olddbapi.Milvus) field.ErrorList {
+	var errs field.ErrorList
+	spec := field.NewPath("spec")
+
+	if db.Spec.WAL != nil && db.Spec.WAL.Type != "" {
+		if db.IsDistributed() && db.Spec.WAL.Type != olddbapi.MilvusWALWoodpecker {
+			errs = append(errs, field.Invalid(spec.Child("wal", "type"), db.Spec.WAL.Type,
+				"a Distributed Milvus always uses the Woodpecker WAL"))
+		}
+	}
+
+	usesArchiver := db.Spec.Archiver != nil || (db.Spec.Init != nil && db.Spec.Init.Archiver != nil)
+	if !usesArchiver {
+		return errs
+	}
+	// The Woodpecker WAL metadata is stored at the etcd root, so an etcd shared with other
+	// databases would collide, and a restore must own the whole keyspace.
+	if db.Spec.MetaStorage != nil && db.Spec.MetaStorage.ExternallyManaged {
+		errs = append(errs, field.Invalid(spec.Child("metaStorage", "externallyManaged"), true,
+			"the archiver and archive recovery need a KubeDB-managed meta etcd dedicated to this Milvus"))
+	}
+	if strings.HasPrefix(db.Spec.Version, "3.") {
+		errs = append(errs, field.Invalid(spec.Child("version"), db.Spec.Version,
+			"the Milvus archiver is not validated for Milvus 3.x yet"))
+	}
+	if ini := db.Spec.Init; ini != nil && ini.Archiver != nil {
+		a := ini.Archiver
+		if a.RecoveryTimestamp.IsZero() {
+			errs = append(errs, field.Required(spec.Child("init", "archiver", "recoveryTimestamp"), "recoveryTimestamp is required"))
+		}
+		if a.FullDBRepository == nil || a.FullDBRepository.Name == "" {
+			errs = append(errs, field.Required(spec.Child("init", "archiver", "fullDBRepository"), "fullDBRepository is required to restore a Milvus"))
+		}
+		if a.EncryptionSecret == nil || a.EncryptionSecret.Name == "" {
+			errs = append(errs, field.Required(spec.Child("init", "archiver", "encryptionSecret"), "encryptionSecret is required to read the encrypted backup"))
+		}
+	}
+	return errs
+}
+
+// milvusValidateArchiverImmutability protects settings that cannot change once the database exists.
+func milvusValidateArchiverImmutability(oldDB, db *olddbapi.Milvus) field.ErrorList {
+	var errs field.ErrorList
+	spec := field.NewPath("spec")
+
+	oldWAL, newWAL := oldDB.WALType(), db.WALType()
+	if oldWAL != newWAL {
+		errs = append(errs, field.Invalid(spec.Child("wal", "type"), db.Spec.WAL,
+			fmt.Sprintf("the WAL type cannot be changed after creation (was %s)", oldWAL)))
+	}
+	if oldDB.Spec.Init != nil && oldDB.Spec.Init.Initialized {
+		if !reflect.DeepEqual(oldDB.Spec.Init.Archiver, safeInitArchiver(db)) {
+			errs = append(errs, field.Forbidden(spec.Child("init", "archiver"),
+				"init.archiver cannot be changed after the database was initialized"))
+		}
+	}
+	return errs
+}
+
+func safeInitArchiver(db *olddbapi.Milvus) *olddbapi.ArchiverRecovery {
+	if db.Spec.Init == nil {
+		return nil
+	}
+	return db.Spec.Init.Archiver
 }
 
 // reserved volume and volumes mounts for milvus

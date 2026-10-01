@@ -74,6 +74,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().MSSQLServerArchivers().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("mariadbarchivers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().MariaDBArchivers().Informer()}, nil
+	case v1alpha1.SchemeGroupVersion.WithResource("milvusarchivers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().MilvusArchivers().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("mongodbarchivers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Archiver().V1alpha1().MongoDBArchivers().Informer()}, nil
 	case v1alpha1.SchemeGroupVersion.WithResource("mysqlarchivers"):

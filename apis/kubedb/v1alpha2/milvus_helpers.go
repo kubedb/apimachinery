@@ -601,6 +601,46 @@ func setDefaultGPUAndNetwork(gpu *MilvusGPUSpec, network *MilvusNetworkSpec) {
 	}
 }
 
+// WALType returns the effective write-ahead log type.
+func (m *Milvus) WALType() MilvusWALType {
+	if m.IsDistributed() {
+		return MilvusWALWoodpecker
+	}
+	if m.Spec.WAL != nil && m.Spec.WAL.Type != "" {
+		return m.Spec.WAL.Type
+	}
+	return MilvusWALRocksMQ
+}
+
+// SupportsPITR reports whether a change log can be recorded for this Milvus.
+func (m *Milvus) SupportsPITR() bool {
+	return m.WALType() == MilvusWALWoodpecker
+}
+
+// SidekickName is the name of the continuous archiver sidekick.
+func (m *Milvus) SidekickName() string {
+	return m.Name + "-" + kubedb.MilvusSidekickSuffix
+}
+
+// SidekickLabels returns the labels of the archiver sidekick.
+func (m *Milvus) SidekickLabels(skName string) map[string]string {
+	return meta_util.OverwriteKeys(nil, kubedb.CommonSidekickLabels(), map[string]string{
+		meta_util.ComponentLabelKey: skName,
+		kubedb.SidekickOwnerName:    m.Name,
+		kubedb.SidekickOwnerKind:    m.ResourceFQN(),
+	})
+}
+
+// ArchiverBackupConfigName is the KubeStash BackupConfiguration created for the archiver.
+func (m *Milvus) ArchiverBackupConfigName() string {
+	return m.Name + "-" + kubedb.MilvusArchiverBackupConfigSuffix
+}
+
+// IncrementalSnapshotName is the Snapshot that carries the change-log window.
+func (m *Milvus) IncrementalSnapshotName() string {
+	return m.Name + "-" + kubedb.MilvusIncrementalSnapshotSuffix
+}
+
 func (m *Milvus) SetDefaults(kc client.Client) {
 	if m.Spec.DeletionPolicy == "" {
 		m.Spec.DeletionPolicy = DeletionPolicyDelete
@@ -644,6 +684,8 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 	}
 
 	m.setMetaStorageDefaults()
+
+	m.setArchiverDefaults()
 
 	m.SetHealthCheckerDefaults()
 
@@ -871,4 +913,29 @@ func (m *Milvus) GetDeletionPolicy() string {
 
 func (m *Milvus) AsOwner() *metav1.OwnerReference {
 	return metav1.NewControllerRef(m, SchemeGroupVersion.WithKind(m.ResourceKind()))
+}
+
+func (m *Milvus) setArchiverDefaults() {
+	if !m.IsDistributed() {
+		if m.Spec.WAL == nil {
+			m.Spec.WAL = &MilvusWALSpec{}
+		}
+		if m.Spec.WAL.Type == "" {
+			m.Spec.WAL.Type = MilvusWALRocksMQ
+		}
+	} else if m.Spec.WAL != nil && m.Spec.WAL.Type == "" {
+		m.Spec.WAL.Type = MilvusWALWoodpecker
+	}
+	if m.Spec.Init != nil && m.Spec.Init.Archiver != nil {
+		a := m.Spec.Init.Archiver
+		if a.EncryptionSecret != nil && a.EncryptionSecret.Namespace == "" {
+			a.EncryptionSecret.Namespace = m.GetNamespace()
+		}
+		if a.FullDBRepository != nil && a.FullDBRepository.Namespace == "" {
+			a.FullDBRepository.Namespace = m.GetNamespace()
+		}
+		if a.ManifestRepository != nil && a.ManifestRepository.Namespace == "" {
+			a.ManifestRepository.Namespace = m.GetNamespace()
+		}
+	}
 }

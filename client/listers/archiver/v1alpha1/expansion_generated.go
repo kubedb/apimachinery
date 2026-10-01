@@ -50,6 +50,14 @@ type MariaDBArchiverListerExpansion interface{}
 // MariaDBArchiverNamespaceLister.
 type MariaDBArchiverNamespaceListerExpansion interface{}
 
+// MilvusArchiverListerExpansion allows custom methods to be added to
+// MilvusArchiverLister.
+type MilvusArchiverListerExpansion interface{}
+
+// MilvusArchiverNamespaceListerExpansion allows custom methods to be added to
+// MilvusArchiverNamespaceLister.
+type MilvusArchiverNamespaceListerExpansion interface{}
+
 // MongoDBArchiverListerExpansion allows custom methods to be added to
 // MongoDBArchiverLister.
 type MongoDBArchiverListerExpansion interface{}

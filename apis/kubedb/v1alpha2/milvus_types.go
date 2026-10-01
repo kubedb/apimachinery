@@ -128,6 +128,43 @@ type MilvusSpec struct {
 	// per-role under spec.topology.distributed.<role>.gpu.
 	// +optional
 	GPU *MilvusGPUSpec `json:"gpu,omitempty"`
+
+	// Init is used to initialize the database from an archiver: a full backup
+	// (and, when the archiver records a change log, the log up to a recovery
+	// timestamp) is restored into this new Milvus before it starts.
+	// +optional
+	Init *InitSpec `json:"init,omitempty"`
+
+	// Archiver controls the continuous archiver (base backups and point-in-time
+	// recovery) of this database. It references a MilvusArchiver that also
+	// selects this database (double opt-in).
+	// +optional
+	Archiver *Archiver `json:"archiver,omitempty"`
+
+	// WAL selects the write-ahead log (message storage) of a Standalone Milvus.
+	// Point-in-time recovery needs the Woodpecker WAL on the object storage.
+	// A Distributed Milvus always uses Woodpecker. It cannot be changed after creation.
+	// +optional
+	WAL *MilvusWALSpec `json:"wal,omitempty"`
+}
+
+// MilvusWALType is the write-ahead log implementation.
+// +kubebuilder:validation:Enum=RocksMQ;Woodpecker
+type MilvusWALType string
+
+const (
+	// MilvusWALRocksMQ keeps the WAL in a RocksDB directory on the data PVC (Standalone default).
+	MilvusWALRocksMQ MilvusWALType = "RocksMQ"
+	// MilvusWALWoodpecker keeps the WAL as objects in the object storage bucket.
+	MilvusWALWoodpecker MilvusWALType = "Woodpecker"
+)
+
+// +k8s:deepcopy-gen=true
+// MilvusWALSpec configures the write-ahead log.
+type MilvusWALSpec struct {
+	// Type of the WAL. Defaults to RocksMQ for Standalone and Woodpecker for Distributed.
+	// +optional
+	Type MilvusWALType `json:"type,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
