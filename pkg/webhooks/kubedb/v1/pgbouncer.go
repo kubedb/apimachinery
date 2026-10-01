@@ -47,7 +47,7 @@ import (
 // SetupPgBouncerWebhookWithManager registers the webhook for PgBouncer in the manager.
 func SetupPgBouncerWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.PgBouncer{}).
-		WithValidator(&PgBouncerCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&PgBouncerCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&PgBouncerCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

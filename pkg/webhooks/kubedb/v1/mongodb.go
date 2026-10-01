@@ -51,7 +51,7 @@ import (
 // SetupMongoDBWebhookWithManager registers the webhook for MongoDB in the manager.
 func SetupMongoDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MongoDB{}).
-		WithValidator(&MongoDBCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MongoDBCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MongoDBCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -106,8 +106,7 @@ func (w MongoDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 	}
 	log := logf.FromContext(ctx)
 	log.Info("creating MongoDB")
-	db := obj.(*dbapi.MongoDB)
-	return mongoDBServiceTemplateWarnings(db), w.ValidateMongoDB(db)
+	return nil, w.ValidateMongoDB(obj.(*dbapi.MongoDB))
 }
 
 func (w MongoDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj runtime.Object) (warnings admission.Warnings, err error) {
@@ -139,11 +138,7 @@ func (w MongoDBCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, newObj
 	if err := w.validateUpdate(mongodb, oldMongoDB); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
-	return mongoDBServiceTemplateWarnings(mongodb), w.ValidateMongoDB(mongodb)
-}
-
-func mongoDBServiceTemplateWarnings(db *dbapi.MongoDB) admission.Warnings {
-	return amv.ServiceTemplateAliasWarnings(db.Spec.ServiceTemplates, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)
+	return nil, w.ValidateMongoDB(mongodb)
 }
 
 func (w MongoDBCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {

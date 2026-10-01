@@ -48,7 +48,7 @@ import (
 // SetupMemcachedWebhookWithManager registers the webhook for Memcached in the manager.
 func SetupMemcachedWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Memcached{}).
-		WithValidator(&MemcachedCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MemcachedCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MemcachedCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }

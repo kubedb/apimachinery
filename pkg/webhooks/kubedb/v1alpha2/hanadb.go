@@ -22,6 +22,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	api "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -45,7 +46,7 @@ import (
 // SetupHanaDBWebhookWithManager registers the webhook for HanaDB in the manager.
 func SetupHanaDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&api.HanaDB{}).
-		WithValidator(&HanaDBCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&HanaDBCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&HanaDBCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

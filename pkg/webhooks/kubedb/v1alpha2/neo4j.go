@@ -46,7 +46,7 @@ import (
 // SetupNeo4jWebhookWithManager registers the webhook for Neo4j in the manager.
 func SetupNeo4jWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Neo4j{}).
-		WithValidator(&Neo4jCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&Neo4jCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&Neo4jCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

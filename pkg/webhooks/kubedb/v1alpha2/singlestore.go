@@ -22,6 +22,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -42,7 +43,7 @@ import (
 // SetupSinglestoreWebhookWithManager registers the webhook for Singlestore in the manager.
 func SetupSinglestoreWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Singlestore{}).
-		WithValidator(&SinglestoreCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&SinglestoreCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&SinglestoreCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

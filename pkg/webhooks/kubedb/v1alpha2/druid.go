@@ -23,6 +23,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -42,7 +43,7 @@ import (
 // SetupDruidWebhookWithManager registers the webhook for Druid in the manager.
 func SetupDruidWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Druid{}).
-		WithValidator(&DruidCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&DruidCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&DruidCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

@@ -48,7 +48,7 @@ import (
 // SetupOracleWebhookWithManager registers the webhook for Oracle in the manager.
 func SetupOracleWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Oracle{}).
-		WithValidator(&OracleCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&OracleCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&OracleCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
