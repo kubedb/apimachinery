@@ -866,6 +866,10 @@ func (p *Postgres) setLogForwarderDefaults() {
 	if lf == nil {
 		return
 	}
+	lf.SetCollectionDefaults()
+	if lf.CollectionMode == LogCollectionModeNodeAgent || lf.Exporter != nil {
+		return
+	}
 	if lf.Enabled == nil {
 		lf.Enabled = ptr.To(true)
 	}
@@ -878,7 +882,7 @@ func (p *Postgres) setLogForwarderDefaults() {
 		lf.Destination.TLS.Mode = LogForwarderTLSModeVerify
 	}
 	for i := range lf.Sources {
-		if lf.Sources[i].InitialPosition == "" {
+		if lf.Sources[i].InitialPosition == "" && lf.Sources[i].FileLog == nil {
 			lf.Sources[i].InitialPosition = LogInitialPositionEnd
 		}
 	}

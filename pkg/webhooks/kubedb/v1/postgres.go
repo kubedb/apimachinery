@@ -29,7 +29,6 @@ import (
 	"github.com/Masterminds/semver/v3"
 	"github.com/pkg/errors"
 	"gomodules.xyz/pointer"
-	core "k8s.io/api/core/v1"
 	kerr "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -749,24 +748,22 @@ func validatePostgresInlineConfig(inline map[string]string) error {
 // validateLogForwarder validates the native log-forwarder feature; no-op when absent/disabled.
 func (wh *PostgresCustomWebhook) validateLogForwarder(postgres *dbapi.Postgres, pgVersion *catalogapi.PostgresVersion) error {
 	lf := postgres.Spec.LogForwarder
-	if lf == nil || (lf.Enabled != nil && !*lf.Enabled) {
+	if lf == nil {
+		return nil
+	}
+	if err := lf.ValidateCollection(); err != nil {
+		return fmt.Errorf("spec.logForwarder: %w", err)
+	}
+	if lf.Enabled != nil && !*lf.Enabled {
 		return nil
 	}
 	if lf.RolloutPolicy == dbapi.LogForwarderRolloutAutomatic {
 		return fmt.Errorf("spec.logForwarder.rolloutPolicy Automatic is not supported; use Manual and a restart OpsRequest")
 	}
-	if (lf.Destination.Profile != "") == (lf.Destination.ExporterConfig != "") {
+	if lf.CollectionMode != dbapi.LogCollectionModeNodeAgent && lf.Exporter == nil && (lf.Destination.Profile != "") == (lf.Destination.ExporterConfig != "") {
 		return fmt.Errorf("spec.logForwarder.destination: exactly one of profile or exporterConfig must be set")
 	}
-	if m := lf.StateStorage.AccessModes; len(m) != 1 || m[0] != core.ReadWriteOnce {
-		return fmt.Errorf("spec.logForwarder.stateStorage must use exactly [ReadWriteOnce]")
-	}
-	if lf.StateStorage.VolumeMode != nil && *lf.StateStorage.VolumeMode != core.PersistentVolumeFilesystem {
-		return fmt.Errorf("spec.logForwarder.stateStorage must use the Filesystem volumeMode")
-	}
-	if qty, ok := lf.StateStorage.Resources.Requests[core.ResourceStorage]; !ok || qty.IsZero() {
-		return fmt.Errorf("spec.logForwarder.stateStorage must request a positive storage capacity")
-	}
+	// Shared validation handles mode-dependent state storage.
 	if len(pgVersion.Spec.LogCapabilities) > 0 {
 		supported := map[string]bool{}
 		for _, c := range pgVersion.Spec.LogCapabilities {
@@ -779,7 +776,7 @@ func (wh *PostgresCustomWebhook) validateLogForwarder(postgres *dbapi.Postgres, 
 		}
 	}
 	for _, c := range postgres.Spec.PodTemplate.Spec.Containers {
-		if c.Name == kubedb.LogForwarderContainerName {
+		if lf.CollectionMode != dbapi.LogCollectionModeNodeAgent && c.Name == kubedb.LogForwarderContainerName {
 			return fmt.Errorf("spec.podTemplate: container name %q is reserved by native logForwarder", kubedb.LogForwarderContainerName)
 		}
 	}

@@ -29120,6 +29120,542 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogBatchProcessor": {
+      "description": "LogBatchProcessor configures only the managed batch processor.",
+      "type": "object",
+      "properties": {
+        "sendBatchMaxSize": {
+          "description": "Zero means no maximum, as in the native Collector.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "sendBatchSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "timeout": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogDatadogAPI": {
+      "type": "object",
+      "required": [
+        "site",
+        "keySecretRef"
+      ],
+      "properties": {
+        "keySecretRef": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "site": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogDatadogExporter": {
+      "type": "object",
+      "required": [
+        "api"
+      ],
+      "properties": {
+        "api": {
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogDatadogAPI"
+        },
+        "retryOnFailure": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogRetryOnFailure"
+        },
+        "sendingQueue": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSendingQueue"
+        },
+        "tls": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogForwarderTLS"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogDeliverySpec": {
+      "description": "LogDeliverySpec tunes batching, the persistent sending queue, and retry behavior.",
+      "type": "object",
+      "properties": {
+        "onQueueFull": {
+          "description": "OnQueueFull selects behavior when the sending queue is saturated. Backpressure pauses log tailing (never the database); Drop discards new records.",
+          "type": "string"
+        },
+        "queueCapacityRequests": {
+          "description": "QueueCapacityRequests is the maximum number of export requests buffered in the persistent sending queue. This bounds requests, not bytes.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "retryInitialInterval": {
+          "description": "RetryInitialInterval is the delay before the first retry of a retryable failure.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "retryMaxElapsedTime": {
+          "description": "RetryMaxElapsedTime bounds total retry time; zero means retry retryable errors forever.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "retryMaxInterval": {
+          "description": "RetryMaxInterval caps the exponential backoff between retries.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "workers": {
+          "description": "Workers is the number of concurrent senders draining the queue.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogDestinationSpec": {
+      "description": "LogDestinationSpec describes a single observability backend and how to reach it. Exactly one of Profile or ExporterConfig must be set.",
+      "type": "object",
+      "properties": {
+        "endpoint": {
+          "description": "Endpoint is the backend URL or host the exporter connects to. Its interpretation depends on the profile/exporter (an OTLP base URL, a Splunk HEC URL, a syslog host, and so on).",
+          "type": "string"
+        },
+        "exporterConfig": {
+          "description": "ExporterConfig is a raw OpenTelemetry Collector exporter configuration block for backends without a shipped profile. It is spliced into the generated pipeline verbatim. Reference credentials with ${env:...} placeholders resolved from SecretRef; never inline secret values. Mutually exclusive with Profile.",
+          "type": "string"
+        },
+        "extraExtensions": {
+          "description": "ExtraExtensions is an optional raw collector \"extensions\" fragment (for example an oauth2client extension required by an OAuth2 backend).",
+          "type": "string"
+        },
+        "extraProcessors": {
+          "description": "ExtraProcessors is an optional raw collector \"processors\" fragment appended to the logs pipeline (for example a transform processor required by the syslog exporter).",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name is a stable identifier for this destination. It names the exporter component and its persistent queue, so it must not change while delivery state is pending.",
+          "type": "string"
+        },
+        "profile": {
+          "description": "Profile selects a KubeDB-shipped exporter profile (for example \"splunk\", \"elastic\", \"datadog\", \"loki\", \"otlphttp\", or \"syslog\"). Mutually exclusive with ExporterConfig.",
+          "type": "string"
+        },
+        "secretRef": {
+          "description": "SecretRef references a same-namespace Secret whose keys are projected as environment variables into the sidecar (envFrom), resolving ${env:...} placeholders in the exporter configuration. The operator consumes but never owns or deletes this Secret.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "tls": {
+          "description": "TLS configures transport security for the connection to the backend.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogForwarderTLS"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogElasticsearchExporter": {
+      "description": "LogElasticsearchExporter preserves Elasticsearch's distinct retry schema.",
+      "type": "object",
+      "required": [
+        "endpoints"
+      ],
+      "properties": {
+        "apiKeySecretRef": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "default": ""
+          }
+        },
+        "logsIndex": {
+          "type": "string"
+        },
+        "mapping": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogElasticsearchMapping"
+        },
+        "retry": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogElasticsearchRetry"
+        },
+        "sendingQueue": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSendingQueue"
+        },
+        "tls": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogForwarderTLS"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogElasticsearchMapping": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "description": "Mode must be supported by the pinned exporter and destination version.",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogElasticsearchRetry": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "initialInterval": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "maxInterval": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "maxRetries": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogExporterAuth": {
+      "description": "LogExporterAuth selects non-optional keys from same-namespace Secrets.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "headerName": {
+          "type": "string"
+        },
+        "passwordSecretRef": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "tokenSecretRef": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "type": {
+          "type": "string",
+          "default": ""
+        },
+        "usernameSecretRef": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "valueSecretRef": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogExporterSpec": {
+      "description": "LogExporterSpec selects exactly one compiled Collector exporter. Name is part of persistent delivery identity, not a license to rename queues.",
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "datadog": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogDatadogExporter"
+        },
+        "elasticsearch": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogElasticsearchExporter"
+        },
+        "name": {
+          "type": "string"
+        },
+        "otlpHttp": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogOTLPHTTPExporter"
+        },
+        "splunkHec": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSplunkHECExporter"
+        },
+        "syslog": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSyslogExporter"
+        },
+        "type": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogFileLogReceiver": {
+      "description": "LogFileLogReceiver tunes a managed reader. Paths and parsers are operator-owned.",
+      "type": "object",
+      "properties": {
+        "maxLogSize": {
+          "description": "MaxLogSize uses Collector sizes, for example 1MiB.",
+          "type": "string"
+        },
+        "pollInterval": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "startAt": {
+          "description": "StartAt applies only to files without saved checkpoints.",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogForwarderSpec": {
+      "description": "LogForwarderSpec selects managed file collection or platform-owned node collection. NodeAgent configures supported container output; the platform owns its Collector. Canonical exporter fields are additive; legacy destination/delivery remain supported.",
+      "type": "object",
+      "properties": {
+        "collectionMode": {
+          "description": "CollectionMode defaults to Sidecar for existing manifests.",
+          "type": "string"
+        },
+        "delivery": {
+          "description": "Delivery is deprecated; use exporter-local sendingQueue and retry settings.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogDeliverySpec"
+        },
+        "destination": {
+          "description": "Destination is deprecated; use Exporter. Existing manifests retain their behavior.",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogDestinationSpec"
+        },
+        "enabled": {
+          "description": "Enabled toggles log forwarding while retaining the generated configuration and the per-pod state PVCs. It defaults to true when logForwarder is present.",
+          "type": "boolean"
+        },
+        "exporter": {
+          "description": "Exporter is the canonical typed Sidecar destination.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogExporterSpec"
+        },
+        "processors": {
+          "description": "Processors tunes managed Sidecar batching, not arbitrary pipelines.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogProcessors"
+        },
+        "resources": {
+          "description": "Resources are the compute resources for the log-forwarder sidecar container.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.ResourceRequirements"
+        },
+        "rolloutPolicy": {
+          "description": "RolloutPolicy controls how pending log-forwarder changes are activated. Manual (default) requires the normal restart OpsRequest; Automatic performs a serialized, health-aware restart.",
+          "type": "string"
+        },
+        "securityContext": {
+          "description": "SecurityContext is applied to the log-forwarder sidecar container on top of the operator's safe defaults (non-root, dropped capabilities, read-only root filesystem).",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecurityContext"
+        },
+        "sourceStorage": {
+          "description": "SourceStorage overrides managed Sidecar source storage where supported.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSourceStorage"
+        },
+        "sources": {
+          "description": "Sources selects which database log streams to forward. Each entry must name a log source advertised by the database version's log capabilities.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSourceSpec"
+          },
+          "x-kubernetes-list-map-keys": [
+            "name"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "name",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "stateStorage": {
+          "description": "StateStorage is the per-pod PVC template that persists receiver offsets and the exporter sending queue. It must be a filesystem, ReadWriteOnce volume; never shared across pods.",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogForwarderTLS": {
+      "description": "LogForwarderTLS configures transport security to the backend.",
+      "type": "object",
+      "properties": {
+        "caSecretRef": {
+          "description": "CASecretRef optionally selects a Secret key holding a CA bundle used to verify the backend certificate when a private CA is used. System trust is used when omitted.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "clientCertSecretRef": {
+          "description": "ClientCertSecretRef and ClientKeySecretRef form an optional mTLS client-certificate pair. Both must be set together.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "clientKeySecretRef": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        },
+        "mode": {
+          "description": "Mode selects TLS behavior: Disabled for plain internal HTTP, or Verify to validate the backend's server certificate.",
+          "type": "string"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogOTLPHTTPExporter": {
+      "description": "LogOTLPHTTPExporter configures native OTLP/HTTP export.",
+      "type": "object",
+      "properties": {
+        "auth": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogExporterAuth"
+        },
+        "endpoint": {
+          "description": "Endpoint is a base URL; LogsEndpoint is a complete logs URL.",
+          "type": "string"
+        },
+        "logsEndpoint": {
+          "type": "string"
+        },
+        "retryOnFailure": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogRetryOnFailure"
+        },
+        "sendingQueue": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSendingQueue"
+        },
+        "tls": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogForwarderTLS"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogProcessors": {
+      "type": "object",
+      "properties": {
+        "batch": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogBatchProcessor"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogRetryOnFailure": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "initialInterval": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "maxElapsedTime": {
+          "description": "MaxElapsedTime of zero means unlimited retry of retryable failures.",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        },
+        "maxInterval": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Duration"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSendingQueue": {
+      "description": "LogSendingQueue bounds export requests, not bytes. KubeDB wires persistence. Blocking overflow does not guarantee backend delivery or block DB writes.",
+      "type": "object",
+      "properties": {
+        "blockOnOverflow": {
+          "type": "boolean"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "numConsumers": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "queueSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSourceSpec": {
+      "description": "LogSourceSpec selects one database log stream to forward.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "fileLog": {
+          "description": "FileLog tunes a Sidecar file receiver; checkpoints take precedence.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogFileLogReceiver"
+        },
+        "initialPosition": {
+          "description": "InitialPosition sets where the receiver starts reading a file that has no saved checkpoint. End (default) avoids replaying history; Beginning is an explicit catch-up. It is ignored once a checkpoint exists for the file.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name identifies the log stream to forward (for example \"query\" or \"security\"). It must match a source advertised by the database version's log capabilities.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSourceStorage": {
+      "description": "LogSourceStorage is a per-emitting-pod log volume override.",
+      "type": "object",
+      "properties": {
+        "emptyDir": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.EmptyDirVolumeSource"
+        },
+        "volumeClaimTemplate": {
+          "$ref": "#/definitions/io.k8s.api.core.v1.PersistentVolumeClaimSpec"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSplunkHECExporter": {
+      "description": "LogSplunkHECExporter configures the HEC endpoint and selected token key.",
+      "type": "object",
+      "required": [
+        "endpoint",
+        "tokenSecretRef"
+      ],
+      "properties": {
+        "endpoint": {
+          "type": "string",
+          "default": ""
+        },
+        "index": {
+          "type": "string"
+        },
+        "retryOnFailure": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogRetryOnFailure"
+        },
+        "sendingQueue": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSendingQueue"
+        },
+        "source": {
+          "type": "string"
+        },
+        "sourcetype": {
+          "type": "string"
+        },
+        "tls": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogForwarderTLS"
+        },
+        "tokenSecretRef": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.api.core.v1.SecretKeySelector"
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSyslogExporter": {
+      "type": "object",
+      "required": [
+        "endpoint",
+        "port",
+        "network",
+        "protocol"
+      ],
+      "properties": {
+        "enableOctetCounting": {
+          "type": "boolean"
+        },
+        "endpoint": {
+          "type": "string",
+          "default": ""
+        },
+        "facility": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "network": {
+          "type": "string",
+          "default": ""
+        },
+        "port": {
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "protocol": {
+          "type": "string",
+          "default": ""
+        },
+        "retryOnFailure": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogRetryOnFailure"
+        },
+        "sendingQueue": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogSendingQueue"
+        },
+        "tls": {
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogForwarderTLS"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.ManifestOptions": {
       "type": "object",
       "properties": {
@@ -30762,6 +31298,10 @@
         "leaderElection": {
           "description": "Leader election configuration",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgreLeaderElectionConfig"
+        },
+        "logForwarder": {
+          "description": "LogForwarder preserves the shared logging API across served versions.",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.LogForwarderSpec"
         },
         "mode": {
           "type": "string"

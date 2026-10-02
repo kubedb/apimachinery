@@ -1253,6 +1253,12 @@ spec:
                 type: object
               logForwarder:
                 properties:
+                  collectionMode:
+                    default: Sidecar
+                    enum:
+                    - Sidecar
+                    - NodeAgent
+                    type: string
                   delivery:
                     properties:
                       onQueueFull:
@@ -1356,12 +1362,658 @@ spec:
                         type: object
                     type: object
                     x-kubernetes-validations:
-                    - message: exactly one of destination.profile or destination.exporterConfig
-                        must be set
-                      rule: (has(self.profile) && size(self.profile) > 0) != (has(self.exporterConfig)
-                        && size(self.exporterConfig) > 0)
+                    - message: destination.profile and destination.exporterConfig
+                        are mutually exclusive
+                      rule: '!(has(self.profile) && size(self.profile) > 0 && has(self.exporterConfig)
+                        && size(self.exporterConfig) > 0)'
                   enabled:
                     type: boolean
+                  exporter:
+                    properties:
+                      datadog:
+                        properties:
+                          api:
+                            properties:
+                              keySecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              site:
+                                minLength: 1
+                                type: string
+                            required:
+                            - keySecretRef
+                            - site
+                            type: object
+                          retryOnFailure:
+                            properties:
+                              enabled:
+                                type: boolean
+                              initialInterval:
+                                type: string
+                              maxElapsedTime:
+                                type: string
+                              maxInterval:
+                                type: string
+                            type: object
+                          sendingQueue:
+                            properties:
+                              blockOnOverflow:
+                                type: boolean
+                              enabled:
+                                type: boolean
+                              numConsumers:
+                                format: int32
+                                minimum: 1
+                                type: integer
+                              queueSize:
+                                format: int32
+                                minimum: 1
+                                type: integer
+                            type: object
+                          tls:
+                            properties:
+                              caSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              clientCertSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              clientKeySecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              mode:
+                                allOf:
+                                - enum:
+                                  - Disabled
+                                  - Verify
+                                - enum:
+                                  - Disabled
+                                  - Verify
+                                default: Verify
+                                type: string
+                            type: object
+                        required:
+                        - api
+                        type: object
+                      elasticsearch:
+                        properties:
+                          apiKeySecretRef:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                default: ""
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                            x-kubernetes-map-type: atomic
+                          endpoints:
+                            items:
+                              type: string
+                            minItems: 1
+                            type: array
+                          logsIndex:
+                            type: string
+                          mapping:
+                            properties:
+                              mode:
+                                type: string
+                            type: object
+                          retry:
+                            properties:
+                              enabled:
+                                type: boolean
+                              initialInterval:
+                                type: string
+                              maxInterval:
+                                type: string
+                              maxRetries:
+                                format: int32
+                                minimum: 0
+                                type: integer
+                            type: object
+                          sendingQueue:
+                            properties:
+                              blockOnOverflow:
+                                type: boolean
+                              enabled:
+                                type: boolean
+                              numConsumers:
+                                format: int32
+                                minimum: 1
+                                type: integer
+                              queueSize:
+                                format: int32
+                                minimum: 1
+                                type: integer
+                            type: object
+                          tls:
+                            properties:
+                              caSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              clientCertSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              clientKeySecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              mode:
+                                allOf:
+                                - enum:
+                                  - Disabled
+                                  - Verify
+                                - enum:
+                                  - Disabled
+                                  - Verify
+                                default: Verify
+                                type: string
+                            type: object
+                        required:
+                        - endpoints
+                        type: object
+                      name:
+                        default: primary
+                        type: string
+                      otlpHttp:
+                        properties:
+                          auth:
+                            properties:
+                              headerName:
+                                minLength: 1
+                                type: string
+                              passwordSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              tokenSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              type:
+                                enum:
+                                - None
+                                - Token
+                                - Bearer
+                                - Basic
+                                - Header
+                                type: string
+                              usernameSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              valueSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                            required:
+                            - type
+                            type: object
+                            x-kubernetes-validations:
+                            - message: auth fields must match the selected type
+                              rule: 'self.type in [''Token'', ''Bearer''] ? has(self.tokenSecretRef)
+                                && !has(self.usernameSecretRef) && !has(self.passwordSecretRef)
+                                && !has(self.valueSecretRef) && !has(self.headerName)
+                                : self.type == ''Basic'' ? has(self.usernameSecretRef)
+                                && has(self.passwordSecretRef) && !has(self.tokenSecretRef)
+                                && !has(self.valueSecretRef) && !has(self.headerName)
+                                : self.type == ''Header'' ? has(self.headerName) &&
+                                has(self.valueSecretRef) && !has(self.tokenSecretRef)
+                                && !has(self.usernameSecretRef) && !has(self.passwordSecretRef)
+                                : !has(self.tokenSecretRef) && !has(self.usernameSecretRef)
+                                && !has(self.passwordSecretRef) && !has(self.valueSecretRef)
+                                && !has(self.headerName)'
+                          endpoint:
+                            minLength: 1
+                            type: string
+                          logsEndpoint:
+                            minLength: 1
+                            type: string
+                          retryOnFailure:
+                            properties:
+                              enabled:
+                                type: boolean
+                              initialInterval:
+                                type: string
+                              maxElapsedTime:
+                                type: string
+                              maxInterval:
+                                type: string
+                            type: object
+                          sendingQueue:
+                            properties:
+                              blockOnOverflow:
+                                type: boolean
+                              enabled:
+                                type: boolean
+                              numConsumers:
+                                format: int32
+                                minimum: 1
+                                type: integer
+                              queueSize:
+                                format: int32
+                                minimum: 1
+                                type: integer
+                            type: object
+                          tls:
+                            properties:
+                              caSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              clientCertSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              clientKeySecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              mode:
+                                allOf:
+                                - enum:
+                                  - Disabled
+                                  - Verify
+                                - enum:
+                                  - Disabled
+                                  - Verify
+                                default: Verify
+                                type: string
+                            type: object
+                        type: object
+                        x-kubernetes-validations:
+                        - message: exactly one of endpoint or logsEndpoint is required
+                          rule: has(self.endpoint) != has(self.logsEndpoint)
+                      splunkHec:
+                        properties:
+                          endpoint:
+                            minLength: 1
+                            type: string
+                          index:
+                            type: string
+                          retryOnFailure:
+                            properties:
+                              enabled:
+                                type: boolean
+                              initialInterval:
+                                type: string
+                              maxElapsedTime:
+                                type: string
+                              maxInterval:
+                                type: string
+                            type: object
+                          sendingQueue:
+                            properties:
+                              blockOnOverflow:
+                                type: boolean
+                              enabled:
+                                type: boolean
+                              numConsumers:
+                                format: int32
+                                minimum: 1
+                                type: integer
+                              queueSize:
+                                format: int32
+                                minimum: 1
+                                type: integer
+                            type: object
+                          source:
+                            type: string
+                          sourcetype:
+                            type: string
+                          tls:
+                            properties:
+                              caSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              clientCertSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              clientKeySecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              mode:
+                                allOf:
+                                - enum:
+                                  - Disabled
+                                  - Verify
+                                - enum:
+                                  - Disabled
+                                  - Verify
+                                default: Verify
+                                type: string
+                            type: object
+                          tokenSecretRef:
+                            properties:
+                              key:
+                                type: string
+                              name:
+                                default: ""
+                                type: string
+                              optional:
+                                type: boolean
+                            required:
+                            - key
+                            type: object
+                            x-kubernetes-map-type: atomic
+                        required:
+                        - endpoint
+                        - tokenSecretRef
+                        type: object
+                      syslog:
+                        properties:
+                          enableOctetCounting:
+                            type: boolean
+                          endpoint:
+                            minLength: 1
+                            type: string
+                          facility:
+                            format: int32
+                            maximum: 23
+                            minimum: 0
+                            type: integer
+                          network:
+                            enum:
+                            - tcp
+                            type: string
+                          port:
+                            format: int32
+                            maximum: 65535
+                            minimum: 1
+                            type: integer
+                          protocol:
+                            enum:
+                            - rfc5424
+                            - rfc3164
+                            type: string
+                          retryOnFailure:
+                            properties:
+                              enabled:
+                                type: boolean
+                              initialInterval:
+                                type: string
+                              maxElapsedTime:
+                                type: string
+                              maxInterval:
+                                type: string
+                            type: object
+                          sendingQueue:
+                            properties:
+                              blockOnOverflow:
+                                type: boolean
+                              enabled:
+                                type: boolean
+                              numConsumers:
+                                format: int32
+                                minimum: 1
+                                type: integer
+                              queueSize:
+                                format: int32
+                                minimum: 1
+                                type: integer
+                            type: object
+                          tls:
+                            properties:
+                              caSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              clientCertSecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              clientKeySecretRef:
+                                properties:
+                                  key:
+                                    type: string
+                                  name:
+                                    default: ""
+                                    type: string
+                                  optional:
+                                    type: boolean
+                                required:
+                                - key
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              mode:
+                                allOf:
+                                - enum:
+                                  - Disabled
+                                  - Verify
+                                - enum:
+                                  - Disabled
+                                  - Verify
+                                default: Verify
+                                type: string
+                            type: object
+                        required:
+                        - endpoint
+                        - network
+                        - port
+                        - protocol
+                        type: object
+                      type:
+                        enum:
+                        - otlphttp
+                        - splunk_hec
+                        - elasticsearch
+                        - datadog
+                        - syslog
+                        type: string
+                    required:
+                    - type
+                    type: object
+                    x-kubernetes-validations:
+                    - message: otlphttp requires only the otlpHttp block
+                      rule: (self.type == 'otlphttp') == has(self.otlpHttp)
+                    - message: splunk_hec requires only the splunkHec block
+                      rule: (self.type == 'splunk_hec') == has(self.splunkHec)
+                    - message: elasticsearch requires only the elasticsearch block
+                      rule: (self.type == 'elasticsearch') == has(self.elasticsearch)
+                    - message: datadog requires only the datadog block
+                      rule: (self.type == 'datadog') == has(self.datadog)
+                    - message: syslog requires only the syslog block
+                      rule: (self.type == 'syslog') == has(self.syslog)
+                  processors:
+                    properties:
+                      batch:
+                        properties:
+                          sendBatchMaxSize:
+                            format: int32
+                            minimum: 0
+                            type: integer
+                          sendBatchSize:
+                            format: int32
+                            minimum: 1
+                            type: integer
+                          timeout:
+                            type: string
+                        type: object
+                    type: object
                   resources:
                     properties:
                       claims:
@@ -1477,9 +2129,126 @@ spec:
                             type: string
                         type: object
                     type: object
+                  sourceStorage:
+                    properties:
+                      emptyDir:
+                        properties:
+                          medium:
+                            type: string
+                          sizeLimit:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                        type: object
+                      volumeClaimTemplate:
+                        properties:
+                          accessModes:
+                            items:
+                              type: string
+                            type: array
+                            x-kubernetes-list-type: atomic
+                          dataSource:
+                            properties:
+                              apiGroup:
+                                type: string
+                              kind:
+                                type: string
+                              name:
+                                type: string
+                            required:
+                            - kind
+                            - name
+                            type: object
+                            x-kubernetes-map-type: atomic
+                          dataSourceRef:
+                            properties:
+                              apiGroup:
+                                type: string
+                              kind:
+                                type: string
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                            required:
+                            - kind
+                            - name
+                            type: object
+                          resources:
+                            properties:
+                              limits:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
+                              requests:
+                                additionalProperties:
+                                  anyOf:
+                                  - type: integer
+                                  - type: string
+                                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                  x-kubernetes-int-or-string: true
+                                type: object
+                            type: object
+                          selector:
+                            properties:
+                              matchExpressions:
+                                items:
+                                  properties:
+                                    key:
+                                      type: string
+                                    operator:
+                                      type: string
+                                    values:
+                                      items:
+                                        type: string
+                                      type: array
+                                      x-kubernetes-list-type: atomic
+                                  required:
+                                  - key
+                                  - operator
+                                  type: object
+                                type: array
+                                x-kubernetes-list-type: atomic
+                              matchLabels:
+                                additionalProperties:
+                                  type: string
+                                type: object
+                            type: object
+                            x-kubernetes-map-type: atomic
+                          storageClassName:
+                            type: string
+                          volumeAttributesClassName:
+                            type: string
+                          volumeMode:
+                            type: string
+                          volumeName:
+                            type: string
+                        type: object
+                    type: object
+                    x-kubernetes-validations:
+                    - message: exactly one source storage type is required
+                      rule: has(self.emptyDir) != has(self.volumeClaimTemplate)
                   sources:
                     items:
                       properties:
+                        fileLog:
+                          properties:
+                            maxLogSize:
+                              type: string
+                            pollInterval:
+                              type: string
+                            startAt:
+                              enum:
+                              - end
+                              - beginning
+                              type: string
+                          type: object
                         initialPosition:
                           allOf:
                           - enum:
@@ -1488,13 +2257,17 @@ spec:
                           - enum:
                             - End
                             - Beginning
-                          default: End
                           type: string
                         name:
                           type: string
                       required:
                       - name
                       type: object
+                      x-kubernetes-validations:
+                      - message: initialPosition and fileLog.startAt are mutually
+                          exclusive
+                        rule: '!has(self.initialPosition) || !has(self.fileLog) ||
+                          !has(self.fileLog.startAt)'
                     type: array
                     x-kubernetes-list-map-keys:
                     - name
@@ -1587,10 +2360,36 @@ spec:
                       volumeName:
                         type: string
                     type: object
-                required:
-                - destination
-                - stateStorage
                 type: object
+                x-kubernetes-validations:
+                - message: exporter cannot be combined with legacy destination or
+                    delivery
+                  rule: '!has(self.exporter) || (!has(self.delivery) && !(has(self.destination)
+                    && (has(self.destination.profile) || has(self.destination.exporterConfig)
+                    || has(self.destination.endpoint) || has(self.destination.secretRef)
+                    || has(self.destination.tls) || has(self.destination.extraProcessors)
+                    || has(self.destination.extraExtensions))))'
+                - message: NodeAgent collector configuration is platform-owned; sidecar
+                    fields are forbidden
+                  rule: '!has(self.collectionMode) || self.collectionMode != ''NodeAgent''
+                    || (!has(self.exporter) && !has(self.delivery) && !has(self.processors)
+                    && !has(self.sourceStorage) && !has(self.securityContext) && !(has(self.resources)
+                    && (has(self.resources.requests) || has(self.resources.limits)))
+                    && !(has(self.stateStorage) && (has(self.stateStorage.accessModes)
+                    || has(self.stateStorage.volumeMode) || (has(self.stateStorage.resources)
+                    && has(self.stateStorage.resources.requests)))) && !(has(self.destination)
+                    && (has(self.destination.profile) || has(self.destination.exporterConfig)
+                    || has(self.destination.endpoint) || has(self.destination.secretRef)
+                    || has(self.destination.tls) || has(self.destination.extraProcessors)
+                    || has(self.destination.extraExtensions))))'
+                - message: enabled Sidecar requires exporter or a legacy destination
+                  rule: (has(self.enabled) && !self.enabled) || (has(self.collectionMode)
+                    && self.collectionMode == 'NodeAgent') || has(self.exporter) ||
+                    (has(self.destination) && (has(self.destination.profile) || has(self.destination.exporterConfig)))
+                - message: NodeAgent cannot tune a shared node reader per database
+                  rule: '!has(self.collectionMode) || self.collectionMode != ''NodeAgent''
+                    || !has(self.sources) || self.sources.all(s, !has(s.fileLog) &&
+                    !has(s.initialPosition))'
               monitor:
                 properties:
                   agent:

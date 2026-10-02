@@ -356,25 +356,36 @@ func removeCondition(conditions []kmapi.Condition, typ string) []kmapi.Condition
 
 // --- Log forwarding (shared, engine-neutral) ---
 
-// LogForwarderSpec configures an operator-managed OpenTelemetry Collector sidecar that tails the
-// database's log files and ships them to an observability backend.
-//
-// The operator owns the vendor-neutral half of the collector pipeline (file receiver, log parser,
-// batching, and a persistent sending queue backed by a per-pod state PVC). The vendor-specific half
-// — the exporter, any exporter-specific processors/extensions, and its credentials — is supplied as
-// data: either a KubeDB-shipped Profile or a raw ExporterConfig. Because every exporter already
-// ships in the collector image, adding a new backend never requires an operator code change or an
-// image rebuild.
-//
-// This type is engine-neutral and intended to be embedded by any KubeDB database spec.
+// LogForwarderSpec selects managed file collection or platform-owned node collection.
+// NodeAgent configures supported container output; the platform owns its Collector.
+// Canonical exporter fields are additive; legacy destination/delivery remain supported.
+// +kubebuilder:validation:XValidation:rule="!has(self.exporter) || (!has(self.delivery) && !(has(self.destination) && (has(self.destination.profile) || has(self.destination.exporterConfig) || has(self.destination.endpoint) || has(self.destination.secretRef) || has(self.destination.tls) || has(self.destination.extraProcessors) || has(self.destination.extraExtensions))))",message="exporter cannot be combined with legacy destination or delivery"
+// +kubebuilder:validation:XValidation:rule="!has(self.collectionMode) || self.collectionMode != 'NodeAgent' || (!has(self.exporter) && !has(self.delivery) && !has(self.processors) && !has(self.sourceStorage) && !has(self.securityContext) && !(has(self.resources) && (has(self.resources.requests) || has(self.resources.limits))) && !(has(self.stateStorage) && (has(self.stateStorage.accessModes) || has(self.stateStorage.volumeMode) || (has(self.stateStorage.resources) && has(self.stateStorage.resources.requests)))) && !(has(self.destination) && (has(self.destination.profile) || has(self.destination.exporterConfig) || has(self.destination.endpoint) || has(self.destination.secretRef) || has(self.destination.tls) || has(self.destination.extraProcessors) || has(self.destination.extraExtensions))))",message="NodeAgent collector configuration is platform-owned; sidecar fields are forbidden"
+// +kubebuilder:validation:XValidation:rule="(has(self.enabled) && !self.enabled) || (has(self.collectionMode) && self.collectionMode == 'NodeAgent') || has(self.exporter) || (has(self.destination) && (has(self.destination.profile) || has(self.destination.exporterConfig)))",message="enabled Sidecar requires exporter or a legacy destination"
+// +kubebuilder:validation:XValidation:rule="!has(self.collectionMode) || self.collectionMode != 'NodeAgent' || !has(self.sources) || self.sources.all(s, !has(s.fileLog) && !has(s.initialPosition))",message="NodeAgent cannot tune a shared node reader per database"
 type LogForwarderSpec struct {
+	// CollectionMode defaults to Sidecar for existing manifests.
+	// +optional
+	// +kubebuilder:default=Sidecar
+	CollectionMode LogCollectionMode `json:"collectionMode,omitempty"`
+	// Exporter is the canonical typed Sidecar destination.
+	// +optional
+	Exporter *LogExporterSpec `json:"exporter,omitempty"`
+	// Processors tunes managed Sidecar batching, not arbitrary pipelines.
+	// +optional
+	Processors *LogProcessors `json:"processors,omitempty"`
+	// SourceStorage overrides managed Sidecar source storage where supported.
+	// +optional
+	SourceStorage *LogSourceStorage `json:"sourceStorage,omitempty"`
+
 	// Enabled toggles log forwarding while retaining the generated configuration and the per-pod
 	// state PVCs. It defaults to true when logForwarder is present.
 	// +optional
 	Enabled *bool `json:"enabled,omitempty"`
 
-	// Destination selects where logs are shipped and how the sidecar authenticates to the backend.
-	Destination LogDestinationSpec `json:"destination"`
+	// Destination is deprecated; use Exporter. Existing manifests retain their behavior.
+	// +optional
+	Destination LogDestinationSpec `json:"destination,omitempty"`
 
 	// Sources selects which database log streams to forward. Each entry must name a log source
 	// advertised by the database version's log capabilities.
@@ -387,9 +398,10 @@ type LogForwarderSpec struct {
 
 	// StateStorage is the per-pod PVC template that persists receiver offsets and the exporter
 	// sending queue. It must be a filesystem, ReadWriteOnce volume; never shared across pods.
-	StateStorage core.PersistentVolumeClaimSpec `json:"stateStorage"`
+	// +optional
+	StateStorage core.PersistentVolumeClaimSpec `json:"stateStorage,omitempty"`
 
-	// Delivery tunes batching, the persistent sending queue, and retry/backpressure behavior.
+	// Delivery is deprecated; use exporter-local sendingQueue and retry settings.
 	// +optional
 	Delivery *LogDeliverySpec `json:"delivery,omitempty"`
 
@@ -412,7 +424,7 @@ type LogForwarderSpec struct {
 
 // LogDestinationSpec describes a single observability backend and how to reach it.
 // Exactly one of Profile or ExporterConfig must be set.
-// +kubebuilder:validation:XValidation:rule="(has(self.profile) && size(self.profile) > 0) != (has(self.exporterConfig) && size(self.exporterConfig) > 0)",message="exactly one of destination.profile or destination.exporterConfig must be set"
+// +kubebuilder:validation:XValidation:rule="!(has(self.profile) && size(self.profile) > 0 && has(self.exporterConfig) && size(self.exporterConfig) > 0)",message="destination.profile and destination.exporterConfig are mutually exclusive"
 type LogDestinationSpec struct {
 	// Name is a stable identifier for this destination. It names the exporter component and its
 	// persistent queue, so it must not change while delivery state is pending.
@@ -481,7 +493,12 @@ type LogForwarderTLS struct {
 }
 
 // LogSourceSpec selects one database log stream to forward.
+// +kubebuilder:validation:XValidation:rule="!has(self.initialPosition) || !has(self.fileLog) || !has(self.fileLog.startAt)",message="initialPosition and fileLog.startAt are mutually exclusive"
 type LogSourceSpec struct {
+	// FileLog tunes a Sidecar file receiver; checkpoints take precedence.
+	// +optional
+	FileLog *LogFileLogReceiver `json:"fileLog,omitempty"`
+
 	// Name identifies the log stream to forward (for example "query" or "security"). It must match
 	// a source advertised by the database version's log capabilities.
 	Name string `json:"name"`
@@ -490,7 +507,6 @@ type LogSourceSpec struct {
 	// End (default) avoids replaying history; Beginning is an explicit catch-up. It is ignored once
 	// a checkpoint exists for the file.
 	// +kubebuilder:validation:Enum=End;Beginning
-	// +kubebuilder:default=End
 	// +optional
 	InitialPosition LogInitialPosition `json:"initialPosition,omitempty"`
 }
