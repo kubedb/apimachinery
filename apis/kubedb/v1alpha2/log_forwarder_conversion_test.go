@@ -27,7 +27,7 @@ func TestPostgresLogForwarderVersionRoundTrip(t *testing.T) {
 	cases := []*dbapi.LogForwarderSpec{
 		{CollectionMode: dbapi.LogCollectionModeNodeAgent, Sources: []dbapi.LogSourceSpec{{Name: "general"}}},
 		{Exporter: &dbapi.LogExporterSpec{Name: "primary", Type: "otlphttp", OTLPHTTP: &dbapi.LogOTLPHTTPExporter{Endpoint: "https://example.com"}}, Sources: []dbapi.LogSourceSpec{{Name: "general", FileLog: &dbapi.LogFileLogReceiver{StartAt: "beginning", MaxLogSize: "1MiB"}}}},
-		{Destination: dbapi.LogDestinationSpec{Name: "primary", Profile: "splunk"}, Sources: []dbapi.LogSourceSpec{{Name: "general", InitialPosition: dbapi.LogInitialPositionEnd}}},
+		{Processors: &dbapi.LogProcessors{MemoryLimiter: &dbapi.LogMemoryLimiterProcessor{LimitMiB: logInt(180), SpikeLimitMiB: logInt(32)}, Attributes: &dbapi.LogAttributesProcessor{Actions: []dbapi.LogAttributeAction{{Key: "team", Action: "delete"}}}, Filter: &dbapi.LogFilterProcessor{Logs: dbapi.LogFilterLogs{LogRecord: []string{"true"}}}, Transform: &dbapi.LogTransformProcessor{LogStatements: []dbapi.LogTransformStatements{{Context: "log", Statements: []string{"set(body, body)"}}}}, ExtraConfig: "resource/custom: {}", Order: []string{"attributes", "resource/custom", "transform", "filter"}}, Extensions: &dbapi.LogExtensions{ExtraConfig: "basicauth/client: {}"}, Exporter: &dbapi.LogExporterSpec{Type: "otlphttp", OTLPHTTP: &dbapi.LogOTLPHTTPExporter{Endpoint: "https://example.com", Auth: &dbapi.LogExporterAuth{Type: "Extension", ExtensionRef: "basicauth/client"}}}},
 	}
 	for _, lf := range cases {
 		input := dbapi.PostgresSpec{LogForwarder: lf}

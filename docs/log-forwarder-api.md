@@ -1,112 +1,217 @@
-# Shared logging API
+# KubeDB logging API
 
-This is an additive API-library change. Generated CRDs expose the schema;
-operators and admission-server binaries must adopt this library and implement
-the selected engine adapter before new configurations are used in production.
-CRD installation alone does not configure database stdout or a Collector.
+Status: unreleased API. This replaces the old destination/delivery shape.
+Scope: shared apimachinery types and pure configuration helpers, not operator deployment.
 
 ## Ownership
 
-- Missing collectionMode means Sidecar, preserving existing installations.
-- Sidecar uses KubeDB-managed file receivers and an inline typed exporter.
-- NodeAgent selects database log sources suitable for stdout/stderr.
-  The platform installs and configures its own node Collector, including
-  parsing, routing, authentication, TLS, queues, and upgrades.
-- There is no LogRoute, routeRef, collectorRef, or node-agent configuration CR.
-- Database audit/statement policies are separate from forwarding.
-  Unsupported sources must be rejected by the engine adapter.
+Sidecar: KubeDB selects sources, mounts log/state storage, renders the Collector,
+and activates configuration through an OpsRequest.
 
-## NodeAgent
+NodeAgent: KubeDB configures supported database streams for container stdout/stderr.
+The platform installs and configures the DaemonSet, including parsing, processing,
+routing, credentials, buffering and retention. File-only, binary and table-resident
+audit sources cannot be promised as stdout streams without an engine adapter.
 
-```yaml
-spec:
-  logForwarder:
-    collectionMode: NodeAgent
-    sources:
-      - name: general
-    rolloutPolicy: Manual
-```
+Neither mode creates audit facilities missing from the selected image or edition.
+Operators must reject unsupported sources/modes using their version capabilities.
 
-No exporter, stateStorage, sourceStorage, processors, delivery, resources,
-securityContext, fileLog, or initialPosition is allowed in NodeAgent.
-Externally collected logs may exist independently of this KubeDB field.
-KubeDB cannot claim backend delivery for a platform-managed Collector.
+## Sidecar example
 
-## Sidecar
+Every Collector-specific field below is Sidecar-only.
 
 ```yaml
 spec:
+  # Configure database log forwarding.
   logForwarder:
+    # Select an operator-managed per-pod collector.
     collectionMode: Sidecar
-    sources:
-      - name: general
-        fileLog:
-          startAt: end
-          maxLogSize: 1MiB
-    exporter:
-      name: primary
-      type: splunk_hec
-      splunkHec:
-        endpoint: https://splunk.example.com:8088/services/collector
-        tokenSecretRef:
-          name: splunk-ingest
-          key: token
-        sendingQueue:
-          enabled: true
-          queueSize: 1000
-          numConsumers: 2
-          blockOnOverflow: true
-        retryOnFailure:
-          enabled: true
-          initialInterval: 2s
-          maxInterval: 30s
-          maxElapsedTime: 0s
-    processors:
-      batch:
-        timeout: 2s
-        sendBatchSize: 256
-    stateStorage:
-      accessModes: [ReadWriteOnce]
-      volumeMode: Filesystem
-      resources:
-        requests:
-          storage: 1Gi
+    # Activate log forwarding.
+    enabled: true
+    # Require controlled activation through an OpsRequest.
     rolloutPolicy: Manual
+    # Select version-advertised database streams.
+    sources:
+      # Identify the general database log stream.
+      - name: general
+        # Tune the managed file reader; paths and parsers remain engine-owned.
+        fileLog:
+          # Read new files from their beginning; checkpoints take precedence.
+          startAt: beginning
+    # Set the collector container budget.
+    resources:
+      # Bound container resources explicitly.
+      limits:
+        # Supply the cgroup memory budget used by percentage thresholds.
+        memory: 256Mi
+    # Allocate persistent checkpoints and delivery state per pod.
+    stateStorage:
+      # Use one-writer state storage.
+      accessModes: [ReadWriteOnce]
+      # Use filesystem-backed state.
+      volumeMode: Filesystem
+      # Request bounded state capacity.
+      resources:
+        # Declare the storage request.
+        requests:
+          # Set the persistent state volume capacity.
+          storage: 1Gi
+    # Select exactly one destination/exporter variant.
+    exporter:
+      # Keep the persistent delivery identity stable.
+      name: primary
+      # Select the compiled OTLP/HTTP exporter.
+      type: otlphttp
+      # Configure the selected exporter.
+      otlpHttp:
+        # Supply a base URL; the exporter appends /v1/logs.
+        endpoint: https://collector.example.com
+        # Select an authentication extension.
+        auth:
+          # Delegate authentication to a native extension.
+          type: Extension
+          # Reference a defined extension component ID.
+          extensionRef: basicauth/client
+    # Configure the five typed processor options.
+    processors:
+      # Keep the always-enabled memory limiter first.
+      memoryLimiter:
+        # Check memory every second.
+        checkInterval: 1s
+        # Set the hard threshold; pairs with spikeLimitPercentage.
+        limitPercentage: 80
+        # Set the spike allowance; pairs with limitPercentage.
+        spikeLimitPercentage: 15
+      # Modify record attributes.
+      attributes:
+        # Apply native actions in this order.
+        actions:
+          # Identify the attribute to modify.
+          - key: environment
+            # Insert or replace its value.
+            action: upsert
+            # Supply a scalar value.
+            value: production
+      # Normalize log records with native OTTL.
+      transform:
+        # Propagate errors instead of silently bypassing normalization.
+        errorMode: propagate
+        # Group statements by context.
+        logStatements:
+          # Evaluate in log context.
+          - context: log
+            # Execute statements in order.
+            statements:
+              - 'set(attributes["normalized"], true)'
+      # Drop unwanted records with native OTTL conditions.
+      filter:
+        # Propagate errors instead of silently bypassing filtering.
+        errorMode: propagate
+        # Configure log-only filtering.
+        logs:
+          # Drop records when any listed condition is true.
+          logRecord:
+            - 'attributes["drop"] == true'
+      # Declare the user-stage sequence; managed stages are excluded.
+      order: [attributes, transform, filter]
+      # Keep batching last.
+      batch:
+        # Flush batches within two seconds.
+        timeout: 2s
+        # Trigger a batch at this record count.
+        sendBatchSize: 256
+    # Define native extensions and their credential bindings.
+    extensions:
+      # Supply component definitions without a top-level extensions wrapper.
+      extraConfig: |
+        basicauth/client:
+          client_auth:
+            username: ${env:EXT_USER}
+            password: ${env:EXT_PASSWORD}
+      # Bind each referenced environment variable to a non-optional Secret key.
+      secretEnv:
+        # Bind the extension username.
+        EXT_USER:
+          # Select the Secret in the database namespace.
+          name: forwarding-auth
+          # Select its username key.
+          key: username
+        # Bind the extension password.
+        EXT_PASSWORD:
+          # Select the Secret in the database namespace.
+          name: forwarding-auth
+          # Select its password key.
+          key: password
 ```
 
-Exporter types and matching blocks:
+## Memory pairs
 
-    otlphttp          otlpHttp
-    splunk_hec        splunkHec
-    elasticsearch     elasticsearch
-    datadog           datadog
-    syslog            syslog
+Use either percentage settings OR absolute MiB settings, never both.
+Each selected pair must contain both fields; partial pairs are rejected.
 
-Exactly one block matching type is required. Elasticsearch uses native retry
-(enabled, initialInterval, maxInterval, maxRetries), not retryOnFailure.
-Public camelCase maps to native Collector snake_case in the runtime renderer.
-Only compiled, tested components and settings may be advertised by a runtime.
+    Percentage pair                 Absolute pair
+    ------------------------------  -------------------------
+    limitPercentage: 80             limitMiB: 180
+    spikeLimitPercentage: 15        spikeLimitMiB: 32
 
-KubeDB owns paths, parser operators, pipeline wiring, checkpoint storage,
-persistent queue component IDs, and memory limits. Request-count queue size
-is not a byte bound. Blocking overflow is not an end-to-end delivery guarantee.
-File startAt only applies when no checkpoint exists.
-Per-source tuning for a shared physical reader must agree.
+If neither pair is supplied, Go defaulting inserts the percentage pair 80/15.
+Absolute settings never receive percentage defaults.
+The soft threshold is hard limit minus spike allowance.
+Percentage settings use the collector's detected container/cgroup budget.
+The runtime helper requires an explicit positive container memory limit;
+an absolute hard threshold must be strictly below that limit.
+This processor is admission/backpressure protection, not a guarantee against OOM
+or log loss. The pinned image's cgroup detection must be certified on supported nodes.
 
-Credentials select non-optional keys from same-namespace Secrets, not broad
-envFrom in new typed configurations. TLS defaults to Verify. HTTP plaintext
-requires explicit Disabled. Existing TLS selectors remain compatible.
+## Processing and extensions
 
-## Compatibility and activation
+Five typed fields: memoryLimiter, batch, attributes, filter, transform.
+Without an explicit order, configured user stages run attributes -> transform -> filter.
+Raw processors belong in processors.extraConfig, using native component IDs and
+snake_case keys, without a processors wrapper. Raw extras require an explicit order
+listing every typed and raw user component exactly once.
 
-Legacy destination, delivery, and initialPosition remain accepted.
-Exporter cannot be combined with populated legacy destination or delivery.
-A source cannot specify both initialPosition and fileLog.startAt.
-Legacy splunk/elastic profiles correspond to splunk_hec/elasticsearch types.
-No stored spec, component identity, queue, checkpoint, or PVC is renamed
-merely to adopt the new API field names. Legacy raw exporter configurations
-remain Sidecar-only. Manual OpsRequest activation remains the policy.
+Managed pipeline:
 
-The current database embedding is Postgres (v1 and v1alpha2) and Neo4j
-(v1alpha2). Shared types are engine-neutral; other database operators need
-separate capability/defaulting/runtime fan-out, not a blanket audit promise.
+    memory_limiter
+        -> ordered user stages
+        -> resource/kubedb (trusted identity restamp)
+        -> batch
+
+Native IDs memory_limiter/*, batch/* and resource/kubedb cannot be replaced.
+Bare attributes/transform/filter IDs belong to the typed fields; named extras such as
+attributes/custom are permitted. Custom stages can filter records, including all
+records; the final restamp protects surviving records' operator-owned identity,
+not the audit completeness of arbitrary user processing.
+
+Extension helpers return native definitions. The operator must register every
+returned ID in service.extensions, using deterministic ordering. file_storage/*
+and health_check/* remain operator-owned. Extension authentication currently
+belongs to the OTLP/HTTP exporter only. Secret selectors must resolve in the DB
+namespace; values should never enter rendered Secrets, logs or status messages.
+Use Secret-backed environment references instead of literal credentials in raw YAML.
+
+No connector API, LogRoute, custom receiver, custom pipeline or replacement exporter
+escape hatch is exposed.
+
+## Validation and rollout boundary
+
+Shared validation checks memory pairs, actions, ordering, duplicate YAML keys,
+reserved component names, Secret selectors and authentication references.
+It does NOT parse OTTL or establish availability of arbitrary native components.
+The downstream renderer must validate the complete configuration against the exact
+catalog-pinned Collector build before activation, and must fail without rolling out
+an invalid configuration. This apimachinery library supplies pure helpers; each
+database operator still needs to wire them into its renderer and OpsRequest workflow.
+
+## Unreleased cleanup and migration
+
+Removed: destination, delivery, initialPosition, legacy profile/raw-exporter
+configuration and old extraProcessors/extraExtensions locations.
+Use exporter, exporter-local sendingQueue/retry options, sources[].fileLog.startAt,
+processors.extraConfig and extensions.extraConfig instead.
+
+Do not apply these CRDs over old POC resources while old operator binaries still
+consume removed fields. First migrate stored manifests/specs and build compatible
+provisioner, webhook and OpsRequest components. Apply the generated CRDs only as
+part of that coordinated rollout.

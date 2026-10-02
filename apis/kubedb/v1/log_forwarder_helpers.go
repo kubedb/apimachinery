@@ -26,7 +26,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// SetCollectionDefaults never populates deprecated fields for canonical or node specs.
+// SetCollectionDefaults sets defaults without overriding a user-selected memory pair.
 func (lf *LogForwarderSpec) SetCollectionDefaults() {
 	if lf.CollectionMode == "" {
 		lf.CollectionMode = LogCollectionModeSidecar
@@ -42,10 +42,14 @@ func (lf *LogForwarderSpec) SetCollectionDefaults() {
 		return
 	}
 	for i := range lf.Sources {
-		if lf.Sources[i].FileLog != nil && lf.Sources[i].FileLog.StartAt == "" && lf.Sources[i].InitialPosition == "" {
+		if lf.Sources[i].FileLog != nil && lf.Sources[i].FileLog.StartAt == "" {
 			lf.Sources[i].FileLog.StartAt = "end"
 		}
 	}
+	if lf.Processors == nil {
+		lf.Processors = &LogProcessors{}
+	}
+	lf.Processors.SetDefaults()
 	if lf.Exporter == nil {
 		return
 	}
@@ -145,8 +149,6 @@ func (lf *LogForwarderSpec) ValidateCollection() error {
 	if lf.RolloutPolicy != "" && lf.RolloutPolicy != LogForwarderRolloutManual {
 		return fmt.Errorf("rolloutPolicy must be Manual; use an OpsRequest")
 	}
-	d := lf.Destination
-	legacy := d.Profile != "" || d.ExporterConfig != "" || d.Endpoint != "" || d.SecretRef != nil || d.TLS != nil || d.ExtraProcessors != "" || d.ExtraExtensions != ""
 	for _, s := range lf.Sources {
 		if s.Name == "" {
 			return fmt.Errorf("source name is required")
@@ -155,9 +157,7 @@ func (lf *LogForwarderSpec) ValidateCollection() error {
 			if mode == LogCollectionModeNodeAgent {
 				return fmt.Errorf("NodeAgent does not accept per-database fileLog tuning")
 			}
-			if s.InitialPosition != "" && s.FileLog.StartAt != "" {
-				return fmt.Errorf("initialPosition and fileLog.startAt are mutually exclusive")
-			}
+
 			if s.FileLog.StartAt != "" && s.FileLog.StartAt != "end" && s.FileLog.StartAt != "beginning" {
 				return fmt.Errorf("fileLog.startAt must be end or beginning")
 			}
@@ -168,30 +168,26 @@ func (lf *LogForwarderSpec) ValidateCollection() error {
 				return fmt.Errorf("fileLog.maxLogSize must be a positive Collector size, for example 1MiB")
 			}
 		}
-		if mode == LogCollectionModeNodeAgent && s.InitialPosition != "" {
-			return fmt.Errorf("NodeAgent does not accept initialPosition")
-		}
+
 	}
 	if mode == LogCollectionModeNodeAgent {
-		if legacy || lf.Exporter != nil || lf.Delivery != nil || lf.Processors != nil || lf.SourceStorage != nil || lf.SecurityContext != nil || len(lf.Resources.Requests) > 0 || len(lf.Resources.Limits) > 0 || len(lf.StateStorage.AccessModes) > 0 || lf.StateStorage.VolumeMode != nil || len(lf.StateStorage.Resources.Requests) > 0 {
+		if lf.Exporter != nil || lf.Extensions != nil || lf.Processors != nil || lf.SourceStorage != nil || lf.SecurityContext != nil || len(lf.Resources.Requests) > 0 || len(lf.Resources.Limits) > 0 || len(lf.StateStorage.AccessModes) > 0 || lf.StateStorage.VolumeMode != nil || len(lf.StateStorage.Resources.Requests) > 0 || len(lf.StateStorage.Resources.Limits) > 0 || lf.StateStorage.Selector != nil || lf.StateStorage.StorageClassName != nil || lf.StateStorage.VolumeName != "" || lf.StateStorage.DataSource != nil || lf.StateStorage.DataSourceRef != nil || lf.StateStorage.VolumeAttributesClassName != nil || len(lf.Resources.Claims) > 0 {
 			return fmt.Errorf("NodeAgent collector configuration belongs to the platform; sidecar-only fields are not allowed")
 		}
 		return nil
 	}
-	if lf.Exporter != nil && (legacy || lf.Delivery != nil) {
-		return fmt.Errorf("exporter cannot be combined with destination or delivery")
-	}
 	enabled := lf.Enabled == nil || *lf.Enabled
 	if lf.Exporter == nil {
-		if d.Profile != "" && d.ExporterConfig != "" {
-			return fmt.Errorf("destination.profile and exporterConfig are mutually exclusive")
-		}
-		if enabled && (d.Profile != "") == (d.ExporterConfig != "") {
-			return fmt.Errorf("Sidecar requires exporter or a legacy destination")
+		if enabled {
+			return fmt.Errorf("enabled Sidecar requires exporter")
 		}
 	} else if err := lf.Exporter.validate(); err != nil {
 		return err
 	}
+	if err := lf.validateProcessing(); err != nil {
+		return err
+	}
+
 	if enabled {
 		if len(lf.StateStorage.AccessModes) != 1 || lf.StateStorage.AccessModes[0] != core.ReadWriteOnce {
 			return fmt.Errorf("Sidecar stateStorage must use exactly [ReadWriteOnce]")
@@ -373,6 +369,8 @@ func validateLogAuth(a *LogExporterAuth) error {
 	header := a.HeaderName != ""
 	valid := false
 	switch a.Type {
+	case "Extension":
+		valid = a.ExtensionRef != "" && !token && !user && !pass && !value && !header
 	case "None":
 		valid = !token && !user && !pass && !value && !header
 	case "Token", "Bearer":
@@ -381,6 +379,9 @@ func validateLogAuth(a *LogExporterAuth) error {
 		valid = user && pass && !token && !value && !header
 	case "Header":
 		valid = value && header && !token && !user && !pass
+	}
+	if a.Type != "Extension" && a.ExtensionRef != "" {
+		valid = false
 	}
 	if !valid {
 		return fmt.Errorf("auth fields must match type")

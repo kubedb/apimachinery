@@ -757,12 +757,7 @@ func (wh *PostgresCustomWebhook) validateLogForwarder(postgres *dbapi.Postgres, 
 	if lf.Enabled != nil && !*lf.Enabled {
 		return nil
 	}
-	if lf.RolloutPolicy == dbapi.LogForwarderRolloutAutomatic {
-		return fmt.Errorf("spec.logForwarder.rolloutPolicy Automatic is not supported; use Manual and a restart OpsRequest")
-	}
-	if lf.CollectionMode != dbapi.LogCollectionModeNodeAgent && lf.Exporter == nil && (lf.Destination.Profile != "") == (lf.Destination.ExporterConfig != "") {
-		return fmt.Errorf("spec.logForwarder.destination: exactly one of profile or exporterConfig must be set")
-	}
+
 	// Shared validation handles mode-dependent state storage.
 	if len(pgVersion.Spec.LogCapabilities) > 0 {
 		supported := map[string]bool{}
