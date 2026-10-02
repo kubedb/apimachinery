@@ -27,6 +27,8 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
+	"kubedb.dev/apimachinery/pkg/reconfigure"
+	mgreconf "kubedb.dev/apimachinery/pkg/reconfigure/mongodb"
 	opsutil "kubedb.dev/apimachinery/pkg/webhooks/ops"
 
 	core "k8s.io/api/core/v1"
@@ -151,6 +153,13 @@ func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mong
 	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeVolumeExpansion {
 		if err = w.validateMongoDBVolumeExpansionOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("volumeExpansion"),
+				req.Name,
+				err.Error()))
+		}
+	}
+	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeReconfigure {
+		if err = w.validateMongoDBReconfigureOpsRequest(&db, req); err != nil {
+			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
 		}
@@ -386,4 +395,66 @@ func validateMongoDBOpsRequest(obj, oldObj runtime.Object) error {
 
 func IsOpsTypeSupported(supportedTypes []string, curOpsType string) bool {
 	return slices.Contains(supportedTypes, curOpsType)
+}
+
+func (w *MongoDBOpsRequestCustomWebhook) validateMongoDBReconfigureOpsRequest(db *dbapi.MongoDB, req *opsapi.MongoDBOpsRequest) error {
+	if req.Spec.Configuration == nil {
+		return errors.New("`spec.configuration` nil not supported in Reconfigure type")
+	}
+
+	type target struct {
+		field string
+		cur   *dbapi.ConfigurationSpec
+		ops   *opsapi.ReconfigurationSpec
+	}
+	targets := []target{
+		{"standalone", db.Spec.Configuration, req.Spec.Configuration.Standalone},
+		{"replicaSet", db.Spec.Configuration, req.Spec.Configuration.ReplicaSet},
+	}
+	if db.Spec.ShardTopology != nil {
+		targets = append(
+			targets,
+			target{"shard", db.Spec.ShardTopology.Shard.Configuration, req.Spec.Configuration.Shard},
+			target{"configServer", db.Spec.ShardTopology.ConfigServer.Configuration, req.Spec.Configuration.ConfigServer},
+			target{"mongos", db.Spec.ShardTopology.Mongos.Configuration, req.Spec.Configuration.Mongos},
+		)
+	}
+	if db.Spec.Arbiter != nil {
+		targets = append(targets, target{"arbiter", db.Spec.Arbiter.Configuration, req.Spec.Configuration.Arbiter})
+	}
+	if db.Spec.Hidden != nil {
+		targets = append(targets, target{"hidden", db.Spec.Hidden.Configuration, req.Spec.Configuration.Hidden})
+	}
+
+	opaque := sets.New(mgreconf.OpaqueFiles...)
+	var denied []string
+	for _, t := range targets {
+		if t.ops == nil {
+			continue
+		}
+		oldFiles, err := reconfigure.RenderConfiguration(context.TODO(), w.DefaultClient, db.Namespace, t.cur)
+		if err != nil {
+			return err
+		}
+		newFiles, err := reconfigure.RenderReconfiguration(context.TODO(), w.DefaultClient, db.Namespace, t.cur, t.ops)
+		if err != nil {
+			return err
+		}
+		changes, err := reconfigure.DiffRendered(oldFiles, newFiles, opaque)
+		if err != nil {
+			return err
+		}
+		classes, err := mgreconf.TableClassifier{}.Classify(context.TODO(), changes)
+		if err != nil {
+			return err
+		}
+		d := reconfigure.Decide(t.ops.Restart, changes, classes)
+		if d.Denied() {
+			denied = append(denied, reconfigure.RenderRejection(d, "spec.configuration."+t.field, mgreconf.Explainer{}))
+		}
+	}
+	if len(denied) > 0 {
+		return errors.New(strings.Join(denied, "\n"))
+	}
+	return nil
 }
