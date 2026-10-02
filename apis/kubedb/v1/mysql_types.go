@@ -126,6 +126,16 @@ type MySQLSpec struct {
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 
+	// License references the Secret holding license/subscription information
+	// required to use a licensed MySQLVersion (e.g. Oracle MySQL Enterprise
+	// Edition). Only valid, and required, when the referenced MySQLVersion has
+	// spec.license.required = true. Unlike AppsCode's Postgres Enterprise
+	// build, this is not consumed by mysqld at runtime; it is an
+	// administrative record of the license/subscription backing this
+	// deployment.
+	// +optional
+	License *MySQLLicenseSpec `json:"license,omitempty"`
+
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional
 	Halted bool `json:"halted,omitempty"`
@@ -166,6 +176,15 @@ type MySQLSpec struct {
 	// Archiver controls database backup using Archiver CR
 	// +optional
 	Archiver *Archiver `json:"archiver,omitempty"`
+}
+
+// MySQLLicenseSpec references the Secret holding license/subscription
+// information for a licensed MySQL distribution (e.g. Oracle MySQL
+// Enterprise Edition).
+type MySQLLicenseSpec struct {
+	// SecretRef selects the key of a Secret holding the license/subscription
+	// information. Key defaults to "license" if left unset.
+	SecretRef core.SecretKeySelector `json:"secretRef"`
 }
 
 // +kubebuilder:validation:Enum=server;client;metrics-exporter
