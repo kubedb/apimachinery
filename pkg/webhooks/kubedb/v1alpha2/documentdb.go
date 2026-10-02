@@ -60,7 +60,7 @@ func getMainContainerEnvs(podTemplate *ofstv2.PodTemplateSpec) []core.EnvVar {
 // SetupDocumentDBWebhookWithManager registers the webhook for DocumentDB in the manager.
 func SetupDocumentDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.DocumentDB{}).
-		WithValidator(&DocumentDBCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&DocumentDBCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias)).
 		WithDefaulter(&DocumentDBCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

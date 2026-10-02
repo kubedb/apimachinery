@@ -23,6 +23,7 @@ import (
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	kafkapi "kubedb.dev/apimachinery/apis/kafka/v1alpha1"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	"github.com/pkg/errors"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -41,7 +42,7 @@ import (
 // SetupSchemaRegistryWebhookWithManager registers the webhook for Kafka SchemaRegistry in the manager.
 func SetupSchemaRegistryWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&kafkapi.SchemaRegistry{}).
-		WithValidator(&SchemaRegistryCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&SchemaRegistryCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias)).
 		WithDefaulter(&SchemaRegistryCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

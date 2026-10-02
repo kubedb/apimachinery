@@ -44,7 +44,7 @@ import (
 // SetupPerconaXtraDBWebhookWithManager registers the webhook for PerconaXtraDB in the manager.
 func SetupPerconaXtraDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.PerconaXtraDB{}).
-		WithValidator(&PerconaXtraDBCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&PerconaXtraDBCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&PerconaXtraDBCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }

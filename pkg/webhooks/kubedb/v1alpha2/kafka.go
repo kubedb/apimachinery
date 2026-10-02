@@ -23,6 +23,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -44,7 +45,7 @@ import (
 // SetupKafkaWebhookWithManager registers the webhook for Kafka in the manager.
 func SetupKafkaWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Kafka{}).
-		WithValidator(&KafkaCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&KafkaCustomWebhook{mgr.GetClient()}, dbapi.StatsServiceAlias)).
 		WithDefaulter(&KafkaCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

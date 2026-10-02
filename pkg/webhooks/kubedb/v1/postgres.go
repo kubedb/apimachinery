@@ -49,7 +49,7 @@ import (
 // SetupPostgresWebhookWithManager registers the webhook for Postgres in the manager.
 func SetupPostgresWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Postgres{}).
-		WithValidator(&PostgresCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&PostgresCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.ReadReplicaServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&PostgresCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }

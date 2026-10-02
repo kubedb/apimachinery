@@ -23,6 +23,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -42,7 +43,7 @@ import (
 // SetupRabbitMQWebhookWithManager registers the webhook for RabbitMQ in the manager.
 func SetupRabbitMQWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.RabbitMQ{}).
-		WithValidator(&RabbitMQCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&RabbitMQCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.DashboardServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&RabbitMQCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
