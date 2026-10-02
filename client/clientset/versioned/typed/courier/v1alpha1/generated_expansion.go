@@ -30,4 +30,6 @@ type MongoDBMigrationExpansion interface{}
 
 type MySQLMigrationExpansion interface{}
 
+type OracleMigrationExpansion interface{}
+
 type PostgresMigrationExpansion interface{}
