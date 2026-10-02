@@ -30845,6 +30845,9 @@
         "adminVariables": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
+        "mysqlAWSAuroraHostgroups": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "mysqlQueryRules": {
           "type": "array",
           "items": {
