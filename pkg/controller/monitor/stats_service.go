@@ -27,6 +27,7 @@ import (
 	kutil "kmodules.xyz/client-go"
 	clientutil "kmodules.xyz/client-go/client"
 	core_util "kmodules.xyz/client-go/core/v1"
+	meta_util "kmodules.xyz/client-go/meta"
 	mona "kmodules.xyz/monitoring-agent-api/api/v1"
 	ofst "kmodules.xyz/offshoot-api/api/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -79,7 +80,11 @@ func (o StatsServiceOptions) Ensure(ctx context.Context) (kutil.VerbType, error)
 		core_util.EnsureOwnerReference(&in.ObjectMeta, o.DB.AsOwner())
 		in.Labels = o.DB.StatsServiceLabels()
 		in.Spec.Selector = o.Selectors
+		// monitoring agents record their own annotations (agent type, prometheus scrape config) on the
+		// stats Service, so template annotations are merged instead of replacing them
+		annotations := in.Annotations
 		svcutil.ApplyServiceTemplate(in, o.ServiceTemplate, ports)
+		in.Annotations = meta_util.OverwriteKeys(annotations, o.ServiceTemplate.Annotations)
 		return in
 	})
 	if err != nil {
