@@ -581,7 +581,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ArbiterSpec":                                         schema_apimachinery_apis_kubedb_v1_ArbiterSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.Archiver":                                            schema_apimachinery_apis_kubedb_v1_Archiver(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ArchiverRecovery":                                    schema_apimachinery_apis_kubedb_v1_ArchiverRecovery(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1.AuroraBackendSpec":                                   schema_apimachinery_apis_kubedb_v1_AuroraBackendSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec":                                         schema_apimachinery_apis_kubedb_v1_AutoOpsSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.BrokerRack":                                          schema_apimachinery_apis_kubedb_v1_BrokerRack(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec":                                   schema_apimachinery_apis_kubedb_v1_ConfigurationSpec(ref),
@@ -665,7 +664,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresTDESpec":                                     schema_apimachinery_apis_kubedb_v1_PostgresTDESpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.PostgresTuningConfig":                                schema_apimachinery_apis_kubedb_v1_PostgresTuningConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQL":                                            schema_apimachinery_apis_kubedb_v1_ProxySQL(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLBackendSpec":                                 schema_apimachinery_apis_kubedb_v1_ProxySQLBackendSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration":                               schema_apimachinery_apis_kubedb_v1_ProxySQLConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfigurationSpec":                           schema_apimachinery_apis_kubedb_v1_ProxySQLConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLInitConfiguration":                           schema_apimachinery_apis_kubedb_v1_ProxySQLInitConfiguration(ref),
@@ -33695,40 +33693,6 @@ func schema_apimachinery_apis_kubedb_v1_ArchiverRecovery(ref common.ReferenceCal
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1_AuroraBackendSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "AuroraBackendSpec configures how this ProxySQL instance routes to an AWS Aurora backend, via ProxySQL's native mysql_aws_aurora_hostgroups mechanism (auto-discovers cluster instances and tracks writer/reader role from Aurora's own information_schema.replica_host_status, rather than polling innodb_read_only through Aurora's floating cluster/reader DNS endpoints).",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"newReaderWeight": {
-						SchemaProps: spec.SchemaProps{
-							Description: "NewReaderWeight sets the ProxySQL mysql_servers.weight assigned to each Aurora reader instance ProxySQL auto-discovers (mysql_aws_aurora_hostgroups.new_reader_weight).",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"maxLagMs": {
-						SchemaProps: spec.SchemaProps{
-							Description: "MaxLagMs excludes an Aurora reader instance from the read pool once its measured replication lag exceeds this many milliseconds (mysql_aws_aurora_hostgroups.max_lag_ms).",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-					"checkIntervalMs": {
-						SchemaProps: spec.SchemaProps{
-							Description: "CheckIntervalMs controls how often ProxySQL polls Aurora's replica_host_status for topology/role changes (mysql_aws_aurora_hostgroups.check_interval_ms). Lower values detect a failover faster at the cost of more frequent checks.",
-							Type:        []string{"integer"},
-							Format:      "int32",
-						},
-					},
-				},
-			},
-		},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1_AutoOpsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -38757,35 +38721,6 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQL(ref common.ReferenceCallback) c
 	}
 }
 
-func schema_apimachinery_apis_kubedb_v1_ProxySQLBackendSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ProxySQLBackendSpec refers to the AppBinding of the backend server, plus any backend-specific routing/tuning policy for this ProxySQL instance.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"name": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Name of the referent. This field is effectively required, but due to backwards compatibility is allowed to be empty. Instances of this type with an empty value here are almost certainly wrong. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"aurora": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Aurora contains AWS Aurora-specific routing/tuning policy for this ProxySQL instance. Only meaningful when the referenced AppBinding's spec.type is the AWS Aurora AppType; ignored otherwise. Two different ProxySQL instances fronting the same Aurora cluster may set this differently.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.AuroraBackendSpec"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1.AuroraBackendSpec"},
-	}
-}
-
 func schema_apimachinery_apis_kubedb_v1_ProxySQLConfiguration(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -38823,6 +38758,11 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLConfiguration(ref common.Referen
 						},
 					},
 					"adminVariables": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"mysqlAWSAuroraHostgroups": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
@@ -38869,7 +38809,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLInitConfiguration(ref common.Ref
 					},
 					"secretName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "a Secret containing raw bootstrap config files for ProxySQL. Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf. Values are patched verbatim into proxysql.cnf during bootstrap. Inline configuration (init.inline) always takes precedence. These configs are applied only once; invalid formatting may cause startup failure.",
+							Description: "a Secret containing raw bootstrap config files for ProxySQL. Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf, MySQLAWSAuroraHostgroups.cnf. Values are patched verbatim into proxysql.cnf during bootstrap. Inline configuration (init.inline) always takes precedence. These configs are applied only once; invalid formatting may cause startup failure.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -38958,7 +38898,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 					},
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret is an optional field to provide custom configuration file for proxysql. Users can provide a Secret containing raw bootstrap config files for ProxySQL. Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf. Values are patched verbatim into proxysql.cnf during bootstrap. InitConfiguration (spec.initConfig) takes precedence than this. These configs are applied only once; invalid formatting may cause startup failure.",
+							Description: "ConfigSecret is an optional field to provide custom configuration file for proxysql. Users can provide a Secret containing raw bootstrap config files for ProxySQL. Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf, MySQLAWSAuroraHostgroups.cnf. Values are patched verbatim into proxysql.cnf during bootstrap. InitConfiguration (spec.initConfig) takes precedence than this. These configs are applied only once; invalid formatting may cause startup failure.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -38986,7 +38926,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 					"backend": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB/AWS-Aurora server",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLBackendSpec"),
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"authSecret": {
@@ -39054,7 +38994,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLBackendSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1.ProxySQLConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 

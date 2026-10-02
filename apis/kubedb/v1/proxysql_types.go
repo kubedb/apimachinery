@@ -88,7 +88,7 @@ type ProxySQLSpec struct {
 	// +kubebuilder:deprecatedversion:warning="Use spec.configuration.init.secretName instead"
 	// ConfigSecret is an optional field to provide custom configuration file for proxysql.
 	// Users can provide a Secret containing raw bootstrap config files for ProxySQL.
-	// Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf.
+	// Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf, MySQLAWSAuroraHostgroups.cnf.
 	// Values are patched verbatim into proxysql.cnf during bootstrap.
 	// InitConfiguration (spec.initConfig) takes precedence than this.
 	// These configs are applied only once; invalid formatting may cause startup failure.
@@ -107,7 +107,7 @@ type ProxySQLSpec struct {
 	Replicas *int32 `json:"replicas,omitempty"`
 
 	// Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB/AWS-Aurora server
-	Backend *ProxySQLBackendSpec `json:"backend,omitempty"`
+	Backend *core.LocalObjectReference `json:"backend,omitempty"`
 
 	// ProxySQL secret containing username and password for root user and proxysql user
 	// +optional
@@ -143,44 +143,6 @@ type ProxySQLSpec struct {
 	Halted bool `json:"halted,omitempty"`
 }
 
-// ProxySQLBackendSpec refers to the AppBinding of the backend server, plus any backend-specific
-// routing/tuning policy for this ProxySQL instance.
-type ProxySQLBackendSpec struct {
-	core.LocalObjectReference `json:",inline"`
-
-	// Aurora contains AWS Aurora-specific routing/tuning policy for this ProxySQL instance. Only
-	// meaningful when the referenced AppBinding's spec.type is the AWS Aurora AppType; ignored
-	// otherwise. Two different ProxySQL instances fronting the same Aurora cluster may set this
-	// differently.
-	// +optional
-	Aurora *AuroraBackendSpec `json:"aurora,omitempty"`
-}
-
-// AuroraBackendSpec configures how this ProxySQL instance routes to an AWS Aurora backend, via
-// ProxySQL's native mysql_aws_aurora_hostgroups mechanism (auto-discovers cluster instances and
-// tracks writer/reader role from Aurora's own information_schema.replica_host_status, rather
-// than polling innodb_read_only through Aurora's floating cluster/reader DNS endpoints).
-type AuroraBackendSpec struct {
-	// NewReaderWeight sets the ProxySQL mysql_servers.weight assigned to each Aurora reader
-	// instance ProxySQL auto-discovers (mysql_aws_aurora_hostgroups.new_reader_weight).
-	// +optional
-	// +kubebuilder:default=1000
-	NewReaderWeight *int32 `json:"newReaderWeight,omitempty"`
-
-	// MaxLagMs excludes an Aurora reader instance from the read pool once its measured
-	// replication lag exceeds this many milliseconds (mysql_aws_aurora_hostgroups.max_lag_ms).
-	// +optional
-	// +kubebuilder:default=600000
-	MaxLagMs *int32 `json:"maxLagMs,omitempty"`
-
-	// CheckIntervalMs controls how often ProxySQL polls Aurora's replica_host_status for
-	// topology/role changes (mysql_aws_aurora_hostgroups.check_interval_ms). Lower values
-	// detect a failover faster at the cost of more frequent checks.
-	// +optional
-	// +kubebuilder:default=1000
-	CheckIntervalMs *int32 `json:"checkIntervalMs,omitempty"`
-}
-
 type ProxySQLConfigurationSpec struct {
 	// +optional
 	// Init contains bootstrap-only configuration.
@@ -197,7 +159,7 @@ type ProxySQLInitConfiguration struct {
 
 	// +optional
 	// a Secret containing raw bootstrap config files for ProxySQL.
-	// Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf.
+	// Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf, MySQLAWSAuroraHostgroups.cnf.
 	// Values are patched verbatim into proxysql.cnf during bootstrap.
 	// Inline configuration (init.inline) always takes precedence.
 	// These configs are applied only once; invalid formatting may cause startup failure.
@@ -219,6 +181,10 @@ type ProxySQLConfiguration struct {
 	// +optional
 	// +kubebuilder:pruning:PreserveUnknownFields
 	AdminVariables *runtime.RawExtension `json:"adminVariables,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	MySQLAWSAuroraHostgroups *runtime.RawExtension `json:"mysqlAWSAuroraHostgroups,omitempty"`
 }
 
 type MySQLUser struct {

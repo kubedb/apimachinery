@@ -1181,11 +1181,7 @@ func Convert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec(in *ProxySQLSpec, out *v1.
 	out.InitConfiguration = (*v1.ProxySQLConfiguration)(unsafe.Pointer(in.InitConfiguration))
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	if in.Backend != nil {
-		out.Backend = &v1.ProxySQLBackendSpec{LocalObjectReference: *in.Backend}
-	} else {
-		out.Backend = nil
-	}
+	out.Backend = (*corev1.LocalObjectReference)(unsafe.Pointer(in.Backend))
 	out.AuthSecret = (*v1.SecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))
@@ -1207,13 +1203,7 @@ func Convert_v1_ProxySQLSpec_To_v1alpha2_ProxySQLSpec(in *v1.ProxySQLSpec, out *
 	out.InitConfiguration = (*ProxySQLConfiguration)(unsafe.Pointer(in.InitConfiguration))
 	out.Version = in.Version
 	out.Replicas = (*int32)(unsafe.Pointer(in.Replicas))
-	if in.Backend != nil {
-		// v1alpha2 has no concept of Backend.Aurora; that policy is dropped on downgrade.
-		ref := in.Backend.LocalObjectReference
-		out.Backend = &ref
-	} else {
-		out.Backend = nil
-	}
+	out.Backend = (*corev1.LocalObjectReference)(unsafe.Pointer(in.Backend))
 	out.AuthSecret = (*SecretReference)(unsafe.Pointer(in.AuthSecret))
 	out.Monitor = (*monitoringagentapiapiv1.AgentSpec)(unsafe.Pointer(in.Monitor))
 	out.ConfigSecret = (*corev1.LocalObjectReference)(unsafe.Pointer(in.ConfigSecret))

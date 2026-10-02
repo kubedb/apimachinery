@@ -56,21 +56,6 @@ spec:
                 type: object
               backend:
                 properties:
-                  aurora:
-                    properties:
-                      checkIntervalMs:
-                        default: 1000
-                        format: int32
-                        type: integer
-                      maxLagMs:
-                        default: 600000
-                        format: int32
-                        type: integer
-                      newReaderWeight:
-                        default: 1000
-                        format: int32
-                        type: integer
-                    type: object
                   name:
                     default: ""
                     type: string
@@ -90,6 +75,9 @@ spec:
                       inline:
                         properties:
                           adminVariables:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
+                          mysqlAWSAuroraHostgroups:
                             type: object
                             x-kubernetes-preserve-unknown-fields: true
                           mysqlQueryRules:
@@ -173,6 +161,9 @@ spec:
               initConfig:
                 properties:
                   adminVariables:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
+                  mysqlAWSAuroraHostgroups:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   mysqlQueryRules:

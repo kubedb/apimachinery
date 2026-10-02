@@ -114,15 +114,12 @@ type ProxySQLConfiguration struct {
 	// +optional
 	// +kubebuilder:pruning:PreserveUnknownFields
 	AdminVariables *runtime.RawExtension `json:"adminVariables,omitempty"`
+
+	// +optional
+	// +kubebuilder:pruning:PreserveUnknownFields
+	MySQLAWSAuroraHostgroups *runtime.RawExtension `json:"mysqlAWSAuroraHostgroups,omitempty"`
 }
 
-// +k8s:conversion-gen=false
-// ProxySQLSpec.Backend is *core.LocalObjectReference here but *v1.ProxySQLBackendSpec in the peer
-// v1 package (added for the Aurora backend, see AuroraBackendSpec), so conversion-gen cannot
-// auto-convert this field and would otherwise emit a permanently-broken autoConvert stub on every
-// regeneration. Convert_v1alpha2_ProxySQLSpec_To_v1_ProxySQLSpec and its reverse in conversion.go
-// are fully hand-written and already used directly by the top-level ProxySQL conversion, so no
-// autoConvert_* variant for this type is needed.
 type ProxySQLSpec struct {
 	// AutoOps contains configuration of automatic ops-request-recommendation generation
 	// +optional
