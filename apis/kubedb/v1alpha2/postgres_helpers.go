@@ -190,6 +190,9 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion, topolog
 	if p == nil {
 		return
 	}
+	if p.Spec.LogForwarder != nil {
+		p.Spec.LogForwarder.SetCollectionDefaults()
+	}
 	if p.Spec.StandbyMode == nil {
 		p.Spec.StandbyMode = ptr.To(HotPostgresStandbyMode)
 	}

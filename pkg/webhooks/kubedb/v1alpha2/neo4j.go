@@ -210,10 +210,66 @@ func (w *Neo4jCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Neo4j) error {
 	if err := amv.ValidateGitInitRootPath((*dbapi.InitSpec)(unsafe.Pointer(db.Spec.Init)), Neo4jReservedVolumeMountPaths); err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("init"), db.GetName(), err.Error()))
 	}
+
+	allErr = append(allErr, w.validateLogForwarder(db)...)
+
 	if len(allErr) == 0 {
 		return nil
 	}
 	return apierrors.NewInvalid(schema.GroupKind{Group: "Neo4j.kubedb.com", Kind: "Neo4j"}, db.GetName(), allErr)
+}
+
+// validateLogForwarder validates the native log-forwarder feature. It is a no-op when the feature
+// is absent, so an unconfigured Neo4j is unaffected.
+func (w *Neo4jCustomWebhook) validateLogForwarder(db *olddbapi.Neo4j) field.ErrorList {
+	lf := db.Spec.LogForwarder
+	if lf == nil {
+		return nil
+	}
+	var errs field.ErrorList
+	lfPath := field.NewPath("spec").Child("logForwarder")
+	if err := lf.ValidateCollection(); err != nil {
+		return field.ErrorList{field.Invalid(lfPath, "configuration", err.Error())}
+	}
+
+	// Only enforce the heavier rules when forwarding is actually enabled; a disabled forwarder may
+	// legitimately retain a partial configuration and its state PVCs.
+	enabled := lf.Enabled == nil || *lf.Enabled
+	if !enabled {
+		return errs
+	}
+
+	// Shared validation handles exporter selection and mode-dependent storage.
+
+	// Sources must be advertised by the version's log capabilities.
+	if len(lf.Sources) > 0 {
+		version := catalog.Neo4jVersion{}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &version); err == nil {
+			supported := map[string]bool{}
+			for _, c := range version.Spec.LogCapabilities {
+				supported[c.Name] = true
+			}
+			// Only enforce when the version actually advertises capabilities; empty means unknown.
+			if len(supported) > 0 {
+				for i, s := range lf.Sources {
+					if !supported[s.Name] {
+						errs = append(errs, field.Invalid(lfPath.Child("sources").Index(i).Child("name"),
+							s.Name, fmt.Sprintf("log source %q is not supported by Neo4jVersion %q", s.Name, db.Spec.Version)))
+					}
+				}
+			}
+		}
+	}
+
+	// Reject collisions with the reserved sidecar container name; native forwarding owns it.
+	for i, c := range db.Spec.PodTemplate.Spec.Containers {
+		if lf.CollectionMode != olddbapi.LogCollectionModeNodeAgent && c.Name == kubedb.LogForwarderContainerName {
+			errs = append(errs, field.Invalid(field.NewPath("spec").Child("podTemplate").Child("spec").Child("containers").Index(i).Child("name"),
+				c.Name, "container name is reserved by native logForwarder; remove the manual sidecar or disable logForwarder"))
+		}
+	}
+
+	return errs
 }
 
 func (w *Neo4jCustomWebhook) ValidateVersion(db *olddbapi.Neo4j) error {

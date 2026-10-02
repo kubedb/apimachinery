@@ -296,6 +296,9 @@ func (wh *PostgresCustomWebhook) validateSpecForDB(postgres *dbapi.Postgres, pgV
 	if err := wh.validateLicense(postgres, pgVersion); err != nil {
 		return err
 	}
+	if err := wh.validateLogForwarder(postgres, pgVersion); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -737,6 +740,39 @@ func validatePostgresInlineConfig(inline map[string]string) error {
 		default:
 			return fmt.Errorf("invalid configuration source %q found in spec.configuration.inline; only %q and %q are allowed",
 				key, kubedb.PostgresCustomConfigFile, kubedb.PostgresCustomHBAFile)
+		}
+	}
+	return nil
+}
+
+// validateLogForwarder validates the native log-forwarder feature; no-op when absent/disabled.
+func (wh *PostgresCustomWebhook) validateLogForwarder(postgres *dbapi.Postgres, pgVersion *catalogapi.PostgresVersion) error {
+	lf := postgres.Spec.LogForwarder
+	if lf == nil {
+		return nil
+	}
+	if err := lf.ValidateCollection(); err != nil {
+		return fmt.Errorf("spec.logForwarder: %w", err)
+	}
+	if lf.Enabled != nil && !*lf.Enabled {
+		return nil
+	}
+
+	// Shared validation handles mode-dependent state storage.
+	if len(pgVersion.Spec.LogCapabilities) > 0 {
+		supported := map[string]bool{}
+		for _, c := range pgVersion.Spec.LogCapabilities {
+			supported[c.Name] = true
+		}
+		for _, s := range lf.Sources {
+			if !supported[s.Name] {
+				return fmt.Errorf("spec.logForwarder: log source %q is not supported by PostgresVersion %q", s.Name, pgVersion.Name)
+			}
+		}
+	}
+	for _, c := range postgres.Spec.PodTemplate.Spec.Containers {
+		if lf.CollectionMode != dbapi.LogCollectionModeNodeAgent && c.Name == kubedb.LogForwarderContainerName {
+			return fmt.Errorf("spec.podTemplate: container name %q is reserved by native logForwarder", kubedb.LogForwarderContainerName)
 		}
 	}
 	return nil

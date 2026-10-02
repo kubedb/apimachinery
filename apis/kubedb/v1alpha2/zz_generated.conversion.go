@@ -27,6 +27,7 @@ import (
 	v1 "kubedb.dev/apimachinery/apis/kubedb/v1"
 
 	corev1 "k8s.io/api/core/v1"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	conversion "k8s.io/apimachinery/pkg/conversion"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -316,6 +317,286 @@ func RegisterConversions(s *runtime.Scheme) error {
 	}
 	if err := s.AddGeneratedConversionFunc((*v1.KernelSettings)(nil), (*KernelSettings)(nil), func(a, b interface{}, scope conversion.Scope) error {
 		return Convert_v1_KernelSettings_To_v1alpha2_KernelSettings(a.(*v1.KernelSettings), b.(*KernelSettings), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogAttributeAction)(nil), (*v1.LogAttributeAction)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogAttributeAction_To_v1_LogAttributeAction(a.(*LogAttributeAction), b.(*v1.LogAttributeAction), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogAttributeAction)(nil), (*LogAttributeAction)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogAttributeAction_To_v1alpha2_LogAttributeAction(a.(*v1.LogAttributeAction), b.(*LogAttributeAction), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogAttributesProcessor)(nil), (*v1.LogAttributesProcessor)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogAttributesProcessor_To_v1_LogAttributesProcessor(a.(*LogAttributesProcessor), b.(*v1.LogAttributesProcessor), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogAttributesProcessor)(nil), (*LogAttributesProcessor)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogAttributesProcessor_To_v1alpha2_LogAttributesProcessor(a.(*v1.LogAttributesProcessor), b.(*LogAttributesProcessor), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogBatchProcessor)(nil), (*v1.LogBatchProcessor)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogBatchProcessor_To_v1_LogBatchProcessor(a.(*LogBatchProcessor), b.(*v1.LogBatchProcessor), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogBatchProcessor)(nil), (*LogBatchProcessor)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogBatchProcessor_To_v1alpha2_LogBatchProcessor(a.(*v1.LogBatchProcessor), b.(*LogBatchProcessor), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogDatadogAPI)(nil), (*v1.LogDatadogAPI)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogDatadogAPI_To_v1_LogDatadogAPI(a.(*LogDatadogAPI), b.(*v1.LogDatadogAPI), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogDatadogAPI)(nil), (*LogDatadogAPI)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogDatadogAPI_To_v1alpha2_LogDatadogAPI(a.(*v1.LogDatadogAPI), b.(*LogDatadogAPI), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogDatadogExporter)(nil), (*v1.LogDatadogExporter)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogDatadogExporter_To_v1_LogDatadogExporter(a.(*LogDatadogExporter), b.(*v1.LogDatadogExporter), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogDatadogExporter)(nil), (*LogDatadogExporter)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogDatadogExporter_To_v1alpha2_LogDatadogExporter(a.(*v1.LogDatadogExporter), b.(*LogDatadogExporter), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogElasticsearchExporter)(nil), (*v1.LogElasticsearchExporter)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogElasticsearchExporter_To_v1_LogElasticsearchExporter(a.(*LogElasticsearchExporter), b.(*v1.LogElasticsearchExporter), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogElasticsearchExporter)(nil), (*LogElasticsearchExporter)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogElasticsearchExporter_To_v1alpha2_LogElasticsearchExporter(a.(*v1.LogElasticsearchExporter), b.(*LogElasticsearchExporter), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogElasticsearchMapping)(nil), (*v1.LogElasticsearchMapping)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogElasticsearchMapping_To_v1_LogElasticsearchMapping(a.(*LogElasticsearchMapping), b.(*v1.LogElasticsearchMapping), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogElasticsearchMapping)(nil), (*LogElasticsearchMapping)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogElasticsearchMapping_To_v1alpha2_LogElasticsearchMapping(a.(*v1.LogElasticsearchMapping), b.(*LogElasticsearchMapping), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogElasticsearchRetry)(nil), (*v1.LogElasticsearchRetry)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogElasticsearchRetry_To_v1_LogElasticsearchRetry(a.(*LogElasticsearchRetry), b.(*v1.LogElasticsearchRetry), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogElasticsearchRetry)(nil), (*LogElasticsearchRetry)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogElasticsearchRetry_To_v1alpha2_LogElasticsearchRetry(a.(*v1.LogElasticsearchRetry), b.(*LogElasticsearchRetry), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogExporterAuth)(nil), (*v1.LogExporterAuth)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogExporterAuth_To_v1_LogExporterAuth(a.(*LogExporterAuth), b.(*v1.LogExporterAuth), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogExporterAuth)(nil), (*LogExporterAuth)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogExporterAuth_To_v1alpha2_LogExporterAuth(a.(*v1.LogExporterAuth), b.(*LogExporterAuth), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogExporterOptions)(nil), (*v1.LogExporterOptions)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogExporterOptions_To_v1_LogExporterOptions(a.(*LogExporterOptions), b.(*v1.LogExporterOptions), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogExporterOptions)(nil), (*LogExporterOptions)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogExporterOptions_To_v1alpha2_LogExporterOptions(a.(*v1.LogExporterOptions), b.(*LogExporterOptions), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogExporterSpec)(nil), (*v1.LogExporterSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogExporterSpec_To_v1_LogExporterSpec(a.(*LogExporterSpec), b.(*v1.LogExporterSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogExporterSpec)(nil), (*LogExporterSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogExporterSpec_To_v1alpha2_LogExporterSpec(a.(*v1.LogExporterSpec), b.(*LogExporterSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogExtensions)(nil), (*v1.LogExtensions)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogExtensions_To_v1_LogExtensions(a.(*LogExtensions), b.(*v1.LogExtensions), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogExtensions)(nil), (*LogExtensions)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogExtensions_To_v1alpha2_LogExtensions(a.(*v1.LogExtensions), b.(*LogExtensions), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogFileLogReceiver)(nil), (*v1.LogFileLogReceiver)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogFileLogReceiver_To_v1_LogFileLogReceiver(a.(*LogFileLogReceiver), b.(*v1.LogFileLogReceiver), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogFileLogReceiver)(nil), (*LogFileLogReceiver)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogFileLogReceiver_To_v1alpha2_LogFileLogReceiver(a.(*v1.LogFileLogReceiver), b.(*LogFileLogReceiver), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogFilterLogs)(nil), (*v1.LogFilterLogs)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogFilterLogs_To_v1_LogFilterLogs(a.(*LogFilterLogs), b.(*v1.LogFilterLogs), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogFilterLogs)(nil), (*LogFilterLogs)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogFilterLogs_To_v1alpha2_LogFilterLogs(a.(*v1.LogFilterLogs), b.(*LogFilterLogs), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogFilterProcessor)(nil), (*v1.LogFilterProcessor)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogFilterProcessor_To_v1_LogFilterProcessor(a.(*LogFilterProcessor), b.(*v1.LogFilterProcessor), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogFilterProcessor)(nil), (*LogFilterProcessor)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogFilterProcessor_To_v1alpha2_LogFilterProcessor(a.(*v1.LogFilterProcessor), b.(*LogFilterProcessor), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogForwarderSpec)(nil), (*v1.LogForwarderSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogForwarderSpec_To_v1_LogForwarderSpec(a.(*LogForwarderSpec), b.(*v1.LogForwarderSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogForwarderSpec)(nil), (*LogForwarderSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogForwarderSpec_To_v1alpha2_LogForwarderSpec(a.(*v1.LogForwarderSpec), b.(*LogForwarderSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogForwarderTLS)(nil), (*v1.LogForwarderTLS)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogForwarderTLS_To_v1_LogForwarderTLS(a.(*LogForwarderTLS), b.(*v1.LogForwarderTLS), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogForwarderTLS)(nil), (*LogForwarderTLS)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogForwarderTLS_To_v1alpha2_LogForwarderTLS(a.(*v1.LogForwarderTLS), b.(*LogForwarderTLS), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogMemoryLimiterProcessor)(nil), (*v1.LogMemoryLimiterProcessor)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogMemoryLimiterProcessor_To_v1_LogMemoryLimiterProcessor(a.(*LogMemoryLimiterProcessor), b.(*v1.LogMemoryLimiterProcessor), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogMemoryLimiterProcessor)(nil), (*LogMemoryLimiterProcessor)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogMemoryLimiterProcessor_To_v1alpha2_LogMemoryLimiterProcessor(a.(*v1.LogMemoryLimiterProcessor), b.(*LogMemoryLimiterProcessor), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogOTLPHTTPExporter)(nil), (*v1.LogOTLPHTTPExporter)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogOTLPHTTPExporter_To_v1_LogOTLPHTTPExporter(a.(*LogOTLPHTTPExporter), b.(*v1.LogOTLPHTTPExporter), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogOTLPHTTPExporter)(nil), (*LogOTLPHTTPExporter)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogOTLPHTTPExporter_To_v1alpha2_LogOTLPHTTPExporter(a.(*v1.LogOTLPHTTPExporter), b.(*LogOTLPHTTPExporter), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogProcessors)(nil), (*v1.LogProcessors)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogProcessors_To_v1_LogProcessors(a.(*LogProcessors), b.(*v1.LogProcessors), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogProcessors)(nil), (*LogProcessors)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogProcessors_To_v1alpha2_LogProcessors(a.(*v1.LogProcessors), b.(*LogProcessors), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogRetryOnFailure)(nil), (*v1.LogRetryOnFailure)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogRetryOnFailure_To_v1_LogRetryOnFailure(a.(*LogRetryOnFailure), b.(*v1.LogRetryOnFailure), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogRetryOnFailure)(nil), (*LogRetryOnFailure)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogRetryOnFailure_To_v1alpha2_LogRetryOnFailure(a.(*v1.LogRetryOnFailure), b.(*LogRetryOnFailure), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogSendingQueue)(nil), (*v1.LogSendingQueue)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogSendingQueue_To_v1_LogSendingQueue(a.(*LogSendingQueue), b.(*v1.LogSendingQueue), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogSendingQueue)(nil), (*LogSendingQueue)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogSendingQueue_To_v1alpha2_LogSendingQueue(a.(*v1.LogSendingQueue), b.(*LogSendingQueue), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogSourceSpec)(nil), (*v1.LogSourceSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogSourceSpec_To_v1_LogSourceSpec(a.(*LogSourceSpec), b.(*v1.LogSourceSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogSourceSpec)(nil), (*LogSourceSpec)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogSourceSpec_To_v1alpha2_LogSourceSpec(a.(*v1.LogSourceSpec), b.(*LogSourceSpec), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogSourceStorage)(nil), (*v1.LogSourceStorage)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogSourceStorage_To_v1_LogSourceStorage(a.(*LogSourceStorage), b.(*v1.LogSourceStorage), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogSourceStorage)(nil), (*LogSourceStorage)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogSourceStorage_To_v1alpha2_LogSourceStorage(a.(*v1.LogSourceStorage), b.(*LogSourceStorage), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogSplunkHECExporter)(nil), (*v1.LogSplunkHECExporter)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogSplunkHECExporter_To_v1_LogSplunkHECExporter(a.(*LogSplunkHECExporter), b.(*v1.LogSplunkHECExporter), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogSplunkHECExporter)(nil), (*LogSplunkHECExporter)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogSplunkHECExporter_To_v1alpha2_LogSplunkHECExporter(a.(*v1.LogSplunkHECExporter), b.(*LogSplunkHECExporter), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogSyslogExporter)(nil), (*v1.LogSyslogExporter)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogSyslogExporter_To_v1_LogSyslogExporter(a.(*LogSyslogExporter), b.(*v1.LogSyslogExporter), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogSyslogExporter)(nil), (*LogSyslogExporter)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogSyslogExporter_To_v1alpha2_LogSyslogExporter(a.(*v1.LogSyslogExporter), b.(*LogSyslogExporter), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogTransformProcessor)(nil), (*v1.LogTransformProcessor)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogTransformProcessor_To_v1_LogTransformProcessor(a.(*LogTransformProcessor), b.(*v1.LogTransformProcessor), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogTransformProcessor)(nil), (*LogTransformProcessor)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogTransformProcessor_To_v1alpha2_LogTransformProcessor(a.(*v1.LogTransformProcessor), b.(*LogTransformProcessor), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*LogTransformStatements)(nil), (*v1.LogTransformStatements)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1alpha2_LogTransformStatements_To_v1_LogTransformStatements(a.(*LogTransformStatements), b.(*v1.LogTransformStatements), scope)
+	}); err != nil {
+		return err
+	}
+	if err := s.AddGeneratedConversionFunc((*v1.LogTransformStatements)(nil), (*LogTransformStatements)(nil), func(a, b interface{}, scope conversion.Scope) error {
+		return Convert_v1_LogTransformStatements_To_v1alpha2_LogTransformStatements(a.(*v1.LogTransformStatements), b.(*LogTransformStatements), scope)
 	}); err != nil {
 		return err
 	}
@@ -2232,6 +2513,768 @@ func Convert_v1_KernelSettings_To_v1alpha2_KernelSettings(in *v1.KernelSettings,
 	return autoConvert_v1_KernelSettings_To_v1alpha2_KernelSettings(in, out, s)
 }
 
+func autoConvert_v1alpha2_LogAttributeAction_To_v1_LogAttributeAction(in *LogAttributeAction, out *v1.LogAttributeAction, s conversion.Scope) error {
+	out.Key = in.Key
+	out.Action = in.Action
+	out.Value = (*apiextensionsv1.JSON)(unsafe.Pointer(in.Value))
+	out.FromAttribute = in.FromAttribute
+	out.FromContext = in.FromContext
+	out.Pattern = in.Pattern
+	out.ConvertedType = in.ConvertedType
+	return nil
+}
+
+// Convert_v1alpha2_LogAttributeAction_To_v1_LogAttributeAction is an autogenerated conversion function.
+func Convert_v1alpha2_LogAttributeAction_To_v1_LogAttributeAction(in *LogAttributeAction, out *v1.LogAttributeAction, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogAttributeAction_To_v1_LogAttributeAction(in, out, s)
+}
+
+func autoConvert_v1_LogAttributeAction_To_v1alpha2_LogAttributeAction(in *v1.LogAttributeAction, out *LogAttributeAction, s conversion.Scope) error {
+	out.Key = in.Key
+	out.Action = in.Action
+	out.Value = (*apiextensionsv1.JSON)(unsafe.Pointer(in.Value))
+	out.FromAttribute = in.FromAttribute
+	out.FromContext = in.FromContext
+	out.Pattern = in.Pattern
+	out.ConvertedType = in.ConvertedType
+	return nil
+}
+
+// Convert_v1_LogAttributeAction_To_v1alpha2_LogAttributeAction is an autogenerated conversion function.
+func Convert_v1_LogAttributeAction_To_v1alpha2_LogAttributeAction(in *v1.LogAttributeAction, out *LogAttributeAction, s conversion.Scope) error {
+	return autoConvert_v1_LogAttributeAction_To_v1alpha2_LogAttributeAction(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogAttributesProcessor_To_v1_LogAttributesProcessor(in *LogAttributesProcessor, out *v1.LogAttributesProcessor, s conversion.Scope) error {
+	out.Actions = *(*[]v1.LogAttributeAction)(unsafe.Pointer(&in.Actions))
+	return nil
+}
+
+// Convert_v1alpha2_LogAttributesProcessor_To_v1_LogAttributesProcessor is an autogenerated conversion function.
+func Convert_v1alpha2_LogAttributesProcessor_To_v1_LogAttributesProcessor(in *LogAttributesProcessor, out *v1.LogAttributesProcessor, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogAttributesProcessor_To_v1_LogAttributesProcessor(in, out, s)
+}
+
+func autoConvert_v1_LogAttributesProcessor_To_v1alpha2_LogAttributesProcessor(in *v1.LogAttributesProcessor, out *LogAttributesProcessor, s conversion.Scope) error {
+	out.Actions = *(*[]LogAttributeAction)(unsafe.Pointer(&in.Actions))
+	return nil
+}
+
+// Convert_v1_LogAttributesProcessor_To_v1alpha2_LogAttributesProcessor is an autogenerated conversion function.
+func Convert_v1_LogAttributesProcessor_To_v1alpha2_LogAttributesProcessor(in *v1.LogAttributesProcessor, out *LogAttributesProcessor, s conversion.Scope) error {
+	return autoConvert_v1_LogAttributesProcessor_To_v1alpha2_LogAttributesProcessor(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogBatchProcessor_To_v1_LogBatchProcessor(in *LogBatchProcessor, out *v1.LogBatchProcessor, s conversion.Scope) error {
+	out.Timeout = (*metav1.Duration)(unsafe.Pointer(in.Timeout))
+	out.SendBatchSize = (*int32)(unsafe.Pointer(in.SendBatchSize))
+	out.SendBatchMaxSize = (*int32)(unsafe.Pointer(in.SendBatchMaxSize))
+	return nil
+}
+
+// Convert_v1alpha2_LogBatchProcessor_To_v1_LogBatchProcessor is an autogenerated conversion function.
+func Convert_v1alpha2_LogBatchProcessor_To_v1_LogBatchProcessor(in *LogBatchProcessor, out *v1.LogBatchProcessor, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogBatchProcessor_To_v1_LogBatchProcessor(in, out, s)
+}
+
+func autoConvert_v1_LogBatchProcessor_To_v1alpha2_LogBatchProcessor(in *v1.LogBatchProcessor, out *LogBatchProcessor, s conversion.Scope) error {
+	out.Timeout = (*metav1.Duration)(unsafe.Pointer(in.Timeout))
+	out.SendBatchSize = (*int32)(unsafe.Pointer(in.SendBatchSize))
+	out.SendBatchMaxSize = (*int32)(unsafe.Pointer(in.SendBatchMaxSize))
+	return nil
+}
+
+// Convert_v1_LogBatchProcessor_To_v1alpha2_LogBatchProcessor is an autogenerated conversion function.
+func Convert_v1_LogBatchProcessor_To_v1alpha2_LogBatchProcessor(in *v1.LogBatchProcessor, out *LogBatchProcessor, s conversion.Scope) error {
+	return autoConvert_v1_LogBatchProcessor_To_v1alpha2_LogBatchProcessor(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogDatadogAPI_To_v1_LogDatadogAPI(in *LogDatadogAPI, out *v1.LogDatadogAPI, s conversion.Scope) error {
+	out.Site = in.Site
+	out.KeySecretRef = in.KeySecretRef
+	return nil
+}
+
+// Convert_v1alpha2_LogDatadogAPI_To_v1_LogDatadogAPI is an autogenerated conversion function.
+func Convert_v1alpha2_LogDatadogAPI_To_v1_LogDatadogAPI(in *LogDatadogAPI, out *v1.LogDatadogAPI, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogDatadogAPI_To_v1_LogDatadogAPI(in, out, s)
+}
+
+func autoConvert_v1_LogDatadogAPI_To_v1alpha2_LogDatadogAPI(in *v1.LogDatadogAPI, out *LogDatadogAPI, s conversion.Scope) error {
+	out.Site = in.Site
+	out.KeySecretRef = in.KeySecretRef
+	return nil
+}
+
+// Convert_v1_LogDatadogAPI_To_v1alpha2_LogDatadogAPI is an autogenerated conversion function.
+func Convert_v1_LogDatadogAPI_To_v1alpha2_LogDatadogAPI(in *v1.LogDatadogAPI, out *LogDatadogAPI, s conversion.Scope) error {
+	return autoConvert_v1_LogDatadogAPI_To_v1alpha2_LogDatadogAPI(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogDatadogExporter_To_v1_LogDatadogExporter(in *LogDatadogExporter, out *v1.LogDatadogExporter, s conversion.Scope) error {
+	if err := Convert_v1alpha2_LogExporterOptions_To_v1_LogExporterOptions(&in.LogExporterOptions, &out.LogExporterOptions, s); err != nil {
+		return err
+	}
+	if err := Convert_v1alpha2_LogDatadogAPI_To_v1_LogDatadogAPI(&in.API, &out.API, s); err != nil {
+		return err
+	}
+	out.RetryOnFailure = (*v1.LogRetryOnFailure)(unsafe.Pointer(in.RetryOnFailure))
+	return nil
+}
+
+// Convert_v1alpha2_LogDatadogExporter_To_v1_LogDatadogExporter is an autogenerated conversion function.
+func Convert_v1alpha2_LogDatadogExporter_To_v1_LogDatadogExporter(in *LogDatadogExporter, out *v1.LogDatadogExporter, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogDatadogExporter_To_v1_LogDatadogExporter(in, out, s)
+}
+
+func autoConvert_v1_LogDatadogExporter_To_v1alpha2_LogDatadogExporter(in *v1.LogDatadogExporter, out *LogDatadogExporter, s conversion.Scope) error {
+	if err := Convert_v1_LogExporterOptions_To_v1alpha2_LogExporterOptions(&in.LogExporterOptions, &out.LogExporterOptions, s); err != nil {
+		return err
+	}
+	if err := Convert_v1_LogDatadogAPI_To_v1alpha2_LogDatadogAPI(&in.API, &out.API, s); err != nil {
+		return err
+	}
+	out.RetryOnFailure = (*LogRetryOnFailure)(unsafe.Pointer(in.RetryOnFailure))
+	return nil
+}
+
+// Convert_v1_LogDatadogExporter_To_v1alpha2_LogDatadogExporter is an autogenerated conversion function.
+func Convert_v1_LogDatadogExporter_To_v1alpha2_LogDatadogExporter(in *v1.LogDatadogExporter, out *LogDatadogExporter, s conversion.Scope) error {
+	return autoConvert_v1_LogDatadogExporter_To_v1alpha2_LogDatadogExporter(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogElasticsearchExporter_To_v1_LogElasticsearchExporter(in *LogElasticsearchExporter, out *v1.LogElasticsearchExporter, s conversion.Scope) error {
+	if err := Convert_v1alpha2_LogExporterOptions_To_v1_LogExporterOptions(&in.LogExporterOptions, &out.LogExporterOptions, s); err != nil {
+		return err
+	}
+	out.Endpoints = *(*[]string)(unsafe.Pointer(&in.Endpoints))
+	out.APIKeySecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.APIKeySecretRef))
+	out.LogsIndex = in.LogsIndex
+	out.Mapping = (*v1.LogElasticsearchMapping)(unsafe.Pointer(in.Mapping))
+	out.Retry = (*v1.LogElasticsearchRetry)(unsafe.Pointer(in.Retry))
+	return nil
+}
+
+// Convert_v1alpha2_LogElasticsearchExporter_To_v1_LogElasticsearchExporter is an autogenerated conversion function.
+func Convert_v1alpha2_LogElasticsearchExporter_To_v1_LogElasticsearchExporter(in *LogElasticsearchExporter, out *v1.LogElasticsearchExporter, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogElasticsearchExporter_To_v1_LogElasticsearchExporter(in, out, s)
+}
+
+func autoConvert_v1_LogElasticsearchExporter_To_v1alpha2_LogElasticsearchExporter(in *v1.LogElasticsearchExporter, out *LogElasticsearchExporter, s conversion.Scope) error {
+	if err := Convert_v1_LogExporterOptions_To_v1alpha2_LogExporterOptions(&in.LogExporterOptions, &out.LogExporterOptions, s); err != nil {
+		return err
+	}
+	out.Endpoints = *(*[]string)(unsafe.Pointer(&in.Endpoints))
+	out.APIKeySecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.APIKeySecretRef))
+	out.LogsIndex = in.LogsIndex
+	out.Mapping = (*LogElasticsearchMapping)(unsafe.Pointer(in.Mapping))
+	out.Retry = (*LogElasticsearchRetry)(unsafe.Pointer(in.Retry))
+	return nil
+}
+
+// Convert_v1_LogElasticsearchExporter_To_v1alpha2_LogElasticsearchExporter is an autogenerated conversion function.
+func Convert_v1_LogElasticsearchExporter_To_v1alpha2_LogElasticsearchExporter(in *v1.LogElasticsearchExporter, out *LogElasticsearchExporter, s conversion.Scope) error {
+	return autoConvert_v1_LogElasticsearchExporter_To_v1alpha2_LogElasticsearchExporter(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogElasticsearchMapping_To_v1_LogElasticsearchMapping(in *LogElasticsearchMapping, out *v1.LogElasticsearchMapping, s conversion.Scope) error {
+	out.Mode = in.Mode
+	return nil
+}
+
+// Convert_v1alpha2_LogElasticsearchMapping_To_v1_LogElasticsearchMapping is an autogenerated conversion function.
+func Convert_v1alpha2_LogElasticsearchMapping_To_v1_LogElasticsearchMapping(in *LogElasticsearchMapping, out *v1.LogElasticsearchMapping, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogElasticsearchMapping_To_v1_LogElasticsearchMapping(in, out, s)
+}
+
+func autoConvert_v1_LogElasticsearchMapping_To_v1alpha2_LogElasticsearchMapping(in *v1.LogElasticsearchMapping, out *LogElasticsearchMapping, s conversion.Scope) error {
+	out.Mode = in.Mode
+	return nil
+}
+
+// Convert_v1_LogElasticsearchMapping_To_v1alpha2_LogElasticsearchMapping is an autogenerated conversion function.
+func Convert_v1_LogElasticsearchMapping_To_v1alpha2_LogElasticsearchMapping(in *v1.LogElasticsearchMapping, out *LogElasticsearchMapping, s conversion.Scope) error {
+	return autoConvert_v1_LogElasticsearchMapping_To_v1alpha2_LogElasticsearchMapping(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogElasticsearchRetry_To_v1_LogElasticsearchRetry(in *LogElasticsearchRetry, out *v1.LogElasticsearchRetry, s conversion.Scope) error {
+	out.Enabled = (*bool)(unsafe.Pointer(in.Enabled))
+	out.InitialInterval = (*metav1.Duration)(unsafe.Pointer(in.InitialInterval))
+	out.MaxInterval = (*metav1.Duration)(unsafe.Pointer(in.MaxInterval))
+	out.MaxRetries = (*int32)(unsafe.Pointer(in.MaxRetries))
+	return nil
+}
+
+// Convert_v1alpha2_LogElasticsearchRetry_To_v1_LogElasticsearchRetry is an autogenerated conversion function.
+func Convert_v1alpha2_LogElasticsearchRetry_To_v1_LogElasticsearchRetry(in *LogElasticsearchRetry, out *v1.LogElasticsearchRetry, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogElasticsearchRetry_To_v1_LogElasticsearchRetry(in, out, s)
+}
+
+func autoConvert_v1_LogElasticsearchRetry_To_v1alpha2_LogElasticsearchRetry(in *v1.LogElasticsearchRetry, out *LogElasticsearchRetry, s conversion.Scope) error {
+	out.Enabled = (*bool)(unsafe.Pointer(in.Enabled))
+	out.InitialInterval = (*metav1.Duration)(unsafe.Pointer(in.InitialInterval))
+	out.MaxInterval = (*metav1.Duration)(unsafe.Pointer(in.MaxInterval))
+	out.MaxRetries = (*int32)(unsafe.Pointer(in.MaxRetries))
+	return nil
+}
+
+// Convert_v1_LogElasticsearchRetry_To_v1alpha2_LogElasticsearchRetry is an autogenerated conversion function.
+func Convert_v1_LogElasticsearchRetry_To_v1alpha2_LogElasticsearchRetry(in *v1.LogElasticsearchRetry, out *LogElasticsearchRetry, s conversion.Scope) error {
+	return autoConvert_v1_LogElasticsearchRetry_To_v1alpha2_LogElasticsearchRetry(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogExporterAuth_To_v1_LogExporterAuth(in *LogExporterAuth, out *v1.LogExporterAuth, s conversion.Scope) error {
+	out.Type = in.Type
+	out.ExtensionRef = in.ExtensionRef
+	out.TokenSecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.TokenSecretRef))
+	out.UsernameSecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.UsernameSecretRef))
+	out.PasswordSecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.PasswordSecretRef))
+	out.HeaderName = in.HeaderName
+	out.ValueSecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.ValueSecretRef))
+	return nil
+}
+
+// Convert_v1alpha2_LogExporterAuth_To_v1_LogExporterAuth is an autogenerated conversion function.
+func Convert_v1alpha2_LogExporterAuth_To_v1_LogExporterAuth(in *LogExporterAuth, out *v1.LogExporterAuth, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogExporterAuth_To_v1_LogExporterAuth(in, out, s)
+}
+
+func autoConvert_v1_LogExporterAuth_To_v1alpha2_LogExporterAuth(in *v1.LogExporterAuth, out *LogExporterAuth, s conversion.Scope) error {
+	out.Type = in.Type
+	out.ExtensionRef = in.ExtensionRef
+	out.TokenSecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.TokenSecretRef))
+	out.UsernameSecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.UsernameSecretRef))
+	out.PasswordSecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.PasswordSecretRef))
+	out.HeaderName = in.HeaderName
+	out.ValueSecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.ValueSecretRef))
+	return nil
+}
+
+// Convert_v1_LogExporterAuth_To_v1alpha2_LogExporterAuth is an autogenerated conversion function.
+func Convert_v1_LogExporterAuth_To_v1alpha2_LogExporterAuth(in *v1.LogExporterAuth, out *LogExporterAuth, s conversion.Scope) error {
+	return autoConvert_v1_LogExporterAuth_To_v1alpha2_LogExporterAuth(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogExporterOptions_To_v1_LogExporterOptions(in *LogExporterOptions, out *v1.LogExporterOptions, s conversion.Scope) error {
+	out.TLS = (*v1.LogForwarderTLS)(unsafe.Pointer(in.TLS))
+	out.SendingQueue = (*v1.LogSendingQueue)(unsafe.Pointer(in.SendingQueue))
+	return nil
+}
+
+// Convert_v1alpha2_LogExporterOptions_To_v1_LogExporterOptions is an autogenerated conversion function.
+func Convert_v1alpha2_LogExporterOptions_To_v1_LogExporterOptions(in *LogExporterOptions, out *v1.LogExporterOptions, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogExporterOptions_To_v1_LogExporterOptions(in, out, s)
+}
+
+func autoConvert_v1_LogExporterOptions_To_v1alpha2_LogExporterOptions(in *v1.LogExporterOptions, out *LogExporterOptions, s conversion.Scope) error {
+	out.TLS = (*LogForwarderTLS)(unsafe.Pointer(in.TLS))
+	out.SendingQueue = (*LogSendingQueue)(unsafe.Pointer(in.SendingQueue))
+	return nil
+}
+
+// Convert_v1_LogExporterOptions_To_v1alpha2_LogExporterOptions is an autogenerated conversion function.
+func Convert_v1_LogExporterOptions_To_v1alpha2_LogExporterOptions(in *v1.LogExporterOptions, out *LogExporterOptions, s conversion.Scope) error {
+	return autoConvert_v1_LogExporterOptions_To_v1alpha2_LogExporterOptions(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogExporterSpec_To_v1_LogExporterSpec(in *LogExporterSpec, out *v1.LogExporterSpec, s conversion.Scope) error {
+	out.Name = in.Name
+	out.Type = in.Type
+	out.OTLPHTTP = (*v1.LogOTLPHTTPExporter)(unsafe.Pointer(in.OTLPHTTP))
+	out.SplunkHEC = (*v1.LogSplunkHECExporter)(unsafe.Pointer(in.SplunkHEC))
+	out.Elasticsearch = (*v1.LogElasticsearchExporter)(unsafe.Pointer(in.Elasticsearch))
+	out.Datadog = (*v1.LogDatadogExporter)(unsafe.Pointer(in.Datadog))
+	out.Syslog = (*v1.LogSyslogExporter)(unsafe.Pointer(in.Syslog))
+	return nil
+}
+
+// Convert_v1alpha2_LogExporterSpec_To_v1_LogExporterSpec is an autogenerated conversion function.
+func Convert_v1alpha2_LogExporterSpec_To_v1_LogExporterSpec(in *LogExporterSpec, out *v1.LogExporterSpec, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogExporterSpec_To_v1_LogExporterSpec(in, out, s)
+}
+
+func autoConvert_v1_LogExporterSpec_To_v1alpha2_LogExporterSpec(in *v1.LogExporterSpec, out *LogExporterSpec, s conversion.Scope) error {
+	out.Name = in.Name
+	out.Type = in.Type
+	out.OTLPHTTP = (*LogOTLPHTTPExporter)(unsafe.Pointer(in.OTLPHTTP))
+	out.SplunkHEC = (*LogSplunkHECExporter)(unsafe.Pointer(in.SplunkHEC))
+	out.Elasticsearch = (*LogElasticsearchExporter)(unsafe.Pointer(in.Elasticsearch))
+	out.Datadog = (*LogDatadogExporter)(unsafe.Pointer(in.Datadog))
+	out.Syslog = (*LogSyslogExporter)(unsafe.Pointer(in.Syslog))
+	return nil
+}
+
+// Convert_v1_LogExporterSpec_To_v1alpha2_LogExporterSpec is an autogenerated conversion function.
+func Convert_v1_LogExporterSpec_To_v1alpha2_LogExporterSpec(in *v1.LogExporterSpec, out *LogExporterSpec, s conversion.Scope) error {
+	return autoConvert_v1_LogExporterSpec_To_v1alpha2_LogExporterSpec(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogExtensions_To_v1_LogExtensions(in *LogExtensions, out *v1.LogExtensions, s conversion.Scope) error {
+	out.ExtraConfig = in.ExtraConfig
+	out.SecretEnv = *(*map[string]corev1.SecretKeySelector)(unsafe.Pointer(&in.SecretEnv))
+	return nil
+}
+
+// Convert_v1alpha2_LogExtensions_To_v1_LogExtensions is an autogenerated conversion function.
+func Convert_v1alpha2_LogExtensions_To_v1_LogExtensions(in *LogExtensions, out *v1.LogExtensions, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogExtensions_To_v1_LogExtensions(in, out, s)
+}
+
+func autoConvert_v1_LogExtensions_To_v1alpha2_LogExtensions(in *v1.LogExtensions, out *LogExtensions, s conversion.Scope) error {
+	out.ExtraConfig = in.ExtraConfig
+	out.SecretEnv = *(*map[string]corev1.SecretKeySelector)(unsafe.Pointer(&in.SecretEnv))
+	return nil
+}
+
+// Convert_v1_LogExtensions_To_v1alpha2_LogExtensions is an autogenerated conversion function.
+func Convert_v1_LogExtensions_To_v1alpha2_LogExtensions(in *v1.LogExtensions, out *LogExtensions, s conversion.Scope) error {
+	return autoConvert_v1_LogExtensions_To_v1alpha2_LogExtensions(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogFileLogReceiver_To_v1_LogFileLogReceiver(in *LogFileLogReceiver, out *v1.LogFileLogReceiver, s conversion.Scope) error {
+	out.StartAt = in.StartAt
+	out.PollInterval = (*metav1.Duration)(unsafe.Pointer(in.PollInterval))
+	out.MaxLogSize = in.MaxLogSize
+	return nil
+}
+
+// Convert_v1alpha2_LogFileLogReceiver_To_v1_LogFileLogReceiver is an autogenerated conversion function.
+func Convert_v1alpha2_LogFileLogReceiver_To_v1_LogFileLogReceiver(in *LogFileLogReceiver, out *v1.LogFileLogReceiver, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogFileLogReceiver_To_v1_LogFileLogReceiver(in, out, s)
+}
+
+func autoConvert_v1_LogFileLogReceiver_To_v1alpha2_LogFileLogReceiver(in *v1.LogFileLogReceiver, out *LogFileLogReceiver, s conversion.Scope) error {
+	out.StartAt = in.StartAt
+	out.PollInterval = (*metav1.Duration)(unsafe.Pointer(in.PollInterval))
+	out.MaxLogSize = in.MaxLogSize
+	return nil
+}
+
+// Convert_v1_LogFileLogReceiver_To_v1alpha2_LogFileLogReceiver is an autogenerated conversion function.
+func Convert_v1_LogFileLogReceiver_To_v1alpha2_LogFileLogReceiver(in *v1.LogFileLogReceiver, out *LogFileLogReceiver, s conversion.Scope) error {
+	return autoConvert_v1_LogFileLogReceiver_To_v1alpha2_LogFileLogReceiver(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogFilterLogs_To_v1_LogFilterLogs(in *LogFilterLogs, out *v1.LogFilterLogs, s conversion.Scope) error {
+	out.LogRecord = *(*[]string)(unsafe.Pointer(&in.LogRecord))
+	return nil
+}
+
+// Convert_v1alpha2_LogFilterLogs_To_v1_LogFilterLogs is an autogenerated conversion function.
+func Convert_v1alpha2_LogFilterLogs_To_v1_LogFilterLogs(in *LogFilterLogs, out *v1.LogFilterLogs, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogFilterLogs_To_v1_LogFilterLogs(in, out, s)
+}
+
+func autoConvert_v1_LogFilterLogs_To_v1alpha2_LogFilterLogs(in *v1.LogFilterLogs, out *LogFilterLogs, s conversion.Scope) error {
+	out.LogRecord = *(*[]string)(unsafe.Pointer(&in.LogRecord))
+	return nil
+}
+
+// Convert_v1_LogFilterLogs_To_v1alpha2_LogFilterLogs is an autogenerated conversion function.
+func Convert_v1_LogFilterLogs_To_v1alpha2_LogFilterLogs(in *v1.LogFilterLogs, out *LogFilterLogs, s conversion.Scope) error {
+	return autoConvert_v1_LogFilterLogs_To_v1alpha2_LogFilterLogs(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogFilterProcessor_To_v1_LogFilterProcessor(in *LogFilterProcessor, out *v1.LogFilterProcessor, s conversion.Scope) error {
+	out.ErrorMode = v1.LogProcessorErrorMode(in.ErrorMode)
+	if err := Convert_v1alpha2_LogFilterLogs_To_v1_LogFilterLogs(&in.Logs, &out.Logs, s); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Convert_v1alpha2_LogFilterProcessor_To_v1_LogFilterProcessor is an autogenerated conversion function.
+func Convert_v1alpha2_LogFilterProcessor_To_v1_LogFilterProcessor(in *LogFilterProcessor, out *v1.LogFilterProcessor, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogFilterProcessor_To_v1_LogFilterProcessor(in, out, s)
+}
+
+func autoConvert_v1_LogFilterProcessor_To_v1alpha2_LogFilterProcessor(in *v1.LogFilterProcessor, out *LogFilterProcessor, s conversion.Scope) error {
+	out.ErrorMode = LogProcessorErrorMode(in.ErrorMode)
+	if err := Convert_v1_LogFilterLogs_To_v1alpha2_LogFilterLogs(&in.Logs, &out.Logs, s); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Convert_v1_LogFilterProcessor_To_v1alpha2_LogFilterProcessor is an autogenerated conversion function.
+func Convert_v1_LogFilterProcessor_To_v1alpha2_LogFilterProcessor(in *v1.LogFilterProcessor, out *LogFilterProcessor, s conversion.Scope) error {
+	return autoConvert_v1_LogFilterProcessor_To_v1alpha2_LogFilterProcessor(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogForwarderSpec_To_v1_LogForwarderSpec(in *LogForwarderSpec, out *v1.LogForwarderSpec, s conversion.Scope) error {
+	out.Enabled = (*bool)(unsafe.Pointer(in.Enabled))
+	out.CollectionMode = v1.LogCollectionMode(in.CollectionMode)
+	out.Sources = *(*[]v1.LogSourceSpec)(unsafe.Pointer(&in.Sources))
+	out.Exporter = (*v1.LogExporterSpec)(unsafe.Pointer(in.Exporter))
+	out.Processors = (*v1.LogProcessors)(unsafe.Pointer(in.Processors))
+	out.Extensions = (*v1.LogExtensions)(unsafe.Pointer(in.Extensions))
+	out.StateStorage = in.StateStorage
+	out.SourceStorage = (*v1.LogSourceStorage)(unsafe.Pointer(in.SourceStorage))
+	out.Resources = in.Resources
+	out.SecurityContext = (*corev1.SecurityContext)(unsafe.Pointer(in.SecurityContext))
+	out.RolloutPolicy = v1.LogForwarderRolloutPolicy(in.RolloutPolicy)
+	return nil
+}
+
+// Convert_v1alpha2_LogForwarderSpec_To_v1_LogForwarderSpec is an autogenerated conversion function.
+func Convert_v1alpha2_LogForwarderSpec_To_v1_LogForwarderSpec(in *LogForwarderSpec, out *v1.LogForwarderSpec, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogForwarderSpec_To_v1_LogForwarderSpec(in, out, s)
+}
+
+func autoConvert_v1_LogForwarderSpec_To_v1alpha2_LogForwarderSpec(in *v1.LogForwarderSpec, out *LogForwarderSpec, s conversion.Scope) error {
+	out.Enabled = (*bool)(unsafe.Pointer(in.Enabled))
+	out.CollectionMode = LogCollectionMode(in.CollectionMode)
+	out.Sources = *(*[]LogSourceSpec)(unsafe.Pointer(&in.Sources))
+	out.Exporter = (*LogExporterSpec)(unsafe.Pointer(in.Exporter))
+	out.Processors = (*LogProcessors)(unsafe.Pointer(in.Processors))
+	out.Extensions = (*LogExtensions)(unsafe.Pointer(in.Extensions))
+	out.StateStorage = in.StateStorage
+	out.SourceStorage = (*LogSourceStorage)(unsafe.Pointer(in.SourceStorage))
+	out.Resources = in.Resources
+	out.SecurityContext = (*corev1.SecurityContext)(unsafe.Pointer(in.SecurityContext))
+	out.RolloutPolicy = LogForwarderRolloutPolicy(in.RolloutPolicy)
+	return nil
+}
+
+// Convert_v1_LogForwarderSpec_To_v1alpha2_LogForwarderSpec is an autogenerated conversion function.
+func Convert_v1_LogForwarderSpec_To_v1alpha2_LogForwarderSpec(in *v1.LogForwarderSpec, out *LogForwarderSpec, s conversion.Scope) error {
+	return autoConvert_v1_LogForwarderSpec_To_v1alpha2_LogForwarderSpec(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogForwarderTLS_To_v1_LogForwarderTLS(in *LogForwarderTLS, out *v1.LogForwarderTLS, s conversion.Scope) error {
+	out.Mode = v1.LogForwarderTLSMode(in.Mode)
+	out.CASecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.CASecretRef))
+	out.ClientCertSecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.ClientCertSecretRef))
+	out.ClientKeySecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.ClientKeySecretRef))
+	return nil
+}
+
+// Convert_v1alpha2_LogForwarderTLS_To_v1_LogForwarderTLS is an autogenerated conversion function.
+func Convert_v1alpha2_LogForwarderTLS_To_v1_LogForwarderTLS(in *LogForwarderTLS, out *v1.LogForwarderTLS, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogForwarderTLS_To_v1_LogForwarderTLS(in, out, s)
+}
+
+func autoConvert_v1_LogForwarderTLS_To_v1alpha2_LogForwarderTLS(in *v1.LogForwarderTLS, out *LogForwarderTLS, s conversion.Scope) error {
+	out.Mode = LogForwarderTLSMode(in.Mode)
+	out.CASecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.CASecretRef))
+	out.ClientCertSecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.ClientCertSecretRef))
+	out.ClientKeySecretRef = (*corev1.SecretKeySelector)(unsafe.Pointer(in.ClientKeySecretRef))
+	return nil
+}
+
+// Convert_v1_LogForwarderTLS_To_v1alpha2_LogForwarderTLS is an autogenerated conversion function.
+func Convert_v1_LogForwarderTLS_To_v1alpha2_LogForwarderTLS(in *v1.LogForwarderTLS, out *LogForwarderTLS, s conversion.Scope) error {
+	return autoConvert_v1_LogForwarderTLS_To_v1alpha2_LogForwarderTLS(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogMemoryLimiterProcessor_To_v1_LogMemoryLimiterProcessor(in *LogMemoryLimiterProcessor, out *v1.LogMemoryLimiterProcessor, s conversion.Scope) error {
+	out.CheckInterval = (*metav1.Duration)(unsafe.Pointer(in.CheckInterval))
+	out.LimitPercentage = (*int32)(unsafe.Pointer(in.LimitPercentage))
+	out.SpikeLimitPercentage = (*int32)(unsafe.Pointer(in.SpikeLimitPercentage))
+	out.LimitMiB = (*int32)(unsafe.Pointer(in.LimitMiB))
+	out.SpikeLimitMiB = (*int32)(unsafe.Pointer(in.SpikeLimitMiB))
+	return nil
+}
+
+// Convert_v1alpha2_LogMemoryLimiterProcessor_To_v1_LogMemoryLimiterProcessor is an autogenerated conversion function.
+func Convert_v1alpha2_LogMemoryLimiterProcessor_To_v1_LogMemoryLimiterProcessor(in *LogMemoryLimiterProcessor, out *v1.LogMemoryLimiterProcessor, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogMemoryLimiterProcessor_To_v1_LogMemoryLimiterProcessor(in, out, s)
+}
+
+func autoConvert_v1_LogMemoryLimiterProcessor_To_v1alpha2_LogMemoryLimiterProcessor(in *v1.LogMemoryLimiterProcessor, out *LogMemoryLimiterProcessor, s conversion.Scope) error {
+	out.CheckInterval = (*metav1.Duration)(unsafe.Pointer(in.CheckInterval))
+	out.LimitPercentage = (*int32)(unsafe.Pointer(in.LimitPercentage))
+	out.SpikeLimitPercentage = (*int32)(unsafe.Pointer(in.SpikeLimitPercentage))
+	out.LimitMiB = (*int32)(unsafe.Pointer(in.LimitMiB))
+	out.SpikeLimitMiB = (*int32)(unsafe.Pointer(in.SpikeLimitMiB))
+	return nil
+}
+
+// Convert_v1_LogMemoryLimiterProcessor_To_v1alpha2_LogMemoryLimiterProcessor is an autogenerated conversion function.
+func Convert_v1_LogMemoryLimiterProcessor_To_v1alpha2_LogMemoryLimiterProcessor(in *v1.LogMemoryLimiterProcessor, out *LogMemoryLimiterProcessor, s conversion.Scope) error {
+	return autoConvert_v1_LogMemoryLimiterProcessor_To_v1alpha2_LogMemoryLimiterProcessor(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogOTLPHTTPExporter_To_v1_LogOTLPHTTPExporter(in *LogOTLPHTTPExporter, out *v1.LogOTLPHTTPExporter, s conversion.Scope) error {
+	if err := Convert_v1alpha2_LogExporterOptions_To_v1_LogExporterOptions(&in.LogExporterOptions, &out.LogExporterOptions, s); err != nil {
+		return err
+	}
+	out.Endpoint = in.Endpoint
+	out.LogsEndpoint = in.LogsEndpoint
+	out.Auth = (*v1.LogExporterAuth)(unsafe.Pointer(in.Auth))
+	out.RetryOnFailure = (*v1.LogRetryOnFailure)(unsafe.Pointer(in.RetryOnFailure))
+	return nil
+}
+
+// Convert_v1alpha2_LogOTLPHTTPExporter_To_v1_LogOTLPHTTPExporter is an autogenerated conversion function.
+func Convert_v1alpha2_LogOTLPHTTPExporter_To_v1_LogOTLPHTTPExporter(in *LogOTLPHTTPExporter, out *v1.LogOTLPHTTPExporter, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogOTLPHTTPExporter_To_v1_LogOTLPHTTPExporter(in, out, s)
+}
+
+func autoConvert_v1_LogOTLPHTTPExporter_To_v1alpha2_LogOTLPHTTPExporter(in *v1.LogOTLPHTTPExporter, out *LogOTLPHTTPExporter, s conversion.Scope) error {
+	if err := Convert_v1_LogExporterOptions_To_v1alpha2_LogExporterOptions(&in.LogExporterOptions, &out.LogExporterOptions, s); err != nil {
+		return err
+	}
+	out.Endpoint = in.Endpoint
+	out.LogsEndpoint = in.LogsEndpoint
+	out.Auth = (*LogExporterAuth)(unsafe.Pointer(in.Auth))
+	out.RetryOnFailure = (*LogRetryOnFailure)(unsafe.Pointer(in.RetryOnFailure))
+	return nil
+}
+
+// Convert_v1_LogOTLPHTTPExporter_To_v1alpha2_LogOTLPHTTPExporter is an autogenerated conversion function.
+func Convert_v1_LogOTLPHTTPExporter_To_v1alpha2_LogOTLPHTTPExporter(in *v1.LogOTLPHTTPExporter, out *LogOTLPHTTPExporter, s conversion.Scope) error {
+	return autoConvert_v1_LogOTLPHTTPExporter_To_v1alpha2_LogOTLPHTTPExporter(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogProcessors_To_v1_LogProcessors(in *LogProcessors, out *v1.LogProcessors, s conversion.Scope) error {
+	out.MemoryLimiter = (*v1.LogMemoryLimiterProcessor)(unsafe.Pointer(in.MemoryLimiter))
+	out.Batch = (*v1.LogBatchProcessor)(unsafe.Pointer(in.Batch))
+	out.Attributes = (*v1.LogAttributesProcessor)(unsafe.Pointer(in.Attributes))
+	out.Filter = (*v1.LogFilterProcessor)(unsafe.Pointer(in.Filter))
+	out.Transform = (*v1.LogTransformProcessor)(unsafe.Pointer(in.Transform))
+	out.ExtraConfig = in.ExtraConfig
+	out.Order = *(*[]string)(unsafe.Pointer(&in.Order))
+	return nil
+}
+
+// Convert_v1alpha2_LogProcessors_To_v1_LogProcessors is an autogenerated conversion function.
+func Convert_v1alpha2_LogProcessors_To_v1_LogProcessors(in *LogProcessors, out *v1.LogProcessors, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogProcessors_To_v1_LogProcessors(in, out, s)
+}
+
+func autoConvert_v1_LogProcessors_To_v1alpha2_LogProcessors(in *v1.LogProcessors, out *LogProcessors, s conversion.Scope) error {
+	out.MemoryLimiter = (*LogMemoryLimiterProcessor)(unsafe.Pointer(in.MemoryLimiter))
+	out.Batch = (*LogBatchProcessor)(unsafe.Pointer(in.Batch))
+	out.Attributes = (*LogAttributesProcessor)(unsafe.Pointer(in.Attributes))
+	out.Filter = (*LogFilterProcessor)(unsafe.Pointer(in.Filter))
+	out.Transform = (*LogTransformProcessor)(unsafe.Pointer(in.Transform))
+	out.ExtraConfig = in.ExtraConfig
+	out.Order = *(*[]string)(unsafe.Pointer(&in.Order))
+	return nil
+}
+
+// Convert_v1_LogProcessors_To_v1alpha2_LogProcessors is an autogenerated conversion function.
+func Convert_v1_LogProcessors_To_v1alpha2_LogProcessors(in *v1.LogProcessors, out *LogProcessors, s conversion.Scope) error {
+	return autoConvert_v1_LogProcessors_To_v1alpha2_LogProcessors(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogRetryOnFailure_To_v1_LogRetryOnFailure(in *LogRetryOnFailure, out *v1.LogRetryOnFailure, s conversion.Scope) error {
+	out.Enabled = (*bool)(unsafe.Pointer(in.Enabled))
+	out.InitialInterval = (*metav1.Duration)(unsafe.Pointer(in.InitialInterval))
+	out.MaxInterval = (*metav1.Duration)(unsafe.Pointer(in.MaxInterval))
+	out.MaxElapsedTime = (*metav1.Duration)(unsafe.Pointer(in.MaxElapsedTime))
+	return nil
+}
+
+// Convert_v1alpha2_LogRetryOnFailure_To_v1_LogRetryOnFailure is an autogenerated conversion function.
+func Convert_v1alpha2_LogRetryOnFailure_To_v1_LogRetryOnFailure(in *LogRetryOnFailure, out *v1.LogRetryOnFailure, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogRetryOnFailure_To_v1_LogRetryOnFailure(in, out, s)
+}
+
+func autoConvert_v1_LogRetryOnFailure_To_v1alpha2_LogRetryOnFailure(in *v1.LogRetryOnFailure, out *LogRetryOnFailure, s conversion.Scope) error {
+	out.Enabled = (*bool)(unsafe.Pointer(in.Enabled))
+	out.InitialInterval = (*metav1.Duration)(unsafe.Pointer(in.InitialInterval))
+	out.MaxInterval = (*metav1.Duration)(unsafe.Pointer(in.MaxInterval))
+	out.MaxElapsedTime = (*metav1.Duration)(unsafe.Pointer(in.MaxElapsedTime))
+	return nil
+}
+
+// Convert_v1_LogRetryOnFailure_To_v1alpha2_LogRetryOnFailure is an autogenerated conversion function.
+func Convert_v1_LogRetryOnFailure_To_v1alpha2_LogRetryOnFailure(in *v1.LogRetryOnFailure, out *LogRetryOnFailure, s conversion.Scope) error {
+	return autoConvert_v1_LogRetryOnFailure_To_v1alpha2_LogRetryOnFailure(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogSendingQueue_To_v1_LogSendingQueue(in *LogSendingQueue, out *v1.LogSendingQueue, s conversion.Scope) error {
+	out.Enabled = (*bool)(unsafe.Pointer(in.Enabled))
+	out.QueueSize = (*int32)(unsafe.Pointer(in.QueueSize))
+	out.NumConsumers = (*int32)(unsafe.Pointer(in.NumConsumers))
+	out.BlockOnOverflow = (*bool)(unsafe.Pointer(in.BlockOnOverflow))
+	return nil
+}
+
+// Convert_v1alpha2_LogSendingQueue_To_v1_LogSendingQueue is an autogenerated conversion function.
+func Convert_v1alpha2_LogSendingQueue_To_v1_LogSendingQueue(in *LogSendingQueue, out *v1.LogSendingQueue, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogSendingQueue_To_v1_LogSendingQueue(in, out, s)
+}
+
+func autoConvert_v1_LogSendingQueue_To_v1alpha2_LogSendingQueue(in *v1.LogSendingQueue, out *LogSendingQueue, s conversion.Scope) error {
+	out.Enabled = (*bool)(unsafe.Pointer(in.Enabled))
+	out.QueueSize = (*int32)(unsafe.Pointer(in.QueueSize))
+	out.NumConsumers = (*int32)(unsafe.Pointer(in.NumConsumers))
+	out.BlockOnOverflow = (*bool)(unsafe.Pointer(in.BlockOnOverflow))
+	return nil
+}
+
+// Convert_v1_LogSendingQueue_To_v1alpha2_LogSendingQueue is an autogenerated conversion function.
+func Convert_v1_LogSendingQueue_To_v1alpha2_LogSendingQueue(in *v1.LogSendingQueue, out *LogSendingQueue, s conversion.Scope) error {
+	return autoConvert_v1_LogSendingQueue_To_v1alpha2_LogSendingQueue(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogSourceSpec_To_v1_LogSourceSpec(in *LogSourceSpec, out *v1.LogSourceSpec, s conversion.Scope) error {
+	out.Name = in.Name
+	out.FileLog = (*v1.LogFileLogReceiver)(unsafe.Pointer(in.FileLog))
+	return nil
+}
+
+// Convert_v1alpha2_LogSourceSpec_To_v1_LogSourceSpec is an autogenerated conversion function.
+func Convert_v1alpha2_LogSourceSpec_To_v1_LogSourceSpec(in *LogSourceSpec, out *v1.LogSourceSpec, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogSourceSpec_To_v1_LogSourceSpec(in, out, s)
+}
+
+func autoConvert_v1_LogSourceSpec_To_v1alpha2_LogSourceSpec(in *v1.LogSourceSpec, out *LogSourceSpec, s conversion.Scope) error {
+	out.Name = in.Name
+	out.FileLog = (*LogFileLogReceiver)(unsafe.Pointer(in.FileLog))
+	return nil
+}
+
+// Convert_v1_LogSourceSpec_To_v1alpha2_LogSourceSpec is an autogenerated conversion function.
+func Convert_v1_LogSourceSpec_To_v1alpha2_LogSourceSpec(in *v1.LogSourceSpec, out *LogSourceSpec, s conversion.Scope) error {
+	return autoConvert_v1_LogSourceSpec_To_v1alpha2_LogSourceSpec(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogSourceStorage_To_v1_LogSourceStorage(in *LogSourceStorage, out *v1.LogSourceStorage, s conversion.Scope) error {
+	out.EmptyDir = (*corev1.EmptyDirVolumeSource)(unsafe.Pointer(in.EmptyDir))
+	out.VolumeClaimTemplate = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.VolumeClaimTemplate))
+	return nil
+}
+
+// Convert_v1alpha2_LogSourceStorage_To_v1_LogSourceStorage is an autogenerated conversion function.
+func Convert_v1alpha2_LogSourceStorage_To_v1_LogSourceStorage(in *LogSourceStorage, out *v1.LogSourceStorage, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogSourceStorage_To_v1_LogSourceStorage(in, out, s)
+}
+
+func autoConvert_v1_LogSourceStorage_To_v1alpha2_LogSourceStorage(in *v1.LogSourceStorage, out *LogSourceStorage, s conversion.Scope) error {
+	out.EmptyDir = (*corev1.EmptyDirVolumeSource)(unsafe.Pointer(in.EmptyDir))
+	out.VolumeClaimTemplate = (*corev1.PersistentVolumeClaimSpec)(unsafe.Pointer(in.VolumeClaimTemplate))
+	return nil
+}
+
+// Convert_v1_LogSourceStorage_To_v1alpha2_LogSourceStorage is an autogenerated conversion function.
+func Convert_v1_LogSourceStorage_To_v1alpha2_LogSourceStorage(in *v1.LogSourceStorage, out *LogSourceStorage, s conversion.Scope) error {
+	return autoConvert_v1_LogSourceStorage_To_v1alpha2_LogSourceStorage(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogSplunkHECExporter_To_v1_LogSplunkHECExporter(in *LogSplunkHECExporter, out *v1.LogSplunkHECExporter, s conversion.Scope) error {
+	if err := Convert_v1alpha2_LogExporterOptions_To_v1_LogExporterOptions(&in.LogExporterOptions, &out.LogExporterOptions, s); err != nil {
+		return err
+	}
+	out.Endpoint = in.Endpoint
+	out.TokenSecretRef = in.TokenSecretRef
+	out.Index = in.Index
+	out.Source = in.Source
+	out.Sourcetype = in.Sourcetype
+	out.RetryOnFailure = (*v1.LogRetryOnFailure)(unsafe.Pointer(in.RetryOnFailure))
+	return nil
+}
+
+// Convert_v1alpha2_LogSplunkHECExporter_To_v1_LogSplunkHECExporter is an autogenerated conversion function.
+func Convert_v1alpha2_LogSplunkHECExporter_To_v1_LogSplunkHECExporter(in *LogSplunkHECExporter, out *v1.LogSplunkHECExporter, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogSplunkHECExporter_To_v1_LogSplunkHECExporter(in, out, s)
+}
+
+func autoConvert_v1_LogSplunkHECExporter_To_v1alpha2_LogSplunkHECExporter(in *v1.LogSplunkHECExporter, out *LogSplunkHECExporter, s conversion.Scope) error {
+	if err := Convert_v1_LogExporterOptions_To_v1alpha2_LogExporterOptions(&in.LogExporterOptions, &out.LogExporterOptions, s); err != nil {
+		return err
+	}
+	out.Endpoint = in.Endpoint
+	out.TokenSecretRef = in.TokenSecretRef
+	out.Index = in.Index
+	out.Source = in.Source
+	out.Sourcetype = in.Sourcetype
+	out.RetryOnFailure = (*LogRetryOnFailure)(unsafe.Pointer(in.RetryOnFailure))
+	return nil
+}
+
+// Convert_v1_LogSplunkHECExporter_To_v1alpha2_LogSplunkHECExporter is an autogenerated conversion function.
+func Convert_v1_LogSplunkHECExporter_To_v1alpha2_LogSplunkHECExporter(in *v1.LogSplunkHECExporter, out *LogSplunkHECExporter, s conversion.Scope) error {
+	return autoConvert_v1_LogSplunkHECExporter_To_v1alpha2_LogSplunkHECExporter(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogSyslogExporter_To_v1_LogSyslogExporter(in *LogSyslogExporter, out *v1.LogSyslogExporter, s conversion.Scope) error {
+	if err := Convert_v1alpha2_LogExporterOptions_To_v1_LogExporterOptions(&in.LogExporterOptions, &out.LogExporterOptions, s); err != nil {
+		return err
+	}
+	out.Endpoint = in.Endpoint
+	out.Port = in.Port
+	out.Network = in.Network
+	out.Protocol = in.Protocol
+	out.EnableOctetCounting = (*bool)(unsafe.Pointer(in.EnableOctetCounting))
+	out.Facility = (*int32)(unsafe.Pointer(in.Facility))
+	out.RetryOnFailure = (*v1.LogRetryOnFailure)(unsafe.Pointer(in.RetryOnFailure))
+	return nil
+}
+
+// Convert_v1alpha2_LogSyslogExporter_To_v1_LogSyslogExporter is an autogenerated conversion function.
+func Convert_v1alpha2_LogSyslogExporter_To_v1_LogSyslogExporter(in *LogSyslogExporter, out *v1.LogSyslogExporter, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogSyslogExporter_To_v1_LogSyslogExporter(in, out, s)
+}
+
+func autoConvert_v1_LogSyslogExporter_To_v1alpha2_LogSyslogExporter(in *v1.LogSyslogExporter, out *LogSyslogExporter, s conversion.Scope) error {
+	if err := Convert_v1_LogExporterOptions_To_v1alpha2_LogExporterOptions(&in.LogExporterOptions, &out.LogExporterOptions, s); err != nil {
+		return err
+	}
+	out.Endpoint = in.Endpoint
+	out.Port = in.Port
+	out.Network = in.Network
+	out.Protocol = in.Protocol
+	out.EnableOctetCounting = (*bool)(unsafe.Pointer(in.EnableOctetCounting))
+	out.Facility = (*int32)(unsafe.Pointer(in.Facility))
+	out.RetryOnFailure = (*LogRetryOnFailure)(unsafe.Pointer(in.RetryOnFailure))
+	return nil
+}
+
+// Convert_v1_LogSyslogExporter_To_v1alpha2_LogSyslogExporter is an autogenerated conversion function.
+func Convert_v1_LogSyslogExporter_To_v1alpha2_LogSyslogExporter(in *v1.LogSyslogExporter, out *LogSyslogExporter, s conversion.Scope) error {
+	return autoConvert_v1_LogSyslogExporter_To_v1alpha2_LogSyslogExporter(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogTransformProcessor_To_v1_LogTransformProcessor(in *LogTransformProcessor, out *v1.LogTransformProcessor, s conversion.Scope) error {
+	out.ErrorMode = v1.LogProcessorErrorMode(in.ErrorMode)
+	out.LogStatements = *(*[]v1.LogTransformStatements)(unsafe.Pointer(&in.LogStatements))
+	return nil
+}
+
+// Convert_v1alpha2_LogTransformProcessor_To_v1_LogTransformProcessor is an autogenerated conversion function.
+func Convert_v1alpha2_LogTransformProcessor_To_v1_LogTransformProcessor(in *LogTransformProcessor, out *v1.LogTransformProcessor, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogTransformProcessor_To_v1_LogTransformProcessor(in, out, s)
+}
+
+func autoConvert_v1_LogTransformProcessor_To_v1alpha2_LogTransformProcessor(in *v1.LogTransformProcessor, out *LogTransformProcessor, s conversion.Scope) error {
+	out.ErrorMode = LogProcessorErrorMode(in.ErrorMode)
+	out.LogStatements = *(*[]LogTransformStatements)(unsafe.Pointer(&in.LogStatements))
+	return nil
+}
+
+// Convert_v1_LogTransformProcessor_To_v1alpha2_LogTransformProcessor is an autogenerated conversion function.
+func Convert_v1_LogTransformProcessor_To_v1alpha2_LogTransformProcessor(in *v1.LogTransformProcessor, out *LogTransformProcessor, s conversion.Scope) error {
+	return autoConvert_v1_LogTransformProcessor_To_v1alpha2_LogTransformProcessor(in, out, s)
+}
+
+func autoConvert_v1alpha2_LogTransformStatements_To_v1_LogTransformStatements(in *LogTransformStatements, out *v1.LogTransformStatements, s conversion.Scope) error {
+	out.Context = in.Context
+	out.Statements = *(*[]string)(unsafe.Pointer(&in.Statements))
+	out.Conditions = *(*[]string)(unsafe.Pointer(&in.Conditions))
+	return nil
+}
+
+// Convert_v1alpha2_LogTransformStatements_To_v1_LogTransformStatements is an autogenerated conversion function.
+func Convert_v1alpha2_LogTransformStatements_To_v1_LogTransformStatements(in *LogTransformStatements, out *v1.LogTransformStatements, s conversion.Scope) error {
+	return autoConvert_v1alpha2_LogTransformStatements_To_v1_LogTransformStatements(in, out, s)
+}
+
+func autoConvert_v1_LogTransformStatements_To_v1alpha2_LogTransformStatements(in *v1.LogTransformStatements, out *LogTransformStatements, s conversion.Scope) error {
+	out.Context = in.Context
+	out.Statements = *(*[]string)(unsafe.Pointer(&in.Statements))
+	out.Conditions = *(*[]string)(unsafe.Pointer(&in.Conditions))
+	return nil
+}
+
+// Convert_v1_LogTransformStatements_To_v1alpha2_LogTransformStatements is an autogenerated conversion function.
+func Convert_v1_LogTransformStatements_To_v1alpha2_LogTransformStatements(in *v1.LogTransformStatements, out *LogTransformStatements, s conversion.Scope) error {
+	return autoConvert_v1_LogTransformStatements_To_v1alpha2_LogTransformStatements(in, out, s)
+}
+
 func autoConvert_v1alpha2_ManifestOptions_To_v1_ManifestOptions(in *ManifestOptions, out *v1.ManifestOptions, s conversion.Scope) error {
 	out.Archiver = (*bool)(unsafe.Pointer(in.Archiver))
 	out.ArchiverRef = (*clientgoapiv1.ObjectReference)(unsafe.Pointer(in.ArchiverRef))
@@ -3783,6 +4826,7 @@ func autoConvert_v1_PostgresReplication_To_v1alpha2_PostgresReplication(in *v1.P
 }
 
 func autoConvert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out *v1.PostgresSpec, s conversion.Scope) error {
+	out.LogForwarder = (*v1.LogForwarderSpec)(unsafe.Pointer(in.LogForwarder))
 	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
 		return err
 	}
@@ -3859,6 +4903,7 @@ func autoConvert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, o
 	out.AllowedSchemas = (*AllowedConsumers)(unsafe.Pointer(in.AllowedSchemas))
 	out.HealthChecker = in.HealthChecker
 	out.Archiver = (*Archiver)(unsafe.Pointer(in.Archiver))
+	out.LogForwarder = (*LogForwarderSpec)(unsafe.Pointer(in.LogForwarder))
 	out.Arbiter = (*ArbiterSpec)(unsafe.Pointer(in.Arbiter))
 	if in.Replication != nil {
 		in, out := &in.Replication, &out.Replication
