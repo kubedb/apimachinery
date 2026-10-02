@@ -45,6 +45,10 @@ func (c *FakeArchiverV1alpha1) MariaDBArchivers(namespace string) v1alpha1.Maria
 	return newFakeMariaDBArchivers(c, namespace)
 }
 
+func (c *FakeArchiverV1alpha1) MilvusArchivers(namespace string) v1alpha1.MilvusArchiverInterface {
+	return newFakeMilvusArchivers(c, namespace)
+}
+
 func (c *FakeArchiverV1alpha1) MongoDBArchivers(namespace string) v1alpha1.MongoDBArchiverInterface {
 	return newFakeMongoDBArchivers(c, namespace)
 }

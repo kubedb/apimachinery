@@ -599,6 +599,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MariaDBArchiverList":                         schema_apimachinery_apis_archiver_v1alpha1_MariaDBArchiverList(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MariaDBArchiverSpec":                         schema_apimachinery_apis_archiver_v1alpha1_MariaDBArchiverSpec(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MariaDBArchiverStatus":                       schema_apimachinery_apis_archiver_v1alpha1_MariaDBArchiverStatus(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MilvusArchiver":                              schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiver(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MilvusArchiverList":                          schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiverList(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MilvusArchiverSpec":                          schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiverSpec(ref),
+		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MilvusArchiverStatus":                        schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiverStatus(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MongoDBArchiver":                             schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiver(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MongoDBArchiverList":                         schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverList(ref),
 		"kubedb.dev/apimachinery/apis/archiver/v1alpha1.MongoDBArchiverSpec":                         schema_apimachinery_apis_archiver_v1alpha1_MongoDBArchiverSpec(ref),
@@ -34513,6 +34517,215 @@ func schema_apimachinery_apis_archiver_v1alpha1_MariaDBArchiverStatus(ref common
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiver(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.MilvusArchiverSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.MilvusArchiverStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.MilvusArchiverSpec", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.MilvusArchiverStatus"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiverList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.MilvusArchiver"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.MilvusArchiver"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiverSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusArchiverSpec defines the desired state of MilvusArchiver.\n\nMilvus keeps its durable state in three places: the meta etcd, the object storage bucket and, for a standalone Milvus that uses RocksMQ, the data PVC. A FullBackup therefore captures the etcd metadata at a single revision together with the bucket objects, while a LogBackup continuously records every etcd change and every new object version so that the database can be restored to any point in time inside the recorded window.\n\nPoint-in-time recovery requires the Woodpecker write-ahead log stored on the object storage. A standalone Milvus that keeps its WAL in RocksMQ on a PVC can only be restored to the time of a full backup.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databases": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Databases define which Milvus databases are allowed to consume this archiver",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"),
+						},
+					},
+					"pause": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Pause defines if the backup process should be paused or not",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"retentionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionPolicy field is the RetentionPolicy of the backupConfiguration's backend",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"fullBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FullBackup defines the sessionConfig of the fullBackup. The driver is either Restic or VolumeSnapshotter; the latter snapshots the data PVC of a standalone RocksMQ Milvus while metadata and objects are always archived by the plugin.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions"),
+						},
+					},
+					"logBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogBackup defines the sidekick configuration of the continuous archiver. Without it only full backups are taken.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.LogBackupOptions"),
+						},
+					},
+					"manifestBackup": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ManifestBackup defines the sessionConfig of the manifestBackup",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions"),
+						},
+					},
+					"encryptionSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EncryptionSecret holds the RESTIC_PASSWORD that encrypts the restic repositories and the archived change log.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"backupStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BackupStorage is the backend storageRef of the BackupConfiguration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy defines the created repository's deletionPolicy",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"databases"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.BackupStorage", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.LogBackupOptions", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ManifestBackupOptions", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers"},
+	}
+}
+
+func schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiverStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusArchiverStatus defines the observed state of MilvusArchiver",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRefs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the information of all the databases managed by this archiver",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"),
+									},
+								},
+							},
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions of the archiver, e.g. PITRUnsupported.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/archiver/v1alpha1.ArchiverDatabaseRef"},
 	}
 }
 
