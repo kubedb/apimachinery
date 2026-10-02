@@ -71,6 +71,9 @@ type MariaDBVersionSpec struct {
 	// Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.
 	// +optional
 	Deprecated bool `json:"deprecated,omitempty"`
+	// Distribution determines the vendor/type of the MariaDB database image (e.g. community vs MariaDB Enterprise Server)
+	// +optional
+	Distribution MariaDBDistro `json:"distribution,omitempty"`
 	// Init container Image
 	// TODO: remove if not needed
 	InitContainer MariaDBVersionInitContainer `json:"initContainer"`
@@ -93,7 +96,34 @@ type MariaDBVersionSpec struct {
 	// Courier defines the courier related CLI/Tools images for this MariaDB version
 	// +optional
 	Courier v1alpha1.DBCourierImages `json:"courier,omitempty"`
+	// License describes whether this version's image is gated behind a
+	// commercial license (e.g. MariaDB Enterprise Server, distributed via
+	// docker.mariadb.com under a Customer Download Token). mariadbd itself
+	// does not enforce a license file at runtime; access is gated at the
+	// image registry level. This field exists so KubeDB can require the user
+	// to explicitly reference their license/subscription via spec.license on
+	// every MariaDB using this version.
+	// +optional
+	License *MariaDBVersionLicense `json:"license,omitempty"`
 }
+
+// MariaDBVersionLicense describes whether a MariaDBVersion's image is only
+// accessible under a commercial license/subscription (e.g. MariaDB
+// Enterprise Server via docker.mariadb.com).
+type MariaDBVersionLicense struct {
+	// Required is true when this version's image is gated behind a
+	// commercial license/subscription. When true, spec.license must be set
+	// on every MariaDB using this version.
+	Required bool `json:"required"`
+}
+
+// +kubebuilder:validation:Enum=Official;Enterprise
+type MariaDBDistro string
+
+const (
+	MariaDBDistroOfficial   MariaDBDistro = "Official"
+	MariaDBDistroEnterprise MariaDBDistro = "Enterprise"
+)
 
 // MariaDBVersionDatabase is the mariadb image
 type MariaDBVersionDatabase struct {

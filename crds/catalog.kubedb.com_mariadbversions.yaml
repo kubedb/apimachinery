@@ -145,6 +145,11 @@ spec:
                 type: object
               deprecated:
                 type: boolean
+              distribution:
+                enum:
+                - Official
+                - Enterprise
+                type: string
               endOfLife:
                 type: boolean
               exporter:
@@ -167,6 +172,13 @@ spec:
                     type: string
                 required:
                 - image
+                type: object
+              license:
+                properties:
+                  required:
+                    type: boolean
+                required:
+                - required
                 type: object
               maxscale:
                 properties:
