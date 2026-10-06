@@ -34618,7 +34618,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiverSpec(ref common.Re
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "MilvusArchiverSpec defines the desired state of MilvusArchiver.\n\nMilvus keeps its durable state in three places: the meta etcd, the object storage bucket and, for a standalone Milvus that uses RocksMQ, the data PVC. A FullBackup therefore captures the etcd metadata at a single revision together with the bucket objects, while a LogBackup continuously records every etcd change and every new object version so that the database can be restored to any point in time inside the recorded window.\n\nPoint-in-time recovery requires the Woodpecker write-ahead log stored on the object storage. A standalone Milvus that keeps its WAL in RocksMQ on a PVC can only be restored to the time of a full backup.",
+				Description: "MilvusArchiverSpec defines the desired state of MilvusArchiver.\n\nMilvus keeps its durable state in the meta etcd and the object storage bucket; the Woodpecker write-ahead log is stored in the same bucket. A FullBackup therefore captures the etcd metadata at a single revision together with the bucket objects, while a LogBackup continuously records every etcd change and every new object version so that the database can be restored to any point in time inside the recorded window.\n\nA Standalone Milvus created by an older operator keeps its write-ahead log in RocksMQ on the data PVC; it cannot be archived and has to be migrated with a logical backup restored into a new Milvus.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"databases": {
@@ -34642,7 +34642,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiverSpec(ref common.Re
 					},
 					"fullBackup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "FullBackup defines the sessionConfig of the fullBackup. The driver is either Restic or VolumeSnapshotter; the latter snapshots the data PVC of a standalone RocksMQ Milvus while metadata and objects are always archived by the plugin.",
+							Description: "FullBackup defines the sessionConfig of the fullBackup. The driver is either Restic or VolumeSnapshotter. Metadata and objects are always archived by the plugin; VolumeSnapshotter (Standalone only) additionally takes a CSI VolumeSnapshot of the data PVC inside the same fence, so a restored Milvus starts with a warm local cache.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/archiver/v1alpha1.FullBackupOptions"),
 						},
 					},
@@ -34709,7 +34709,7 @@ func schema_apimachinery_apis_archiver_v1alpha1_MilvusArchiverStatus(ref common.
 					},
 					"conditions": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Conditions of the archiver, e.g. PITRUnsupported.",
+							Description: "Conditions of the archiver, e.g. ArchiverUnsupported.",
 							Type:        []string{"array"},
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{

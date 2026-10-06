@@ -47,16 +47,16 @@ type MilvusArchiver struct {
 
 // MilvusArchiverSpec defines the desired state of MilvusArchiver.
 //
-// Milvus keeps its durable state in three places: the meta etcd, the object
-// storage bucket and, for a standalone Milvus that uses RocksMQ, the data
-// PVC. A FullBackup therefore captures the etcd metadata at a single revision
-// together with the bucket objects, while a LogBackup continuously records
-// every etcd change and every new object version so that the database can be
-// restored to any point in time inside the recorded window.
+// Milvus keeps its durable state in the meta etcd and the object storage bucket;
+// the Woodpecker write-ahead log is stored in the same bucket. A FullBackup
+// therefore captures the etcd metadata at a single revision together with the
+// bucket objects, while a LogBackup continuously records every etcd change and
+// every new object version so that the database can be restored to any point in
+// time inside the recorded window.
 //
-// Point-in-time recovery requires the Woodpecker write-ahead log stored on the
-// object storage. A standalone Milvus that keeps its WAL in RocksMQ on a PVC
-// can only be restored to the time of a full backup.
+// A Standalone Milvus created by an older operator keeps its write-ahead log in
+// RocksMQ on the data PVC; it cannot be archived and has to be migrated with a
+// logical backup restored into a new Milvus.
 type MilvusArchiverSpec struct {
 	// Databases define which Milvus databases are allowed to consume this archiver
 	Databases *dbapi.AllowedConsumers `json:"databases"`
@@ -67,8 +67,10 @@ type MilvusArchiverSpec struct {
 	// +optional
 	RetentionPolicy *kmapi.ObjectReference `json:"retentionPolicy"`
 	// FullBackup defines the sessionConfig of the fullBackup. The driver is either
-	// Restic or VolumeSnapshotter; the latter snapshots the data PVC of a standalone
-	// RocksMQ Milvus while metadata and objects are always archived by the plugin.
+	// Restic or VolumeSnapshotter. Metadata and objects are always archived by the
+	// plugin; VolumeSnapshotter (Standalone only) additionally takes a CSI
+	// VolumeSnapshot of the data PVC inside the same fence, so a restored Milvus
+	// starts with a warm local cache.
 	// +optional
 	FullBackup *FullBackupOptions `json:"fullBackup"`
 	// LogBackup defines the sidekick configuration of the continuous archiver.
@@ -95,7 +97,7 @@ type MilvusArchiverStatus struct {
 	// Specifies the information of all the databases managed by this archiver
 	// +optional
 	DatabaseRefs []ArchiverDatabaseRef `json:"databaseRefs,omitempty"`
-	// Conditions of the archiver, e.g. PITRUnsupported.
+	// Conditions of the archiver, e.g. ArchiverUnsupported.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }

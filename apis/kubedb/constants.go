@@ -2663,31 +2663,31 @@ const (
 	EtcdEnvAdvertiseClientURLs      = "ETCD_ADVERTISE_CLIENT_URLS"
 )
 
-// Milvus archiver (base backup and point-in-time recovery).
 const (
 	MilvusSidekickSuffix             = "sidekick"
 	MilvusArchiverBackupConfigSuffix = "archiver"
 	MilvusIncrementalSnapshotSuffix  = "incremental-snapshot"
-	// ArchiverSkipLabel opts a database out of archiver auto-attachment when set to "true".
+	// opts a database out of archiver auto-attachment when "true"
 	ArchiverSkipLabel = GroupName + "/archiver-skip"
-	// MilvusArchiverSkipLabel is set on the Etcd owned by a Milvus so that a user
-	// EtcdArchiver never auto-attaches to it: its data is only consistent together
-	// with the object storage and is captured by the MilvusArchiver.
+	// set on the meta Etcd of a Milvus so no EtcdArchiver attaches to it
 	MilvusArchiverSkipLabel = ArchiverSkipLabel
 
 	MilvusArchiverLastArchivedRevAnnotation = "archiver." + GroupName + "/last-archived-rev"
 	MilvusArchiverFullBackupRunning         = "archiver." + GroupName + "/full-backup-running"
 
-	// Snapshot components written by the Milvus physical backup.
-	MilvusComponentMeta     = "meta"
-	MilvusComponentObjects  = "objects"
-	MilvusComponentLocalWAL = "local-wal"
+	MilvusComponentMeta    = "meta"
+	MilvusComponentObjects = "objects"
 
-	// Condition types.
+	// set once by the operator; a Standalone that predates Woodpecker keeps "rocksmq"
+	MilvusWALAnnotation = GroupName + "/milvus-wal"
+	MilvusWALWoodpecker = "woodpecker"
+	MilvusWALRocksMQ    = "rocksmq"
+
 	MilvusLogBackupLagging        = "LogBackupLagging"
 	MilvusLogBackupDegraded       = "LogBackupDegraded"
 	MilvusLogBackupGap            = "LogBackupGap"
 	MilvusArchiverRecoveryPlanned = "ArchiverRecoveryPlanned"
 	MilvusManifestRestored        = "ManifestRestored"
-	MilvusPITRUnsupported         = "PITRUnsupported"
+	// set when the archiver cannot serve this Milvus (legacy RocksMQ, or VolumeSnapshotter on Distributed)
+	MilvusArchiverUnsupported = "ArchiverUnsupported"
 )

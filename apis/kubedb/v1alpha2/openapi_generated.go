@@ -721,7 +721,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusStatus":                                  schema_apimachinery_apis_kubedb_v1alpha2_MilvusStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig":                               schema_apimachinery_apis_kubedb_v1alpha2_MilvusTLSConfig(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology":                                schema_apimachinery_apis_kubedb_v1alpha2_MilvusTopology(ref),
-		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusWALSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_MilvusWALSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoArbiterNode":                              schema_apimachinery_apis_kubedb_v1alpha2_MongoArbiterNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDB":                                       schema_apimachinery_apis_kubedb_v1alpha2_MongoDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MongoDBConfigNode":                             schema_apimachinery_apis_kubedb_v1alpha2_MongoDBConfigNode(ref),
@@ -41300,18 +41299,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref common.ReferenceCal
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver"),
 						},
 					},
-					"wal": {
-						SchemaProps: spec.SchemaProps{
-							Description: "WAL selects the write-ahead log (message storage) of a Standalone Milvus. Point-in-time recovery needs the Woodpecker WAL on the object storage. A Distributed Milvus always uses Woodpecker. It cannot be changed after creation.",
-							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusWALSpec"),
-						},
-					},
 				},
 				Required: []string{"version", "objectStorage"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusWALSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MetaStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusGPUSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusNetworkSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ObjectStorageSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -41428,26 +41421,6 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusTopology(ref common.Referenc
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusDistributedSpec"},
-	}
-}
-
-func schema_apimachinery_apis_kubedb_v1alpha2_MilvusWALSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "MilvusWALSpec configures the write-ahead log.",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"type": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Type of the WAL. Defaults to RocksMQ for Standalone and Woodpecker for Distributed.",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-			},
-		},
 	}
 }
 
