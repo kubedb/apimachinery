@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+option go_package = "kubedb.dev/apimachinery/pkg/utils/grpc/postgres/protogen";
+
+message PodInfo {
+  string Name = 1 [ json_name = "name" ];
+  string Namespace = 2 [ json_name = "namespace" ];
+  map<string, string> Labels = 3 [ json_name = "labels" ];
+  string DeletionTimeStamp = 4 [ json_name = "deletionTimeStamp" ];
+}
+
+message ExecRequest {
+  repeated string Commands = 1 [ json_name = "commands" ];
+}
+
+message ExecResult {
+  string Result = 1 [ json_name = "result" ];
+}
+
+message Pod {
+  string PodName = 1 [ json_name = "pod_name" ];
+  string PodNamespace = 2 [ json_name = "pod_namespace" ];
+}
+
+message Empty {}
+
+message RRC {
+  int32 MajorVersion = 1 [ json_name = "major_version" ];
+}
+
+message TP {
+  bool Immediate = 1 [ json_name = "immediate" ];
+}
+
+message IPPR {
+  bool Running = 1 [ json_name = "running" ];
+}
+
+message CRC {
+  int32 MajorVersion = 1 [ json_name = "major_version" ];
+}
+
+message HealthCheckResponse {
+  enum ServingStatus {
+    UNKNOWN = 0;
+    SERVING = 1;
+    NOT_SERVING = 2;
+  }
+  ServingStatus status = 1;
+}
+
+message CD {
+  map<string,string> Data = 1 [ json_name= "data" ];
+}
+
+message CPE {
+  int64 LocalTimeLine = 1 [ json_name = "localTimeLine" ];
+  string LocalLsn = 2 [ json_name = "localLsn" ];
+}
+
+message CPER {
+  string Lsn = 1 [ json_name = "lsn" ];
+}
+
+message LSNP {
+  string Lsn = 1 [ json_name = "lsn" ];
+  string PodName = 2 [ json_name = "podName" ];
+  string ArchivedWalFileName = 3 [ json_name = "archivedWalFileName" ];
+}
+
+message ACK {
+  bool Success = 1 [ json_name = "success" ];
+}
+
+// FFOF carries the WAL LSN for a ForceFailOver marker file. The coordinator writes
+// exactly one fixed file (touch <PostgresDataDir>/force-failover-with-lsn-<Lsn>) from
+// this; there is no caller supplied command.
+message FFOF {
+  string Lsn = 1 [ json_name = "lsn" ];
+}
+
+message DBHistoryResponse {
+  repeated string HistoryFiles = 1 [ json_name = "historyFiles" ];
+  string HighestWalFile = 2 [ json_name = "highestWalFile" ];
+}
+
+message WalFileResponse {
+  string WalFileName = 1 [ json_name = "walFileName" ];
+}
+
+
+message PrimaryAliveResponse {
+  bool Alive = 1 [ json_name = "alive" ];
+}
+
+service CoordinatorManager {
+  rpc GetPodInfo(Pod) returns (PodInfo) {}
+  rpc RemoveRecoveryConf(RRC) returns(Empty) {}
+  rpc TerminatePostgres(TP) returns(Empty) {}
+  rpc GetPostMasterPIDFileData(Empty) returns(ExecResult) {}
+  rpc IsPostgresProcessRunning(Empty) returns(IPPR) {}
+  rpc ConfigRecoveryConf(CRC) returns (Empty){}
+  // PgInRecovery() TODO: implement this
+  rpc UpdatePeerLsn(LSNP) returns(ACK){}
+  rpc PromotePostgres(Empty) returns (ExecResult) {}
+  rpc HealthCheck(Empty) returns (HealthCheckResponse) {}
+  rpc GetControlData(Empty) returns (CD) {}
+  rpc GetCheckPointEnd(CPE) returns (CPER) {}
+  rpc ListDatabaseHistory(Empty) returns (DBHistoryResponse) {}
+  rpc GetSmallestWalFile(Empty) returns (WalFileResponse) {}
+  rpc CheckPrimaryAlive(Empty) returns (PrimaryAliveResponse) {}
+  // CreateFailOverFile writes the ForceFailOver marker file locally on the pod's own
+  // cluster (a fixed touch, no caller supplied command). Used by the distributed ops
+  // path where the hub cannot exec into the spoke pod.
+  rpc CreateFailOverFile(FFOF) returns (ACK) {}
+}
+
+// Generated from the repo root so the descriptor registers under its full path
+// (pkg/utils/grpc/postgres/proto/postgres.proto) rather than a bare filename, which
+// would collide with mariadb/proto/api.proto in any binary that links both:
+//    protoc --go_out=. --go_opt=module=kubedb.dev/apimachinery \
+//           --go-grpc_out=. --go-grpc_opt=module=kubedb.dev/apimachinery \
+//           --proto_path=. ./pkg/utils/grpc/postgres/proto/postgres.proto
