@@ -20,6 +20,8 @@ package v1alpha1
 
 type ClickHouseArchiverExpansion interface{}
 
+type DocumentDBArchiverExpansion interface{}
+
 type EtcdArchiverExpansion interface{}
 
 type MSSQLServerArchiverExpansion interface{}

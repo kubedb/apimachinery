@@ -27,15 +27,23 @@ func TestDB2HADRDatabases(t *testing.T) {
 		hadr *DB2HADRSpec
 		want []DB2HADRDatabase
 	}{
-		{"standalone defaults to the image database", nil,
-			[]DB2HADRDatabase{{"TESTDB", 55000}}},
-		{"deprecated databaseName is a one-entry list", &DB2HADRSpec{DatabaseName: "abc"},
-			[]DB2HADRDatabase{{"ABC", 55000}}},
-		{"databases wins over databaseName", &DB2HADRSpec{DatabaseName: "abc", Databases: []DB2HADRDatabase{{Name: "xyz"}}},
-			[]DB2HADRDatabase{{"XYZ", 55000}}},
-		{"explicit ports are kept, the rest take the lowest free",
+		{
+			"standalone defaults to the image database", nil,
+			[]DB2HADRDatabase{{"TESTDB", 55000}},
+		},
+		{
+			"deprecated databaseName is a one-entry list", &DB2HADRSpec{DatabaseName: "abc"},
+			[]DB2HADRDatabase{{"ABC", 55000}},
+		},
+		{
+			"databases wins over databaseName", &DB2HADRSpec{DatabaseName: "abc", Databases: []DB2HADRDatabase{{Name: "xyz"}}},
+			[]DB2HADRDatabase{{"XYZ", 55000}},
+		},
+		{
+			"explicit ports are kept, the rest take the lowest free",
 			&DB2HADRSpec{Databases: []DB2HADRDatabase{{Name: "a"}, {Name: "b", Port: 55000}, {Name: "c"}}},
-			[]DB2HADRDatabase{{"A", 55001}, {"B", 55000}, {"C", 55002}}},
+			[]DB2HADRDatabase{{"A", 55001}, {"B", 55000}, {"C", 55002}},
+		},
 	}
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {

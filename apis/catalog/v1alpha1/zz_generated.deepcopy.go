@@ -764,6 +764,7 @@ func (in *DB2VersionSpec) DeepCopyInto(out *DB2VersionSpec) {
 	*out = *in
 	out.DB = in.DB
 	out.Coordinator = in.Coordinator
+	out.InitContainer = in.InitContainer
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	if in.UI != nil {
@@ -903,7 +904,7 @@ func (in *DocumentDBVersionSpec) DeepCopyInto(out *DocumentDBVersionSpec) {
 	out.InitContainer = in.InitContainer
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
 	in.SecurityContext.DeepCopyInto(&out.SecurityContext)
-	in.Archiver.DeepCopyInto(&out.Archiver)
+	out.Archiver = in.Archiver
 	if in.UI != nil {
 		in, out := &in.UI, &out.UI
 		*out = make([]ChartInfo, len(*in))
