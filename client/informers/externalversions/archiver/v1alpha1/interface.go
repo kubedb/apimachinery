@@ -32,6 +32,8 @@ type Interface interface {
 	MSSQLServerArchivers() MSSQLServerArchiverInformer
 	// MariaDBArchivers returns a MariaDBArchiverInformer.
 	MariaDBArchivers() MariaDBArchiverInformer
+	// MilvusArchivers returns a MilvusArchiverInformer.
+	MilvusArchivers() MilvusArchiverInformer
 	// MongoDBArchivers returns a MongoDBArchiverInformer.
 	MongoDBArchivers() MongoDBArchiverInformer
 	// MySQLArchivers returns a MySQLArchiverInformer.
@@ -71,6 +73,11 @@ func (v *version) MSSQLServerArchivers() MSSQLServerArchiverInformer {
 // MariaDBArchivers returns a MariaDBArchiverInformer.
 func (v *version) MariaDBArchivers() MariaDBArchiverInformer {
 	return &mariaDBArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// MilvusArchivers returns a MilvusArchiverInformer.
+func (v *version) MilvusArchivers() MilvusArchiverInformer {
+	return &milvusArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // MongoDBArchivers returns a MongoDBArchiverInformer.

@@ -2671,3 +2671,32 @@ const (
 	EtcdEnvListenClientURLs         = "ETCD_LISTEN_CLIENT_URLS"
 	EtcdEnvAdvertiseClientURLs      = "ETCD_ADVERTISE_CLIENT_URLS"
 )
+
+const (
+	MilvusSidekickSuffix             = "sidekick"
+	MilvusArchiverBackupConfigSuffix = "archiver"
+	MilvusIncrementalSnapshotSuffix  = "incremental-snapshot"
+	// opts a database out of archiver auto-attachment when "true"
+	ArchiverSkipLabel = GroupName + "/archiver-skip"
+	// set on the meta Etcd of a Milvus so no EtcdArchiver attaches to it
+	MilvusArchiverSkipLabel = ArchiverSkipLabel
+
+	MilvusArchiverLastArchivedRevAnnotation = "archiver." + GroupName + "/last-archived-rev"
+	MilvusArchiverFullBackupRunning         = "archiver." + GroupName + "/full-backup-running"
+
+	MilvusComponentMeta    = "meta"
+	MilvusComponentObjects = "objects"
+
+	// set once by the operator; a Standalone that predates Woodpecker keeps "rocksmq"
+	MilvusWALAnnotation = GroupName + "/milvus-wal"
+	MilvusWALWoodpecker = "woodpecker"
+	MilvusWALRocksMQ    = "rocksmq"
+
+	MilvusLogBackupLagging        = "LogBackupLagging"
+	MilvusLogBackupDegraded       = "LogBackupDegraded"
+	MilvusLogBackupGap            = "LogBackupGap"
+	MilvusArchiverRecoveryPlanned = "ArchiverRecoveryPlanned"
+	MilvusManifestRestored        = "ManifestRestored"
+	// set when the archiver cannot serve this Milvus (legacy RocksMQ, or VolumeSnapshotter on Distributed)
+	MilvusArchiverUnsupported = "ArchiverUnsupported"
+)

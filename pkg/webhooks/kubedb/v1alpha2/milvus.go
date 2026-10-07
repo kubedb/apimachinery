@@ -20,6 +20,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
@@ -98,6 +99,7 @@ func (m *MilvusCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Ob
 	milvuslog.Info("validate create", "name", db.Name)
 
 	warnings, allErr := m.ValidateCreateOrUpdate(db)
+	allErr = append(allErr, milvusValidateWALOnCreate(db)...)
 	if len(allErr) == 0 {
 		return warnings, nil
 	}
@@ -117,6 +119,9 @@ func (m *MilvusCustomWebhook) ValidateUpdate(ctx context.Context, old, newObj ru
 	milvuslog.Info("validate update", "name", db.Name)
 
 	warnings, allErr := m.ValidateCreateOrUpdate(db)
+	if oldDB, ok := old.(*olddbapi.Milvus); ok {
+		allErr = append(allErr, milvusValidateArchiverImmutability(oldDB, db)...)
+	}
 	if len(allErr) == 0 {
 		return warnings, nil
 	}
@@ -240,11 +245,95 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 		}
 	}
 
+	allErr = append(allErr, milvusValidateArchiver(db)...)
+
 	if len(allErr) == 0 {
 		return warnings, nil
 	}
 
 	return warnings, allErr
+}
+
+func milvusValidateArchiver(db *olddbapi.Milvus) field.ErrorList {
+	var errs field.ErrorList
+	spec := field.NewPath("spec")
+	walAnnotation := field.NewPath("metadata", "annotations").Key(kubedb.MilvusWALAnnotation)
+
+	if v, ok := db.GetAnnotations()[kubedb.MilvusWALAnnotation]; ok {
+		switch {
+		case v != kubedb.MilvusWALWoodpecker && v != kubedb.MilvusWALRocksMQ:
+			errs = append(errs, field.NotSupported(walAnnotation, v, []string{kubedb.MilvusWALWoodpecker, kubedb.MilvusWALRocksMQ}))
+		case v == kubedb.MilvusWALRocksMQ && db.IsDistributed():
+			errs = append(errs, field.Invalid(walAnnotation, v, "a Distributed Milvus always uses the Woodpecker WAL"))
+		}
+	}
+
+	usesArchiver := db.Spec.Archiver != nil || (db.Spec.Init != nil && db.Spec.Init.Archiver != nil)
+	if !usesArchiver {
+		return errs
+	}
+	// the physical backup does not capture the RocksMQ WAL on the data PVC
+	if db.IsLegacyRocksMQ() {
+		errs = append(errs, field.Forbidden(spec.Child("archiver"),
+			"this Standalone Milvus keeps its write-ahead log in RocksMQ (created by an older operator); "+
+				"the archiver needs the Woodpecker WAL. Migrate with a logical backup restored into a new Milvus"))
+	}
+	// Woodpecker keeps its WAL metadata at the etcd root, so the etcd cannot be shared
+	if db.Spec.MetaStorage != nil && db.Spec.MetaStorage.ExternallyManaged {
+		errs = append(errs, field.Invalid(spec.Child("metaStorage", "externallyManaged"), true,
+			"the archiver and archive recovery need a KubeDB-managed meta etcd dedicated to this Milvus"))
+	}
+	if strings.HasPrefix(db.Spec.Version, "3.") {
+		errs = append(errs, field.Invalid(spec.Child("version"), db.Spec.Version,
+			"the Milvus archiver is not validated for Milvus 3.x yet"))
+	}
+	if ini := db.Spec.Init; ini != nil && ini.Archiver != nil {
+		a := ini.Archiver
+		if a.RecoveryTimestamp.IsZero() {
+			errs = append(errs, field.Required(spec.Child("init", "archiver", "recoveryTimestamp"), "recoveryTimestamp is required"))
+		}
+		if a.FullDBRepository == nil || a.FullDBRepository.Name == "" {
+			errs = append(errs, field.Required(spec.Child("init", "archiver", "fullDBRepository"), "fullDBRepository is required to restore a Milvus"))
+		}
+		if a.EncryptionSecret == nil || a.EncryptionSecret.Name == "" {
+			errs = append(errs, field.Required(spec.Child("init", "archiver", "encryptionSecret"), "encryptionSecret is required to read the encrypted backup"))
+		}
+	}
+	return errs
+}
+
+func milvusValidateWALOnCreate(db *olddbapi.Milvus) field.ErrorList {
+	if db.GetAnnotations()[kubedb.MilvusWALAnnotation] == kubedb.MilvusWALRocksMQ {
+		return field.ErrorList{field.Forbidden(field.NewPath("metadata", "annotations").Key(kubedb.MilvusWALAnnotation),
+			"a new Milvus always uses the Woodpecker write-ahead log; remove this annotation")}
+	}
+	return nil
+}
+
+func milvusValidateArchiverImmutability(oldDB, db *olddbapi.Milvus) field.ErrorList {
+	var errs field.ErrorList
+	spec := field.NewPath("spec")
+
+	if oldWAL, ok := oldDB.GetAnnotations()[kubedb.MilvusWALAnnotation]; ok {
+		if newWAL := db.GetAnnotations()[kubedb.MilvusWALAnnotation]; newWAL != oldWAL {
+			errs = append(errs, field.Forbidden(field.NewPath("metadata", "annotations").Key(kubedb.MilvusWALAnnotation),
+				fmt.Sprintf("the write-ahead log cannot be changed after it was recorded (was %q)", oldWAL)))
+		}
+	}
+	if oldDB.Spec.Init != nil && oldDB.Spec.Init.Initialized {
+		if !reflect.DeepEqual(oldDB.Spec.Init.Archiver, safeInitArchiver(db)) {
+			errs = append(errs, field.Forbidden(spec.Child("init", "archiver"),
+				"init.archiver cannot be changed after the database was initialized"))
+		}
+	}
+	return errs
+}
+
+func safeInitArchiver(db *olddbapi.Milvus) *olddbapi.ArchiverRecovery {
+	if db.Spec.Init == nil {
+		return nil
+	}
+	return db.Spec.Init.Archiver
 }
 
 // reserved volume and volumes mounts for milvus

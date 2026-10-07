@@ -2746,6 +2746,7 @@ func (in *MilvusVersionSpec) DeepCopyInto(out *MilvusVersionSpec) {
 		}
 	}
 	in.UpdateConstraints.DeepCopyInto(&out.UpdateConstraints)
+	out.Archiver = in.Archiver
 	return
 }
 

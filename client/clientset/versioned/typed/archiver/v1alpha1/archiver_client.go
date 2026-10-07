@@ -33,6 +33,7 @@ type ArchiverV1alpha1Interface interface {
 	EtcdArchiversGetter
 	MSSQLServerArchiversGetter
 	MariaDBArchiversGetter
+	MilvusArchiversGetter
 	MongoDBArchiversGetter
 	MySQLArchiversGetter
 	Neo4jArchiversGetter
@@ -58,6 +59,10 @@ func (c *ArchiverV1alpha1Client) MSSQLServerArchivers(namespace string) MSSQLSer
 
 func (c *ArchiverV1alpha1Client) MariaDBArchivers(namespace string) MariaDBArchiverInterface {
 	return newMariaDBArchivers(c, namespace)
+}
+
+func (c *ArchiverV1alpha1Client) MilvusArchivers(namespace string) MilvusArchiverInterface {
+	return newMilvusArchivers(c, namespace)
 }
 
 func (c *ArchiverV1alpha1Client) MongoDBArchivers(namespace string) MongoDBArchiverInterface {
