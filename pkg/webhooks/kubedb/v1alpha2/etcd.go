@@ -22,6 +22,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -47,7 +48,7 @@ import (
 // SetupEtcdWebhookWithManager registers the webhook for Etcd in the manager.
 func SetupEtcdWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Etcd{}).
-		WithValidator(&EtcdCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&EtcdCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&EtcdCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
 		Complete()
 }

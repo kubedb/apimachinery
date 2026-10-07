@@ -25,6 +25,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
+	types "k8s.io/apimachinery/pkg/types"
 	intstr "k8s.io/apimachinery/pkg/util/intstr"
 	apiv1 "kmodules.xyz/client-go/api/v1"
 	v1 "kmodules.xyz/monitoring-agent-api/api/v1"
@@ -858,6 +859,13 @@ func (in *ClickHouseStatus) DeepCopyInto(out *ClickHouseStatus) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.ObservedDataPVCUIDs != nil {
+		in, out := &in.ObservedDataPVCUIDs, &out.ObservedDataPVCUIDs
+		*out = make(map[string]types.UID, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
 	return
 }
 
@@ -1528,6 +1536,11 @@ func (in *DocumentDBSpec) DeepCopyInto(out *DocumentDBSpec) {
 	if in.Init != nil {
 		in, out := &in.Init, &out.Init
 		*out = new(InitSpec)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Archiver != nil {
+		in, out := &in.Archiver, &out.Archiver
+		*out = new(Archiver)
 		(*in).DeepCopyInto(*out)
 	}
 	return
@@ -6884,6 +6897,11 @@ func (in *ProxySQLConfiguration) DeepCopyInto(out *ProxySQLConfiguration) {
 	}
 	if in.AdminVariables != nil {
 		in, out := &in.AdminVariables, &out.AdminVariables
+		*out = new(runtime.RawExtension)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.MySQLAWSAuroraHostgroups != nil {
+		in, out := &in.MySQLAWSAuroraHostgroups, &out.MySQLAWSAuroraHostgroups
 		*out = new(runtime.RawExtension)
 		(*in).DeepCopyInto(*out)
 	}
