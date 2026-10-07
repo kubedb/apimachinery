@@ -34960,6 +34960,22 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ClickHouseStatus(ref common.Refere
 							},
 						},
 					},
+					"observedDataPVCUIDs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ObservedDataPVCUIDs records the last verified Kubernetes UID of each ClickHouse data PVC, keyed by PVC name.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -45000,6 +45016,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLConfiguration(ref common.R
 						},
 					},
 					"adminVariables": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
+					"mysqlAWSAuroraHostgroups": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},

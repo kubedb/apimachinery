@@ -45,7 +45,7 @@ import (
 // SetupCassandraWebhookWithManager registers the webhook for Cassandra in the manager.
 func SetupCassandraWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Cassandra{}).
-		WithValidator(&CassandraCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&CassandraCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&CassandraCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

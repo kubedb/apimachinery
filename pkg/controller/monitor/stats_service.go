@@ -19,6 +19,8 @@ package monitor
 import (
 	"context"
 
+	svcutil "kubedb.dev/apimachinery/pkg/controller/service"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -77,27 +79,12 @@ func (o StatsServiceOptions) Ensure(ctx context.Context) (kutil.VerbType, error)
 		in := obj.(*core.Service)
 		core_util.EnsureOwnerReference(&in.ObjectMeta, o.DB.AsOwner())
 		in.Labels = o.DB.StatsServiceLabels()
-		in.Annotations = meta_util.OverwriteKeys(in.Annotations, o.ServiceTemplate.Annotations)
-
 		in.Spec.Selector = o.Selectors
-		in.Spec.Ports = ofst.PatchServicePorts(
-			core_util.MergeServicePorts(in.Spec.Ports, ports),
-			o.ServiceTemplate.Spec.Ports,
-		)
-		if o.ServiceTemplate.Spec.ClusterIP != "" {
-			in.Spec.ClusterIP = o.ServiceTemplate.Spec.ClusterIP
-		}
-		if o.ServiceTemplate.Spec.Type != "" {
-			in.Spec.Type = o.ServiceTemplate.Spec.Type
-		}
-		in.Spec.ExternalIPs = o.ServiceTemplate.Spec.ExternalIPs
-		in.Spec.LoadBalancerIP = o.ServiceTemplate.Spec.LoadBalancerIP
-		in.Spec.LoadBalancerSourceRanges = o.ServiceTemplate.Spec.LoadBalancerSourceRanges
-		in.Spec.ExternalTrafficPolicy = o.ServiceTemplate.Spec.ExternalTrafficPolicy
-		in.Spec.SessionAffinityConfig = o.ServiceTemplate.Spec.SessionAffinityConfig
-		if o.ServiceTemplate.Spec.HealthCheckNodePort > 0 {
-			in.Spec.HealthCheckNodePort = o.ServiceTemplate.Spec.HealthCheckNodePort
-		}
+		// monitoring agents record their own annotations (agent type, prometheus scrape config) on the
+		// stats Service, so template annotations are merged instead of replacing them
+		annotations := in.Annotations
+		svcutil.ApplyServiceTemplate(in, o.ServiceTemplate, ports)
+		in.Annotations = meta_util.OverwriteKeys(annotations, o.ServiceTemplate.Annotations)
 		return in
 	})
 	if err != nil {

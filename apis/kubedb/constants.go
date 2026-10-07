@@ -467,9 +467,8 @@ const (
 
 	AGPrimaryReplicaReadyCondition = "AGPrimaryReplicaReady"
 
-	MSSQLDatabasePodPrimary    = "primary"
-	MSSQLDatabasePodSecondary  = "secondary"
-	MSSQLSecondaryServiceAlias = "secondary"
+	MSSQLDatabasePodPrimary   = "primary"
+	MSSQLDatabasePodSecondary = "secondary"
 
 	// port related
 	MSSQLDatabasePortName              = "db"
@@ -1946,9 +1945,10 @@ const (
 	// container, so a membership change written by the ops-manager is picked up by
 	// ClickHouse's config reloader and applied via add_srv/remove_srv without
 	// restarting any keeper pod.
-	ClickHouseKeeperRaftConfigFileName   = "raft_configuration.xml"
-	ClickHouseKeeperRaftConfigVolumeName = "keeper-raft-config"
-	ClickHouseKeeperRaftConfigDir        = "/etc/clickhouse-keeper/keeper_config.d"
+	ClickHouseKeeperRaftConfigFileName     = "raft_configuration.xml"
+	ClickHouseKeeperRaftConfigVolumeName   = "keeper-raft-config"
+	ClickHouseKeeperRaftConfigDir          = "/etc/clickhouse-keeper/keeper_config.d"
+	ClickHouseInternalKeeperRaftConfigFile = "raft_configuration.yaml"
 )
 
 // =========================== Neo4j Constants ============================
@@ -2142,6 +2142,15 @@ func CommonSidekickLabels() map[string]string {
 }
 
 var (
+	DefaultExporterResource = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".100"),
+			core.ResourceMemory: resource.MustParse("128Mi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("256Mi"),
+		},
+	}
 	DefaultInitContainerResource = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse(".200"),

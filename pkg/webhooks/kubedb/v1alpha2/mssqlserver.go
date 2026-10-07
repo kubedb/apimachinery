@@ -47,7 +47,7 @@ import (
 // SetupMSSQLServerWebhookWithManager registers the webhook for MSSQLServer in the manager.
 func SetupMSSQLServerWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.MSSQLServer{}).
-		WithValidator(&MSSQLServerCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MSSQLServerCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MSSQLServerCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

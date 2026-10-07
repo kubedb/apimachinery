@@ -23,6 +23,7 @@ import (
 
 	"kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -43,7 +44,7 @@ import (
 // SetupZooKeeperWebhookWithManager registers the webhook for ZooKeeper in the manager.
 func SetupZooKeeperWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.ZooKeeper{}).
-		WithValidator(&ZooKeeperCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&ZooKeeperCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&ZooKeeperCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

@@ -3193,6 +3193,11 @@ func (in *ProxySQLConfiguration) DeepCopyInto(out *ProxySQLConfiguration) {
 		*out = new(runtime.RawExtension)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.MySQLAWSAuroraHostgroups != nil {
+		in, out := &in.MySQLAWSAuroraHostgroups, &out.MySQLAWSAuroraHostgroups
+		*out = new(runtime.RawExtension)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 

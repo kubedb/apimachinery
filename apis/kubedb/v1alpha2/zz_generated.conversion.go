@@ -3935,6 +3935,7 @@ func autoConvert_v1alpha2_ProxySQLConfiguration_To_v1_ProxySQLConfiguration(in *
 	out.MySQLQueryRules = *(*[]*runtime.RawExtension)(unsafe.Pointer(&in.MySQLQueryRules))
 	out.MySQLVariables = (*runtime.RawExtension)(unsafe.Pointer(in.MySQLVariables))
 	out.AdminVariables = (*runtime.RawExtension)(unsafe.Pointer(in.AdminVariables))
+	out.MySQLAWSAuroraHostgroups = (*runtime.RawExtension)(unsafe.Pointer(in.MySQLAWSAuroraHostgroups))
 	return nil
 }
 
@@ -3948,6 +3949,7 @@ func autoConvert_v1_ProxySQLConfiguration_To_v1alpha2_ProxySQLConfiguration(in *
 	out.MySQLQueryRules = *(*[]*runtime.RawExtension)(unsafe.Pointer(&in.MySQLQueryRules))
 	out.MySQLVariables = (*runtime.RawExtension)(unsafe.Pointer(in.MySQLVariables))
 	out.AdminVariables = (*runtime.RawExtension)(unsafe.Pointer(in.AdminVariables))
+	out.MySQLAWSAuroraHostgroups = (*runtime.RawExtension)(unsafe.Pointer(in.MySQLAWSAuroraHostgroups))
 	return nil
 }
 

@@ -44,7 +44,7 @@ import (
 // SetupDb2WebhookWithManager registers the webhook for Db2 in the manager.
 func SetupDb2WebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.DB2{}).
-		WithValidator(&DB2CustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&DB2CustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias)).
 		WithDefaulter(&DB2CustomWebhook{mgr.GetClient()}).
 		Complete()
 }

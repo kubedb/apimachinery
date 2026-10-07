@@ -47,7 +47,7 @@ import (
 // SetupPgpoolWebhookWithManager registers the webhook for Pgpool in the manager.
 func SetupPgpoolWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Pgpool{}).
-		WithValidator(&PgpoolCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&PgpoolCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&PgpoolCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

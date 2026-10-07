@@ -41,7 +41,7 @@ import (
 // SetupProxySQLWebhookWithManager registers the webhook for ProxySQL in the manager.
 func SetupProxySQLWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.ProxySQL{}).
-		WithValidator(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
