@@ -2136,6 +2136,15 @@ func CommonSidekickLabels() map[string]string {
 }
 
 var (
+	DefaultExporterResource = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".100"),
+			core.ResourceMemory: resource.MustParse("128Mi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("256Mi"),
+		},
+	}
 	DefaultInitContainerResource = core.ResourceRequirements{
 		Requests: core.ResourceList{
 			core.ResourceCPU:    resource.MustParse(".200"),
