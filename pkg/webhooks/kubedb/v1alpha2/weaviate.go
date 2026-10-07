@@ -23,6 +23,7 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
@@ -42,7 +43,7 @@ import (
 // SetupWeaviateWebhookWithManager registers the webhook for Weaviate in the manager.
 func SetupWeaviateWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Weaviate{}).
-		WithValidator(&WeaviateCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&WeaviateCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&WeaviateCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

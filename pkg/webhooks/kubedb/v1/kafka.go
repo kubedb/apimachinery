@@ -47,7 +47,7 @@ import (
 // SetupKafkaWebhookWithManager registers the webhook for Kafka in the manager.
 func SetupKafkaWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Kafka{}).
-		WithValidator(&KafkaCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&KafkaCustomWebhook{mgr.GetClient()}, dbapi.StatsServiceAlias)).
 		WithDefaulter(&KafkaCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

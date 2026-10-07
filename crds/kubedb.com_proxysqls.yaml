@@ -99,6 +99,9 @@ spec:
                           adminVariables:
                             type: object
                             x-kubernetes-preserve-unknown-fields: true
+                          mysqlAWSAuroraHostgroups:
+                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
                           mysqlQueryRules:
                             items:
                               type: object
@@ -180,6 +183,9 @@ spec:
               initConfig:
                 properties:
                   adminVariables:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
+                  mysqlAWSAuroraHostgroups:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   mysqlQueryRules:
@@ -4115,6 +4121,9 @@ spec:
               initConfig:
                 properties:
                   adminVariables:
+                    type: object
+                    x-kubernetes-preserve-unknown-fields: true
+                  mysqlAWSAuroraHostgroups:
                     type: object
                     x-kubernetes-preserve-unknown-fields: true
                   mysqlQueryRules:

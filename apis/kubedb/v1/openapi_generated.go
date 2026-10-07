@@ -38762,6 +38762,11 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLConfiguration(ref common.Referen
 							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
+					"mysqlAWSAuroraHostgroups": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
 				},
 			},
 		},
@@ -38804,7 +38809,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLInitConfiguration(ref common.Ref
 					},
 					"secretName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "a Secret containing raw bootstrap config files for ProxySQL. Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf. Values are patched verbatim into proxysql.cnf during bootstrap. Inline configuration (init.inline) always takes precedence. These configs are applied only once; invalid formatting may cause startup failure.",
+							Description: "a Secret containing raw bootstrap config files for ProxySQL. Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf, MySQLAWSAuroraHostgroups.cnf. Values are patched verbatim into proxysql.cnf during bootstrap. Inline configuration (init.inline) always takes precedence. These configs are applied only once; invalid formatting may cause startup failure.",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -38893,7 +38898,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 					},
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret is an optional field to provide custom configuration file for proxysql. Users can provide a Secret containing raw bootstrap config files for ProxySQL. Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf. Values are patched verbatim into proxysql.cnf during bootstrap. InitConfiguration (spec.initConfig) takes precedence than this. These configs are applied only once; invalid formatting may cause startup failure.",
+							Description: "ConfigSecret is an optional field to provide custom configuration file for proxysql. Users can provide a Secret containing raw bootstrap config files for ProxySQL. Allowed keys: AdminVariables.cnf, MySQLVariables.cnf, MySQLUsers.cnf, MySQLQueryRules.cnf, MySQLAWSAuroraHostgroups.cnf. Values are patched verbatim into proxysql.cnf during bootstrap. InitConfiguration (spec.initConfig) takes precedence than this. These configs are applied only once; invalid formatting may cause startup failure.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
@@ -38920,7 +38925,7 @@ func schema_apimachinery_apis_kubedb_v1_ProxySQLSpec(ref common.ReferenceCallbac
 					},
 					"backend": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB server",
+							Description: "Backend refers to the AppBinding of the backend MySQL/MariaDB/Percona-XtraDB/AWS-Aurora server",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},

@@ -45020,6 +45020,11 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ProxySQLConfiguration(ref common.R
 							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
 						},
 					},
+					"mysqlAWSAuroraHostgroups": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/runtime.RawExtension"),
+						},
+					},
 				},
 			},
 		},

@@ -51,7 +51,7 @@ import (
 // SetupMariaDBWebhookWithManager registers the webhook for MariaDB in the manager.
 func SetupMariaDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MariaDB{}).
-		WithValidator(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }

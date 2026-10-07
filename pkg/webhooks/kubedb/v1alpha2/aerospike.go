@@ -37,7 +37,7 @@ import (
 // SetupAerospikeWebhookWithManager registers the webhook for Aerospike in the manager.
 func SetupAerospikeWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Aerospike{}).
-		WithValidator(&AerospikeCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&AerospikeCustomWebhook{mgr.GetClient()})).
 		WithDefaulter(&AerospikeCustomWebhook{mgr.GetClient()}).
 		Complete()
 }

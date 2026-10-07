@@ -461,9 +461,8 @@ const (
 
 	AGPrimaryReplicaReadyCondition = "AGPrimaryReplicaReady"
 
-	MSSQLDatabasePodPrimary    = "primary"
-	MSSQLDatabasePodSecondary  = "secondary"
-	MSSQLSecondaryServiceAlias = "secondary"
+	MSSQLDatabasePodPrimary   = "primary"
+	MSSQLDatabasePodSecondary = "secondary"
 
 	// port related
 	MSSQLDatabasePortName              = "db"
