@@ -155,6 +155,11 @@ func (w *MongoDBOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.Mong
 				err.Error()))
 		}
 	}
+	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeReconfigure && req.Spec.Configuration == nil {
+		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
+			req.Name,
+			"`spec.configuration` nil not supported in Reconfigure type"))
+	}
 	if req.Spec.Type == opsapi.MongoDBOpsRequestTypeStorageMigration {
 		if err = w.validateMongoDBStorageMigrationOpsRequest(&db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("migration"),
