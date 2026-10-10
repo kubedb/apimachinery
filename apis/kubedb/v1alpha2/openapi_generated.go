@@ -685,6 +685,34 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KafkaStatus":                                   schema_apimachinery_apis_kubedb_v1alpha2_KafkaStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.KernelSettings":                                schema_apimachinery_apis_kubedb_v1alpha2_KernelSettings(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ListenerSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_ListenerSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogAttributeAction":                            schema_apimachinery_apis_kubedb_v1alpha2_LogAttributeAction(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogAttributesProcessor":                        schema_apimachinery_apis_kubedb_v1alpha2_LogAttributesProcessor(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogBatchProcessor":                             schema_apimachinery_apis_kubedb_v1alpha2_LogBatchProcessor(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogDatadogAPI":                                 schema_apimachinery_apis_kubedb_v1alpha2_LogDatadogAPI(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogDatadogExporter":                            schema_apimachinery_apis_kubedb_v1alpha2_LogDatadogExporter(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogElasticsearchExporter":                      schema_apimachinery_apis_kubedb_v1alpha2_LogElasticsearchExporter(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogElasticsearchMapping":                       schema_apimachinery_apis_kubedb_v1alpha2_LogElasticsearchMapping(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogElasticsearchRetry":                         schema_apimachinery_apis_kubedb_v1alpha2_LogElasticsearchRetry(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogExporterAuth":                               schema_apimachinery_apis_kubedb_v1alpha2_LogExporterAuth(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogExporterOptions":                            schema_apimachinery_apis_kubedb_v1alpha2_LogExporterOptions(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogExporterSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_LogExporterSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogExtensions":                                 schema_apimachinery_apis_kubedb_v1alpha2_LogExtensions(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogFileLogReceiver":                            schema_apimachinery_apis_kubedb_v1alpha2_LogFileLogReceiver(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogFilterLogs":                                 schema_apimachinery_apis_kubedb_v1alpha2_LogFilterLogs(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogFilterProcessor":                            schema_apimachinery_apis_kubedb_v1alpha2_LogFilterProcessor(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderSpec":                              schema_apimachinery_apis_kubedb_v1alpha2_LogForwarderSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS":                               schema_apimachinery_apis_kubedb_v1alpha2_LogForwarderTLS(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogMemoryLimiterProcessor":                     schema_apimachinery_apis_kubedb_v1alpha2_LogMemoryLimiterProcessor(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogOTLPHTTPExporter":                           schema_apimachinery_apis_kubedb_v1alpha2_LogOTLPHTTPExporter(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogProcessors":                                 schema_apimachinery_apis_kubedb_v1alpha2_LogProcessors(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogRetryOnFailure":                             schema_apimachinery_apis_kubedb_v1alpha2_LogRetryOnFailure(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue":                               schema_apimachinery_apis_kubedb_v1alpha2_LogSendingQueue(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSourceSpec":                                 schema_apimachinery_apis_kubedb_v1alpha2_LogSourceSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSourceStorage":                              schema_apimachinery_apis_kubedb_v1alpha2_LogSourceStorage(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSplunkHECExporter":                          schema_apimachinery_apis_kubedb_v1alpha2_LogSplunkHECExporter(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSyslogExporter":                             schema_apimachinery_apis_kubedb_v1alpha2_LogSyslogExporter(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogTransformProcessor":                         schema_apimachinery_apis_kubedb_v1alpha2_LogTransformProcessor(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogTransformStatements":                        schema_apimachinery_apis_kubedb_v1alpha2_LogTransformStatements(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServer":                                   schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServer(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerApp":                                schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MSSQLServerAvailabilityGroupSpec":              schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServerAvailabilityGroupSpec(ref),
@@ -39516,6 +39544,1333 @@ func schema_apimachinery_apis_kubedb_v1alpha2_ListenerSpec(ref common.ReferenceC
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_LogAttributeAction(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogAttributeAction modifies one attribute using native Collector semantics.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Key identifies the attribute to modify.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"action": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Action selects the supported native operation.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"value": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Value supplies a scalar value for insert/update/upsert instead of a source reference.",
+							Ref:         ref("k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.JSON"),
+						},
+					},
+					"fromAttribute": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FromAttribute copies an existing attribute instead of using Value or FromContext.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"fromContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FromContext copies a native context value instead of Value or FromAttribute.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"pattern": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Pattern is the extraction expression used by the extract action.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"convertedType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConvertedType selects the resulting scalar type for the convert action.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"key", "action"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1.JSON"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogAttributesProcessor(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogAttributesProcessor configures native attribute actions.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"actions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Actions lists the attribute modifications in execution order.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogAttributeAction"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"actions"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogAttributeAction"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogBatchProcessor(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogBatchProcessor configures only the managed batch processor.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout sets the batch flush interval.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"sendBatchSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SendBatchSize sets the batching trigger in records.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"sendBatchMaxSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Zero means no maximum, as in the native Collector.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogDatadogAPI(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"site": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Site sets the Datadog destination site.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"keySecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "KeySecretRef selects the Datadog API key.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+				},
+				Required: []string{"site", "keySecretRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogDatadogExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configures verified transport and optional client authentication.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS"),
+						},
+					},
+					"sendingQueue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SendingQueue configures bounded persistent delivery buffering.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"),
+						},
+					},
+					"api": {
+						SchemaProps: spec.SchemaProps{
+							Description: "API configures the Datadog intake credentials.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogDatadogAPI"),
+						},
+					},
+					"retryOnFailure": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetryOnFailure configures retryable export failures.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogRetryOnFailure"),
+						},
+					},
+				},
+				Required: []string{"api"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogDatadogAPI", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogRetryOnFailure", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogElasticsearchExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogElasticsearchExporter preserves Elasticsearch's distinct retry schema.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configures verified transport and optional client authentication.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS"),
+						},
+					},
+					"sendingQueue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SendingQueue configures bounded persistent delivery buffering.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"),
+						},
+					},
+					"endpoints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Endpoints lists Elasticsearch destination URLs.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"apiKeySecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIKeySecretRef selects an Elasticsearch API key.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"logsIndex": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogsIndex sets the destination logs index.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"mapping": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mapping selects native Elasticsearch document mapping.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogElasticsearchMapping"),
+						},
+					},
+					"retry": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Retry configures Elasticsearch-specific retry behavior.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogElasticsearchRetry"),
+						},
+					},
+				},
+				Required: []string{"endpoints"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogElasticsearchMapping", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogElasticsearchRetry", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogElasticsearchMapping(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode must be supported by the pinned exporter and destination version.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogElasticsearchRetry(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled toggles the native feature.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"initialInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InitialInterval sets the initial retry delay.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"maxInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxInterval caps the retry delay.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxRetries caps the retry count.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogExporterAuth(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogExporterAuth selects non-optional keys from same-namespace Secrets.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type selects the native Collector component or authentication type.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"extensionRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExtensionRef names an authentication extension defined in extensions.extraConfig.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tokenSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TokenSecretRef selects the token from a same-namespace Secret.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"usernameSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "UsernameSecretRef selects the authentication username.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"passwordSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PasswordSecretRef selects the authentication password.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"headerName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HeaderName sets the authentication HTTP header name.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"valueSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ValueSecretRef selects the authentication header value.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogExporterOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogExporterOptions contains shared queue and transport intent. The runtime must validate support against the pinned exporter build.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configures verified transport and optional client authentication.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS"),
+						},
+					},
+					"sendingQueue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SendingQueue configures bounded persistent delivery buffering.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogExporterSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogExporterSpec selects exactly one compiled Collector exporter. Name is part of persistent delivery identity, not a license to rename queues.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name identifies the stable Collector component or database source.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type selects the native Collector component or authentication type.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"otlpHttp": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OTLPHTTP configures the OTLP/HTTP exporter.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogOTLPHTTPExporter"),
+						},
+					},
+					"splunkHec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SplunkHEC configures the Splunk HEC exporter.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSplunkHECExporter"),
+						},
+					},
+					"elasticsearch": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Elasticsearch configures direct Elasticsearch export.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogElasticsearchExporter"),
+						},
+					},
+					"datadog": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Datadog configures the Datadog exporter.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogDatadogExporter"),
+						},
+					},
+					"syslog": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Syslog configures syslog export.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSyslogExporter"),
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogDatadogExporter", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogElasticsearchExporter", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogOTLPHTTPExporter", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSplunkHECExporter", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSyslogExporter"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogExtensions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogExtensions configures additional services without exposing pipeline wiring.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"extraConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExtraConfig defines native extensions activated through service.extensions.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"secretEnv": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretEnv binds extension environment names to selected same-namespace Secret keys.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/api/core/v1.SecretKeySelector"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogFileLogReceiver(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogFileLogReceiver tunes a managed reader. Paths and parsers are operator-owned.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"startAt": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StartAt applies only to files without saved checkpoints.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"pollInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PollInterval sets the file discovery interval.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"maxLogSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxLogSize uses Collector sizes, for example 1MiB.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogFilterLogs(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogFilterLogs contains log-only filter conditions.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"logRecord": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "LogRecord drops a record when any condition evaluates to true.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"logRecord"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogFilterProcessor(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogFilterProcessor configures native OTTL log-record filtering.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"errorMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ErrorMode defaults to propagate so failed filtering is not silently bypassed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"logs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Logs selects conditions evaluated against incoming log records.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogFilterLogs"),
+						},
+					},
+				},
+				Required: []string{"logs"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogFilterLogs"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogForwarderSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogForwarderSpec configures Sidecar collection or platform-managed NodeAgent collection.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled toggles KubeDB forwarding without deleting retained logs or state.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"collectionMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CollectionMode selects the source topology; defaults to Sidecar.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sources": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"name",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "name",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Sources selects the log streams advertised by the database version.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSourceSpec"),
+									},
+								},
+							},
+						},
+					},
+					"exporter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Exporter selects the Sidecar destination and its transport settings.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogExporterSpec"),
+						},
+					},
+					"processors": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Processors configures Sidecar processing without exposing arbitrary pipelines.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogProcessors"),
+						},
+					},
+					"extensions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Extensions configures additional Sidecar services and selected credential keys.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogExtensions"),
+						},
+					},
+					"stateStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StateStorage is the per-pod Filesystem/RWO PVC for checkpoints and queued records.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"sourceStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SourceStorage overrides per-pod source storage where the engine adapter supports it.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSourceStorage"),
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resources sets the Sidecar compute budget, including its explicit memory limit.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.ResourceRequirements"),
+						},
+					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext customizes the Sidecar's operator-managed security defaults.",
+							Ref:         ref("k8s.io/api/core/v1.SecurityContext"),
+						},
+					},
+					"rolloutPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RolloutPolicy requires an OpsRequest to activate pending configuration changes.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/api/core/v1.ResourceRequirements", "k8s.io/api/core/v1.SecurityContext", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogExporterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogExtensions", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogProcessors", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSourceSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSourceStorage"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogForwarderTLS(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogForwarderTLS configures trusted transport and optional client authentication.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode defaults to Verify; Disabled permits plaintext, not unverified HTTPS.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"caSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CASecretRef selects a private server-trust CA bundle when system trust is insufficient.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"clientCertSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientCertSecretRef selects a client certificate and pairs with ClientKeySecretRef.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"clientKeySecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientKeySecretRef selects a client private key and pairs with ClientCertSecretRef.",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogMemoryLimiterProcessor(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogMemoryLimiterProcessor selects a complete percentage or absolute-MiB pair.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"checkInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CheckInterval sets the memory-check interval; defaults to 1s.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"limitPercentage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LimitPercentage is the hard percentage threshold; pairs with SpikeLimitPercentage.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"spikeLimitPercentage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SpikeLimitPercentage is the percentage spike allowance; pairs with LimitPercentage.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"limitMiB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LimitMiB is the absolute hard threshold; pairs with SpikeLimitMiB instead of percentages.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"spikeLimitMiB": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SpikeLimitMiB is the absolute spike allowance; pairs with LimitMiB instead of percentages.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogOTLPHTTPExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogOTLPHTTPExporter configures native OTLP/HTTP export.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configures verified transport and optional client authentication.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS"),
+						},
+					},
+					"sendingQueue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SendingQueue configures bounded persistent delivery buffering.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"),
+						},
+					},
+					"endpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Endpoint is a base URL; LogsEndpoint is a complete logs URL.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"logsEndpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogsEndpoint sets the complete OTLP logs URL without automatic path suffixes.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"auth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Auth selects destination authentication.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogExporterAuth"),
+						},
+					},
+					"retryOnFailure": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetryOnFailure configures retryable export failures.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogRetryOnFailure"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogExporterAuth", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogRetryOnFailure", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogProcessors(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogProcessors configures managed Sidecar processing stages.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"memoryLimiter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MemoryLimiter tunes the always-enabled first processor and its paired memory thresholds.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogMemoryLimiterProcessor"),
+						},
+					},
+					"batch": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Batch tunes managed batching, which always runs last.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogBatchProcessor"),
+						},
+					},
+					"attributes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Attributes applies ordered actions to log-record attributes.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogAttributesProcessor"),
+						},
+					},
+					"filter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Filter drops log records matching log-only OTTL conditions.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogFilterProcessor"),
+						},
+					},
+					"transform": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Transform applies log-only OTTL normalization and redaction statements.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogTransformProcessor"),
+						},
+					},
+					"extraConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExtraConfig defines native processors without replacing managed safety components.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"order": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Order lists each user stage exactly once; excludes memoryLimiter and batch.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogAttributesProcessor", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogBatchProcessor", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogFilterProcessor", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogMemoryLimiterProcessor", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogTransformProcessor"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogRetryOnFailure(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled toggles the native feature.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"initialInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InitialInterval sets the initial retry delay.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"maxInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxInterval caps the retry delay.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"maxElapsedTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxElapsedTime of zero means unlimited retry of retryable failures.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogSendingQueue(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogSendingQueue bounds export requests, not bytes. KubeDB wires persistence. Blocking overflow does not guarantee backend delivery or block DB writes.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled toggles the native feature.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"queueSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "QueueSize bounds queued requests, not bytes.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"numConsumers": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NumConsumers sets concurrent queue consumers.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"blockOnOverflow": {
+						SchemaProps: spec.SchemaProps{
+							Description: "BlockOnOverflow blocks the collector producer when the queue fills.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogSourceSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogSourceSpec selects a source supported by the engine/version adapter.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name identifies the selected database log stream.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"fileLog": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FileLog tunes a Sidecar reader; saved checkpoints take precedence over startAt.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogFileLogReceiver"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogFileLogReceiver"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogSourceStorage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogSourceStorage is a per-emitting-pod log volume override.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"emptyDir": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EmptyDir selects bounded ephemeral source storage.",
+							Ref:         ref("k8s.io/api/core/v1.EmptyDirVolumeSource"),
+						},
+					},
+					"volumeClaimTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VolumeClaimTemplate selects durable per-pod source storage.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.EmptyDirVolumeSource", "k8s.io/api/core/v1.PersistentVolumeClaimSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogSplunkHECExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogSplunkHECExporter configures the HEC endpoint and selected token key.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configures verified transport and optional client authentication.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS"),
+						},
+					},
+					"sendingQueue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SendingQueue configures bounded persistent delivery buffering.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"),
+						},
+					},
+					"endpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Endpoint sets the destination address.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"tokenSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TokenSecretRef selects the token from a same-namespace Secret.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"index": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Index sets the Splunk destination index.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source sets the Splunk event source.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"sourcetype": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Sourcetype sets the Splunk event sourcetype.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"retryOnFailure": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetryOnFailure configures retryable export failures.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogRetryOnFailure"),
+						},
+					},
+				},
+				Required: []string{"endpoint", "tokenSecretRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogRetryOnFailure", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogSyslogExporter(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configures verified transport and optional client authentication.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS"),
+						},
+					},
+					"sendingQueue": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SendingQueue configures bounded persistent delivery buffering.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"),
+						},
+					},
+					"endpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Endpoint sets the destination address.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"port": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Port sets the syslog destination port.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"network": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Network selects the supported TCP transport.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"protocol": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Protocol selects the syslog message format.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"enableOctetCounting": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EnableOctetCounting enables TCP octet-counted framing.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"facility": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Facility sets the syslog facility number.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"retryOnFailure": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetryOnFailure configures retryable export failures.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogRetryOnFailure"),
+						},
+					},
+				},
+				Required: []string{"endpoint", "port", "network", "protocol"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderTLS", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogRetryOnFailure", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogSendingQueue"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogTransformProcessor(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogTransformProcessor configures native OTTL transformations of logs.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"errorMode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ErrorMode defaults to propagate so failed redaction is not silently bypassed.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"logStatements": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "LogStatements groups ordered statements by their OTTL context.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogTransformStatements"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"logStatements"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogTransformStatements"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_LogTransformStatements(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "LogTransformStatements contains one native OTTL statement group.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"context": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Context selects the native log, resource, or scope evaluation context.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"statements": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Statements lists transformations in execution order.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions optionally restrict when this group executes.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"context", "statements"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_MSSQLServer(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -43140,12 +44495,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_Neo4jSpec(ref common.ReferenceCall
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver"),
 						},
 					},
+					"logForwarder": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogForwarder configures an operator-managed OpenTelemetry Collector sidecar that tails Neo4j log files and ships them to an observability backend.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderSpec"),
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jConfiguration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -44808,6 +46169,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresSpec(ref common.ReferenceC
 			SchemaProps: spec.SchemaProps{
 				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
+					"logForwarder": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LogForwarder preserves the shared logging API across served versions.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderSpec"),
+						},
+					},
 					"autoOps": {
 						SchemaProps: spec.SchemaProps{
 							Description: "AutoOps contains configuration of automatic ops-request-recommendation generation",
@@ -45003,7 +46370,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_PostgresSpec(ref common.ReferenceC
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ArbiterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgreLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresReplication", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RemoteReplicaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v1.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ArbiterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.CoordinatorSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.LogForwarderSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgreLeaderElectionConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.PostgresReplication", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.RemoteReplicaSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
