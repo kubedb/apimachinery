@@ -719,6 +719,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionList":                             schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionPodSecurityPolicy":                schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionPodSecurityPolicy(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouter":                           schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionRouter(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionLicense":                          schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionLicense(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouterInitContainer":              schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionRouterInitContainer(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionSpec":                             schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.Neo4jVersion":                                 schema_apimachinery_apis_catalog_v1alpha1_Neo4jVersion(ref),
@@ -39231,12 +39232,40 @@ func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionSpec(ref common.Refer
 							Ref:         ref("kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"),
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Description: "License describes whether this version's image is gated behind a commercial license (e.g. Oracle's MySQL Enterprise Edition, distributed via Oracle Container Registry under a bring-your-own-license subscription). Unlike AppsCode's Postgres Enterprise build, mysqld itself does not enforce a license file at runtime; access is gated at the image registry level. This field exists so KubeDB can require the user to explicitly reference their license/subscription via spec.license on every MySQL using this version.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionLicense"),
+						},
+					},
 				},
 				Required: []string{"version", "db", "exporter", "coordinator", "initContainer", "podSecurityPolicies"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLUpdateConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouterInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"},
+			"kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1.StashAddonSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ArchiverSpec", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.GitSyncer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLUpdateConstraints", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionCoordinator", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionExporter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionLicense", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionPodSecurityPolicy", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouter", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.MySQLVersionRouterInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.ReplicationModeDetector", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/courier/v1alpha1.DBCourierImages"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_MySQLVersionLicense(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MySQLVersionLicense describes whether a MySQLVersion's image is only accessible under a commercial license/subscription (e.g. Oracle MySQL Enterprise Edition via Oracle Container Registry BYOL).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"required": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Required is true when this version's image is gated behind a commercial license/subscription. When true, spec.license must be set on every MySQL using this version.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"required"},
+			},
+		},
 	}
 }
 
