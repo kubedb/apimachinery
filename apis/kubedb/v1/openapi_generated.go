@@ -612,6 +612,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1.KernelSettings":                                      schema_apimachinery_apis_kubedb_v1_KernelSettings(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.ManifestOptions":                                     schema_apimachinery_apis_kubedb_v1_ManifestOptions(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDB":                                             schema_apimachinery_apis_kubedb_v1_MariaDB(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBLicenseSpec":                                  schema_apimachinery_apis_kubedb_v1_MariaDBLicenseSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBList":                                         schema_apimachinery_apis_kubedb_v1_MariaDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBSpec":                                         schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBStatus":                                       schema_apimachinery_apis_kubedb_v1_MariaDBStatus(ref),
@@ -35409,6 +35410,29 @@ func schema_apimachinery_apis_kubedb_v1_MariaDB(ref common.ReferenceCallback) co
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1_MariaDBLicenseSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MariaDBLicenseSpec references the Secret holding license/subscription information for a licensed MariaDB distribution (e.g. MariaDB Enterprise Server).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretRef selects the key of a Secret holding the license/subscription information. Key defaults to \"license\" if left unset.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+				},
+				Required: []string{"secretRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1_MariaDBList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -35574,6 +35598,12 @@ func schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref common.ReferenceCallback
 							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Description: "License references the Secret holding license/subscription information required to use a licensed MariaDBVersion (e.g. MariaDB Enterprise Server). Only valid, and required, when the referenced MariaDBVersion has spec.license.required = true. This is not consumed by mariadbd at runtime; it is an administrative record of the license/subscription backing this deployment.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBLicenseSpec"),
+						},
+					},
 					"halted": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
@@ -35619,7 +35649,7 @@ func schema_apimachinery_apis_kubedb_v1_MariaDBSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.AllowedConsumers", "kubedb.dev/apimachinery/apis/kubedb/v1.Archiver", "kubedb.dev/apimachinery/apis/kubedb/v1.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBLicenseSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.MariaDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1.SecretReference"},
 	}
 }
 
