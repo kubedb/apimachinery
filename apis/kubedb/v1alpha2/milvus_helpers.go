@@ -446,6 +446,34 @@ func (m *Milvus) MetaStorageTLSEnabled() bool {
 	return m.Spec.MetaStorage != nil && !m.Spec.MetaStorage.ExternallyManaged && m.Spec.MetaStorage.TLS != nil
 }
 
+// MetaStorageRootPath returns the etcd key prefix Milvus stores its metadata
+// under: spec.metaStorage.rootPath if set, else the historical default
+// "<name>-etcd".
+func (m *Milvus) MetaStorageRootPath() string {
+	if m.Spec.MetaStorage != nil && m.Spec.MetaStorage.RootPath != "" {
+		return m.Spec.MetaStorage.RootPath
+	}
+	return m.EtcdServiceName()
+}
+
+// MetaStorageExternalAuthSecretName returns the Secret holding the basic-auth
+// credentials for an externally-managed meta etcd, or "" if none is set.
+func (m *Milvus) MetaStorageExternalAuthSecretName() string {
+	if m.Spec.MetaStorage == nil || !m.Spec.MetaStorage.ExternallyManaged || m.Spec.MetaStorage.AuthSecret == nil {
+		return ""
+	}
+	return m.Spec.MetaStorage.AuthSecret.Name
+}
+
+// MetaStorageExternalTLSSecretName returns the client-TLS Secret for an
+// externally-managed meta etcd, or "" if none is set.
+func (m *Milvus) MetaStorageExternalTLSSecretName() string {
+	if m.Spec.MetaStorage == nil || !m.Spec.MetaStorage.ExternallyManaged || m.Spec.MetaStorage.ClientTLSSecret == nil {
+		return ""
+	}
+	return m.Spec.MetaStorage.ClientTLSSecret.Name
+}
+
 // MetaStorageClientCertSecretName returns the internally-managed meta etcd's
 // client certificate secret name, or "" if TLS is disabled.
 func (m *Milvus) MetaStorageClientCertSecretName() string {
@@ -687,10 +715,10 @@ func (m *Milvus) SetDefaults(kc client.Client) {
 			m.Spec.Monitor.Prometheus.Exporter.Port = kubedb.MilvusMetricsPort
 		}
 		m.Spec.Monitor.SetDefaults()
-		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil {
+		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser == nil && !m.Spec.RestrictedSCC {
 			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsUser = mvVersion.Spec.SecurityContext.RunAsUser
 		}
-		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil {
+		if m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup == nil && !m.Spec.RestrictedSCC {
 			m.Spec.Monitor.Prometheus.Exporter.SecurityContext.RunAsGroup = mvVersion.Spec.SecurityContext.RunAsUser
 		}
 	}
@@ -756,7 +784,7 @@ func (m *Milvus) setDefaultContainerSecurityContext(mvVersion *catalog.MilvusVer
 	if podTemplate.Spec.SecurityContext == nil {
 		podTemplate.Spec.SecurityContext = &core.PodSecurityContext{}
 	}
-	if podTemplate.Spec.SecurityContext.FSGroup == nil {
+	if podTemplate.Spec.SecurityContext.FSGroup == nil && !m.Spec.RestrictedSCC {
 		podTemplate.Spec.SecurityContext.FSGroup = mvVersion.Spec.SecurityContext.RunAsUser
 	}
 
@@ -785,10 +813,10 @@ func (m *Milvus) AssignDefaultContainerSecurityContext(mvVersion *catalog.Milvus
 	if rc.RunAsNonRoot == nil {
 		rc.RunAsNonRoot = pointer.BoolP(true)
 	}
-	if rc.RunAsUser == nil {
+	if rc.RunAsUser == nil && !m.Spec.RestrictedSCC {
 		rc.RunAsUser = mvVersion.Spec.SecurityContext.RunAsUser
 	}
-	if rc.RunAsGroup == nil {
+	if rc.RunAsGroup == nil && !m.Spec.RestrictedSCC {
 		rc.RunAsGroup = mvVersion.Spec.SecurityContext.RunAsUser
 	}
 	if rc.SeccompProfile == nil {
