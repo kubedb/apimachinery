@@ -117,6 +117,16 @@ type MilvusSpec struct {
 	// +optional
 	TLS *MilvusTLSConfig `json:"tls,omitempty"`
 
+	// RestrictedSCC lets the platform choose the pods' user, group and fsGroup
+	// instead of KubeDB defaulting them from the MilvusVersion (uid 1000). Set
+	// it on OpenShift under the restricted-v2 SCC, which assigns IDs from the
+	// namespace range and rejects a fixed uid outside it. runAsNonRoot and the
+	// rest of the container hardening stay on. Explicit values in the pod
+	// template still win. The Milvus image must tolerate an arbitrary uid
+	// (writable paths owned by group 0).
+	// +optional
+	RestrictedSCC bool `json:"restrictedSCC,omitempty"`
+
 	// Network configures secondary networking (e.g. SR-IOV via Multus) for
 	// this component. Only meaningful in Standalone mode; Distributed roles
 	// configure this per-role under spec.topology.distributed.<role>.network.
@@ -405,11 +415,31 @@ type MetaStorageSpec struct {
 	// +optional
 	TLS *kmapi.TLSConfig `json:"tls,omitempty"`
 
-	// AuthSecret is the root credential for the internally-managed meta etcd.
-	// If omitted, the etcd operator auto-generates one. Only used when
-	// ExternallyManaged is false.
+	// AuthSecret is the root credential for the meta etcd.
+	// When ExternallyManaged is false and this is omitted, the etcd operator
+	// auto-generates one. When ExternallyManaged is true, it names an existing
+	// basic-auth Secret (keys "username" and "password") in this namespace that
+	// Milvus uses to authenticate to the external etcd; omit it if the external
+	// etcd has authentication disabled. Virtual secrets are not supported for
+	// an external etcd.
 	// +optional
 	AuthSecret *SecretReference `json:"authSecret,omitempty"`
+
+	// ClientTLSSecret names a Secret in this namespace with the client
+	// certificate Milvus presents to an external etcd ("tls.crt", "tls.key")
+	// and the CA that signed the etcd server certificate ("ca.crt"). Only used,
+	// and only allowed, when ExternallyManaged is true; for the
+	// internally-managed etcd, use TLS instead.
+	// +optional
+	ClientTLSSecret *core.LocalObjectReference `json:"clientTLSSecret,omitempty"`
+
+	// RootPath is the etcd key prefix Milvus stores its metadata under
+	// (etcd.rootPath in milvus.yaml). Defaults to "<milvus name>-etcd". Set it to
+	// reuse the metadata of an existing deployment, e.g. "by-dev", the Milvus
+	// Helm chart default. Changing it on a running Milvus points it at a
+	// different (likely empty) metadata tree.
+	// +optional
+	RootPath string `json:"rootPath,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

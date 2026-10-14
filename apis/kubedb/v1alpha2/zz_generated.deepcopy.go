@@ -4318,6 +4318,11 @@ func (in *MetaStorageSpec) DeepCopyInto(out *MetaStorageSpec) {
 		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ClientTLSSecret != nil {
+		in, out := &in.ClientTLSSecret, &out.ClientTLSSecret
+		*out = new(corev1.LocalObjectReference)
+		**out = **in
+	}
 	return
 }
 
