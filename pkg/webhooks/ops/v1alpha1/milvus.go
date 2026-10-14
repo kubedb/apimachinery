@@ -277,7 +277,7 @@ func (w *MilvusOpsRequestCustomWebhook) validateMilvusVerticalScalingOpsRequest(
 		}
 		if verticalScalingSpec.Proxy == nil && verticalScalingSpec.MixCoord == nil &&
 			verticalScalingSpec.DataNode == nil && verticalScalingSpec.QueryNode == nil &&
-			verticalScalingSpec.StreamingNode == nil {
+			verticalScalingSpec.StreamingNode == nil && len(verticalScalingSpec.Groups) == 0 {
 			return errors.New("at least one distributed node type must be specified in spec.verticalScaling")
 		}
 
