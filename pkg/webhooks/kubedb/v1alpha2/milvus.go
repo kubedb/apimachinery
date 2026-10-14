@@ -150,7 +150,6 @@ func (m *MilvusCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Ob
 
 func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admission.Warnings, field.ErrorList) {
 	var allErr field.ErrorList
-	var warnings admission.Warnings
 
 	milvusVersion, err := m.milvusValidateVersion(db)
 	if err != nil {
@@ -163,7 +162,7 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 			err.Error()))
 	}
 
-	warnings = append(warnings, milvusWarnSRIOVTopology(db)...)
+	warnings := milvusWarnSRIOVTopology(db)
 
 	if err := milvusValidateNodeGroups(db); err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("distributed"),
