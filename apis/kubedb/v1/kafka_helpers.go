@@ -302,7 +302,7 @@ func (k *Kafka) PVCName(alias string) string {
 }
 
 func (k *Kafka) IsVersionGreaterOrEqual(version string) bool {
-	v1, err := semver.NewVersion(k.Spec.Version)
+	v1, err := kafkaSemver(k.Spec.Version)
 	if err != nil {
 		klog.Error(err, "Failed to parse version", "version", k.Spec.Version)
 		return false
@@ -313,6 +313,24 @@ func (k *Kafka) IsVersionGreaterOrEqual(version string) bool {
 		return false
 	}
 	return v1.GreaterThanEqual(v2)
+}
+
+// kafkaSemver returns the Apache Kafka version for a KafkaVersion name. Confluent versions are named
+// "confluent-<Confluent Platform version>"; Confluent Platform 7.x ships Apache Kafka 3.x and 8.x ships
+// Apache Kafka 4.x, with the same minor version.
+func kafkaSemver(name string) (*semver.Version, error) {
+	cpVersion, ok := strings.CutPrefix(name, "confluent-")
+	if !ok {
+		return semver.NewVersion(name)
+	}
+	v, err := semver.NewVersion(cpVersion)
+	if err != nil {
+		return nil, err
+	}
+	if v.Major() < 4 {
+		return nil, fmt.Errorf("unsupported Confluent Platform version %s", cpVersion)
+	}
+	return semver.NewVersion(fmt.Sprintf("%d.%d.0", v.Major()-4, v.Minor()))
 }
 
 func (k *Kafka) SetHealthCheckerDefaults() {
@@ -352,6 +370,10 @@ func (k *Kafka) SetDefaults(kc client.Client) {
 		if k.Spec.AuthSecret.Kind == "" {
 			k.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
 		}
+	}
+
+	if k.Spec.License != nil && k.Spec.License.Key == "" {
+		k.Spec.License.Key = "license"
 	}
 
 	var kfVersion catalog.KafkaVersion
