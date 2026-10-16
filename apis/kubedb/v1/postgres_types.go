@@ -169,6 +169,11 @@ type PostgresSpec struct {
 	// +optional
 	Archiver *Archiver `json:"archiver,omitempty"`
 
+	// LogForwarder configures an operator-managed OpenTelemetry Collector sidecar that tails Postgres
+	// log files and ships them to an observability backend.
+	// +optional
+	LogForwarder *LogForwarderSpec `json:"logForwarder,omitempty"`
+
 	// Arbiter controls spec for arbiter pods
 	// +optional
 	Arbiter *ArbiterSpec `json:"arbiter,omitempty"`

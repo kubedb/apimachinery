@@ -58,6 +58,10 @@ const (
 )
 
 type PostgresSpec struct {
+	// LogForwarder preserves the shared logging API across served versions.
+	// +optional
+	LogForwarder *LogForwarderSpec `json:"logForwarder,omitempty"`
+
 	// AutoOps contains configuration of automatic ops-request-recommendation generation
 	// +optional
 	AutoOps AutoOpsSpec `json:"autoOps,omitempty"`

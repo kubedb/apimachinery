@@ -156,6 +156,7 @@ func (r *Neo4j) SetDefaults(kc client.Client) {
 	}
 
 	r.SetTLSDefaults()
+	r.setLogForwarderDefaults()
 
 	dbContainer := coreutil.GetContainerByName(r.Spec.PodTemplate.Spec.Containers, kubedb.Neo4jContainerName)
 	if dbContainer != nil {
@@ -163,6 +164,14 @@ func (r *Neo4j) SetDefaults(kc client.Client) {
 	}
 
 	apis.SetDefaultResizePolicy(r.Spec.PodTemplate.Spec.Containers, r.Spec.PodTemplate.Spec.InitContainers)
+}
+
+// setLogForwarderDefaults fills in the safe defaults for an enabled log-forwarder. It only acts when
+// the feature is present, so a Neo4j without logForwarder renders exactly as before.
+func (r *Neo4j) setLogForwarderDefaults() {
+	if r.Spec.LogForwarder != nil {
+		r.Spec.LogForwarder.SetCollectionDefaults()
+	}
 }
 
 func (r *Neo4j) SetTLSDefaults() {
