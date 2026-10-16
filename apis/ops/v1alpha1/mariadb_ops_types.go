@@ -118,6 +118,23 @@ type MariaDBHorizontalScalingSpec struct {
 	Member *int32 `json:"member,omitempty"`
 	// specifies the weight of the current member/PodResources
 	MemberWeight int32 `json:"memberWeight,omitempty"`
+
+	// DataCenters scales individual data centers of a distributed DC-DR MariaDB.
+	// Each entry sets that data center's local Galera node count; data centers not
+	// listed are left unchanged. Use this instead of Member for a DC-DR cluster, where
+	// each data center has its own intra-DC Galera quorum and is scaled independently.
+	// +optional
+	DataCenters []MariaDBHorizontalScalingDC `json:"dataCenters,omitempty"`
+}
+
+// MariaDBHorizontalScalingDC is a per data center node-count target for scaling a
+// distributed DC-DR MariaDB.
+type MariaDBHorizontalScalingDC struct {
+	// ClusterName is the data center, named by its OCM managed cluster, matching a
+	// Member distributionRule in the MariaDB PlacementPolicy.
+	ClusterName string `json:"clusterName"`
+	// Replicas is the desired local Galera node count for this data center.
+	Replicas int32 `json:"replicas"`
 }
 
 type MariaDBVerticalScalingSpec struct {

@@ -180,6 +180,69 @@ type MariaDBStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 	// +optional
 	AuthSecret *Age `json:"authSecret,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed MariaDB.
+	// +optional
+	DisasterRecovery *MariaDBDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// MariaDBDRPhase is the cross data center DR phase of a distributed MariaDB.
+type MariaDBDRPhase string
+
+const (
+	MariaDBDRPhaseSteady      MariaDBDRPhase = "Steady"
+	MariaDBDRPhaseFailingOver MariaDBDRPhase = "FailingOver"
+	MariaDBDRPhaseFailingBack MariaDBDRPhase = "FailingBack"
+	MariaDBDRPhaseDegraded    MariaDBDRPhase = "Degraded"
+)
+
+// MariaDBDisasterRecoveryStatus reports the per data center DC-DR view of a
+// distributed MariaDB. Each Member DC runs its own self contained Galera cluster
+// and the cross-DC decision is owned by the dr-controlplane primary-DC Lease; this
+// status reflects it on the single Database object.
+type MariaDBDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and runs the writable Galera cluster.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase MariaDBDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []MariaDBDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// MariaDBDCStatus is one data center's local view inside a distributed MariaDB.
+type MariaDBDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member or Arbiter.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Leader is this DC's representative Galera node, the node that runs the cross-DC
+	// async replica when this DC is a standby.
+	// +optional
+	Leader string `json:"leader,omitempty"`
+
+	// Writable is true when this DC's Galera cluster is the cluster's writable head.
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// LagBytes is this DC's cross-DC async replication lag behind the active DC, in bytes.
+	// +optional
+	LagBytes *int64 `json:"lagBytes,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
