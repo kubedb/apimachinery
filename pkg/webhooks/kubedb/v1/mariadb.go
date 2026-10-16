@@ -95,6 +95,12 @@ func (w *MariaDBCustomWebhook) Default(ctx context.Context, obj runtime.Object) 
 	}
 	db.SetDefaults(&mdVersion)
 
+	if db.Spec.License != nil {
+		if db.Spec.License.SecretRef.Key == "" {
+			db.Spec.License.SecretRef.Key = "license"
+		}
+	}
+
 	archiverList := &archiverapi.MariaDBArchiverList{}
 	err = w.DefaultClient.List(context.TODO(), archiverList)
 	if err != nil {
@@ -329,6 +335,28 @@ func validateWsrepSSTMethod(db *dbapi.MariaDB) error {
 	return nil
 }
 
+// validateLicense enforces the MariaDB license invariants: a version that is
+// gated behind a commercial license (spec.license.required = true, e.g.
+// MariaDB Enterprise Server) must have spec.license set on the MariaDB
+// referencing it, and conversely spec.license may only be set against a
+// version that requires one.
+func (w MariaDBCustomWebhook) validateLicense(mariadb *dbapi.MariaDB, mariadbVersion *catalogapi.MariaDBVersion) error {
+	versionRequiresLicense := mariadbVersion.Spec.License != nil && mariadbVersion.Spec.License.Required
+	if mariadb.Spec.License == nil {
+		if versionRequiresLicense {
+			return fmt.Errorf("MariaDBVersion %q requires spec.license (a licensed MariaDB distribution); set spec.license.secretRef to a Secret containing your license/subscription information", mariadbVersion.Name)
+		}
+		return nil
+	}
+	if !versionRequiresLicense {
+		return fmt.Errorf("spec.license is set but MariaDBVersion %q is not a licensed distribution (spec.license.required is not set)", mariadbVersion.Name)
+	}
+	if mariadb.Spec.License.SecretRef.Name == "" {
+		return fmt.Errorf("spec.license.secretRef.name must be set")
+	}
+	return nil
+}
+
 func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 	if mariadb.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
@@ -341,6 +369,10 @@ func (w MariaDBCustomWebhook) ValidateMariaDB(mariadb *dbapi.MariaDB) error {
 	}
 	if mariadb.Spec.Version == "" {
 		return errors.New(`'spec.version' is missing`)
+	}
+
+	if err := w.validateLicense(mariadb, &mariadbVersion); err != nil {
+		return err
 	}
 
 	if mariadb.Spec.Replicas == nil || ptr.Deref(mariadb.Spec.Replicas, 0) < 1 {
