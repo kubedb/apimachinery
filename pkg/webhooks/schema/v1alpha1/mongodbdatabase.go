@@ -128,9 +128,8 @@ func (in *MongoDatabaseCustomWebhook) ValidateDelete(ctx context.Context, obj ru
 	}
 	mongodbdatabaselog.Info("validate delete", "name", db.Name)
 	if db.Spec.DeletionPolicy == smapi.DeletionPolicyDoNotDelete {
-		var allErrs field.ErrorList
 		path := field.NewPath("spec").Child("deletionPolicy")
-		allErrs = append(allErrs, field.Invalid(path, db.Name, MongoDBValidateDeletionPolicyError))
+		allErrs := field.ErrorList{field.Invalid(path, db.Name, MongoDBValidateDeletionPolicyError)}
 		return nil, apierrors.NewInvalid(db.GroupVersionKind().GroupKind(), db.Name, allErrs)
 	}
 	return nil, nil

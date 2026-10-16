@@ -150,7 +150,6 @@ func (m *MilvusCustomWebhook) ValidateDelete(ctx context.Context, obj runtime.Ob
 
 func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admission.Warnings, field.ErrorList) {
 	var allErr field.ErrorList
-	var warnings admission.Warnings
 
 	milvusVersion, err := m.milvusValidateVersion(db)
 	if err != nil {
@@ -163,7 +162,7 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 			err.Error()))
 	}
 
-	warnings = append(warnings, milvusWarnSRIOVTopology(db)...)
+	warnings := milvusWarnSRIOVTopology(db)
 
 	if err := milvusValidateNodeGroups(db); err != nil {
 		allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("topology").Child("distributed"),
@@ -227,21 +226,42 @@ func (m *MilvusCustomWebhook) ValidateCreateOrUpdate(db *olddbapi.Milvus) (admis
 	}
 
 	if meta := db.Spec.MetaStorage; meta != nil {
+		metaPath := field.NewPath("spec").Child("metaStorage")
 		if meta.ExternallyManaged {
 			if meta.TLS != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("metaStorage").Child("tls"),
-					db.Name, "spec.metaStorage.tls is only used when metaStorage is not externally managed"))
+				allErr = append(allErr, field.Invalid(metaPath.Child("tls"),
+					db.Name, "spec.metaStorage.tls is only used when metaStorage is not externally managed; use clientTLSSecret for an external etcd"))
 			}
 			if meta.AuthSecret != nil {
-				allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("metaStorage").Child("authSecret"),
-					db.Name, "spec.metaStorage.authSecret is only used when metaStorage is not externally managed"))
+				if meta.AuthSecret.Name == "" {
+					allErr = append(allErr, field.Required(metaPath.Child("authSecret", "name"),
+						"an external etcd's authSecret must name an existing basic-auth Secret"))
+				}
+				if olddbapi.IsVirtualAuthSecretReferred(meta.AuthSecret) {
+					allErr = append(allErr, field.Invalid(metaPath.Child("authSecret"),
+						db.Name, "virtual secrets are not supported for an external meta etcd"))
+				}
 			}
-		} else if meta.TLS != nil && meta.TLS.IssuerRef == nil {
-			allErr = append(allErr, field.Invalid(
-				field.NewPath("spec").Child("metaStorage").Child("tls").Child("issuerRef"),
-				db.Name,
-				"spec.metaStorage.tls.issuerRef is required when metaStorage.tls is configured",
-			))
+			if meta.ClientTLSSecret != nil && meta.ClientTLSSecret.Name == "" {
+				allErr = append(allErr, field.Required(metaPath.Child("clientTLSSecret", "name"),
+					"clientTLSSecret must name a Secret"))
+			}
+		} else {
+			if meta.ClientTLSSecret != nil {
+				allErr = append(allErr, field.Invalid(metaPath.Child("clientTLSSecret"),
+					db.Name, "spec.metaStorage.clientTLSSecret is only used when metaStorage is externally managed"))
+			}
+			if meta.TLS != nil && meta.TLS.IssuerRef == nil {
+				allErr = append(allErr, field.Invalid(
+					metaPath.Child("tls", "issuerRef"),
+					db.Name,
+					"spec.metaStorage.tls.issuerRef is required when metaStorage.tls is configured",
+				))
+			}
+		}
+		if strings.TrimSpace(meta.RootPath) != meta.RootPath || strings.Contains(meta.RootPath, "/") {
+			allErr = append(allErr, field.Invalid(metaPath.Child("rootPath"), meta.RootPath,
+				"spec.metaStorage.rootPath must not contain '/' or surrounding whitespace"))
 		}
 	}
 

@@ -82,7 +82,7 @@ func TestValidateDB2HADRPortsImmutable(t *testing.T) {
 		t.Fatalf("removing a database must be allowed, got %v", errs)
 	}
 
-	legacy := &olddbapi.DB2{Spec: olddbapi.DB2Spec{Replicas: ptr.To(int32(2)), HADR: &olddbapi.DB2HADRSpec{DatabaseName: "A"}}}
+	legacy := &olddbapi.DB2{Spec: olddbapi.DB2Spec{Replicas: ptr.To(int32(2)), HADR: &olddbapi.DB2HADRSpec{DatabaseName: "A"}}} //nolint:staticcheck // exercises the deprecated databaseName migration path
 	if errs := validateDB2HADRPortsImmutable(legacy, hadrDB2(olddbapi.DB2HADRDatabase{Name: "A", Port: 55000})); len(errs) != 0 {
 		t.Fatalf("migrating databaseName to databases must keep port 55000 valid, got %v", errs)
 	}

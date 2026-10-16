@@ -40721,15 +40721,28 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MetaStorageSpec(ref common.Referen
 					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "AuthSecret is the root credential for the internally-managed meta etcd. If omitted, the etcd operator auto-generates one. Only used when ExternallyManaged is false.",
+							Description: "AuthSecret is the root credential for the meta etcd. When ExternallyManaged is false and this is omitted, the etcd operator auto-generates one. When ExternallyManaged is true, it names an existing basic-auth Secret (keys \"username\" and \"password\") in this namespace that Milvus uses to authenticate to the external etcd; omit it if the external etcd has authentication disabled. Virtual secrets are not supported for an external etcd.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"clientTLSSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientTLSSecret names a Secret in this namespace with the client certificate Milvus presents to an external etcd (\"tls.crt\", \"tls.key\") and the CA that signed the etcd server certificate (\"ca.crt\"). Only used, and only allowed, when ExternallyManaged is true; for the internally-managed etcd, use TLS instead.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"rootPath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RootPath is the etcd key prefix Milvus stores its metadata under (etcd.rootPath in milvus.yaml). Defaults to \"<milvus name>-etcd\". Set it to reuse the metadata of an existing deployment, e.g. \"by-dev\", the Milvus Helm chart default. Changing it on a running Milvus points it at a different (likely empty) metadata tree.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 
@@ -41416,6 +41429,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MilvusSpec(ref common.ReferenceCal
 						SchemaProps: spec.SchemaProps{
 							Description: "TLS contains tls configurations",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MilvusTLSConfig"),
+						},
+					},
+					"restrictedSCC": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RestrictedSCC lets the platform choose the pods' user, group and fsGroup instead of KubeDB defaulting them from the MilvusVersion (uid 1000). Set it on OpenShift under the restricted-v2 SCC, which assigns IDs from the namespace range and rejects a fixed uid outside it. runAsNonRoot and the rest of the container hardening stay on. Explicit values in the pod template still win. The Milvus image must tolerate an arbitrary uid (writable paths owned by group 0).",
+							Type:        []string{"boolean"},
+							Format:      "",
 						},
 					},
 					"network": {

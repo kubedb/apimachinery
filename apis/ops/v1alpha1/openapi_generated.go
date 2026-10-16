@@ -652,6 +652,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdOpsRequestList":                               schema_apimachinery_apis_ops_v1alpha1_EtcdOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdOpsRequestSpec":                               schema_apimachinery_apis_ops_v1alpha1_EtcdOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverFromQuorumLossSpec":                    schema_apimachinery_apis_ops_v1alpha1_EtcdRecoverFromQuorumLossSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverMemberSpec":                            schema_apimachinery_apis_ops_v1alpha1_EtcdRecoverMemberSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRestoreSpec":                                  schema_apimachinery_apis_ops_v1alpha1_EtcdRestoreSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdTLSSpec":                                      schema_apimachinery_apis_ops_v1alpha1_EtcdTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpdateVersionSpec":                            schema_apimachinery_apis_ops_v1alpha1_EtcdUpdateVersionSpec(ref),
@@ -37162,6 +37163,12 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdOpsRequestSpec(ref common.Referen
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRestoreSpec"),
 						},
 					},
+					"recoverMember": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RecoverMember replaces a single etcd member that lost its data while still part of the raft membership. The member is removed, its data volume is discarded, and it rejoins as a fresh learner at the same peer URL.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverMemberSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -37186,7 +37193,7 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdOpsRequestSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCompactSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdDefragmentSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdMoveLeaderSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverFromQuorumLossSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRestoreSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCompactSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdDefragmentSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdMoveLeaderSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverFromQuorumLossSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverMemberSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRestoreSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"},
 	}
 }
 
@@ -37212,6 +37219,28 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdRecoverFromQuorumLossSpec(ref com
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_EtcdRecoverMemberSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EtcdRecoverMemberSpec names the etcd member to replace. The operator refuses the request if the named member looks healthy.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"memberName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MemberName is the pod name of the etcd member to recover.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"memberName"},
 			},
 		},
 	}
