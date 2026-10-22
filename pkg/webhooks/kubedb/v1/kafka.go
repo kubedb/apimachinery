@@ -295,6 +295,10 @@ func (w *KafkaCustomWebhook) validateServiceTemplates(db *dbapi.Kafka) error {
 	if dbapi.HasServiceTemplate(db.Spec.ServiceTemplates, dbapi.BrokerServiceAlias) && broker.Spec.Type != core.ServiceTypeLoadBalancer {
 		return fmt.Errorf("service template %q must have type %s", dbapi.BrokerServiceAlias, core.ServiceTypeLoadBalancer)
 	}
+	// the per-broker external advertised listener is set by the kafka-init setup script, which older versions don't run
+	if db.ExternalAccessEnabled() && !db.IsVersionGreaterOrEqual("4.0.0") {
+		return fmt.Errorf("service template %q requires Kafka version 4.0.0 or later", dbapi.BrokerServiceAlias)
+	}
 	primaryType := dbapi.GetServiceTemplate(db.Spec.ServiceTemplates, dbapi.PrimaryServiceAlias).Spec.Type
 	if (primaryType == core.ServiceTypeLoadBalancer || primaryType == core.ServiceTypeNodePort) && !db.ExternalAccessEnabled() {
 		return fmt.Errorf("service template %q of type %s requires service template %q of type %s", dbapi.PrimaryServiceAlias, primaryType, dbapi.BrokerServiceAlias, core.ServiceTypeLoadBalancer)
