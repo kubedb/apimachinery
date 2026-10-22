@@ -3342,9 +3342,6 @@ spec:
                       - primary
                       - standby
                       - stats
-                      - dashboard
-                      - readreplica
-                      - broker
                       type: string
                     metadata:
                       properties:
