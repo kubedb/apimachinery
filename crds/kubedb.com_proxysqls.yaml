@@ -3808,6 +3808,7 @@ spec:
                       - stats
                       - dashboard
                       - readreplica
+                      - broker
                       type: string
                     metadata:
                       properties:

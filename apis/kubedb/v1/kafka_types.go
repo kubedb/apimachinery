@@ -245,6 +245,7 @@ const (
 	KafkaListenerController KafkaListenerType = "CONTROLLER"
 	KafkaListenerLocal      KafkaListenerType = "LOCAL"
 	KafkaListenerCC         KafkaListenerType = "CC"
+	KafkaListenerExternal   KafkaListenerType = "EXTERNAL"
 )
 
 // +kubebuilder:validation:Enum=ca;transport;http;client;server
