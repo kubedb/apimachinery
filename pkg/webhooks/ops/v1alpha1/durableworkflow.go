@@ -143,9 +143,9 @@ func (w *DurableWorkflowOpsRequestCustomWebhook) validateCreateOrUpdate(req *ops
 			allErr = append(allErr, field.Forbidden(spec.Child("configuration").Child("applyConfig"), "numHistoryShards can't be changed"))
 		}
 	case opsapi.DurableWorkflowOpsRequestTypeReconfigureTLS:
-		if req.Spec.TLS == nil {
-			allErr = append(allErr, field.Required(spec.Child("tls"), "spec.tls is required for ReconfigureTLS"))
-		}
+		warns, errs := w.validateReconfigureTLS(db, req)
+		warnings = append(warnings, warns...)
+		allErr = append(allErr, errs...)
 	case opsapi.DurableWorkflowOpsRequestTypeRestart, opsapi.DurableWorkflowOpsRequestTypeRotateAuth:
 	}
 
@@ -153,6 +153,51 @@ func (w *DurableWorkflowOpsRequestCustomWebhook) validateCreateOrUpdate(req *ops
 		return warnings, nil
 	}
 	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: "durableworkflowopsrequests.kubedb.com", Kind: "DurableWorkflowOpsRequest"}, req.Name, allErr)
+}
+
+func (w *DurableWorkflowOpsRequestCustomWebhook) validateReconfigureTLS(db *dbapi.DurableWorkflow, req *opsapi.DurableWorkflowOpsRequest) (admission.Warnings, field.ErrorList) {
+	tls := field.NewPath("spec").Child("tls")
+	t := req.Spec.TLS
+	if t == nil {
+		return nil, field.ErrorList{field.Required(tls, "spec.tls is required for ReconfigureTLS")}
+	}
+	var warnings admission.Warnings
+	var errs field.ErrorList
+	switch {
+	case t.Remove:
+		if !db.IsTLSEnabled() {
+			errs = append(errs, field.Invalid(tls.Child("remove"), true, "TLS is not enabled"))
+		}
+		if t.IssuerRef != nil || len(t.Certificates) > 0 || t.RotateCertificates {
+			errs = append(errs, field.Invalid(tls.Child("remove"), true, "remove can't be combined with issuerRef, certificates or rotateCertificates"))
+		}
+		warnings = append(warnings, "removing TLS replaces every server pod at once, so the cluster is unavailable while they start")
+	case !db.IsTLSEnabled():
+		if t.IssuerRef == nil {
+			errs = append(errs, field.Required(tls.Child("issuerRef"), "issuerRef is required to enable TLS"))
+		}
+		if t.RotateCertificates {
+			errs = append(errs, field.Invalid(tls.Child("rotateCertificates"), true, "TLS is not enabled"))
+		}
+		var v catalog.DurableWorkflowVersion
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: db.Spec.Version}, &v); err == nil {
+			if v.IsCadence() && !v.Spec.PublicClientTLS {
+				errs = append(errs, field.Forbidden(tls, fmt.Sprintf("%s doesn't support TLS", v.Name)))
+			}
+			if v.IsCadence() && db.IsFrontendClientAuthRequired(&v) {
+				errs = append(errs, field.Forbidden(tls, "set spec.frontendClientAuth to NotRequired before enabling TLS on Cadence"))
+			}
+		}
+		warnings = append(warnings, "enabling TLS replaces every server pod at once, so the cluster is unavailable while they start")
+	default:
+		if t.IssuerRef == nil && len(t.Certificates) == 0 && !t.RotateCertificates {
+			errs = append(errs, field.Required(tls, "one of issuerRef, certificates, rotateCertificates or remove is required"))
+		}
+		if t.IssuerRef != nil && (t.IssuerRef.Name != db.Spec.TLS.IssuerRef.Name || t.IssuerRef.Kind != db.Spec.TLS.IssuerRef.Kind) {
+			warnings = append(warnings, "changing the issuer replaces every server pod at once, so the cluster is unavailable while they start")
+		}
+	}
+	return warnings, errs
 }
 
 func (w *DurableWorkflowOpsRequestCustomWebhook) isTemporal(db *dbapi.DurableWorkflow) bool {

@@ -136,6 +136,27 @@ func TestDurableWorkflowOpsRequestValidation(t *testing.T) {
 			wantErr: "target version temporal-9.9.9",
 		},
 		{
+			name:    "reconfigure tls needs its spec",
+			spec:    opsapi.DurableWorkflowOpsRequestSpec{Type: opsapi.DurableWorkflowOpsRequestTypeReconfigureTLS},
+			wantErr: "spec.tls is required",
+		},
+		{
+			name: "enabling tls needs an issuer",
+			spec: opsapi.DurableWorkflowOpsRequestSpec{
+				Type: opsapi.DurableWorkflowOpsRequestTypeReconfigureTLS,
+				TLS:  &opsapi.TLSSpec{RotateCertificates: true},
+			},
+			wantErr: "issuerRef is required to enable TLS",
+		},
+		{
+			name: "removing tls that is not enabled",
+			spec: opsapi.DurableWorkflowOpsRequestSpec{
+				Type: opsapi.DurableWorkflowOpsRequestTypeReconfigureTLS,
+				TLS:  &opsapi.TLSSpec{Remove: true},
+			},
+			wantErr: "TLS is not enabled",
+		},
+		{
 			name:    "update needs its spec",
 			spec:    opsapi.DurableWorkflowOpsRequestSpec{Type: opsapi.DurableWorkflowOpsRequestTypeUpdateVersion},
 			wantErr: "spec.updateVersion nil",

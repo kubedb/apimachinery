@@ -526,4 +526,15 @@ const (
 	DurableWorkflowVerifyUpdate = "VerifyUpdate"
 	// DurableWorkflowRolledBack marks an UpdateVersion that failed and returned the servers to the previous version.
 	DurableWorkflowRolledBack = "RolledBack"
+	// DurableWorkflowUpdateTLS is the condition of the step that applies the new TLS configuration.
+	DurableWorkflowUpdateTLS = "UpdateTLS"
+	// DurableWorkflowReissueCertificates is the condition of the step that has cert-manager issue new certificates.
+	DurableWorkflowReissueCertificates = "ReissueCertificates"
+	// DurableWorkflowRecreateServers is the condition of the step that replaces every server pod at once, which a
+	// change between plaintext and TLS needs.
+	DurableWorkflowRecreateServers = "RecreateServers"
+	// DurableWorkflowCreateNewStoreUsers is the condition of the step that creates the next application users.
+	DurableWorkflowCreateNewStoreUsers = "CreateNewStoreUsers"
+	// DurableWorkflowDropOldStoreUsers is the condition of the step that drops the previous application users.
+	DurableWorkflowDropOldStoreUsers = "DropOldStoreUsers"
 )
