@@ -533,6 +533,8 @@ const (
 	// DurableWorkflowRecreateServers is the condition of the step that replaces every server pod at once, which a
 	// change between plaintext and TLS needs.
 	DurableWorkflowRecreateServers = "RecreateServers"
+	// DurableWorkflowReplaceClients is the condition of the step that replaces the UI and the admin tools pods.
+	DurableWorkflowReplaceClients = "ReplaceClients"
 	// DurableWorkflowCreateNewStoreUsers is the condition of the step that creates the next application users.
 	DurableWorkflowCreateNewStoreUsers = "CreateNewStoreUsers"
 	// DurableWorkflowDropOldStoreUsers is the condition of the step that drops the previous application users.
