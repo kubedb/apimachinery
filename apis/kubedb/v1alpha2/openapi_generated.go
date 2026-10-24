@@ -850,6 +850,18 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_WeaviateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateStatus":                                schema_apimachinery_apis_kubedb_v1alpha2_WeaviateStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateTLSConfig":                             schema_apimachinery_apis_kubedb_v1alpha2_WeaviateTLSConfig(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDB":                                    schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDB(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBApp":                                 schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBBind":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBBind(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBList":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBNode":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPlacement":                           schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBPlacement(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTLSConfig":                           schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBTLSConfig(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTopology":                            schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYCQLSpec":                            schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBYCQLSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYSQLSpec":                            schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBYSQLSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeper":                                     schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeper(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperApp":                                  schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperList":                                 schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperList(ref),
@@ -904,6 +916,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.singlestoreStatsService":                       schema_apimachinery_apis_kubedb_v1alpha2_singlestoreStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.solrStatsService":                              schema_apimachinery_apis_kubedb_v1alpha2_solrStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.weaviateStatsService":                          schema_apimachinery_apis_kubedb_v1alpha2_weaviateStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.yugabyteDBStatsService":                        schema_apimachinery_apis_kubedb_v1alpha2_yugabyteDBStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.zookeeperStatsService":                         schema_apimachinery_apis_kubedb_v1alpha2_zookeeperStatsService(ref),
 	}
 }
@@ -48551,6 +48564,522 @@ func schema_apimachinery_apis_kubedb_v1alpha2_WeaviateTLSConfig(ref common.Refer
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDB(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"YugabyteDB": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDB"),
+						},
+					},
+				},
+				Required: []string{"YugabyteDB"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDB"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"YugabyteDB": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDB"),
+						},
+					},
+				},
+				Required: []string{"YugabyteDB"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDB"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBList contains a list of YugabyteDB.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDB"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDB"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBNode configures one role.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas is the number of pods of the role.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate customizes the pods of the role. Set spec.podPlacementPolicy to spread the pods across zones and nodes.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType is Durable (default, PVCs) or Ephemeral (emptyDir).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage is the PVC template of every data volume when StorageType is Durable.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"dataVolumes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataVolumes is the number of data volumes of each pod. They are mounted at /mnt/disk0 and up and listed in --fs_data_dirs. It cannot be changed after the database is created.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBPlacement(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBPlacement names the placement of the universe.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"cloud": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Cloud is reported as --placement_cloud. Defaults to \"kubernetes\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Region is reported as --placement_region. Defaults to the topology.kubernetes.io/region label of the node, else \"region1\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"preferredZones": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PreferredZones lists, in order of preference, the zones that should hold the tablet leaders.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBSpec defines the desired state of YugabyteDB.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version of YugabyteDB to deploy. Must correspond to a YugabyteDBVersion in the catalog.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicationFactor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReplicationFactor is the number of masters and the default number of replicas of every tablet. Defaults to 3. It cannot be changed after the database is created.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"topology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Topology configures the yb-master and yb-tserver roles.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTopology"),
+						},
+					},
+					"placement": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Placement names the cloud and region reported to YugabyteDB and orders the zones that hold the tablet leaders. The zone of each pod is read from the node it runs on.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPlacement"),
+						},
+					},
+					"ysql": {
+						SchemaProps: spec.SchemaProps{
+							Description: "YSQL configures the PostgreSQL compatible API. It is enabled by default.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYSQLSpec"),
+						},
+					},
+					"ycql": {
+						SchemaProps: spec.SchemaProps{
+							Description: "YCQL configures the Cassandra compatible API. It is disabled by default.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYCQLSpec"),
+						},
+					},
+					"disableSecurity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisableSecurity disables authentication when set to true. Not recommended for production.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"authSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AuthSecret references the Secret that holds the credentials of the yugabyte user (keys username and password).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration holds custom flags. The keys are master.flags, tserver.flags, ysql_pg.conf and ysql_hba.conf. Flags that the operator owns, such as addresses, placement and TLS, are rejected.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS contains the cert-manager based TLS configuration.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTLSConfig"),
+						},
+					},
+					"serviceTemplates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplates customizes the Services that expose YugabyteDB (aliases primary and stats).",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"halted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Halted is a shortcut for deletionPolicy Halt. The pods are removed and the volumes and Secrets are kept.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used to monitor the database instance.",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy controls what happens to the data when this resource is deleted.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"healthChecker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HealthChecker configures the health checks performed by the operator.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
+						},
+					},
+					"init": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Init is used to initialize the database from a script.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec"),
+						},
+					},
+				},
+				Required: []string{"version"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPlacement", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYCQLSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYSQLSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBStatus defines the observed state of YugabyteDB.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the database, such as approval or denial.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBTLSConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBTLSConfig configures TLS for node to node and client to node traffic.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"nodeToNode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeToNode encrypts the traffic between the masters and the tservers. Defaults to true.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"clientToNode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientToNode encrypts the traffic between the clients and the tservers (YSQL and YCQL). Defaults to true.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBTopology configures the two roles of a YugabyteDB universe.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"master": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Master is the yb-master role. Its replicas always equal the replication factor.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBNode"),
+						},
+					},
+					"tserver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TServer is the yb-tserver role. It stores the tablets and runs the YSQL and YCQL query layers.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBNode"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBNode"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBYCQLSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBYCQLSpec configures the YCQL API.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled starts the YCQL API. It cannot be changed after the database is created.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"enabled"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBYSQLSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBYSQLSpec configures the YSQL API.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled starts the YSQL API. It cannot be changed after the database is created.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"enabled"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeper(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -49849,6 +50378,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_weaviateStatsService(ref common.Re
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Weaviate"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_yugabyteDBStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"YugabyteDB": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDB"),
+						},
+					},
+				},
+				Required: []string{"YugabyteDB"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDB"},
 	}
 }
 

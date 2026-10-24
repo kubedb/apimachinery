@@ -2779,3 +2779,107 @@ const (
 	// set when the archiver cannot serve this Milvus (legacy RocksMQ, or VolumeSnapshotter on Distributed)
 	MilvusArchiverUnsupported = "ArchiverUnsupported"
 )
+
+// =========================== YugabyteDB Constants ============================
+
+const (
+	YugabyteDBMasterContainerName  = "yb-master"
+	YugabyteDBTServerContainerName = "yb-tserver"
+	YugabyteDBInitContainerName    = "yb-init"
+
+	// Ports
+	YugabyteDBMasterRPCPort   = 7100
+	YugabyteDBMasterUIPort    = 7000
+	YugabyteDBTServerRPCPort  = 9100
+	YugabyteDBTServerUIPort   = 9000
+	YugabyteDBYSQLPort        = 5433
+	YugabyteDBYCQLPort        = 9042
+	YugabyteDBYSQLMetricsPort = 13000
+	YugabyteDBYCQLMetricsPort = 12000
+
+	YugabyteDBMasterRPCPortName   = "tcp-master-rpc"
+	YugabyteDBMasterUIPortName    = "http-master-ui"
+	YugabyteDBTServerRPCPortName  = "tcp-tserver-rpc"
+	YugabyteDBTServerUIPortName   = "http-tserver-ui"
+	YugabyteDBYSQLPortName        = "tcp-ysql"
+	YugabyteDBYCQLPortName        = "tcp-ycql"
+	YugabyteDBYSQLMetricsPortName = "http-ysql-met"
+	YugabyteDBYCQLMetricsPortName = "http-ycql-met"
+
+	// Volumes and paths. The data volumes are data-0, data-1 and so on, mounted at /mnt/disk0, /mnt/disk1 and so on.
+	YugabyteDBDataVolumeFmt    = "data-%d"
+	YugabyteDBDataMountPathFmt = "/mnt/disk%d"
+	YugabyteDBConfigVolume     = "config"
+	YugabyteDBConfigDir        = "/opt/yugabyte-config"
+	YugabyteDBCustomConfigVol  = "custom-config"
+	YugabyteDBCustomConfigDir  = "/opt/yugabyte-custom-config"
+	YugabyteDBFlagsDir         = "/tmp/yugabyte"
+	YugabyteDBTLSVolume        = "tls"
+	YugabyteDBTLSDir           = "/opt/certs/yugabyte"
+	YugabyteDBTmpVolume        = "tmp"
+	YugabyteDBTmpDir           = "/tmp"
+	YugabyteDBShmVolume        = "dshm"
+	YugabyteDBShmDir           = "/dev/shm"
+	YugabyteDBPodInfoVolume    = "podinfo"
+	YugabyteDBPodInfoDir       = "/etc/podinfo"
+
+	// Keys of the config Secret rendered by the operator, and of the user supplied configuration.
+	YugabyteDBMasterFlagsTemplateKey  = "master.flags.tmpl"
+	YugabyteDBTServerFlagsTemplateKey = "tserver.flags.tmpl"
+	YugabyteDBMasterFlagsKey          = "master.flags"
+	YugabyteDBTServerFlagsKey         = "tserver.flags"
+	YugabyteDBPGConfKey               = "ysql_pg.conf"
+	YugabyteDBHBAConfKey              = "ysql_hba.conf"
+
+	// TLS. Every pod loads node.yugabyte.crt, node.yugabyte.key and ca.crt, whatever its hostname.
+	YugabyteDBCertNodeFilename = "yugabyte"
+
+	// Pod annotations that carry the placement of the node the pod runs on. The operator writes them.
+	YugabyteDBZoneAnnotation   = "yugabytedb." + GroupName + "/zone"
+	YugabyteDBRegionAnnotation = "yugabytedb." + GroupName + "/region"
+
+	// YugabyteDBAuthBootstrappedLabel is set on a pod after the default passwords were replaced.
+	// The client Service selects only the pods that have it.
+	YugabyteDBAuthBootstrappedLabel = GroupName + "/auth-bootstrapped"
+
+	// Users. YSQL and YCQL are created with these passwords and the operator replaces them at bootstrap.
+	YugabyteDBAdminUser           = "yugabyte"
+	YugabyteDBDefaultPassword     = "yugabyte"
+	YugabyteDBYCQLDefaultUser     = "cassandra"
+	YugabyteDBYCQLDefaultPassword = "cassandra"
+	YugabyteDBDefaultDatabase     = "yugabyte"
+
+	YugabyteDBTerminationGraceSeconds = 300
+	YugabyteDBRunAsUser               = 10001
+
+	// Roles
+	YugabyteDBRoleMasterValue  = "master"
+	YugabyteDBRoleTServerValue = "tserver"
+
+	// Conditions
+	YugabyteDBConditionMastersReady         = "MastersReady"
+	YugabyteDBConditionTServersReady        = "TServersReady"
+	YugabyteDBConditionPlacementSet         = "PlacementSet"
+	YugabyteDBConditionLeaderBlacklistDirty = "LeaderBlacklistDirty"
+)
+
+var (
+	DefaultResourcesYugabyteDBMaster = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("500m"),
+			core.ResourceMemory: resource.MustParse("2Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("2Gi"),
+		},
+	}
+	DefaultResourcesYugabyteDBTServer = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("1"),
+			core.ResourceMemory: resource.MustParse("4Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("4Gi"),
+		},
+	}
+)

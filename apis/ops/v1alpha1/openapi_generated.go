@@ -906,6 +906,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateUpdateVersionSpec":                        schema_apimachinery_apis_ops_v1alpha1_WeaviateUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVerticalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_WeaviateVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVolumeExpansionSpec":                      schema_apimachinery_apis_ops_v1alpha1_WeaviateVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec":                  schema_apimachinery_apis_ops_v1alpha1_YugabyteDBHorizontalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequest":                             schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequest(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequestList":                         schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestList(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequestSpec":                         schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec":                            schema_apimachinery_apis_ops_v1alpha1_YugabyteDBRollingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec":                                schema_apimachinery_apis_ops_v1alpha1_YugabyteDBTLSSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec":                      schema_apimachinery_apis_ops_v1alpha1_YugabyteDBUpdateVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec":                    schema_apimachinery_apis_ops_v1alpha1_YugabyteDBVerticalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec":                    schema_apimachinery_apis_ops_v1alpha1_YugabyteDBVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperHorizontalScalingSpec":                   schema_apimachinery_apis_ops_v1alpha1_ZooKeeperHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperOpsRequest":                              schema_apimachinery_apis_ops_v1alpha1_ZooKeeperOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ZooKeeperOpsRequestList":                          schema_apimachinery_apis_ops_v1alpha1_ZooKeeperOpsRequestList(ref),
@@ -47958,6 +47967,416 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateVolumeExpansionSpec(ref commo
 					"node": {
 						SchemaProps: spec.SchemaProps{
 							Description: "volume specification for nodes",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+				},
+				Required: []string{"mode"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBHorizontalScalingSpec contains the horizontal scaling information of a YugabyteDB universe. The masters cannot be scaled, their number is the replication factor.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tserver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of tservers",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequestSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.OpsRequestStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OpsRequestStatus", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequestSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBOpsRequestList is a list of YugabyteDBOpsRequests",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of YugabyteDBOpsRequest CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequest"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequest"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBOpsRequestSpec is the spec for YugabyteDBOpsRequest",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the YugabyteDB reference",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for restarting database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec"),
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring TLS",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec"),
+						},
+					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring authSecret of the database",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for custom configuration of YugabyteDB",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
+						},
+					},
+					"horizontalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for horizontal scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec"),
+						},
+					},
+					"verticalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for vertical scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec"),
+						},
+					},
+					"volumeExpansion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for volume expansion",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec"),
+						},
+					},
+					"updateVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for upgrading YugabyteDB",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec"),
+						},
+					},
+					"rolling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Rolling tunes the operations that restart the pods one at a time.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"apply": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"databaseRef", "type"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBRollingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBRollingSpec tunes a rolling restart. Pods restart one at a time, masters first.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"masterWait": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MasterWait is the pause after a master is back and caught up. Defaults to 60s.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"tserverWait": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TServerWait is the pause after a tserver is back and caught up. Defaults to 60s.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"leaderDrainTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LeaderDrainTimeout is how long to wait for the tablet leaders to leave a tserver before it is stopped. The operation continues after the timeout and records a LeaderDrainTimedOut condition. Defaults to 120s.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBTLSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"issuerRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IssuerRef is a reference to a Certificate Issuer.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"certificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Certificate provides server and/or client certificate options used by application pods. These options are passed to a cert-manager Certificate object. xref: https://github.com/jetstack/cert-manager/blob/v0.16.0/pkg/apis/certmanager/v1beta1/types_certificate.go#L82-L162",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.CertificateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"nodeToNode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeToNode encrypts the traffic between the masters and the tservers. Defaults to true.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"clientToNode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientToNode encrypts the traffic between the clients and the tservers (YSQL and YCQL). Defaults to true.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"rotateCertificates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RotateCertificates tells operator to initiate certificate rotation",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"remove": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Remove tells operator to remove TLS configuration",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBUpdateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBUpdateVersionSpec contains the update version information of a YugabyteDB universe",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the target version name from catalog",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"soakDuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SoakDuration is how long the universe is watched, before the upgrade is finalized, after every pod runs the new version. The upgrade can still be rolled back until it is finalized. Defaults to 10m.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"master": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for the masters",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"tserver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for the tservers",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBVolumeExpansionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBVolumeExpansionSpec is the spec for YugabyteDB volume expansion",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"master": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for the masters",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"tserver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for the tservers",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},

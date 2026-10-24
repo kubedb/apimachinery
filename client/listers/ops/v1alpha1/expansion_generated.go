@@ -274,6 +274,14 @@ type WeaviateOpsRequestListerExpansion interface{}
 // WeaviateOpsRequestNamespaceLister.
 type WeaviateOpsRequestNamespaceListerExpansion interface{}
 
+// YugabyteDBOpsRequestListerExpansion allows custom methods to be added to
+// YugabyteDBOpsRequestLister.
+type YugabyteDBOpsRequestListerExpansion interface{}
+
+// YugabyteDBOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// YugabyteDBOpsRequestNamespaceLister.
+type YugabyteDBOpsRequestNamespaceListerExpansion interface{}
+
 // ZooKeeperOpsRequestListerExpansion allows custom methods to be added to
 // ZooKeeperOpsRequestLister.
 type ZooKeeperOpsRequestListerExpansion interface{}

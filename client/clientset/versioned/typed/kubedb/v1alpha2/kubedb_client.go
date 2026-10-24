@@ -61,6 +61,7 @@ type KubedbV1alpha2Interface interface {
 	SinglestoresGetter
 	SolrsGetter
 	WeaviatesGetter
+	YugabyteDBsGetter
 	ZooKeepersGetter
 }
 
@@ -195,6 +196,10 @@ func (c *KubedbV1alpha2Client) Solrs(namespace string) SolrInterface {
 
 func (c *KubedbV1alpha2Client) Weaviates(namespace string) WeaviateInterface {
 	return newWeaviates(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) YugabyteDBs(namespace string) YugabyteDBInterface {
+	return newYugabyteDBs(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) ZooKeepers(namespace string) ZooKeeperInterface {

@@ -142,11 +142,11 @@ const (
 	// Enables Vitess operator.
 	// Vitess featuregate.Feature = "Vitess"
 
-	// Enables YugabyteDB operator.
-	// YugabyteDB featuregate.Feature = "YugabyteDB"
-
 	// Enables Weaviate operator.
 	Weaviate featuregate.Feature = "Weaviate"
+
+	// Enables YugabyteDB operator.
+	YugabyteDB featuregate.Feature = "YugabyteDB"
 
 	// Enables ZooKeeper operator.
 	ZooKeeper featuregate.Feature = "ZooKeeper"
@@ -191,5 +191,6 @@ var defaultKubeDBFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
 	Singlestore:   {Default: false, PreRelease: featuregate.Alpha},
 	Solr:          {Default: false, PreRelease: featuregate.Alpha},
 	Weaviate:      {Default: false, PreRelease: featuregate.Alpha},
+	YugabyteDB:    {Default: false, PreRelease: featuregate.Alpha},
 	ZooKeeper:     {Default: false, PreRelease: featuregate.Alpha},
 }

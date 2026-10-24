@@ -61,6 +61,7 @@ type OpsV1alpha1Interface interface {
 	SinglestoreOpsRequestsGetter
 	SolrOpsRequestsGetter
 	WeaviateOpsRequestsGetter
+	YugabyteDBOpsRequestsGetter
 	ZooKeeperOpsRequestsGetter
 }
 
@@ -195,6 +196,10 @@ func (c *OpsV1alpha1Client) SolrOpsRequests(namespace string) SolrOpsRequestInte
 
 func (c *OpsV1alpha1Client) WeaviateOpsRequests(namespace string) WeaviateOpsRequestInterface {
 	return newWeaviateOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) YugabyteDBOpsRequests(namespace string) YugabyteDBOpsRequestInterface {
+	return newYugabyteDBOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) ZooKeeperOpsRequests(namespace string) ZooKeeperOpsRequestInterface {

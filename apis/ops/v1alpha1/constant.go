@@ -510,3 +510,35 @@ const (
 	EtcdRestoreSnapshotApplied = "EtcdRestoreSnapshotApplied"
 	EtcdRestorePetSetRestored  = "EtcdRestorePetSetRestored"
 )
+
+// YugabyteDB Constants
+const (
+	// YugabyteDBPreflight is the step that checks the universe before anything is changed.
+	YugabyteDBPreflight = "Preflight"
+	// YugabyteDBRollMasters is the step that restarts the masters one at a time.
+	YugabyteDBRollMasters = "RollMasters"
+	// YugabyteDBRollTServers is the step that restarts the tservers one at a time, after their leaders were drained.
+	YugabyteDBRollTServers = "RollTServers"
+	// YugabyteDBLeaderDrainTimedOut records that the tablet leaders did not all leave a tserver before it was stopped.
+	YugabyteDBLeaderDrainTimedOut = "LeaderDrainTimedOut"
+	// YugabyteDBScaleTServers is the step that changes the number of tserver pods.
+	YugabyteDBScaleTServers = "ScaleTServers"
+	// YugabyteDBDrainTServers is the step that moves the tablets off the tservers that are being removed.
+	YugabyteDBDrainTServers = "DrainTServers"
+	// YugabyteDBUpdateResources is the step that applies the new resources to the PetSets.
+	YugabyteDBUpdateResources = "UpdateResources"
+	// YugabyteDBApplyConfiguration is the step that applies a new configuration.
+	YugabyteDBApplyConfiguration = "ApplyConfiguration"
+	// YugabyteDBSetRuntimeFlags is the step that sets the changed runtime flags on every pod without a restart.
+	YugabyteDBSetRuntimeFlags = "SetRuntimeFlags"
+	// YugabyteDBReloadCertificates is the step that makes the servers load the new certificates without a restart.
+	YugabyteDBReloadCertificates = "ReloadCertificates"
+	// YugabyteDBPromoteAutoFlags is the step that promotes the volatile AutoFlags after all pods run the new version.
+	YugabyteDBPromoteAutoFlags = "PromoteAutoFlags"
+	// YugabyteDBSoak is the step that watches the universe before the upgrade is finalized.
+	YugabyteDBSoak = "Soak"
+	// YugabyteDBFinalizeUpgrade is the step that finalizes the upgrade. The upgrade cannot be rolled back after it.
+	YugabyteDBFinalizeUpgrade = "FinalizeUpgrade"
+	// YugabyteDBUpdateVolumes is the step that grows the PVCs.
+	YugabyteDBUpdateVolumes = "UpdateVolumes"
+)
