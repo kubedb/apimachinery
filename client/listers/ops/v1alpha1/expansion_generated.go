@@ -66,6 +66,14 @@ type DruidOpsRequestListerExpansion interface{}
 // DruidOpsRequestNamespaceLister.
 type DruidOpsRequestNamespaceListerExpansion interface{}
 
+// DurableWorkflowOpsRequestListerExpansion allows custom methods to be added to
+// DurableWorkflowOpsRequestLister.
+type DurableWorkflowOpsRequestListerExpansion interface{}
+
+// DurableWorkflowOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// DurableWorkflowOpsRequestNamespaceLister.
+type DurableWorkflowOpsRequestNamespaceListerExpansion interface{}
+
 // ElasticsearchOpsRequestListerExpansion allows custom methods to be added to
 // ElasticsearchOpsRequestLister.
 type ElasticsearchOpsRequestListerExpansion interface{}

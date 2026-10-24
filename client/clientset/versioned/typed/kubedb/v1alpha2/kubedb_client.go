@@ -35,6 +35,7 @@ type KubedbV1alpha2Interface interface {
 	DB2sGetter
 	DocumentDBsGetter
 	DruidsGetter
+	DurableWorkflowsGetter
 	ElasticsearchesGetter
 	EtcdsGetter
 	HanaDBsGetter
@@ -91,6 +92,10 @@ func (c *KubedbV1alpha2Client) DocumentDBs(namespace string) DocumentDBInterface
 
 func (c *KubedbV1alpha2Client) Druids(namespace string) DruidInterface {
 	return newDruids(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) DurableWorkflows(namespace string) DurableWorkflowInterface {
+	return newDurableWorkflows(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Elasticsearches(namespace string) ElasticsearchInterface {

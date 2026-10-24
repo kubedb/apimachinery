@@ -53,6 +53,10 @@ func (c *FakeKubedbV1alpha2) Druids(namespace string) v1alpha2.DruidInterface {
 	return newFakeDruids(c, namespace)
 }
 
+func (c *FakeKubedbV1alpha2) DurableWorkflows(namespace string) v1alpha2.DurableWorkflowInterface {
+	return newFakeDurableWorkflows(c, namespace)
+}
+
 func (c *FakeKubedbV1alpha2) Elasticsearches(namespace string) v1alpha2.ElasticsearchInterface {
 	return newFakeElasticsearches(c, namespace)
 }

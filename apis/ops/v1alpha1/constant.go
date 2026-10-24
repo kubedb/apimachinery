@@ -510,3 +510,31 @@ const (
 	EtcdRestoreSnapshotApplied = "EtcdRestoreSnapshotApplied"
 	EtcdRestorePetSetRestored  = "EtcdRestorePetSetRestored"
 )
+
+// DurableWorkflow Constants
+const (
+	// DurableWorkflowScaleRoles is the condition of the step that scales the PetSets of the roles.
+	DurableWorkflowScaleRoles = "ScaleRoles"
+	// DurableWorkflowUpdateRoleResources is the condition of the step that updates the resources of the roles.
+	DurableWorkflowUpdateRoleResources = "UpdateRoleResources"
+	// DurableWorkflowUpdateConfiguration is the condition of the step that applies a new configuration.
+	DurableWorkflowUpdateConfiguration = "UpdateConfiguration"
+	// DurableWorkflowUpdateSchema is the condition of the step that runs the schema update of the target version
+	// while the servers still run the previous one.
+	DurableWorkflowUpdateSchema = "UpdateSchema"
+	// DurableWorkflowVerifyUpdate is the condition of the step that checks the cluster after the servers were replaced.
+	DurableWorkflowVerifyUpdate = "VerifyUpdate"
+	// DurableWorkflowRolledBack marks an UpdateVersion that failed and returned the servers to the previous version.
+	DurableWorkflowRolledBack = "RolledBack"
+	// DurableWorkflowUpdateTLS is the condition of the step that applies the new TLS configuration.
+	DurableWorkflowUpdateTLS = "UpdateTLS"
+	// DurableWorkflowReissueCertificates is the condition of the step that has cert-manager issue new certificates.
+	DurableWorkflowReissueCertificates = "ReissueCertificates"
+	// DurableWorkflowRecreateServers is the condition of the step that replaces every server pod at once, which a
+	// change between plaintext and TLS needs.
+	DurableWorkflowRecreateServers = "RecreateServers"
+	// DurableWorkflowCreateNewStoreUsers is the condition of the step that creates the next application users.
+	DurableWorkflowCreateNewStoreUsers = "CreateNewStoreUsers"
+	// DurableWorkflowDropOldStoreUsers is the condition of the step that drops the previous application users.
+	DurableWorkflowDropOldStoreUsers = "DropOldStoreUsers"
+)

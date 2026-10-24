@@ -630,6 +630,13 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidUpdateVersionSpec":                           schema_apimachinery_apis_ops_v1alpha1_DruidUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidVerticalScalingSpec":                         schema_apimachinery_apis_ops_v1alpha1_DruidVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidVolumeExpansionSpec":                         schema_apimachinery_apis_ops_v1alpha1_DruidVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowHorizontalScalingSpec":             schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowHorizontalScalingSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowOpsRequest":                        schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowOpsRequest(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowOpsRequestList":                    schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowOpsRequestList(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowOpsRequestSpec":                    schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowRestartSpec":                       schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowRestartSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowUpdateVersionSpec":                 schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowUpdateVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowVerticalScalingSpec":               schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfiguration":                 schema_apimachinery_apis_ops_v1alpha1_ElasticsearchCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec":               schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingTopologySpec":       schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingTopologySpec(ref),
@@ -36091,6 +36098,346 @@ func schema_apimachinery_apis_ops_v1alpha1_DruidVolumeExpansionSpec(ref common.R
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowHorizontalScalingSpec contains the horizontal scaling information",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"frontend": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"history": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"matching": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"worker": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"internalFrontend": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowOpsRequest(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowOpsRequestSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.OpsRequestStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowOpsRequestSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.OpsRequestStatus"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowOpsRequestList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowOpsRequestList is a list of DurableWorkflowOpsRequests",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of DurableWorkflowOpsRequest CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowOpsRequest"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowOpsRequest"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowOpsRequestSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowOpsRequestSpec is the spec for DurableWorkflowOpsRequest",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the DurableWorkflow reference",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the ops request type: UpdateVersion, HorizontalScaling, VerticalScaling etc.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"restart": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for restarting the cluster",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowRestartSpec"),
+						},
+					},
+					"updateVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for upgrading the cluster",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowUpdateVersionSpec"),
+						},
+					},
+					"horizontalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for horizontal scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowHorizontalScalingSpec"),
+						},
+					},
+					"verticalScaling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for vertical scaling",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowVerticalScalingSpec"),
+						},
+					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for custom configuration",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec"),
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for configuring TLS",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"),
+						},
+					},
+					"authentication": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for rotating the credentials of the persistence stores",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec"),
+						},
+					},
+					"timeout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"apply": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ApplyOption is to control the execution of OpsRequest depending on the database state.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"maxRetries": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+				},
+				Required: []string{"databaseRef", "type"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowRestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.DurableWorkflowVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowRestartSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowRestartSpec selects the roles to restart. All roles are restarted if none is selected.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"roles": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowUpdateVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowUpdateVersionSpec contains the update version information",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"targetVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the target version name from catalog",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"allowDowntime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AllowDowntime allows a hop whose schema update can't run online, and a non-HA cluster.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"surge": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Surge lists the roles that are scaled up by one pod while they are rolled. By default, every role except history is surged.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: false,
+										Type:    []string{"boolean"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_DurableWorkflowVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowVerticalScalingSpec contains the vertical scaling information",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"frontend": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"history": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"matching": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"worker": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+					"internalFrontend": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
 	}
 }
 
