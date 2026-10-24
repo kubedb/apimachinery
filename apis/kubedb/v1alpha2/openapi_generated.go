@@ -640,6 +640,24 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidSpec":                                     schema_apimachinery_apis_kubedb_v1alpha2_DruidSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidStatsService":                             schema_apimachinery_apis_kubedb_v1alpha2_DruidStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DruidStatus":                                   schema_apimachinery_apis_kubedb_v1alpha2_DruidStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflow":                               schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflow(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowAdminTools":                     schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowAdminTools(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowApp":                            schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowArchival":                       schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowArchival(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowArchivalTarget":                 schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowArchivalTarget(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowAuthorization":                  schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowAuthorization(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowBind":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowBind(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowCassandraOptions":               schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowCassandraOptions(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowList":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowNode":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistence":                    schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowPersistence(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistenceStatus":              schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowPersistenceStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowSpec":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStatus":                         schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStore":                          schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowStore(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStoreStatus":                    schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowStoreStatus(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowTopology":                       schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowTopology(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowUI":                             schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowUI(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Elasticsearch":                                 schema_apimachinery_apis_kubedb_v1alpha2_Elasticsearch(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ElasticsearchClusterTopology":                  schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchClusterTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ElasticsearchList":                             schema_apimachinery_apis_kubedb_v1alpha2_ElasticsearchList(ref),
@@ -863,6 +881,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBAdminApp":                            schema_apimachinery_apis_kubedb_v1alpha2_documentDBAdminApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBApp":                                 schema_apimachinery_apis_kubedb_v1alpha2_documentDBApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.documentDBStatsService":                        schema_apimachinery_apis_kubedb_v1alpha2_documentDBStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.durableWorkflowStatsService":                   schema_apimachinery_apis_kubedb_v1alpha2_durableWorkflowStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchApp":                              schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.elasticsearchStatsService":                     schema_apimachinery_apis_kubedb_v1alpha2_elasticsearchStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.etcdApp":                                       schema_apimachinery_apis_kubedb_v1alpha2_etcdApp(ref),
@@ -36780,6 +36799,725 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DruidStatus(ref common.ReferenceCa
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflow(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowAdminTools(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowAdminTools configures the admin tools pod.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"DurableWorkflow": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflow"),
+						},
+					},
+				},
+				Required: []string{"DurableWorkflow"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflow"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowArchival(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowArchival configures archival to object storage or a file store.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"history": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowArchivalTarget"),
+						},
+					},
+					"visibility": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowArchivalTarget"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowArchivalTarget"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowArchivalTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowArchivalTarget is one archival target.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"provider": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+					"uri": {
+						SchemaProps: spec.SchemaProps{
+							Description: "URI of the archive, for example s3://bucket/path.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"configSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConfigSecret holds the credentials of the provider.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+				},
+				Required: []string{"provider", "uri"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowAuthorization(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowAuthorization configures JWT authorization.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"jwksURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JWKSURL is the URL of the key set that verifies external tokens.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"publicKeySecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PublicKeySecret holds an RS256 public key (\"tls.crt\" or \"public.pem\") that verifies external tokens.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"maxTokenTTL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxTokenTTL is the longest token lifetime accepted, in seconds. Cadence only.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowBind(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"DurableWorkflow": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflow"),
+						},
+					},
+				},
+				Required: []string{"DurableWorkflow"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflow"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowCassandraOptions(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowCassandraOptions are used when the operator creates a keyspace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicationFactor": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"datacenter": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowList contains a list of DurableWorkflow.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflow"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflow"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowNode configures one server role.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas is the number of pods of this role.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for the pods of this role.",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowPersistence(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowPersistence references the persistence stores.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"default": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Default is the store for workflow state: Postgres, MySQL or Cassandra.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStore"),
+						},
+					},
+					"visibility": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Visibility is the store for visibility records. If omitted, the default store's server is used with a separate database or keyspace.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStore"),
+						},
+					},
+					"kafkaRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "KafkaRef is required by Cadence when the visibility store is Elasticsearch or OpenSearch, and is rejected for Temporal.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+				},
+				Required: []string{"default"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStore"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowPersistenceStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowPersistenceStatus reports the persistence stores.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"default": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStoreStatus"),
+						},
+					},
+					"visibility": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStoreStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStoreStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowSpec defines the desired state of DurableWorkflow.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version is the name of a DurableWorkflowVersion, for example \"temporal-1.32.1\" or \"cadence-1.4.2\". The distribution (Temporal or Cadence) comes from that version.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"numHistoryShards": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NumHistoryShards is the number of history shards. It can't be changed after creation. If omitted, the default of the DurableWorkflowVersion is used (16).",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"topology": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Topology configures the replicas and pod templates of each server role.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowTopology"),
+						},
+					},
+					"persistence": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Persistence references the stores that hold all workflow state.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistence"),
+						},
+					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration provides custom static server configuration and dynamic configuration. The key \"dynamic_config.yaml\" is the dynamic configuration, which the servers reload without a restart.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
+						},
+					},
+					"archival": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Archival of closed workflow histories and visibility records.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowArchival"),
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configures certificates for internode, frontend and client traffic. The certificate aliases are \"internode\", \"frontend\" and \"client\".",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
+					"frontendClientAuth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FrontendClientAuth controls whether the frontend requires client certificates. Defaults to Required for Temporal and NotRequired for Cadence (the Cadence web UI can't present a client certificate).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"authorization": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Authorization configures JWT authorization of API calls.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowAuthorization"),
+						},
+					},
+					"ui": {
+						SchemaProps: spec.SchemaProps{
+							Description: "UI configures the web UI.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowUI"),
+						},
+					},
+					"adminTools": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AdminTools configures a pod with the admin command line tools.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowAdminTools"),
+						},
+					},
+					"serviceTemplates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplates is an optional configuration for the services that expose the frontend.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used to monitor the cluster.",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy controls the delete operation.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"halted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Halted indicates that all server pods are removed. The configuration, secrets and the persistence stores are kept.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"healthChecker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HealthChecker defines attributes of the health checker.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
+						},
+					},
+				},
+				Required: []string{"version", "persistence"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowAdminTools", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowArchival", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowAuthorization", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistence", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowUI", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowStatus defines the observed state of DurableWorkflow.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the cluster.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the cluster, such as Ready and HighlyAvailable.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"distribution": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distribution is the resolved distribution of spec.version.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"persistence": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Persistence reports the state of each persistence store.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistenceStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistenceStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowStore(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowStore references a persistence store.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type is required only when the AppBinding does not identify the engine.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"databaseName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseName is the database, keyspace or index name. Defaults to \"<name>\" for the default store and \"<name>_visibility\" for the visibility store.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"createDatabase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CreateDatabase lets the operator create the database or keyspace and a dedicated user, using the admin credentials of the AppBinding. If false, both must exist already and AuthSecret is required. Defaults to true.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"authSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AuthSecret holds the credentials of the user the servers connect with. The operator generates it when CreateDatabase is true.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"cassandra": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Cassandra holds the keyspace options. It is only used for Cassandra.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowCassandraOptions"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowCassandraOptions", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowStoreStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowStoreStatus reports one persistence store.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"created": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Created is true once the database and user exist.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"schemaVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SchemaVersion is the schema version applied by the schema Job.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"schemaServerVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SchemaServerVersion is the server version whose schema was applied.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowTopology(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowTopology holds the server roles.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"frontend": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowNode"),
+						},
+					},
+					"history": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowNode"),
+						},
+					},
+					"matching": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowNode"),
+						},
+					},
+					"worker": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowNode"),
+						},
+					},
+					"internalFrontend": {
+						SchemaProps: spec.SchemaProps{
+							Description: "InternalFrontend is only available for Temporal.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowNode"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowNode"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowUI(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowUI configures the web UI.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"auth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Auth selects the UI authentication strategy. Cadence only.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_Elasticsearch(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -49022,6 +49760,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_documentDBStatsService(ref common.
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DocumentDB"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_durableWorkflowStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"DurableWorkflow": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflow"),
+						},
+					},
+				},
+				Required: []string{"DurableWorkflow"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflow"},
 	}
 }
 

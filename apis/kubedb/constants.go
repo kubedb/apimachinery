@@ -2779,3 +2779,56 @@ const (
 	// set when the archiver cannot serve this Milvus (legacy RocksMQ, or VolumeSnapshotter on Distributed)
 	MilvusArchiverUnsupported = "ArchiverUnsupported"
 )
+
+// =========================== DurableWorkflow Constants ============================
+
+const (
+	DurableWorkflowContainerName      = "durableworkflow"
+	DurableWorkflowInitContainerName  = "durableworkflow-init"
+	DurableWorkflowUIContainerName    = "durableworkflow-ui"
+	DurableWorkflowAdminToolsName     = "durableworkflow-admin-tools"
+	DurableWorkflowSchemaJobName      = "schema"
+	DurableWorkflowConfigVolName      = "config"
+	DurableWorkflowDynamicConfigVol   = "dynamic-config"
+	DurableWorkflowCustomConfigVol    = "custom-config"
+	DurableWorkflowTLSVolName         = "tls"
+	DurableWorkflowConfigDir          = "/etc/durableworkflow/config"
+	DurableWorkflowDynamicConfigDir   = "/etc/durableworkflow/dynamic"
+	DurableWorkflowCustomConfigDir    = "/etc/durableworkflow/custom"
+	DurableWorkflowTLSDir             = "/etc/durableworkflow/tls"
+	DurableWorkflowDynamicConfigFile  = "dynamic_config.yaml"
+	DurableWorkflowServerConfigFile   = "server.yaml"
+	DurableWorkflowStoreUserKey       = "username"
+	DurableWorkflowStorePasswordKey   = "password"
+	DurableWorkflowMetricsPortName    = "metrics"
+	DurableWorkflowUIPortName         = "ui"
+	DurableWorkflowDefaultDrainSecond = 30
+
+	// Labels
+	DurableWorkflowRoleLabelKey = "kubedb.com/durableworkflow-role"
+	ComponentDurableWorkflow    = "durableworkflow"
+
+	// Roles
+	DurableWorkflowRoleFrontend         = "frontend"
+	DurableWorkflowRoleHistory          = "history"
+	DurableWorkflowRoleMatching         = "matching"
+	DurableWorkflowRoleWorker           = "worker"
+	DurableWorkflowRoleInternalFrontend = "internal-frontend"
+	DurableWorkflowRoleUI               = "ui"
+	DurableWorkflowRoleAdminTools       = "admin-tools"
+
+	// Conditions
+	DurableWorkflowConditionHighlyAvailable = "HighlyAvailable"
+)
+
+var (
+	DefaultResourcesDurableWorkflow = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".250"),
+			core.ResourceMemory: resource.MustParse("512Mi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("1Gi"),
+		},
+	}
+)

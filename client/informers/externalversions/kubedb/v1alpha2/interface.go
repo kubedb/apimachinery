@@ -36,6 +36,8 @@ type Interface interface {
 	DocumentDBs() DocumentDBInformer
 	// Druids returns a DruidInformer.
 	Druids() DruidInformer
+	// DurableWorkflows returns a DurableWorkflowInformer.
+	DurableWorkflows() DurableWorkflowInformer
 	// Elasticsearches returns a ElasticsearchInformer.
 	Elasticsearches() ElasticsearchInformer
 	// Etcds returns a EtcdInformer.
@@ -131,6 +133,11 @@ func (v *version) DocumentDBs() DocumentDBInformer {
 // Druids returns a DruidInformer.
 func (v *version) Druids() DruidInformer {
 	return &druidInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// DurableWorkflows returns a DurableWorkflowInformer.
+func (v *version) DurableWorkflows() DurableWorkflowInformer {
+	return &durableWorkflowInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Elasticsearches returns a ElasticsearchInformer.

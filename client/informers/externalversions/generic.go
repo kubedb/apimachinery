@@ -168,6 +168,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().DocumentDBVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("druidversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().DruidVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("durableworkflowversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().DurableWorkflowVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("elasticsearchversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ElasticsearchVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("etcdversions"):
@@ -362,6 +364,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().DocumentDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("druids"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Druids().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("durableworkflows"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().DurableWorkflows().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("elasticsearches"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Elasticsearches().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("etcds"):
@@ -430,6 +434,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().DocumentDBOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("druidopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().DruidOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("durableworkflowopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().DurableWorkflowOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("elasticsearchopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().ElasticsearchOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("etcdopsrequests"):

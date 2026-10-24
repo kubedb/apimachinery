@@ -622,6 +622,15 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase":                         schema_apimachinery_apis_catalog_v1alpha1_DruidVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionList":                             schema_apimachinery_apis_catalog_v1alpha1_DruidVersionList(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionSpec":                             schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowRolePorts":                     schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowRolePorts(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersion":                       schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersion(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionImage":                  schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionImage(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionList":                   schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionList(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionPorts":                  schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionPorts(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionRollout":                schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionRollout(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionSchema":                 schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionSchema(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionSpec":                   schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionStore":                  schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionStore(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchDashboardVersionDatabase":        schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchDashboardVersionDatabase(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchSecurityContext":                 schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchSecurityContext(ref),
 		"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ElasticsearchVersion":                         schema_apimachinery_apis_catalog_v1alpha1_ElasticsearchVersion(ref),
@@ -35351,6 +35360,487 @@ func schema_apimachinery_apis_catalog_v1alpha1_DruidVersionSpec(ref common.Refer
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.ChartInfo", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidInitContainer", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DruidVersionDatabase", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowRolePorts(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowRolePorts are the ports of one role.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"grpc": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GRPC is the gRPC port.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"membership": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Membership is the membership (ringpop) port. Temporal only; Cadence's ringpop uses TChannel.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"http": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HTTP is the HTTP API port. Temporal frontend only.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"tchannel": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TChannel is the TChannel port. Cadence only, and also its membership port.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionImage(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowVersionImage is a container image.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"image": {
+						SchemaProps: spec.SchemaProps{
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
+						},
+					},
+				},
+				Required: []string{"image"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowVersionList is a list of DurableWorkflowVersions",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of DurableWorkflowVersion CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersion"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersion"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionPorts(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowVersionPorts lists the ports of every server role. A zero port means the role doesn't have that port.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"frontend": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowRolePorts"),
+						},
+					},
+					"history": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowRolePorts"),
+						},
+					},
+					"matching": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowRolePorts"),
+						},
+					},
+					"worker": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowRolePorts"),
+						},
+					},
+					"internalFrontend": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowRolePorts"),
+						},
+					},
+					"metrics": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Metrics is the Prometheus port of every role.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"ui": {
+						SchemaProps: spec.SchemaProps{
+							Description: "UI is the port of the web UI.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"frontend", "history", "matching", "worker", "metrics"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowRolePorts"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionRollout(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowVersionRollout holds what zero-downtime rolling needs.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"roleOrder": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RoleOrder is the order in which the roles are rolled.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"frontendShutdownFailHealthCheckDuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FrontendShutdownFailHealthCheckDuration is how long a frontend reports unhealthy before it stops accepting requests. Temporal only.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"frontendShutdownDrainDuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FrontendShutdownDrainDuration is the drain duration of the frontend.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"matchingShutdownDrainDuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MatchingShutdownDrainDuration is the drain duration of matching.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"historyShutdownDrainDuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HistoryShutdownDrainDuration is the drain duration of history.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"preStopSleep": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PreStopSleep is the sleep before the container receives SIGTERM.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"historyMinInterval": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HistoryMinInterval is the minimum interval between two history pod replacements.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"postHopSettle": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PostHopSettle is how long to wait after a version hop before starting the next one.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"onlineSchemaUpdate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OnlineSchemaUpdate is false if the schema update from the previous hop locks heavily and must not run while the old servers are serving.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionSchema(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowVersionSchema describes the schema tooling of a version.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"tool": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Tool is how the schema is applied: \"temporal-tools\" (temporal-sql-tool, temporal-cassandra-tool) or \"cadence-server\" (cadence-server update-schema).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"dir": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Dir is the directory in the admin tools image that holds the versioned schema, for example /etc/temporal/schema.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"stores": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Stores lists the supported default and visibility stores.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionStore"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"tool"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionStore"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowVersionSpec is the spec for a DurableWorkflowVersion.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version of the engine, for example 1.32.1 or 1.4.2.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"distribution": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distribution is the engine: Temporal or Cadence.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"endOfLife": {
+						SchemaProps: spec.SchemaProps{
+							Description: "EndOfLife refers if this version reached into its end of the life or not, based on https://endoflife.date/",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"deprecated": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Deprecated versions usable but regarded as obsolete and best avoided, typically due to having been superseded.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"server": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Server is the image that runs every server role.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionImage"),
+						},
+					},
+					"adminTools": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AdminTools is the image of the schema Job and the admin tools pod. Cadence uses the server image.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionImage"),
+						},
+					},
+					"ui": {
+						SchemaProps: spec.SchemaProps{
+							Description: "UI is the web UI image.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionImage"),
+						},
+					},
+					"ports": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ports of each server role.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionPorts"),
+						},
+					},
+					"schema": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Schema describes the persistence schema tooling.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionSchema"),
+						},
+					},
+					"defaultHistoryShards": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DefaultHistoryShards is used when spec.numHistoryShards is omitted.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"rollout": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Rollout holds what zero-downtime rolling needs.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionRollout"),
+						},
+					},
+					"securityContext": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecurityContext is for the additional config for the server containers.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext"),
+						},
+					},
+					"updateConstraints": {
+						SchemaProps: spec.SchemaProps{
+							Description: "update constraints",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"),
+						},
+					},
+				},
+				Required: []string{"version", "distribution", "server", "adminTools", "ports", "schema"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionImage", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionPorts", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionRollout", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.DurableWorkflowVersionSchema", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.SecurityContext", "kubedb.dev/apimachinery/apis/catalog/v1alpha1.UpdateConstraints"},
+	}
+}
+
+func schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionStore(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowVersionStore is a supported persistence engine of a version.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type is Postgres, MySQL, Cassandra, Elasticsearch or OpenSearch.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"default": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Default is true if the engine can be the default store.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"visibility": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Visibility is true if the engine can be the visibility store.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"type"},
+			},
+		},
 	}
 }
 

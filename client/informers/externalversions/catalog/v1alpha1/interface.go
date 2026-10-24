@@ -36,6 +36,8 @@ type Interface interface {
 	DocumentDBVersions() DocumentDBVersionInformer
 	// DruidVersions returns a DruidVersionInformer.
 	DruidVersions() DruidVersionInformer
+	// DurableWorkflowVersions returns a DurableWorkflowVersionInformer.
+	DurableWorkflowVersions() DurableWorkflowVersionInformer
 	// ElasticsearchVersions returns a ElasticsearchVersionInformer.
 	ElasticsearchVersions() ElasticsearchVersionInformer
 	// EtcdVersions returns a EtcdVersionInformer.
@@ -133,6 +135,11 @@ func (v *version) DocumentDBVersions() DocumentDBVersionInformer {
 // DruidVersions returns a DruidVersionInformer.
 func (v *version) DruidVersions() DruidVersionInformer {
 	return &druidVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// DurableWorkflowVersions returns a DurableWorkflowVersionInformer.
+func (v *version) DurableWorkflowVersions() DurableWorkflowVersionInformer {
+	return &durableWorkflowVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // ElasticsearchVersions returns a ElasticsearchVersionInformer.
