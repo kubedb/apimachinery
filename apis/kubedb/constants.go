@@ -2823,14 +2823,12 @@ const (
 	DurableWorkflowConditionHighlyAvailable = "HighlyAvailable"
 )
 
-var (
-	DefaultResourcesDurableWorkflow = core.ResourceRequirements{
-		Requests: core.ResourceList{
-			core.ResourceCPU:    resource.MustParse(".250"),
-			core.ResourceMemory: resource.MustParse("512Mi"),
-		},
-		Limits: core.ResourceList{
-			core.ResourceMemory: resource.MustParse("1Gi"),
-		},
-	}
-)
+var DefaultResourcesDurableWorkflow = core.ResourceRequirements{
+	Requests: core.ResourceList{
+		core.ResourceCPU:    resource.MustParse(".250"),
+		core.ResourceMemory: resource.MustParse("512Mi"),
+	},
+	Limits: core.ResourceList{
+		core.ResourceMemory: resource.MustParse("1Gi"),
+	},
+}

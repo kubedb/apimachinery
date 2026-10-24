@@ -243,8 +243,9 @@ func (w *DurableWorkflowCustomWebhook) validatePersistence(db *olddbapi.DurableW
 		visibilityType := db.VisibilityStore().Type
 		isSearch := visibilityType == olddbapi.DurableWorkflowStoreElasticsearch || visibilityType == olddbapi.DurableWorkflowStoreOpenSearch
 		switch {
-		case version.IsCadence() && isSearch && db.Spec.Persistence.KafkaRef == nil:
-			allErr = append(allErr, field.Required(p.Child("kafkaRef"), "Cadence requires kafkaRef when the visibility store is Elasticsearch or OpenSearch"))
+		case version.IsCadence() && isSearch:
+			// Cadence feeds the search index through Kafka and a visibility consumer, which the operator doesn't set up yet
+			allErr = append(allErr, field.Forbidden(p.Child("visibility"), "an Elasticsearch or OpenSearch visibility store is not supported for Cadence yet (it also needs Kafka)"))
 		case version.IsTemporal() && db.Spec.Persistence.KafkaRef != nil:
 			allErr = append(allErr, field.Forbidden(p.Child("kafkaRef"), "kafkaRef is not used by Temporal"))
 		case version.IsCadence() && !isSearch && db.Spec.Persistence.KafkaRef != nil:

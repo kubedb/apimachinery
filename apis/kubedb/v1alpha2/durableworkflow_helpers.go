@@ -247,6 +247,7 @@ func (r *DurableWorkflow) PodTemplate(role string) *ofst.PodTemplateSpec {
 
 // HasUI and HasAdminTools tell if the optional pods are wanted.
 func (r *DurableWorkflow) HasUI() bool { return r.Spec.UI != nil && r.Spec.UI.Enabled }
+
 func (r *DurableWorkflow) HasAdminTools() bool {
 	return r.Spec.AdminTools != nil && r.Spec.AdminTools.Enabled
 }
