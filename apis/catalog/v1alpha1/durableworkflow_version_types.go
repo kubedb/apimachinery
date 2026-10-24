@@ -86,6 +86,11 @@ type DurableWorkflowVersionSpec struct {
 	// +optional
 	DefaultHistoryShards int32 `json:"defaultHistoryShards,omitempty"`
 
+	// PublicClientTLS says the server image reads publicClient.tls, which the Cadence worker service needs to reach a
+	// TLS-enabled frontend. Upstream Cadence has no such field; the AppsCode build does.
+	// +optional
+	PublicClientTLS bool `json:"publicClientTLS,omitempty"`
+
 	// Rollout holds what zero-downtime rolling needs.
 	// +optional
 	Rollout DurableWorkflowVersionRollout `json:"rollout,omitempty"`

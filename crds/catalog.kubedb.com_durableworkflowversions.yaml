@@ -157,6 +157,8 @@ spec:
                 - metrics
                 - worker
                 type: object
+              publicClientTLS:
+                type: boolean
               rollout:
                 properties:
                   frontendShutdownDrainDuration:

@@ -184,9 +184,13 @@ func (w *DurableWorkflowCustomWebhook) validate(db, old *olddbapi.DurableWorkflo
 		if db.Spec.UI != nil && db.Spec.UI.Enabled && db.Spec.UI.Auth == olddbapi.DurableWorkflowUIAuthJWT && !version.IsCadence() {
 			allErr = append(allErr, field.Forbidden(spec.Child("ui").Child("auth"), "UI JWT auth is only available for Cadence"))
 		}
-		if version.IsCadence() && db.Spec.UI != nil && db.Spec.UI.Enabled && db.IsFrontendClientAuthRequired(version) && db.IsTLSEnabled() {
+		if version.IsCadence() && db.IsFrontendClientAuthRequired(version) && db.IsTLSEnabled() {
 			allErr = append(allErr, field.Forbidden(spec.Child("frontendClientAuth"),
-				"the Cadence web UI can't present a client certificate; set frontendClientAuth to NotRequired or disable the UI"))
+				"the Cadence web UI and the readiness probe can't present a client certificate; set frontendClientAuth to NotRequired"))
+		}
+		if version.IsCadence() && db.IsTLSEnabled() && !version.Spec.PublicClientTLS {
+			allErr = append(allErr, field.Forbidden(spec.Child("tls"),
+				fmt.Sprintf("%s doesn't support TLS: Cadence's worker service can't reach a TLS frontend without publicClient.tls (set publicClientTLS on a DurableWorkflowVersion built with it)", version.Name)))
 		}
 		if version.IsTemporal() && db.Spec.Authorization != nil && db.Spec.Authorization.MaxTokenTTL != nil {
 			allErr = append(allErr, field.Forbidden(spec.Child("authorization").Child("maxTokenTTL"), "maxTokenTTL is only available for Cadence"))

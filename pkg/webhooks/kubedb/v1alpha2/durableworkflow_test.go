@@ -68,9 +68,18 @@ func dwTestWebhook(t *testing.T) *DurableWorkflowCustomWebhook {
 			},
 		},
 		{
-			ObjectMeta: metav1.ObjectMeta{Name: "cadence-1.4.2"},
+			ObjectMeta: metav1.ObjectMeta{Name: "cadence-1.4.2-upstream"},
 			Spec: catalog.DurableWorkflowVersionSpec{
 				Version: "1.4.2", Distribution: catalog.DurableWorkflowDistroCadence, DefaultHistoryShards: 16,
+				Schema: catalog.DurableWorkflowVersionSchema{Stores: []catalog.DurableWorkflowVersionStore{
+					{Type: "Postgres", Default: true, Visibility: true},
+				}},
+			},
+		},
+		{
+			ObjectMeta: metav1.ObjectMeta{Name: "cadence-1.4.2"},
+			Spec: catalog.DurableWorkflowVersionSpec{
+				Version: "1.4.2", Distribution: catalog.DurableWorkflowDistroCadence, DefaultHistoryShards: 16, PublicClientTLS: true,
 				Schema: catalog.DurableWorkflowVersionSchema{Stores: []catalog.DurableWorkflowVersionStore{
 					{Type: "Postgres", Default: true, Visibility: true},
 					{Type: "Cassandra", Default: true, Visibility: true},
@@ -164,6 +173,22 @@ func TestDurableWorkflowValidate(t *testing.T) {
 				d.Spec.UI = &olddbapi.DurableWorkflowUI{Enabled: true}
 				d.Spec.TLS = &kmapi.TLSConfig{IssuerRef: &core.TypedLocalObjectReference{Name: "issuer"}}
 			},
+		},
+		{
+			name: "cadence tls without publicClient.tls", version: "cadence-1.4.2-upstream",
+			mutate: func(d *olddbapi.DurableWorkflow) {
+				d.Spec.TLS = &kmapi.TLSConfig{IssuerRef: &core.TypedLocalObjectReference{Name: "issuer"}}
+			},
+			wantErr: "doesn't support TLS",
+		},
+		{
+			name: "cadence tls with required client auth", version: "cadence-1.4.2",
+			mutate: func(d *olddbapi.DurableWorkflow) {
+				required := olddbapi.DurableWorkflowClientAuthRequired
+				d.Spec.TLS = &kmapi.TLSConfig{IssuerRef: &core.TypedLocalObjectReference{Name: "issuer"}}
+				d.Spec.FrontendClientAuth = &required
+			},
+			wantErr: "can't present a client certificate",
 		},
 		{
 			name: "ui jwt auth on temporal", version: "temporal-1.32.1",

@@ -35778,6 +35778,13 @@ func schema_apimachinery_apis_catalog_v1alpha1_DurableWorkflowVersionSpec(ref co
 							Format:      "int32",
 						},
 					},
+					"publicClientTLS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PublicClientTLS says the server image reads publicClient.tls, which the Cadence worker service needs to reach a TLS-enabled frontend. Upstream Cadence has no such field; the AppsCode build does.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"rollout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Rollout holds what zero-downtime rolling needs.",
