@@ -192,9 +192,7 @@ func (w *DurableWorkflowCustomWebhook) validate(db, old *olddbapi.DurableWorkflo
 			allErr = append(allErr, field.Forbidden(spec.Child("tls"),
 				fmt.Sprintf("%s doesn't support TLS: Cadence's worker service can't reach a TLS frontend without publicClient.tls (set publicClientTLS on a DurableWorkflowVersion built with it)", version.Name)))
 		}
-		if version.IsTemporal() && db.Spec.Authorization != nil && db.Spec.Authorization.MaxTokenTTL != nil {
-			allErr = append(allErr, field.Forbidden(spec.Child("authorization").Child("maxTokenTTL"), "maxTokenTTL is only available for Cadence"))
-		}
+		allErr = append(allErr, validateAuthorization(db, version)...)
 	}
 
 	if db.Spec.TLS != nil && db.Spec.TLS.IssuerRef == nil {
@@ -262,4 +260,43 @@ func (w *DurableWorkflowCustomWebhook) getVersion(db *olddbapi.DurableWorkflow) 
 		return nil, errors.New("version not supported")
 	}
 	return v, nil
+}
+
+func validateAuthorization(db *olddbapi.DurableWorkflow, version *catalog.DurableWorkflowVersion) field.ErrorList {
+	a := db.Spec.Authorization
+	if a == nil {
+		return nil
+	}
+	var errs field.ErrorList
+	path := field.NewPath("spec").Child("authorization")
+	if a.JWKSURL == "" && a.PublicKeySecret == nil {
+		errs = append(errs, field.Required(path, "one of jwksURL and publicKeySecret is required"))
+	}
+	if a.JWKSURL != "" && a.PublicKeySecret != nil {
+		errs = append(errs, field.Invalid(path.Child("publicKeySecret"), a.PublicKeySecret.Name, "jwksURL and publicKeySecret are exclusive"))
+	}
+	if version.IsTemporal() {
+		if a.MaxTokenTTL != nil {
+			errs = append(errs, field.Forbidden(path.Child("maxTokenTTL"), "maxTokenTTL is only available for Cadence"))
+		}
+		if a.GroupsAttributePath != "" || a.AdminAttributePath != "" {
+			errs = append(errs, field.Forbidden(path, "groupsAttributePath and adminAttributePath are only available for Cadence"))
+		}
+		// Without an internal frontend the system worker would call the authorized frontend with no token.
+		if db.Spec.Topology == nil || db.Spec.Topology.InternalFrontend == nil {
+			errs = append(errs, field.Required(field.NewPath("spec").Child("topology").Child("internalFrontend"),
+				"Temporal authorization needs an internalFrontend, which the system worker uses instead of the authorized frontend"))
+		}
+		return errs
+	}
+	if a.PublicKeySecret != nil {
+		errs = append(errs, field.Forbidden(path.Child("publicKeySecret"), "Cadence verifies external tokens with a JWKS URL; its static key is the one the cluster signs internal tokens with"))
+	}
+	if a.PermissionsClaimName != "" || a.PermissionsRegex != "" || a.Audience != "" {
+		errs = append(errs, field.Forbidden(path, "permissionsClaimName, permissionsRegex and audience are only available for Temporal"))
+	}
+	if a.MaxTokenTTL != nil && *a.MaxTokenTTL <= 0 {
+		errs = append(errs, field.Invalid(path.Child("maxTokenTTL"), *a.MaxTokenTTL, "must be greater than 0"))
+	}
+	return errs
 }

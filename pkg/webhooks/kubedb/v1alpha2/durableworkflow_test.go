@@ -191,6 +191,34 @@ func TestDurableWorkflowValidate(t *testing.T) {
 			wantErr: "can't present a client certificate",
 		},
 		{
+			name: "temporal authorization needs an internal frontend", version: "temporal-1.32.1",
+			mutate: func(d *olddbapi.DurableWorkflow) {
+				d.Spec.Authorization = &olddbapi.DurableWorkflowAuthorization{JWKSURL: "https://idp/jwks"}
+			},
+			wantErr: "needs an internalFrontend",
+		},
+		{
+			name: "temporal authorization with an internal frontend", version: "temporal-1.32.1",
+			mutate: func(d *olddbapi.DurableWorkflow) {
+				d.Spec.Topology = &olddbapi.DurableWorkflowTopology{InternalFrontend: &olddbapi.DurableWorkflowNode{}}
+				d.Spec.Authorization = &olddbapi.DurableWorkflowAuthorization{JWKSURL: "https://idp/jwks"}
+			},
+		},
+		{
+			name: "cadence authorization verifies external tokens by JWKS", version: "cadence-1.4.2",
+			mutate: func(d *olddbapi.DurableWorkflow) {
+				d.Spec.Authorization = &olddbapi.DurableWorkflowAuthorization{PublicKeySecret: &core.LocalObjectReference{Name: "keys"}}
+			},
+			wantErr: "Cadence verifies external tokens with a JWKS URL",
+		},
+		{
+			name: "authorization needs a key source", version: "cadence-1.4.2",
+			mutate: func(d *olddbapi.DurableWorkflow) {
+				d.Spec.Authorization = &olddbapi.DurableWorkflowAuthorization{}
+			},
+			wantErr: "one of jwksURL and publicKeySecret is required",
+		},
+		{
 			name: "ui jwt auth on temporal", version: "temporal-1.32.1",
 			mutate: func(d *olddbapi.DurableWorkflow) {
 				d.Spec.UI = &olddbapi.DurableWorkflowUI{Enabled: true, Auth: olddbapi.DurableWorkflowUIAuthJWT}

@@ -2798,6 +2798,8 @@ const (
 	DurableWorkflowTLSDir             = "/etc/durableworkflow/tls"
 	DurableWorkflowDynamicConfigFile  = "dynamic_config.yaml"
 	DurableWorkflowServerConfigFile   = "server.yaml"
+	DurableWorkflowAuthPrivateKey     = "private.pem"
+	DurableWorkflowAuthPublicKey      = "public.pem"
 	DurableWorkflowStoreUserKey       = "username"
 	DurableWorkflowStorePasswordKey   = "password"
 	DurableWorkflowMetricsPortName    = "metrics"

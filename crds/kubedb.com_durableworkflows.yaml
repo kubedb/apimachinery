@@ -3330,11 +3330,21 @@ spec:
                 type: object
               authorization:
                 properties:
+                  adminAttributePath:
+                    type: string
+                  audience:
+                    type: string
+                  groupsAttributePath:
+                    type: string
                   jwksURL:
                     type: string
                   maxTokenTTL:
                     format: int64
                     type: integer
+                  permissionsClaimName:
+                    type: string
+                  permissionsRegex:
+                    type: string
                   publicKeySecret:
                     properties:
                       name:

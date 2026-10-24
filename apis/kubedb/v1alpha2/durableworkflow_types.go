@@ -251,12 +251,31 @@ type DurableWorkflowAuthorization struct {
 	// JWKSURL is the URL of the key set that verifies external tokens.
 	// +optional
 	JWKSURL string `json:"jwksURL,omitempty"`
-	// PublicKeySecret holds an RS256 public key ("tls.crt" or "public.pem") that verifies external tokens.
+	// PublicKeySecret holds a JWKS document under the key "jwks.json", which verifies external tokens. Temporal only:
+	// Cadence uses its single static key for the tokens the cluster signs itself, so its external tokens come
+	// through JWKSURL.
 	// +optional
 	PublicKeySecret *core.LocalObjectReference `json:"publicKeySecret,omitempty"`
-	// MaxTokenTTL is the longest token lifetime accepted, in seconds. Cadence only.
+	// MaxTokenTTL is the longest token lifetime accepted, in seconds. Cadence only; defaults to 3600.
 	// +optional
 	MaxTokenTTL *int64 `json:"maxTokenTTL,omitempty"`
+
+	// PermissionsClaimName is the claim that lists the permissions of the caller. Temporal only; defaults to "permissions".
+	// +optional
+	PermissionsClaimName string `json:"permissionsClaimName,omitempty"`
+	// PermissionsRegex parses a permission into "namespace" and "role" groups. Temporal only.
+	// +optional
+	PermissionsRegex string `json:"permissionsRegex,omitempty"`
+	// Audience is the audience the tokens must carry. Temporal only.
+	// +optional
+	Audience string `json:"audience,omitempty"`
+
+	// GroupsAttributePath is the claim that lists the groups of the caller. Cadence only; defaults to "groups".
+	// +optional
+	GroupsAttributePath string `json:"groupsAttributePath,omitempty"`
+	// AdminAttributePath is the claim that marks an administrator. Cadence only; defaults to "admin".
+	// +optional
+	AdminAttributePath string `json:"adminAttributePath,omitempty"`
 }
 
 // DurableWorkflowUI configures the web UI.

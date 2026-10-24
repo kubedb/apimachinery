@@ -321,6 +321,16 @@ func (r *DurableWorkflow) GetPersistentSecrets() []string {
 	return secrets
 }
 
+// IsAuthorizationEnabled reports whether JWT authorization is on.
+func (r *DurableWorkflow) IsAuthorizationEnabled() bool {
+	return r.Spec.Authorization != nil
+}
+
+// AuthKeysSecretName is the secret with the RSA key pair a Cadence cluster signs its internal tokens with.
+func (r *DurableWorkflow) AuthKeysSecretName() string {
+	return meta_util.NameWithSuffix(r.Name, "auth-keys")
+}
+
 func (r *DurableWorkflow) IsTLSEnabled() bool {
 	return r.Spec.TLS != nil && r.Spec.TLS.IssuerRef != nil
 }

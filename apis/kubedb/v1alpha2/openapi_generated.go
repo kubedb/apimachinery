@@ -36969,15 +36969,50 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowAuthorization(ref c
 					},
 					"publicKeySecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "PublicKeySecret holds an RS256 public key (\"tls.crt\" or \"public.pem\") that verifies external tokens.",
+							Description: "PublicKeySecret holds a JWKS document under the key \"jwks.json\", which verifies external tokens. Temporal only: Cadence uses its single static key for the tokens the cluster signs itself, so its external tokens come through JWKSURL.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},
 					"maxTokenTTL": {
 						SchemaProps: spec.SchemaProps{
-							Description: "MaxTokenTTL is the longest token lifetime accepted, in seconds. Cadence only.",
+							Description: "MaxTokenTTL is the longest token lifetime accepted, in seconds. Cadence only; defaults to 3600.",
 							Type:        []string{"integer"},
 							Format:      "int64",
+						},
+					},
+					"permissionsClaimName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PermissionsClaimName is the claim that lists the permissions of the caller. Temporal only; defaults to \"permissions\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"permissionsRegex": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PermissionsRegex parses a permission into \"namespace\" and \"role\" groups. Temporal only.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"audience": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Audience is the audience the tokens must carry. Temporal only.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"groupsAttributePath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GroupsAttributePath is the claim that lists the groups of the caller. Cadence only; defaults to \"groups\".",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"adminAttributePath": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AdminAttributePath is the claim that marks an administrator. Cadence only; defaults to \"admin\".",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},
