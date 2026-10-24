@@ -554,3 +554,21 @@ func (r *YugabyteDBBind) SecretName() string {
 func (r *YugabyteDBBind) CertSecretName() string {
 	return r.GetCertSecretName(YugabyteDBCertificateTypeClient)
 }
+
+var _ Accessor = &YugabyteDB{}
+
+func (r *YugabyteDB) GetObjectMeta() meta.ObjectMeta {
+	return r.ObjectMeta
+}
+
+func (r *YugabyteDB) GetConditions() []kmapi.Condition {
+	return r.Status.Conditions
+}
+
+func (r *YugabyteDB) SetCondition(cond kmapi.Condition) {
+	r.Status.Conditions = setCondition(r.Status.Conditions, cond)
+}
+
+func (r *YugabyteDB) RemoveCondition(typ string) {
+	r.Status.Conditions = removeCondition(r.Status.Conditions, typ)
+}

@@ -1,0 +1,12 @@
+apiVersion: kubedb.com/v1alpha2
+kind: YugabyteDB
+metadata:
+  name: yb-single
+  namespace: demo
+spec:
+  version: 2025.1.4
+  replicationFactor: 1
+  topology:
+    tserver:
+      replicas: 1
+  deletionPolicy: WipeOut
