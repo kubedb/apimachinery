@@ -53,6 +53,10 @@ func (c *FakeAutoscalingV1alpha1) DruidAutoscalers(namespace string) v1alpha1.Dr
 	return newFakeDruidAutoscalers(c, namespace)
 }
 
+func (c *FakeAutoscalingV1alpha1) DurableWorkflowAutoscalers(namespace string) v1alpha1.DurableWorkflowAutoscalerInterface {
+	return newFakeDurableWorkflowAutoscalers(c, namespace)
+}
+
 func (c *FakeAutoscalingV1alpha1) ElasticsearchAutoscalers(namespace string) v1alpha1.ElasticsearchAutoscalerInterface {
 	return newFakeElasticsearchAutoscalers(c, namespace)
 }
