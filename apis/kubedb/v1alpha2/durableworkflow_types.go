@@ -176,8 +176,9 @@ type DurableWorkflowPersistence struct {
 	// +optional
 	Managed *DurableWorkflowManagedStore `json:"managed,omitempty"`
 
-	// KafkaRef is required by Cadence when the visibility store is Elasticsearch or OpenSearch,
-	// and is rejected for Temporal.
+	// KafkaRef is the AppBinding of a KubeDB Kafka. It is required by Cadence when the visibility store is
+	// Elasticsearch or OpenSearch (the history service writes visibility records to a topic of it, and the worker
+	// service indexes them), and is rejected otherwise. The operator creates the topics.
 	// +optional
 	KafkaRef *kmapi.ObjectReference `json:"kafkaRef,omitempty"`
 }
@@ -230,7 +231,9 @@ type DurableWorkflowStore struct {
 	Type DurableWorkflowStoreType `json:"type,omitempty"`
 
 	// DatabaseName is the database, keyspace or index name.
-	// Defaults to "<name>" for the default store and "<name>_visibility" for the visibility store.
+	// Defaults to "<name>" for the default store and "<name>_visibility" for the visibility store. A Cadence
+	// Elasticsearch or OpenSearch index must start with "cadence-visibility-", and then defaults to
+	// "cadence-visibility-<namespace>-<name>".
 	// +optional
 	DatabaseName string `json:"databaseName,omitempty"`
 
