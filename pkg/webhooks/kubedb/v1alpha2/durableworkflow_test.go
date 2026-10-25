@@ -137,17 +137,21 @@ func TestDurableWorkflowValidate(t *testing.T) {
 			wantErr: "not supported as the visibility store",
 		},
 		{
-			name: "cadence elasticsearch visibility is not supported yet", version: "cadence-1.4.2",
+			name: "cadence needs kafka for elasticsearch", version: "cadence-1.4.2",
 			mutate:  func(d *olddbapi.DurableWorkflow) { d.Spec.Persistence.Visibility = &es },
-			wantErr: "not supported for Cadence yet",
+			wantErr: "requires kafkaRef",
 		},
 		{
-			name: "cadence with elasticsearch and kafka is not supported yet", version: "cadence-1.4.2",
+			name: "cadence with elasticsearch and kafka", version: "cadence-1.4.2",
 			mutate: func(d *olddbapi.DurableWorkflow) {
 				d.Spec.Persistence.Visibility = &es
 				d.Spec.Persistence.KafkaRef = &kmapi.ObjectReference{Name: "kafka"}
 			},
-			wantErr: "not supported for Cadence yet",
+		},
+		{
+			name: "cadence rejects kafka without a search visibility store", version: "cadence-1.4.2",
+			mutate:  func(d *olddbapi.DurableWorkflow) { d.Spec.Persistence.KafkaRef = &kmapi.ObjectReference{Name: "kafka"} },
+			wantErr: "kafkaRef is only used with",
 		},
 		{
 			name: "temporal rejects kafka", version: "temporal-1.32.1",

@@ -37167,7 +37167,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowPersistence(ref com
 					},
 					"kafkaRef": {
 						SchemaProps: spec.SchemaProps{
-							Description: "KafkaRef is required by Cadence when the visibility store is Elasticsearch or OpenSearch, and is rejected for Temporal.",
+							Description: "KafkaRef is the AppBinding of a KubeDB Kafka. It is required by Cadence when the visibility store is Elasticsearch or OpenSearch (the history service writes visibility records to a topic of it, and the worker service indexes them), and is rejected otherwise. The operator creates the topics.",
 							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
 						},
 					},
@@ -37407,7 +37407,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowStore(ref common.Re
 					},
 					"databaseName": {
 						SchemaProps: spec.SchemaProps{
-							Description: "DatabaseName is the database, keyspace or index name. Defaults to \"<name>\" for the default store and \"<name>_visibility\" for the visibility store.",
+							Description: "DatabaseName is the database, keyspace or index name. Defaults to \"<name>\" for the default store and \"<name>_visibility\" for the visibility store. A Cadence Elasticsearch or OpenSearch index must start with \"cadence-visibility-\", and then defaults to \"cadence-visibility-<namespace>-<name>\".",
 							Type:        []string{"string"},
 							Format:      "",
 						},
