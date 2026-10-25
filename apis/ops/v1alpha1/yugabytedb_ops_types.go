@@ -61,6 +61,9 @@ type YugabyteDBOpsRequestSpec struct {
 	Restart *RestartSpec `json:"restart,omitempty"`
 	// Specifies information necessary for configuring TLS
 	TLS *YugabyteDBTLSSpec `json:"tls,omitempty"`
+	// ConnectionManager changes the YSQL Connection Manager of the database. It is only valid in a Reconfigure
+	// request, next to or instead of spec.configuration. The pods restart one at a time.
+	ConnectionManager *dbapi.YugabyteDBConnectionManager `json:"connectionManager,omitempty"`
 	// Specifies information necessary for configuring authSecret of the database
 	Authentication *AuthSpec `json:"authentication,omitempty"`
 	// Specifies information necessary for custom configuration of YugabyteDB

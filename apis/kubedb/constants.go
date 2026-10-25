@@ -2788,14 +2788,17 @@ const (
 	YugabyteDBInitContainerName    = "yb-init"
 
 	// Ports
-	YugabyteDBMasterRPCPort   = 7100
-	YugabyteDBMasterUIPort    = 7000
-	YugabyteDBTServerRPCPort  = 9100
-	YugabyteDBTServerUIPort   = 9000
-	YugabyteDBYSQLPort        = 5433
-	YugabyteDBYCQLPort        = 9042
-	YugabyteDBYSQLMetricsPort = 13000
-	YugabyteDBYCQLMetricsPort = 12000
+	YugabyteDBMasterRPCPort  = 7100
+	YugabyteDBMasterUIPort   = 7000
+	YugabyteDBTServerRPCPort = 9100
+	YugabyteDBTServerUIPort  = 9000
+	YugabyteDBYSQLPort       = 5433
+	// YugabyteDBYSQLInternalPort is the port of PostgreSQL when the Connection Manager is enabled. The Connection
+	// Manager listens on YugabyteDBYSQLPort and forwards the connections to this port.
+	YugabyteDBYSQLInternalPort = 6433
+	YugabyteDBYCQLPort         = 9042
+	YugabyteDBYSQLMetricsPort  = 13000
+	YugabyteDBYCQLMetricsPort  = 12000
 
 	YugabyteDBMasterRPCPortName   = "tcp-master-rpc"
 	YugabyteDBMasterUIPortName    = "http-master-ui"
@@ -2856,6 +2859,20 @@ const (
 	YugabyteDBRoleMasterValue      = "master"
 	YugabyteDBRoleTServerValue     = "tserver"
 	YugabyteDBRoleReadReplicaValue = "readreplica"
+
+	// YSQL Connection Manager. enable_ysql_conn_mgr moves PostgreSQL to the internal port and starts the pooler on ysql_conn_mgr_port.
+	YugabyteDBConnMgrEnableFlag                 = "enable_ysql_conn_mgr"
+	YugabyteDBConnMgrPortFlag                   = "ysql_conn_mgr_port"
+	YugabyteDBConnMgrMaxClientConnectionsFlag   = "ysql_conn_mgr_max_client_connections"
+	YugabyteDBDefaultConnMgrMaxClientConnection = 10000
+
+	// Webserver TLS. The web UIs of the masters (7000) and the tservers (9000) serve HTTPS with the node certificate.
+	YugabyteDBWebserverCertificateFlag   = "webserver_certificate_file"
+	YugabyteDBWebserverPrivateKeyFlag    = "webserver_private_key_file"
+	YugabyteDBWebserverCACertificateFlag = "webserver_ca_certificate_file"
+	YugabyteDBTLSCertFile                = YugabyteDBTLSDir + "/node." + YugabyteDBCertNodeFilename + ".crt"
+	YugabyteDBTLSKeyFile                 = YugabyteDBTLSDir + "/node." + YugabyteDBCertNodeFilename + ".key"
+	YugabyteDBTLSCAFile                  = YugabyteDBTLSDir + "/ca.crt"
 
 	// YugabyteDBDefaultReadReplicaPlacementUUID is the placement_uuid of the read replica tservers.
 	YugabyteDBDefaultReadReplicaPlacementUUID = "rr"

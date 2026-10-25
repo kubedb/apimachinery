@@ -24,6 +24,7 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	core "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
@@ -177,5 +178,64 @@ func TestYugabyteDBOpsReadReplica(t *testing.T) {
 		{name: "vertical no read replica", req: vs, want: "no spec.topology.readReplica"},
 		{name: "volume expansion", db: ybReadReplicaDB(), req: ve},
 		{name: "volume expansion no read replica", req: ve, want: "no spec.topology.readReplica"},
+	})
+}
+
+func TestYugabyteDBOpsConnectionManager(t *testing.T) {
+	cm := func(enabled bool, max *int32) func() *opsapi.YugabyteDBOpsRequest {
+		return func() *opsapi.YugabyteDBOpsRequest {
+			r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeReconfigure)
+			r.Spec.ConnectionManager = &dbapi.YugabyteDBConnectionManager{Enabled: enabled, MaxClientConnections: max}
+			return r
+		}
+	}
+	withCM := ybOpsDB(nil, false)
+	withCM.Spec.YSQL = &dbapi.YugabyteDBYSQLSpec{Enabled: true, ConnectionManager: &dbapi.YugabyteDBConnectionManager{Enabled: true}}
+	noYSQL := ybOpsDB(nil, false)
+	noYSQL.Spec.YSQL = &dbapi.YugabyteDBYSQLSpec{Enabled: false}
+	runYBOpsCases(t, []ybOpsCase{
+		{name: "enable", req: cm(true, nil)},
+		{name: "enable with max", req: cm(true, ptr.To(int32(500)))},
+		{name: "disable when off", req: cm(false, nil), want: "same as the current"},
+		{name: "enable when on", db: withCM, req: cm(true, nil), want: "same as the current"},
+		{name: "change max", db: withCM, req: cm(true, ptr.To(int32(500)))},
+		{name: "disable", db: withCM, req: cm(false, nil)},
+		{name: "zero max", req: cm(true, ptr.To(int32(0))), want: "at least 1"},
+		{name: "ysql disabled", db: noYSQL, req: cm(true, nil), want: "YSQL is not enabled"},
+		{name: "wrong type", req: func() *opsapi.YugabyteDBOpsRequest {
+			r := cm(true, nil)()
+			r.Spec.Type = opsapi.YugabyteDBOpsRequestTypeRestart
+			return r
+		}, want: "only valid in a Reconfigure request"},
+		{name: "with configuration", req: func() *opsapi.YugabyteDBOpsRequest {
+			r := cm(true, nil)()
+			r.Spec.Configuration = &opsapi.ReconfigurationSpec{RemoveCustomConfig: true}
+			return r
+		}},
+	})
+}
+
+func TestYugabyteDBOpsWebserverTLS(t *testing.T) {
+	issuer := &core.TypedLocalObjectReference{Name: "yb-ca-issuer", Kind: "Issuer"}
+	ws := func(v bool) func() *opsapi.YugabyteDBOpsRequest {
+		return func() *opsapi.YugabyteDBOpsRequest {
+			r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeReconfigureTLS)
+			r.Spec.TLS = &opsapi.YugabyteDBTLSSpec{YugabyteDBTLSConfig: dbapi.YugabyteDBTLSConfig{Webserver: ptr.To(v)}}
+			return r
+		}
+	}
+	withTLS := func(ws bool) *dbapi.YugabyteDB {
+		return ybOpsDB(&dbapi.YugabyteDBTLSConfig{TLSConfig: kmapi.TLSConfig{IssuerRef: issuer}, Webserver: ptr.To(ws)}, false)
+	}
+	runYBOpsCases(t, []ybOpsCase{
+		{name: "enable", db: withTLS(false), req: ws(true)},
+		{name: "disable", db: withTLS(true), req: ws(false)},
+		{name: "already on", db: withTLS(true), req: ws(true), want: "same as the current"},
+		{name: "no TLS", req: ws(true), want: "issuerRef is required"},
+		{name: "with remove", db: withTLS(true), req: func() *opsapi.YugabyteDBOpsRequest {
+			r := ws(true)()
+			r.Spec.TLS.Remove = true
+			return r
+		}, want: "one is allowed to run one operation"},
 	})
 }

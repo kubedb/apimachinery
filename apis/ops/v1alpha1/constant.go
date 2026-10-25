@@ -541,6 +541,10 @@ const (
 	YugabyteDBFinalizeUpgrade = "FinalizeUpgrade"
 	// YugabyteDBUpdateVolumes is the step that grows the PVCs.
 	YugabyteDBUpdateVolumes = "UpdateVolumes"
+	// YugabyteDBApplyConnectionManager is the step that applies a new YSQL Connection Manager setting, which needs a rolling restart.
+	YugabyteDBApplyConnectionManager = "ApplyConnectionManager"
+	// YugabyteDBApplyWebserverTLS is the step that switches the web UIs between HTTP and HTTPS, which needs a rolling restart.
+	YugabyteDBApplyWebserverTLS = "ApplyWebserverTLS"
 	// YugabyteDBRollReadReplicas is the step that restarts the read replica tservers one at a time, after the tservers.
 	YugabyteDBRollReadReplicas = "RollReadReplicas"
 	// YugabyteDBScaleReadReplicas is the step that changes the number of read replica pods.

@@ -272,6 +272,10 @@ func validateYugabyteDBOpsOwned(old, db *olddbapi.YugabyteDB) field.ErrorList {
 	if !apiequality.Semantic.DeepEqual(old.Spec.TLS, db.Spec.TLS) {
 		allErr = append(allErr, field.Forbidden(spec.Child("tls"), "tls "+hint+" (ReconfigureTLS)"))
 	}
+	if old.IsConnectionManagerEnabled() != db.IsConnectionManagerEnabled() ||
+		(old.IsConnectionManagerEnabled() && old.ConnectionManagerMaxClientConnections() != db.ConnectionManagerMaxClientConnections()) {
+		allErr = append(allErr, field.Forbidden(spec.Child("ysql", "connectionManager"), "connectionManager "+hint+" (Reconfigure)"))
+	}
 	if old.GetAuthSecretName() != db.GetAuthSecretName() {
 		allErr = append(allErr, field.Forbidden(spec.Child("authSecret"), "authSecret "+hint+" (RotateAuth)"))
 	}
@@ -378,6 +382,19 @@ func (w *YugabyteDBCustomWebhook) validate(ctx context.Context, db, old *olddbap
 		}
 		if tls.NodeToNode != nil && !*tls.NodeToNode && tls.ClientToNode != nil && !*tls.ClientToNode {
 			allErr = append(allErr, field.Invalid(spec.Child("tls"), tls, "at least one of nodeToNode and clientToNode must be enabled"))
+		}
+	}
+
+	if tls := db.Spec.TLS; tls != nil && tls.Webserver != nil && *tls.Webserver && tls.IssuerRef == nil {
+		allErr = append(allErr, field.Invalid(spec.Child("tls", "webserver"), true, "webserver TLS needs spec.tls.issuerRef"))
+	}
+	if cm := db.Spec.YSQL; cm != nil && cm.ConnectionManager != nil {
+		cp := spec.Child("ysql", "connectionManager")
+		if cm.ConnectionManager.Enabled && !db.IsYSQLEnabled() {
+			allErr = append(allErr, field.Invalid(cp.Child("enabled"), true, "the Connection Manager needs spec.ysql.enabled"))
+		}
+		if m := cm.ConnectionManager.MaxClientConnections; m != nil && *m < 1 {
+			allErr = append(allErr, field.Invalid(cp.Child("maxClientConnections"), *m, "maxClientConnections must be at least 1"))
 		}
 	}
 

@@ -298,6 +298,40 @@ func (r *YugabyteDB) IsYCQLEnabled() bool {
 	return r.Spec.YCQL != nil && r.Spec.YCQL.Enabled
 }
 
+// IsConnectionManagerEnabled reports whether the YSQL Connection Manager is on.
+func (r *YugabyteDB) IsConnectionManagerEnabled() bool {
+	return r.IsYSQLEnabled() && r.Spec.YSQL != nil && r.Spec.YSQL.ConnectionManager != nil && r.Spec.YSQL.ConnectionManager.Enabled
+}
+
+// ConnectionManagerMaxClientConnections is --ysql_conn_mgr_max_client_connections.
+func (r *YugabyteDB) ConnectionManagerMaxClientConnections() int32 {
+	if r.Spec.YSQL != nil && r.Spec.YSQL.ConnectionManager != nil && r.Spec.YSQL.ConnectionManager.MaxClientConnections != nil {
+		return *r.Spec.YSQL.ConnectionManager.MaxClientConnections
+	}
+	return kubedb.YugabyteDBDefaultConnMgrMaxClientConnection
+}
+
+// YSQLInternalPort is the port PostgreSQL listens on inside the pod: 6433 behind the Connection Manager, else 5433.
+func (r *YugabyteDB) YSQLInternalPort() int32 {
+	if r.IsConnectionManagerEnabled() {
+		return kubedb.YugabyteDBYSQLInternalPort
+	}
+	return kubedb.YugabyteDBYSQLPort
+}
+
+// IsWebserverTLS reports whether the web UIs and the metrics endpoints of the masters and tservers serve HTTPS.
+func (r *YugabyteDB) IsWebserverTLS() bool {
+	return r.Spec.TLS != nil && r.Spec.TLS.Webserver != nil && *r.Spec.TLS.Webserver
+}
+
+// GetWebserverScheme is the scheme of the web UIs (7000 and 9000) and of /prometheus-metrics.
+func (r *YugabyteDB) GetWebserverScheme() string {
+	if r.IsWebserverTLS() {
+		return "https"
+	}
+	return "http"
+}
+
 func (r *YugabyteDB) IsNodeToNodeTLS() bool {
 	return r.Spec.TLS != nil && (r.Spec.TLS.NodeToNode == nil || *r.Spec.TLS.NodeToNode)
 }
@@ -559,7 +593,7 @@ func (r yugabyteDBStatsService) Path() string {
 }
 
 func (r yugabyteDBStatsService) Scheme() string {
-	return "http"
+	return r.GetWebserverScheme()
 }
 
 func (r yugabyteDBStatsService) TLSConfig() *promapi.TLSConfig {

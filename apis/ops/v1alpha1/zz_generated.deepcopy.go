@@ -9988,6 +9988,11 @@ func (in *YugabyteDBOpsRequestSpec) DeepCopyInto(out *YugabyteDBOpsRequestSpec) 
 		*out = new(YugabyteDBTLSSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ConnectionManager != nil {
+		in, out := &in.ConnectionManager, &out.ConnectionManager
+		*out = new(v1alpha2.YugabyteDBConnectionManager)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Authentication != nil {
 		in, out := &in.Authentication, &out.Authentication
 		*out = new(AuthSpec)

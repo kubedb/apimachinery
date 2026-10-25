@@ -151,6 +151,9 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateCreateOrUpdate(ctx context.C
 			allErr = append(allErr, field.Invalid(spec.Child(child), req.Name, err.Error()))
 		}
 	}
+	if req.Spec.ConnectionManager != nil && req.Spec.Type != opsapi.YugabyteDBOpsRequestTypeReconfigure {
+		add("connectionManager", fmt.Errorf("spec.connectionManager is only valid in a Reconfigure request, not in %s", req.Spec.Type))
+	}
 	switch opsapi.YugabyteDBOpsRequestType(req.GetRequestType()) {
 	case opsapi.YugabyteDBOpsRequestTypeRestart:
 	case opsapi.YugabyteDBOpsRequestTypeUpdateVersion:
@@ -165,7 +168,7 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateCreateOrUpdate(ctx context.C
 	case opsapi.YugabyteDBOpsRequestTypeVolumeExpansion:
 		add("volumeExpansion", w.validateVolumeExpansion(db, req))
 	case opsapi.YugabyteDBOpsRequestTypeReconfigure:
-		add("configuration", w.validateReconfigure(ctx, req))
+		add("configuration", w.validateReconfigure(ctx, db, req))
 	case opsapi.YugabyteDBOpsRequestTypeReconfigureTLS:
 		add("tls", w.validateReconfigureTLS(db, req))
 	case opsapi.YugabyteDBOpsRequestTypeRotateAuth:
@@ -445,8 +448,16 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateRoleExpansion(db *dbapi.Yuga
 	return opsutil.ValidateStorageExpansion(node.Storage, q, req.Status.Phase, "YugabyteDB "+string(role))
 }
 
-func (w *YugabyteDBOpsRequestCustomWebhook) validateReconfigure(ctx context.Context, req *opsapi.YugabyteDBOpsRequest) error {
+func (w *YugabyteDBOpsRequestCustomWebhook) validateReconfigure(ctx context.Context, db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
 	cfg := req.Spec.Configuration
+	if cm := req.Spec.ConnectionManager; cm != nil {
+		if err := w.validateConnectionManager(db, req); err != nil {
+			return err
+		}
+		if cfg == nil {
+			return nil
+		}
+	}
 	if cfg == nil {
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
 	}
@@ -486,13 +497,31 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateReconfigure(ctx context.Cont
 	return nil
 }
 
+func (w *YugabyteDBOpsRequestCustomWebhook) validateConnectionManager(db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
+	cm := req.Spec.ConnectionManager
+	if !db.IsYSQLEnabled() {
+		return errors.New("spec.connectionManager: YSQL is not enabled on this database")
+	}
+	if cm.MaxClientConnections != nil && *cm.MaxClientConnections < 1 {
+		return errors.New("spec.connectionManager.maxClientConnections must be at least 1")
+	}
+	if !yugabyteDBOpsPending(req) {
+		return nil
+	}
+	cur := db.IsConnectionManagerEnabled()
+	if cm.Enabled == cur && (!cm.Enabled || cm.MaxClientConnections == nil || *cm.MaxClientConnections == db.ConnectionManagerMaxClientConnections()) {
+		return errors.New("spec.connectionManager is the same as the current setting")
+	}
+	return nil
+}
+
 func (w *YugabyteDBOpsRequestCustomWebhook) validateReconfigureTLS(db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
 	tls := req.Spec.TLS
 	if tls == nil {
 		return errors.New("spec.tls nil not supported in ReconfigureTLS type")
 	}
 
-	change := tls.IssuerRef != nil || len(tls.Certificates) > 0 || tls.NodeToNode != nil || tls.ClientToNode != nil
+	change := tls.IssuerRef != nil || len(tls.Certificates) > 0 || tls.NodeToNode != nil || tls.ClientToNode != nil || tls.Webserver != nil
 	n := 0
 	for _, b := range []bool{tls.Remove, tls.RotateCertificates, change} {
 		if b {
@@ -510,6 +539,9 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateReconfigureTLS(db *dbapi.Yug
 	}
 
 	hasTLS := db.Spec.TLS != nil
+	if tls.Webserver != nil && *tls.Webserver && (tls.Remove || tls.RotateCertificates) {
+		return errors.New("spec.tls.webserver can not be combined with remove or rotateCertificates")
+	}
 	switch {
 	case tls.Remove:
 		if !hasTLS {
@@ -529,6 +561,9 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateReconfigureTLS(db *dbapi.Yug
 		}
 	default:
 		// issuer change, certificates update or channel toggle
+		if tls.Webserver != nil && tls.IssuerRef == nil && len(tls.Certificates) == 0 && tls.NodeToNode == nil && tls.ClientToNode == nil && *tls.Webserver == db.IsWebserverTLS() {
+			return errors.New("spec.tls.webserver is the same as the current setting")
+		}
 		if tls.IssuerRef != nil && db.Spec.TLS.IssuerRef != nil && apiequality.Semantic.DeepEqual(*tls.IssuerRef, *db.Spec.TLS.IssuerRef) &&
 			len(tls.Certificates) == 0 && tls.NodeToNode == nil && tls.ClientToNode == nil {
 			return errors.New("spec.tls.issuerRef is the same as the current issuer, use rotateCertificates to renew the certificates")

@@ -485,7 +485,7 @@ func TestYugabyteDBOpsExamples(t *testing.T) {
 				db.Spec.Topology.ReadReplica = &dbapi.YugabyteDBReadReplica{YugabyteDBNode: dbapi.YugabyteDBNode{Replicas: ptr.To(int32(2)), Storage: db.Spec.Topology.TServer.Storage}, ReplicationFactor: ptr.To(int32(2))}
 			}
 			// tls remove and rotate need a database that has TLS
-			if req.Spec.TLS != nil && (req.Spec.TLS.Remove || req.Spec.TLS.RotateCertificates) {
+			if req.Spec.TLS != nil && (req.Spec.TLS.Remove || req.Spec.TLS.RotateCertificates || req.Spec.TLS.Webserver != nil) {
 				db.Spec.TLS = &dbapi.YugabyteDBTLSConfig{TLSConfig: kmapi.TLSConfig{IssuerRef: issuer}}
 			}
 			// finalize and rollback need an upgrade that is pending finalization

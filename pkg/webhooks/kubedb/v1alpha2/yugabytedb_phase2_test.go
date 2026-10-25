@@ -22,7 +22,9 @@ import (
 
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 
+	core "k8s.io/api/core/v1"
 	"k8s.io/utils/ptr"
+	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
 func TestYugabyteDBReadReplica(t *testing.T) {
@@ -121,4 +123,66 @@ func TestYugabyteDBReadReplica(t *testing.T) {
 			checkErr(t, err, tc.want)
 		})
 	}
+}
+
+func TestYugabyteDBConnectionManagerAndWebserver(t *testing.T) {
+	w := ybTestWebhook(t)
+	issuer := &core.TypedLocalObjectReference{Name: "ca", Kind: "Issuer"}
+	cm := func(db *olddbapi.YugabyteDB, enabled bool, max *int32) {
+		db.Spec.YSQL.ConnectionManager = &olddbapi.YugabyteDBConnectionManager{Enabled: enabled, MaxClientConnections: max}
+	}
+	tests := []struct {
+		name   string
+		mutate func(db *olddbapi.YugabyteDB)
+		want   string
+	}{
+		{name: "connection manager", mutate: func(db *olddbapi.YugabyteDB) { cm(db, true, ptr.To(int32(100))) }},
+		{name: "zero max", mutate: func(db *olddbapi.YugabyteDB) { cm(db, true, ptr.To(int32(0))) }, want: "at least 1"},
+		{name: "without ysql", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.YSQL.Enabled = false
+			db.Spec.YCQL.Enabled = true
+			cm(db, true, nil)
+		}, want: "needs spec.ysql.enabled"},
+		{name: "webserver with tls", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.TLS = &olddbapi.YugabyteDBTLSConfig{TLSConfig: kmapi.TLSConfig{IssuerRef: issuer}, Webserver: ptr.To(true)}
+		}},
+		{name: "webserver without issuer", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.TLS = &olddbapi.YugabyteDBTLSConfig{Webserver: ptr.To(true)}
+		}, want: "issuerRef"},
+	}
+	for _, tc := range tests {
+		t.Run("create/"+tc.name, func(t *testing.T) {
+			db := ybTestDB(t, w)
+			tc.mutate(db)
+			_, err := w.ValidateCreate(context.TODO(), db)
+			checkErr(t, err, tc.want)
+		})
+	}
+
+	t.Run("helpers", func(t *testing.T) {
+		db := ybTestDB(t, w)
+		if db.IsConnectionManagerEnabled() || db.YSQLInternalPort() != 5433 || db.GetWebserverScheme() != "http" {
+			t.Fatal("unexpected defaults")
+		}
+		cm(db, true, nil)
+		db.Spec.TLS = &olddbapi.YugabyteDBTLSConfig{TLSConfig: kmapi.TLSConfig{IssuerRef: issuer}, Webserver: ptr.To(true)}
+		if !db.IsConnectionManagerEnabled() || db.YSQLInternalPort() != 6433 || db.ConnectionManagerMaxClientConnections() != 10000 || db.GetWebserverScheme() != "https" {
+			t.Fatal("unexpected values")
+		}
+	})
+
+	t.Run("owned by ops after provisioning", func(t *testing.T) {
+		old := ybTestDB(t, w)
+		setProvisioned(old)
+		db := old.DeepCopy()
+		cm(db, true, nil)
+		_, err := w.ValidateUpdate(ybCtx("alice"), old, db)
+		checkErr(t, err, "connectionManager is owned by")
+		_, err = w.ValidateUpdate(ybCtx("system:serviceaccount:kubedb:p"), old, db)
+		checkErr(t, err, "")
+		db = old.DeepCopy()
+		db.Spec.TLS = &olddbapi.YugabyteDBTLSConfig{TLSConfig: kmapi.TLSConfig{IssuerRef: issuer}, Webserver: ptr.To(true)}
+		_, err = w.ValidateUpdate(ybCtx("alice"), old, db)
+		checkErr(t, err, "tls is owned by")
+	})
 }

@@ -88,6 +88,17 @@ spec:
                     - "false"
                     type: string
                 type: object
+              connectionManager:
+                properties:
+                  enabled:
+                    type: boolean
+                  maxClientConnections:
+                    format: int32
+                    minimum: 1
+                    type: integer
+                required:
+                - enabled
+                type: object
               databaseRef:
                 properties:
                   name:
