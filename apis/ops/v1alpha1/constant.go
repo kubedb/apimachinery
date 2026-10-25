@@ -541,6 +541,14 @@ const (
 	YugabyteDBFinalizeUpgrade = "FinalizeUpgrade"
 	// YugabyteDBUpdateVolumes is the step that grows the PVCs.
 	YugabyteDBUpdateVolumes = "UpdateVolumes"
+	// YugabyteDBRollReadReplicas is the step that restarts the read replica tservers one at a time, after the tservers.
+	YugabyteDBRollReadReplicas = "RollReadReplicas"
+	// YugabyteDBScaleReadReplicas is the step that changes the number of read replica pods.
+	YugabyteDBScaleReadReplicas = "ScaleReadReplicas"
+	// YugabyteDBDrainReadReplicas is the step that moves the tablet copies off the read replicas that are being removed.
+	YugabyteDBDrainReadReplicas = "DrainReadReplicas"
+	// YugabyteDBSetReadReplicaPlacement is the step that registers the read replica placement and replication factor on the masters.
+	YugabyteDBSetReadReplicaPlacement = "SetReadReplicaPlacement"
 	// YugabyteDBDeleteSnapshotSchedules is the step that records and deletes the PITR snapshot schedules before an upgrade.
 	YugabyteDBDeleteSnapshotSchedules = "DeleteSnapshotSchedules"
 	// YugabyteDBRecordAutoFlagsConfig is the step that records the AutoFlags config version, so a rollback can return to it.

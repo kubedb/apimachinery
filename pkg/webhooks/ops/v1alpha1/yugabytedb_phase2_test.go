@@ -24,7 +24,9 @@ import (
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
 )
 
@@ -133,5 +135,47 @@ func TestYugabyteDBOpsUpdateVersionFinalizeMode(t *testing.T) {
 		{name: "auto", req: mode(opsapi.YugabyteDBFinalizeModeAuto)},
 		{name: "manual", req: mode(opsapi.YugabyteDBFinalizeModeManual)},
 		{name: "unknown", req: mode("Later"), want: "is not valid"},
+	})
+}
+
+func ybReadReplicaDB() *dbapi.YugabyteDB {
+	db := ybOpsDB(nil, false)
+	db.Spec.Topology.ReadReplica = &dbapi.YugabyteDBReadReplica{
+		YugabyteDBNode:    dbapi.YugabyteDBNode{Replicas: ptr.To(int32(2)), Storage: db.Spec.Topology.TServer.Storage.DeepCopy()},
+		ReplicationFactor: ptr.To(int32(2)),
+	}
+	return db
+}
+
+func TestYugabyteDBOpsReadReplica(t *testing.T) {
+	hs := func(n *int32) func() *opsapi.YugabyteDBOpsRequest {
+		return func() *opsapi.YugabyteDBOpsRequest {
+			r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeHorizontalScaling)
+			r.Spec.HorizontalScaling = &opsapi.YugabyteDBHorizontalScalingSpec{ReadReplica: n}
+			return r
+		}
+	}
+	vs := func() *opsapi.YugabyteDBOpsRequest {
+		r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeVerticalScaling)
+		r.Spec.VerticalScaling = &opsapi.YugabyteDBVerticalScalingSpec{ReadReplica: podResources("4Gi")}
+		return r
+	}
+	ve := func() *opsapi.YugabyteDBOpsRequest {
+		r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeVolumeExpansion)
+		q := resource.MustParse("20Gi")
+		r.Spec.VolumeExpansion = &opsapi.YugabyteDBVolumeExpansionSpec{Mode: opsapi.VolumeExpansionModeOffline, ReadReplica: &q}
+		return r
+	}
+	runYBOpsCases(t, []ybOpsCase{
+		{name: "scale out", db: ybReadReplicaDB(), req: hs(ptr.To(int32(4)))},
+		{name: "scale to zero", db: ybReadReplicaDB(), req: hs(ptr.To(int32(0)))},
+		{name: "below RF", db: ybReadReplicaDB(), req: hs(ptr.To(int32(1))), want: "read replica replicationFactor (2)"},
+		{name: "negative", db: ybReadReplicaDB(), req: hs(ptr.To(int32(-1))), want: "must not be negative"},
+		{name: "same", db: ybReadReplicaDB(), req: hs(ptr.To(int32(2))), want: "same as current"},
+		{name: "no read replica", req: hs(ptr.To(int32(2))), want: "no spec.topology.readReplica"},
+		{name: "vertical", db: ybReadReplicaDB(), req: vs},
+		{name: "vertical no read replica", req: vs, want: "no spec.topology.readReplica"},
+		{name: "volume expansion", db: ybReadReplicaDB(), req: ve},
+		{name: "volume expansion no read replica", req: ve, want: "no spec.topology.readReplica"},
 	})
 }

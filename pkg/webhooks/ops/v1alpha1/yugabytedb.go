@@ -161,7 +161,7 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateCreateOrUpdate(ctx context.C
 	case opsapi.YugabyteDBOpsRequestTypeHorizontalScaling:
 		add("horizontalScaling", w.validateHorizontalScaling(db, req))
 	case opsapi.YugabyteDBOpsRequestTypeVerticalScaling:
-		add("verticalScaling", w.validateVerticalScaling(req))
+		add("verticalScaling", w.validateVerticalScaling(db, req))
 	case opsapi.YugabyteDBOpsRequestTypeVolumeExpansion:
 		add("volumeExpansion", w.validateVolumeExpansion(db, req))
 	case opsapi.YugabyteDBOpsRequestTypeReconfigure:
@@ -325,16 +325,33 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateHorizontalScaling(db *dbapi.
 	if hs == nil {
 		return errors.New("spec.horizontalScaling nil not supported in HorizontalScaling type")
 	}
-	if hs.TServer == nil {
-		return errors.New("spec.horizontalScaling.tserver is required, only the tservers can be scaled")
+	if hs.TServer == nil && hs.ReadReplica == nil {
+		return errors.New("at least one of spec.horizontalScaling.tserver and spec.horizontalScaling.readReplica is required, only the tservers and the read replicas can be scaled")
 	}
-	target := *hs.TServer
-	rf := db.ReplicationFactor()
-	if target < rf {
-		return fmt.Errorf("spec.horizontalScaling.tserver (%d) must be at least the replication factor (%d)", target, rf)
+	if hs.TServer != nil {
+		target := *hs.TServer
+		rf := db.ReplicationFactor()
+		if target < rf {
+			return fmt.Errorf("spec.horizontalScaling.tserver (%d) must be at least the replication factor (%d)", target, rf)
+		}
+		if cur := db.Replicas(dbapi.YugabyteDBRoleTServer); yugabyteDBOpsPending(req) && cur == target && hs.ReadReplica == nil {
+			return fmt.Errorf("target tserver replicas %d is same as current replicas %d", target, cur)
+		}
 	}
-	if cur := db.Replicas(dbapi.YugabyteDBRoleTServer); yugabyteDBOpsPending(req) && cur == target {
-		return fmt.Errorf("target tserver replicas %d is same as current replicas %d", target, cur)
+	if hs.ReadReplica != nil {
+		target := *hs.ReadReplica
+		if !db.IsReadReplicaEnabled() {
+			return errors.New("spec.horizontalScaling.readReplica: the database has no spec.topology.readReplica")
+		}
+		if target < 0 {
+			return fmt.Errorf("spec.horizontalScaling.readReplica (%d) must not be negative", target)
+		}
+		if rf := db.ReadReplicaReplicationFactor(); target != 0 && target < rf {
+			return fmt.Errorf("spec.horizontalScaling.readReplica (%d) must be 0 or at least the read replica replicationFactor (%d)", target, rf)
+		}
+		if cur := db.Replicas(dbapi.YugabyteDBRoleReadReplica); yugabyteDBOpsPending(req) && cur == target && hs.TServer == nil {
+			return fmt.Errorf("target read replica replicas %d is same as current replicas %d", target, cur)
+		}
 	}
 	return nil
 }
@@ -352,13 +369,21 @@ func validateYugabyteDBRoleResources(role string, pr *opsapi.PodResources) error
 	return nil
 }
 
-func (w *YugabyteDBOpsRequestCustomWebhook) validateVerticalScaling(req *opsapi.YugabyteDBOpsRequest) error {
+func (w *YugabyteDBOpsRequestCustomWebhook) validateVerticalScaling(db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
 	vs := req.Spec.VerticalScaling
 	if vs == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
-	if vs.Master == nil && vs.TServer == nil {
-		return errors.New("at least one of spec.verticalScaling.master and spec.verticalScaling.tserver must be set")
+	if vs.Master == nil && vs.TServer == nil && vs.ReadReplica == nil {
+		return errors.New("at least one of spec.verticalScaling.master, spec.verticalScaling.tserver and spec.verticalScaling.readReplica must be set")
+	}
+	if vs.ReadReplica != nil {
+		if !db.IsReadReplicaEnabled() {
+			return errors.New("spec.verticalScaling.readReplica: the database has no spec.topology.readReplica")
+		}
+		if err := validateYugabyteDBRoleResources("readReplica", vs.ReadReplica); err != nil {
+			return err
+		}
 	}
 	if vs.Master != nil {
 		if err := validateYugabyteDBRoleResources("master", vs.Master); err != nil {
@@ -381,8 +406,16 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateVolumeExpansion(db *dbapi.Yu
 	if ve.Mode != opsapi.VolumeExpansionModeOnline && ve.Mode != opsapi.VolumeExpansionModeOffline {
 		return fmt.Errorf("spec.volumeExpansion.mode must be %s or %s", opsapi.VolumeExpansionModeOnline, opsapi.VolumeExpansionModeOffline)
 	}
-	if ve.Master == nil && ve.TServer == nil {
-		return errors.New("at least one of spec.volumeExpansion.master and spec.volumeExpansion.tserver must be set")
+	if ve.Master == nil && ve.TServer == nil && ve.ReadReplica == nil {
+		return errors.New("at least one of spec.volumeExpansion.master, spec.volumeExpansion.tserver and spec.volumeExpansion.readReplica must be set")
+	}
+	if ve.ReadReplica != nil {
+		if !db.IsReadReplicaEnabled() {
+			return errors.New("spec.volumeExpansion.readReplica: the database has no spec.topology.readReplica")
+		}
+		if err := w.validateRoleExpansion(db, dbapi.YugabyteDBRoleReadReplica, req); err != nil {
+			return err
+		}
 	}
 	if ve.Master != nil {
 		if err := w.validateRoleExpansion(db, dbapi.YugabyteDBRoleMaster, req); err != nil {
@@ -403,8 +436,11 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateRoleExpansion(db *dbapi.Yuga
 		return fmt.Errorf("the %s uses Ephemeral storage and cannot be expanded", role)
 	}
 	q := req.Spec.VolumeExpansion.Master
-	if role == dbapi.YugabyteDBRoleTServer {
+	switch role {
+	case dbapi.YugabyteDBRoleTServer:
 		q = req.Spec.VolumeExpansion.TServer
+	case dbapi.YugabyteDBRoleReadReplica:
+		q = req.Spec.VolumeExpansion.ReadReplica
 	}
 	return opsutil.ValidateStorageExpansion(node.Storage, q, req.Status.Phase, "YugabyteDB "+string(role))
 }

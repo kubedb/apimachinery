@@ -249,7 +249,7 @@ func TestYugabyteDBOpsHorizontalScaling(t *testing.T) {
 		{name: "zero", req: scale(ptr.To(int32(0))), want: "at least the replication factor"},
 		{name: "same as current", req: scale(ptr.To(int32(4))), want: "same as current"},
 		{name: "same as current while running", phase: opsapi.OpsRequestPhaseProgressing, req: scale(ptr.To(int32(4)))},
-		{name: "no tserver", req: scale(nil), want: "spec.horizontalScaling.tserver is required"},
+		{name: "no tserver", req: scale(nil), want: "at least one of spec.horizontalScaling.tserver"},
 		{name: "no spec", req: func() *opsapi.YugabyteDBOpsRequest {
 			return ybOpsReq(opsapi.YugabyteDBOpsRequestTypeHorizontalScaling)
 		}, want: "spec.horizontalScaling nil"},
@@ -481,6 +481,9 @@ func TestYugabyteDBOpsExamples(t *testing.T) {
 			types[req.Spec.Type] = true
 			db := ybOpsDB(nil, false)
 			db.Name = req.Spec.DatabaseRef.Name
+			if db.Name == "yb-rr" {
+				db.Spec.Topology.ReadReplica = &dbapi.YugabyteDBReadReplica{YugabyteDBNode: dbapi.YugabyteDBNode{Replicas: ptr.To(int32(2)), Storage: db.Spec.Topology.TServer.Storage}, ReplicationFactor: ptr.To(int32(2))}
+			}
 			// tls remove and rotate need a database that has TLS
 			if req.Spec.TLS != nil && (req.Spec.TLS.Remove || req.Spec.TLS.RotateCertificates) {
 				db.Spec.TLS = &dbapi.YugabyteDBTLSConfig{TLSConfig: kmapi.TLSConfig{IssuerRef: issuer}}

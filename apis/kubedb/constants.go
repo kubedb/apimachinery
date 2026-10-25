@@ -2853,8 +2853,14 @@ const (
 	YugabyteDBRunAsUser               = 10001
 
 	// Roles
-	YugabyteDBRoleMasterValue  = "master"
-	YugabyteDBRoleTServerValue = "tserver"
+	YugabyteDBRoleMasterValue      = "master"
+	YugabyteDBRoleTServerValue     = "tserver"
+	YugabyteDBRoleReadReplicaValue = "readreplica"
+
+	// YugabyteDBDefaultReadReplicaPlacementUUID is the placement_uuid of the read replica tservers.
+	YugabyteDBDefaultReadReplicaPlacementUUID = "rr"
+	// YugabyteDBPlacementUUIDFlag is the tserver flag that assigns a tserver to a placement.
+	YugabyteDBPlacementUUIDFlag = "placement_uuid"
 
 	// Conditions
 	YugabyteDBConditionMastersReady         = "MastersReady"

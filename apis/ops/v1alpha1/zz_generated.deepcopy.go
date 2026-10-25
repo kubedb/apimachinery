@@ -9895,6 +9895,11 @@ func (in *YugabyteDBHorizontalScalingSpec) DeepCopyInto(out *YugabyteDBHorizonta
 		*out = new(int32)
 		**out = **in
 	}
+	if in.ReadReplica != nil {
+		in, out := &in.ReadReplica, &out.ReadReplica
+		*out = new(int32)
+		**out = **in
+	}
 	return
 }
 
@@ -10128,6 +10133,11 @@ func (in *YugabyteDBVerticalScalingSpec) DeepCopyInto(out *YugabyteDBVerticalSca
 		*out = new(PodResources)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ReadReplica != nil {
+		in, out := &in.ReadReplica, &out.ReadReplica
+		*out = new(PodResources)
+		(*in).DeepCopyInto(*out)
+	}
 	return
 }
 
@@ -10151,6 +10161,11 @@ func (in *YugabyteDBVolumeExpansionSpec) DeepCopyInto(out *YugabyteDBVolumeExpan
 	}
 	if in.TServer != nil {
 		in, out := &in.TServer, &out.TServer
+		x := (*in).DeepCopy()
+		*out = &x
+	}
+	if in.ReadReplica != nil {
+		in, out := &in.ReadReplica, &out.ReadReplica
 		x := (*in).DeepCopy()
 		*out = &x
 	}

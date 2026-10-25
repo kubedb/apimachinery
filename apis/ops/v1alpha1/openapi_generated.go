@@ -48017,6 +48017,13 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBHorizontalScalingSpec(ref c
 							Format:      "int32",
 						},
 					},
+					"readReplica": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of read replica tservers. It needs spec.topology.readReplica on the database.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
 				},
 			},
 		},
@@ -48307,6 +48314,13 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBTLSSpec(ref common.Referenc
 							Format:      "",
 						},
 					},
+					"webserver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Webserver serves the web UIs and the metrics endpoint of the masters (7000) and the tservers (9000) over HTTPS with the node certificate (--webserver_certificate_file and related flags). Defaults to false. It can only be changed by a ReconfigureTLS request.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"rotateCertificates": {
 						SchemaProps: spec.SchemaProps{
 							Description: "RotateCertificates tells operator to initiate certificate rotation",
@@ -48382,6 +48396,12 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBVerticalScalingSpec(ref com
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
 						},
 					},
+					"readReplica": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resource spec for the read replicas",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
 					"mode": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Mode selects how the vertical scaling is actuated. Defaults to Restart.",
@@ -48420,6 +48440,12 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBVolumeExpansionSpec(ref com
 					"tserver": {
 						SchemaProps: spec.SchemaProps{
 							Description: "volume specification for the tservers",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+					"readReplica": {
+						SchemaProps: spec.SchemaProps{
+							Description: "volume specification for the read replicas",
 							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
 						},
 					},

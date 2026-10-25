@@ -853,9 +853,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDB":                                    schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDB(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBApp":                                 schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBBind":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBBind(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager":                   schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBConnectionManager(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBList":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBNode":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPlacement":                           schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBPlacement(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBReadReplica":                         schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBReadReplica(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBStatus":                              schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTLSConfig":                           schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBTLSConfig(ref),
@@ -48650,6 +48652,35 @@ func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBBind(ref common.Referenc
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBConnectionManager(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBConnectionManager configures the YSQL Connection Manager (--enable_ysql_conn_mgr). It can only be changed by a Reconfigure request.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled starts the Connection Manager.",
+							Default:     false,
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"maxClientConnections": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxClientConnections is --ysql_conn_mgr_max_client_connections, the number of client connections the Connection Manager accepts. YugabyteDB defaults to 10000.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"enabled"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -48787,6 +48818,83 @@ func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBPlacement(ref common.Ref
 				},
 			},
 		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBReadReplica(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBReadReplica configures the read replica tservers. The node fields (replicas, podTemplate, storageType, storage, dataVolumes) behave as they do for the tservers. The pods run in the PetSet <name>-readreplica.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas is the number of pods of the role.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate customizes the pods of the role. Set spec.podPlacementPolicy to spread the pods across zones and nodes.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType is Durable (default, PVCs) or Ephemeral (emptyDir).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage is the PVC template of every data volume when StorageType is Durable.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"dataVolumes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataVolumes is the number of data volumes of each pod. They are mounted at /mnt/disk0 and up and listed in --fs_data_dirs. It cannot be changed after the database is created.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"placementUUID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PlacementUUID is the placement_uuid of the read replica tservers and of the read replica placement registered on the masters. Defaults to \"rr\". It cannot be changed once the read replica is created.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"region": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Region overrides the region of the read replica placement. Defaults to spec.placement.region.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"zone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Zone overrides the zone of the read replica placement. By default the zone of every pod is read from its node. YugabyteDB needs the read replica zones to differ from the zones of the primary tservers.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicationFactor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReplicationFactor is the total number of read replica copies of every tablet. Defaults to 1. It must not exceed the number of read replica pods.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
 	}
 }
 
@@ -49001,6 +49109,13 @@ func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBTLSConfig(ref common.Ref
 							Format:      "",
 						},
 					},
+					"webserver": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Webserver serves the web UIs and the metrics endpoint of the masters (7000) and the tservers (9000) over HTTPS with the node certificate (--webserver_certificate_file and related flags). Defaults to false. It can only be changed by a ReconfigureTLS request.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
@@ -49028,11 +49143,17 @@ func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBTopology(ref common.Refe
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBNode"),
 						},
 					},
+					"readReplica": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ReadReplica is an optional second group of tservers, a read replica cluster. Its tservers hold non-voting copies of every tablet in their own placement (placement_uuid), so they never take part in writes.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBReadReplica"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBNode"},
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBNode", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBReadReplica"},
 	}
 }
 
@@ -49073,10 +49194,18 @@ func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBYSQLSpec(ref common.Refe
 							Format:      "",
 						},
 					},
+					"connectionManager": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ConnectionManager configures the YSQL Connection Manager, a built-in connection pooler. When it is enabled the tservers move PostgreSQL to port 6433 and the Connection Manager listens on 5433.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager"),
+						},
+					},
 				},
 				Required: []string{"enabled"},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager"},
 	}
 }
 

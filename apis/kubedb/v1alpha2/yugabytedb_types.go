@@ -128,6 +128,36 @@ type YugabyteDBTopology struct {
 	// TServer is the yb-tserver role. It stores the tablets and runs the YSQL and YCQL query layers.
 	// +optional
 	TServer *YugabyteDBNode `json:"tserver,omitempty"`
+	// ReadReplica is an optional second group of tservers, a read replica cluster. Its tservers hold
+	// non-voting copies of every tablet in their own placement (placement_uuid), so they never take part in writes.
+	// +optional
+	ReadReplica *YugabyteDBReadReplica `json:"readReplica,omitempty"`
+}
+
+// YugabyteDBReadReplica configures the read replica tservers. The node fields (replicas, podTemplate, storageType,
+// storage, dataVolumes) behave as they do for the tservers. The pods run in the PetSet <name>-readreplica.
+type YugabyteDBReadReplica struct {
+	YugabyteDBNode `json:",inline"`
+
+	// PlacementUUID is the placement_uuid of the read replica tservers and of the read replica placement
+	// registered on the masters. Defaults to "rr". It cannot be changed once the read replica is created.
+	// +optional
+	PlacementUUID string `json:"placementUUID,omitempty"`
+
+	// Region overrides the region of the read replica placement. Defaults to spec.placement.region.
+	// +optional
+	Region string `json:"region,omitempty"`
+
+	// Zone overrides the zone of the read replica placement. By default the zone of every pod is read from its node.
+	// YugabyteDB needs the read replica zones to differ from the zones of the primary tservers.
+	// +optional
+	Zone string `json:"zone,omitempty"`
+
+	// ReplicationFactor is the total number of read replica copies of every tablet. Defaults to 1.
+	// It must not exceed the number of read replica pods.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	ReplicationFactor *int32 `json:"replicationFactor,omitempty"`
 }
 
 // YugabyteDBNode configures one role.
@@ -174,6 +204,24 @@ type YugabyteDBYSQLSpec struct {
 	// Enabled starts the YSQL API. It cannot be changed after the database is created.
 	// +kubebuilder:default=true
 	Enabled bool `json:"enabled"`
+
+	// ConnectionManager configures the YSQL Connection Manager, a built-in connection pooler. When it is enabled
+	// the tservers move PostgreSQL to port 6433 and the Connection Manager listens on 5433.
+	// +optional
+	ConnectionManager *YugabyteDBConnectionManager `json:"connectionManager,omitempty"`
+}
+
+// YugabyteDBConnectionManager configures the YSQL Connection Manager (--enable_ysql_conn_mgr).
+// It can only be changed by a Reconfigure request.
+type YugabyteDBConnectionManager struct {
+	// Enabled starts the Connection Manager.
+	Enabled bool `json:"enabled"`
+
+	// MaxClientConnections is --ysql_conn_mgr_max_client_connections, the number of client connections the
+	// Connection Manager accepts. YugabyteDB defaults to 10000.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	MaxClientConnections *int32 `json:"maxClientConnections,omitempty"`
 }
 
 // YugabyteDBYCQLSpec configures the YCQL API.
@@ -192,6 +240,11 @@ type YugabyteDBTLSConfig struct {
 	// ClientToNode encrypts the traffic between the clients and the tservers (YSQL and YCQL). Defaults to true.
 	// +optional
 	ClientToNode *bool `json:"clientToNode,omitempty"`
+	// Webserver serves the web UIs and the metrics endpoint of the masters (7000) and the tservers (9000) over HTTPS
+	// with the node certificate (--webserver_certificate_file and related flags). Defaults to false.
+	// It can only be changed by a ReconfigureTLS request.
+	// +optional
+	Webserver *bool `json:"webserver,omitempty"`
 }
 
 // YugabyteDBStatus defines the observed state of YugabyteDB.
@@ -209,12 +262,13 @@ type YugabyteDBStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=master;tserver
+// +kubebuilder:validation:Enum=master;tserver;readreplica
 type YugabyteDBRole string
 
 const (
-	YugabyteDBRoleMaster  YugabyteDBRole = "master"
-	YugabyteDBRoleTServer YugabyteDBRole = "tserver"
+	YugabyteDBRoleMaster      YugabyteDBRole = "master"
+	YugabyteDBRoleTServer     YugabyteDBRole = "tserver"
+	YugabyteDBRoleReadReplica YugabyteDBRole = "readreplica"
 )
 
 // +kubebuilder:validation:Enum=server;client

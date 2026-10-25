@@ -34,6 +34,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/validation"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	kmc "kmodules.xyz/client-go/conditions"
 	psapi "kubeops.dev/petset/apis/apps/v1"
@@ -194,6 +195,9 @@ func validateYugabyteDBImmutable(old, db *olddbapi.YugabyteDB) field.ErrorList {
 	if old.Spec.DisableSecurity != db.Spec.DisableSecurity {
 		allErr = append(allErr, field.Forbidden(spec.Child("disableSecurity"), "disableSecurity is immutable"))
 	}
+	if old.IsReadReplicaEnabled() && db.IsReadReplicaEnabled() && old.ReadReplicaPlacementUUID() != db.ReadReplicaPlacementUUID() {
+		allErr = append(allErr, field.Forbidden(spec.Child("topology", "readReplica", "placementUUID"), "placementUUID is immutable"))
+	}
 	for _, role := range db.Roles() {
 		p := spec.Child("topology", string(role))
 		if old.DataVolumes(role) != db.DataVolumes(role) {
@@ -249,6 +253,9 @@ func validateYugabyteDBOpsOwned(old, db *olddbapi.YugabyteDB) field.ErrorList {
 	if old.Replicas(olddbapi.YugabyteDBRoleTServer) != db.Replicas(olddbapi.YugabyteDBRoleTServer) {
 		allErr = append(allErr, field.Forbidden(spec.Child("topology", "tserver", "replicas"), "replicas "+hint+" (HorizontalScaling)"))
 	}
+	if old.IsReadReplicaEnabled() && db.IsReadReplicaEnabled() && old.Replicas(olddbapi.YugabyteDBRoleReadReplica) != db.Replicas(olddbapi.YugabyteDBRoleReadReplica) {
+		allErr = append(allErr, field.Forbidden(spec.Child("topology", "readReplica", "replicas"), "replicas "+hint+" (HorizontalScaling)"))
+	}
 	for _, role := range db.Roles() {
 		p := spec.Child("topology", string(role))
 		if !apiequality.Semantic.DeepEqual(yugabyteDBContainerResources(old, role), yugabyteDBContainerResources(db, role)) {
@@ -301,6 +308,10 @@ func (w *YugabyteDBCustomWebhook) validate(ctx context.Context, db, old *olddbap
 			allErr = append(allErr, field.Invalid(spec.Child("topology", "tserver", "replicas"), *t.TServer.Replicas,
 				fmt.Sprintf("tserver replicas must be at least replicationFactor (%d)", rf)))
 		}
+	}
+
+	if rr := db.Spec.Topology; rr != nil && rr.ReadReplica != nil {
+		allErr = append(allErr, validateYugabyteDBReadReplica(db)...)
 	}
 
 	for _, role := range db.Roles() {
@@ -393,6 +404,32 @@ func (w *YugabyteDBCustomWebhook) validate(ctx context.Context, db, old *olddbap
 		return warnings, yugabyteDBInvalid(db.Name, allErr)
 	}
 	return warnings, nil
+}
+
+// validateYugabyteDBReadReplica checks spec.topology.readReplica.
+func validateYugabyteDBReadReplica(db *olddbapi.YugabyteDB) field.ErrorList {
+	var allErr field.ErrorList
+	p := field.NewPath("spec", "topology", "readReplica")
+	rr := db.Spec.Topology.ReadReplica
+	if rr.ReplicationFactor != nil && *rr.ReplicationFactor < 1 {
+		allErr = append(allErr, field.Invalid(p.Child("replicationFactor"), *rr.ReplicationFactor, "the read replica replicationFactor must be at least 1"))
+	}
+	if rr.Replicas != nil {
+		n, rf := *rr.Replicas, db.ReadReplicaReplicationFactor()
+		switch {
+		case n < 0:
+			allErr = append(allErr, field.Invalid(p.Child("replicas"), n, "replicas must not be negative"))
+		case n != 0 && n < rf && rf >= 1:
+			allErr = append(allErr, field.Invalid(p.Child("replicas"), n,
+				fmt.Sprintf("read replica replicas must be 0 or at least the read replica replicationFactor (%d)", rf)))
+		}
+	}
+	if rr.PlacementUUID != "" {
+		if errs := validation.IsDNS1123Label(rr.PlacementUUID); len(errs) > 0 {
+			allErr = append(allErr, field.Invalid(p.Child("placementUUID"), rr.PlacementUUID, strings.Join(errs, "; ")))
+		}
+	}
+	return allErr
 }
 
 func (w *YugabyteDBCustomWebhook) validateVersion(ctx context.Context, db *olddbapi.YugabyteDB) error {

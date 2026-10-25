@@ -148,13 +148,56 @@ func (r *YugabyteDB) Node(role YugabyteDBRole) *YugabyteDBNode {
 			if r.Spec.Topology.TServer != nil {
 				return r.Spec.Topology.TServer
 			}
+		case YugabyteDBRoleReadReplica:
+			if r.Spec.Topology.ReadReplica != nil {
+				return &r.Spec.Topology.ReadReplica.YugabyteDBNode
+			}
 		}
 	}
 	return &YugabyteDBNode{}
 }
 
+// Roles returns the roles that have pods: the masters, the tservers and, when it is configured, the read replicas.
 func (r *YugabyteDB) Roles() []YugabyteDBRole {
-	return []YugabyteDBRole{YugabyteDBRoleMaster, YugabyteDBRoleTServer}
+	roles := []YugabyteDBRole{YugabyteDBRoleMaster, YugabyteDBRoleTServer}
+	if r.IsReadReplicaEnabled() {
+		roles = append(roles, YugabyteDBRoleReadReplica)
+	}
+	return roles
+}
+
+// IsReadReplicaEnabled reports whether spec.topology.readReplica is set.
+func (r *YugabyteDB) IsReadReplicaEnabled() bool {
+	return r.Spec.Topology != nil && r.Spec.Topology.ReadReplica != nil
+}
+
+// ReadReplicaPlacementUUID is the placement_uuid of the read replica tservers.
+func (r *YugabyteDB) ReadReplicaPlacementUUID() string {
+	if r.IsReadReplicaEnabled() && r.Spec.Topology.ReadReplica.PlacementUUID != "" {
+		return r.Spec.Topology.ReadReplica.PlacementUUID
+	}
+	return kubedb.YugabyteDBDefaultReadReplicaPlacementUUID
+}
+
+// ReadReplicaReplicationFactor is the number of read replica copies of every tablet. It is 0 without read replicas.
+func (r *YugabyteDB) ReadReplicaReplicationFactor() int32 {
+	if !r.IsReadReplicaEnabled() {
+		return 0
+	}
+	if rf := r.Spec.Topology.ReadReplica.ReplicationFactor; rf != nil {
+		return *rf
+	}
+	return 1
+}
+
+// IsReadReplica reports whether a role is the read replica role.
+func (role YugabyteDBRole) IsReadReplica() bool {
+	return role == YugabyteDBRoleReadReplica
+}
+
+// IsTServer reports whether the pods of a role run yb-tserver: the tservers and the read replicas.
+func (role YugabyteDBRole) IsTServer() bool {
+	return role == YugabyteDBRoleTServer || role == YugabyteDBRoleReadReplica
 }
 
 func (r *YugabyteDB) ReplicationFactor() int32 {
@@ -171,6 +214,9 @@ func (r *YugabyteDB) Replicas(role YugabyteDBRole) int32 {
 	}
 	if n := r.Node(role); n.Replicas != nil {
 		return *n.Replicas
+	}
+	if role == YugabyteDBRoleReadReplica {
+		return r.ReadReplicaReplicationFactor()
 	}
 	return r.ReplicationFactor()
 }
@@ -322,6 +368,14 @@ func (r *YugabyteDB) SetDefaults(kc client.Client) {
 	}
 	if r.Spec.Topology.TServer == nil {
 		r.Spec.Topology.TServer = &YugabyteDBNode{}
+	}
+	if rr := r.Spec.Topology.ReadReplica; rr != nil {
+		if rr.PlacementUUID == "" {
+			rr.PlacementUUID = kubedb.YugabyteDBDefaultReadReplicaPlacementUUID
+		}
+		if rr.Replicas == nil {
+			rr.Replicas = ptr.To(r.ReadReplicaReplicationFactor())
+		}
 	}
 	r.Spec.Topology.Master.Replicas = ptr.To(r.ReplicationFactor())
 	if r.Spec.Topology.TServer.Replicas == nil {

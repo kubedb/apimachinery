@@ -111,6 +111,8 @@ type YugabyteDBVolumeExpansionSpec struct {
 	Master *resource.Quantity `json:"master,omitempty"`
 	// volume specification for the tservers
 	TServer *resource.Quantity `json:"tserver,omitempty"`
+	// volume specification for the read replicas
+	ReadReplica *resource.Quantity `json:"readReplica,omitempty"`
 }
 
 // YugabyteDBUpdateVersionSpec contains the update version information of a YugabyteDB universe
@@ -154,6 +156,9 @@ type YugabyteDBHorizontalScalingSpec struct {
 	// Number of tservers
 	// +kubebuilder:validation:Minimum=1
 	TServer *int32 `json:"tserver,omitempty"`
+	// Number of read replica tservers. It needs spec.topology.readReplica on the database.
+	// +kubebuilder:validation:Minimum=0
+	ReadReplica *int32 `json:"readReplica,omitempty"`
 }
 
 type YugabyteDBVerticalScalingSpec struct {
@@ -161,6 +166,8 @@ type YugabyteDBVerticalScalingSpec struct {
 	Master *PodResources `json:"master,omitempty"`
 	// Resource spec for the tservers
 	TServer *PodResources `json:"tserver,omitempty"`
+	// Resource spec for the read replicas
+	ReadReplica *PodResources `json:"readReplica,omitempty"`
 	// Mode selects how the vertical scaling is actuated. Defaults to Restart.
 	// +optional
 	// +kubebuilder:default=Restart
