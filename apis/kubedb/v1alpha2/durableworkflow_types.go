@@ -159,18 +159,65 @@ type DurableWorkflowNode struct {
 
 // DurableWorkflowPersistence references the persistence stores.
 type DurableWorkflowPersistence struct {
-	// Default is the store for workflow state: Postgres, MySQL or Cassandra.
-	Default DurableWorkflowStore `json:"default"`
+	// Default is the store for workflow state: Postgres, MySQL or Cassandra. Its AppBinding reference is
+	// required unless Managed is set.
+	// +optional
+	Default DurableWorkflowStore `json:"default,omitempty"`
 
 	// Visibility is the store for visibility records. If omitted, the default store's server is used with
-	// a separate database or keyspace.
+	// a separate database or keyspace. It can't be set together with Managed.
 	// +optional
 	Visibility *DurableWorkflowStore `json:"visibility,omitempty"`
+
+	// Managed makes the operator create the backing database itself, a Postgres or MySQL named
+	// "<name>-db" that is owned by this DurableWorkflow, instead of referencing an existing one. It is exclusive
+	// with default.name and visibility, and immutable: the database is afterwards managed with its own
+	// ops requests (an UpdateVersion of the DurableWorkflow never touches it).
+	// +optional
+	Managed *DurableWorkflowManagedStore `json:"managed,omitempty"`
 
 	// KafkaRef is required by Cadence when the visibility store is Elasticsearch or OpenSearch,
 	// and is rejected for Temporal.
 	// +optional
 	KafkaRef *kmapi.ObjectReference `json:"kafkaRef,omitempty"`
+}
+
+// DurableWorkflowManagedEngine is the engine of a managed store.
+// +kubebuilder:validation:Enum=Postgres;MySQL
+type DurableWorkflowManagedEngine string
+
+const (
+	DurableWorkflowManagedPostgres DurableWorkflowManagedEngine = "Postgres"
+	DurableWorkflowManagedMySQL    DurableWorkflowManagedEngine = "MySQL"
+)
+
+// DurableWorkflowManagedStore describes the database the operator creates for the default store (and the visibility
+// store, which shares its server). The child inherits spec.deletionPolicy of the DurableWorkflow. Its connection
+// limit is sized from the topology when it is created.
+type DurableWorkflowManagedStore struct {
+	// Engine is Postgres (default) or MySQL.
+	// +kubebuilder:default=Postgres
+	// +optional
+	Engine DurableWorkflowManagedEngine `json:"engine,omitempty"`
+
+	// Version is the name of a PostgresVersion or MySQLVersion. If omitted, the newest catalog entry of the
+	// engine that is official, not deprecated, not end of life and needs no license is used. The choice is written
+	// to the spec on creation.
+	// +optional
+	Version string `json:"version,omitempty"`
+
+	// Replicas is the number of database pods: 1 (default) or 3 for a highly available database.
+	// Postgres forms a streaming replication cluster, MySQL a group replication cluster.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Storage specifies the volume of each database pod.
+	Storage core.PersistentVolumeClaimSpec `json:"storage"`
+
+	// PodTemplate is an optional configuration for the database pods.
+	// +optional
+	PodTemplate *ofstv2.PodTemplateSpec `json:"podTemplate,omitempty"`
 }
 
 // DurableWorkflowStore references a persistence store.

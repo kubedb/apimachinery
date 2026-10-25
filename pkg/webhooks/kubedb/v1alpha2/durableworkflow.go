@@ -29,6 +29,8 @@ import (
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	amv "kubedb.dev/apimachinery/pkg/validator"
 
+	core "k8s.io/api/core/v1"
+	apiequality "k8s.io/apimachinery/pkg/api/equality"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -177,7 +179,7 @@ func (w *DurableWorkflowCustomWebhook) validate(db, old *olddbapi.DurableWorkflo
 		}
 	}
 
-	allErr = append(allErr, w.validatePersistence(db, version)...)
+	allErr = append(allErr, w.validatePersistence(db, old, version)...)
 
 	if version != nil {
 		if t := db.Spec.Topology; t != nil && t.InternalFrontend != nil && !version.IsTemporal() {
@@ -218,7 +220,7 @@ func (w *DurableWorkflowCustomWebhook) validate(db, old *olddbapi.DurableWorkflo
 	return warnings, apierrors.NewInvalid(schema.GroupKind{Group: "kubedb.com", Kind: "DurableWorkflow"}, db.GetName(), allErr)
 }
 
-func (w *DurableWorkflowCustomWebhook) validatePersistence(db *olddbapi.DurableWorkflow, version *catalog.DurableWorkflowVersion) field.ErrorList {
+func (w *DurableWorkflowCustomWebhook) validatePersistence(db, old *olddbapi.DurableWorkflow, version *catalog.DurableWorkflowVersion) field.ErrorList {
 	var allErr field.ErrorList
 	p := field.NewPath("spec").Child("persistence")
 
@@ -239,7 +241,14 @@ func (w *DurableWorkflowCustomWebhook) validatePersistence(db *olddbapi.DurableW
 		}
 	}
 
-	validateStore(p.Child("default"), db.Spec.Persistence.Default, false)
+	if db.Spec.Persistence.Managed != nil {
+		allErr = append(allErr, w.validateManaged(db, old, version)...)
+	} else {
+		if old != nil && old.Spec.Persistence.Managed != nil {
+			allErr = append(allErr, field.Forbidden(p.Child("managed"), "managed can't be removed: the database it created is owned by the DurableWorkflow"))
+		}
+		validateStore(p.Child("default"), db.Spec.Persistence.Default, false)
+	}
 	if db.Spec.Persistence.Visibility != nil {
 		validateStore(p.Child("visibility"), *db.Spec.Persistence.Visibility, true)
 	}
@@ -255,6 +264,80 @@ func (w *DurableWorkflowCustomWebhook) validatePersistence(db *olddbapi.DurableW
 			allErr = append(allErr, field.Forbidden(p.Child("kafkaRef"), "kafkaRef is not used by Temporal"))
 		case version.IsCadence() && !isSearch && db.Spec.Persistence.KafkaRef != nil:
 			allErr = append(allErr, field.Forbidden(p.Child("kafkaRef"), "kafkaRef is only used with an Elasticsearch or OpenSearch visibility store"))
+		}
+	}
+	return allErr
+}
+
+// validateManaged checks spec.persistence.managed, the database the operator creates itself.
+func (w *DurableWorkflowCustomWebhook) validateManaged(db, old *olddbapi.DurableWorkflow, version *catalog.DurableWorkflowVersion) field.ErrorList {
+	var allErr field.ErrorList
+	p := field.NewPath("spec").Child("persistence")
+	m := db.Spec.Persistence.Managed
+	mp := p.Child("managed")
+
+	if d := db.Spec.Persistence.Default; d.ObjectReference != nil && (d.Name != "" || d.Namespace != "") {
+		allErr = append(allErr, field.Forbidden(p.Child("default"), "default.name and managed are exclusive: the managed database is "+db.ManagedStoreName()))
+	}
+	if db.Spec.Persistence.Visibility != nil {
+		allErr = append(allErr, field.Forbidden(p.Child("visibility"), "a managed database holds the visibility store as well; visibility can't be set with managed"))
+	}
+	if d := db.Spec.Persistence.Default; !d.ShouldCreateDatabase() {
+		allErr = append(allErr, field.Forbidden(p.Child("default").Child("createDatabase"), "the operator always creates the database and the user in a managed database"))
+	}
+
+	engine := m.ManagedEngine()
+	switch engine {
+	case olddbapi.DurableWorkflowManagedPostgres, olddbapi.DurableWorkflowManagedMySQL:
+		if t := db.Spec.Persistence.Default.Type; t != "" && t != olddbapi.DurableWorkflowStoreType(engine) {
+			allErr = append(allErr, field.Invalid(p.Child("default").Child("type"), t, fmt.Sprintf("must be %s, the engine of the managed database", engine)))
+		}
+		if version != nil && !version.SupportsStore(string(engine), false) {
+			allErr = append(allErr, field.Invalid(mp.Child("engine"), engine, fmt.Sprintf("%s is not supported as the default store of %s %s",
+				engine, version.Spec.Distribution, version.Spec.Version)))
+		}
+	default:
+		allErr = append(allErr, field.NotSupported(mp.Child("engine"), engine, []string{
+			string(olddbapi.DurableWorkflowManagedPostgres), string(olddbapi.DurableWorkflowManagedMySQL),
+		}))
+	}
+
+	if m.Version == "" {
+		allErr = append(allErr, field.Required(mp.Child("version"), "no version could be picked from the catalog; set one"))
+	} else if engine == olddbapi.DurableWorkflowManagedPostgres || engine == olddbapi.DurableWorkflowManagedMySQL {
+		var obj client.Object = &catalog.PostgresVersion{}
+		if engine == olddbapi.DurableWorkflowManagedMySQL {
+			obj = &catalog.MySQLVersion{}
+		}
+		if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: m.Version}, obj); err != nil {
+			allErr = append(allErr, field.Invalid(mp.Child("version"), m.Version, fmt.Sprintf("%sVersion not found", engine)))
+		}
+	}
+
+	switch r := m.ManagedReplicas(); {
+	case r < 1:
+		allErr = append(allErr, field.Invalid(mp.Child("replicas"), r, "number of replicas can not be 0 or less"))
+	case engine == olddbapi.DurableWorkflowManagedMySQL && (r == 2 || r > 9):
+		allErr = append(allErr, field.Invalid(mp.Child("replicas"), r, "MySQL group replication needs 3 to 9 replicas; use 1 for a single server"))
+	}
+	if _, ok := m.Storage.Resources.Requests[core.ResourceStorage]; !ok {
+		allErr = append(allErr, field.Required(mp.Child("storage").Child("resources").Child("requests").Key("storage"), "the size of the volume is required"))
+	}
+
+	if old != nil {
+		if o := old.Spec.Persistence.Managed; o == nil {
+			allErr = append(allErr, field.Forbidden(mp, "managed can't be added to an existing DurableWorkflow: it already uses the databases it references"))
+		} else {
+			// The version is filled in by the defaulter when it was left out.
+			if o.Version == "" {
+				o = o.DeepCopy()
+				o.Version = m.Version
+			}
+			if !apiequality.Semantic.DeepEqual(o, m) {
+				allErr = append(allErr, field.Forbidden(mp, fmt.Sprintf(
+					"managed is immutable: change the database %s with its own ops requests (UpdateVersion, VerticalScaling, VolumeExpansion, HorizontalScaling, Reconfigure)", db.ManagedStoreName(),
+				)))
+			}
 		}
 	}
 	return allErr
