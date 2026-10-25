@@ -260,6 +260,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().DocumentDBs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("druids"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Druids().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("durableworkflows"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().DurableWorkflows().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("elasticsearches"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Elasticsearches().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("etcds"):

@@ -53,6 +53,10 @@ func (c *FakeGitopsV1alpha1) Druids(namespace string) v1alpha1.DruidInterface {
 	return newFakeDruids(c, namespace)
 }
 
+func (c *FakeGitopsV1alpha1) DurableWorkflows(namespace string) v1alpha1.DurableWorkflowInterface {
+	return newFakeDurableWorkflows(c, namespace)
+}
+
 func (c *FakeGitopsV1alpha1) Elasticsearches(namespace string) v1alpha1.ElasticsearchInterface {
 	return newFakeElasticsearches(c, namespace)
 }
