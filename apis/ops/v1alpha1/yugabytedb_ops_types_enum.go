@@ -31,6 +31,8 @@ const (
 	YugabyteDBOpsRequestTypeFinalizeUpgrade YugabyteDBOpsRequestType = "FinalizeUpgrade"
 	// YugabyteDBOpsRequestTypeRollbackUpgrade is a YugabyteDBOpsRequestType of type RollbackUpgrade.
 	YugabyteDBOpsRequestTypeRollbackUpgrade YugabyteDBOpsRequestType = "RollbackUpgrade"
+	// YugabyteDBOpsRequestTypeStorageMigration is a YugabyteDBOpsRequestType of type StorageMigration.
+	YugabyteDBOpsRequestTypeStorageMigration YugabyteDBOpsRequestType = "StorageMigration"
 )
 
 var ErrInvalidYugabyteDBOpsRequestType = fmt.Errorf("not a valid YugabyteDBOpsRequestType, try [%s]", strings.Join(_YugabyteDBOpsRequestTypeNames, ", "))
@@ -46,6 +48,7 @@ var _YugabyteDBOpsRequestTypeNames = []string{
 	string(YugabyteDBOpsRequestTypeUpdateVersion),
 	string(YugabyteDBOpsRequestTypeFinalizeUpgrade),
 	string(YugabyteDBOpsRequestTypeRollbackUpgrade),
+	string(YugabyteDBOpsRequestTypeStorageMigration),
 }
 
 // YugabyteDBOpsRequestTypeNames returns a list of possible string values of YugabyteDBOpsRequestType.
@@ -68,6 +71,7 @@ func YugabyteDBOpsRequestTypeValues() []YugabyteDBOpsRequestType {
 		YugabyteDBOpsRequestTypeUpdateVersion,
 		YugabyteDBOpsRequestTypeFinalizeUpgrade,
 		YugabyteDBOpsRequestTypeRollbackUpgrade,
+		YugabyteDBOpsRequestTypeStorageMigration,
 	}
 }
 
@@ -94,6 +98,7 @@ var _YugabyteDBOpsRequestTypeValue = map[string]YugabyteDBOpsRequestType{
 	"UpdateVersion":     YugabyteDBOpsRequestTypeUpdateVersion,
 	"FinalizeUpgrade":   YugabyteDBOpsRequestTypeFinalizeUpgrade,
 	"RollbackUpgrade":   YugabyteDBOpsRequestTypeRollbackUpgrade,
+	"StorageMigration":  YugabyteDBOpsRequestTypeStorageMigration,
 }
 
 // ParseYugabyteDBOpsRequestType attempts to convert a string to a YugabyteDBOpsRequestType.

@@ -2887,6 +2887,8 @@ const (
 	// YugabyteDBConditionUpgradePendingFinalize is true on the database while an UpdateVersion with finalize: Manual
 	// waits for a FinalizeUpgrade or RollbackUpgrade request.
 	YugabyteDBConditionUpgradePendingFinalize = "UpgradePendingFinalize"
+	// YugabyteDBConditionStorageMigrationInProgress is true on the database while a StorageMigration moves the pods to a new StorageClass.
+	YugabyteDBConditionStorageMigrationInProgress = "StorageMigrationInProgress"
 )
 
 var (

@@ -10023,6 +10023,11 @@ func (in *YugabyteDBOpsRequestSpec) DeepCopyInto(out *YugabyteDBOpsRequestSpec) 
 		*out = new(YugabyteDBUpdateVersionSpec)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Migration != nil {
+		in, out := &in.Migration, &out.Migration
+		*out = new(StorageMigrationSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.FinalizeUpgrade != nil {
 		in, out := &in.FinalizeUpgrade, &out.FinalizeUpgrade
 		*out = new(FinalizeUpgradeSpec)

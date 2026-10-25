@@ -29,6 +29,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -492,8 +493,13 @@ func TestYugabyteDBOpsExamples(t *testing.T) {
 			if req.Spec.Type == opsapi.YugabyteDBOpsRequestTypeFinalizeUpgrade || req.Spec.Type == opsapi.YugabyteDBOpsRequestTypeRollbackUpgrade {
 				db.Status.Conditions = []kmapi.Condition{{Type: kubedb.YugabyteDBConditionUpgradePendingFinalize, Status: metav1.ConditionTrue}}
 			}
+			if req.Spec.VerticalScaling != nil && req.Spec.VerticalScaling.Mode == opsapi.VerticalScalingModeInPlace {
+				db.Spec.Topology.TServer.PodTemplate.Spec.Containers = []core.Container{{Name: "yb-tserver", Resources: core.ResourceRequirements{
+					Limits: core.ResourceList{core.ResourceMemory: resource.MustParse("4Gi")}, Requests: core.ResourceList{core.ResourceMemory: resource.MustParse("4Gi")},
+				}}}
+			}
 			w := ybOpsWebhook(
-				t, db,
+				t, db, &storagev1.StorageClass{ObjectMeta: metav1.ObjectMeta{Name: "fast-ssd"}},
 				&core.Secret{ObjectMeta: metav1.ObjectMeta{Name: "yb-custom-config", Namespace: "demo"}, Data: map[string][]byte{"tserver.flags": []byte("--ysql_max_connections=300")}},
 				&core.Secret{ObjectMeta: metav1.ObjectMeta{Name: "yb-new-auth", Namespace: "demo"}, Data: map[string][]byte{"username": []byte("yugabyte"), "password": []byte("x")}},
 			)

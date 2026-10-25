@@ -545,6 +545,23 @@ const (
 	YugabyteDBApplyConnectionManager = "ApplyConnectionManager"
 	// YugabyteDBApplyWebserverTLS is the step that switches the web UIs between HTTP and HTTPS, which needs a rolling restart.
 	YugabyteDBApplyWebserverTLS = "ApplyWebserverTLS"
+	// StorageMigration. The pods move one at a time: tservers and read replicas first, then masters.
+	// YugabyteDBMigrateUpdatePetSets is the step that sets the new StorageClass in the volumeClaimTemplates of the PetSets.
+	YugabyteDBMigrateUpdatePetSets = "MigrateUpdatePetSets"
+	// YugabyteDBMigrateBlacklistPod is the per pod step that blacklists the tserver so that its tablets move away.
+	YugabyteDBMigrateBlacklistPod = "MigrateBlacklistPod"
+	// YugabyteDBMigrateDrainPod is the per pod step that waits until the tablets and leaders left the tserver.
+	YugabyteDBMigrateDrainPod = "MigrateDrainPod"
+	// YugabyteDBMigrateDeletePod is the per pod step that deletes the pod and its PVCs.
+	YugabyteDBMigrateDeletePod = "MigrateDeletePod"
+	// YugabyteDBMigrateRecreatePod is the per pod step that waits for the PetSet to recreate the pod on the new StorageClass.
+	YugabyteDBMigrateRecreatePod = "MigrateRecreatePod"
+	// YugabyteDBMigrateUnblacklistPod is the per pod step that removes the tserver from the blacklist.
+	YugabyteDBMigrateUnblacklistPod = "MigrateUnblacklistPod"
+	// YugabyteDBMigrateWaitBalancer is the per pod step that waits until the load balancer is idle before the next pod is migrated.
+	YugabyteDBMigrateWaitBalancer = "MigrateWaitBalancer"
+	// YugabyteDBMigrateMasterReplace is the per master step that deletes the pod and its PVC and waits until the rebuilt master is a VOTER.
+	YugabyteDBMigrateMasterReplace = "MigrateMasterReplace"
 	// YugabyteDBRollReadReplicas is the step that restarts the read replica tservers one at a time, after the tservers.
 	YugabyteDBRollReadReplicas = "RollReadReplicas"
 	// YugabyteDBScaleReadReplicas is the step that changes the number of read replica pods.

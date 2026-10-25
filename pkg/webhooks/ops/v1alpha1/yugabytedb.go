@@ -33,6 +33,7 @@ import (
 	vsecretapi "go.virtual-secrets.dev/apimachinery/apis/virtual/v1alpha1"
 	"gomodules.xyz/x/arrays"
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	apiequality "k8s.io/apimachinery/pkg/api/equality"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -165,6 +166,10 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateCreateOrUpdate(ctx context.C
 		add("horizontalScaling", w.validateHorizontalScaling(db, req))
 	case opsapi.YugabyteDBOpsRequestTypeVerticalScaling:
 		add("verticalScaling", w.validateVerticalScaling(db, req))
+	case opsapi.YugabyteDBOpsRequestTypeStorageMigration:
+		warns, err := w.validateStorageMigration(ctx, db, req)
+		warnings = append(warnings, warns...)
+		add("migration", err)
 	case opsapi.YugabyteDBOpsRequestTypeVolumeExpansion:
 		add("volumeExpansion", w.validateVolumeExpansion(db, req))
 	case opsapi.YugabyteDBOpsRequestTypeReconfigure:
@@ -377,6 +382,11 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateVerticalScaling(db *dbapi.Yu
 	if vs == nil {
 		return errors.New("spec.verticalScaling nil not supported in VerticalScaling type")
 	}
+	switch vs.Mode {
+	case "", opsapi.VerticalScalingModeRestart, opsapi.VerticalScalingModeInPlace:
+	default:
+		return fmt.Errorf("spec.verticalScaling.mode %q is not valid, use %s or %s", vs.Mode, opsapi.VerticalScalingModeRestart, opsapi.VerticalScalingModeInPlace)
+	}
 	if vs.Master == nil && vs.TServer == nil && vs.ReadReplica == nil {
 		return errors.New("at least one of spec.verticalScaling.master, spec.verticalScaling.tserver and spec.verticalScaling.readReplica must be set")
 	}
@@ -398,7 +408,100 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateVerticalScaling(db *dbapi.Yu
 			return err
 		}
 	}
+	if vs.Mode == opsapi.VerticalScalingModeInPlace && yugabyteDBOpsPending(req) {
+		// Only the CPU can be resized in place. The memory limit of the processes is derived from the container
+		// memory when they start (--memory_limit_hard_bytes and the PostgreSQL memory), so a new memory value
+		// needs a restart.
+		for role, pr := range map[dbapi.YugabyteDBRole]*opsapi.PodResources{
+			dbapi.YugabyteDBRoleMaster: vs.Master, dbapi.YugabyteDBRoleTServer: vs.TServer, dbapi.YugabyteDBRoleReadReplica: vs.ReadReplica,
+		} {
+			if pr == nil {
+				continue
+			}
+			cur := yugabyteDBContainerResources(db, role)
+			for _, c := range []struct {
+				kind     string
+				old, new core.ResourceList
+			}{{"limits", cur.Limits, pr.Resources.Limits}, {"requests", cur.Requests, pr.Resources.Requests}} {
+				want, ok := c.new[core.ResourceMemory]
+				if !ok {
+					continue
+				}
+				have := c.old[core.ResourceMemory]
+				if want.Cmp(have) != 0 {
+					return fmt.Errorf("spec.verticalScaling.%s.resources.%s.memory (%s) differs from the current value (%s): only the CPU can be resized in place, use mode Restart to change the memory",
+						role, c.kind, want.String(), have.String())
+				}
+			}
+		}
+	}
 	return nil
+}
+
+func yugabyteDBContainerResources(db *dbapi.YugabyteDB, role dbapi.YugabyteDBRole) core.ResourceRequirements {
+	for _, c := range db.Node(role).PodTemplate.Spec.Containers {
+		if c.Name == db.ContainerName(role) {
+			return c.Resources
+		}
+	}
+	return core.ResourceRequirements{}
+}
+
+// validateStorageMigration checks a StorageMigration request. It warns when the tservers cannot absorb the data of
+// the pod that is being migrated.
+func (w *YugabyteDBOpsRequestCustomWebhook) validateStorageMigration(ctx context.Context, db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) (admission.Warnings, error) {
+	m := req.Spec.Migration
+	if m == nil {
+		return nil, errors.New("spec.migration nil not supported in StorageMigration type")
+	}
+	if m.StorageClassName == nil || *m.StorageClassName == "" {
+		return nil, errors.New("spec.migration.storageClassName is required")
+	}
+	switch m.OldPVReclaimPolicy {
+	case "", core.PersistentVolumeReclaimRetain, core.PersistentVolumeReclaimDelete:
+	default:
+		return nil, fmt.Errorf("spec.migration.oldPVReclaimPolicy %q is not valid, use Retain or Delete", m.OldPVReclaimPolicy)
+	}
+	if req.Spec.Timeout == nil {
+		return nil, errors.New("spec.timeout is required for a StorageMigration, the operation moves the data of every pod, set it according to the size of the database")
+	}
+	for _, role := range db.Roles() {
+		if db.Node(role).StorageType == dbapi.StorageTypeEphemeral {
+			return nil, fmt.Errorf("the %s uses Ephemeral storage and has no volume to migrate", role)
+		}
+	}
+	var newSC storagev1.StorageClass
+	if err := w.DefaultClient.Get(ctx, types.NamespacedName{Name: *m.StorageClassName}, &newSC); err != nil {
+		if apierrors.IsNotFound(err) {
+			return nil, fmt.Errorf("storage class %q not found", *m.StorageClassName)
+		}
+		return nil, err
+	}
+	if !yugabyteDBOpsPending(req) {
+		return nil, nil
+	}
+	same := true
+	for _, role := range db.Roles() {
+		if db.GetStorageClassName(role) != *m.StorageClassName {
+			same = false
+		}
+	}
+	if same {
+		return nil, fmt.Errorf("every volume of the database already uses the storage class %q", *m.StorageClassName)
+	}
+	if cur := db.GetStorageClassName(dbapi.YugabyteDBRoleTServer); cur != "" {
+		var oldSC storagev1.StorageClass
+		if err := w.DefaultClient.Get(ctx, types.NamespacedName{Name: cur}, &oldSC); err == nil &&
+			oldSC.VolumeBindingMode != nil && *oldSC.VolumeBindingMode == storagev1.VolumeBindingWaitForFirstConsumer &&
+			(newSC.VolumeBindingMode == nil || *newSC.VolumeBindingMode != storagev1.VolumeBindingWaitForFirstConsumer) {
+			return nil, fmt.Errorf("the volume binding mode of storage class %q must be WaitForFirstConsumer, as it is for %q", newSC.Name, cur)
+		}
+	}
+	var warnings admission.Warnings
+	if n, rf := db.Replicas(dbapi.YugabyteDBRoleTServer), db.ReplicationFactor(); n < rf+1 {
+		warnings = append(warnings, fmt.Sprintf("the database has %d tservers, fewer than the replication factor plus one (%d): the data of a tserver cannot be moved off it before its volume is replaced, so the migration may not complete", n, rf+1))
+	}
+	return warnings, nil
 }
 
 func (w *YugabyteDBOpsRequestCustomWebhook) validateVolumeExpansion(db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {

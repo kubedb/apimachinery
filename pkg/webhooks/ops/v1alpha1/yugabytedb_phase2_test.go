@@ -25,6 +25,7 @@ import (
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
 	core "k8s.io/api/core/v1"
+	storagev1 "k8s.io/api/storage/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
@@ -237,5 +238,97 @@ func TestYugabyteDBOpsWebserverTLS(t *testing.T) {
 			r.Spec.TLS.Remove = true
 			return r
 		}, want: "one is allowed to run one operation"},
+	})
+}
+
+func TestYugabyteDBOpsStorageMigration(t *testing.T) {
+	sc := func(name string, mode storagev1.VolumeBindingMode) *storagev1.StorageClass {
+		return &storagev1.StorageClass{ObjectMeta: metav1.ObjectMeta{Name: name}, VolumeBindingMode: &mode}
+	}
+	mig := func(class string, timeout bool) func() *opsapi.YugabyteDBOpsRequest {
+		return func() *opsapi.YugabyteDBOpsRequest {
+			r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeStorageMigration)
+			r.Spec.Migration = &opsapi.StorageMigrationSpec{StorageClassName: ptr.To(class)}
+			if timeout {
+				r.Spec.Timeout = &metav1.Duration{Duration: 3600e9}
+			}
+			return r
+		}
+	}
+	withClass := func(class string) *dbapi.YugabyteDB {
+		db := ybOpsDB(nil, false)
+		for _, n := range []*dbapi.YugabyteDBNode{db.Spec.Topology.Master, db.Spec.Topology.TServer} {
+			n.Storage.StorageClassName = ptr.To(class)
+		}
+		return db
+	}
+	ephemeral := ybOpsDB(nil, false)
+	ephemeral.Spec.Topology.TServer.StorageType = dbapi.StorageTypeEphemeral
+	cases := []struct {
+		name string
+		db   *dbapi.YugabyteDB
+		req  func() *opsapi.YugabyteDBOpsRequest
+		want string
+	}{
+		{name: "migrate", db: withClass("old"), req: mig("new", true)},
+		{name: "no timeout", db: withClass("old"), req: mig("new", false), want: "spec.timeout is required"},
+		{name: "unknown class", db: withClass("old"), req: mig("nope", true), want: "not found"},
+		{name: "same class", db: withClass("new"), req: mig("new", true), want: "already uses"},
+		{name: "no spec", db: withClass("old"), req: func() *opsapi.YugabyteDBOpsRequest {
+			return ybOpsReq(opsapi.YugabyteDBOpsRequestTypeStorageMigration)
+		}, want: "spec.migration nil"},
+		{name: "empty class", db: withClass("old"), req: mig("", true), want: "storageClassName is required"},
+		{name: "ephemeral", db: ephemeral, req: mig("new", true), want: "Ephemeral"},
+		{name: "bad reclaim policy", db: withClass("old"), req: func() *opsapi.YugabyteDBOpsRequest {
+			r := mig("new", true)()
+			r.Spec.Migration.OldPVReclaimPolicy = "Recycle"
+			return r
+		}, want: "oldPVReclaimPolicy"},
+		{name: "binding mode", db: withClass("old"), req: mig("immediate", true), want: "WaitForFirstConsumer"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			w := ybOpsWebhook(t, tc.db, sc("new", storagev1.VolumeBindingWaitForFirstConsumer), sc("old", storagev1.VolumeBindingWaitForFirstConsumer), sc("immediate", storagev1.VolumeBindingImmediate))
+			_, err := w.ValidateCreate(context.TODO(), tc.req())
+			expectErr(t, err, tc.want)
+		})
+	}
+
+	t.Run("warns with too few tservers", func(t *testing.T) {
+		db := withClass("old")
+		db.Spec.Topology.TServer.Replicas = ptr.To(int32(3))
+		w := ybOpsWebhook(t, db, sc("new", storagev1.VolumeBindingWaitForFirstConsumer), sc("old", storagev1.VolumeBindingWaitForFirstConsumer))
+		warns, err := w.ValidateCreate(context.TODO(), mig("new", true)())
+		if err != nil || len(warns) != 1 {
+			t.Fatalf("want one warning, got %v, %v", warns, err)
+		}
+	})
+}
+
+func TestYugabyteDBOpsVerticalScalingInPlace(t *testing.T) {
+	db := ybOpsDB(nil, false)
+	db.Spec.Topology.TServer.PodTemplate.Spec.Containers = []core.Container{{Name: "yb-tserver", Resources: core.ResourceRequirements{
+		Limits:   core.ResourceList{core.ResourceCPU: resource.MustParse("2"), core.ResourceMemory: resource.MustParse("4Gi")},
+		Requests: core.ResourceList{core.ResourceCPU: resource.MustParse("1"), core.ResourceMemory: resource.MustParse("4Gi")},
+	}}}
+	vs := func(mode opsapi.VerticalScalingMode, cpu, mem, reqMem string) func() *opsapi.YugabyteDBOpsRequest {
+		return func() *opsapi.YugabyteDBOpsRequest {
+			r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeVerticalScaling)
+			res := core.ResourceRequirements{Limits: core.ResourceList{core.ResourceCPU: resource.MustParse(cpu), core.ResourceMemory: resource.MustParse(mem)}}
+			if reqMem != "" {
+				res.Requests = core.ResourceList{core.ResourceMemory: resource.MustParse(reqMem)}
+			}
+			r.Spec.VerticalScaling = &opsapi.YugabyteDBVerticalScalingSpec{Mode: mode, TServer: &opsapi.PodResources{Resources: res}}
+			return r
+		}
+	}
+	runYBOpsCases(t, []ybOpsCase{
+		{name: "in place cpu only", db: db, req: vs(opsapi.VerticalScalingModeInPlace, "4", "4Gi", "4Gi")},
+		{name: "in place memory limit", db: db, req: vs(opsapi.VerticalScalingModeInPlace, "4", "8Gi", ""), want: "only the CPU can be resized in place"},
+		{name: "in place memory request", db: db, req: vs(opsapi.VerticalScalingModeInPlace, "4", "4Gi", "2Gi"), want: "only the CPU can be resized in place"},
+		{name: "restart mode memory", db: db, req: vs(opsapi.VerticalScalingModeRestart, "4", "8Gi", "")},
+		{name: "default mode memory", db: db, req: vs("", "4", "8Gi", "")},
+		{name: "in place memory while running", db: db, phase: opsapi.OpsRequestPhaseProgressing, req: vs(opsapi.VerticalScalingModeInPlace, "4", "8Gi", "")},
+		{name: "unknown mode", db: db, req: vs("Hot", "4", "4Gi", ""), want: "is not valid"},
 	})
 }

@@ -76,6 +76,10 @@ type YugabyteDBOpsRequestSpec struct {
 	VolumeExpansion *YugabyteDBVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for upgrading YugabyteDB
 	UpdateVersion *YugabyteDBUpdateVersionSpec `json:"updateVersion,omitempty"`
+	// Specifies information necessary for migrating the data volumes to another StorageClass. It applies to the
+	// masters, the tservers and the read replicas. The pods are migrated one at a time, which moves all the data of a
+	// tserver for every pod.
+	Migration *StorageMigrationSpec `json:"migration,omitempty"`
 	// Specifies information necessary for finalizing an upgrade that was started with finalize: Manual.
 	// The upgrade is finalized and can not be rolled back after it.
 	FinalizeUpgrade *FinalizeUpgradeSpec `json:"finalizeUpgrade,omitempty"`
@@ -172,6 +176,8 @@ type YugabyteDBVerticalScalingSpec struct {
 	// Resource spec for the read replicas
 	ReadReplica *PodResources `json:"readReplica,omitempty"`
 	// Mode selects how the vertical scaling is actuated. Defaults to Restart.
+	// InPlace resizes the CPU of the running pods without a restart. The memory limit of YugabyteDB is fixed by
+	// flags when the process starts, so an InPlace request that changes the memory is rejected.
 	// +optional
 	// +kubebuilder:default=Restart
 	Mode VerticalScalingMode `json:"mode,omitempty"`
@@ -191,8 +197,8 @@ type YugabyteDBTLSSpec struct {
 	Remove bool `json:"remove,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;HorizontalScaling;VerticalScaling;VolumeExpansion;UpdateVersion;FinalizeUpgrade;RollbackUpgrade
-// ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling,VerticalScaling,VolumeExpansion,UpdateVersion,FinalizeUpgrade,RollbackUpgrade)
+// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;HorizontalScaling;VerticalScaling;VolumeExpansion;UpdateVersion;FinalizeUpgrade;RollbackUpgrade;StorageMigration
+// ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling,VerticalScaling,VolumeExpansion,UpdateVersion,FinalizeUpgrade,RollbackUpgrade,StorageMigration)
 type YugabyteDBOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
