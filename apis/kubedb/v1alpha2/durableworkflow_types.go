@@ -17,6 +17,9 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"encoding/json"
+	"reflect"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -424,4 +427,18 @@ func (m *DurableWorkflow) SetCondition(cond kmapi.Condition) {
 
 func (m *DurableWorkflow) RemoveCondition(typ string) {
 	m.Status.Conditions = removeCondition(m.Status.Conditions, typ)
+}
+
+// MarshalJSON leaves out an empty default store. With managed persistence there is no reference, and the empty struct
+// would be sent as {}, which the CRD refuses because name is required in a reference.
+func (p DurableWorkflowPersistence) MarshalJSON() ([]byte, error) {
+	type plain DurableWorkflowPersistence
+	out := struct {
+		plain
+		Default *DurableWorkflowStore `json:"default,omitempty"`
+	}{plain: plain(p)}
+	if !reflect.DeepEqual(p.Default, DurableWorkflowStore{}) {
+		out.Default = &p.Default
+	}
+	return json.Marshal(out)
 }
