@@ -118,6 +118,53 @@ type YugabyteDBSpec struct {
 	// Init is used to initialize the database from a script.
 	// +optional
 	Init *InitSpec `json:"init,omitempty"`
+
+	// PITR lists the point in time recovery schedules, one for each database. Every entry becomes a YugabyteDB
+	// snapshot schedule (create_snapshot_schedule). A Rewind YugabyteDBOpsRequest restores a database to a time
+	// inside the retention of its schedule, and a Clone request copies a database as of such a time.
+	// YugabyteDB allows at most one schedule for each database. A rewind can not go back past a YSQL upgrade
+	// (upgrade_ysql), and roles and tablespaces are not rewound.
+	// +listType=map
+	// +listMapKey=database
+	// +optional
+	PITR []YugabyteDBPITR `json:"pitr,omitempty"`
+}
+
+// YugabyteDBPITRKind is the API of the database or keyspace that a PITR schedule protects.
+// +kubebuilder:validation:Enum=YSQL;YCQL
+type YugabyteDBPITRKind string
+
+const (
+	YugabyteDBPITRKindYSQL YugabyteDBPITRKind = "YSQL"
+	YugabyteDBPITRKindYCQL YugabyteDBPITRKind = "YCQL"
+)
+
+// YugabyteDBPITR is the point in time recovery schedule of one database.
+type YugabyteDBPITR struct {
+	// Database is the YSQL database or the YCQL keyspace to protect.
+	Database string `json:"database"`
+	// Kind is YSQL (default) or YCQL.
+	// +kubebuilder:default=YSQL
+	// +optional
+	Kind YugabyteDBPITRKind `json:"kind,omitempty"`
+	// IntervalMinutes is the time between two snapshots.
+	// +kubebuilder:validation:Minimum=1
+	IntervalMinutes int32 `json:"intervalMinutes"`
+	// RetentionMinutes is how far back the database can be rewound. It must be at least IntervalMinutes.
+	// +kubebuilder:validation:Minimum=1
+	RetentionMinutes int32 `json:"retentionMinutes"`
+}
+
+// YugabyteDBPITRStatus is the observed state of the PITR schedule of one database.
+type YugabyteDBPITRStatus struct {
+	// Database is the database or keyspace of the schedule.
+	Database string `json:"database"`
+	// ScheduleID is the ID of the snapshot schedule in YugabyteDB.
+	// +optional
+	ScheduleID string `json:"scheduleID,omitempty"`
+	// LastSnapshotTime is the time of the latest snapshot of the schedule.
+	// +optional
+	LastSnapshotTime *metav1.Time `json:"lastSnapshotTime,omitempty"`
 }
 
 // YugabyteDBTopology configures the two roles of a YugabyteDB universe.
@@ -260,6 +307,12 @@ type YugabyteDBStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+
+	// PITR is the state of the snapshot schedules of spec.pitr.
+	// +listType=map
+	// +listMapKey=database
+	// +optional
+	PITR []YugabyteDBPITRStatus `json:"pitr,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=master;tserver;readreplica

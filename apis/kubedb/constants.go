@@ -2874,6 +2874,9 @@ const (
 	YugabyteDBTLSKeyFile                 = YugabyteDBTLSDir + "/node." + YugabyteDBCertNodeFilename + ".key"
 	YugabyteDBTLSCAFile                  = YugabyteDBTLSDir + "/ca.crt"
 
+	// YugabyteDBCloneMinVersion is the first YugabyteDB release that supports CREATE DATABASE ... TEMPLATE ... AS OF.
+	YugabyteDBCloneMinVersion = "2024.2.0"
+
 	// YugabyteDBDefaultReadReplicaPlacementUUID is the placement_uuid of the read replica tservers.
 	YugabyteDBDefaultReadReplicaPlacementUUID = "rr"
 	// YugabyteDBPlacementUUIDFlag is the tserver flag that assigns a tserver to a placement.
@@ -2887,6 +2890,10 @@ const (
 	// YugabyteDBConditionUpgradePendingFinalize is true on the database while an UpdateVersion with finalize: Manual
 	// waits for a FinalizeUpgrade or RollbackUpgrade request.
 	YugabyteDBConditionUpgradePendingFinalize = "UpgradePendingFinalize"
+	// YugabyteDBConditionPITRReady is true while every snapshot schedule of spec.pitr exists in YugabyteDB.
+	YugabyteDBConditionPITRReady = "PITRReady"
+	// YugabyteDBConditionRewindInProgress is true on the database while a Rewind restores a snapshot schedule.
+	YugabyteDBConditionRewindInProgress = "RewindInProgress"
 	// YugabyteDBConditionStorageMigrationInProgress is true on the database while a StorageMigration moves the pods to a new StorageClass.
 	YugabyteDBConditionStorageMigrationInProgress = "StorageMigrationInProgress"
 )

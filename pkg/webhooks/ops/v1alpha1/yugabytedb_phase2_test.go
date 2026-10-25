@@ -18,7 +18,9 @@ package v1alpha1
 
 import (
 	"context"
+	"strings"
 	"testing"
+	"time"
 
 	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
@@ -330,5 +332,76 @@ func TestYugabyteDBOpsVerticalScalingInPlace(t *testing.T) {
 		{name: "default mode memory", db: db, req: vs("", "4", "8Gi", "")},
 		{name: "in place memory while running", db: db, phase: opsapi.OpsRequestPhaseProgressing, req: vs(opsapi.VerticalScalingModeInPlace, "4", "8Gi", "")},
 		{name: "unknown mode", db: db, req: vs("Hot", "4", "4Gi", ""), want: "is not valid"},
+	})
+}
+
+func ybPITRDB() *dbapi.YugabyteDB {
+	db := ybOpsDB(nil, false)
+	db.Spec.PITR = []dbapi.YugabyteDBPITR{{Database: "app", Kind: dbapi.YugabyteDBPITRKindYSQL, IntervalMinutes: 60, RetentionMinutes: 120}}
+	return db
+}
+
+func TestYugabyteDBOpsRewind(t *testing.T) {
+	rewind := func(mut func(r *opsapi.YugabyteDBRewindSpec)) func() *opsapi.YugabyteDBOpsRequest {
+		return func() *opsapi.YugabyteDBOpsRequest {
+			r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeRewind)
+			r.Spec.Rewind = &opsapi.YugabyteDBRewindSpec{Database: "app", Minus: &metav1.Duration{Duration: 15 * time.Minute}}
+			if mut != nil {
+				mut(r.Spec.Rewind)
+			}
+			return r
+		}
+	}
+	at := func(d time.Duration) *metav1.Time { return &metav1.Time{Time: time.Now().Add(d)} }
+	runYBOpsCases(t, []ybOpsCase{
+		{name: "minus", db: ybPITRDB(), req: rewind(nil)},
+		{name: "restore time", db: ybPITRDB(), req: rewind(func(r *opsapi.YugabyteDBRewindSpec) { r.Minus, r.RestoreTime = nil, at(-30*time.Minute) })},
+		{name: "both", db: ybPITRDB(), req: rewind(func(r *opsapi.YugabyteDBRewindSpec) { r.RestoreTime = at(-time.Minute) }), want: "exactly one of"},
+		{name: "neither", db: ybPITRDB(), req: rewind(func(r *opsapi.YugabyteDBRewindSpec) { r.Minus = nil }), want: "exactly one of"},
+		{name: "minus too long", db: ybPITRDB(), req: rewind(func(r *opsapi.YugabyteDBRewindSpec) { r.Minus = &metav1.Duration{Duration: 3 * time.Hour} }), want: "longer than the retention"},
+		{name: "minus negative", db: ybPITRDB(), req: rewind(func(r *opsapi.YugabyteDBRewindSpec) { r.Minus = &metav1.Duration{Duration: -time.Minute} }), want: "must be positive"},
+		{name: "future", db: ybPITRDB(), req: rewind(func(r *opsapi.YugabyteDBRewindSpec) { r.Minus, r.RestoreTime = nil, at(time.Hour) }), want: "in the future"},
+		{name: "too old", db: ybPITRDB(), req: rewind(func(r *opsapi.YugabyteDBRewindSpec) { r.Minus, r.RestoreTime = nil, at(-3*time.Hour) }), want: "older than the retention"},
+		{name: "too old while running", db: ybPITRDB(), phase: opsapi.OpsRequestPhaseProgressing, req: rewind(func(r *opsapi.YugabyteDBRewindSpec) { r.Minus, r.RestoreTime = nil, at(-3*time.Hour) })},
+		{name: "no schedule", db: ybPITRDB(), req: rewind(func(r *opsapi.YugabyteDBRewindSpec) { r.Database = "other" }), want: "has no schedule"},
+		{name: "no database", db: ybPITRDB(), req: rewind(func(r *opsapi.YugabyteDBRewindSpec) { r.Database = "" }), want: "database is required"},
+		{name: "no spec", db: ybPITRDB(), req: func() *opsapi.YugabyteDBOpsRequest { return ybOpsReq(opsapi.YugabyteDBOpsRequestTypeRewind) }, want: "spec.rewind nil"},
+	})
+	t.Run("warns about the limits", func(t *testing.T) {
+		w := ybOpsWebhook(t, ybPITRDB())
+		warns, err := w.ValidateCreate(context.TODO(), rewind(nil)())
+		if err != nil || len(warns) != 1 || !strings.Contains(warns[0], "upgrade_ysql") {
+			t.Fatalf("unexpected %v %v", warns, err)
+		}
+	})
+}
+
+func TestYugabyteDBOpsClone(t *testing.T) {
+	clone := func(mut func(c *opsapi.YugabyteDBCloneSpec)) func() *opsapi.YugabyteDBOpsRequest {
+		return func() *opsapi.YugabyteDBOpsRequest {
+			r := ybOpsReq(opsapi.YugabyteDBOpsRequestTypeClone)
+			r.Spec.Clone = &opsapi.YugabyteDBCloneSpec{SourceDatabase: "app", TargetDatabase: "app_copy"}
+			if mut != nil {
+				mut(r.Spec.Clone)
+			}
+			return r
+		}
+	}
+	at := func(d time.Duration) *metav1.Time { return &metav1.Time{Time: time.Now().Add(d)} }
+	noYSQL := ybPITRDB()
+	noYSQL.Spec.YSQL = &dbapi.YugabyteDBYSQLSpec{Enabled: false}
+	old := ybPITRDB()
+	old.Spec.Version = "2024.1.0"
+	runYBOpsCases(t, []ybOpsCase{
+		{name: "now", req: clone(nil)},
+		{name: "as of", db: ybPITRDB(), req: clone(func(c *opsapi.YugabyteDBCloneSpec) { c.AsOf = at(-30 * time.Minute) })},
+		{name: "as of without schedule", req: clone(func(c *opsapi.YugabyteDBCloneSpec) { c.AsOf = at(-30 * time.Minute) }), want: "needs a schedule"},
+		{name: "as of too old", db: ybPITRDB(), req: clone(func(c *opsapi.YugabyteDBCloneSpec) { c.AsOf = at(-3 * time.Hour) }), want: "older than the retention"},
+		{name: "as of future", db: ybPITRDB(), req: clone(func(c *opsapi.YugabyteDBCloneSpec) { c.AsOf = at(time.Hour) }), want: "in the future"},
+		{name: "same name", req: clone(func(c *opsapi.YugabyteDBCloneSpec) { c.TargetDatabase = "app" }), want: "must differ"},
+		{name: "no target", req: clone(func(c *opsapi.YugabyteDBCloneSpec) { c.TargetDatabase = "" }), want: "are required"},
+		{name: "no ysql", db: noYSQL, req: clone(nil), want: "needs YSQL"},
+		{name: "old version", db: old, req: clone(nil), want: "2024.2.0 or later"},
+		{name: "no spec", req: func() *opsapi.YugabyteDBOpsRequest { return ybOpsReq(opsapi.YugabyteDBOpsRequestTypeClone) }, want: "spec.clone nil"},
 	})
 }

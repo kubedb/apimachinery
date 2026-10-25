@@ -332,6 +332,34 @@ func (r *YugabyteDB) GetWebserverScheme() string {
 	return "http"
 }
 
+// PITRFor returns the PITR schedule of a database, or nil.
+func (r *YugabyteDB) PITRFor(database string) *YugabyteDBPITR {
+	for i := range r.Spec.PITR {
+		if r.Spec.PITR[i].Database == database {
+			return &r.Spec.PITR[i]
+		}
+	}
+	return nil
+}
+
+// PITRStatusFor returns the observed state of the PITR schedule of a database, or nil.
+func (r *YugabyteDB) PITRStatusFor(database string) *YugabyteDBPITRStatus {
+	for i := range r.Status.PITR {
+		if r.Status.PITR[i].Database == database {
+			return &r.Status.PITR[i]
+		}
+	}
+	return nil
+}
+
+// GetKind returns the kind of the schedule, YSQL when unset.
+func (p YugabyteDBPITR) GetKind() YugabyteDBPITRKind {
+	if p.Kind == "" {
+		return YugabyteDBPITRKindYSQL
+	}
+	return p.Kind
+}
+
 func (r *YugabyteDB) IsNodeToNodeTLS() bool {
 	return r.Spec.TLS != nil && (r.Spec.TLS.NodeToNode == nil || *r.Spec.TLS.NodeToNode)
 }
@@ -425,6 +453,12 @@ func (r *YugabyteDB) SetDefaults(kc client.Client) {
 		}
 		if r.Spec.AuthSecret.Kind == "" {
 			r.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
+		}
+	}
+
+	for i := range r.Spec.PITR {
+		if r.Spec.PITR[i].Kind == "" {
+			r.Spec.PITR[i].Kind = YugabyteDBPITRKindYSQL
 		}
 	}
 

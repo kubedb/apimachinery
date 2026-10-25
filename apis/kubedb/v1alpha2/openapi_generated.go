@@ -856,6 +856,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager":                   schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBConnectionManager(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBList":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBNode":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBNode(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPITR":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBPITR(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPITRStatus":                          schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBPITRStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPlacement":                           schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBPlacement(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBReadReplica":                         schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBReadReplica(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBSpec":                                schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBSpec(ref),
@@ -48779,6 +48781,88 @@ func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBNode(ref common.Referenc
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBPITR(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBPITR is the point in time recovery schedule of one database.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database is the YSQL database or the YCQL keyspace to protect.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is YSQL (default) or YCQL.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"intervalMinutes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "IntervalMinutes is the time between two snapshots.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"retentionMinutes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RetentionMinutes is how far back the database can be rewound. It must be at least IntervalMinutes.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"database", "intervalMinutes", "retentionMinutes"},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBPITRStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBPITRStatus is the observed state of the PITR schedule of one database.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database is the database or keyspace of the schedule.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"scheduleID": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ScheduleID is the ID of the snapshot schedule in YugabyteDB.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastSnapshotTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSnapshotTime is the time of the latest snapshot of the schedule.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"database"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBPlacement(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -49016,12 +49100,34 @@ func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBSpec(ref common.Referenc
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec"),
 						},
 					},
+					"pitr": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"database",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "PITR lists the point in time recovery schedules, one for each database. Every entry becomes a YugabyteDB snapshot schedule (create_snapshot_schedule). A Rewind YugabyteDBOpsRequest restores a database to a time inside the retention of its schedule, and a Clone request copies a database as of such a time. YugabyteDB allows at most one schedule for each database. A rewind can not go back past a YSQL upgrade (upgrade_ysql), and roles and tablespaces are not rewound.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPITR"),
+									},
+								},
+							},
+						},
+					},
 				},
 				Required: []string{"version"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPlacement", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYCQLSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYSQLSpec"},
+			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.InitSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPITR", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPlacement", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTLSConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYCQLSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBYSQLSpec"},
 	}
 }
 
@@ -49060,11 +49166,33 @@ func schema_apimachinery_apis_kubedb_v1alpha2_YugabyteDBStatus(ref common.Refere
 							},
 						},
 					},
+					"pitr": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"database",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "PITR is the state of the snapshot schedules of spec.pitr.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPITRStatus"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPITRStatus"},
 	}
 }
 

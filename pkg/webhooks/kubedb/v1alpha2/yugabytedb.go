@@ -398,6 +398,8 @@ func (w *YugabyteDBCustomWebhook) validate(ctx context.Context, db, old *olddbap
 		}
 	}
 
+	allErr = append(allErr, validateYugabyteDBPITR(db)...)
+
 	if pl := db.Spec.Placement; pl != nil {
 		seen := map[string]bool{}
 		for i, z := range pl.PreferredZones {
@@ -421,6 +423,40 @@ func (w *YugabyteDBCustomWebhook) validate(ctx context.Context, db, old *olddbap
 		return warnings, yugabyteDBInvalid(db.Name, allErr)
 	}
 	return warnings, nil
+}
+
+// validateYugabyteDBPITR checks spec.pitr. YugabyteDB allows one snapshot schedule for each database.
+func validateYugabyteDBPITR(db *olddbapi.YugabyteDB) field.ErrorList {
+	var allErr field.ErrorList
+	seen := map[string]bool{}
+	for i, p := range db.Spec.PITR {
+		path := field.NewPath("spec", "pitr").Index(i)
+		if p.Database == "" {
+			allErr = append(allErr, field.Required(path.Child("database"), "database is required"))
+		} else if seen[p.Database] {
+			allErr = append(allErr, field.Duplicate(path.Child("database"), p.Database))
+		}
+		seen[p.Database] = true
+		switch p.GetKind() {
+		case olddbapi.YugabyteDBPITRKindYSQL:
+			if !db.IsYSQLEnabled() {
+				allErr = append(allErr, field.Invalid(path.Child("kind"), p.Kind, "YSQL is not enabled"))
+			}
+		case olddbapi.YugabyteDBPITRKindYCQL:
+			if !db.IsYCQLEnabled() {
+				allErr = append(allErr, field.Invalid(path.Child("kind"), p.Kind, "YCQL is not enabled"))
+			}
+		default:
+			allErr = append(allErr, field.NotSupported(path.Child("kind"), p.Kind, []string{string(olddbapi.YugabyteDBPITRKindYSQL), string(olddbapi.YugabyteDBPITRKindYCQL)}))
+		}
+		if p.IntervalMinutes < 1 {
+			allErr = append(allErr, field.Invalid(path.Child("intervalMinutes"), p.IntervalMinutes, "intervalMinutes must be at least 1"))
+		}
+		if p.RetentionMinutes < p.IntervalMinutes || p.RetentionMinutes < 1 {
+			allErr = append(allErr, field.Invalid(path.Child("retentionMinutes"), p.RetentionMinutes, "retentionMinutes must be at least intervalMinutes"))
+		}
+	}
+	return allErr
 }
 
 // validateYugabyteDBReadReplica checks spec.topology.readReplica.

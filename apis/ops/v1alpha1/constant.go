@@ -562,6 +562,20 @@ const (
 	YugabyteDBMigrateWaitBalancer = "MigrateWaitBalancer"
 	// YugabyteDBMigrateMasterReplace is the per master step that deletes the pod and its PVC and waits until the rebuilt master is a VOTER.
 	YugabyteDBMigrateMasterReplace = "MigrateMasterReplace"
+	// YugabyteDBRewindPreflight is the step that checks the schedule of the database and that the time is inside its retention.
+	YugabyteDBRewindPreflight = "RewindPreflight"
+	// YugabyteDBRewindResolveTime is the step that turns minus into a restore time and records it, so retries restore to the same time.
+	YugabyteDBRewindResolveTime = "RewindResolveTime"
+	// YugabyteDBRewindRestore is the step that runs restore_snapshot_schedule.
+	YugabyteDBRewindRestore = "RewindRestore"
+	// YugabyteDBRewindWaitRestored is the step that waits until the restoration is COMPLETE.
+	YugabyteDBRewindWaitRestored = "RewindWaitRestored"
+	// YugabyteDBClonePreflight is the step that checks the source database, the target name and the time.
+	YugabyteDBClonePreflight = "ClonePreflight"
+	// YugabyteDBCloneCreateDatabase is the step that runs CREATE DATABASE ... TEMPLATE ... AS OF.
+	YugabyteDBCloneCreateDatabase = "CloneCreateDatabase"
+	// YugabyteDBCloneWaitReady is the step that waits until the target database accepts connections.
+	YugabyteDBCloneWaitReady = "CloneWaitReady"
 	// YugabyteDBRollReadReplicas is the step that restarts the read replica tservers one at a time, after the tservers.
 	YugabyteDBRollReadReplicas = "RollReadReplicas"
 	// YugabyteDBScaleReadReplicas is the step that changes the number of read replica pods.

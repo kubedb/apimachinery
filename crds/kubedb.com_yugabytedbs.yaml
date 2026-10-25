@@ -1518,6 +1518,34 @@ spec:
                         type: object
                     type: object
                 type: object
+              pitr:
+                items:
+                  properties:
+                    database:
+                      type: string
+                    intervalMinutes:
+                      format: int32
+                      minimum: 1
+                      type: integer
+                    kind:
+                      default: YSQL
+                      enum:
+                      - YSQL
+                      - YCQL
+                      type: string
+                    retentionMinutes:
+                      format: int32
+                      minimum: 1
+                      type: integer
+                  required:
+                  - database
+                  - intervalMinutes
+                  - retentionMinutes
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - database
+                x-kubernetes-list-type: map
               placement:
                 properties:
                   cloud:
@@ -11821,6 +11849,23 @@ spec:
                 - Halted
                 - Unknown
                 type: string
+              pitr:
+                items:
+                  properties:
+                    database:
+                      type: string
+                    lastSnapshotTime:
+                      format: date-time
+                      type: string
+                    scheduleID:
+                      type: string
+                  required:
+                  - database
+                  type: object
+                type: array
+                x-kubernetes-list-map-keys:
+                - database
+                x-kubernetes-list-type: map
             type: object
         type: object
     served: true

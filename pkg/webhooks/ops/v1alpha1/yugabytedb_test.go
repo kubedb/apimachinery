@@ -91,6 +91,7 @@ func ybOpsWebhook(t *testing.T, objs ...client.Object) *YugabyteDBOpsRequestCust
 	t.Helper()
 	base := []client.Object{
 		ybOpsVersion("2025.1.0", 15, false, nil, nil),
+		ybOpsVersion("2024.1.0", 15, false, nil, nil),
 		ybOpsVersion("2025.1.4", 15, false, []string{">= 2025.1.0, < 2025.1.4"}, nil),
 		ybOpsVersion("2025.2.8", 15, false, []string{">= 2025.1.4, < 2025.2.8"}, nil),
 		ybOpsVersion("2025.2.9", 15, true, []string{">= 2025.1.4, < 2025.2.9"}, nil),
@@ -482,6 +483,9 @@ func TestYugabyteDBOpsExamples(t *testing.T) {
 			types[req.Spec.Type] = true
 			db := ybOpsDB(nil, false)
 			db.Name = req.Spec.DatabaseRef.Name
+			if req.Spec.Rewind != nil {
+				db.Spec.PITR = []dbapi.YugabyteDBPITR{{Database: req.Spec.Rewind.Database, IntervalMinutes: 60, RetentionMinutes: 1440}}
+			}
 			if db.Name == "yb-rr" {
 				db.Spec.Topology.ReadReplica = &dbapi.YugabyteDBReadReplica{YugabyteDBNode: dbapi.YugabyteDBNode{Replicas: ptr.To(int32(2)), Storage: db.Spec.Topology.TServer.Storage}, ReplicationFactor: ptr.To(int32(2))}
 			}

@@ -908,10 +908,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateUpdateVersionSpec":                        schema_apimachinery_apis_ops_v1alpha1_WeaviateUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVerticalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_WeaviateVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.WeaviateVolumeExpansionSpec":                      schema_apimachinery_apis_ops_v1alpha1_WeaviateVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBCloneSpec":                              schema_apimachinery_apis_ops_v1alpha1_YugabyteDBCloneSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec":                  schema_apimachinery_apis_ops_v1alpha1_YugabyteDBHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequest":                             schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequestList":                         schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBOpsRequestSpec":                         schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRewindSpec":                             schema_apimachinery_apis_ops_v1alpha1_YugabyteDBRewindSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec":                            schema_apimachinery_apis_ops_v1alpha1_YugabyteDBRollingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec":                                schema_apimachinery_apis_ops_v1alpha1_YugabyteDBTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec":                      schema_apimachinery_apis_ops_v1alpha1_YugabyteDBUpdateVersionSpec(ref),
@@ -48003,6 +48005,44 @@ func schema_apimachinery_apis_ops_v1alpha1_WeaviateVolumeExpansionSpec(ref commo
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBCloneSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBCloneSpec copies a YSQL database as it was at a time, with CREATE DATABASE ... TEMPLATE ... AS OF. It needs YugabyteDB 2024.2 or later. The source database needs a schedule in spec.pitr when asOf is set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"sourceDatabase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SourceDatabase is the YSQL database to copy.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"targetDatabase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TargetDatabase is the name of the new database. It must not exist.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"asOf": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AsOf is the time to clone the source at. Defaults to now.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+				},
+				Required: []string{"sourceDatabase", "targetDatabase"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -48201,6 +48241,18 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.R
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec"),
 						},
 					},
+					"rewind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for rewinding a database to a time in its PITR retention window.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRewindSpec"),
+						},
+					},
+					"clone": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for cloning a database as of a time.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBCloneSpec"),
+						},
+					},
 					"migration": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Specifies information necessary for migrating the data volumes to another StorageClass. It applies to the masters, the tservers and the read replicas. The pods are migrated one at a time, which moves all the data of a tserver for every pod.",
@@ -48249,7 +48301,43 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FinalizeUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RollbackUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBConnectionManager", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FinalizeUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RollbackUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBCloneSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRewindSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec"},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBRewindSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "YugabyteDBRewindSpec restores a database to an earlier time with restore_snapshot_schedule. The database needs a schedule in spec.pitr and the time must be inside its retention. Set exactly one of restoreTime and minus. Roles and tablespaces are not rewound, and a rewind can not go back past a YSQL upgrade (upgrade_ysql).",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"database": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Database is the database or keyspace to rewind. It must have an entry in spec.pitr.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"restoreTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RestoreTime is the time to restore the database to.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"minus": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Minus restores the database to the state it had this long before the request starts, for example 15m.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+				Required: []string{"database"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }
 

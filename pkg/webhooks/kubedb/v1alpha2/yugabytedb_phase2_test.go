@@ -186,3 +186,51 @@ func TestYugabyteDBConnectionManagerAndWebserver(t *testing.T) {
 		checkErr(t, err, "tls is owned by")
 	})
 }
+
+func TestYugabyteDBPITR(t *testing.T) {
+	w := ybTestWebhook(t)
+	p := func(db string, kind olddbapi.YugabyteDBPITRKind, interval, retention int32) olddbapi.YugabyteDBPITR {
+		return olddbapi.YugabyteDBPITR{Database: db, Kind: kind, IntervalMinutes: interval, RetentionMinutes: retention}
+	}
+	tests := []struct {
+		name string
+		pitr []olddbapi.YugabyteDBPITR
+		ycql bool
+		want string
+	}{
+		{name: "one schedule", pitr: []olddbapi.YugabyteDBPITR{p("yugabyte", "", 60, 1440)}},
+		{name: "two databases", pitr: []olddbapi.YugabyteDBPITR{p("a", "YSQL", 60, 120), p("b", "YSQL", 30, 60)}},
+		{name: "ycql", ycql: true, pitr: []olddbapi.YugabyteDBPITR{p("ks", "YCQL", 60, 120)}},
+		{name: "ycql disabled", pitr: []olddbapi.YugabyteDBPITR{p("ks", "YCQL", 60, 120)}, want: "YCQL is not enabled"},
+		{name: "two schedules for a database", pitr: []olddbapi.YugabyteDBPITR{p("a", "YSQL", 60, 120), p("a", "YSQL", 30, 60)}, want: "Duplicate"},
+		{name: "no database", pitr: []olddbapi.YugabyteDBPITR{p("", "YSQL", 60, 120)}, want: "database is required"},
+		{name: "zero interval", pitr: []olddbapi.YugabyteDBPITR{p("a", "YSQL", 0, 120)}, want: "intervalMinutes must be at least 1"},
+		{name: "retention below interval", pitr: []olddbapi.YugabyteDBPITR{p("a", "YSQL", 60, 30)}, want: "retentionMinutes must be at least intervalMinutes"},
+		{name: "bad kind", pitr: []olddbapi.YugabyteDBPITR{p("a", "SQL", 60, 120)}, want: "kind"},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			db := ybTestDB(t, w)
+			db.Spec.PITR = tc.pitr
+			db.Spec.YCQL.Enabled = tc.ycql
+			_, err := w.ValidateCreate(context.TODO(), db)
+			checkErr(t, err, tc.want)
+		})
+	}
+	t.Run("defaults and helpers", func(t *testing.T) {
+		db := ybTestDB(t, w)
+		db.Spec.PITR = []olddbapi.YugabyteDBPITR{p("a", "", 60, 120)}
+		db.SetDefaults(w.DefaultClient)
+		if db.Spec.PITR[0].Kind != olddbapi.YugabyteDBPITRKindYSQL || db.PITRFor("a") == nil || db.PITRFor("b") != nil || db.PITRStatusFor("a") != nil {
+			t.Fatal("unexpected helpers")
+		}
+	})
+	t.Run("editable after provisioning", func(t *testing.T) {
+		old := ybTestDB(t, w)
+		setProvisioned(old)
+		db := old.DeepCopy()
+		db.Spec.PITR = []olddbapi.YugabyteDBPITR{p("a", "YSQL", 60, 120)}
+		_, err := w.ValidateUpdate(ybCtx("alice"), old, db)
+		checkErr(t, err, "")
+	})
+}

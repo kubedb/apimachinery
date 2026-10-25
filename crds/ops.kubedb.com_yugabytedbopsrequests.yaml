@@ -65,6 +65,19 @@ spec:
                     type: object
                     x-kubernetes-map-type: atomic
                 type: object
+              clone:
+                properties:
+                  asOf:
+                    format: date-time
+                    type: string
+                  sourceDatabase:
+                    type: string
+                  targetDatabase:
+                    type: string
+                required:
+                - sourceDatabase
+                - targetDatabase
+                type: object
               configuration:
                 properties:
                   applyConfig:
@@ -133,6 +146,18 @@ spec:
                 - storageClassName
                 type: object
               restart:
+                type: object
+              rewind:
+                properties:
+                  database:
+                    type: string
+                  minus:
+                    type: string
+                  restoreTime:
+                    format: date-time
+                    type: string
+                required:
+                - database
                 type: object
               rollbackUpgrade:
                 type: object
@@ -271,6 +296,8 @@ spec:
                 - FinalizeUpgrade
                 - RollbackUpgrade
                 - StorageMigration
+                - Rewind
+                - Clone
                 type: string
               updateVersion:
                 properties:

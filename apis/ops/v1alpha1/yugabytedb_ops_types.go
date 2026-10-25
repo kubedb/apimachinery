@@ -76,6 +76,10 @@ type YugabyteDBOpsRequestSpec struct {
 	VolumeExpansion *YugabyteDBVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for upgrading YugabyteDB
 	UpdateVersion *YugabyteDBUpdateVersionSpec `json:"updateVersion,omitempty"`
+	// Specifies information necessary for rewinding a database to a time in its PITR retention window.
+	Rewind *YugabyteDBRewindSpec `json:"rewind,omitempty"`
+	// Specifies information necessary for cloning a database as of a time.
+	Clone *YugabyteDBCloneSpec `json:"clone,omitempty"`
 	// Specifies information necessary for migrating the data volumes to another StorageClass. It applies to the
 	// masters, the tservers and the read replicas. The pods are migrated one at a time, which moves all the data of a
 	// tserver for every pod.
@@ -157,6 +161,32 @@ type FinalizeUpgradeSpec struct{}
 // the one that is pending on the database.
 type RollbackUpgradeSpec struct{}
 
+// YugabyteDBRewindSpec restores a database to an earlier time with restore_snapshot_schedule. The database needs a
+// schedule in spec.pitr and the time must be inside its retention. Set exactly one of restoreTime and minus.
+// Roles and tablespaces are not rewound, and a rewind can not go back past a YSQL upgrade (upgrade_ysql).
+type YugabyteDBRewindSpec struct {
+	// Database is the database or keyspace to rewind. It must have an entry in spec.pitr.
+	Database string `json:"database"`
+	// RestoreTime is the time to restore the database to.
+	// +optional
+	RestoreTime *metav1.Time `json:"restoreTime,omitempty"`
+	// Minus restores the database to the state it had this long before the request starts, for example 15m.
+	// +optional
+	Minus *metav1.Duration `json:"minus,omitempty"`
+}
+
+// YugabyteDBCloneSpec copies a YSQL database as it was at a time, with CREATE DATABASE ... TEMPLATE ... AS OF.
+// It needs YugabyteDB 2024.2 or later. The source database needs a schedule in spec.pitr when asOf is set.
+type YugabyteDBCloneSpec struct {
+	// SourceDatabase is the YSQL database to copy.
+	SourceDatabase string `json:"sourceDatabase"`
+	// TargetDatabase is the name of the new database. It must not exist.
+	TargetDatabase string `json:"targetDatabase"`
+	// AsOf is the time to clone the source at. Defaults to now.
+	// +optional
+	AsOf *metav1.Time `json:"asOf,omitempty"`
+}
+
 // YugabyteDBHorizontalScalingSpec contains the horizontal scaling information of a YugabyteDB universe.
 // The masters cannot be scaled, their number is the replication factor.
 type YugabyteDBHorizontalScalingSpec struct {
@@ -197,8 +227,8 @@ type YugabyteDBTLSSpec struct {
 	Remove bool `json:"remove,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;HorizontalScaling;VerticalScaling;VolumeExpansion;UpdateVersion;FinalizeUpgrade;RollbackUpgrade;StorageMigration
-// ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling,VerticalScaling,VolumeExpansion,UpdateVersion,FinalizeUpgrade,RollbackUpgrade,StorageMigration)
+// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;HorizontalScaling;VerticalScaling;VolumeExpansion;UpdateVersion;FinalizeUpgrade;RollbackUpgrade;StorageMigration;Rewind;Clone
+// ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling,VerticalScaling,VolumeExpansion,UpdateVersion,FinalizeUpgrade,RollbackUpgrade,StorageMigration,Rewind,Clone)
 type YugabyteDBOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

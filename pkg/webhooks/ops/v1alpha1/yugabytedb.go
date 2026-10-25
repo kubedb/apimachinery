@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -166,6 +167,12 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateCreateOrUpdate(ctx context.C
 		add("horizontalScaling", w.validateHorizontalScaling(db, req))
 	case opsapi.YugabyteDBOpsRequestTypeVerticalScaling:
 		add("verticalScaling", w.validateVerticalScaling(db, req))
+	case opsapi.YugabyteDBOpsRequestTypeRewind:
+		warns, err := w.validateRewind(db, req)
+		warnings = append(warnings, warns...)
+		add("rewind", err)
+	case opsapi.YugabyteDBOpsRequestTypeClone:
+		add("clone", w.validateClone(ctx, db, req))
 	case opsapi.YugabyteDBOpsRequestTypeStorageMigration:
 		warns, err := w.validateStorageMigration(ctx, db, req)
 		warnings = append(warnings, warns...)
@@ -445,6 +452,87 @@ func yugabyteDBContainerResources(db *dbapi.YugabyteDB, role dbapi.YugabyteDBRol
 		}
 	}
 	return core.ResourceRequirements{}
+}
+
+// validateRewind checks a Rewind request against the PITR schedule of the database.
+func (w *YugabyteDBOpsRequestCustomWebhook) validateRewind(db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) (admission.Warnings, error) {
+	rw := req.Spec.Rewind
+	if rw == nil {
+		return nil, errors.New("spec.rewind nil not supported in Rewind type")
+	}
+	if rw.Database == "" {
+		return nil, errors.New("spec.rewind.database is required")
+	}
+	if (rw.RestoreTime == nil) == (rw.Minus == nil) {
+		return nil, errors.New("exactly one of spec.rewind.restoreTime and spec.rewind.minus must be set")
+	}
+	if rw.Minus != nil && rw.Minus.Duration <= 0 {
+		return nil, errors.New("spec.rewind.minus must be positive")
+	}
+	sched := db.PITRFor(rw.Database)
+	if sched == nil {
+		return nil, fmt.Errorf("database %q has no schedule in spec.pitr of %s, add one before it can be rewound", rw.Database, db.Name)
+	}
+	if !yugabyteDBOpsPending(req) {
+		return nil, nil
+	}
+	retention := time.Duration(sched.RetentionMinutes) * time.Minute
+	now := time.Now()
+	if rw.Minus != nil && rw.Minus.Duration > retention {
+		return nil, fmt.Errorf("spec.rewind.minus (%s) is longer than the retention of the schedule (%s)", rw.Minus.Duration, retention)
+	}
+	if rw.RestoreTime != nil {
+		if rw.RestoreTime.Time.After(now) {
+			return nil, errors.New("spec.rewind.restoreTime is in the future")
+		}
+		if rw.RestoreTime.Time.Before(now.Add(-retention)) {
+			return nil, fmt.Errorf("spec.rewind.restoreTime is older than the retention of the schedule (%s)", retention)
+		}
+	}
+	return admission.Warnings{"a rewind can not go back past a YSQL upgrade (upgrade_ysql) and does not rewind roles and tablespaces; the database is unavailable to writes while it is restored"}, nil
+}
+
+// validateClone checks a Clone request.
+func (w *YugabyteDBOpsRequestCustomWebhook) validateClone(ctx context.Context, db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
+	c := req.Spec.Clone
+	if c == nil {
+		return errors.New("spec.clone nil not supported in Clone type")
+	}
+	if !db.IsYSQLEnabled() {
+		return errors.New("a clone needs YSQL, it is not enabled on this database")
+	}
+	if c.SourceDatabase == "" || c.TargetDatabase == "" {
+		return errors.New("spec.clone.sourceDatabase and spec.clone.targetDatabase are required")
+	}
+	if c.SourceDatabase == c.TargetDatabase {
+		return errors.New("spec.clone.targetDatabase must differ from spec.clone.sourceDatabase")
+	}
+	var v catalog.YugabyteDBVersion
+	if err := w.DefaultClient.Get(ctx, types.NamespacedName{Name: db.Spec.Version}, &v); err != nil {
+		return errors.Wrapf(err, "failed to get the YugabyteDBVersion %q", db.Spec.Version)
+	}
+	cur, err := semver.NewVersion(v.Spec.Version)
+	if err != nil {
+		return fmt.Errorf("version %q is not a semantic version: %w", v.Spec.Version, err)
+	}
+	if min := semver.MustParse(kubedb.YugabyteDBCloneMinVersion); cur.LessThan(min) {
+		return fmt.Errorf("a clone needs YugabyteDB %s or later, the database runs %s", kubedb.YugabyteDBCloneMinVersion, v.Spec.Version)
+	}
+	if c.AsOf == nil || !yugabyteDBOpsPending(req) {
+		return nil
+	}
+	sched := db.PITRFor(c.SourceDatabase)
+	if sched == nil {
+		return fmt.Errorf("spec.clone.asOf needs a schedule for %q in spec.pitr, the database keeps no history without it", c.SourceDatabase)
+	}
+	now, retention := time.Now(), time.Duration(sched.RetentionMinutes)*time.Minute
+	if c.AsOf.Time.After(now) {
+		return errors.New("spec.clone.asOf is in the future")
+	}
+	if c.AsOf.Time.Before(now.Add(-retention)) {
+		return fmt.Errorf("spec.clone.asOf is older than the retention of the schedule (%s)", retention)
+	}
+	return nil
 }
 
 // validateStorageMigration checks a StorageMigration request. It warns when the tservers cannot absorb the data of
