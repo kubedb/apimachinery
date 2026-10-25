@@ -35079,11 +35079,6 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_DurableWorkflowComputeAutosca
 				Description: "DurableWorkflowComputeAutoscalerSpec configures the compute autoscaling of each server role.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"nodeTopology": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.NodeTopology"),
-						},
-					},
 					"frontend": {
 						SchemaProps: spec.SchemaProps{
 							Ref: ref("kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"),
@@ -35114,7 +35109,7 @@ func schema_apimachinery_apis_autoscaling_v1alpha1_DurableWorkflowComputeAutosca
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec", "kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.NodeTopology"},
+			"kubedb.dev/apimachinery/apis/autoscaling/v1alpha1.ComputeAutoscalerSpec"},
 	}
 }
 

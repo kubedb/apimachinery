@@ -67,9 +67,6 @@ type DurableWorkflowAutoscalerSpec struct {
 
 // DurableWorkflowComputeAutoscalerSpec configures the compute autoscaling of each server role.
 type DurableWorkflowComputeAutoscalerSpec struct {
-	// +optional
-	NodeTopology *NodeTopology `json:"nodeTopology,omitempty"`
-
 	Frontend *ComputeAutoscalerSpec `json:"frontend,omitempty"`
 	History  *ComputeAutoscalerSpec `json:"history,omitempty"`
 	Matching *ComputeAutoscalerSpec `json:"matching,omitempty"`
