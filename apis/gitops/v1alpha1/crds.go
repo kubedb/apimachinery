@@ -155,3 +155,7 @@ func (Weaviate) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 func (ZooKeeper) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(dbv1a2.ResourcePluralZooKeeper))
 }
+
+func (DurableWorkflow) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(dbv1a2.ResourcePluralDurableWorkflows))
+}
