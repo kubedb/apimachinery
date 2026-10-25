@@ -17,10 +17,22 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"context"
 	"encoding/json"
 	"strings"
 	"testing"
+
+	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
+
+// noObjects is a client that has nothing.
+type noObjects struct{ client.Client }
+
+func (noObjects) Get(_ context.Context, key client.ObjectKey, _ client.Object, _ ...client.GetOption) error {
+	return apierrors.NewNotFound(schema.GroupResource{Resource: "objects"}, key.Name)
+}
 
 func TestPersistenceMarshalOmitsAnEmptyDefault(t *testing.T) {
 	b, err := json.Marshal(DurableWorkflowPersistence{Managed: &DurableWorkflowManagedStore{}})
@@ -33,5 +45,15 @@ func TestPersistenceMarshalOmitsAnEmptyDefault(t *testing.T) {
 	b, _ = json.Marshal(DurableWorkflowPersistence{Default: DurableWorkflowStore{Type: DurableWorkflowStorePostgres}})
 	if !strings.Contains(string(b), `"default"`) {
 		t.Errorf("a default that is set must be sent: %s", b)
+	}
+}
+
+func TestSetDefaultsLeavesTheDefaultStoreEmptyWhenManaged(t *testing.T) {
+	db := &DurableWorkflow{}
+	db.Name, db.Namespace = "dw", "demo"
+	db.Spec.Persistence.Managed = &DurableWorkflowManagedStore{Version: "16.4"}
+	db.SetDefaults(noObjects{})
+	if db.Spec.Persistence.Default.DatabaseName != "" {
+		t.Errorf("a managed cluster has no reference to default: %+v", db.Spec.Persistence.Default)
 	}
 }

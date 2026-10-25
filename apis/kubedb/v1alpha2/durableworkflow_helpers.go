@@ -405,7 +405,11 @@ func (r *DurableWorkflow) SetDefaults(kc client.Client) {
 		t.InternalFrontend.Replicas = ptr.To(int32(1))
 	}
 
-	r.setDefaultStore(&r.Spec.Persistence.Default, false)
+	// The reference of the default store is empty with managed persistence, and defaulting its database name would
+	// make it look like a reference without a name.
+	if r.Spec.Persistence.Managed == nil {
+		r.setDefaultStore(&r.Spec.Persistence.Default, false)
+	}
 	if m := r.Spec.Persistence.Managed; m != nil {
 		m.Engine = m.ManagedEngine()
 		m.Replicas = ptr.To(m.ManagedReplicas())
