@@ -17,6 +17,10 @@ limitations under the License.
 package v1alpha2
 
 import (
+	"fmt"
+	"net/url"
+	"path"
+
 	core "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kmapi "kmodules.xyz/client-go/api/v1"
@@ -227,7 +231,10 @@ const (
 	DurableWorkflowClientAuthNotRequired DurableWorkflowClientAuth = "NotRequired"
 )
 
-// DurableWorkflowArchival configures archival to object storage or a file store.
+// DurableWorkflowArchival configures archival of closed workflow histories and visibility records. Each target is
+// enabled by being set and renders the engine's static archival config (and the namespace/domain defaults), so a change
+// rolls the pods. Namespaces that exist already keep their own archival state: enable it on them with the engine's CLI.
+// Temporal builds without the "temporal_with_gstorage" tag refuse to start with a gcs target.
 type DurableWorkflowArchival struct {
 	// +optional
 	History *DurableWorkflowArchivalTarget `json:"history,omitempty"`
@@ -235,15 +242,65 @@ type DurableWorkflowArchival struct {
 	Visibility *DurableWorkflowArchivalTarget `json:"visibility,omitempty"`
 }
 
+const (
+	DurableWorkflowArchivalProviderFilestore = "filestore"
+	DurableWorkflowArchivalProviderS3        = "s3"
+	DurableWorkflowArchivalProviderGCS       = "gcs"
+)
+
 // DurableWorkflowArchivalTarget is one archival target.
 type DurableWorkflowArchivalTarget struct {
+	// Provider is one of filestore, s3 and gcs.
 	// +kubebuilder:validation:Enum=filestore;s3;gcs
 	Provider string `json:"provider"`
-	// URI of the archive, for example s3://bucket/path.
+	// URI of the archive. The scheme follows the provider: file:///absolute/path for filestore, s3://bucket/prefix for
+	// s3 and gs://bucket/prefix for gcs.
+	//
+	// A filestore path is an emptyDir the operator mounts into every pod of the cluster. It is NOT durable and not
+	// shared between pods: archives are lost with the pod and can't be read through another pod. Use it for tests only.
 	URI string `json:"uri"`
-	// ConfigSecret holds the credentials of the provider.
+	// ConfigSecret holds the credentials of the provider. Required for s3 and gcs, and not allowed for filestore.
+	// A secret is read from the namespace of the DurableWorkflow.
+	//
+	// s3 keys: AWS_REGION (required), AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY (both or none; both are passed to
+	// the servers as env variables), AWS_ENDPOINT_URL (optional, an S3-compatible endpoint such as MinIO) and
+	// AWS_S3_FORCE_PATH_STYLE (optional, "true" for path style addressing).
+	//
+	// gcs key: credentials.json, the service account key. It is mounted read-only and set as the credentialsPath.
+	//
+	// The history and visibility targets may share one s3 secret but can't use two different ones, as the
+	// credentials are process wide env variables. A change of the secret data rolls the pods.
 	// +optional
 	ConfigSecret *core.LocalObjectReference `json:"configSecret,omitempty"`
+}
+
+// ArchivalFilestoreDir returns the directory of a file:///path URI, or an error for any other form.
+func ArchivalFilestoreDir(uri string) (string, error) {
+	u, err := url.Parse(uri)
+	if err != nil {
+		return "", err
+	}
+	if u.Scheme != "file" || u.Host != "" || u.RawQuery != "" || u.Fragment != "" {
+		return "", fmt.Errorf("must look like file:///absolute/path")
+	}
+	p := path.Clean(u.Path)
+	if !path.IsAbs(u.Path) || p == "/" {
+		return "", fmt.Errorf("must be an absolute path below /")
+	}
+	return p, nil
+}
+
+// ArchivalURIScheme is the URI scheme a provider requires.
+func ArchivalURIScheme(provider string) string {
+	switch provider {
+	case DurableWorkflowArchivalProviderFilestore:
+		return "file"
+	case DurableWorkflowArchivalProviderS3:
+		return "s3"
+	case DurableWorkflowArchivalProviderGCS:
+		return "gs"
+	}
+	return ""
 }
 
 // DurableWorkflowAuthorization configures JWT authorization.

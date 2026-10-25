@@ -36895,7 +36895,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowArchival(ref common
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "DurableWorkflowArchival configures archival to object storage or a file store.",
+				Description: "DurableWorkflowArchival configures archival of closed workflow histories and visibility records. Each target is enabled by being set and renders the engine's static archival config (and the namespace/domain defaults), so a change rolls the pods. Namespaces that exist already keep their own archival state: enable it on them with the engine's CLI. Temporal builds without the \"temporal_with_gstorage\" tag refuse to start with a gcs target.",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"history": {
@@ -36925,14 +36925,15 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowArchivalTarget(ref 
 				Properties: map[string]spec.Schema{
 					"provider": {
 						SchemaProps: spec.SchemaProps{
-							Default: "",
-							Type:    []string{"string"},
-							Format:  "",
+							Description: "Provider is one of filestore, s3 and gcs.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"uri": {
 						SchemaProps: spec.SchemaProps{
-							Description: "URI of the archive, for example s3://bucket/path.",
+							Description: "URI of the archive. The scheme follows the provider: file:///absolute/path for filestore, s3://bucket/prefix for s3 and gs://bucket/prefix for gcs.\n\nA filestore path is an emptyDir the operator mounts into every pod of the cluster. It is NOT durable and not shared between pods: archives are lost with the pod and can't be read through another pod. Use it for tests only.",
 							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
@@ -36940,7 +36941,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowArchivalTarget(ref 
 					},
 					"configSecret": {
 						SchemaProps: spec.SchemaProps{
-							Description: "ConfigSecret holds the credentials of the provider.",
+							Description: "ConfigSecret holds the credentials of the provider. Required for s3 and gcs, and not allowed for filestore. A secret is read from the namespace of the DurableWorkflow.\n\ns3 keys: AWS_REGION (required), AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY (both or none; both are passed to the servers as env variables), AWS_ENDPOINT_URL (optional, an S3-compatible endpoint such as MinIO) and AWS_S3_FORCE_PATH_STYLE (optional, \"true\" for path style addressing).\n\ngcs key: credentials.json, the service account key. It is mounted read-only and set as the credentialsPath.\n\nThe history and visibility targets may share one s3 secret but can't use two different ones, as the credentials are process wide env variables. A change of the secret data rolls the pods.",
 							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
 						},
 					},

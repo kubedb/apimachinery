@@ -110,6 +110,26 @@ func dwTestObj(version string) *olddbapi.DurableWorkflow {
 	}
 }
 
+func archCase(name, version string, a *olddbapi.DurableWorkflowArchival, wantErr, wantWarn string) struct {
+	name     string
+	mutate   func(*olddbapi.DurableWorkflow)
+	old      func(*olddbapi.DurableWorkflow)
+	version  string
+	wantErr  string // substring, empty means valid
+	wantWarn string
+} {
+	c := struct {
+		name     string
+		mutate   func(*olddbapi.DurableWorkflow)
+		old      func(*olddbapi.DurableWorkflow)
+		version  string
+		wantErr  string // substring, empty means valid
+		wantWarn string
+	}{name: name, version: version, wantErr: wantErr, wantWarn: wantWarn}
+	c.mutate = func(d *olddbapi.DurableWorkflow) { d.Spec.Archival = a }
+	return c
+}
+
 func TestDurableWorkflowValidate(t *testing.T) {
 	es := olddbapi.DurableWorkflowStore{ObjectReference: &kmapi.ObjectReference{Name: "es"}, Type: olddbapi.DurableWorkflowStoreElasticsearch}
 	cassandra := olddbapi.DurableWorkflowStore{ObjectReference: &kmapi.ObjectReference{Name: "c"}, Type: olddbapi.DurableWorkflowStoreCassandra}
@@ -226,6 +246,48 @@ func TestDurableWorkflowValidate(t *testing.T) {
 			},
 			wantErr: "only available for Cadence",
 		},
+		archCase("valid s3 on temporal", "temporal-1.32.1", &olddbapi.DurableWorkflowArchival{
+			History:    &olddbapi.DurableWorkflowArchivalTarget{Provider: "s3", URI: "s3://b/h", ConfigSecret: &core.LocalObjectReference{Name: "s3"}},
+			Visibility: &olddbapi.DurableWorkflowArchivalTarget{Provider: "s3", URI: "s3://b/v", ConfigSecret: &core.LocalObjectReference{Name: "s3"}},
+		}, "", ""),
+		archCase("valid gcs on cadence", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History: &olddbapi.DurableWorkflowArchivalTarget{Provider: "gcs", URI: "gs://b/h", ConfigSecret: &core.LocalObjectReference{Name: "gcs"}},
+		}, "", ""),
+		archCase("gcs on temporal warns about the build tag", "temporal-1.32.1", &olddbapi.DurableWorkflowArchival{
+			History: &olddbapi.DurableWorkflowArchivalTarget{Provider: "gcs", URI: "gs://b/h", ConfigSecret: &core.LocalObjectReference{Name: "gcs"}},
+		}, "", "temporal_with_gstorage"),
+		archCase("filestore warns it is not durable", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History: &olddbapi.DurableWorkflowArchivalTarget{Provider: "filestore", URI: "file:///var/archive/h"},
+		}, "", "not shared between pods"),
+		archCase("provider and scheme mismatch", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History: &olddbapi.DurableWorkflowArchivalTarget{Provider: "s3", URI: "gs://b/h", ConfigSecret: &core.LocalObjectReference{Name: "s3"}},
+		}, "needs a s3:// URI", ""),
+		archCase("s3 without a secret", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History: &olddbapi.DurableWorkflowArchivalTarget{Provider: "s3", URI: "s3://b/h"},
+		}, "needs a configSecret", ""),
+		archCase("s3 without a bucket", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History: &olddbapi.DurableWorkflowArchivalTarget{Provider: "s3", URI: "s3:///h", ConfigSecret: &core.LocalObjectReference{Name: "s3"}},
+		}, "bucket is missing", ""),
+		archCase("filestore with a secret", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History: &olddbapi.DurableWorkflowArchivalTarget{Provider: "filestore", URI: "file:///a", ConfigSecret: &core.LocalObjectReference{Name: "x"}},
+		}, "no credentials", ""),
+		archCase("filestore relative path", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History: &olddbapi.DurableWorkflowArchivalTarget{Provider: "filestore", URI: "file://archive/h"},
+		}, "file:///absolute/path", ""),
+		archCase("filestore root", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History: &olddbapi.DurableWorkflowArchivalTarget{Provider: "filestore", URI: "file:///"},
+		}, "below /", ""),
+		archCase("nested filestore paths", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History:    &olddbapi.DurableWorkflowArchivalTarget{Provider: "filestore", URI: "file:///a"},
+			Visibility: &olddbapi.DurableWorkflowArchivalTarget{Provider: "filestore", URI: "file:///a/v"},
+		}, "can't be nested", ""),
+		archCase("two s3 secrets", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History:    &olddbapi.DurableWorkflowArchivalTarget{Provider: "s3", URI: "s3://b/h", ConfigSecret: &core.LocalObjectReference{Name: "a"}},
+			Visibility: &olddbapi.DurableWorkflowArchivalTarget{Provider: "s3", URI: "s3://b/v", ConfigSecret: &core.LocalObjectReference{Name: "b"}},
+		}, "same s3 secret", ""),
+		archCase("unknown provider", "cadence-1.4.2", &olddbapi.DurableWorkflowArchival{
+			History: &olddbapi.DurableWorkflowArchivalTarget{Provider: "azure", URI: "az://b"},
+		}, "Unsupported value", ""),
 		{
 			name: "tls without issuer", version: "temporal-1.32.1",
 			mutate:  func(d *olddbapi.DurableWorkflow) { d.Spec.TLS = &kmapi.TLSConfig{} },

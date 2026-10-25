@@ -20,6 +20,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
+	"strings"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
@@ -194,6 +196,9 @@ func (w *DurableWorkflowCustomWebhook) validate(db, old *olddbapi.DurableWorkflo
 		}
 		allErr = append(allErr, validateAuthorization(db, version)...)
 	}
+	archErrs, archWarnings := validateArchival(db, version)
+	allErr = append(allErr, archErrs...)
+	warnings = append(warnings, archWarnings...)
 
 	if db.Spec.TLS != nil && db.Spec.TLS.IssuerRef == nil {
 		allErr = append(allErr, field.Required(spec.Child("tls").Child("issuerRef"), "spec.tls.issuerRef is missing"))
@@ -300,4 +305,74 @@ func validateAuthorization(db *olddbapi.DurableWorkflow, version *catalog.Durabl
 		errs = append(errs, field.Invalid(path.Child("maxTokenTTL"), *a.MaxTokenTTL, "must be greater than 0"))
 	}
 	return errs
+}
+
+func validateArchival(db *olddbapi.DurableWorkflow, version *catalog.DurableWorkflowVersion) (field.ErrorList, admission.Warnings) {
+	a := db.Spec.Archival
+	if a == nil {
+		return nil, nil
+	}
+	var errs field.ErrorList
+	var warnings admission.Warnings
+	root := field.NewPath("spec").Child("archival")
+	targets := map[string]*olddbapi.DurableWorkflowArchivalTarget{"history": a.History, "visibility": a.Visibility}
+
+	var dirs []string
+	s3Secret := ""
+	for _, name := range []string{"history", "visibility"} {
+		t := targets[name]
+		if t == nil {
+			continue
+		}
+		p := root.Child(name)
+		want := olddbapi.ArchivalURIScheme(t.Provider)
+		if want == "" {
+			errs = append(errs, field.NotSupported(p.Child("provider"), t.Provider,
+				[]string{olddbapi.DurableWorkflowArchivalProviderFilestore, olddbapi.DurableWorkflowArchivalProviderS3, olddbapi.DurableWorkflowArchivalProviderGCS}))
+			continue
+		}
+		u, err := url.Parse(t.URI)
+		switch {
+		case t.URI == "":
+			errs = append(errs, field.Required(p.Child("uri"), "uri is required"))
+		case err != nil || u.Scheme != want:
+			errs = append(errs, field.Invalid(p.Child("uri"), t.URI, fmt.Sprintf("the %s provider needs a %s:// URI", t.Provider, want)))
+		case t.Provider != olddbapi.DurableWorkflowArchivalProviderFilestore && u.Host == "":
+			errs = append(errs, field.Invalid(p.Child("uri"), t.URI, "the bucket is missing, use "+want+"://bucket/prefix"))
+		}
+
+		switch t.Provider {
+		case olddbapi.DurableWorkflowArchivalProviderFilestore:
+			if t.ConfigSecret != nil {
+				errs = append(errs, field.Forbidden(p.Child("configSecret"), "the filestore provider has no credentials"))
+			}
+			if dir, err := olddbapi.ArchivalFilestoreDir(t.URI); err != nil {
+				if t.URI != "" && (u != nil && u.Scheme == "file") {
+					errs = append(errs, field.Invalid(p.Child("uri"), t.URI, err.Error()))
+				}
+			} else {
+				dirs = append(dirs, dir)
+			}
+			warnings = append(warnings, fmt.Sprintf("spec.archival.%s: the filestore archive is an emptyDir of each pod; it is lost when the pod is, and not shared between pods. Use s3 or gcs for anything but tests", name))
+		case olddbapi.DurableWorkflowArchivalProviderS3, olddbapi.DurableWorkflowArchivalProviderGCS:
+			if t.ConfigSecret == nil || t.ConfigSecret.Name == "" {
+				errs = append(errs, field.Required(p.Child("configSecret"), fmt.Sprintf("the %s provider needs a configSecret with its credentials", t.Provider)))
+			} else if t.Provider == olddbapi.DurableWorkflowArchivalProviderS3 {
+				if s3Secret != "" && s3Secret != t.ConfigSecret.Name {
+					errs = append(errs, field.Invalid(p.Child("configSecret"), t.ConfigSecret.Name,
+						"history and visibility must use the same s3 secret: the credentials are env variables of the whole process"))
+				}
+				s3Secret = t.ConfigSecret.Name
+			}
+			if t.Provider == olddbapi.DurableWorkflowArchivalProviderGCS && version != nil && version.IsTemporal() {
+				warnings = append(warnings, fmt.Sprintf("spec.archival.%s: the Temporal server image must be built with the temporal_with_gstorage tag, or it refuses to start", name))
+			}
+		}
+	}
+	// two filestore paths may be equal (one mount), but not nested: the mounts would shadow each other
+	if len(dirs) == 2 && dirs[0] != dirs[1] &&
+		(strings.HasPrefix(dirs[0], dirs[1]+"/") || strings.HasPrefix(dirs[1], dirs[0]+"/")) {
+		errs = append(errs, field.Invalid(root.Child("visibility").Child("uri"), a.Visibility.URI, "filestore paths of history and visibility can't be nested"))
+	}
+	return errs, warnings
 }
