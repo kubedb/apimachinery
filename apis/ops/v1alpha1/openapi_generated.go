@@ -658,6 +658,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpdateVersionSpec":                            schema_apimachinery_apis_ops_v1alpha1_EtcdUpdateVersionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVerticalScalingSpec":                          schema_apimachinery_apis_ops_v1alpha1_EtcdVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVolumeExpansionSpec":                          schema_apimachinery_apis_ops_v1alpha1_EtcdVolumeExpansionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.FinalizeUpgradeSpec":                              schema_apimachinery_apis_ops_v1alpha1_FinalizeUpgradeSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBHorizontalScalingSpec":                      schema_apimachinery_apis_ops_v1alpha1_HanaDBHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBOpsRequest":                                 schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.HanaDBOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_HanaDBOpsRequestList(ref),
@@ -873,6 +874,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RedisVolumeExpansionSpec":                         schema_apimachinery_apis_ops_v1alpha1_RedisVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Reprovision":                                      schema_apimachinery_apis_ops_v1alpha1_Reprovision(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec":                                      schema_apimachinery_apis_ops_v1alpha1_RestartSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.RollbackUpgradeSpec":                              schema_apimachinery_apis_ops_v1alpha1_RollbackUpgradeSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.Shards":                                           schema_apimachinery_apis_ops_v1alpha1_Shards(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfiguration":                   schema_apimachinery_apis_ops_v1alpha1_SinglestoreCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.SinglestoreCustomConfigurationSpec":               schema_apimachinery_apis_ops_v1alpha1_SinglestoreCustomConfigurationSpec(ref),
@@ -37422,6 +37424,17 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdVolumeExpansionSpec(ref common.Re
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_FinalizeUpgradeSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "FinalizeUpgradeSpec is the spec of a FinalizeUpgrade request. It has no fields: the upgrade to finalize is the one that is pending on the database.",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_HanaDBHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -46544,6 +46557,17 @@ func schema_apimachinery_apis_ops_v1alpha1_RestartSpec(ref common.ReferenceCallb
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_RollbackUpgradeSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "RollbackUpgradeSpec is the spec of a RollbackUpgrade request. It has no fields: the upgrade to roll back is the one that is pending on the database.",
+				Type:        []string{"object"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_Shards(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -48164,6 +48188,18 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.R
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec"),
 						},
 					},
+					"finalizeUpgrade": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for finalizing an upgrade that was started with finalize: Manual. The upgrade is finalized and can not be rolled back after it.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.FinalizeUpgradeSpec"),
+						},
+					},
+					"rollbackUpgrade": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for rolling an upgrade back to the previous version. It is only possible while the upgrade is not finalized.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.RollbackUpgradeSpec"),
+						},
+					},
 					"rolling": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Rolling tunes the operations that restart the pods one at a time.",
@@ -48194,7 +48230,7 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBOpsRequestSpec(ref common.R
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.FinalizeUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RollbackUpgradeSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBRollingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.YugabyteDBVolumeExpansionSpec"},
 	}
 }
 
@@ -48311,6 +48347,13 @@ func schema_apimachinery_apis_ops_v1alpha1_YugabyteDBUpdateVersionSpec(ref commo
 						SchemaProps: spec.SchemaProps{
 							Description: "SoakDuration is how long the universe is watched, before the upgrade is finalized, after every pod runs the new version. The upgrade can still be rolled back until it is finalized. Defaults to 10m.",
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"finalize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Finalize selects what happens after the soak. Auto finalizes the upgrade. Manual stops with the UpgradePendingFinalize condition on the database, and a FinalizeUpgrade or RollbackUpgrade YugabyteDBOpsRequest completes the upgrade either way. Defaults to Auto.",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 				},

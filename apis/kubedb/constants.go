@@ -2861,6 +2861,9 @@ const (
 	YugabyteDBConditionTServersReady        = "TServersReady"
 	YugabyteDBConditionPlacementSet         = "PlacementSet"
 	YugabyteDBConditionLeaderBlacklistDirty = "LeaderBlacklistDirty"
+	// YugabyteDBConditionUpgradePendingFinalize is true on the database while an UpdateVersion with finalize: Manual
+	// waits for a FinalizeUpgrade or RollbackUpgrade request.
+	YugabyteDBConditionUpgradePendingFinalize = "UpgradePendingFinalize"
 )
 
 var (

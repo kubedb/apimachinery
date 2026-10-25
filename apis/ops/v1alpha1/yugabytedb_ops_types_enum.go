@@ -27,6 +27,10 @@ const (
 	YugabyteDBOpsRequestTypeVolumeExpansion YugabyteDBOpsRequestType = "VolumeExpansion"
 	// YugabyteDBOpsRequestTypeUpdateVersion is a YugabyteDBOpsRequestType of type UpdateVersion.
 	YugabyteDBOpsRequestTypeUpdateVersion YugabyteDBOpsRequestType = "UpdateVersion"
+	// YugabyteDBOpsRequestTypeFinalizeUpgrade is a YugabyteDBOpsRequestType of type FinalizeUpgrade.
+	YugabyteDBOpsRequestTypeFinalizeUpgrade YugabyteDBOpsRequestType = "FinalizeUpgrade"
+	// YugabyteDBOpsRequestTypeRollbackUpgrade is a YugabyteDBOpsRequestType of type RollbackUpgrade.
+	YugabyteDBOpsRequestTypeRollbackUpgrade YugabyteDBOpsRequestType = "RollbackUpgrade"
 )
 
 var ErrInvalidYugabyteDBOpsRequestType = fmt.Errorf("not a valid YugabyteDBOpsRequestType, try [%s]", strings.Join(_YugabyteDBOpsRequestTypeNames, ", "))
@@ -40,6 +44,8 @@ var _YugabyteDBOpsRequestTypeNames = []string{
 	string(YugabyteDBOpsRequestTypeVerticalScaling),
 	string(YugabyteDBOpsRequestTypeVolumeExpansion),
 	string(YugabyteDBOpsRequestTypeUpdateVersion),
+	string(YugabyteDBOpsRequestTypeFinalizeUpgrade),
+	string(YugabyteDBOpsRequestTypeRollbackUpgrade),
 }
 
 // YugabyteDBOpsRequestTypeNames returns a list of possible string values of YugabyteDBOpsRequestType.
@@ -60,6 +66,8 @@ func YugabyteDBOpsRequestTypeValues() []YugabyteDBOpsRequestType {
 		YugabyteDBOpsRequestTypeVerticalScaling,
 		YugabyteDBOpsRequestTypeVolumeExpansion,
 		YugabyteDBOpsRequestTypeUpdateVersion,
+		YugabyteDBOpsRequestTypeFinalizeUpgrade,
+		YugabyteDBOpsRequestTypeRollbackUpgrade,
 	}
 }
 
@@ -84,6 +92,8 @@ var _YugabyteDBOpsRequestTypeValue = map[string]YugabyteDBOpsRequestType{
 	"VerticalScaling":   YugabyteDBOpsRequestTypeVerticalScaling,
 	"VolumeExpansion":   YugabyteDBOpsRequestTypeVolumeExpansion,
 	"UpdateVersion":     YugabyteDBOpsRequestTypeUpdateVersion,
+	"FinalizeUpgrade":   YugabyteDBOpsRequestTypeFinalizeUpgrade,
+	"RollbackUpgrade":   YugabyteDBOpsRequestTypeRollbackUpgrade,
 }
 
 // ParseYugabyteDBOpsRequestType attempts to convert a string to a YugabyteDBOpsRequestType.

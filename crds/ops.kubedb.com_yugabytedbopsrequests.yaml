@@ -95,6 +95,8 @@ spec:
                     type: string
                 type: object
                 x-kubernetes-map-type: atomic
+              finalizeUpgrade:
+                type: object
               horizontalScaling:
                 properties:
                   tserver:
@@ -107,6 +109,8 @@ spec:
                 format: int32
                 type: integer
               restart:
+                type: object
+              rollbackUpgrade:
                 type: object
               rolling:
                 properties:
@@ -238,9 +242,17 @@ spec:
                 - VerticalScaling
                 - VolumeExpansion
                 - UpdateVersion
+                - FinalizeUpgrade
+                - RollbackUpgrade
                 type: string
               updateVersion:
                 properties:
+                  finalize:
+                    default: Auto
+                    enum:
+                    - Auto
+                    - Manual
+                    type: string
                   soakDuration:
                     type: string
                   targetVersion:

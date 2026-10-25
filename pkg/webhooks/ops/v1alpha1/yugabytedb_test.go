@@ -24,6 +24,7 @@ import (
 	"testing"
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
+	"kubedb.dev/apimachinery/apis/kubedb"
 	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
 	opsapi "kubedb.dev/apimachinery/apis/ops/v1alpha1"
 
@@ -462,8 +463,8 @@ func TestYugabyteDBOpsResumeOnCompletion(t *testing.T) {
 // that allows each of them.
 func TestYugabyteDBOpsExamples(t *testing.T) {
 	files, _ := filepath.Glob(filepath.Join("..", "..", "..", "..", "examples", "yugabytedb", "ops", "*.yaml"))
-	if len(files) != 11 {
-		t.Fatalf("expected 11 ops examples, got %d", len(files))
+	if len(files) < len(opsapi.YugabyteDBOpsRequestTypeNames()) {
+		t.Fatalf("expected at least one ops example per type, got %d files", len(files))
 	}
 	issuer := &core.TypedLocalObjectReference{Name: "yb-ca-issuer", Kind: "Issuer"}
 	types := map[opsapi.YugabyteDBOpsRequestType]bool{}
@@ -484,7 +485,12 @@ func TestYugabyteDBOpsExamples(t *testing.T) {
 			if req.Spec.TLS != nil && (req.Spec.TLS.Remove || req.Spec.TLS.RotateCertificates) {
 				db.Spec.TLS = &dbapi.YugabyteDBTLSConfig{TLSConfig: kmapi.TLSConfig{IssuerRef: issuer}}
 			}
-			w := ybOpsWebhook(t, db,
+			// finalize and rollback need an upgrade that is pending finalization
+			if req.Spec.Type == opsapi.YugabyteDBOpsRequestTypeFinalizeUpgrade || req.Spec.Type == opsapi.YugabyteDBOpsRequestTypeRollbackUpgrade {
+				db.Status.Conditions = []kmapi.Condition{{Type: kubedb.YugabyteDBConditionUpgradePendingFinalize, Status: metav1.ConditionTrue}}
+			}
+			w := ybOpsWebhook(
+				t, db,
 				&core.Secret{ObjectMeta: metav1.ObjectMeta{Name: "yb-custom-config", Namespace: "demo"}, Data: map[string][]byte{"tserver.flags": []byte("--ysql_max_connections=300")}},
 				&core.Secret{ObjectMeta: metav1.ObjectMeta{Name: "yb-new-auth", Namespace: "demo"}, Data: map[string][]byte{"username": []byte("yugabyte"), "password": []byte("x")}},
 			)

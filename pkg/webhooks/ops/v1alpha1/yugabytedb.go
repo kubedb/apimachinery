@@ -41,6 +41,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/mergepatch"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
+	kmc "kmodules.xyz/client-go/conditions"
 	meta_util "kmodules.xyz/client-go/meta"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -154,6 +155,9 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateCreateOrUpdate(ctx context.C
 	case opsapi.YugabyteDBOpsRequestTypeRestart:
 	case opsapi.YugabyteDBOpsRequestTypeUpdateVersion:
 		add("updateVersion", w.validateUpdateVersion(ctx, db, req))
+		add("type", w.validateOneUpgradeAtATime(ctx, db, req))
+	case opsapi.YugabyteDBOpsRequestTypeFinalizeUpgrade, opsapi.YugabyteDBOpsRequestTypeRollbackUpgrade:
+		add("type", w.validateFinalizeOrRollback(ctx, db, req))
 	case opsapi.YugabyteDBOpsRequestTypeHorizontalScaling:
 		add("horizontalScaling", w.validateHorizontalScaling(db, req))
 	case opsapi.YugabyteDBOpsRequestTypeVerticalScaling:
@@ -191,6 +195,11 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateUpdateVersion(ctx context.Co
 	if uv.TargetVersion == "" {
 		return errors.New("spec.updateVersion.targetVersion is required")
 	}
+	switch uv.Finalize {
+	case "", opsapi.YugabyteDBFinalizeModeAuto, opsapi.YugabyteDBFinalizeModeManual:
+	default:
+		return fmt.Errorf("spec.updateVersion.finalize %q is not valid, use %s or %s", uv.Finalize, opsapi.YugabyteDBFinalizeModeAuto, opsapi.YugabyteDBFinalizeModeManual)
+	}
 	if uv.SoakDuration != nil && uv.SoakDuration.Duration < 0 {
 		return errors.New("spec.updateVersion.soakDuration must not be negative")
 	}
@@ -227,6 +236,55 @@ func (w *YugabyteDBOpsRequestCustomWebhook) validateUpdateVersion(ctx context.Co
 		return fmt.Errorf("upgrade from version %v to %v is not allowed by the updateConstraints of %v", db.Spec.Version, uv.TargetVersion, uv.TargetVersion)
 	}
 	return nil
+}
+
+// yugabyteDBIsUpgradeType reports the ops request types that move the version of the universe. Only one of them may
+// be active on a database at a time.
+func yugabyteDBIsUpgradeType(t opsapi.YugabyteDBOpsRequestType) bool {
+	switch t {
+	case opsapi.YugabyteDBOpsRequestTypeUpdateVersion, opsapi.YugabyteDBOpsRequestTypeFinalizeUpgrade, opsapi.YugabyteDBOpsRequestTypeRollbackUpgrade:
+		return true
+	}
+	return false
+}
+
+// validateOneUpgradeAtATime rejects a new upgrade related request while another one of the same database has not
+// completed. A FinalizeUpgrade or RollbackUpgrade may run next to the UpdateVersion request that left the
+// upgrade pending, since that request stays active until the upgrade is completed. A pending upgrade of the
+// database also blocks a new UpdateVersion.
+func (w *YugabyteDBOpsRequestCustomWebhook) validateOneUpgradeAtATime(ctx context.Context, db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
+	if !yugabyteDBOpsPending(req) {
+		return nil
+	}
+	pendingFinalize := kmc.IsConditionTrue(db.Status.Conditions, kubedb.YugabyteDBConditionUpgradePendingFinalize)
+	if req.Spec.Type == opsapi.YugabyteDBOpsRequestTypeUpdateVersion && pendingFinalize {
+		return errors.New("an upgrade of this database is pending finalization, send a FinalizeUpgrade or RollbackUpgrade request first")
+	}
+	var list opsapi.YugabyteDBOpsRequestList
+	if err := w.DefaultClient.List(ctx, &list, client.InNamespace(req.Namespace)); err != nil {
+		return err
+	}
+	for i := range list.Items {
+		o := &list.Items[i]
+		if o.Name == req.Name || o.Spec.DatabaseRef.Name != req.Spec.DatabaseRef.Name || !yugabyteDBIsUpgradeType(o.Spec.Type) || isOpsReqCompleted(o.Status.Phase) {
+			continue
+		}
+		if o.Spec.Type == opsapi.YugabyteDBOpsRequestTypeUpdateVersion && req.Spec.Type != opsapi.YugabyteDBOpsRequestTypeUpdateVersion && pendingFinalize {
+			continue
+		}
+		return fmt.Errorf("the upgrade related request %s (%s) of this database has not completed, only one upgrade related request can run at a time", o.Name, o.Spec.Type)
+	}
+	return nil
+}
+
+// validateFinalizeOrRollback checks a FinalizeUpgrade or RollbackUpgrade request. Both are only valid while the
+// database has the UpgradePendingFinalize condition, which an UpdateVersion with finalize: Manual sets.
+func (w *YugabyteDBOpsRequestCustomWebhook) validateFinalizeOrRollback(ctx context.Context, db *dbapi.YugabyteDB, req *opsapi.YugabyteDBOpsRequest) error {
+	if yugabyteDBOpsPending(req) && !kmc.IsConditionTrue(db.Status.Conditions, kubedb.YugabyteDBConditionUpgradePendingFinalize) {
+		return fmt.Errorf("%s needs a pending upgrade: the database has no %s condition, run an UpdateVersion with spec.updateVersion.finalize: Manual first",
+			req.Spec.Type, kubedb.YugabyteDBConditionUpgradePendingFinalize)
+	}
+	return w.validateOneUpgradeAtATime(ctx, db, req)
 }
 
 // yugabyteDBUpgradeAllowed evaluates the updateConstraints of the target version against the current version.

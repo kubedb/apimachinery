@@ -73,6 +73,12 @@ type YugabyteDBOpsRequestSpec struct {
 	VolumeExpansion *YugabyteDBVolumeExpansionSpec `json:"volumeExpansion,omitempty"`
 	// Specifies information necessary for upgrading YugabyteDB
 	UpdateVersion *YugabyteDBUpdateVersionSpec `json:"updateVersion,omitempty"`
+	// Specifies information necessary for finalizing an upgrade that was started with finalize: Manual.
+	// The upgrade is finalized and can not be rolled back after it.
+	FinalizeUpgrade *FinalizeUpgradeSpec `json:"finalizeUpgrade,omitempty"`
+	// Specifies information necessary for rolling an upgrade back to the previous version.
+	// It is only possible while the upgrade is not finalized.
+	RollbackUpgrade *RollbackUpgradeSpec `json:"rollbackUpgrade,omitempty"`
 	// Rolling tunes the operations that restart the pods one at a time.
 	Rolling *YugabyteDBRollingSpec `json:"rolling,omitempty"`
 	// Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.
@@ -115,7 +121,32 @@ type YugabyteDBUpdateVersionSpec struct {
 	// The upgrade can still be rolled back until it is finalized. Defaults to 10m.
 	// +optional
 	SoakDuration *metav1.Duration `json:"soakDuration,omitempty"`
+	// Finalize selects what happens after the soak. Auto finalizes the upgrade. Manual stops with the
+	// UpgradePendingFinalize condition on the database, and a FinalizeUpgrade or RollbackUpgrade
+	// YugabyteDBOpsRequest completes the upgrade either way. Defaults to Auto.
+	// +optional
+	// +kubebuilder:default=Auto
+	Finalize YugabyteDBFinalizeMode `json:"finalize,omitempty"`
 }
+
+// YugabyteDBFinalizeMode selects whether an upgrade is finalized by the UpdateVersion request itself.
+// +kubebuilder:validation:Enum=Auto;Manual
+type YugabyteDBFinalizeMode string
+
+const (
+	// YugabyteDBFinalizeModeAuto finalizes the upgrade when the soak ends.
+	YugabyteDBFinalizeModeAuto YugabyteDBFinalizeMode = "Auto"
+	// YugabyteDBFinalizeModeManual leaves the upgrade pending until a FinalizeUpgrade or RollbackUpgrade request.
+	YugabyteDBFinalizeModeManual YugabyteDBFinalizeMode = "Manual"
+)
+
+// FinalizeUpgradeSpec is the spec of a FinalizeUpgrade request. It has no fields: the upgrade to finalize is
+// the one that is pending on the database.
+type FinalizeUpgradeSpec struct{}
+
+// RollbackUpgradeSpec is the spec of a RollbackUpgrade request. It has no fields: the upgrade to roll back is
+// the one that is pending on the database.
+type RollbackUpgradeSpec struct{}
 
 // YugabyteDBHorizontalScalingSpec contains the horizontal scaling information of a YugabyteDB universe.
 // The masters cannot be scaled, their number is the replication factor.
@@ -150,8 +181,8 @@ type YugabyteDBTLSSpec struct {
 	Remove bool `json:"remove,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;HorizontalScaling;VerticalScaling;VolumeExpansion;UpdateVersion
-// ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling,VerticalScaling,VolumeExpansion,UpdateVersion)
+// +kubebuilder:validation:Enum=Restart;ReconfigureTLS;RotateAuth;Reconfigure;HorizontalScaling;VerticalScaling;VolumeExpansion;UpdateVersion;FinalizeUpgrade;RollbackUpgrade
+// ENUM(Restart,ReconfigureTLS,RotateAuth,Reconfigure,HorizontalScaling,VerticalScaling,VolumeExpansion,UpdateVersion,FinalizeUpgrade,RollbackUpgrade)
 type YugabyteDBOpsRequestType string
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

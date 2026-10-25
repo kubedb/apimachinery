@@ -541,4 +541,22 @@ const (
 	YugabyteDBFinalizeUpgrade = "FinalizeUpgrade"
 	// YugabyteDBUpdateVolumes is the step that grows the PVCs.
 	YugabyteDBUpdateVolumes = "UpdateVolumes"
+	// YugabyteDBDeleteSnapshotSchedules is the step that records and deletes the PITR snapshot schedules before an upgrade.
+	YugabyteDBDeleteSnapshotSchedules = "DeleteSnapshotSchedules"
+	// YugabyteDBRecordAutoFlagsConfig is the step that records the AutoFlags config version, so a rollback can return to it.
+	YugabyteDBRecordAutoFlagsConfig = "RecordAutoFlagsConfig"
+	// YugabyteDBUpgradePendingFinalize is the step at which a Manual upgrade waits for a FinalizeUpgrade or RollbackUpgrade request.
+	YugabyteDBUpgradePendingFinalize = "UpgradePendingFinalize"
+	// YugabyteDBUpgradeYSQL is the step that upgrades the YSQL catalog (upgrade_ysql) as part of the finalization.
+	YugabyteDBUpgradeYSQL = "UpgradeYSQL"
+	// YugabyteDBRecreateSnapshotSchedules is the step that recreates the PITR snapshot schedules after the upgrade is finalized or rolled back.
+	YugabyteDBRecreateSnapshotSchedules = "RecreateSnapshotSchedules"
+	// YugabyteDBRollbackAutoFlags is the step that returns the AutoFlags to the recorded config version (rollback_auto_flags).
+	YugabyteDBRollbackAutoFlags = "RollbackAutoFlags"
+	// YugabyteDBRollbackTServers is the step that returns the tservers to the previous image, one at a time.
+	YugabyteDBRollbackTServers = "RollbackTServers"
+	// YugabyteDBRollbackMasters is the step that returns the masters to the previous image, one at a time, after the tservers.
+	YugabyteDBRollbackMasters = "RollbackMasters"
+	// YugabyteDBRestoreVersion is the step that sets spec.version back to the previous version after a rollback.
+	YugabyteDBRestoreVersion = "RestoreVersion"
 )
