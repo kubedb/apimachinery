@@ -152,6 +152,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().SolrAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("weaviateautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().WeaviateAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("yugabytedbautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().YugabyteDBAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("zookeeperautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().ZooKeeperAutoscalers().Informer()}, nil
 
@@ -312,6 +314,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Solrs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("weaviates"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Weaviates().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("yugabytedbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().YugabyteDBs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("zookeepers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().ZooKeepers().Informer()}, nil
 
