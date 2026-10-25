@@ -157,6 +157,10 @@ func (c *FakeGitopsV1alpha1) Weaviates(namespace string) v1alpha1.WeaviateInterf
 	return newFakeWeaviates(c, namespace)
 }
 
+func (c *FakeGitopsV1alpha1) YugabyteDBs(namespace string) v1alpha1.YugabyteDBInterface {
+	return newFakeYugabyteDBs(c, namespace)
+}
+
 func (c *FakeGitopsV1alpha1) ZooKeepers(namespace string) v1alpha1.ZooKeeperInterface {
 	return newFakeZooKeepers(c, namespace)
 }

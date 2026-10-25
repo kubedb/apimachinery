@@ -93,6 +93,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MySQLAutoscalerList{},
 		&Neo4jAutoscaler{},
 		&Neo4jAutoscalerList{},
+		&YugabyteDBAutoscaler{},
+		&YugabyteDBAutoscalerList{},
 		&OracleAutoscaler{},
 		&OracleAutoscalerList{},
 		&PerconaXtraDBAutoscaler{},
