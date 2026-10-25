@@ -84,4 +84,6 @@ type SolrExpansion interface{}
 
 type WeaviateExpansion interface{}
 
+type WorkflowNamespaceExpansion interface{}
+
 type ZooKeeperExpansion interface{}

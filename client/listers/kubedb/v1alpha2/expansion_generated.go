@@ -282,6 +282,14 @@ type WeaviateListerExpansion interface{}
 // WeaviateNamespaceLister.
 type WeaviateNamespaceListerExpansion interface{}
 
+// WorkflowNamespaceListerExpansion allows custom methods to be added to
+// WorkflowNamespaceLister.
+type WorkflowNamespaceListerExpansion interface{}
+
+// WorkflowNamespaceNamespaceListerExpansion allows custom methods to be added to
+// WorkflowNamespaceNamespaceLister.
+type WorkflowNamespaceNamespaceListerExpansion interface{}
+
 // ZooKeeperListerExpansion allows custom methods to be added to
 // ZooKeeperLister.
 type ZooKeeperListerExpansion interface{}

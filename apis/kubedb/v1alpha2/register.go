@@ -93,6 +93,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MSSQLServerList{},
 		&DurableWorkflow{},
 		&DurableWorkflowList{},
+		&WorkflowNamespace{},
+		&WorkflowNamespaceList{},
 		&Neo4j{},
 		&Neo4jList{},
 		&Oracle{},

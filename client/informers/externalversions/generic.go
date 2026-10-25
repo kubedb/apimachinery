@@ -418,6 +418,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Solrs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("weaviates"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Weaviates().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("workflownamespaces"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().WorkflowNamespaces().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("zookeepers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ZooKeepers().Informer()}, nil
 

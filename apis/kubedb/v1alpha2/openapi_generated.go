@@ -868,6 +868,11 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_WeaviateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateStatus":                                schema_apimachinery_apis_kubedb_v1alpha2_WeaviateStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WeaviateTLSConfig":                             schema_apimachinery_apis_kubedb_v1alpha2_WeaviateTLSConfig(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespace":                             schema_apimachinery_apis_kubedb_v1alpha2_WorkflowNamespace(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespaceArchival":                     schema_apimachinery_apis_kubedb_v1alpha2_WorkflowNamespaceArchival(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespaceList":                         schema_apimachinery_apis_kubedb_v1alpha2_WorkflowNamespaceList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespaceSpec":                         schema_apimachinery_apis_kubedb_v1alpha2_WorkflowNamespaceSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespaceStatus":                       schema_apimachinery_apis_kubedb_v1alpha2_WorkflowNamespaceStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeper":                                     schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeper(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperApp":                                  schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ZooKeeperList":                                 schema_apimachinery_apis_kubedb_v1alpha2_ZooKeeperList(ref),
@@ -49321,6 +49326,251 @@ func schema_apimachinery_apis_kubedb_v1alpha2_WeaviateTLSConfig(ref common.Refer
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.TypedLocalObjectReference", "kmodules.xyz/client-go/api/v1.CertificateSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_WorkflowNamespace(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespaceSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespaceStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespaceSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespaceStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_WorkflowNamespaceArchival(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "WorkflowNamespaceArchival is the archival of a namespace or domain.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled archives the histories and the visibility records of the closed workflows to the URIs in the archival of the DurableWorkflow.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_WorkflowNamespaceList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "WorkflowNamespaceList contains a list of WorkflowNamespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespace"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespace"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_WorkflowNamespaceSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "WorkflowNamespaceSpec defines the desired state of WorkflowNamespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"databaseRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseRef is the DurableWorkflow, in the same namespace, that holds the Temporal namespace or Cadence domain.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name is the name of the Temporal namespace or Cadence domain. It defaults to metadata.name and is immutable.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"description": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Description of the namespace or domain.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"ownerEmail": {
+						SchemaProps: spec.SchemaProps{
+							Description: "OwnerEmail is the contact of the owner. Cadence requires it; Temporal stores it as given.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"retention": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Retention is how long the closed workflow executions are kept. Defaults to 72h. Cadence keeps whole days (at least 1d): the operator rounds up to the next day.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"archival": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Archival turns the archival of the closed workflows on. It needs archival in the spec of the DurableWorkflow.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespaceArchival"),
+						},
+					},
+					"tokenSecretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TokenSecretRef is a Secret, in the same namespace, whose key \"token\" holds a JWT that the operator sends to the frontend. Needed only when the DurableWorkflow has authorization enabled: it must carry the admin permission for Temporal (for example \"default:admin\") and the admin claim for Cadence.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy controls what happens in the engine when this object is deleted. Delete (the default) deletes the namespace or domain, which drops all its workflows and their histories. DoNotTerminate refuses the deletion of the object.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"databaseRef"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.WorkflowNamespaceArchival"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_WorkflowNamespaceStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "WorkflowNamespaceStatus defines the observed state of WorkflowNamespace.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name is the name used in the engine.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"id": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ID is the id the engine reported for the namespace or domain.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"retention": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Retention is the retention in force in the engine.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kmodules.xyz/client-go/api/v1.Condition"},
 	}
 }
 
