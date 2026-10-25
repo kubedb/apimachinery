@@ -649,6 +649,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowBind":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowCassandraOptions":               schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowCassandraOptions(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowList":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowManagedStore":                   schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowManagedStore(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowNode":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowNode(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistence":                    schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowPersistence(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistenceStatus":              schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowPersistenceStatus(ref),
@@ -37117,6 +37118,56 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowList(ref common.Ref
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowManagedStore(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowManagedStore describes the database the operator creates for the default store (and the visibility store, which shares its server). The child inherits spec.deletionPolicy of the DurableWorkflow. Its connection limit is sized from the topology when it is created.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"engine": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Engine is Postgres (default) or MySQL.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version is the name of a PostgresVersion or MySQLVersion. If omitted, the newest catalog entry of the engine that is official, not deprecated, not end of life and needs no license is used. The choice is written to the spec on creation.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas is the number of database pods: 1 (default) or 3 for a highly available database. Postgres forms a streaming replication cluster, MySQL a group replication cluster.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage specifies the volume of each database pod.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for the database pods.",
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+				},
+				Required: []string{"storage"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37154,15 +37205,21 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowPersistence(ref com
 				Properties: map[string]spec.Schema{
 					"default": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Default is the store for workflow state: Postgres, MySQL or Cassandra.",
+							Description: "Default is the store for workflow state: Postgres, MySQL or Cassandra. Its AppBinding reference is required unless Managed is set.",
 							Default:     map[string]interface{}{},
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStore"),
 						},
 					},
 					"visibility": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Visibility is the store for visibility records. If omitted, the default store's server is used with a separate database or keyspace.",
+							Description: "Visibility is the store for visibility records. If omitted, the default store's server is used with a separate database or keyspace. It can't be set together with Managed.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStore"),
+						},
+					},
+					"managed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Managed makes the operator create the backing database itself, a Postgres or MySQL named \"<name>-db\" that is owned by this DurableWorkflow, instead of referencing an existing one. It is exclusive with default.name and visibility, and immutable: the database is afterwards managed with its own ops requests (an UpdateVersion of the DurableWorkflow never touches it).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowManagedStore"),
 						},
 					},
 					"kafkaRef": {
@@ -37172,11 +37229,10 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowPersistence(ref com
 						},
 					},
 				},
-				Required: []string{"default"},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStore"},
+			"kmodules.xyz/client-go/api/v1.ObjectReference", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowManagedStore", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowStore"},
 	}
 }
 

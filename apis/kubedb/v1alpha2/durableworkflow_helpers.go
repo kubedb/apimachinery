@@ -205,7 +205,7 @@ func (r *DurableWorkflow) VisibilityStore() DurableWorkflowStore {
 	if r.Spec.Persistence.Visibility != nil {
 		return *r.Spec.Persistence.Visibility
 	}
-	return r.Spec.Persistence.Default
+	return r.DefaultStore()
 }
 
 // Replicas returns the replicas of a role.
@@ -406,6 +406,18 @@ func (r *DurableWorkflow) SetDefaults(kc client.Client) {
 	}
 
 	r.setDefaultStore(&r.Spec.Persistence.Default, false)
+	if m := r.Spec.Persistence.Managed; m != nil {
+		m.Engine = m.ManagedEngine()
+		m.Replicas = ptr.To(m.ManagedReplicas())
+		if m.Version == "" {
+			// Written to the spec once, so that a newer catalog entry never changes an existing database.
+			if v, err := ResolveManagedVersion(context.TODO(), kc, m.Engine); err != nil {
+				klog.Errorf("can't pick a version for the managed %s of %s/%s: %s", m.Engine, r.Namespace, r.Name, err.Error())
+			} else {
+				m.Version = v
+			}
+		}
+	}
 	if r.Spec.Persistence.Visibility != nil {
 		r.setDefaultStore(r.Spec.Persistence.Visibility, true)
 	}

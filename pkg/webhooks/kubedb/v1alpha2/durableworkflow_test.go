@@ -26,6 +26,7 @@ import (
 
 	core "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/utils/ptr"
@@ -37,12 +38,44 @@ import (
 type stubClient struct {
 	client.Client
 	versions map[string]*catalog.DurableWorkflowVersion
+	pg       []catalog.PostgresVersion
+	mysql    []catalog.MySQLVersion
+}
+
+func (c stubClient) List(_ context.Context, list client.ObjectList, _ ...client.ListOption) error {
+	switch l := list.(type) {
+	case *catalog.PostgresVersionList:
+		l.Items = c.pg
+	case *catalog.MySQLVersionList:
+		l.Items = c.mysql
+	default:
+		panic("stubClient only lists PostgresVersion and MySQLVersion")
+	}
+	return nil
 }
 
 func (c stubClient) Get(_ context.Context, key client.ObjectKey, obj client.Object, _ ...client.GetOption) error {
+	switch o := obj.(type) {
+	case *catalog.PostgresVersion:
+		for _, v := range c.pg {
+			if v.Name == key.Name {
+				*o = v
+				return nil
+			}
+		}
+		return apierrors.NewNotFound(schema.GroupResource{Resource: "postgresversions"}, key.Name)
+	case *catalog.MySQLVersion:
+		for _, v := range c.mysql {
+			if v.Name == key.Name {
+				*o = v
+				return nil
+			}
+		}
+		return apierrors.NewNotFound(schema.GroupResource{Resource: "mysqlversions"}, key.Name)
+	}
 	v, ok := obj.(*catalog.DurableWorkflowVersion)
 	if !ok {
-		panic("stubClient only serves DurableWorkflowVersion")
+		panic("stubClient only serves DurableWorkflowVersion, PostgresVersion and MySQLVersion")
 	}
 	found, ok := c.versions[key.Name]
 	if !ok {
@@ -88,7 +121,29 @@ func dwTestWebhook(t *testing.T) *DurableWorkflowCustomWebhook {
 			},
 		},
 	}
-	c := stubClient{versions: map[string]*catalog.DurableWorkflowVersion{}}
+	pgv := func(name, version string, mod func(*catalog.PostgresVersionSpec)) catalog.PostgresVersion {
+		v := catalog.PostgresVersion{ObjectMeta: metav1.ObjectMeta{Name: name}, Spec: catalog.PostgresVersionSpec{Version: version}}
+		if mod != nil {
+			mod(&v.Spec)
+		}
+		return v
+	}
+	c := stubClient{
+		versions: map[string]*catalog.DurableWorkflowVersion{},
+		pg: []catalog.PostgresVersion{
+			pgv("16.4", "16.4", nil),
+			pgv("17.2", "17.2", nil),
+			pgv("17.4", "17.4", func(s *catalog.PostgresVersionSpec) { s.Deprecated = true }),
+			pgv("18.0-ts", "18.0", func(s *catalog.PostgresVersionSpec) { s.Distribution = catalog.PostgresDistroTimescaleDB }),
+			pgv("18.1-ent", "18.1", func(s *catalog.PostgresVersionSpec) { s.License = &catalog.PostgresVersionLicense{Required: true} }),
+			pgv("9.6", "9.6", nil),
+		},
+		mysql: []catalog.MySQLVersion{
+			{ObjectMeta: metav1.ObjectMeta{Name: "8.0.35"}, Spec: catalog.MySQLVersionSpec{Version: "8.0.35"}},
+			{ObjectMeta: metav1.ObjectMeta{Name: "8.4.2"}, Spec: catalog.MySQLVersionSpec{Version: "8.4.2"}},
+			{ObjectMeta: metav1.ObjectMeta{Name: "9.1.0"}, Spec: catalog.MySQLVersionSpec{Version: "9.1.0", EndOfLife: true}},
+		},
+	}
 	for _, v := range versions {
 		c.versions[v.Name] = v
 	}
@@ -312,5 +367,127 @@ func TestDurableWorkflowSetDefaults(t *testing.T) {
 	db.SetDefaults(w.DefaultClient)
 	if got := ptr.Deref(db.Spec.NumHistoryShards, 0); got != 1024 {
 		t.Errorf("explicit numHistoryShards overwritten: %d", got)
+	}
+}
+
+func managedObj(version string, m olddbapi.DurableWorkflowManagedStore) *olddbapi.DurableWorkflow {
+	db := dwTestObj(version)
+	db.Spec.Persistence.Default = olddbapi.DurableWorkflowStore{}
+	db.Spec.Persistence.Managed = &m
+	return db
+}
+
+func managedStorage() core.PersistentVolumeClaimSpec {
+	return core.PersistentVolumeClaimSpec{Resources: core.VolumeResourceRequirements{
+		Requests: core.ResourceList{core.ResourceStorage: resource.MustParse("10Gi")},
+	}}
+}
+
+func TestDurableWorkflowManagedValidate(t *testing.T) {
+	ok := olddbapi.DurableWorkflowManagedStore{Version: "17.2", Storage: managedStorage()}
+	tests := []struct {
+		name    string
+		version string
+		mutate  func(*olddbapi.DurableWorkflow)
+		old     func(*olddbapi.DurableWorkflow)
+		wantErr string
+	}{
+		{name: "postgres", version: "temporal-1.32.1"},
+		{name: "mysql ha", version: "temporal-1.32.1", mutate: func(d *olddbapi.DurableWorkflow) {
+			m := d.Spec.Persistence.Managed
+			m.Engine, m.Version, m.Replicas = olddbapi.DurableWorkflowManagedMySQL, "8.4.2", ptr.To(int32(3))
+		}},
+		{name: "mysql two replicas", version: "temporal-1.32.1", mutate: func(d *olddbapi.DurableWorkflow) {
+			m := d.Spec.Persistence.Managed
+			m.Engine, m.Version, m.Replicas = olddbapi.DurableWorkflowManagedMySQL, "8.4.2", ptr.To(int32(2))
+		}, wantErr: "3 to 9"},
+		{name: "cassandra", version: "temporal-1.32.1", mutate: func(d *olddbapi.DurableWorkflow) {
+			d.Spec.Persistence.Managed.Engine = "Cassandra"
+		}, wantErr: "Unsupported value"},
+		{name: "exclusive with a reference", version: "temporal-1.32.1", mutate: func(d *olddbapi.DurableWorkflow) {
+			d.Spec.Persistence.Default.ObjectReference = &kmapi.ObjectReference{Name: "pg"}
+		}, wantErr: "exclusive"},
+		{name: "no visibility", version: "temporal-1.32.1", mutate: func(d *olddbapi.DurableWorkflow) {
+			d.Spec.Persistence.Visibility = &olddbapi.DurableWorkflowStore{ObjectReference: &kmapi.ObjectReference{Name: "pg2"}}
+		}, wantErr: "visibility can't be set with managed"},
+		{name: "no createDatabase false", version: "temporal-1.32.1", mutate: func(d *olddbapi.DurableWorkflow) {
+			d.Spec.Persistence.Default.CreateDatabase = ptr.To(false)
+		}, wantErr: "always creates"},
+		{name: "unknown version", version: "temporal-1.32.1", mutate: func(d *olddbapi.DurableWorkflow) {
+			d.Spec.Persistence.Managed.Version = "1.0"
+		}, wantErr: "PostgresVersion not found"},
+		{name: "no storage", version: "temporal-1.32.1", mutate: func(d *olddbapi.DurableWorkflow) {
+			d.Spec.Persistence.Managed.Storage = core.PersistentVolumeClaimSpec{}
+		}, wantErr: "size of the volume"},
+		{name: "engine not in the catalog of the version", version: "cadence-1.4.2", mutate: func(d *olddbapi.DurableWorkflow) {
+			m := d.Spec.Persistence.Managed
+			m.Engine, m.Version = olddbapi.DurableWorkflowManagedMySQL, "8.4.2"
+		}, wantErr: "not supported as the default store"},
+		{name: "managed can't be added", version: "temporal-1.32.1", old: func(d *olddbapi.DurableWorkflow) {
+			d.Spec.Persistence.Managed = nil
+			d.Spec.Persistence.Default = olddbapi.DurableWorkflowStore{ObjectReference: &kmapi.ObjectReference{Name: "pg"}}
+		}, wantErr: "can't be added"},
+		{name: "managed can't be removed", version: "temporal-1.32.1", mutate: func(d *olddbapi.DurableWorkflow) {
+			d.Spec.Persistence.Managed = nil
+			d.Spec.Persistence.Default = olddbapi.DurableWorkflowStore{ObjectReference: &kmapi.ObjectReference{Name: "pg"}}
+		}, old: func(d *olddbapi.DurableWorkflow) {}, wantErr: "can't be removed"},
+		{name: "immutable", version: "temporal-1.32.1", mutate: func(d *olddbapi.DurableWorkflow) {
+			d.Spec.Persistence.Managed.Version = "16.4"
+		}, old: func(d *olddbapi.DurableWorkflow) {}, wantErr: "managed is immutable"},
+		{name: "unchanged", version: "temporal-1.32.1", old: func(d *olddbapi.DurableWorkflow) {}},
+		{name: "defaulter fills the version", version: "temporal-1.32.1", old: func(d *olddbapi.DurableWorkflow) {
+			d.Spec.Persistence.Managed.Version = ""
+		}},
+	}
+	w := dwTestWebhook(t)
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			db := managedObj(tc.version, *ok.DeepCopy())
+			if tc.mutate != nil {
+				tc.mutate(db)
+			}
+			var old *olddbapi.DurableWorkflow
+			if tc.old != nil {
+				old = managedObj(tc.version, *ok.DeepCopy())
+				tc.old(old)
+			}
+			_, err := w.validate(db, old)
+			switch {
+			case tc.wantErr == "" && err != nil:
+				t.Fatalf("unexpected error: %v", err)
+			case tc.wantErr != "" && (err == nil || !strings.Contains(err.Error(), tc.wantErr)):
+				t.Fatalf("want error containing %q, got %v", tc.wantErr, err)
+			}
+		})
+	}
+}
+
+func TestDurableWorkflowManagedDefaults(t *testing.T) {
+	w := dwTestWebhook(t)
+	db := managedObj("temporal-1.32.1", olddbapi.DurableWorkflowManagedStore{Storage: managedStorage()})
+	db.SetDefaults(w.DefaultClient)
+	m := db.Spec.Persistence.Managed
+	if m.Engine != olddbapi.DurableWorkflowManagedPostgres || m.ManagedReplicas() != 1 {
+		t.Errorf("engine/replicas defaults: %+v", m)
+	}
+	// 18.1-ent needs a license, 18.0-ts is not official, 17.4 is deprecated
+	if m.Version != "17.2" {
+		t.Errorf("version = %q, want the newest usable one, 17.2", m.Version)
+	}
+	if _, err := w.validate(db, nil); err != nil {
+		t.Errorf("defaulted object is invalid: %v", err)
+	}
+	s := db.DefaultStore()
+	if s.Name != "dw-db" || s.Namespace != "demo" || s.Type != olddbapi.DurableWorkflowStorePostgres {
+		t.Errorf("effective default store = %+v", s)
+	}
+	if db.Spec.Persistence.Default.ObjectReference != nil {
+		t.Errorf("the reference must not be written to the spec")
+	}
+
+	db = managedObj("temporal-1.32.1", olddbapi.DurableWorkflowManagedStore{Engine: olddbapi.DurableWorkflowManagedMySQL, Storage: managedStorage()})
+	db.SetDefaults(w.DefaultClient)
+	if got := db.Spec.Persistence.Managed.Version; got != "8.4.2" {
+		t.Errorf("mysql version = %q, want 8.4.2 (9.1.0 is end of life)", got)
 	}
 }
