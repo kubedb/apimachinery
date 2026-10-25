@@ -127,6 +127,10 @@ type DurableWorkflowSpec struct {
 	// +optional
 	Halted bool `json:"halted,omitempty"`
 
+	// Init holds what to do before the cluster is first provisioned.
+	// +optional
+	Init *DurableWorkflowInit `json:"init,omitempty"`
+
 	// HealthChecker defines attributes of the health checker.
 	// +optional
 	// +kubebuilder:default={periodSeconds: 10, timeoutSeconds: 10, failureThreshold: 3}
@@ -438,6 +442,16 @@ type DurableWorkflowStatus struct {
 	// Persistence reports the state of each persistence store.
 	// +optional
 	Persistence *DurableWorkflowPersistenceStatus `json:"persistence,omitempty"`
+}
+
+// DurableWorkflowInit holds what to do before the cluster is first provisioned.
+type DurableWorkflowInit struct {
+	// WaitForInitialRestore holds the cluster back until the persistence stores have been restored from a backup. While
+	// it waits, the operator creates no database, user, schema or pod, and only publishes where the stores are. A restore
+	// of the stores (the DurableWorkflow backup addon) sets the DataRestored condition, and the cluster is provisioned on
+	// top of the restored data. The stores must use the databases and users of the backup.
+	// +optional
+	WaitForInitialRestore bool `json:"waitForInitialRestore,omitempty"`
 }
 
 // DurableWorkflowPersistenceStatus reports the persistence stores.

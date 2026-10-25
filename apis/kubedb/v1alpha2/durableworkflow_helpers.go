@@ -33,6 +33,7 @@ import (
 	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	"kmodules.xyz/client-go/apiextensions"
+	condutil "kmodules.xyz/client-go/conditions"
 	coreutil "kmodules.xyz/client-go/core/v1"
 	meta_util "kmodules.xyz/client-go/meta"
 	"kmodules.xyz/client-go/policy/secomp"
@@ -611,4 +612,12 @@ func (r *DurableWorkflowBind) SecretName() string {
 
 func (r *DurableWorkflowBind) CertSecretName() string {
 	return r.GetCertSecretName(DurableWorkflowCertificateTypeClient)
+}
+
+// WaitingForInitialRestore reports whether the cluster is held back until its stores are restored.
+func (d *DurableWorkflow) WaitingForInitialRestore() bool {
+	if d.Spec.Init == nil || !d.Spec.Init.WaitForInitialRestore {
+		return false
+	}
+	return !condutil.IsConditionTrue(d.Status.Conditions, kubedb.DatabaseDataRestored)
 }

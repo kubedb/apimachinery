@@ -3380,6 +3380,11 @@ spec:
                     format: int32
                     type: integer
                 type: object
+              init:
+                properties:
+                  waitForInitialRestore:
+                    type: boolean
+                type: object
               monitor:
                 properties:
                   agent:

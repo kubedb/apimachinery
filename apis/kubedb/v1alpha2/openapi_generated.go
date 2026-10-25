@@ -648,6 +648,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowAuthorization":                  schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowAuthorization(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowBind":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowBind(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowCassandraOptions":               schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowCassandraOptions(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowInit":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowInit(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowList":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowList(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowManagedStore":                   schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowManagedStore(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowNode":                           schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowNode(ref),
@@ -37075,6 +37076,26 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowCassandraOptions(re
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowInit(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "DurableWorkflowInit holds what to do before the cluster is first provisioned.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"waitForInitialRestore": {
+						SchemaProps: spec.SchemaProps{
+							Description: "WaitForInitialRestore holds the cluster back until the persistence stores have been restored from a backup. While it waits, the operator creates no database, user, schema or pod, and only publishes where the stores are. A restore of the stores (the DurableWorkflow backup addon) sets the DataRestored condition, and the cluster is provisioned on top of the restored data. The stores must use the databases and users of the backup.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -37381,6 +37402,12 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowSpec(ref common.Ref
 							Format:      "",
 						},
 					},
+					"init": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Init holds what to do before the cluster is first provisioned.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowInit"),
+						},
+					},
 					"healthChecker": {
 						SchemaProps: spec.SchemaProps{
 							Description: "HealthChecker defines attributes of the health checker.",
@@ -37393,6 +37420,7 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowSpec(ref common.Ref
 			},
 		},
 		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowInit",
 			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowAdminTools", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowArchival", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowAuthorization", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowPersistence", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowTopology", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.DurableWorkflowUI", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"},
 	}
 }
