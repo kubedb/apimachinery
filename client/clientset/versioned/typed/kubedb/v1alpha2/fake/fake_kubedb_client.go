@@ -161,6 +161,10 @@ func (c *FakeKubedbV1alpha2) Weaviates(namespace string) v1alpha2.WeaviateInterf
 	return newFakeWeaviates(c, namespace)
 }
 
+func (c *FakeKubedbV1alpha2) WorkflowNamespaces(namespace string) v1alpha2.WorkflowNamespaceInterface {
+	return newFakeWorkflowNamespaces(c, namespace)
+}
+
 func (c *FakeKubedbV1alpha2) ZooKeepers(namespace string) v1alpha2.ZooKeeperInterface {
 	return newFakeZooKeepers(c, namespace)
 }

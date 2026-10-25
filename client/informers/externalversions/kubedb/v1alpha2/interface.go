@@ -90,6 +90,8 @@ type Interface interface {
 	Solrs() SolrInformer
 	// Weaviates returns a WeaviateInformer.
 	Weaviates() WeaviateInformer
+	// WorkflowNamespaces returns a WorkflowNamespaceInformer.
+	WorkflowNamespaces() WorkflowNamespaceInformer
 	// ZooKeepers returns a ZooKeeperInformer.
 	ZooKeepers() ZooKeeperInformer
 }
@@ -268,6 +270,11 @@ func (v *version) Solrs() SolrInformer {
 // Weaviates returns a WeaviateInformer.
 func (v *version) Weaviates() WeaviateInformer {
 	return &weaviateInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// WorkflowNamespaces returns a WorkflowNamespaceInformer.
+func (v *version) WorkflowNamespaces() WorkflowNamespaceInformer {
+	return &workflowNamespaceInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeepers returns a ZooKeeperInformer.
