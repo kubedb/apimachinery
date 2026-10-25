@@ -37529,9 +37529,31 @@ func schema_apimachinery_apis_kubedb_v1alpha2_DurableWorkflowStoreStatus(ref com
 							Format:      "",
 						},
 					},
+					"ref": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Ref is the AppBinding of the server the store lives on, whether the user named it or the operator created it (managed persistence). Backup and restore tools read it instead of resolving the store again.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"type": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Type is the engine of the store.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"databaseName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DatabaseName is the database, keyspace or index of the store on that server.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
 	}
 }
 

@@ -459,6 +459,16 @@ type DurableWorkflowStoreStatus struct {
 	// SchemaServerVersion is the server version whose schema was applied.
 	// +optional
 	SchemaServerVersion string `json:"schemaServerVersion,omitempty"`
+	// Ref is the AppBinding of the server the store lives on, whether the user named it or the operator created it
+	// (managed persistence). Backup and restore tools read it instead of resolving the store again.
+	// +optional
+	Ref *kmapi.ObjectReference `json:"ref,omitempty"`
+	// Type is the engine of the store.
+	// +optional
+	Type DurableWorkflowStoreType `json:"type,omitempty"`
+	// DatabaseName is the database, keyspace or index of the store on that server.
+	// +optional
+	DatabaseName string `json:"databaseName,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

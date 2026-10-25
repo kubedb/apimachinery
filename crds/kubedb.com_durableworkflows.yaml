@@ -26869,18 +26869,56 @@ spec:
                     properties:
                       created:
                         type: boolean
+                      databaseName:
+                        type: string
+                      ref:
+                        properties:
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        required:
+                        - name
+                        type: object
                       schemaServerVersion:
                         type: string
                       schemaVersion:
+                        type: string
+                      type:
+                        enum:
+                        - Postgres
+                        - MySQL
+                        - Cassandra
+                        - Elasticsearch
+                        - OpenSearch
                         type: string
                     type: object
                   visibility:
                     properties:
                       created:
                         type: boolean
+                      databaseName:
+                        type: string
+                      ref:
+                        properties:
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        required:
+                        - name
+                        type: object
                       schemaServerVersion:
                         type: string
                       schemaVersion:
+                        type: string
+                      type:
+                        enum:
+                        - Postgres
+                        - MySQL
+                        - Cassandra
+                        - Elasticsearch
+                        - OpenSearch
                         type: string
                     type: object
                 type: object
