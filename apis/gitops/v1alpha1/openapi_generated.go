@@ -38277,6 +38277,28 @@ func schema_apimachinery_apis_gitops_v1alpha1_YugabyteDBStatus(ref common.Refere
 							},
 						},
 					},
+					"pitr": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"database",
+								},
+								"x-kubernetes-list-type": "map",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "PITR is the state of the snapshot schedules of spec.pitr.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPITRStatus"),
+									},
+								},
+							},
+						},
+					},
 					"gitops": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -38287,7 +38309,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_YugabyteDBStatus(ref common.Refere
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.YugabyteDBPITRStatus"},
 	}
 }
 
