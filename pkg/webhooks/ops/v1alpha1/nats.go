@@ -41,6 +41,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	meta_util "kmodules.xyz/client-go/meta"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -233,6 +234,12 @@ func (w *NATSOpsRequestCustomWebhook) validateNATSHorizontalScalingOpsRequest(db
 	if horizontalScalingSpec == nil {
 		return errors.New("spec.horizontalScaling is nil, not supported in HorizontalScaling type")
 	}
+	if db.Spec.Distributed {
+		return w.validateNATSDistributedScaling(db, horizontalScalingSpec)
+	}
+	if len(horizontalScalingSpec.DataCenters) > 0 {
+		return errors.New("spec.horizontalScaling.dataCenters is only allowed for a distributed NATS")
+	}
 	if horizontalScalingSpec.Replicas == nil {
 		return errors.New("spec.horizontalScaling.replicas can not be empty")
 	}
@@ -251,6 +258,59 @@ func (w *NATSOpsRequestCustomWebhook) validateNATSHorizontalScalingOpsRequest(db
 	}
 	if db.Spec.Replicas != nil && *db.Spec.Replicas >= 3 && target < 3 {
 		return fmt.Errorf("scaling a JetStream cluster below 3 replicas is not supported, current replicas: %d", *db.Spec.Replicas)
+	}
+	return nil
+}
+
+// validateNATSDistributedScaling: a distributed NATS scales per DC. Every entry names a distributionRule
+// of the PlacementPolicy; a Member DC keeps the JetStream rule (1 or at least 3), the Arbiter DC at least 1.
+func (w *NATSOpsRequestCustomWebhook) validateNATSDistributedScaling(db *olddbapi.NATS, hs *opsapi.NATSHorizontalScalingSpec) error {
+	if hs.Replicas != nil {
+		return errors.New("spec.horizontalScaling.replicas is not allowed for a distributed NATS, use spec.horizontalScaling.dataCenters")
+	}
+	if len(hs.DataCenters) == 0 {
+		return errors.New("spec.horizontalScaling.dataCenters can not be empty for a distributed NATS")
+	}
+	ref := db.Spec.PodTemplate.Spec.PodPlacementPolicy
+	if ref == nil {
+		return errors.New("the distributed NATS has no spec.podTemplate.spec.podPlacementPolicy")
+	}
+	var pp psapi.PlacementPolicy
+	if err := w.DefaultClient.Get(context.TODO(), client.ObjectKey{Name: ref.Name}, &pp); err != nil {
+		return fmt.Errorf("failed to get PlacementPolicy %q: %w", ref.Name, err)
+	}
+	if pp.Spec.ClusterSpreadConstraint == nil {
+		return fmt.Errorf("PlacementPolicy %q has no clusterSpreadConstraint", ref.Name)
+	}
+	roles := map[string]psapi.DCRole{}
+	for _, rule := range pp.Spec.ClusterSpreadConstraint.DistributionRules {
+		role := rule.Role
+		if role == "" {
+			role = psapi.DCRoleMember
+		}
+		roles[rule.ClusterName] = role
+	}
+	seen := map[string]struct{}{}
+	for i, dc := range hs.DataCenters {
+		role, ok := roles[dc.ClusterName]
+		if !ok {
+			return fmt.Errorf("spec.horizontalScaling.dataCenters[%d]: cluster %q is not in PlacementPolicy %q", i, dc.ClusterName, ref.Name)
+		}
+		if _, dup := seen[dc.ClusterName]; dup {
+			return fmt.Errorf("spec.horizontalScaling.dataCenters[%d]: cluster %q is listed twice", i, dc.ClusterName)
+		}
+		seen[dc.ClusterName] = struct{}{}
+		if dc.Replicas < 1 {
+			return fmt.Errorf("spec.horizontalScaling.dataCenters[%d].replicas must be at least 1", i)
+		}
+		if role == psapi.DCRoleMember && db.IsJetStreamEnabled() {
+			if dc.Replicas == 2 {
+				return fmt.Errorf("spec.horizontalScaling.dataCenters[%d].replicas: with JetStream a DC must have 1 or at least 3 servers", i)
+			}
+			if db.IsEphemeral() && dc.Replicas != 1 {
+				return errors.New("an Ephemeral JetStream store only allows 1 replica per DC")
+			}
+		}
 	}
 	return nil
 }

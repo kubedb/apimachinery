@@ -98,8 +98,23 @@ type NATSUpdateVersionSpec struct {
 // NATSHorizontalScalingSpec contains the horizontal scaling information of a NATS cluster.
 // Scaling down evacuates the highest ordinal from the JetStream meta group before the pod is removed.
 type NATSHorizontalScalingSpec struct {
-	// Number of nats-server pods in the cluster
+	// Number of nats-server pods in the cluster. Not allowed for a distributed NATS, use dataCenters.
 	Replicas *int32 `json:"replicas,omitempty"`
+
+	// DataCenters scales individual data centers of a distributed NATS. Each entry sets that DC's local
+	// server count; DCs not listed are unchanged. A DC may be a Member DC or the Arbiter DC of the
+	// PlacementPolicy.
+	// +optional
+	DataCenters []NATSHorizontalScalingDC `json:"dataCenters,omitempty"`
+}
+
+// NATSHorizontalScalingDC is a per data center server-count target for a distributed NATS.
+type NATSHorizontalScalingDC struct {
+	// ClusterName is the data center, named by its OCM managed cluster, matching a distributionRule of
+	// the NATS PlacementPolicy.
+	ClusterName string `json:"clusterName"`
+	// Replicas is the desired local server count of this data center.
+	Replicas int32 `json:"replicas"`
 }
 
 // NATSVerticalScalingSpec is the spec for NATS vertical scaling

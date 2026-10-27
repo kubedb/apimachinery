@@ -2831,6 +2831,12 @@ const (
 	NATSMonitorPort      = 8222
 	NATSExporterPortName = "metrics"
 	NATSExporterPort     = 7777
+	// Gateway (super-cluster) and leafnodes ports. Gateways are only on the headless Service; leafnodes
+	// are also on the client Service when leafNodes.accept is true.
+	NATSGatewayPortName  = "gateway"
+	NATSGatewayPort      = 7222
+	NATSLeafNodePortName = "leafnodes"
+	NATSLeafNodePort     = 7422
 
 	// Users and accounts
 	NATSUserAdmin     = "admin"
@@ -2845,6 +2851,7 @@ const (
 	NATSSecretSuffixSysAuth     = "sys-auth"
 	NATSSecretSuffixClusterAuth = "cluster-auth"
 	NATSSecretSuffixConfig      = "config"
+	NATSSecretSuffixGatewayAuth = "gateway-auth"
 	// Operator mode only.
 	NATSSecretSuffixOperator   = "operator"
 	NATSSecretSuffixSysCreds   = "sys-creds"
@@ -2876,6 +2883,9 @@ const (
 	NATSJetStreamQuorum = "JetStreamQuorum"
 	// NATSUnderReplicatedStreams is informational: at least one stream has an outdated or missing replica.
 	NATSUnderReplicatedStreams = "UnderReplicatedStreams"
+	// NATSGatewayRTTHigh is raised by the health checker when /gatewayz reports an rtt above
+	// NATSGatewayRTTWarnThreshold to some remote cluster. The webhook cannot measure it.
+	NATSGatewayRTTHigh = "GatewayRTTHigh"
 
 	// Sizing rules
 	// NATSMaxFileStorePercent of the PVC request becomes max_file_store; the rest is headroom for the
@@ -2899,11 +2909,18 @@ const (
 	NATSGroupID int64 = 1000
 
 	NATSDefaultReplicas int32 = 3
+
+	// NATSGatewayRTTWarnThreshold is a recommendation, not a server limit (design 15.4 item 3).
+	NATSGatewayRTTWarnThreshold = 100 * time.Millisecond
+
+	// Arbiter: vote-only JetStream servers in the Arbiter DC.
+	NATSDefaultArbiterReplicas int32 = 1
 )
 
 var (
 	NATSDefaultJetStreamStorage = resource.MustParse("10Gi")
 	NATSDefaultResolverStorage  = resource.MustParse("1Gi")
+	NATSDefaultArbiterStorage   = resource.MustParse("1Gi")
 
 	// NATSSidecarDefaultResources are the small fixed limits of the reloader and exporter containers.
 	NATSSidecarDefaultResources = core.ResourceRequirements{

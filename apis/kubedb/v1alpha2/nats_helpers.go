@@ -209,6 +209,44 @@ func (n *NATS) IsMonitorTLS() bool {
 	return tlsChannel(n.IsTLSEnabled(), n.Spec.MonitorTLS)
 }
 
+// IsGatewayTLS reports TLS on the gateway port. The gateway uses the server certificate.
+func (n *NATS) IsGatewayTLS() bool {
+	return tlsChannel(n.IsTLSEnabled(), n.Spec.GatewayTLS)
+}
+
+// IsLeafNodeTLS reports TLS on the leafnodes port.
+func (n *NATS) IsLeafNodeTLS() bool {
+	return tlsChannel(n.IsTLSEnabled(), n.Spec.LeafNodeTLS)
+}
+
+// IsGatewayEnabled reports whether the gateway block is rendered: an explicit spec.gateway, or a
+// distributed NATS, whose per-DC clusters are always joined by gateways.
+func (n *NATS) IsGatewayEnabled() bool {
+	return n.Spec.Gateway != nil || n.Spec.Distributed
+}
+
+// IsLeafNodeAccepting reports whether the leafnodes listener (hub side) is open.
+func (n *NATS) IsLeafNodeAccepting() bool {
+	return n.Spec.LeafNodes != nil && n.Spec.LeafNodes.Accept
+}
+
+// GatewayName is the gateway name of a non-distributed NATS; it must equal the cluster name. For a
+// distributed NATS the name is the DC's cluster name and is derived by the operator.
+func (n *NATS) GatewayName() string {
+	if n.Spec.Gateway != nil && n.Spec.Gateway.Name != "" {
+		return n.Spec.Gateway.Name
+	}
+	return n.Name
+}
+
+// ArbiterReplicas returns the replica count of the arbiter PetSet, defaulting to 1.
+func (n *NATS) ArbiterReplicas() int32 {
+	if n.Spec.Arbiter == nil || n.Spec.Arbiter.Replicas == nil {
+		return kubedb.NATSDefaultArbiterReplicas
+	}
+	return *n.Spec.Arbiter.Replicas
+}
+
 // ---------------------------------------------------------------------------
 // Sizing
 // ---------------------------------------------------------------------------
@@ -586,6 +624,21 @@ func (n *NATS) SetDefaults(natsVersion *catalog.NATSVersion) {
 		}
 	}
 
+	if n.Spec.Gateway != nil && !n.Spec.Distributed && n.Spec.Gateway.Name == "" {
+		n.Spec.Gateway.Name = n.Name
+	}
+	if n.Spec.Distributed {
+		if n.Spec.Arbiter == nil {
+			n.Spec.Arbiter = &NATSArbiterSpec{}
+		}
+		if n.Spec.Arbiter.Replicas == nil {
+			n.Spec.Arbiter.Replicas = pointer.Int32P(kubedb.NATSDefaultArbiterReplicas)
+		}
+		if n.Spec.Arbiter.Storage == nil {
+			n.Spec.Arbiter.Storage = natsStorageSpec(kubedb.NATSDefaultArbiterStorage)
+		}
+	}
+
 	if n.Spec.AuthSecret == nil {
 		n.Spec.AuthSecret = &SecretReference{}
 	}
@@ -682,6 +735,12 @@ func (n *NATS) SetTLSDefaults() {
 	}
 	if n.Spec.MonitorTLS == nil {
 		n.Spec.MonitorTLS = pointer.BoolP(true)
+	}
+	if n.Spec.GatewayTLS == nil {
+		n.Spec.GatewayTLS = pointer.BoolP(true)
+	}
+	if n.Spec.LeafNodeTLS == nil {
+		n.Spec.LeafNodeTLS = pointer.BoolP(true)
 	}
 }
 

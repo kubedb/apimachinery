@@ -4854,6 +4854,7 @@ spec:
                       - stats
                       - dashboard
                       - readreplica
+                      - leafnodes
                       type: string
                     metadata:
                       properties:
@@ -9636,6 +9637,7 @@ spec:
                       - stats
                       - dashboard
                       - readreplica
+                      - leafnodes
                       type: string
                     metadata:
                       properties:

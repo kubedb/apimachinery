@@ -34,6 +34,7 @@ import (
 	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
 	appcat "kmodules.xyz/custom-resources/apis/appcatalog/v1alpha1"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
@@ -54,7 +55,7 @@ func natsVersion(name string, deprecated bool, allow ...string) *catalog.NATSVer
 func natsOpsTestWebhook(t *testing.T, objs ...runtime.Object) *NATSOpsRequestCustomWebhook {
 	t.Helper()
 	scheme := runtime.NewScheme()
-	for _, add := range []func(*runtime.Scheme) error{catalog.AddToScheme, olddbapi.AddToScheme, core.AddToScheme, storagev1.AddToScheme, opsapi.AddToScheme} {
+	for _, add := range []func(*runtime.Scheme) error{catalog.AddToScheme, olddbapi.AddToScheme, core.AddToScheme, storagev1.AddToScheme, opsapi.AddToScheme, psapi.AddToScheme} {
 		if err := add(scheme); err != nil {
 			t.Fatal(err)
 		}
@@ -379,4 +380,66 @@ func TestNATSOpsStorageMigration(t *testing.T) {
 		{"new class exists", withClass, sm("fast", true), ""},
 		{"new class missing", withClass, sm("nope", true), "storage class nope not found"},
 	})
+}
+
+func TestNATSOpsHorizontalScalingPerDC(t *testing.T) {
+	pp := &psapi.PlacementPolicy{
+		ObjectMeta: metav1.ObjectMeta{Name: "nats-3dc"},
+		Spec: psapi.PlacementPolicySpec{ClusterSpreadConstraint: &psapi.ClusterSpreadConstraint{
+			DistributionRules: []psapi.DistributionRule{
+				{ClusterName: "dc-a", ReplicaIndices: []int32{0, 1, 2}, Role: psapi.DCRoleMember},
+				{ClusterName: "dc-b", ReplicaIndices: []int32{3, 4, 5}},
+				{ClusterName: "dc-c", Role: psapi.DCRoleArbiter},
+			},
+		}},
+	}
+	distributed := func() *olddbapi.NATS {
+		db := opsNATS("2.15.1")
+		db.Spec.Distributed = true
+		db.Spec.PodTemplate.Spec.PodPlacementPolicy = &core.LocalObjectReference{Name: "nats-3dc"}
+		return db
+	}
+	hs := func(dcs ...opsapi.NATSHorizontalScalingDC) *opsapi.NATSOpsRequest {
+		r := natsOps(opsapi.NATSOpsRequestTypeHorizontalScaling)
+		r.Spec.HorizontalScaling = &opsapi.NATSHorizontalScalingSpec{DataCenters: dcs}
+		return r
+	}
+	dc := func(name string, n int32) opsapi.NATSHorizontalScalingDC {
+		return opsapi.NATSHorizontalScalingDC{ClusterName: name, Replicas: n}
+	}
+	withReplicas := hs(dc("dc-a", 3))
+	withReplicas.Spec.HorizontalScaling.Replicas = ptr.To(int32(3))
+
+	cases := []struct {
+		name    string
+		db      *olddbapi.NATS
+		req     *opsapi.NATSOpsRequest
+		wantErr string
+	}{
+		{"scale one DC", distributed(), hs(dc("dc-a", 5)), ""},
+		{"scale a member and the arbiter", distributed(), hs(dc("dc-b", 3), dc("dc-c", 2)), ""},
+		{"replicas not allowed", distributed(), withReplicas, "use spec.horizontalScaling.dataCenters"},
+		{"empty", distributed(), hs(), "dataCenters can not be empty"},
+		{"unknown DC", distributed(), hs(dc("dc-z", 3)), "is not in PlacementPolicy"},
+		{"duplicate DC", distributed(), hs(dc("dc-a", 3), dc("dc-a", 5)), "listed twice"},
+		{"zero", distributed(), hs(dc("dc-a", 0)), "must be at least 1"},
+		{"two servers in a member DC", distributed(), hs(dc("dc-a", 2)), "1 or at least 3"},
+		{"dataCenters on a plain NATS", nil, hs(dc("dc-a", 3)), "only allowed for a distributed NATS"},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			db := c.db
+			if db == nil {
+				db = opsNATS("2.15.1")
+			}
+			w := natsOpsTestWebhook(t, db, pp)
+			err := w.validateCreateOrUpdate(c.req)
+			switch {
+			case c.wantErr == "" && err != nil:
+				t.Fatalf("unexpected error: %v", err)
+			case c.wantErr != "" && (err == nil || !strings.Contains(err.Error(), c.wantErr)):
+				t.Fatalf("want error containing %q, got %v", c.wantErr, err)
+			}
+		})
+	}
 }

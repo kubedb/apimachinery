@@ -761,6 +761,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVerticalScalingSpec":                         schema_apimachinery_apis_ops_v1alpha1_MySQLVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MySQLVolumeExpansionSpec":                         schema_apimachinery_apis_ops_v1alpha1_MySQLVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.NATSCustomConfigurationSpec":                      schema_apimachinery_apis_ops_v1alpha1_NATSCustomConfigurationSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.NATSHorizontalScalingDC":                          schema_apimachinery_apis_ops_v1alpha1_NATSHorizontalScalingDC(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.NATSHorizontalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_NATSHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.NATSOpsRequest":                                   schema_apimachinery_apis_ops_v1alpha1_NATSOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.NATSOpsRequestList":                               schema_apimachinery_apis_ops_v1alpha1_NATSOpsRequestList(ref),
@@ -41837,6 +41838,36 @@ func schema_apimachinery_apis_ops_v1alpha1_NATSCustomConfigurationSpec(ref commo
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_NATSHorizontalScalingDC(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSHorizontalScalingDC is a per data center server-count target for a distributed NATS.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the data center, named by its OCM managed cluster, matching a distributionRule of the NATS PlacementPolicy.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas is the desired local server count of this data center.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"clusterName", "replicas"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_NATSHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -41846,14 +41877,30 @@ func schema_apimachinery_apis_ops_v1alpha1_NATSHorizontalScalingSpec(ref common.
 				Properties: map[string]spec.Schema{
 					"replicas": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Number of nats-server pods in the cluster",
+							Description: "Number of nats-server pods in the cluster. Not allowed for a distributed NATS, use dataCenters.",
 							Type:        []string{"integer"},
 							Format:      "int32",
+						},
+					},
+					"dataCenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataCenters scales individual data centers of a distributed NATS. Each entry sets that DC's local server count; DCs not listed are unchanged. A DC may be a Member DC or the Arbiter DC of the PlacementPolicy.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.NATSHorizontalScalingDC"),
+									},
+								},
+							},
 						},
 					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.NATSHorizontalScalingDC"},
 	}
 }
 

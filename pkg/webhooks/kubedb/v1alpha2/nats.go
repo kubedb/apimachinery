@@ -46,7 +46,7 @@ import (
 // SetupNATSWebhookWithManager registers the webhook for NATS in the manager.
 func SetupNATSWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.NATS{}).
-		WithValidator(amv.WithServiceTemplateAliasWarnings(&NATSCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&NATSCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias, dbapi.LeafNodesServiceAlias)).
 		WithDefaulter(&NATSCustomWebhook{DefaultClient: mgr.GetClient(), StrictValidation: true}).
 		Complete()
 }
@@ -226,7 +226,7 @@ func (w *NATSCustomWebhook) ValidateCreateOrUpdate(ctx context.Context, db *oldd
 		case jsOn && replicas >= 4 && replicas%2 == 0:
 			warnings = append(warnings, fmt.Sprintf("spec.replicas %d is even: it tolerates no more failures than %d replicas", replicas, replicas-1))
 		}
-		if replicas > 1 {
+		if replicas > 1 && !db.Spec.Distributed {
 			warnings = append(warnings, w.placementPolicyWarnings(ctx, db)...)
 		}
 	}
@@ -296,7 +296,7 @@ func (w *NATSCustomWebhook) ValidateCreateOrUpdate(ctx context.Context, db *oldd
 		}
 	} else {
 		// clusterTLS (and the other channel switches) can only be set with tls
-		for name, sw := range map[string]*bool{"clientTLS": db.Spec.ClientTLS, "clusterTLS": db.Spec.ClusterTLS, "monitorTLS": db.Spec.MonitorTLS} {
+		for name, sw := range map[string]*bool{"clientTLS": db.Spec.ClientTLS, "clusterTLS": db.Spec.ClusterTLS, "monitorTLS": db.Spec.MonitorTLS, "gatewayTLS": db.Spec.GatewayTLS, "leafNodeTLS": db.Spec.LeafNodeTLS} {
 			if sw != nil {
 				allErr = append(allErr, field.Forbidden(specPath.Child(name), fmt.Sprintf("spec.%s can only be set together with spec.tls", name)))
 			}
@@ -305,6 +305,11 @@ func (w *NATSCustomWebhook) ValidateCreateOrUpdate(ctx context.Context, db *oldd
 
 	// auth
 	allErr = append(allErr, validateNATSAuth(db)...)
+
+	// gateway, leafnodes, distributed and arbiter (design 15.1 to 15.4)
+	mdWarnings, mdErr := w.validateNATSMultiDC(ctx, db)
+	warnings = append(warnings, mdWarnings...)
+	allErr = append(allErr, mdErr...)
 
 	// halted: true sets deletionPolicy Halt, or is rejected if DoNotTerminate
 	if db.Spec.Halted && db.Spec.DeletionPolicy == olddbapi.DeletionPolicyDoNotTerminate {
@@ -438,6 +443,9 @@ func validateNATSUpdate(obj, oldObj *olddbapi.NATS) error {
 	}
 	if obj.AuthMode() != oldObj.AuthMode() {
 		return fmt.Errorf("spec.auth.mode is immutable")
+	}
+	if obj.Spec.Distributed != oldObj.Spec.Distributed {
+		return fmt.Errorf("spec.distributed is immutable")
 	}
 	if obj.Spec.DisableSecurity != oldObj.Spec.DisableSecurity {
 		return fmt.Errorf("spec.disableSecurity is immutable")

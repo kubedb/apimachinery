@@ -144,6 +144,15 @@ type NATSSpec struct {
 	// +optional
 	ClientTLS *bool `json:"clientTLS,omitempty"`
 
+	// GatewayTLS selects whether the gateway port (7222) uses TLS when spec.tls is set. Default true.
+	// Gateway TLS material reloads in place.
+	// +optional
+	GatewayTLS *bool `json:"gatewayTLS,omitempty"`
+
+	// LeafNodeTLS selects whether the leafnodes port (7422) uses TLS when spec.tls is set. Default true.
+	// +optional
+	LeafNodeTLS *bool `json:"leafNodeTLS,omitempty"`
+
 	// ClusterTLS selects whether the route port (6222) uses TLS when spec.tls is set. Default true.
 	// +optional
 	ClusterTLS *bool `json:"clusterTLS,omitempty"`
@@ -157,9 +166,31 @@ type NATSSpec struct {
 	PodTemplate ofst.PodTemplateSpec `json:"podTemplate,omitempty"`
 
 	// ServiceTemplates is an optional configuration for services used to expose database.
-	// Aliases: primary, stats.
+	// Aliases: primary, stats, leafnodes (the leafnodes port of the client-facing Service when
+	// leafNodes.accept is true; default ClusterIP).
 	// +optional
 	ServiceTemplates []NamedServiceTemplateSpec `json:"serviceTemplates,omitempty"`
+
+	// Gateway joins this cluster to a super-cluster of other NATS clusters. A NATS object is always one
+	// cluster; clusters in different DCs are joined by gateways. Changing a configured remote is a rolling
+	// restart, adding a DC needs none on the existing ones (gateways gossip).
+	// +optional
+	Gateway *NATSGatewaySpec `json:"gateway,omitempty"`
+
+	// LeafNodes accepts leaf connections (hub side) and/or dials out to a remote NATS system (leaf side).
+	// +optional
+	LeafNodes *NATSLeafNodesSpec `json:"leafNodes,omitempty"`
+
+	// Distributed makes KubeDB create one NATS cluster per Member rule of the PlacementPolicy referenced by
+	// podTemplate.spec.podPlacementPolicy, joined by gateways. The PlacementPolicy needs a
+	// clusterSpreadConstraint and no failoverPolicy.
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
+	// Arbiter configures the vote-only JetStream servers in the Arbiter DC of a distributed NATS.
+	// Meaningful only when the PlacementPolicy has an Arbiter rule.
+	// +optional
+	Arbiter *NATSArbiterSpec `json:"arbiter,omitempty"`
 
 	// Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.
 	// +optional
@@ -177,6 +208,90 @@ type NATSSpec struct {
 	// +optional
 	// +kubebuilder:default={periodSeconds: 20, timeoutSeconds: 10, failureThreshold: 3}
 	HealthChecker kmapi.HealthCheckSpec `json:"healthChecker"`
+}
+
+// NATSGatewaySpec joins this cluster to a super-cluster.
+type NATSGatewaySpec struct {
+	// Name is the gateway name. It must equal the cluster name (the object name), or the server refuses
+	// to start. Defaults to the cluster name. Must be empty when spec.distributed is true: each DC's
+	// gateway is named after the DC.
+	// +optional
+	Name string `json:"name,omitempty"`
+
+	// Remotes seed discovery. Gateways gossip, so a few are enough.
+	// +optional
+	Remotes []NATSRemoteGateway `json:"remotes,omitempty"`
+
+	// RejectUnknown sets reject_unknown_cluster. The operator never sets it; with it, adding a DC
+	// restarts the existing ones.
+	// +optional
+	RejectUnknown bool `json:"rejectUnknown,omitempty"`
+}
+
+// NATSRemoteGateway is a remote cluster of the super-cluster. Exactly one of urls and natsRef is set.
+type NATSRemoteGateway struct {
+	// Name of the remote cluster (its gateway name).
+	Name string `json:"name"`
+
+	// URLs of the remote gateway, nats:// or tls://.
+	// +optional
+	URLs []string `json:"urls,omitempty"`
+
+	// NATSRef points at another NATS object (through its AppBinding). KubeDB fills in the gateway URLs.
+	// +optional
+	NATSRef *kmapi.ObjectReference `json:"natsRef,omitempty"`
+}
+
+// NATSLeafNodesSpec configures leaf connections.
+type NATSLeafNodesSpec struct {
+	// Accept (hub side) listens on 7422 and exposes the port on the client Service.
+	// +optional
+	Accept bool `json:"accept,omitempty"`
+
+	// Remotes (leaf side) dial out to a remote NATS system.
+	// +optional
+	Remotes []NATSLeafRemote `json:"remotes,omitempty"`
+
+	// JetStreamDomain is required when this NATS runs its own JetStream and has leaf remotes.
+	// +optional
+	JetStreamDomain string `json:"jetStreamDomain,omitempty"`
+}
+
+// NATSLeafRemote is a remote NATS system this NATS connects to as a leaf. Exactly one of urls and
+// natsRef is set.
+type NATSLeafRemote struct {
+	// URLs of the remote leafnodes listener, nats-leaf:// , nats:// or tls://.
+	// +optional
+	URLs []string `json:"urls,omitempty"`
+
+	// NATSRef points at another NATS object (through its AppBinding). KubeDB fills in the leafnode URLs.
+	// +optional
+	NATSRef *kmapi.ObjectReference `json:"natsRef,omitempty"`
+
+	// Account binds the leaf connection to a local account. Without it (and without credentialsSecret)
+	// the leaf binds the default account and has no subject boundary.
+	// +optional
+	Account string `json:"account,omitempty"`
+
+	// CredentialsSecret holds a .creds file (key "creds"), used in Operator auth mode.
+	// +optional
+	CredentialsSecret *core.LocalObjectReference `json:"credentialsSecret,omitempty"`
+
+	// Domain is the JetStream domain of the remote, when it differs from the default.
+	// +optional
+	Domain string `json:"domain,omitempty"`
+}
+
+// NATSArbiterSpec configures the vote-only JetStream servers of the Arbiter DC. They are meta-group
+// peers (they vote) but are excluded from stream and consumer placement.
+type NATSArbiterSpec struct {
+	// Replicas of the arbiter PetSet. Defaults to 1.
+	// +optional
+	Replicas *int32 `json:"replicas,omitempty"`
+
+	// Storage is the small PVC holding the meta state. Defaults to 1Gi.
+	// +optional
+	Storage *core.PersistentVolumeClaimSpec `json:"storage,omitempty"`
 }
 
 // NATSJetStreamSpec configures JetStream.

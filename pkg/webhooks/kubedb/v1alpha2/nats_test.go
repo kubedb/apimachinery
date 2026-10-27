@@ -32,6 +32,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/utils/ptr"
 	kmapi "kmodules.xyz/client-go/api/v1"
+	psapi "kubeops.dev/petset/apis/apps/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
@@ -45,6 +46,9 @@ func natsTestWebhook(t *testing.T, objs ...runtime.Object) *NATSCustomWebhook {
 		t.Fatal(err)
 	}
 	if err := core.AddToScheme(scheme); err != nil {
+		t.Fatal(err)
+	}
+	if err := psapi.AddToScheme(scheme); err != nil {
 		t.Fatal(err)
 	}
 	objs = append(objs, &catalog.NATSVersion{
