@@ -91,6 +91,12 @@ func (w MySQLCustomWebhook) Default(ctx context.Context, obj runtime.Object) err
 		return err
 	}
 
+	if db.Spec.License != nil {
+		if db.Spec.License.SecretRef.Key == "" {
+			db.Spec.License.SecretRef.Key = "license"
+		}
+	}
+
 	return nil
 }
 
@@ -201,6 +207,28 @@ func validateMySQLGroup(replicas int32, version string, group dbapi.MySQLGroupSp
 	return nil
 }
 
+// validateLicense enforces the MySQL license invariants: a version that is
+// gated behind a commercial license (spec.license.required = true, e.g.
+// Oracle MySQL Enterprise Edition) must have spec.license set on the MySQL
+// referencing it, and conversely spec.license may only be set against a
+// version that requires one.
+func (w MySQLCustomWebhook) validateLicense(mysql *dbapi.MySQL, mysqlVersion *catalogapi.MySQLVersion) error {
+	versionRequiresLicense := mysqlVersion.Spec.License != nil && mysqlVersion.Spec.License.Required
+	if mysql.Spec.License == nil {
+		if versionRequiresLicense {
+			return fmt.Errorf("MySQLVersion %q requires spec.license (a licensed MySQL distribution); set spec.license.secretRef to a Secret containing your license/subscription information", mysqlVersion.Name)
+		}
+		return nil
+	}
+	if !versionRequiresLicense {
+		return fmt.Errorf("spec.license is set but MySQLVersion %q is not a licensed distribution (spec.license.required is not set)", mysqlVersion.Name)
+	}
+	if mysql.Spec.License.SecretRef.Name == "" {
+		return fmt.Errorf("spec.license.secretRef.name must be set")
+	}
+	return nil
+}
+
 // ValidateMySQL checks if the object satisfies all the requirements.
 // It is not method of Interface, because it is referenced from controller package too.
 func (w MySQLCustomWebhook) ValidateMySQL(mysql *dbapi.MySQL) error {
@@ -211,6 +239,10 @@ func (w MySQLCustomWebhook) ValidateMySQL(mysql *dbapi.MySQL) error {
 	var mysqlVersion catalogapi.MySQLVersion
 	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{Name: mysql.Spec.Version}, &mysqlVersion)
 	if err != nil {
+		return err
+	}
+
+	if err := w.validateLicense(mysql, &mysqlVersion); err != nil {
 		return err
 	}
 
