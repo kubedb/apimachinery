@@ -649,6 +649,9 @@ func (wh *PostgresCustomWebhook) ValidateCreate(ctx context.Context, obj runtime
 		return nil, fmt.Errorf("expected a Postgres but got a %T", obj)
 	}
 	pgLog.Info("validating", "name", postgres.GetName())
+	if err := validatePostgresDCDRArchiver(postgres, nil); err != nil {
+		return nil, err
+	}
 	// Need a validation on readReplica Name, can't set arbiter as read replica name
 	return wh.validate(postgres)
 }
@@ -684,6 +687,9 @@ func (wh *PostgresCustomWebhook) ValidateUpdate(ctx context.Context, oldObj, new
 	if err := wh.validateUpdate(postgres, oldPostgres); err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
+	if err := validatePostgresDCDRArchiver(postgres, oldPostgres); err != nil {
+		return nil, err
+	}
 	return wh.validate(postgres)
 }
 
@@ -704,6 +710,27 @@ func (wh *PostgresCustomWebhook) ValidateDelete(ctx context.Context, obj runtime
 		return nil, fmt.Errorf(`postgres "%v/%v" can't be terminated. To delete, change spec.deletionPolicy`, pg.Namespace, pg.Name)
 	}
 	return nil, nil
+}
+
+// validatePostgresDCDRArchiver rejects spec.archiver and spec.init.archiver on a DC-DR Postgres.
+// Archiving and archiver restore are not supported there yet: the operator creates no
+// BackupConfiguration or Sidekick for a distributed database, so WAL would pile up in
+// every DC's wal_archive with nothing pushing or pruning it until the data PVC fills.
+// On update only a newly added archiver (or a newly enabled DC-DR) is rejected, so an
+// object that already carries one is not wedged; the operator ignores it on DC-DR.
+func validatePostgresDCDRArchiver(postgres, oldPostgres *dbapi.Postgres) error {
+	if !postgres.IsDCDRDistributed() {
+		return nil
+	}
+	wasDCDR := oldPostgres != nil && oldPostgres.IsDCDRDistributed()
+	if postgres.Spec.Archiver != nil && (!wasDCDR || oldPostgres.Spec.Archiver == nil) {
+		return fmt.Errorf(`'spec.archiver' is not supported for DC-DR postgres (annotation %s=true)`, dbapi.DCDREnabledAnnotation)
+	}
+	if postgres.Spec.Init != nil && postgres.Spec.Init.Archiver != nil &&
+		(!wasDCDR || oldPostgres.Spec.Init == nil || oldPostgres.Spec.Init.Archiver == nil) {
+		return fmt.Errorf(`'spec.init.archiver' is not supported for DC-DR postgres (annotation %s=true)`, dbapi.DCDREnabledAnnotation)
+	}
+	return nil
 }
 
 func checkPgScramAuthMethodSupport(v string) error {

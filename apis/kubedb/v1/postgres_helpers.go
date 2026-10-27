@@ -375,7 +375,7 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 		p.Spec.AuthSecret.Kind = kubedb.ResourceKindSecret
 	}
 
-	if p.Spec.LeaderElection == nil && p.isDCDRDistributed() {
+	if p.Spec.LeaderElection == nil && p.IsDCDRDistributed() {
 		// A raft election timeout of Period * ElectionTick = 3s (the plain HA default below)
 		// is tuned for pods sharing a data center switch. Under DC-DR the same raft runs
 		// inside one DC but on a cluster whose API server and coordination control plane are
@@ -812,11 +812,11 @@ func ValidateHBAConfig(content string) error {
 	return nil
 }
 
-// isDCDRDistributed reports whether this Postgres is a cross data center disaster recovery
+// IsDCDRDistributed reports whether this Postgres is a cross data center disaster recovery
 // deployment, which is a distributed database explicitly opted in with the DC-DR annotation.
 // It mirrors the operator's own detection (isDCDRDistributed in pkg/controller) so defaults
 // applied here and behaviour applied there can never disagree about what a DC-DR database is.
-func (p Postgres) isDCDRDistributed() bool {
+func (p Postgres) IsDCDRDistributed() bool {
 	return p.Spec.Distributed && p.Annotations[DCDREnabledAnnotation] == "true"
 }
 
