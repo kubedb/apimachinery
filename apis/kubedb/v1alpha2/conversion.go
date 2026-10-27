@@ -222,6 +222,14 @@ func Convert_v1_PostgresStatus_To_v1alpha2_PostgresStatus(in *v1.PostgresStatus,
 }
 
 func Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out *v1.PostgresSpec, s conversion.Scope) error {
+	if in.LogForwarder != nil {
+		out.LogForwarder = &v1.LogForwarderSpec{}
+		if err := Convert_v1alpha2_LogForwarderSpec_To_v1_LogForwarderSpec(in.LogForwarder, out.LogForwarder, s); err != nil {
+			return err
+		}
+	} else {
+		out.LogForwarder = nil
+	}
 	if err := Convert_v1alpha2_AutoOpsSpec_To_v1_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
 		return err
 	}
@@ -279,6 +287,14 @@ func Convert_v1alpha2_PostgresSpec_To_v1_PostgresSpec(in *PostgresSpec, out *v1.
 }
 
 func Convert_v1_PostgresSpec_To_v1alpha2_PostgresSpec(in *v1.PostgresSpec, out *PostgresSpec, s conversion.Scope) error {
+	if in.LogForwarder != nil {
+		out.LogForwarder = &LogForwarderSpec{}
+		if err := Convert_v1_LogForwarderSpec_To_v1alpha2_LogForwarderSpec(in.LogForwarder, out.LogForwarder, s); err != nil {
+			return err
+		}
+	} else {
+		out.LogForwarder = nil
+	}
 	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
 		return err
 	}

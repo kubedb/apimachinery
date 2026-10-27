@@ -467,6 +467,7 @@ func (p *Postgres) SetDefaults(postgresVersion *catalog.PostgresVersion) {
 	p.SetArbiterDefault()
 	p.SetTLSDefaults()
 	p.SetHealthCheckerDefaults()
+	p.setLogForwarderDefaults()
 
 	p.Spec.Monitor.SetDefaults()
 	if p.Spec.Monitor != nil && p.Spec.Monitor.Prometheus != nil {
@@ -856,4 +857,12 @@ func (d *PostgresDCStatus) WritablePrimaryConfirmed(now time.Time) bool {
 		return false // never probed: the true is the placement default, not an observation
 	}
 	return now.Sub(d.WritableObservedAt.Time) <= WritableObservationTTL
+}
+
+// setLogForwarderDefaults fills safe defaults for an enabled log-forwarder; no-op when absent so an
+// unconfigured Postgres renders exactly as before.
+func (p *Postgres) setLogForwarderDefaults() {
+	if p.Spec.LogForwarder != nil {
+		p.Spec.LogForwarder.SetCollectionDefaults()
+	}
 }

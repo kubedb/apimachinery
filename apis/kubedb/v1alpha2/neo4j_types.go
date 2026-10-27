@@ -110,6 +110,11 @@ type Neo4jSpec struct {
 	// Archiver controls database backup using Archiver CR
 	// +optional
 	Archiver *Archiver `json:"archiver,omitempty"`
+
+	// LogForwarder configures an operator-managed OpenTelemetry Collector sidecar that tails Neo4j
+	// log files and ships them to an observability backend.
+	// +optional
+	LogForwarder *LogForwarderSpec `json:"logForwarder,omitempty"`
 }
 
 // Neo4jConfiguration holds the user supplied Neo4j configuration.
