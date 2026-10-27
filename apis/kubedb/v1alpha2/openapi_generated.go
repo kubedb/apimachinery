@@ -43541,14 +43541,14 @@ func schema_apimachinery_apis_kubedb_v1alpha2_NATSStatus(ref common.ReferenceCal
 					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Age"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Age"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 

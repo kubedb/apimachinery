@@ -36236,7 +36236,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_NATSStatus(ref common.ReferenceCal
 					},
 					"authSecret": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Age"),
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
 						},
 					},
 					"gitops": {
@@ -36249,7 +36249,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_NATSStatus(ref common.ReferenceCal
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Age"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
 	}
 }
 

@@ -6020,7 +6020,7 @@ func (in *NATSStatus) DeepCopyInto(out *NATSStatus) {
 	}
 	if in.AuthSecret != nil {
 		in, out := &in.AuthSecret, &out.AuthSecret
-		*out = new(Age)
+		*out = new(SecretReference)
 		(*in).DeepCopyInto(*out)
 	}
 	return

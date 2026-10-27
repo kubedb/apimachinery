@@ -398,7 +398,7 @@ type NATSStatus struct {
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
 
 	// +optional
-	AuthSecret *Age `json:"authSecret,omitempty"`
+	AuthSecret *SecretReference `json:"authSecret,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
