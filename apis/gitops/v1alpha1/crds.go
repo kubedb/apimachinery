@@ -96,6 +96,10 @@ func (Milvus) CustomResourceDefinition() *apiextensions.CustomResourceDefinition
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(dbv1a2.ResourcePluralMilvus))
 }
 
+func (NATS) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(dbv1a2.ResourcePluralNATS))
+}
+
 func (Neo4j) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(dbv1a2.ResourcePluralNeo4j))
 }

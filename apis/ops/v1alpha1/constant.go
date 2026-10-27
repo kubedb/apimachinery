@@ -533,3 +533,36 @@ const (
 	EtcdRestoreSnapshotApplied = "EtcdRestoreSnapshotApplied"
 	EtcdRestorePetSetRestored  = "EtcdRestorePetSetRestored"
 )
+
+// NATS Constants
+const (
+	// rolling procedure (design 9.0): one pod at a time, non-leaders first, meta-leader last
+	NATSPreflightHealthy      = "NATSPreflightHealthy"
+	NATSMetaLeaderSteppedDown = "NATSMetaLeaderSteppedDown"
+	RestartNATSPods           = "RestartNATSPods"
+	ReadyNATSPod              = "ReadyNATSPod"
+	NATSPodCurrent            = "NATSPodCurrent"
+	NATSRouteMeshFormed       = "NATSRouteMeshFormed"
+	NATSClusterHealthy        = "NATSClusterHealthy"
+
+	// scaling steps
+	UpdateNATSPetSet       = "UpdateNATSPetSet"
+	NATSServerEvacuated    = "NATSServerEvacuated"
+	NATSServerPeerRemoved  = "NATSServerPeerRemoved"
+	NATSPVCDeleted         = "NATSPVCDeleted"
+	NATSRoutesUpdated      = "NATSRoutesUpdated"
+	UpdateNATSNodePVCs     = "UpdateNATSNodePVCs"
+	MigrateNATSStorage     = "MigrateNATSStorage"
+	NATSMaxFileStoreRaised = "NATSMaxFileStoreRaised"
+
+	// reconfigure steps
+	NATSConfigValidated = "NATSConfigValidated"
+	NATSConfigReloaded  = "NATSConfigReloaded"
+
+	// TLS steps
+	NATSAllowNonTLSRolled = "NATSAllowNonTLSRolled"
+	NATSPlaintextDrained  = "NATSPlaintextDrained"
+
+	// auth steps
+	NATSCredentialsRotated = "NATSCredentialsRotated"
+)

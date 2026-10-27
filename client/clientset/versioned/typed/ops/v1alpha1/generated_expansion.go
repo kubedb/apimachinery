@@ -54,6 +54,8 @@ type MongoDBOpsRequestExpansion interface{}
 
 type MySQLOpsRequestExpansion interface{}
 
+type NATSOpsRequestExpansion interface{}
+
 type Neo4jOpsRequestExpansion interface{}
 
 type OracleOpsRequestExpansion interface{}

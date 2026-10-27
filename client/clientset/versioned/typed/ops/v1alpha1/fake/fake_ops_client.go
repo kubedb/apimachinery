@@ -101,6 +101,10 @@ func (c *FakeOpsV1alpha1) MySQLOpsRequests(namespace string) v1alpha1.MySQLOpsRe
 	return newFakeMySQLOpsRequests(c, namespace)
 }
 
+func (c *FakeOpsV1alpha1) NATSOpsRequests(namespace string) v1alpha1.NATSOpsRequestInterface {
+	return newFakeNATSOpsRequests(c, namespace)
+}
+
 func (c *FakeOpsV1alpha1) Neo4jOpsRequests(namespace string) v1alpha1.Neo4jOpsRequestInterface {
 	return newFakeNeo4jOpsRequests(c, namespace)
 }

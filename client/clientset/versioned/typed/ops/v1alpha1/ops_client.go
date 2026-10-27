@@ -47,6 +47,7 @@ type OpsV1alpha1Interface interface {
 	MilvusOpsRequestsGetter
 	MongoDBOpsRequestsGetter
 	MySQLOpsRequestsGetter
+	NATSOpsRequestsGetter
 	Neo4jOpsRequestsGetter
 	OracleOpsRequestsGetter
 	PerconaXtraDBOpsRequestsGetter
@@ -139,6 +140,10 @@ func (c *OpsV1alpha1Client) MongoDBOpsRequests(namespace string) MongoDBOpsReque
 
 func (c *OpsV1alpha1Client) MySQLOpsRequests(namespace string) MySQLOpsRequestInterface {
 	return newMySQLOpsRequests(c, namespace)
+}
+
+func (c *OpsV1alpha1Client) NATSOpsRequests(namespace string) NATSOpsRequestInterface {
+	return newNATSOpsRequests(c, namespace)
 }
 
 func (c *OpsV1alpha1Client) Neo4jOpsRequests(namespace string) Neo4jOpsRequestInterface {

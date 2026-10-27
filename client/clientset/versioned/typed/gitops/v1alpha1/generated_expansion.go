@@ -54,6 +54,8 @@ type MongoDBExpansion interface{}
 
 type MySQLExpansion interface{}
 
+type NATSExpansion interface{}
+
 type Neo4jExpansion interface{}
 
 type OracleExpansion interface{}

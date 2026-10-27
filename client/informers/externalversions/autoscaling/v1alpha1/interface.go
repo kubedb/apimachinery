@@ -60,6 +60,8 @@ type Interface interface {
 	MongoDBAutoscalers() MongoDBAutoscalerInformer
 	// MySQLAutoscalers returns a MySQLAutoscalerInformer.
 	MySQLAutoscalers() MySQLAutoscalerInformer
+	// NATSAutoscalers returns a NATSAutoscalerInformer.
+	NATSAutoscalers() NATSAutoscalerInformer
 	// Neo4jAutoscalers returns a Neo4jAutoscalerInformer.
 	Neo4jAutoscalers() Neo4jAutoscalerInformer
 	// OracleAutoscalers returns a OracleAutoscalerInformer.
@@ -191,6 +193,11 @@ func (v *version) MongoDBAutoscalers() MongoDBAutoscalerInformer {
 // MySQLAutoscalers returns a MySQLAutoscalerInformer.
 func (v *version) MySQLAutoscalers() MySQLAutoscalerInformer {
 	return &mySQLAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// NATSAutoscalers returns a NATSAutoscalerInformer.
+func (v *version) NATSAutoscalers() NATSAutoscalerInformer {
+	return &nATSAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Neo4jAutoscalers returns a Neo4jAutoscalerInformer.

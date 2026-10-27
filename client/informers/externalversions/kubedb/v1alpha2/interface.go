@@ -60,6 +60,8 @@ type Interface interface {
 	MongoDBs() MongoDBInformer
 	// MySQLs returns a MySQLInformer.
 	MySQLs() MySQLInformer
+	// NATSs returns a NATSInformer.
+	NATSs() NATSInformer
 	// Neo4js returns a Neo4jInformer.
 	Neo4js() Neo4jInformer
 	// Oracles returns a OracleInformer.
@@ -191,6 +193,11 @@ func (v *version) MongoDBs() MongoDBInformer {
 // MySQLs returns a MySQLInformer.
 func (v *version) MySQLs() MySQLInformer {
 	return &mySQLInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// NATSs returns a NATSInformer.
+func (v *version) NATSs() NATSInformer {
+	return &nATSInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Neo4js returns a Neo4jInformer.

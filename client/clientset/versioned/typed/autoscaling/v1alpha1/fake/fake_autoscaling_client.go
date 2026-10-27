@@ -101,6 +101,10 @@ func (c *FakeAutoscalingV1alpha1) MySQLAutoscalers(namespace string) v1alpha1.My
 	return newFakeMySQLAutoscalers(c, namespace)
 }
 
+func (c *FakeAutoscalingV1alpha1) NATSAutoscalers(namespace string) v1alpha1.NATSAutoscalerInterface {
+	return newFakeNATSAutoscalers(c, namespace)
+}
+
 func (c *FakeAutoscalingV1alpha1) Neo4jAutoscalers(namespace string) v1alpha1.Neo4jAutoscalerInterface {
 	return newFakeNeo4jAutoscalers(c, namespace)
 }

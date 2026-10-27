@@ -181,6 +181,17 @@ func (c *Controller) extractDatabaseInfo(ps *petsetapps.PetSet) (*databaseInfo, 
 		}
 		dbInfo.shouldRequeue = scapi.ShouldEnqueueObjectForShard(c.KBClient, c.ShardConfig, my.GetLabels())
 
+	case olddbapi.ResourceKindNATS:
+		dbInfo.opts.GVR.Resource = olddbapi.ResourcePluralNATS
+		nats, err := c.DBClient.KubedbV1alpha2().NATSs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})
+		if err != nil {
+			return nil, err
+		}
+		dbInfo.replicasReady, dbInfo.msg, err = nats.ReplicasAreReady(c.PSLister)
+		if err != nil {
+			return nil, err
+		}
+
 	case dbapi.ResourceKindPerconaXtraDB:
 		dbInfo.opts.GVR.Resource = dbapi.ResourcePluralPerconaXtraDB
 		px, err := c.DBClient.KubedbV1().PerconaXtraDBs(dbInfo.opts.Namespace).Get(context.TODO(), dbInfo.opts.Name, metav1.GetOptions{})

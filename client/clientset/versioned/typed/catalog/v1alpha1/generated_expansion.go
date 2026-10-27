@@ -56,6 +56,8 @@ type MongoDBVersionExpansion interface{}
 
 type MySQLVersionExpansion interface{}
 
+type NATSVersionExpansion interface{}
+
 type Neo4jVersionExpansion interface{}
 
 type OracleVersionExpansion interface{}

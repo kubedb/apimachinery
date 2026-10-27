@@ -47,6 +47,7 @@ type GitopsV1alpha1Interface interface {
 	MilvusesGetter
 	MongoDBsGetter
 	MySQLsGetter
+	NATSsGetter
 	Neo4jsGetter
 	OraclesGetter
 	PerconaXtraDBsGetter
@@ -139,6 +140,10 @@ func (c *GitopsV1alpha1Client) MongoDBs(namespace string) MongoDBInterface {
 
 func (c *GitopsV1alpha1Client) MySQLs(namespace string) MySQLInterface {
 	return newMySQLs(c, namespace)
+}
+
+func (c *GitopsV1alpha1Client) NATSs(namespace string) NATSInterface {
+	return newNATSs(c, namespace)
 }
 
 func (c *GitopsV1alpha1Client) Neo4js(namespace string) Neo4jInterface {
