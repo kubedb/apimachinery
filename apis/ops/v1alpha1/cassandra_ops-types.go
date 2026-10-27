@@ -95,6 +95,23 @@ type CassandraOpsRequestType string
 type CassandraHorizontalScalingSpec struct {
 	// Number of node
 	Node *int32 `json:"node,omitempty"`
+
+	// DataCenters scales individual data centers of a distributed DC-DR Cassandra. Each
+	// entry sets that data center's node count; data centers not listed are left
+	// unchanged. Use this instead of Node for a DC-DR cluster, where each data center is a
+	// full Cassandra datacenter on the shared ring and is scaled independently.
+	// +optional
+	DataCenters []CassandraHorizontalScalingDC `json:"dataCenters,omitempty"`
+}
+
+// CassandraHorizontalScalingDC is a per data center node-count target for scaling a
+// distributed DC-DR Cassandra.
+type CassandraHorizontalScalingDC struct {
+	// ClusterName is the data center, named by its OCM managed cluster, matching a Member
+	// distributionRule in the Cassandra PlacementPolicy.
+	ClusterName string `json:"clusterName"`
+	// Node is the desired node count for this data center.
+	Node int32 `json:"node"`
 }
 
 // CassandraUpdateVersionSpec contains the update version information of a cassandra cluster
