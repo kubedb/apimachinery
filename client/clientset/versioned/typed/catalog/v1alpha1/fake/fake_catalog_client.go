@@ -161,6 +161,10 @@ func (c *FakeCatalogV1alpha1) WeaviateVersions() v1alpha1.WeaviateVersionInterfa
 	return newFakeWeaviateVersions(c)
 }
 
+func (c *FakeCatalogV1alpha1) YugabyteDBVersions() v1alpha1.YugabyteDBVersionInterface {
+	return newFakeYugabyteDBVersions(c)
+}
+
 func (c *FakeCatalogV1alpha1) ZooKeeperVersions() v1alpha1.ZooKeeperVersionInterface {
 	return newFakeZooKeeperVersions(c)
 }

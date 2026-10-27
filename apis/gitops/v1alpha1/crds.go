@@ -155,3 +155,7 @@ func (Weaviate) CustomResourceDefinition() *apiextensions.CustomResourceDefiniti
 func (ZooKeeper) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
 	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(dbv1a2.ResourcePluralZooKeeper))
 }
+
+func (YugabyteDB) CustomResourceDefinition() *apiextensions.CustomResourceDefinition {
+	return crds.MustCustomResourceDefinition(SchemeGroupVersion.WithResource(dbv1a2.ResourcePluralYugabyteDB))
+}

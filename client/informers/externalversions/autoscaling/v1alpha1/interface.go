@@ -88,6 +88,8 @@ type Interface interface {
 	SolrAutoscalers() SolrAutoscalerInformer
 	// WeaviateAutoscalers returns a WeaviateAutoscalerInformer.
 	WeaviateAutoscalers() WeaviateAutoscalerInformer
+	// YugabyteDBAutoscalers returns a YugabyteDBAutoscalerInformer.
+	YugabyteDBAutoscalers() YugabyteDBAutoscalerInformer
 	// ZooKeeperAutoscalers returns a ZooKeeperAutoscalerInformer.
 	ZooKeeperAutoscalers() ZooKeeperAutoscalerInformer
 }
@@ -261,6 +263,11 @@ func (v *version) SolrAutoscalers() SolrAutoscalerInformer {
 // WeaviateAutoscalers returns a WeaviateAutoscalerInformer.
 func (v *version) WeaviateAutoscalers() WeaviateAutoscalerInformer {
 	return &weaviateAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// YugabyteDBAutoscalers returns a YugabyteDBAutoscalerInformer.
+func (v *version) YugabyteDBAutoscalers() YugabyteDBAutoscalerInformer {
+	return &yugabyteDBAutoscalerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeeperAutoscalers returns a ZooKeeperAutoscalerInformer.

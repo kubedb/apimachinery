@@ -533,3 +533,96 @@ const (
 	EtcdRestoreSnapshotApplied = "EtcdRestoreSnapshotApplied"
 	EtcdRestorePetSetRestored  = "EtcdRestorePetSetRestored"
 )
+
+// YugabyteDB Constants
+const (
+	// YugabyteDBPreflight is the step that checks the universe before anything is changed.
+	YugabyteDBPreflight = "Preflight"
+	// YugabyteDBRollMasters is the step that restarts the masters one at a time.
+	YugabyteDBRollMasters = "RollMasters"
+	// YugabyteDBRollTServers is the step that restarts the tservers one at a time, after their leaders were drained.
+	YugabyteDBRollTServers = "RollTServers"
+	// YugabyteDBLeaderDrainTimedOut records that the tablet leaders did not all leave a tserver before it was stopped.
+	YugabyteDBLeaderDrainTimedOut = "LeaderDrainTimedOut"
+	// YugabyteDBScaleTServers is the step that changes the number of tserver pods.
+	YugabyteDBScaleTServers = "ScaleTServers"
+	// YugabyteDBDrainTServers is the step that moves the tablets off the tservers that are being removed.
+	YugabyteDBDrainTServers = "DrainTServers"
+	// YugabyteDBUpdateResources is the step that applies the new resources to the PetSets.
+	YugabyteDBUpdateResources = "UpdateResources"
+	// YugabyteDBApplyConfiguration is the step that applies a new configuration.
+	YugabyteDBApplyConfiguration = "ApplyConfiguration"
+	// YugabyteDBSetRuntimeFlags is the step that sets the changed runtime flags on every pod without a restart.
+	YugabyteDBSetRuntimeFlags = "SetRuntimeFlags"
+	// YugabyteDBReloadCertificates is the step that makes the servers load the new certificates without a restart.
+	YugabyteDBReloadCertificates = "ReloadCertificates"
+	// YugabyteDBPromoteAutoFlags is the step that promotes the volatile AutoFlags after all pods run the new version.
+	YugabyteDBPromoteAutoFlags = "PromoteAutoFlags"
+	// YugabyteDBSoak is the step that watches the universe before the upgrade is finalized.
+	YugabyteDBSoak = "Soak"
+	// YugabyteDBFinalizeUpgrade is the step that finalizes the upgrade. The upgrade cannot be rolled back after it.
+	YugabyteDBFinalizeUpgrade = "FinalizeUpgrade"
+	// YugabyteDBUpdateVolumes is the step that grows the PVCs.
+	YugabyteDBUpdateVolumes = "UpdateVolumes"
+	// YugabyteDBApplyConnectionManager is the step that applies a new YSQL Connection Manager setting, which needs a rolling restart.
+	YugabyteDBApplyConnectionManager = "ApplyConnectionManager"
+	// YugabyteDBApplyWebserverTLS is the step that switches the web UIs between HTTP and HTTPS, which needs a rolling restart.
+	YugabyteDBApplyWebserverTLS = "ApplyWebserverTLS"
+	// StorageMigration. The pods move one at a time: tservers and read replicas first, then masters.
+	// YugabyteDBMigrateUpdatePetSets is the step that sets the new StorageClass in the volumeClaimTemplates of the PetSets.
+	YugabyteDBMigrateUpdatePetSets = "MigrateUpdatePetSets"
+	// YugabyteDBMigrateBlacklistPod is the per pod step that blacklists the tserver so that its tablets move away.
+	YugabyteDBMigrateBlacklistPod = "MigrateBlacklistPod"
+	// YugabyteDBMigrateDrainPod is the per pod step that waits until the tablets and leaders left the tserver.
+	YugabyteDBMigrateDrainPod = "MigrateDrainPod"
+	// YugabyteDBMigrateDeletePod is the per pod step that deletes the pod and its PVCs.
+	YugabyteDBMigrateDeletePod = "MigrateDeletePod"
+	// YugabyteDBMigrateRecreatePod is the per pod step that waits for the PetSet to recreate the pod on the new StorageClass.
+	YugabyteDBMigrateRecreatePod = "MigrateRecreatePod"
+	// YugabyteDBMigrateUnblacklistPod is the per pod step that removes the tserver from the blacklist.
+	YugabyteDBMigrateUnblacklistPod = "MigrateUnblacklistPod"
+	// YugabyteDBMigrateWaitBalancer is the per pod step that waits until the load balancer is idle before the next pod is migrated.
+	YugabyteDBMigrateWaitBalancer = "MigrateWaitBalancer"
+	// YugabyteDBMigrateMasterReplace is the per master step that deletes the pod and its PVC and waits until the rebuilt master is a VOTER.
+	YugabyteDBMigrateMasterReplace = "MigrateMasterReplace"
+	// YugabyteDBRewindPreflight is the step that checks the schedule of the database and that the time is inside its retention.
+	YugabyteDBRewindPreflight = "RewindPreflight"
+	// YugabyteDBRewindResolveTime is the step that turns minus into a restore time and records it, so retries restore to the same time.
+	YugabyteDBRewindResolveTime = "RewindResolveTime"
+	// YugabyteDBRewindRestore is the step that runs restore_snapshot_schedule.
+	YugabyteDBRewindRestore = "RewindRestore"
+	// YugabyteDBRewindWaitRestored is the step that waits until the restoration is COMPLETE.
+	YugabyteDBRewindWaitRestored = "RewindWaitRestored"
+	// YugabyteDBClonePreflight is the step that checks the source database, the target name and the time.
+	YugabyteDBClonePreflight = "ClonePreflight"
+	// YugabyteDBCloneCreateDatabase is the step that runs CREATE DATABASE ... TEMPLATE ... AS OF.
+	YugabyteDBCloneCreateDatabase = "CloneCreateDatabase"
+	// YugabyteDBCloneWaitReady is the step that waits until the target database accepts connections.
+	YugabyteDBCloneWaitReady = "CloneWaitReady"
+	// YugabyteDBRollReadReplicas is the step that restarts the read replica tservers one at a time, after the tservers.
+	YugabyteDBRollReadReplicas = "RollReadReplicas"
+	// YugabyteDBScaleReadReplicas is the step that changes the number of read replica pods.
+	YugabyteDBScaleReadReplicas = "ScaleReadReplicas"
+	// YugabyteDBDrainReadReplicas is the step that moves the tablet copies off the read replicas that are being removed.
+	YugabyteDBDrainReadReplicas = "DrainReadReplicas"
+	// YugabyteDBSetReadReplicaPlacement is the step that registers the read replica placement and replication factor on the masters.
+	YugabyteDBSetReadReplicaPlacement = "SetReadReplicaPlacement"
+	// YugabyteDBDeleteSnapshotSchedules is the step that records and deletes the PITR snapshot schedules before an upgrade.
+	YugabyteDBDeleteSnapshotSchedules = "DeleteSnapshotSchedules"
+	// YugabyteDBRecordAutoFlagsConfig is the step that records the AutoFlags config version, so a rollback can return to it.
+	YugabyteDBRecordAutoFlagsConfig = "RecordAutoFlagsConfig"
+	// YugabyteDBUpgradePendingFinalize is the step at which a Manual upgrade waits for a FinalizeUpgrade or RollbackUpgrade request.
+	YugabyteDBUpgradePendingFinalize = "UpgradePendingFinalize"
+	// YugabyteDBUpgradeYSQL is the step that upgrades the YSQL catalog (upgrade_ysql) as part of the finalization.
+	YugabyteDBUpgradeYSQL = "UpgradeYSQL"
+	// YugabyteDBRecreateSnapshotSchedules is the step that recreates the PITR snapshot schedules after the upgrade is finalized or rolled back.
+	YugabyteDBRecreateSnapshotSchedules = "RecreateSnapshotSchedules"
+	// YugabyteDBRollbackAutoFlags is the step that returns the AutoFlags to the recorded config version (rollback_auto_flags).
+	YugabyteDBRollbackAutoFlags = "RollbackAutoFlags"
+	// YugabyteDBRollbackTServers is the step that returns the tservers to the previous image, one at a time.
+	YugabyteDBRollbackTServers = "RollbackTServers"
+	// YugabyteDBRollbackMasters is the step that returns the masters to the previous image, one at a time, after the tservers.
+	YugabyteDBRollbackMasters = "RollbackMasters"
+	// YugabyteDBRestoreVersion is the step that sets spec.version back to the previous version after a rollback.
+	YugabyteDBRestoreVersion = "RestoreVersion"
+)

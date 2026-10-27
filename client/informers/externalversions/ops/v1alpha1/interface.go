@@ -88,6 +88,8 @@ type Interface interface {
 	SolrOpsRequests() SolrOpsRequestInformer
 	// WeaviateOpsRequests returns a WeaviateOpsRequestInformer.
 	WeaviateOpsRequests() WeaviateOpsRequestInformer
+	// YugabyteDBOpsRequests returns a YugabyteDBOpsRequestInformer.
+	YugabyteDBOpsRequests() YugabyteDBOpsRequestInformer
 	// ZooKeeperOpsRequests returns a ZooKeeperOpsRequestInformer.
 	ZooKeeperOpsRequests() ZooKeeperOpsRequestInformer
 }
@@ -261,6 +263,11 @@ func (v *version) SolrOpsRequests() SolrOpsRequestInformer {
 // WeaviateOpsRequests returns a WeaviateOpsRequestInformer.
 func (v *version) WeaviateOpsRequests() WeaviateOpsRequestInformer {
 	return &weaviateOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// YugabyteDBOpsRequests returns a YugabyteDBOpsRequestInformer.
+func (v *version) YugabyteDBOpsRequests() YugabyteDBOpsRequestInformer {
+	return &yugabyteDBOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ZooKeeperOpsRequests returns a ZooKeeperOpsRequestInformer.

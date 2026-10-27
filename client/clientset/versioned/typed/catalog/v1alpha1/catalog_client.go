@@ -62,6 +62,7 @@ type CatalogV1alpha1Interface interface {
 	SinglestoreVersionsGetter
 	SolrVersionsGetter
 	WeaviateVersionsGetter
+	YugabyteDBVersionsGetter
 	ZooKeeperVersionsGetter
 }
 
@@ -200,6 +201,10 @@ func (c *CatalogV1alpha1Client) SolrVersions() SolrVersionInterface {
 
 func (c *CatalogV1alpha1Client) WeaviateVersions() WeaviateVersionInterface {
 	return newWeaviateVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) YugabyteDBVersions() YugabyteDBVersionInterface {
+	return newYugabyteDBVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) ZooKeeperVersions() ZooKeeperVersionInterface {

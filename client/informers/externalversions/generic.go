@@ -152,6 +152,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().SolrAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("weaviateautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().WeaviateAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("yugabytedbautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().YugabyteDBAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("zookeeperautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().ZooKeeperAutoscalers().Informer()}, nil
 
@@ -222,6 +224,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().SolrVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("weaviateversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().WeaviateVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("yugabytedbversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().YugabyteDBVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("zookeeperversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().ZooKeeperVersions().Informer()}, nil
 
@@ -310,6 +314,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Solrs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("weaviates"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Weaviates().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("yugabytedbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().YugabyteDBs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("zookeepers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().ZooKeepers().Informer()}, nil
 
@@ -414,6 +420,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Solrs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("weaviates"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Weaviates().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("yugabytedbs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().YugabyteDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("zookeepers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().ZooKeepers().Informer()}, nil
 
@@ -482,6 +490,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().SolrOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("weaviateopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().WeaviateOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("yugabytedbopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().YugabyteDBOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("zookeeperopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().ZooKeeperOpsRequests().Informer()}, nil
 

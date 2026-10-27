@@ -157,6 +157,10 @@ func (c *FakeOpsV1alpha1) WeaviateOpsRequests(namespace string) v1alpha1.Weaviat
 	return newFakeWeaviateOpsRequests(c, namespace)
 }
 
+func (c *FakeOpsV1alpha1) YugabyteDBOpsRequests(namespace string) v1alpha1.YugabyteDBOpsRequestInterface {
+	return newFakeYugabyteDBOpsRequests(c, namespace)
+}
+
 func (c *FakeOpsV1alpha1) ZooKeeperOpsRequests(namespace string) v1alpha1.ZooKeeperOpsRequestInterface {
 	return newFakeZooKeeperOpsRequests(c, namespace)
 }

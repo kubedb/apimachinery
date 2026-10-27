@@ -1,0 +1,8 @@
+apiVersion: kubedb.com/v1alpha2
+kind: YugabyteDB
+metadata:
+  name: yb-demo
+  namespace: demo
+spec:
+  version: 2025.2.8
+  deletionPolicy: WipeOut

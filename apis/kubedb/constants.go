@@ -2790,3 +2790,142 @@ const (
 	// set when the archiver cannot serve this Milvus (legacy RocksMQ, or VolumeSnapshotter on Distributed)
 	MilvusArchiverUnsupported = "ArchiverUnsupported"
 )
+
+// =========================== YugabyteDB Constants ============================
+
+const (
+	YugabyteDBMasterContainerName  = "yb-master"
+	YugabyteDBTServerContainerName = "yb-tserver"
+	YugabyteDBInitContainerName    = "yb-init"
+
+	// Ports
+	YugabyteDBMasterRPCPort  = 7100
+	YugabyteDBMasterUIPort   = 7000
+	YugabyteDBTServerRPCPort = 9100
+	YugabyteDBTServerUIPort  = 9000
+	YugabyteDBYSQLPort       = 5433
+	// YugabyteDBYSQLInternalPort is the port of PostgreSQL when the Connection Manager is enabled. The Connection
+	// Manager listens on YugabyteDBYSQLPort and forwards the connections to this port.
+	YugabyteDBYSQLInternalPort = 6433
+	YugabyteDBYCQLPort         = 9042
+	YugabyteDBYSQLMetricsPort  = 13000
+	YugabyteDBYCQLMetricsPort  = 12000
+
+	YugabyteDBMasterRPCPortName   = "tcp-master-rpc"
+	YugabyteDBMasterUIPortName    = "http-master-ui"
+	YugabyteDBTServerRPCPortName  = "tcp-tserver-rpc"
+	YugabyteDBTServerUIPortName   = "http-tserver-ui"
+	YugabyteDBYSQLPortName        = "tcp-ysql"
+	YugabyteDBYCQLPortName        = "tcp-ycql"
+	YugabyteDBYSQLMetricsPortName = "http-ysql-met"
+	YugabyteDBYCQLMetricsPortName = "http-ycql-met"
+
+	// Volumes and paths. The data volumes are data-0, data-1 and so on, mounted at /mnt/disk0, /mnt/disk1 and so on.
+	YugabyteDBDataVolumeFmt    = "data-%d"
+	YugabyteDBDataMountPathFmt = "/mnt/disk%d"
+	YugabyteDBConfigVolume     = "config"
+	YugabyteDBConfigDir        = "/opt/yugabyte-config"
+	YugabyteDBCustomConfigVol  = "custom-config"
+	YugabyteDBCustomConfigDir  = "/opt/yugabyte-custom-config"
+	YugabyteDBFlagsDir         = "/tmp/yugabyte"
+	YugabyteDBTLSVolume        = "tls"
+	YugabyteDBTLSDir           = "/opt/certs/yugabyte"
+	YugabyteDBTmpVolume        = "tmp"
+	YugabyteDBTmpDir           = "/tmp"
+	YugabyteDBShmVolume        = "dshm"
+	YugabyteDBShmDir           = "/dev/shm"
+	YugabyteDBPodInfoVolume    = "podinfo"
+	YugabyteDBPodInfoDir       = "/etc/podinfo"
+
+	// Keys of the config Secret rendered by the operator, and of the user supplied configuration.
+	YugabyteDBMasterFlagsTemplateKey  = "master.flags.tmpl"
+	YugabyteDBTServerFlagsTemplateKey = "tserver.flags.tmpl"
+	YugabyteDBMasterFlagsKey          = "master.flags"
+	YugabyteDBTServerFlagsKey         = "tserver.flags"
+	YugabyteDBPGConfKey               = "ysql_pg.conf"
+	YugabyteDBHBAConfKey              = "ysql_hba.conf"
+
+	// TLS. Every pod loads node.yugabyte.crt, node.yugabyte.key and ca.crt, whatever its hostname.
+	YugabyteDBCertNodeFilename = "yugabyte"
+
+	// Pod annotations that carry the placement of the node the pod runs on. The operator writes them.
+	YugabyteDBZoneAnnotation   = "yugabytedb." + GroupName + "/zone"
+	YugabyteDBRegionAnnotation = "yugabytedb." + GroupName + "/region"
+
+	// YugabyteDBAuthBootstrappedLabel is set on a pod after the default passwords were replaced.
+	// The client Service selects only the pods that have it.
+	YugabyteDBAuthBootstrappedLabel = GroupName + "/auth-bootstrapped"
+
+	// Users. YSQL and YCQL are created with these passwords and the operator replaces them at bootstrap.
+	YugabyteDBAdminUser           = "yugabyte"
+	YugabyteDBDefaultPassword     = "yugabyte"
+	YugabyteDBYCQLDefaultUser     = "cassandra"
+	YugabyteDBYCQLDefaultPassword = "cassandra"
+	YugabyteDBDefaultDatabase     = "yugabyte"
+
+	YugabyteDBTerminationGraceSeconds = 300
+	YugabyteDBRunAsUser               = 10001
+
+	// Roles
+	YugabyteDBRoleMasterValue      = "master"
+	YugabyteDBRoleTServerValue     = "tserver"
+	YugabyteDBRoleReadReplicaValue = "readreplica"
+
+	// YSQL Connection Manager. enable_ysql_conn_mgr moves PostgreSQL to the internal port and starts the pooler on ysql_conn_mgr_port.
+	YugabyteDBConnMgrEnableFlag                 = "enable_ysql_conn_mgr"
+	YugabyteDBConnMgrPortFlag                   = "ysql_conn_mgr_port"
+	YugabyteDBConnMgrMaxClientConnectionsFlag   = "ysql_conn_mgr_max_client_connections"
+	YugabyteDBDefaultConnMgrMaxClientConnection = 10000
+
+	// Webserver TLS. The web UIs of the masters (7000) and the tservers (9000) serve HTTPS with the node certificate.
+	YugabyteDBWebserverCertificateFlag   = "webserver_certificate_file"
+	YugabyteDBWebserverPrivateKeyFlag    = "webserver_private_key_file"
+	YugabyteDBWebserverCACertificateFlag = "webserver_ca_certificate_file"
+	YugabyteDBTLSCertFile                = YugabyteDBTLSDir + "/node." + YugabyteDBCertNodeFilename + ".crt"
+	YugabyteDBTLSKeyFile                 = YugabyteDBTLSDir + "/node." + YugabyteDBCertNodeFilename + ".key"
+	YugabyteDBTLSCAFile                  = YugabyteDBTLSDir + "/ca.crt"
+
+	// YugabyteDBCloneMinVersion is the first YugabyteDB release that supports CREATE DATABASE ... TEMPLATE ... AS OF.
+	YugabyteDBCloneMinVersion = "2024.2.0"
+
+	// YugabyteDBDefaultReadReplicaPlacementUUID is the placement_uuid of the read replica tservers.
+	YugabyteDBDefaultReadReplicaPlacementUUID = "rr"
+	// YugabyteDBPlacementUUIDFlag is the tserver flag that assigns a tserver to a placement.
+	YugabyteDBPlacementUUIDFlag = "placement_uuid"
+
+	// Conditions
+	YugabyteDBConditionMastersReady         = "MastersReady"
+	YugabyteDBConditionTServersReady        = "TServersReady"
+	YugabyteDBConditionPlacementSet         = "PlacementSet"
+	YugabyteDBConditionLeaderBlacklistDirty = "LeaderBlacklistDirty"
+	// YugabyteDBConditionUpgradePendingFinalize is true on the database while an UpdateVersion with finalize: Manual
+	// waits for a FinalizeUpgrade or RollbackUpgrade request.
+	YugabyteDBConditionUpgradePendingFinalize = "UpgradePendingFinalize"
+	// YugabyteDBConditionPITRReady is true while every snapshot schedule of spec.pitr exists in YugabyteDB.
+	YugabyteDBConditionPITRReady = "PITRReady"
+	// YugabyteDBConditionRewindInProgress is true on the database while a Rewind restores a snapshot schedule.
+	YugabyteDBConditionRewindInProgress = "RewindInProgress"
+	// YugabyteDBConditionStorageMigrationInProgress is true on the database while a StorageMigration moves the pods to a new StorageClass.
+	YugabyteDBConditionStorageMigrationInProgress = "StorageMigrationInProgress"
+)
+
+var (
+	DefaultResourcesYugabyteDBMaster = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("500m"),
+			core.ResourceMemory: resource.MustParse("2Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("2Gi"),
+		},
+	}
+	DefaultResourcesYugabyteDBTServer = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse("1"),
+			core.ResourceMemory: resource.MustParse("4Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceMemory: resource.MustParse("4Gi"),
+		},
+	}
+)

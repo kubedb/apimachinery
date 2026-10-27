@@ -1,0 +1,38 @@
+apiVersion: kubedb.com/v1alpha2
+kind: YugabyteDB
+metadata:
+  name: yb-tls
+  namespace: demo
+spec:
+  version: 2025.2.8
+  replicationFactor: 3
+  placement:
+    cloud: kubernetes
+    region: region1
+    preferredZones:
+    - zone-a
+  ycql:
+    enabled: true
+  configuration:
+    inline:
+      tserver.flags: |
+        --ysql_max_connections=300
+      master.flags: |
+        --load_balancer_max_concurrent_adds=2
+      ysql_hba.conf: |
+        host all all 10.0.0.0/8 md5
+  tls:
+    issuerRef:
+      apiGroup: cert-manager.io
+      kind: Issuer
+      name: yb-ca-issuer
+    nodeToNode: true
+    clientToNode: true
+  monitor:
+    agent: prometheus.io/operator
+    prometheus:
+      serviceMonitor:
+        labels:
+          release: prometheus
+        interval: 10s
+  deletionPolicy: Delete

@@ -1,0 +1,10 @@
+apiVersion: ops.kubedb.com/v1alpha1
+kind: YugabyteDBOpsRequest
+metadata:
+  name: yb-restart
+  namespace: demo
+spec:
+  type: Restart
+  databaseRef:
+    name: yb-demo
+  restart: {}
