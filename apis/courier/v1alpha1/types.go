@@ -43,6 +43,8 @@ type Source struct {
 	*MongoDBSource `json:",inline,omitempty"`
 	// MSSQLServer refers to the source MSSQL Server database configuration
 	*MSSQLServerSource `json:",inline,omitempty"`
+	// Oracle refers to the source Oracle database configuration
+	*OracleSource `json:",inline,omitempty"`
 }
 
 // Target defines the target database configuration
@@ -62,6 +64,8 @@ type Target struct {
 	*MariaDBTarget `json:",inline,omitempty"`
 	// MSSQLServer refers to the target MSSQL Server database configuration
 	*MSSQLServerTarget `json:",inline,omitempty"`
+	// Oracle refers to the target Oracle database configuration
+	*OracleTarget `json:",inline,omitempty"`
 }
 
 type ConnectionInfo struct {

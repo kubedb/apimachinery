@@ -36,6 +36,8 @@ type Interface interface {
 	MongoDBMigrations() MongoDBMigrationInformer
 	// MySQLMigrations returns a MySQLMigrationInformer.
 	MySQLMigrations() MySQLMigrationInformer
+	// OracleMigrations returns a OracleMigrationInformer.
+	OracleMigrations() OracleMigrationInformer
 	// PostgresMigrations returns a PostgresMigrationInformer.
 	PostgresMigrations() PostgresMigrationInformer
 }
@@ -79,6 +81,11 @@ func (v *version) MongoDBMigrations() MongoDBMigrationInformer {
 // MySQLMigrations returns a MySQLMigrationInformer.
 func (v *version) MySQLMigrations() MySQLMigrationInformer {
 	return &mySQLMigrationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// OracleMigrations returns a OracleMigrationInformer.
+func (v *version) OracleMigrations() OracleMigrationInformer {
+	return &oracleMigrationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PostgresMigrations returns a PostgresMigrationInformer.
