@@ -557,6 +557,7 @@ const (
 
 	// reconfigure steps
 	NATSConfigValidated = "NATSConfigValidated"
+	NATSConfigWritten   = "NATSConfigWritten"
 	NATSConfigReloaded  = "NATSConfigReloaded"
 
 	// TLS steps
