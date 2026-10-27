@@ -93,6 +93,18 @@ message PrimaryAliveResponse {
   bool Alive = 1 [ json_name = "alive" ];
 }
 
+// JobRequest carries a batch/v1 Job (JSON) for the coordinator to run in its own
+// cluster and namespace, and where the Job leaves its result.
+message JobRequest {
+  bytes Job = 1 [ json_name = "job" ];
+  string ResultConfigMap = 2 [ json_name = "resultConfigMap" ];
+  string ResultKey = 3 [ json_name = "resultKey" ];
+}
+
+message JobResult {
+  bytes Output = 1 [ json_name = "output" ];
+}
+
 service CoordinatorManager {
   rpc GetPodInfo(Pod) returns (PodInfo) {}
   rpc RemoveRecoveryConf(RRC) returns(Empty) {}
@@ -113,6 +125,11 @@ service CoordinatorManager {
   // cluster (a fixed touch, no caller supplied command). Used by the distributed ops
   // path where the hub cannot exec into the spoke pod.
   rpc CreateFailOverFile(FFOF) returns (ACK) {}
+  // RunJob runs a Job in the coordinator's own cluster and returns the value the
+  // Job wrote under ResultKey in ResultConfigMap. Used by distributed backup and
+  // restore, where the hub sends the work to a pod's data center so the data
+  // stays local.
+  rpc RunJob(JobRequest) returns (JobResult) {}
 }
 
 // Generated from the repo root so the descriptor registers under its full path
