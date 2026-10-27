@@ -100,6 +100,23 @@ type RabbitMQReplicaReadinessCriteria struct{}
 type RabbitMQHorizontalScalingSpec struct {
 	// Number of node
 	Node *int32 `json:"node,omitempty"`
+
+	// DataCenters scales individual data centers of a distributed DC-DR RabbitMQ.
+	// Each entry sets that data center's local node count; data centers not listed
+	// are left unchanged. Use this instead of Node for a DC-DR cluster, where each
+	// data center runs its own self-contained RabbitMQ cluster and is scaled independently.
+	// +optional
+	DataCenters []RabbitMQHorizontalScalingDC `json:"dataCenters,omitempty"`
+}
+
+// RabbitMQHorizontalScalingDC is a per data center node-count target for scaling a
+// distributed DC-DR RabbitMQ.
+type RabbitMQHorizontalScalingDC struct {
+	// ClusterName is the data center, named by its OCM managed cluster, matching a
+	// Member distributionRule in the RabbitMQ PlacementPolicy.
+	ClusterName string `json:"clusterName"`
+	// Replicas is the desired local node count for this data center.
+	Replicas int32 `json:"replicas"`
 }
 
 // RabbitMQVerticalScalingSpec contains the vertical scaling information of a RabbitMQ cluster

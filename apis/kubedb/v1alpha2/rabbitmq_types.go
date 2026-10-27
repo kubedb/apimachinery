@@ -64,6 +64,18 @@ type RabbitMQSpec struct {
 	// +optional
 	Replicas *int32 `json:"replicas,omitempty"`
 
+	// Distributed if set true, manifestwork objects will be created instead of raw resources.
+	// A distributed RabbitMQ is expanded by the operator into one self-contained RabbitMQ cluster
+	// per Member data center for cross data center disaster recovery (DC-DR). Cross-DC replication
+	// is carried by the Federation (or Shovel) plugin, active to standby.
+	// +optional
+	Distributed bool `json:"distributed,omitempty"`
+
+	// PodPlacementPolicy is the reference of the podPlacementPolicy that spreads the per data
+	// center RabbitMQ clusters across data centers for DC-DR.
+	// +optional
+	PodPlacementPolicy *core.LocalObjectReference `json:"podPlacementPolicy,omitempty"`
+
 	// StorageType can be durable (default) or ephemeral
 	StorageType StorageType `json:"storageType,omitempty"`
 
@@ -136,6 +148,70 @@ type RabbitMQStatus struct {
 	// Conditions applied to the database, such as approval or denial.
 	// +optional
 	Conditions []kmapi.Condition `json:"conditions,omitempty"`
+	// DisasterRecovery reports the cross data center (DC-DR) state for a distributed RabbitMQ.
+	// +optional
+	DisasterRecovery *RabbitMQDisasterRecoveryStatus `json:"disasterRecovery,omitempty"`
+}
+
+// RabbitMQDRPhase is the cross data center DR phase of a distributed RabbitMQ.
+type RabbitMQDRPhase string
+
+const (
+	RabbitMQDRPhaseSteady      RabbitMQDRPhase = "Steady"
+	RabbitMQDRPhaseFailingOver RabbitMQDRPhase = "FailingOver"
+	RabbitMQDRPhaseFailingBack RabbitMQDRPhase = "FailingBack"
+	RabbitMQDRPhaseDegraded    RabbitMQDRPhase = "Degraded"
+)
+
+// RabbitMQDisasterRecoveryStatus reports the per data center DC-DR view of a distributed RabbitMQ.
+// RabbitMQ DC-DR is active/passive: exactly one data center is the publish cluster, chosen by the
+// dr-controlplane primary-DC Lease, and the Federation (or Shovel) plugin asynchronously replicates
+// it to the standby. This status reflects that decision on the single RabbitMQ object.
+type RabbitMQDisasterRecoveryStatus struct {
+	// ActiveDC is the data center that currently holds the primary DC Lease and takes client publishes.
+	// +optional
+	ActiveDC string `json:"activeDC,omitempty"`
+
+	// Phase is the DC-DR phase.
+	// +optional
+	Phase RabbitMQDRPhase `json:"phase,omitempty"`
+
+	// DataCenters is the per data center view, one entry per Member DC.
+	// +optional
+	DataCenters []RabbitMQDCStatus `json:"dataCenters,omitempty"`
+
+	// LastTransitionTime is when ActiveDC last changed.
+	// +optional
+	LastTransitionTime *meta.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// RabbitMQDCStatus is one data center's local view inside a distributed RabbitMQ.
+type RabbitMQDCStatus struct {
+	// ClusterName is the data center, named by its OCM managed cluster (the same
+	// clusterName used in the PlacementPolicy distributionRule).
+	ClusterName string `json:"clusterName"`
+
+	// Role is Member or Arbiter. An Arbiter DC holds only the dr-controlplane etcd member and no RabbitMQ.
+	// +optional
+	Role string `json:"role,omitempty"`
+
+	// Writable is true when this DC is the active publish cluster (its produce fence is open).
+	// +optional
+	Writable bool `json:"writable,omitempty"`
+
+	// NodesReady is the number of ready nodes in this DC's local RabbitMQ cluster.
+	// +optional
+	NodesReady *int32 `json:"nodesReady,omitempty"`
+
+	// FederationLagMessages is this DC's cross-DC Federation (or Shovel) replication backlog
+	// behind the active DC, in messages (the upstream vs downstream position gap). Nil when this
+	// DC is the active publish cluster.
+	// +optional
+	FederationLagMessages *int64 `json:"federationLagMessages,omitempty"`
+
+	// Healthy reflects whether this DC's health Lease is fresh.
+	// +optional
+	Healthy bool `json:"healthy,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=ca;client;server
