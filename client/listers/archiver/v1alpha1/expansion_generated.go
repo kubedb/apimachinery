@@ -26,6 +26,14 @@ type ClickHouseArchiverListerExpansion interface{}
 // ClickHouseArchiverNamespaceLister.
 type ClickHouseArchiverNamespaceListerExpansion interface{}
 
+// DocumentDBArchiverListerExpansion allows custom methods to be added to
+// DocumentDBArchiverLister.
+type DocumentDBArchiverListerExpansion interface{}
+
+// DocumentDBArchiverNamespaceListerExpansion allows custom methods to be added to
+// DocumentDBArchiverNamespaceLister.
+type DocumentDBArchiverNamespaceListerExpansion interface{}
+
 // EtcdArchiverListerExpansion allows custom methods to be added to
 // EtcdArchiverLister.
 type EtcdArchiverListerExpansion interface{}
@@ -50,6 +58,14 @@ type MariaDBArchiverListerExpansion interface{}
 // MariaDBArchiverNamespaceLister.
 type MariaDBArchiverNamespaceListerExpansion interface{}
 
+// MilvusArchiverListerExpansion allows custom methods to be added to
+// MilvusArchiverLister.
+type MilvusArchiverListerExpansion interface{}
+
+// MilvusArchiverNamespaceListerExpansion allows custom methods to be added to
+// MilvusArchiverNamespaceLister.
+type MilvusArchiverNamespaceListerExpansion interface{}
+
 // MongoDBArchiverListerExpansion allows custom methods to be added to
 // MongoDBArchiverLister.
 type MongoDBArchiverListerExpansion interface{}
@@ -65,6 +81,14 @@ type MySQLArchiverListerExpansion interface{}
 // MySQLArchiverNamespaceListerExpansion allows custom methods to be added to
 // MySQLArchiverNamespaceLister.
 type MySQLArchiverNamespaceListerExpansion interface{}
+
+// Neo4jArchiverListerExpansion allows custom methods to be added to
+// Neo4jArchiverLister.
+type Neo4jArchiverListerExpansion interface{}
+
+// Neo4jArchiverNamespaceListerExpansion allows custom methods to be added to
+// Neo4jArchiverNamespaceLister.
+type Neo4jArchiverNamespaceListerExpansion interface{}
 
 // PostgresArchiverListerExpansion allows custom methods to be added to
 // PostgresArchiverLister.

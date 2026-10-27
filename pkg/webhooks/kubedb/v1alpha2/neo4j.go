@@ -46,7 +46,7 @@ import (
 // SetupNeo4jWebhookWithManager registers the webhook for Neo4j in the manager.
 func SetupNeo4jWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Neo4j{}).
-		WithValidator(&Neo4jCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&Neo4jCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&Neo4jCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -86,6 +86,9 @@ var _ webhook.CustomValidator = &Neo4jCustomWebhook{}
 func (w *Neo4jCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	db, ok := obj.(*olddbapi.Neo4j)
 	if !ok {

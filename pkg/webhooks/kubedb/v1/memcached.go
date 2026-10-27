@@ -48,7 +48,7 @@ import (
 // SetupMemcachedWebhookWithManager registers the webhook for Memcached in the manager.
 func SetupMemcachedWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.Memcached{}).
-		WithValidator(&MemcachedCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MemcachedCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MemcachedCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -286,6 +286,9 @@ func (mv MemcachedCustomWebhook) validate(ctx context.Context, obj runtime.Objec
 func (mv MemcachedCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, mv.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	memcached := obj.(*dbapi.Memcached)
 	memLog.Info("validating", "name", memcached.Name)

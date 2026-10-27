@@ -47,7 +47,7 @@ import (
 // SetupMSSQLServerWebhookWithManager registers the webhook for MSSQLServer in the manager.
 func SetupMSSQLServerWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.MSSQLServer{}).
-		WithValidator(&MSSQLServerCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MSSQLServerCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MSSQLServerCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -86,6 +86,9 @@ var _ webhook.CustomValidator = &MSSQLServerCustomWebhook{}
 func (w *MSSQLServerCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	db, ok := obj.(*olddbapi.MSSQLServer)
 	if !ok {

@@ -30862,6 +30862,9 @@
         "adminVariables": {
           "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
         },
+        "mysqlAWSAuroraHostgroups": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.runtime.RawExtension"
+        },
         "mysqlQueryRules": {
           "type": "array",
           "items": {
@@ -31596,6 +31599,20 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchLicenseOpsSpec": {
+      "description": "ElasticsearchLicenseOpsSpec drives an explicit license (re)activation. It has the same SecretRef/Trial shape as kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchLicenseSpec; applying it also patches spec.license on the Elasticsearch CR so the CR stays the source of truth for future reconciles.",
+      "type": "object",
+      "properties": {
+        "secretRef": {
+          "description": "SecretRef references a Secret holding the signed license file content under a single key, \"license.json\". Mutually exclusive with Trial.",
+          "$ref": "#/definitions/io.k8s.api.core.v1.LocalObjectReference"
+        },
+        "trial": {
+          "description": "Trial requests Elastic's built-in one-time 30-day trial license (POST _license/start_trial) instead of a user-supplied license. Mutually exclusive with SecretRef.",
+          "type": "boolean"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchMigrationSpec": {
       "description": "ElasticsearchMigrationSpec is the spec for storage migration of an Elasticsearch database. Set Node for combined mode, or per-role fields for topology mode.",
       "type": "object",
@@ -31743,6 +31760,10 @@
         "horizontalScaling": {
           "description": "Specifies information necessary for horizontal scaling",
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchHorizontalScalingSpec"
+        },
+        "license": {
+          "description": "Specifies information necessary for activating/rotating an Elastic subscription license",
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.ElasticsearchLicenseOpsSpec"
         },
         "maxRetries": {
           "type": "integer",
@@ -33125,10 +33146,39 @@
         }
       }
     },
+    "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingDC": {
+      "description": "PostgresHorizontalScalingDC is a per data center node-count target for scaling a distributed DC-DR Postgres.",
+      "type": "object",
+      "required": [
+        "clusterName",
+        "replicas"
+      ],
+      "properties": {
+        "clusterName": {
+          "description": "ClusterName is the data center, named by its OCM managed cluster, matching a Member or Witness distributionRule in the Postgres PlacementPolicy.",
+          "type": "string",
+          "default": ""
+        },
+        "replicas": {
+          "description": "Replicas is the desired local node count for this data center.",
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingSpec": {
       "description": "HorizontalScaling is the spec for Postgres horizontal scaling",
       "type": "object",
       "properties": {
+        "dataCenters": {
+          "description": "DataCenters scales individual data centers of a distributed DC-DR Postgres. Each entry sets that data center's local node count; data centers not listed are left unchanged. Use this instead of Replicas for a DC-DR cluster, where each data center has its own intra-DC raft and is scaled independently.",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.ops.v1alpha1.PostgresHorizontalScalingDC"
+          }
+        },
         "readReplicas": {
           "type": "array",
           "items": {

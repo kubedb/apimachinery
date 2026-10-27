@@ -30,11 +30,14 @@ import (
 type ArchiverV1alpha1Interface interface {
 	RESTClient() rest.Interface
 	ClickHouseArchiversGetter
+	DocumentDBArchiversGetter
 	EtcdArchiversGetter
 	MSSQLServerArchiversGetter
 	MariaDBArchiversGetter
+	MilvusArchiversGetter
 	MongoDBArchiversGetter
 	MySQLArchiversGetter
+	Neo4jArchiversGetter
 	PostgresArchiversGetter
 }
 
@@ -45,6 +48,10 @@ type ArchiverV1alpha1Client struct {
 
 func (c *ArchiverV1alpha1Client) ClickHouseArchivers(namespace string) ClickHouseArchiverInterface {
 	return newClickHouseArchivers(c, namespace)
+}
+
+func (c *ArchiverV1alpha1Client) DocumentDBArchivers(namespace string) DocumentDBArchiverInterface {
+	return newDocumentDBArchivers(c, namespace)
 }
 
 func (c *ArchiverV1alpha1Client) EtcdArchivers(namespace string) EtcdArchiverInterface {
@@ -59,12 +66,20 @@ func (c *ArchiverV1alpha1Client) MariaDBArchivers(namespace string) MariaDBArchi
 	return newMariaDBArchivers(c, namespace)
 }
 
+func (c *ArchiverV1alpha1Client) MilvusArchivers(namespace string) MilvusArchiverInterface {
+	return newMilvusArchivers(c, namespace)
+}
+
 func (c *ArchiverV1alpha1Client) MongoDBArchivers(namespace string) MongoDBArchiverInterface {
 	return newMongoDBArchivers(c, namespace)
 }
 
 func (c *ArchiverV1alpha1Client) MySQLArchivers(namespace string) MySQLArchiverInterface {
 	return newMySQLArchivers(c, namespace)
+}
+
+func (c *ArchiverV1alpha1Client) Neo4jArchivers(namespace string) Neo4jArchiverInterface {
+	return newNeo4jArchivers(c, namespace)
 }
 
 func (c *ArchiverV1alpha1Client) PostgresArchivers(namespace string) PostgresArchiverInterface {

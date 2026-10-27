@@ -44,7 +44,7 @@ import (
 // SetupClickHouseWebhookWithManager registers the webhook for ClickHouse in the manager.
 func SetupClickHouseWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.ClickHouse{}).
-		WithValidator(&ClickHouseCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&ClickHouseCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&ClickHouseCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -78,6 +78,9 @@ var _ webhook.CustomValidator = &ClickHouseCustomWebhook{}
 func (w *ClickHouseCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	db, ok := obj.(*olddbapi.ClickHouse)
 	if !ok {

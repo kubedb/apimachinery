@@ -44,7 +44,7 @@ import (
 // SetupPerconaXtraDBWebhookWithManager registers the webhook for PerconaXtraDB in the manager.
 func SetupPerconaXtraDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.PerconaXtraDB{}).
-		WithValidator(&PerconaXtraDBCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&PerconaXtraDBCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&PerconaXtraDBCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -92,6 +92,9 @@ var _ webhook.CustomValidator = &PerconaXtraDBCustomWebhook{}
 func (w PerconaXtraDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	perconaxtradb := obj.(*dbapi.PerconaXtraDB)
 	err = w.ValidatePerconaXtraDB(perconaxtradb)

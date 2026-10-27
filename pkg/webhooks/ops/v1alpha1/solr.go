@@ -31,6 +31,7 @@ import (
 	core "k8s.io/api/core/v1"
 	storagev1 "k8s.io/api/storage/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
@@ -141,7 +142,7 @@ func (w *SolrOpsRequestCustomWebhook) validateCreateOrUpdate(req *opsapi.SolrOps
 				err.Error()))
 		}
 	case opsapi.SolrOpsRequestTypeReconfigure:
-		if err := w.validateSolrReconfigurationOpsRequest(req); err != nil {
+		if err := w.validateSolrReconfigurationOpsRequest(db, req); err != nil {
 			allErr = append(allErr, field.Invalid(field.NewPath("spec").Child("configuration"),
 				req.Name,
 				err.Error()))
@@ -350,7 +351,7 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrVolumeExpansionOpsRequest(req 
 	return nil
 }
 
-func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req *opsapi.SolrOpsRequest) error {
+func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(db *olddbapi.Solr, req *opsapi.SolrOpsRequest) error {
 	cfg := req.Spec.Configuration
 	if cfg == nil {
 		return errors.New("spec.configuration nil not supported in Reconfigure type")
@@ -358,7 +359,7 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 
 	creds := cfg.BackupSpec
 	if !cfg.RemoveCustomConfig && cfg.ConfigSecret == nil && len(cfg.ApplyConfig) == 0 &&
-		(creds == nil || (creds.S3Secret == nil && creds.GCSSecret == nil)) {
+		(creds == nil || (len(creds.S3Secrets) == 0 && len(creds.GCSSecrets) == 0)) {
 		return errors.New("at least one of `removeCustomConfig`, `configSecret`, `applyConfig` or `backup` must be specified")
 	}
 
@@ -371,12 +372,24 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 	if creds == nil {
 		return nil
 	}
-
-	if creds.S3Secret != nil {
-		if creds.S3Secret.Name == "" {
-			return errors.New("`spec.configuration.backup.s3Secret.name` must be specified")
+	reservedSecretName := db.BackupCredentialsSecretName()
+	if err := validateSolrBackupCredentialRefs(creds.S3Secrets, "s3Secrets", reservedSecretName); err != nil {
+		return err
+	}
+	if err := validateSolrBackupCredentialRefs(creds.GCSSecrets, "gcsSecrets", reservedSecretName); err != nil {
+		return err
+	}
+	if len(creds.S3Secrets) != 0 || len(creds.GCSSecrets) != 0 {
+		if err := w.validateSolrBackupCredentialsSecret(db); err != nil {
+			return err
 		}
-		secret, err := w.getReferencedSecret(req.Namespace, creds.S3Secret.Name, "s3")
+	}
+
+	for i, ref := range creds.S3Secrets {
+		if ref.Name == "" {
+			return fmt.Errorf("`spec.configuration.backup.s3Secrets[%d].name` must be specified", i)
+		}
+		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "s3")
 		if err != nil {
 			return err
 		}
@@ -387,11 +400,11 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 		}
 	}
 
-	if creds.GCSSecret != nil {
-		if creds.GCSSecret.Name == "" {
-			return errors.New("`spec.configuration.backup.gcsSecret.name` must be specified")
+	for i, ref := range creds.GCSSecrets {
+		if ref.Name == "" {
+			return fmt.Errorf("`spec.configuration.backup.gcsSecrets[%d].name` must be specified", i)
 		}
-		secret, err := w.getReferencedSecret(req.Namespace, creds.GCSSecret.Name, "gcs")
+		secret, err := w.getReferencedSecret(req.Namespace, ref.Name, "gcs")
 		if err != nil {
 			return err
 		}
@@ -401,6 +414,41 @@ func (w *SolrOpsRequestCustomWebhook) validateSolrReconfigurationOpsRequest(req 
 	}
 
 	return nil
+}
+
+func validateSolrBackupCredentialRefs(refs []core.LocalObjectReference, fieldName, reservedSecretName string) error {
+	seen := make(map[string]struct{})
+	for i, ref := range refs {
+		if ref.Name == "" {
+			return fmt.Errorf("spec.configuration.backup.%s[%d].name must be specified", fieldName, i)
+		}
+		if ref.Name == reservedSecretName {
+			return fmt.Errorf("spec.configuration.backup.%s cannot reference generated Secret %q", fieldName, reservedSecretName)
+		}
+		if _, found := seen[ref.Name]; found {
+			return fmt.Errorf("spec.configuration.backup.%s contains duplicate Secret %q", fieldName, ref.Name)
+		}
+		seen[ref.Name] = struct{}{}
+	}
+	return nil
+}
+
+func (w *SolrOpsRequestCustomWebhook) validateSolrBackupCredentialsSecret(db *olddbapi.Solr) error {
+	var secret core.Secret
+	err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+		Name:      db.BackupCredentialsSecretName(),
+		Namespace: db.Namespace,
+	}, &secret)
+	if apierrors.IsNotFound(err) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if metav1.IsControlledBy(&secret, db) {
+		return nil
+	}
+	return fmt.Errorf("secret %s/%s is reserved for generated backup credentials and is not controlled by Solr %s/%s", secret.Namespace, secret.Name, db.Namespace, db.Name)
 }
 
 func (w *SolrOpsRequestCustomWebhook) getReferencedSecret(namespace, name, kind string) (*core.Secret, error) {

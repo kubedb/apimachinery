@@ -47,7 +47,7 @@ import (
 // SetupMySQLWebhookWithManager registers the webhook for MySQL in the manager.
 func SetupMySQLWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MySQL{}).
-		WithValidator(&MySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MySQLCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -99,6 +99,9 @@ var _ webhook.CustomValidator = &MySQLCustomWebhook{}
 func (w MySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	mysql := obj.(*dbapi.MySQL)
 	err = w.ValidateMySQL(mysql)

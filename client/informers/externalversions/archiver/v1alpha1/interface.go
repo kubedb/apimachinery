@@ -26,16 +26,22 @@ import (
 type Interface interface {
 	// ClickHouseArchivers returns a ClickHouseArchiverInformer.
 	ClickHouseArchivers() ClickHouseArchiverInformer
+	// DocumentDBArchivers returns a DocumentDBArchiverInformer.
+	DocumentDBArchivers() DocumentDBArchiverInformer
 	// EtcdArchivers returns a EtcdArchiverInformer.
 	EtcdArchivers() EtcdArchiverInformer
 	// MSSQLServerArchivers returns a MSSQLServerArchiverInformer.
 	MSSQLServerArchivers() MSSQLServerArchiverInformer
 	// MariaDBArchivers returns a MariaDBArchiverInformer.
 	MariaDBArchivers() MariaDBArchiverInformer
+	// MilvusArchivers returns a MilvusArchiverInformer.
+	MilvusArchivers() MilvusArchiverInformer
 	// MongoDBArchivers returns a MongoDBArchiverInformer.
 	MongoDBArchivers() MongoDBArchiverInformer
 	// MySQLArchivers returns a MySQLArchiverInformer.
 	MySQLArchivers() MySQLArchiverInformer
+	// Neo4jArchivers returns a Neo4jArchiverInformer.
+	Neo4jArchivers() Neo4jArchiverInformer
 	// PostgresArchivers returns a PostgresArchiverInformer.
 	PostgresArchivers() PostgresArchiverInformer
 }
@@ -56,6 +62,11 @@ func (v *version) ClickHouseArchivers() ClickHouseArchiverInformer {
 	return &clickHouseArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// DocumentDBArchivers returns a DocumentDBArchiverInformer.
+func (v *version) DocumentDBArchivers() DocumentDBArchiverInformer {
+	return &documentDBArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // EtcdArchivers returns a EtcdArchiverInformer.
 func (v *version) EtcdArchivers() EtcdArchiverInformer {
 	return &etcdArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -71,6 +82,11 @@ func (v *version) MariaDBArchivers() MariaDBArchiverInformer {
 	return &mariaDBArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// MilvusArchivers returns a MilvusArchiverInformer.
+func (v *version) MilvusArchivers() MilvusArchiverInformer {
+	return &milvusArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // MongoDBArchivers returns a MongoDBArchiverInformer.
 func (v *version) MongoDBArchivers() MongoDBArchiverInformer {
 	return &mongoDBArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -79,6 +95,11 @@ func (v *version) MongoDBArchivers() MongoDBArchiverInformer {
 // MySQLArchivers returns a MySQLArchiverInformer.
 func (v *version) MySQLArchivers() MySQLArchiverInformer {
 	return &mySQLArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// Neo4jArchivers returns a Neo4jArchiverInformer.
+func (v *version) Neo4jArchivers() Neo4jArchiverInformer {
+	return &neo4jArchiverInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // PostgresArchivers returns a PostgresArchiverInformer.

@@ -23,7 +23,9 @@ import (
 
 	catalog "kubedb.dev/apimachinery/apis/catalog/v1alpha1"
 	"kubedb.dev/apimachinery/apis/kubedb"
+	dbapi "kubedb.dev/apimachinery/apis/kubedb/v1"
 	olddbapi "kubedb.dev/apimachinery/apis/kubedb/v1alpha2"
+	amv "kubedb.dev/apimachinery/pkg/validator"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -41,7 +43,7 @@ import (
 // SetupRabbitMQWebhookWithManager registers the webhook for RabbitMQ in the manager.
 func SetupRabbitMQWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.RabbitMQ{}).
-		WithValidator(&RabbitMQCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&RabbitMQCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.DashboardServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&RabbitMQCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -81,6 +83,9 @@ var _ webhook.CustomValidator = &RabbitMQCustomWebhook{}
 func (w *RabbitMQCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	db, ok := obj.(*olddbapi.RabbitMQ)
 	if !ok {

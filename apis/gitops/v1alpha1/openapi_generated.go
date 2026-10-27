@@ -492,6 +492,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/client-go/api/v1.Condition":                                                    schema_kmodulesxyz_client_go_api_v1_Condition(ref),
 		"kmodules.xyz/client-go/api/v1.HealthCheckSpec":                                              schema_kmodulesxyz_client_go_api_v1_HealthCheckSpec(ref),
 		"kmodules.xyz/client-go/api/v1.ImageInfo":                                                    schema_kmodulesxyz_client_go_api_v1_ImageInfo(ref),
+		"kmodules.xyz/client-go/api/v1.LicenseInfo":                                                  schema_kmodulesxyz_client_go_api_v1_LicenseInfo(ref),
 		"kmodules.xyz/client-go/api/v1.Lineage":                                                      schema_kmodulesxyz_client_go_api_v1_Lineage(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectID":                                                     schema_kmodulesxyz_client_go_api_v1_ObjectID(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectInfo":                                                   schema_kmodulesxyz_client_go_api_v1_ObjectInfo(ref),
@@ -29019,10 +29020,17 @@ func schema_kmodulesxyz_client_go_api_v1_ClusterMetadata(ref common.ReferenceCal
 							Format: "",
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.LicenseInfo"),
+						},
+					},
 				},
 				Required: []string{"uid"},
 			},
 		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.LicenseInfo"},
 	}
 }
 
@@ -29170,6 +29178,37 @@ func schema_kmodulesxyz_client_go_api_v1_ImageInfo(ref common.ReferenceCallback)
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Lineage", "kmodules.xyz/client-go/api/v1.PullCredentials"},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_LicenseInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"distributor": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"endpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Endpoint is the platform-api to acquire licenses from, when Distributor is selfhosted.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"orgID": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -33812,6 +33851,22 @@ func schema_apimachinery_apis_gitops_v1alpha1_ClickHouseStatus(ref common.Refere
 							},
 						},
 					},
+					"observedDataPVCUIDs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ObservedDataPVCUIDs records the last verified Kubernetes UID of each ClickHouse data PVC, keyed by PVC name.",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 					"gitops": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -36920,6 +36975,12 @@ func schema_apimachinery_apis_gitops_v1alpha1_PostgresStatus(ref common.Referenc
 							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1.Age"),
 						},
 					},
+					"disasterRecovery": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisasterRecovery reports the cross data center (DC-DR) state for a distributed Postgres.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1.PostgresDisasterRecoveryStatus"),
+						},
+					},
 					"gitops": {
 						SchemaProps: spec.SchemaProps{
 							Default: map[string]interface{}{},
@@ -36930,7 +36991,7 @@ func schema_apimachinery_apis_gitops_v1alpha1_PostgresStatus(ref common.Referenc
 			},
 		},
 		Dependencies: []string{
-			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1.Age"},
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/gitops/v1alpha1.GitOpsStatus", "kubedb.dev/apimachinery/apis/kubedb/v1.Age", "kubedb.dev/apimachinery/apis/kubedb/v1.PostgresDisasterRecoveryStatus"},
 	}
 }
 

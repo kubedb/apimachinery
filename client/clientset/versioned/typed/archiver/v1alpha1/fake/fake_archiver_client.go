@@ -33,6 +33,10 @@ func (c *FakeArchiverV1alpha1) ClickHouseArchivers(namespace string) v1alpha1.Cl
 	return newFakeClickHouseArchivers(c, namespace)
 }
 
+func (c *FakeArchiverV1alpha1) DocumentDBArchivers(namespace string) v1alpha1.DocumentDBArchiverInterface {
+	return newFakeDocumentDBArchivers(c, namespace)
+}
+
 func (c *FakeArchiverV1alpha1) EtcdArchivers(namespace string) v1alpha1.EtcdArchiverInterface {
 	return newFakeEtcdArchivers(c, namespace)
 }
@@ -45,12 +49,20 @@ func (c *FakeArchiverV1alpha1) MariaDBArchivers(namespace string) v1alpha1.Maria
 	return newFakeMariaDBArchivers(c, namespace)
 }
 
+func (c *FakeArchiverV1alpha1) MilvusArchivers(namespace string) v1alpha1.MilvusArchiverInterface {
+	return newFakeMilvusArchivers(c, namespace)
+}
+
 func (c *FakeArchiverV1alpha1) MongoDBArchivers(namespace string) v1alpha1.MongoDBArchiverInterface {
 	return newFakeMongoDBArchivers(c, namespace)
 }
 
 func (c *FakeArchiverV1alpha1) MySQLArchivers(namespace string) v1alpha1.MySQLArchiverInterface {
 	return newFakeMySQLArchivers(c, namespace)
+}
+
+func (c *FakeArchiverV1alpha1) Neo4jArchivers(namespace string) v1alpha1.Neo4jArchiverInterface {
+	return newFakeNeo4jArchivers(c, namespace)
 }
 
 func (c *FakeArchiverV1alpha1) PostgresArchivers(namespace string) v1alpha1.PostgresArchiverInterface {

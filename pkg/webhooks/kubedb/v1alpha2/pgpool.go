@@ -47,7 +47,7 @@ import (
 // SetupPgpoolWebhookWithManager registers the webhook for Pgpool in the manager.
 func SetupPgpoolWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Pgpool{}).
-		WithValidator(&PgpoolCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&PgpoolCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&PgpoolCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -89,6 +89,9 @@ var _ webhook.CustomValidator = &PgpoolCustomWebhook{}
 func (w *PgpoolCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	pp, ok := obj.(*olddbapi.Pgpool)
 	if !ok {

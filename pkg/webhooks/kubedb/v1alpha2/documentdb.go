@@ -60,7 +60,7 @@ func getMainContainerEnvs(podTemplate *ofstv2.PodTemplateSpec) []core.EnvVar {
 // SetupDocumentDBWebhookWithManager registers the webhook for DocumentDB in the manager.
 func SetupDocumentDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.DocumentDB{}).
-		WithValidator(&DocumentDBCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&DocumentDBCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias)).
 		WithDefaulter(&DocumentDBCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -113,6 +113,9 @@ var _ webhook.CustomValidator = &DocumentDBCustomWebhook{}
 func (w *DocumentDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	db, ok := obj.(*olddbapi.DocumentDB)
 	if !ok {

@@ -18,9 +18,12 @@ package lib
 
 import (
 	"context"
+	"crypto/tls"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 	"sync"
@@ -255,17 +258,74 @@ func isNoConnectivityErr(_ error) bool {
 	return false
 }
 
+// normalizeServers defaults the port of each server in the comma separated
+// list to 443 when none is given, reports whether any of them is addressed by
+// a bare IP instead of a hostname, and returns the URL path, if any. The
+// websocket handshake builds its request from the host plus Options.ProxyPath
+// and drops the path of the server URL, so the path has to be handed back
+// separately and passed as nats.ProxyPath.
+func normalizeServers(servers string) (normalized string, isIP bool, proxyPath string) {
+	var out []string
+	for s := range strings.SplitSeq(servers, ",") {
+		s = strings.TrimSpace(s)
+		if s == "" {
+			continue
+		}
+		toParse := s
+		if !strings.Contains(toParse, "://") {
+			toParse = "nats://" + toParse
+		}
+		u, err := url.Parse(toParse)
+		if err != nil {
+			klog.V(5).InfoS("failed to parse event receiver address", "address", s, "error", err)
+			out = append(out, s)
+			continue
+		}
+		if net.ParseIP(u.Hostname()) != nil {
+			isIP = true
+		}
+		if path := strings.TrimSuffix(u.Path, "/"); path != "" && proxyPath == "" {
+			proxyPath = path
+		}
+		if u.Port() == "" {
+			u.Host = net.JoinHostPort(u.Hostname(), "443")
+		}
+		u.Path, u.RawQuery, u.Fragment = "", "", ""
+		out = append(out, u.String())
+	}
+	return strings.Join(out, ","), isIP, proxyPath
+}
+
 // NewConnection creates a new NATS connection
 func NewConnection(licenseID string, natscred NatsCredential) (nc *nats.Conn, err error) {
-	servers := natscred.Server
+	servers, ipHost, proxyPath := normalizeServers(natscred.Server)
 
-	opts := []nats.Option{
+	opts := make([]nats.Option, 0, 8)
+	opts = append(
+		opts,
 		nats.Name(fmt.Sprintf("%s.%s", licenseID, info.ProductName)),
 		nats.MaxReconnects(-1),
 		nats.ErrorHandler(errorHandler),
 		nats.ReconnectHandler(reconnectHandler),
 		nats.DisconnectErrHandler(disconnectHandler),
 		// nats.UseOldRequestStyle(),
+	)
+
+	if proxyPath != "" {
+		opts = append(opts, nats.ProxyPath(proxyPath))
+	}
+
+	// A bare IP address can't be matched against the serving cert's SANs, so
+	// hostname verification would always fail. Only the TLSConfig is set here,
+	// not nats.Secure(), so a non-TLS server still connects in plain mode.
+	if ipHost {
+		opts = append(opts, func(o *nats.Options) error {
+			if o.TLSConfig == nil {
+				o.TLSConfig = &tls.Config{} // nolint:gosec
+			}
+			o.TLSConfig.InsecureSkipVerify = true // nolint:gosec
+			return nil
+		})
 	}
 
 	credFile := "/tmp/nats.creds"
@@ -288,6 +348,7 @@ func NewConnection(licenseID string, natscred NatsCredential) (nc *nats.Conn, er
 	defer cancel()
 
 	ticker := time.NewTicker(natsConnectionRetryInterval)
+	defer ticker.Stop()
 	for {
 		select {
 		case <-ticker.C:

@@ -44,7 +44,7 @@ import (
 // SetupRedisSentinelWebhookWithManager registers the webhook for RedisSentinel in the manager.
 func SetupRedisSentinelWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.RedisSentinel{}).
-		WithValidator(&RedisSentinelCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&RedisSentinelCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&RedisSentinelCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -97,6 +97,9 @@ var _ webhook.CustomValidator = &RedisSentinelCustomWebhook{}
 func (w RedisSentinelCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	sentinel, ok := obj.(*dbapi.RedisSentinel)
 	if !ok {

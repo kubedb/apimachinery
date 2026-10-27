@@ -45,7 +45,7 @@ import (
 // SetupCassandraWebhookWithManager registers the webhook for Cassandra in the manager.
 func SetupCassandraWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Cassandra{}).
-		WithValidator(&CassandraCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&CassandraCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&CassandraCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -82,6 +82,9 @@ var _ webhook.CustomValidator = &CassandraCustomWebhook{}
 func (w *CassandraCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	db, ok := obj.(*olddbapi.Cassandra)
 	if !ok {

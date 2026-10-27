@@ -48,7 +48,7 @@ import (
 // SetupOracleWebhookWithManager registers the webhook for Oracle in the manager.
 func SetupOracleWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&olddbapi.Oracle{}).
-		WithValidator(&OracleCustomWebhook{mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&OracleCustomWebhook{mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&OracleCustomWebhook{mgr.GetClient()}).
 		Complete()
 }
@@ -87,6 +87,9 @@ var _ webhook.CustomValidator = &OracleCustomWebhook{}
 func (w *OracleCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	db, ok := obj.(*olddbapi.Oracle)
 	if !ok {
@@ -314,9 +317,20 @@ var oracleReservedVolumesMountPaths = []string{
 func (w *OracleCustomWebhook) oracleValidateVersion(db *olddbapi.Oracle) error {
 	var oracleVersion catalog.OracleVersion
 
-	return w.DefaultClient.Get(context.TODO(), types.NamespacedName{
+	if err := w.DefaultClient.Get(context.TODO(), types.NamespacedName{
 		Name: db.Spec.Version,
-	}, &oracleVersion)
+	}, &oracleVersion); err != nil {
+		return err
+	}
+	if err := oracleVersion.ValidateSpecs(); err != nil {
+		return err
+	}
+	if db.Spec.Mode == olddbapi.OracleModeDataGuard {
+		if err := oracleVersion.ValidateDataGuardSpecs(); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func oracleValidateVolumes(podTemplate *ofst.PodTemplateSpec) error {

@@ -15,7 +15,7 @@ spec:
     listKind: EtcdOpsRequestList
     plural: etcdopsrequests
     shortNames:
-    - etcdops
+    - etops
     singular: etcdopsrequest
   scope: Namespaced
   versions:
@@ -149,6 +149,13 @@ spec:
                     type: string
                   member:
                     type: string
+                type: object
+              recoverMember:
+                properties:
+                  memberName:
+                    type: string
+                required:
+                - memberName
                 type: object
               restart:
                 type: object
@@ -301,6 +308,7 @@ spec:
                 - Compact
                 - RecoverFromQuorumLoss
                 - Restore
+                - RecoverMember
                 type: string
               updateVersion:
                 properties:

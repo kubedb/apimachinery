@@ -41,7 +41,7 @@ import (
 // SetupProxySQLWebhookWithManager registers the webhook for ProxySQL in the manager.
 func SetupProxySQLWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.ProxySQL{}).
-		WithValidator(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&ProxySQLCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -90,6 +90,9 @@ var _ webhook.CustomValidator = &ProxySQLCustomWebhook{}
 func (w ProxySQLCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (warnings admission.Warnings, err error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	proxysql := obj.(*dbapi.ProxySQL)
 	proxyLog.Info("validating", "name", proxysql.Name)

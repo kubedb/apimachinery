@@ -492,6 +492,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kmodules.xyz/client-go/api/v1.Condition":                                                    schema_kmodulesxyz_client_go_api_v1_Condition(ref),
 		"kmodules.xyz/client-go/api/v1.HealthCheckSpec":                                              schema_kmodulesxyz_client_go_api_v1_HealthCheckSpec(ref),
 		"kmodules.xyz/client-go/api/v1.ImageInfo":                                                    schema_kmodulesxyz_client_go_api_v1_ImageInfo(ref),
+		"kmodules.xyz/client-go/api/v1.LicenseInfo":                                                  schema_kmodulesxyz_client_go_api_v1_LicenseInfo(ref),
 		"kmodules.xyz/client-go/api/v1.Lineage":                                                      schema_kmodulesxyz_client_go_api_v1_Lineage(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectID":                                                     schema_kmodulesxyz_client_go_api_v1_ObjectID(ref),
 		"kmodules.xyz/client-go/api/v1.ObjectInfo":                                                   schema_kmodulesxyz_client_go_api_v1_ObjectInfo(ref),
@@ -632,6 +633,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfiguration":                 schema_apimachinery_apis_ops_v1alpha1_ElasticsearchCustomConfiguration(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec":               schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingTopologySpec":       schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingTopologySpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchLicenseOpsSpec":                      schema_apimachinery_apis_ops_v1alpha1_ElasticsearchLicenseOpsSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchMigrationSpec":                       schema_apimachinery_apis_ops_v1alpha1_ElasticsearchMigrationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchOpsRequest":                          schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchOpsRequestList":                      schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestList(ref),
@@ -650,6 +652,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdOpsRequestList":                               schema_apimachinery_apis_ops_v1alpha1_EtcdOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdOpsRequestSpec":                               schema_apimachinery_apis_ops_v1alpha1_EtcdOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverFromQuorumLossSpec":                    schema_apimachinery_apis_ops_v1alpha1_EtcdRecoverFromQuorumLossSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverMemberSpec":                            schema_apimachinery_apis_ops_v1alpha1_EtcdRecoverMemberSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRestoreSpec":                                  schema_apimachinery_apis_ops_v1alpha1_EtcdRestoreSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdTLSSpec":                                      schema_apimachinery_apis_ops_v1alpha1_EtcdTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpdateVersionSpec":                            schema_apimachinery_apis_ops_v1alpha1_EtcdUpdateVersionSpec(ref),
@@ -726,8 +729,10 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestList":                             schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestList(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusOpsRequestSpec":                             schema_apimachinery_apis_ops_v1alpha1_MilvusOpsRequestSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusReplicaReadinessCriteria":                   schema_apimachinery_apis_ops_v1alpha1_MilvusReplicaReadinessCriteria(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusScalingGroupTarget":                         schema_apimachinery_apis_ops_v1alpha1_MilvusScalingGroupTarget(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusTLSSpec":                                    schema_apimachinery_apis_ops_v1alpha1_MilvusTLSSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusUpdateVersionSpec":                          schema_apimachinery_apis_ops_v1alpha1_MilvusUpdateVersionSpec(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingGroupTarget":                 schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingGroupTarget(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingSpec":                        schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVolumeExpansionSpec":                        schema_apimachinery_apis_ops_v1alpha1_MilvusVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.MongoDBHorizontalScalingSpec":                     schema_apimachinery_apis_ops_v1alpha1_MongoDBHorizontalScalingSpec(ref),
@@ -803,6 +808,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresCustomConfigurationSpec":                  schema_apimachinery_apis_ops_v1alpha1_PostgresCustomConfigurationSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresEnableWALEncryptionSpec":                  schema_apimachinery_apis_ops_v1alpha1_PostgresEnableWALEncryptionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresForceFailOver":                            schema_apimachinery_apis_ops_v1alpha1_PostgresForceFailOver(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingDC":                      schema_apimachinery_apis_ops_v1alpha1_PostgresHorizontalScalingDC(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingSpec":                    schema_apimachinery_apis_ops_v1alpha1_PostgresHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequest":                               schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequest(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresOpsRequestList":                           schema_apimachinery_apis_ops_v1alpha1_PostgresOpsRequestList(ref),
@@ -29253,10 +29259,17 @@ func schema_kmodulesxyz_client_go_api_v1_ClusterMetadata(ref common.ReferenceCal
 							Format: "",
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kmodules.xyz/client-go/api/v1.LicenseInfo"),
+						},
+					},
 				},
 				Required: []string{"uid"},
 			},
 		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.LicenseInfo"},
 	}
 }
 
@@ -29404,6 +29417,37 @@ func schema_kmodulesxyz_client_go_api_v1_ImageInfo(ref common.ReferenceCallback)
 		},
 		Dependencies: []string{
 			"kmodules.xyz/client-go/api/v1.Lineage", "kmodules.xyz/client-go/api/v1.PullCredentials"},
+	}
+}
+
+func schema_kmodulesxyz_client_go_api_v1_LicenseInfo(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"distributor": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"endpoint": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Endpoint is the platform-api to acquire licenses from, when Distributor is selfhosted.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"orgID": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
 	}
 }
 
@@ -36202,6 +36246,34 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingTopolog
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchLicenseOpsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchLicenseOpsSpec drives an explicit license (re)activation. It has the same SecretRef/Trial shape as kubedb.dev/apimachinery/apis/kubedb/v1.ElasticsearchLicenseSpec; applying it also patches spec.license on the Elasticsearch CR so the CR stays the source of truth for future reconciles.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SecretRef references a Secret holding the signed license file content under a single key, \"license.json\". Mutually exclusive with Trial.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"trial": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Trial requests Elastic's built-in one-time 30-day trial license (POST _license/start_trial) instead of a user-supplied license. Mutually exclusive with SecretRef.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchMigrationSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -36460,6 +36532,12 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestSpec(ref commo
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchMigrationSpec"),
 						},
 					},
+					"license": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies information necessary for activating/rotating an Elastic subscription license",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchLicenseOpsSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -36484,7 +36562,7 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchOpsRequestSpec(ref commo
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchLicenseOpsSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchMigrationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchReconfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.TLSSpec"},
 	}
 }
 
@@ -37087,6 +37165,12 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdOpsRequestSpec(ref common.Referen
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRestoreSpec"),
 						},
 					},
+					"recoverMember": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RecoverMember replaces a single etcd member that lost its data while still part of the raft membership. The member is removed, its data volume is discarded, and it rejoins as a fresh learner at the same peer URL.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverMemberSpec"),
+						},
+					},
 					"timeout": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Timeout for each step of the ops request in second. If a step doesn't finish within the specified timeout, the ops request will result in failure.",
@@ -37111,7 +37195,7 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdOpsRequestSpec(ref common.Referen
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCompactSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdDefragmentSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdMoveLeaderSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverFromQuorumLossSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRestoreSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"},
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.Duration", "kubedb.dev/apimachinery/apis/ops/v1alpha1.AuthSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCompactSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdCustomConfigurationSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdDefragmentSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdHorizontalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdMoveLeaderSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverFromQuorumLossSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRecoverMemberSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdRestoreSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdTLSSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdUpdateVersionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVerticalScalingSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.EtcdVolumeExpansionSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.RestartSpec", "kubedb.dev/apimachinery/apis/ops/v1alpha1.StorageMigrationSpec"},
 	}
 }
 
@@ -37137,6 +37221,28 @@ func schema_apimachinery_apis_ops_v1alpha1_EtcdRecoverFromQuorumLossSpec(ref com
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_apimachinery_apis_ops_v1alpha1_EtcdRecoverMemberSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "EtcdRecoverMemberSpec names the etcd member to replace. The operator refuses the request if the named member looks healthy.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"memberName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MemberName is the pod name of the etcd member to recover.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"memberName"},
 			},
 		},
 	}
@@ -40039,9 +40145,25 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusHorizontalScalingTopologySpec(r
 							Format:      "int32",
 						},
 					},
+					"groups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Groups optionally horizontally scales one or more MilvusNodeGroup sub-pools (pl2/milvus-fixes/sriov-gpu-design.md § 13.5) instead of a whole role above. A role whose spec.topology.distributed.<role>.groups is set is only addressable through this field -- the flat per-role fields above target that role's own (ungrouped) PetSet, which doesn't exist once Groups is in use.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusScalingGroupTarget"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusScalingGroupTarget"},
 	}
 }
 
@@ -40255,6 +40377,44 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusReplicaReadinessCriteria(ref co
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MilvusScalingGroupTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusScalingGroupTarget identifies one MilvusNodeGroup (by role + group name) and its desired replica count, for horizontal-scaling a group individually.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeType is the Distributed role the target group belongs to.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Group is the MilvusNodeGroup name (spec.topology.distributed.<nodeType>.groups[].name).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas is the desired replica count for this group's PetSet.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"nodeType", "group", "replicas"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MilvusTLSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40335,6 +40495,45 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusUpdateVersionSpec(ref common.Re
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingGroupTarget(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MilvusVerticalScalingGroupTarget identifies one MilvusNodeGroup (by role + group name) and its desired resources, for vertical-scaling a group individually.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"nodeType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NodeType is the Distributed role the target group belongs to.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"group": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Group is the MilvusNodeGroup name (spec.topology.distributed.<nodeType>.groups[].name).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"resources": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Resources is the desired resource/scheduling spec for this group.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"),
+						},
+					},
+				},
+				Required: []string{"nodeType", "group", "resources"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -40381,11 +40580,25 @@ func schema_apimachinery_apis_ops_v1alpha1_MilvusVerticalScalingSpec(ref common.
 							Format:      "",
 						},
 					},
+					"groups": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Groups optionally vertically scales one or more MilvusNodeGroup sub-pools (pl2/milvus-fixes/sriov-gpu-design.md § 13.5) instead of a whole role above. A role whose spec.topology.distributed.<role>.groups is set is only addressable through this field -- the flat per-role fields above target that role's own (ungrouped) PetSet, which doesn't exist once Groups is in use.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingGroupTarget"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.MilvusVerticalScalingGroupTarget", "kubedb.dev/apimachinery/apis/ops/v1alpha1.PodResources"},
 	}
 }
 
@@ -43695,6 +43908,36 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresForceFailOver(ref common.Refe
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_PostgresHorizontalScalingDC(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PostgresHorizontalScalingDC is a per data center node-count target for scaling a distributed DC-DR Postgres.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the data center, named by its OCM managed cluster, matching a Member or Witness distributionRule in the Postgres PlacementPolicy.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas is the desired local node count for this data center.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"clusterName", "replicas"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_PostgresHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -43735,11 +43978,25 @@ func schema_apimachinery_apis_ops_v1alpha1_PostgresHorizontalScalingSpec(ref com
 							},
 						},
 					},
+					"dataCenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataCenters scales individual data centers of a distributed DC-DR Postgres. Each entry sets that data center's local node count; data centers not listed are left unchanged. Use this instead of Replicas for a DC-DR cluster, where each data center has its own intra-DC raft and is scaled independently.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingDC"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ReadReplicaHzScalingSpec"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.PostgresHorizontalScalingDC", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ReadReplicaHzScalingSpec"},
 	}
 }
 
@@ -47193,7 +47450,7 @@ func schema_apimachinery_apis_ops_v1alpha1_SolrReconfigurationSpec(ref common.Re
 					},
 					"backup": {
 						SchemaProps: spec.SchemaProps{
-							Description: "BackupSpec references the Secrets holding the object storage credentials for the backup repositories. The Secrets must be in the database namespace.",
+							Description: "BackupSpec references Secrets holding object storage credentials. The Secrets must be in the database namespace.",
 							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.BackupSpec"),
 						},
 					},

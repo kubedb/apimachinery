@@ -51,7 +51,7 @@ import (
 // SetupMariaDBWebhookWithManager registers the webhook for MariaDB in the manager.
 func SetupMariaDBWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).For(&dbapi.MariaDB{}).
-		WithValidator(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}).
+		WithValidator(amv.WithServiceTemplateAliasWarnings(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}, dbapi.PrimaryServiceAlias, dbapi.StandbyServiceAlias, dbapi.StatsServiceAlias)).
 		WithDefaulter(&MariaDBCustomWebhook{DefaultClient: mgr.GetClient()}).
 		Complete()
 }
@@ -141,6 +141,9 @@ var _ webhook.CustomValidator = &MariaDBCustomWebhook{}
 func (w MariaDBCustomWebhook) ValidateCreate(ctx context.Context, obj runtime.Object) (admission.Warnings, error) {
 	if isDeletionInProgress(obj) {
 		return nil, nil
+	}
+	if err := amv.ValidateNameUniqueness(ctx, w.DefaultClient, obj); err != nil {
+		return nil, err
 	}
 	mariadb := obj.(*dbapi.MariaDB)
 	mariadbLog.Info("validating", "name", mariadb.Name)
