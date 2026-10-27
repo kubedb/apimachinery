@@ -30643,6 +30643,29 @@
         }
       ]
     },
+    "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresNamedServiceTemplateSpec": {
+      "type": "object",
+      "required": [
+        "alias"
+      ],
+      "properties": {
+        "alias": {
+          "description": "Alias represents the identifier of the service.",
+          "type": "string",
+          "default": ""
+        },
+        "metadata": {
+          "description": "Standard object's metadata. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#metadata",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "Specification of the desired behavior of the service. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status",
+          "default": {},
+          "$ref": "#/definitions/xyz.kmodules.offshoot-api.api.v1.ServiceSpec"
+        }
+      }
+    },
     "dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresReplication": {
       "type": "object",
       "required": [
@@ -30761,7 +30784,7 @@
           "type": "array",
           "items": {
             "default": {},
-            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.NamedServiceTemplateSpec"
+            "$ref": "#/definitions/dev.kubedb.apimachinery.apis.kubedb.v1alpha2.PostgresNamedServiceTemplateSpec"
           }
         },
         "sslMode": {
