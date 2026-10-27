@@ -94,6 +94,10 @@ type MongoDBVersionListerExpansion interface{}
 // MySQLVersionLister.
 type MySQLVersionListerExpansion interface{}
 
+// NATSVersionListerExpansion allows custom methods to be added to
+// NATSVersionLister.
+type NATSVersionListerExpansion interface{}
+
 // Neo4jVersionListerExpansion allows custom methods to be added to
 // Neo4jVersionLister.
 type Neo4jVersionListerExpansion interface{}

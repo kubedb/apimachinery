@@ -101,6 +101,10 @@ func (c *FakeGitopsV1alpha1) MySQLs(namespace string) v1alpha1.MySQLInterface {
 	return newFakeMySQLs(c, namespace)
 }
 
+func (c *FakeGitopsV1alpha1) NATSs(namespace string) v1alpha1.NATSInterface {
+	return newFakeNATSs(c, namespace)
+}
+
 func (c *FakeGitopsV1alpha1) Neo4js(namespace string) v1alpha1.Neo4jInterface {
 	return newFakeNeo4js(c, namespace)
 }

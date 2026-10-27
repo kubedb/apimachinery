@@ -54,6 +54,8 @@ type MongoDBAutoscalerExpansion interface{}
 
 type MySQLAutoscalerExpansion interface{}
 
+type NATSAutoscalerExpansion interface{}
+
 type Neo4jAutoscalerExpansion interface{}
 
 type OracleAutoscalerExpansion interface{}

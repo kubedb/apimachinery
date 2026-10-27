@@ -112,7 +112,7 @@ const (
 	DeletionPolicyDoNotTerminate DeletionPolicy = "DoNotTerminate"
 )
 
-// +kubebuilder:validation:Enum=primary;standby;stats;dashboard;readreplica
+// +kubebuilder:validation:Enum=primary;standby;stats;dashboard;readreplica;leafnodes
 type ServiceAlias string
 
 const (
@@ -121,6 +121,8 @@ const (
 	StatsServiceAlias       ServiceAlias = "stats"
 	DashboardServiceAlias   ServiceAlias = "dashboard"
 	ReadReplicaServiceAlias ServiceAlias = "readreplica"
+	// LeafNodesServiceAlias is the NATS service exposing the leafnodes port (7422).
+	LeafNodesServiceAlias ServiceAlias = "leafnodes"
 )
 
 // +kubebuilder:validation:Enum=fscopy;clone;sync;none

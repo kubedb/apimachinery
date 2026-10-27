@@ -101,6 +101,10 @@ func (c *FakeKubedbV1alpha2) MySQLs(namespace string) v1alpha2.MySQLInterface {
 	return newFakeMySQLs(c, namespace)
 }
 
+func (c *FakeKubedbV1alpha2) NATSs(namespace string) v1alpha2.NATSInterface {
+	return newFakeNATSs(c, namespace)
+}
+
 func (c *FakeKubedbV1alpha2) Neo4js(namespace string) v1alpha2.Neo4jInterface {
 	return newFakeNeo4js(c, namespace)
 }

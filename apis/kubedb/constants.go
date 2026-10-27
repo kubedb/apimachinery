@@ -2790,3 +2790,159 @@ const (
 	// set when the archiver cannot serve this Milvus (legacy RocksMQ, or VolumeSnapshotter on Distributed)
 	MilvusArchiverUnsupported = "ArchiverUnsupported"
 )
+
+// =========================== NATS Constants ============================
+const (
+	// Container names
+	NATSContainerName         = "nats"
+	NATSReloaderContainerName = "reloader"
+	NATSExporterContainerName = "exporter"
+	// NATSZoneInitContainerName waits for the zone/region pod annotations and renders pod.conf
+	// (server_tags). It runs from the NATSVersion db image, so the catalog has no init image.
+	NATSZoneInitContainerName = "zone-init"
+
+	// Volume names
+	NATSDataVolumeName      = "data"
+	NATSConfigVolumeName    = "config"
+	NATSPidVolumeName       = "pid"
+	NATSTLSVolumeName       = "tls"
+	NATSPodConfigVolumeName = "pod-config"
+	NATSResolverVolumeName  = "resolver"
+
+	// Mount paths. NATSConfigDir and NATSPodConfigDir are siblings on purpose: the config parser
+	// joins every include path onto the including file's directory, so nats.conf includes pod.conf
+	// as "../nats-pod/pod.conf".
+	NATSDataDir          = "/data"
+	NATSJetStreamDir     = "/data/jetstream"
+	NATSConfigDir        = "/etc/nats-config"
+	NATSPodConfigDir     = "/etc/nats-pod"
+	NATSPidDir           = "/var/run/nats"
+	NATSPidFile          = "/var/run/nats/nats.pid"
+	NATSTLSDir           = "/etc/nats-certs"
+	NATSResolverDir      = "/resolver"
+	NATSPodConfigInclude = "../nats-pod/pod.conf"
+
+	// Ports
+	NATSClientPortName   = "client"
+	NATSClientPort       = 4222
+	NATSClusterPortName  = "cluster"
+	NATSClusterPort      = 6222
+	NATSMonitorPortName  = "monitor"
+	NATSMonitorPort      = 8222
+	NATSExporterPortName = "metrics"
+	NATSExporterPort     = 7777
+	// Gateway (super-cluster) and leafnodes ports. Gateways are only on the headless Service; leafnodes
+	// are also on the client Service when leafNodes.accept is true.
+	NATSGatewayPortName  = "gateway"
+	NATSGatewayPort      = 7222
+	NATSLeafNodePortName = "leafnodes"
+	NATSLeafNodePort     = 7422
+
+	// Users and accounts
+	NATSUserAdmin     = "admin"
+	NATSUserSys       = "kubedb-sys"
+	NATSUserAnonymous = "anonymous"
+	// NATSAccountSys is the system account, NATSAccountApp is the default application account.
+	// Both names are reserved in accounts.conf.
+	NATSAccountSys = "SYS"
+	NATSAccountApp = "APP"
+
+	// Secret suffixes. The <name>-auth Secret is the standard authSecret and has no NATS-specific suffix.
+	NATSSecretSuffixSysAuth     = "sys-auth"
+	NATSSecretSuffixClusterAuth = "cluster-auth"
+	NATSSecretSuffixConfig      = "config"
+	NATSSecretSuffixGatewayAuth = "gateway-auth"
+	// Operator mode only.
+	NATSSecretSuffixOperator   = "operator"
+	NATSSecretSuffixSysCreds   = "sys-creds"
+	NATSSecretSuffixAccountFmt = "account-%s"
+	// Service suffixes
+	NATSServiceSuffixPods  = "pods"
+	NATSServiceSuffixStats = "stats"
+
+	// Keys of the <name>-config Secret. All keys are flat: Secret keys cannot contain "/".
+	NATSConfKey         = "nats.conf"
+	NATSAuthConfKey     = "auth.conf"
+	NATSUserConfKey     = "user.conf"
+	NATSAccountsConfKey = "accounts.conf"
+	NATSPodConfKey      = "pod.conf"
+
+	// Pod annotations written by the provisioner from the node's topology labels.
+	NATSAnnotationZone   = "nats.kubedb.com/zone"
+	NATSAnnotationRegion = "nats.kubedb.com/region"
+	// Defaults for a node with no topology labels.
+	NATSDefaultZone   = "zone1"
+	NATSDefaultRegion = "region1"
+
+	// Environment variables
+	NATSEnvServerName = "SERVER_NAME"
+	NATSEnvGoMemLimit = "GOMEMLIMIT"
+
+	// Condition types NATS adds to the standard set.
+	// NATSJetStreamQuorum: the JetStream meta group has a leader and a majority of peers are current.
+	NATSJetStreamQuorum = "JetStreamQuorum"
+	// NATSUnderReplicatedStreams is informational: at least one stream has an outdated or missing replica.
+	NATSUnderReplicatedStreams = "UnderReplicatedStreams"
+	// NATSGatewayRTTHigh is raised by the health checker when /gatewayz reports an rtt above
+	// NATSGatewayRTTWarnThreshold to some remote cluster. The webhook cannot measure it.
+	NATSGatewayRTTHigh = "GatewayRTTHigh"
+
+	// Sizing rules
+	// NATSMaxFileStorePercent of the PVC request becomes max_file_store; the rest is headroom for the
+	// Raft WAL, meta snapshots and filesystem overhead.
+	NATSMaxFileStorePercent = 90
+	// NATSMaxMemoryStorePercent of limits.memory is the most max_memory_store may take.
+	NATSMaxMemoryStorePercent = 50
+	// NATSGoMemLimitPercent of limits.memory is GOMEMLIMIT.
+	NATSGoMemLimitPercent = 90
+
+	// Lame-duck. The server refuses a lame_duck_duration below 30s.
+	NATSMinLameDuckDuration = 30 * time.Second
+	// NATSTerminationGraceExtra is added to lameDuck.duration to get terminationGracePeriodSeconds:
+	// leader hand-off, JetStream flush and final shutdown.
+	NATSTerminationGraceExtra = 30 * time.Second
+	// NATSMinTerminationGracePeriodSeconds is the floor of terminationGracePeriodSeconds.
+	NATSMinTerminationGracePeriodSeconds int64 = 60
+
+	// Run-as ids of the upstream nats image
+	NATSUserID  int64 = 1000
+	NATSGroupID int64 = 1000
+
+	NATSDefaultReplicas int32 = 3
+
+	// NATSGatewayRTTWarnThreshold is a recommendation, not a server limit (design 15.4 item 3).
+	NATSGatewayRTTWarnThreshold = 100 * time.Millisecond
+
+	// Arbiter: vote-only JetStream servers in the Arbiter DC.
+	NATSDefaultArbiterReplicas int32 = 1
+)
+
+var (
+	NATSDefaultJetStreamStorage = resource.MustParse("10Gi")
+	NATSDefaultResolverStorage  = resource.MustParse("1Gi")
+	NATSDefaultArbiterStorage   = resource.MustParse("1Gi")
+
+	// NATSSidecarDefaultResources are the small fixed limits of the reloader and exporter containers.
+	NATSSidecarDefaultResources = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".050"),
+			core.ResourceMemory: resource.MustParse("64Mi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".100"),
+			core.ResourceMemory: resource.MustParse("128Mi"),
+		},
+	}
+
+	// NATSDefaultResources: 500m CPU / 1Gi memory with requests equal to limits.
+	NATSDefaultResources = core.ResourceRequirements{
+		Requests: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("1Gi"),
+		},
+		Limits: core.ResourceList{
+			core.ResourceCPU:    resource.MustParse(".500"),
+			core.ResourceMemory: resource.MustParse("1Gi"),
+		},
+	}
+)

@@ -47,6 +47,7 @@ type AutoscalingV1alpha1Interface interface {
 	MilvusAutoscalersGetter
 	MongoDBAutoscalersGetter
 	MySQLAutoscalersGetter
+	NATSAutoscalersGetter
 	Neo4jAutoscalersGetter
 	OracleAutoscalersGetter
 	PerconaXtraDBAutoscalersGetter
@@ -139,6 +140,10 @@ func (c *AutoscalingV1alpha1Client) MongoDBAutoscalers(namespace string) MongoDB
 
 func (c *AutoscalingV1alpha1Client) MySQLAutoscalers(namespace string) MySQLAutoscalerInterface {
 	return newMySQLAutoscalers(c, namespace)
+}
+
+func (c *AutoscalingV1alpha1Client) NATSAutoscalers(namespace string) NATSAutoscalerInterface {
+	return newNATSAutoscalers(c, namespace)
 }
 
 func (c *AutoscalingV1alpha1Client) Neo4jAutoscalers(namespace string) Neo4jAutoscalerInterface {

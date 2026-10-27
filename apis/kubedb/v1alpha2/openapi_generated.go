@@ -745,6 +745,20 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLStatus":                                   schema_apimachinery_apis_kubedb_v1alpha2_MySQLStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLTopology":                                 schema_apimachinery_apis_kubedb_v1alpha2_MySQLTopology(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQLUser":                                     schema_apimachinery_apis_kubedb_v1alpha2_MySQLUser(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATS":                                          schema_apimachinery_apis_kubedb_v1alpha2_NATS(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSArbiterSpec":                               schema_apimachinery_apis_kubedb_v1alpha2_NATSArbiterSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSAuthSpec":                                  schema_apimachinery_apis_kubedb_v1alpha2_NATSAuthSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSGatewaySpec":                               schema_apimachinery_apis_kubedb_v1alpha2_NATSGatewaySpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSJetStreamSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_NATSJetStreamSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSLameDuckSpec":                              schema_apimachinery_apis_kubedb_v1alpha2_NATSLameDuckSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSLeafNodesSpec":                             schema_apimachinery_apis_kubedb_v1alpha2_NATSLeafNodesSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSLeafRemote":                                schema_apimachinery_apis_kubedb_v1alpha2_NATSLeafRemote(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSList":                                      schema_apimachinery_apis_kubedb_v1alpha2_NATSList(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSOperatorSpec":                              schema_apimachinery_apis_kubedb_v1alpha2_NATSOperatorSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSRemoteGateway":                             schema_apimachinery_apis_kubedb_v1alpha2_NATSRemoteGateway(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSServerConfig":                              schema_apimachinery_apis_kubedb_v1alpha2_NATSServerConfig(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSSpec":                                      schema_apimachinery_apis_kubedb_v1alpha2_NATSSpec(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSStatus":                                    schema_apimachinery_apis_kubedb_v1alpha2_NATSStatus(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec":                      schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceTemplateSpec(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4j":                                         schema_apimachinery_apis_kubedb_v1alpha2_Neo4j(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.Neo4jApp":                                      schema_apimachinery_apis_kubedb_v1alpha2_Neo4jApp(ref),
@@ -883,6 +897,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.mssqlserverStatsService":                       schema_apimachinery_apis_kubedb_v1alpha2_mssqlserverStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.mysqlApp":                                      schema_apimachinery_apis_kubedb_v1alpha2_mysqlApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.mysqlStatsService":                             schema_apimachinery_apis_kubedb_v1alpha2_mysqlStatsService(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.natsApp":                                       schema_apimachinery_apis_kubedb_v1alpha2_natsApp(ref),
+		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.natsStatsService":                              schema_apimachinery_apis_kubedb_v1alpha2_natsStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.neo4jStatsService":                             schema_apimachinery_apis_kubedb_v1alpha2_neo4jStatsService(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.oracleApp":                                     schema_apimachinery_apis_kubedb_v1alpha2_oracleApp(ref),
 		"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.oracleStatsService":                            schema_apimachinery_apis_kubedb_v1alpha2_oracleStatsService(ref),
@@ -42779,6 +42795,763 @@ func schema_apimachinery_apis_kubedb_v1alpha2_MySQLUser(ref common.ReferenceCall
 	}
 }
 
+func schema_apimachinery_apis_kubedb_v1alpha2_NATS(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Description: "metadata is a standard object metadata",
+							Default:     map[string]interface{}{},
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec defines the desired state of NATS",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status defines the observed state of NATS",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSStatus"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSStatus"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSArbiterSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSArbiterSpec configures the vote-only JetStream servers of the Arbiter DC. They are meta-group peers (they vote) but are excluded from stream and consumer placement.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas of the arbiter PetSet. Defaults to 1.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage is the small PVC holding the meta state. Defaults to 1Gi.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSAuthSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSAuthSpec selects the authentication mode.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mode": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Mode is Config (default) or Operator. Immutable.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"operator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Operator configures Operator mode. Absent: KubeDB generates and owns the whole trust chain.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSOperatorSpec"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSOperatorSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSGatewaySpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSGatewaySpec joins this cluster to a super-cluster.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name is the gateway name. It must equal the cluster name (the object name), or the server refuses to start. Defaults to the cluster name. Must be empty when spec.distributed is true: each DC's gateway is named after the DC.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"remotes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Remotes seed discovery. Gateways gossip, so a few are enough.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSRemoteGateway"),
+									},
+								},
+							},
+						},
+					},
+					"rejectUnknown": {
+						SchemaProps: spec.SchemaProps{
+							Description: "RejectUnknown sets reject_unknown_cluster. The operator never sets it; with it, adding a DC restarts the existing ones.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSRemoteGateway"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSJetStreamSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSJetStreamSpec configures JetStream.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"enabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enabled turns JetStream on. Defaults to true. Immutable in v1.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"storageType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "StorageType of the file store. Durable (default) uses a PVC mounted at /data; Ephemeral uses an emptyDir and is only allowed with replicas == 1. Immutable.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"storage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Storage is the file store PVC. Defaults to 10Gi.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"memoryStoreSize": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MemoryStoreSize caps the memory store. Unset means 0: memory streams are disabled. Must be <= 50% of limits.memory.",
+							Ref:         ref("k8s.io/apimachinery/pkg/api/resource.Quantity"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.PersistentVolumeClaimSpec", "k8s.io/apimachinery/pkg/api/resource.Quantity"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSLameDuckSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSLameDuckSpec configures the lame-duck mode a pod enters before it stops.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"gracePeriod": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GracePeriod is the time clients get to leave before they are closed. Must be < Duration.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"duration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Duration is the total lame-duck time (lame_duck_duration). Must be >= 30s, the server minimum.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSLeafNodesSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSLeafNodesSpec configures leaf connections.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"accept": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Accept (hub side) listens on 7422 and exposes the port on the client Service.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"remotes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Remotes (leaf side) dial out to a remote NATS system.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSLeafRemote"),
+									},
+								},
+							},
+						},
+					},
+					"jetStreamDomain": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JetStreamDomain is required when this NATS runs its own JetStream and has leaf remotes.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSLeafRemote"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSLeafRemote(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSLeafRemote is a remote NATS system this NATS connects to as a leaf. Exactly one of urls and natsRef is set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"urls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "URLs of the remote leafnodes listener, nats-leaf:// , nats:// or tls://.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"natsRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NATSRef points at another NATS object (through its AppBinding). KubeDB fills in the leafnode URLs.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+					"account": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Account binds the leaf connection to a local account. Without it (and without credentialsSecret) the leaf binds the default account and has no subject boundary.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"credentialsSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CredentialsSecret holds a .creds file (key \"creds\"), used in Operator auth mode.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"domain": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Domain is the JetStream domain of the remote, when it differs from the default.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "kmodules.xyz/client-go/api/v1.ObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSList contains a list of NATS",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Items is a list of NATS CRD objects",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATS"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATS"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSOperatorSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSOperatorSpec configures the decentralized JWT mode.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"externalSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ExternalSecret brings your own operator (created with nsc). The Secret holds operator.jwt, sys-account.jwt and sys.creds; KubeDB then generates nothing and only renders the server config.",
+							Ref:         ref("k8s.io/api/core/v1.LocalObjectReference"),
+						},
+					},
+					"resolverStorage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ResolverStorage is the resolver PVC. Defaults to 1Gi; the full resolver keeps every account JWT on disk.",
+							Ref:         ref("k8s.io/api/core/v1.PersistentVolumeClaimSpec"),
+						},
+					},
+					"allowDelete": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AllowDelete is the resolver's allow_delete. Defaults to false.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.LocalObjectReference", "k8s.io/api/core/v1.PersistentVolumeClaimSpec"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSRemoteGateway(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSRemoteGateway is a remote cluster of the super-cluster. Exactly one of urls and natsRef is set.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Name of the remote cluster (its gateway name).",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"urls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "URLs of the remote gateway, nats:// or tls://.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"natsRef": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NATSRef points at another NATS object (through its AppBinding). KubeDB fills in the gateway URLs.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.ObjectReference"),
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.ObjectReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSServerConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSServerConfig holds typed server limits and timeouts. Most of them are reloadable; maxSubscriptions and maxPending are not and take a rolling restart.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"maxConnections": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"maxPayload": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxPayload must be <= maxPending.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"maxPending": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxPending is not reloadable.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"maxSubscriptions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxSubscriptions is not reloadable.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"maxControlLine": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"integer"},
+							Format: "int32",
+						},
+					},
+					"writeDeadline": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"authTimeout": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"debug": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"trace": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSSpec defines the desired state of NATS.\n\nEvery nats-server of a NATS object is identical, so there is one PetSet and no per-role topology. The fields that an OpsRequest owns (version, replicas, resources, storage size, configuration, TLS, auth secret) are rejected by the webhook when edited directly after provisioning.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"autoOps": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AutoOps contains configuration of automatic ops-request-recommendation generation",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec"),
+						},
+					},
+					"version": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Version of NATS to be deployed. It refers to the name of a NATSVersion catalog object.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Number of nats-server pods. 1, or an odd number >= 3 when JetStream is enabled; any value >= 1 when it is not. Defaults to 3. Changed by HorizontalScaling only.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"jetStream": {
+						SchemaProps: spec.SchemaProps{
+							Description: "JetStream configures the persistence layer. Default: enabled, file store on a PVC, no memory store.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSJetStreamSpec"),
+						},
+					},
+					"configuration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration holds ordinary NATS server settings. Supported keys are nats.conf (rendered as extra top-level keys in user.conf) and accounts.conf (extra accounts, Config auth mode only). Operator-owned keys (server_name, listen, jetstream, cluster, accounts, ...) are rejected.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec"),
+						},
+					},
+					"serverConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServerConfig holds typed server limits and timeouts.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSServerConfig"),
+						},
+					},
+					"lameDuck": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LameDuck configures the lame-duck timing. Defaults come from the NATSVersion (10s / 30s). Not reloadable: a change rolls the pods, since it also changes terminationGracePeriodSeconds.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSLameDuckSpec"),
+						},
+					},
+					"disableSecurity": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DisableSecurity lets clients connect without credentials. They are mapped to the APP account; the system account keeps its credential. Immutable. Not allowed in Operator auth mode.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"authSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "AuthSecret holds the admin credentials (user \"admin\"). Defaults to <name>-auth.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+					"auth": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Auth selects the authentication mode: Config (default) or Operator. Immutable.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSAuthSpec"),
+						},
+					},
+					"tls": {
+						SchemaProps: spec.SchemaProps{
+							Description: "TLS configures certificates issued from spec.tls.issuerRef. Supported aliases: server, client. When TLS is specified, issuerRef must be set.",
+							Ref:         ref("kmodules.xyz/client-go/api/v1.TLSConfig"),
+						},
+					},
+					"clientTLS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClientTLS selects whether the client port (4222) uses TLS when spec.tls is set. Default true.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"gatewayTLS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "GatewayTLS selects whether the gateway port (7222) uses TLS when spec.tls is set. Default true. Gateway TLS material reloads in place.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"leafNodeTLS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LeafNodeTLS selects whether the leafnodes port (7422) uses TLS when spec.tls is set. Default true.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"clusterTLS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterTLS selects whether the route port (6222) uses TLS when spec.tls is set. Default true.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"monitorTLS": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MonitorTLS selects whether the monitor port (8222) uses TLS when spec.tls is set. Default true.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"podTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "PodTemplate is an optional configuration for pods used to expose database",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec"),
+						},
+					},
+					"serviceTemplates": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ServiceTemplates is an optional configuration for services used to expose database. Aliases: primary, stats, leafnodes (the leafnodes port of the client-facing Service when leafNodes.accept is true; default ClusterIP).",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec"),
+									},
+								},
+							},
+						},
+					},
+					"gateway": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Gateway joins this cluster to a super-cluster of other NATS clusters. A NATS object is always one cluster; clusters in different DCs are joined by gateways. Changing a configured remote is a rolling restart, adding a DC needs none on the existing ones (gateways gossip).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSGatewaySpec"),
+						},
+					},
+					"leafNodes": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LeafNodes accepts leaf connections (hub side) and/or dials out to a remote NATS system (leaf side).",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSLeafNodesSpec"),
+						},
+					},
+					"distributed": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Distributed makes KubeDB create one NATS cluster per Member rule of the PlacementPolicy referenced by podTemplate.spec.podPlacementPolicy, joined by gateways. The PlacementPolicy needs a clusterSpreadConstraint and no failoverPolicy.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"arbiter": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Arbiter configures the vote-only JetStream servers in the Arbiter DC of a distributed NATS. Meaningful only when the PlacementPolicy has an Arbiter rule.",
+							Ref:         ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSArbiterSpec"),
+						},
+					},
+					"halted": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Indicates that the database is halted and all offshoot Kubernetes resources except PVCs are deleted.",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"monitor": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Monitor is used monitor database instance",
+							Ref:         ref("kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec"),
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy controls the delete operation for database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"healthChecker": {
+						SchemaProps: spec.SchemaProps{
+							Description: "HealthChecker defines attributes of the health checker",
+							Default:     map[string]interface{}{},
+							Ref:         ref("kmodules.xyz/client-go/api/v1.HealthCheckSpec"),
+						},
+					},
+				},
+				Required: []string{"version"},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.HealthCheckSpec", "kmodules.xyz/client-go/api/v1.TLSConfig", "kmodules.xyz/monitoring-agent-api/api/v1.AgentSpec", "kmodules.xyz/offshoot-api/api/v2.PodTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.AutoOpsSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.ConfigurationSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSArbiterSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSAuthSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSGatewaySpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSJetStreamSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSLameDuckSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSLeafNodesSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATSServerConfig", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NamedServiceTemplateSpec", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_NATSStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "NATSStatus defines the observed state of NATS.\n\nBesides the standard conditions, NATS sets JetStreamQuorum and UnderReplicatedStreams. Phase Critical means some pods are not Ready but the JetStream meta group still has quorum.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specifies the current phase of the database",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration is the most recent generation observed for this resource. It corresponds to the resource's generation, which is updated on mutation by the API Server.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+					"conditions": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions applied to the database, such as approval or denial.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kmodules.xyz/client-go/api/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"authSecret": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"kmodules.xyz/client-go/api/v1.Condition", "kubedb.dev/apimachinery/apis/kubedb/v1alpha2.SecretReference"},
+	}
+}
+
 func schema_apimachinery_apis_kubedb_v1alpha2_NamedServiceTemplateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -49429,6 +50202,46 @@ func schema_apimachinery_apis_kubedb_v1alpha2_mysqlStatsService(ref common.Refer
 		},
 		Dependencies: []string{
 			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.MySQL"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_natsApp(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"NATS": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATS"),
+						},
+					},
+				},
+				Required: []string{"NATS"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATS"},
+	}
+}
+
+func schema_apimachinery_apis_kubedb_v1alpha2_natsStatsService(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"NATS": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATS"),
+						},
+					},
+				},
+				Required: []string{"NATS"},
+			},
+		},
+		Dependencies: []string{
+			"kubedb.dev/apimachinery/apis/kubedb/v1alpha2.NATS"},
 	}
 }
 

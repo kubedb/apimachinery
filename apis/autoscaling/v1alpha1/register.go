@@ -91,6 +91,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MSSQLServerAutoscalerList{},
 		&MySQLAutoscaler{},
 		&MySQLAutoscalerList{},
+		&NATSAutoscaler{},
+		&NATSAutoscalerList{},
 		&Neo4jAutoscaler{},
 		&Neo4jAutoscalerList{},
 		&OracleAutoscaler{},

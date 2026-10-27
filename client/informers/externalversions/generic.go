@@ -124,6 +124,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MongoDBAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("mysqlautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().MySQLAutoscalers().Informer()}, nil
+	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("natsautoscalers"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().NATSAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("neo4jautoscalers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Autoscaling().V1alpha1().Neo4jAutoscalers().Informer()}, nil
 	case autoscalingv1alpha1.SchemeGroupVersion.WithResource("oracleautoscalers"):
@@ -194,6 +196,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MongoDBVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("mysqlversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().MySQLVersions().Informer()}, nil
+	case catalogv1alpha1.SchemeGroupVersion.WithResource("natsversions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().NATSVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("neo4jversions"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Catalog().V1alpha1().Neo4jVersions().Informer()}, nil
 	case catalogv1alpha1.SchemeGroupVersion.WithResource("oracleversions"):
@@ -282,6 +286,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().MongoDBs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("mysqls"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().MySQLs().Informer()}, nil
+	case gitopsv1alpha1.SchemeGroupVersion.WithResource("natses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().NATSs().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("neo4js"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Gitops().V1alpha1().Neo4js().Informer()}, nil
 	case gitopsv1alpha1.SchemeGroupVersion.WithResource("oracles"):
@@ -386,6 +392,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MongoDBs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("mysqls"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().MySQLs().Informer()}, nil
+	case v1alpha2.SchemeGroupVersion.WithResource("natses"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().NATSs().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("neo4js"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubedb().V1alpha2().Neo4js().Informer()}, nil
 	case v1alpha2.SchemeGroupVersion.WithResource("oracles"):
@@ -454,6 +462,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MongoDBOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("mysqlopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().MySQLOpsRequests().Informer()}, nil
+	case opsv1alpha1.SchemeGroupVersion.WithResource("natsopsrequests"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().NATSOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("neo4jopsrequests"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Ops().V1alpha1().Neo4jOpsRequests().Informer()}, nil
 	case opsv1alpha1.SchemeGroupVersion.WithResource("oracleopsrequests"):

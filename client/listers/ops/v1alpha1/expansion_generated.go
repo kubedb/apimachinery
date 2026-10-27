@@ -162,6 +162,14 @@ type MySQLOpsRequestListerExpansion interface{}
 // MySQLOpsRequestNamespaceLister.
 type MySQLOpsRequestNamespaceListerExpansion interface{}
 
+// NATSOpsRequestListerExpansion allows custom methods to be added to
+// NATSOpsRequestLister.
+type NATSOpsRequestListerExpansion interface{}
+
+// NATSOpsRequestNamespaceListerExpansion allows custom methods to be added to
+// NATSOpsRequestNamespaceLister.
+type NATSOpsRequestNamespaceListerExpansion interface{}
+
 // Neo4jOpsRequestListerExpansion allows custom methods to be added to
 // Neo4jOpsRequestLister.
 type Neo4jOpsRequestListerExpansion interface{}

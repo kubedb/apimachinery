@@ -221,6 +221,7 @@ crd_to_patch := kubedb.com_cassandras.yaml \
 								kubedb.com_mongodbs.yaml \
 								kubedb.com_mssqlservers.yaml \
 								kubedb.com_mysqls.yaml \
+								kubedb.com_natses.yaml \
 								kubedb.com_perconaxtradbs.yaml \
 								kubedb.com_pgbouncers.yaml \
 								kubedb.com_pgpools.yaml \

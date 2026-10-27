@@ -47,6 +47,7 @@ type KubedbV1alpha2Interface interface {
 	MilvusesGetter
 	MongoDBsGetter
 	MySQLsGetter
+	NATSsGetter
 	Neo4jsGetter
 	OraclesGetter
 	PerconaXtraDBsGetter
@@ -139,6 +140,10 @@ func (c *KubedbV1alpha2Client) MongoDBs(namespace string) MongoDBInterface {
 
 func (c *KubedbV1alpha2Client) MySQLs(namespace string) MySQLInterface {
 	return newMySQLs(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) NATSs(namespace string) NATSInterface {
+	return newNATSs(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Neo4js(namespace string) Neo4jInterface {

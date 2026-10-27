@@ -48,6 +48,7 @@ type CatalogV1alpha1Interface interface {
 	MilvusVersionsGetter
 	MongoDBVersionsGetter
 	MySQLVersionsGetter
+	NATSVersionsGetter
 	Neo4jVersionsGetter
 	OracleVersionsGetter
 	PerconaXtraDBVersionsGetter
@@ -144,6 +145,10 @@ func (c *CatalogV1alpha1Client) MongoDBVersions() MongoDBVersionInterface {
 
 func (c *CatalogV1alpha1Client) MySQLVersions() MySQLVersionInterface {
 	return newMySQLVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) NATSVersions() NATSVersionInterface {
+	return newNATSVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) Neo4jVersions() Neo4jVersionInterface {

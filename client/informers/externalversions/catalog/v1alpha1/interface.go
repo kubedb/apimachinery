@@ -62,6 +62,8 @@ type Interface interface {
 	MongoDBVersions() MongoDBVersionInformer
 	// MySQLVersions returns a MySQLVersionInformer.
 	MySQLVersions() MySQLVersionInformer
+	// NATSVersions returns a NATSVersionInformer.
+	NATSVersions() NATSVersionInformer
 	// Neo4jVersions returns a Neo4jVersionInformer.
 	Neo4jVersions() Neo4jVersionInformer
 	// OracleVersions returns a OracleVersionInformer.
@@ -198,6 +200,11 @@ func (v *version) MongoDBVersions() MongoDBVersionInformer {
 // MySQLVersions returns a MySQLVersionInformer.
 func (v *version) MySQLVersions() MySQLVersionInformer {
 	return &mySQLVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
+}
+
+// NATSVersions returns a NATSVersionInformer.
+func (v *version) NATSVersions() NATSVersionInformer {
+	return &nATSVersionInformer{factory: v.factory, tweakListOptions: v.tweakListOptions}
 }
 
 // Neo4jVersions returns a Neo4jVersionInformer.

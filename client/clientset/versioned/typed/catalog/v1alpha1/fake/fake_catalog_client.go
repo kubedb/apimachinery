@@ -105,6 +105,10 @@ func (c *FakeCatalogV1alpha1) MySQLVersions() v1alpha1.MySQLVersionInterface {
 	return newFakeMySQLVersions(c)
 }
 
+func (c *FakeCatalogV1alpha1) NATSVersions() v1alpha1.NATSVersionInterface {
+	return newFakeNATSVersions(c)
+}
+
 func (c *FakeCatalogV1alpha1) Neo4jVersions() v1alpha1.Neo4jVersionInterface {
 	return newFakeNeo4jVersions(c)
 }

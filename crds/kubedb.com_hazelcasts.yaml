@@ -3707,6 +3707,7 @@ spec:
                       - stats
                       - dashboard
                       - readreplica
+                      - leafnodes
                       type: string
                     metadata:
                       properties:

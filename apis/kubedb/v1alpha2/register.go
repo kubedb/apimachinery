@@ -91,6 +91,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MySQLList{},
 		&MSSQLServer{},
 		&MSSQLServerList{},
+		&NATS{},
+		&NATSList{},
 		&Neo4j{},
 		&Neo4jList{},
 		&Oracle{},

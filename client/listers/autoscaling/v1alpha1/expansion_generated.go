@@ -162,6 +162,14 @@ type MySQLAutoscalerListerExpansion interface{}
 // MySQLAutoscalerNamespaceLister.
 type MySQLAutoscalerNamespaceListerExpansion interface{}
 
+// NATSAutoscalerListerExpansion allows custom methods to be added to
+// NATSAutoscalerLister.
+type NATSAutoscalerListerExpansion interface{}
+
+// NATSAutoscalerNamespaceListerExpansion allows custom methods to be added to
+// NATSAutoscalerNamespaceLister.
+type NATSAutoscalerNamespaceListerExpansion interface{}
+
 // Neo4jAutoscalerListerExpansion allows custom methods to be added to
 // Neo4jAutoscalerLister.
 type Neo4jAutoscalerListerExpansion interface{}

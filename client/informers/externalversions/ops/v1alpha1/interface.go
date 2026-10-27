@@ -60,6 +60,8 @@ type Interface interface {
 	MongoDBOpsRequests() MongoDBOpsRequestInformer
 	// MySQLOpsRequests returns a MySQLOpsRequestInformer.
 	MySQLOpsRequests() MySQLOpsRequestInformer
+	// NATSOpsRequests returns a NATSOpsRequestInformer.
+	NATSOpsRequests() NATSOpsRequestInformer
 	// Neo4jOpsRequests returns a Neo4jOpsRequestInformer.
 	Neo4jOpsRequests() Neo4jOpsRequestInformer
 	// OracleOpsRequests returns a OracleOpsRequestInformer.
@@ -191,6 +193,11 @@ func (v *version) MongoDBOpsRequests() MongoDBOpsRequestInformer {
 // MySQLOpsRequests returns a MySQLOpsRequestInformer.
 func (v *version) MySQLOpsRequests() MySQLOpsRequestInformer {
 	return &mySQLOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// NATSOpsRequests returns a NATSOpsRequestInformer.
+func (v *version) NATSOpsRequests() NATSOpsRequestInformer {
+	return &nATSOpsRequestInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Neo4jOpsRequests returns a Neo4jOpsRequestInformer.

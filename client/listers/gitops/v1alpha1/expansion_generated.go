@@ -162,6 +162,14 @@ type MySQLListerExpansion interface{}
 // MySQLNamespaceLister.
 type MySQLNamespaceListerExpansion interface{}
 
+// NATSListerExpansion allows custom methods to be added to
+// NATSLister.
+type NATSListerExpansion interface{}
+
+// NATSNamespaceListerExpansion allows custom methods to be added to
+// NATSNamespaceLister.
+type NATSNamespaceListerExpansion interface{}
+
 // Neo4jListerExpansion allows custom methods to be added to
 // Neo4jLister.
 type Neo4jListerExpansion interface{}
