@@ -22,6 +22,133 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Major version upgrade.
+//
+// Each step runs a fixed command, chosen by the coordinator, in its own pod's postgres
+// container; the caller only names the step, never a command or a path. A step runs in
+// the background and records its progress under the data volume, so a dropped call, an
+// ops-manager restart or a coordinator restart neither loses nor repeats it. Used by the
+// distributed ops path, where the hub cannot exec into a spoke pod.
+type UpgradeStep int32
+
+const (
+	UpgradeStep_UPGRADE_STEP_UNSPECIFIED UpgradeStep = 0
+	// Copy the running (old) server's binaries, libraries and config under /var/pv/old.
+	// Runs on the pod while it still runs the old image.
+	UpgradeStep_UPGRADE_STEP_COPY_OLD_BINARIES UpgradeStep = 1
+	// initdb a new data directory /var/pv/data.new with the new image's binaries.
+	UpgradeStep_UPGRADE_STEP_INIT_NEW_DATA_DIR UpgradeStep = 2
+	// pg_upgrade --check: the compatibility checks only; changes nothing.
+	UpgradeStep_UPGRADE_STEP_PG_UPGRADE_CHECK UpgradeStep = 3
+	// pg_upgrade --link into /var/pv/data.new.
+	UpgradeStep_UPGRADE_STEP_PG_UPGRADE UpgradeStep = 4
+	// Remove the old cluster files and move /var/pv/data.new to /var/pv/data.
+	UpgradeStep_UPGRADE_STEP_SWAP_DATA_DIR UpgradeStep = 5
+)
+
+// Enum value maps for UpgradeStep.
+var (
+	UpgradeStep_name = map[int32]string{
+		0: "UPGRADE_STEP_UNSPECIFIED",
+		1: "UPGRADE_STEP_COPY_OLD_BINARIES",
+		2: "UPGRADE_STEP_INIT_NEW_DATA_DIR",
+		3: "UPGRADE_STEP_PG_UPGRADE_CHECK",
+		4: "UPGRADE_STEP_PG_UPGRADE",
+		5: "UPGRADE_STEP_SWAP_DATA_DIR",
+	}
+	UpgradeStep_value = map[string]int32{
+		"UPGRADE_STEP_UNSPECIFIED":       0,
+		"UPGRADE_STEP_COPY_OLD_BINARIES": 1,
+		"UPGRADE_STEP_INIT_NEW_DATA_DIR": 2,
+		"UPGRADE_STEP_PG_UPGRADE_CHECK":  3,
+		"UPGRADE_STEP_PG_UPGRADE":        4,
+		"UPGRADE_STEP_SWAP_DATA_DIR":     5,
+	}
+)
+
+func (x UpgradeStep) Enum() *UpgradeStep {
+	p := new(UpgradeStep)
+	*p = x
+	return p
+}
+
+func (x UpgradeStep) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (UpgradeStep) Descriptor() protoreflect.EnumDescriptor {
+	return file_pkg_utils_grpc_postgres_proto_postgres_proto_enumTypes[0].Descriptor()
+}
+
+func (UpgradeStep) Type() protoreflect.EnumType {
+	return &file_pkg_utils_grpc_postgres_proto_postgres_proto_enumTypes[0]
+}
+
+func (x UpgradeStep) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use UpgradeStep.Descriptor instead.
+func (UpgradeStep) EnumDescriptor() ([]byte, []int) {
+	return file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescGZIP(), []int{0}
+}
+
+type UpgradeStepPhase int32
+
+const (
+	UpgradeStepPhase_UPGRADE_STEP_PHASE_UNSPECIFIED UpgradeStepPhase = 0
+	// Never started for this ops request.
+	UpgradeStepPhase_UPGRADE_STEP_PHASE_NOT_STARTED UpgradeStepPhase = 1
+	UpgradeStepPhase_UPGRADE_STEP_PHASE_RUNNING     UpgradeStepPhase = 2
+	UpgradeStepPhase_UPGRADE_STEP_PHASE_SUCCEEDED   UpgradeStepPhase = 3
+	UpgradeStepPhase_UPGRADE_STEP_PHASE_FAILED      UpgradeStepPhase = 4
+)
+
+// Enum value maps for UpgradeStepPhase.
+var (
+	UpgradeStepPhase_name = map[int32]string{
+		0: "UPGRADE_STEP_PHASE_UNSPECIFIED",
+		1: "UPGRADE_STEP_PHASE_NOT_STARTED",
+		2: "UPGRADE_STEP_PHASE_RUNNING",
+		3: "UPGRADE_STEP_PHASE_SUCCEEDED",
+		4: "UPGRADE_STEP_PHASE_FAILED",
+	}
+	UpgradeStepPhase_value = map[string]int32{
+		"UPGRADE_STEP_PHASE_UNSPECIFIED": 0,
+		"UPGRADE_STEP_PHASE_NOT_STARTED": 1,
+		"UPGRADE_STEP_PHASE_RUNNING":     2,
+		"UPGRADE_STEP_PHASE_SUCCEEDED":   3,
+		"UPGRADE_STEP_PHASE_FAILED":      4,
+	}
+)
+
+func (x UpgradeStepPhase) Enum() *UpgradeStepPhase {
+	p := new(UpgradeStepPhase)
+	*p = x
+	return p
+}
+
+func (x UpgradeStepPhase) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (UpgradeStepPhase) Descriptor() protoreflect.EnumDescriptor {
+	return file_pkg_utils_grpc_postgres_proto_postgres_proto_enumTypes[1].Descriptor()
+}
+
+func (UpgradeStepPhase) Type() protoreflect.EnumType {
+	return &file_pkg_utils_grpc_postgres_proto_postgres_proto_enumTypes[1]
+}
+
+func (x UpgradeStepPhase) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use UpgradeStepPhase.Descriptor instead.
+func (UpgradeStepPhase) EnumDescriptor() ([]byte, []int) {
+	return file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescGZIP(), []int{1}
+}
+
 type HealthCheckResponse_ServingStatus int32
 
 const (
@@ -55,11 +182,11 @@ func (x HealthCheckResponse_ServingStatus) String() string {
 }
 
 func (HealthCheckResponse_ServingStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_pkg_utils_grpc_postgres_proto_postgres_proto_enumTypes[0].Descriptor()
+	return file_pkg_utils_grpc_postgres_proto_postgres_proto_enumTypes[2].Descriptor()
 }
 
 func (HealthCheckResponse_ServingStatus) Type() protoreflect.EnumType {
-	return &file_pkg_utils_grpc_postgres_proto_postgres_proto_enumTypes[0]
+	return &file_pkg_utils_grpc_postgres_proto_postgres_proto_enumTypes[2]
 }
 
 func (x HealthCheckResponse_ServingStatus) Number() protoreflect.EnumNumber {
@@ -966,6 +1093,280 @@ func (x *PrimaryAliveResponse) GetAlive() bool {
 	return false
 }
 
+type UpgradeCapabilities struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Steps this coordinator can run.
+	Steps         []UpgradeStep `protobuf:"varint,1,rep,packed,name=Steps,json=steps,proto3,enum=UpgradeStep" json:"Steps,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpgradeCapabilities) Reset() {
+	*x = UpgradeCapabilities{}
+	mi := &file_pkg_utils_grpc_postgres_proto_postgres_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpgradeCapabilities) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpgradeCapabilities) ProtoMessage() {}
+
+func (x *UpgradeCapabilities) ProtoReflect() protoreflect.Message {
+	mi := &file_pkg_utils_grpc_postgres_proto_postgres_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpgradeCapabilities.ProtoReflect.Descriptor instead.
+func (*UpgradeCapabilities) Descriptor() ([]byte, []int) {
+	return file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *UpgradeCapabilities) GetSteps() []UpgradeStep {
+	if x != nil {
+		return x.Steps
+	}
+	return nil
+}
+
+type UpgradeEnv struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// "alpine" or "debian", from /etc/os-release ID.
+	Distro string `protobuf:"bytes,1,opt,name=Distro,json=distro,proto3" json:"Distro,omitempty"`
+	// `postgres --version` of the image the pod runs.
+	ServerVersion string `protobuf:"bytes,2,opt,name=ServerVersion,json=serverVersion,proto3" json:"ServerVersion,omitempty"`
+	// pg_config --bindir, --sharedir, --pkglibdir of that image.
+	BinDir    string `protobuf:"bytes,3,opt,name=BinDir,json=binDir,proto3" json:"BinDir,omitempty"`
+	ShareDir  string `protobuf:"bytes,4,opt,name=ShareDir,json=shareDir,proto3" json:"ShareDir,omitempty"`
+	PkgLibDir string `protobuf:"bytes,5,opt,name=PkgLibDir,json=pkgLibDir,proto3" json:"PkgLibDir,omitempty"`
+	// Whether the human-placed authorization file /var/pv/UPGRADE_PG_VERSION exists.
+	AuthorizationFile bool `protobuf:"varint,6,opt,name=AuthorizationFile,json=authorizationFile,proto3" json:"AuthorizationFile,omitempty"`
+	// Free and used bytes of the data volume.
+	DataVolumeFreeBytes int64 `protobuf:"varint,7,opt,name=DataVolumeFreeBytes,json=dataVolumeFreeBytes,proto3" json:"DataVolumeFreeBytes,omitempty"`
+	DataVolumeUsedBytes int64 `protobuf:"varint,8,opt,name=DataVolumeUsedBytes,json=dataVolumeUsedBytes,proto3" json:"DataVolumeUsedBytes,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *UpgradeEnv) Reset() {
+	*x = UpgradeEnv{}
+	mi := &file_pkg_utils_grpc_postgres_proto_postgres_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpgradeEnv) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpgradeEnv) ProtoMessage() {}
+
+func (x *UpgradeEnv) ProtoReflect() protoreflect.Message {
+	mi := &file_pkg_utils_grpc_postgres_proto_postgres_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpgradeEnv.ProtoReflect.Descriptor instead.
+func (*UpgradeEnv) Descriptor() ([]byte, []int) {
+	return file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *UpgradeEnv) GetDistro() string {
+	if x != nil {
+		return x.Distro
+	}
+	return ""
+}
+
+func (x *UpgradeEnv) GetServerVersion() string {
+	if x != nil {
+		return x.ServerVersion
+	}
+	return ""
+}
+
+func (x *UpgradeEnv) GetBinDir() string {
+	if x != nil {
+		return x.BinDir
+	}
+	return ""
+}
+
+func (x *UpgradeEnv) GetShareDir() string {
+	if x != nil {
+		return x.ShareDir
+	}
+	return ""
+}
+
+func (x *UpgradeEnv) GetPkgLibDir() string {
+	if x != nil {
+		return x.PkgLibDir
+	}
+	return ""
+}
+
+func (x *UpgradeEnv) GetAuthorizationFile() bool {
+	if x != nil {
+		return x.AuthorizationFile
+	}
+	return false
+}
+
+func (x *UpgradeEnv) GetDataVolumeFreeBytes() int64 {
+	if x != nil {
+		return x.DataVolumeFreeBytes
+	}
+	return 0
+}
+
+func (x *UpgradeEnv) GetDataVolumeUsedBytes() int64 {
+	if x != nil {
+		return x.DataVolumeUsedBytes
+	}
+	return 0
+}
+
+type UpgradeStepRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// UID of the ops request driving the upgrade; a step's state is kept per UID, so a
+	// later upgrade never reads an earlier one's result.
+	OpsRequestUID string      `protobuf:"bytes,1,opt,name=OpsRequestUID,json=opsRequestUID,proto3" json:"OpsRequestUID,omitempty"`
+	Step          UpgradeStep `protobuf:"varint,2,opt,name=Step,json=step,proto3,enum=UpgradeStep" json:"Step,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpgradeStepRequest) Reset() {
+	*x = UpgradeStepRequest{}
+	mi := &file_pkg_utils_grpc_postgres_proto_postgres_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpgradeStepRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpgradeStepRequest) ProtoMessage() {}
+
+func (x *UpgradeStepRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_pkg_utils_grpc_postgres_proto_postgres_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpgradeStepRequest.ProtoReflect.Descriptor instead.
+func (*UpgradeStepRequest) Descriptor() ([]byte, []int) {
+	return file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *UpgradeStepRequest) GetOpsRequestUID() string {
+	if x != nil {
+		return x.OpsRequestUID
+	}
+	return ""
+}
+
+func (x *UpgradeStepRequest) GetStep() UpgradeStep {
+	if x != nil {
+		return x.Step
+	}
+	return UpgradeStep_UPGRADE_STEP_UNSPECIFIED
+}
+
+type UpgradeStepStatus struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Step  UpgradeStep            `protobuf:"varint,1,opt,name=Step,json=step,proto3,enum=UpgradeStep" json:"Step,omitempty"`
+	Phase UpgradeStepPhase       `protobuf:"varint,2,opt,name=Phase,json=phase,proto3,enum=UpgradeStepPhase" json:"Phase,omitempty"`
+	// Why it failed, or what it is doing.
+	Message string `protobuf:"bytes,3,opt,name=Message,json=message,proto3" json:"Message,omitempty"`
+	// The last lines of the step's output.
+	OutputTail    string `protobuf:"bytes,4,opt,name=OutputTail,json=outputTail,proto3" json:"OutputTail,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpgradeStepStatus) Reset() {
+	*x = UpgradeStepStatus{}
+	mi := &file_pkg_utils_grpc_postgres_proto_postgres_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpgradeStepStatus) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpgradeStepStatus) ProtoMessage() {}
+
+func (x *UpgradeStepStatus) ProtoReflect() protoreflect.Message {
+	mi := &file_pkg_utils_grpc_postgres_proto_postgres_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpgradeStepStatus.ProtoReflect.Descriptor instead.
+func (*UpgradeStepStatus) Descriptor() ([]byte, []int) {
+	return file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *UpgradeStepStatus) GetStep() UpgradeStep {
+	if x != nil {
+		return x.Step
+	}
+	return UpgradeStep_UPGRADE_STEP_UNSPECIFIED
+}
+
+func (x *UpgradeStepStatus) GetPhase() UpgradeStepPhase {
+	if x != nil {
+		return x.Phase
+	}
+	return UpgradeStepPhase_UPGRADE_STEP_PHASE_UNSPECIFIED
+}
+
+func (x *UpgradeStepStatus) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *UpgradeStepStatus) GetOutputTail() string {
+	if x != nil {
+		return x.OutputTail
+	}
+	return ""
+}
+
 var File_pkg_utils_grpc_postgres_proto_postgres_proto protoreflect.FileDescriptor
 
 const file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDesc = "" +
@@ -1026,7 +1427,42 @@ const file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDesc = "" +
 	"\x0fWalFileResponse\x12 \n" +
 	"\vWalFileName\x18\x01 \x01(\tR\vwalFileName\",\n" +
 	"\x14PrimaryAliveResponse\x12\x14\n" +
-	"\x05Alive\x18\x01 \x01(\bR\x05alive2\x83\x05\n" +
+	"\x05Alive\x18\x01 \x01(\bR\x05alive\"9\n" +
+	"\x13UpgradeCapabilities\x12\"\n" +
+	"\x05Steps\x18\x01 \x03(\x0e2\f.UpgradeStepR\x05steps\"\xae\x02\n" +
+	"\n" +
+	"UpgradeEnv\x12\x16\n" +
+	"\x06Distro\x18\x01 \x01(\tR\x06distro\x12$\n" +
+	"\rServerVersion\x18\x02 \x01(\tR\rserverVersion\x12\x16\n" +
+	"\x06BinDir\x18\x03 \x01(\tR\x06binDir\x12\x1a\n" +
+	"\bShareDir\x18\x04 \x01(\tR\bshareDir\x12\x1c\n" +
+	"\tPkgLibDir\x18\x05 \x01(\tR\tpkgLibDir\x12,\n" +
+	"\x11AuthorizationFile\x18\x06 \x01(\bR\x11authorizationFile\x120\n" +
+	"\x13DataVolumeFreeBytes\x18\a \x01(\x03R\x13dataVolumeFreeBytes\x120\n" +
+	"\x13DataVolumeUsedBytes\x18\b \x01(\x03R\x13dataVolumeUsedBytes\"\\\n" +
+	"\x12UpgradeStepRequest\x12$\n" +
+	"\rOpsRequestUID\x18\x01 \x01(\tR\ropsRequestUID\x12 \n" +
+	"\x04Step\x18\x02 \x01(\x0e2\f.UpgradeStepR\x04step\"\x98\x01\n" +
+	"\x11UpgradeStepStatus\x12 \n" +
+	"\x04Step\x18\x01 \x01(\x0e2\f.UpgradeStepR\x04step\x12'\n" +
+	"\x05Phase\x18\x02 \x01(\x0e2\x11.UpgradeStepPhaseR\x05phase\x12\x18\n" +
+	"\aMessage\x18\x03 \x01(\tR\amessage\x12\x1e\n" +
+	"\n" +
+	"OutputTail\x18\x04 \x01(\tR\n" +
+	"outputTail*\xd3\x01\n" +
+	"\vUpgradeStep\x12\x1c\n" +
+	"\x18UPGRADE_STEP_UNSPECIFIED\x10\x00\x12\"\n" +
+	"\x1eUPGRADE_STEP_COPY_OLD_BINARIES\x10\x01\x12\"\n" +
+	"\x1eUPGRADE_STEP_INIT_NEW_DATA_DIR\x10\x02\x12!\n" +
+	"\x1dUPGRADE_STEP_PG_UPGRADE_CHECK\x10\x03\x12\x1b\n" +
+	"\x17UPGRADE_STEP_PG_UPGRADE\x10\x04\x12\x1e\n" +
+	"\x1aUPGRADE_STEP_SWAP_DATA_DIR\x10\x05*\xbb\x01\n" +
+	"\x10UpgradeStepPhase\x12\"\n" +
+	"\x1eUPGRADE_STEP_PHASE_UNSPECIFIED\x10\x00\x12\"\n" +
+	"\x1eUPGRADE_STEP_PHASE_NOT_STARTED\x10\x01\x12\x1e\n" +
+	"\x1aUPGRADE_STEP_PHASE_RUNNING\x10\x02\x12 \n" +
+	"\x1cUPGRADE_STEP_PHASE_SUCCEEDED\x10\x03\x12\x1d\n" +
+	"\x19UPGRADE_STEP_PHASE_FAILED\x10\x042\xe7\x06\n" +
 	"\x12CoordinatorManager\x12\x1e\n" +
 	"\n" +
 	"GetPodInfo\x12\x04.Pod\x1a\b.PodInfo\"\x00\x12$\n" +
@@ -1043,7 +1479,11 @@ const file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDesc = "" +
 	"\x13ListDatabaseHistory\x12\x06.Empty\x1a\x12.DBHistoryResponse\"\x00\x120\n" +
 	"\x12GetSmallestWalFile\x12\x06.Empty\x1a\x10.WalFileResponse\"\x00\x124\n" +
 	"\x11CheckPrimaryAlive\x12\x06.Empty\x1a\x15.PrimaryAliveResponse\"\x00\x12#\n" +
-	"\x12CreateFailOverFile\x12\x05.FFOF\x1a\x04.ACK\"\x00B:Z8kubedb.dev/apimachinery/pkg/utils/grpc/postgres/protogenb\x06proto3"
+	"\x12CreateFailOverFile\x12\x05.FFOF\x1a\x04.ACK\"\x00\x128\n" +
+	"\x16GetUpgradeCapabilities\x12\x06.Empty\x1a\x14.UpgradeCapabilities\"\x00\x12&\n" +
+	"\rGetUpgradeEnv\x12\x06.Empty\x1a\v.UpgradeEnv\"\x00\x12=\n" +
+	"\x10StartUpgradeStep\x12\x13.UpgradeStepRequest\x1a\x12.UpgradeStepStatus\"\x00\x12A\n" +
+	"\x14GetUpgradeStepStatus\x12\x13.UpgradeStepRequest\x1a\x12.UpgradeStepStatus\"\x00B:Z8kubedb.dev/apimachinery/pkg/utils/grpc/postgres/protogenb\x06proto3"
 
 var (
 	file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescOnce sync.Once
@@ -1057,71 +1497,89 @@ func file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescGZIP() []byte {
 	return file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDescData
 }
 
-var file_pkg_utils_grpc_postgres_proto_postgres_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_pkg_utils_grpc_postgres_proto_postgres_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_pkg_utils_grpc_postgres_proto_postgres_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_pkg_utils_grpc_postgres_proto_postgres_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_pkg_utils_grpc_postgres_proto_postgres_proto_goTypes = []any{
-	(HealthCheckResponse_ServingStatus)(0), // 0: HealthCheckResponse.ServingStatus
-	(*PodInfo)(nil),                        // 1: PodInfo
-	(*ExecRequest)(nil),                    // 2: ExecRequest
-	(*ExecResult)(nil),                     // 3: ExecResult
-	(*Pod)(nil),                            // 4: Pod
-	(*Empty)(nil),                          // 5: Empty
-	(*RRC)(nil),                            // 6: RRC
-	(*TP)(nil),                             // 7: TP
-	(*IPPR)(nil),                           // 8: IPPR
-	(*CRC)(nil),                            // 9: CRC
-	(*HealthCheckResponse)(nil),            // 10: HealthCheckResponse
-	(*CD)(nil),                             // 11: CD
-	(*CPE)(nil),                            // 12: CPE
-	(*CPER)(nil),                           // 13: CPER
-	(*LSNP)(nil),                           // 14: LSNP
-	(*ACK)(nil),                            // 15: ACK
-	(*FFOF)(nil),                           // 16: FFOF
-	(*DBHistoryResponse)(nil),              // 17: DBHistoryResponse
-	(*WalFileResponse)(nil),                // 18: WalFileResponse
-	(*PrimaryAliveResponse)(nil),           // 19: PrimaryAliveResponse
-	nil,                                    // 20: PodInfo.LabelsEntry
-	nil,                                    // 21: CD.DataEntry
+	(UpgradeStep)(0),                       // 0: UpgradeStep
+	(UpgradeStepPhase)(0),                  // 1: UpgradeStepPhase
+	(HealthCheckResponse_ServingStatus)(0), // 2: HealthCheckResponse.ServingStatus
+	(*PodInfo)(nil),                        // 3: PodInfo
+	(*ExecRequest)(nil),                    // 4: ExecRequest
+	(*ExecResult)(nil),                     // 5: ExecResult
+	(*Pod)(nil),                            // 6: Pod
+	(*Empty)(nil),                          // 7: Empty
+	(*RRC)(nil),                            // 8: RRC
+	(*TP)(nil),                             // 9: TP
+	(*IPPR)(nil),                           // 10: IPPR
+	(*CRC)(nil),                            // 11: CRC
+	(*HealthCheckResponse)(nil),            // 12: HealthCheckResponse
+	(*CD)(nil),                             // 13: CD
+	(*CPE)(nil),                            // 14: CPE
+	(*CPER)(nil),                           // 15: CPER
+	(*LSNP)(nil),                           // 16: LSNP
+	(*ACK)(nil),                            // 17: ACK
+	(*FFOF)(nil),                           // 18: FFOF
+	(*DBHistoryResponse)(nil),              // 19: DBHistoryResponse
+	(*WalFileResponse)(nil),                // 20: WalFileResponse
+	(*PrimaryAliveResponse)(nil),           // 21: PrimaryAliveResponse
+	(*UpgradeCapabilities)(nil),            // 22: UpgradeCapabilities
+	(*UpgradeEnv)(nil),                     // 23: UpgradeEnv
+	(*UpgradeStepRequest)(nil),             // 24: UpgradeStepRequest
+	(*UpgradeStepStatus)(nil),              // 25: UpgradeStepStatus
+	nil,                                    // 26: PodInfo.LabelsEntry
+	nil,                                    // 27: CD.DataEntry
 }
 var file_pkg_utils_grpc_postgres_proto_postgres_proto_depIdxs = []int32{
-	20, // 0: PodInfo.Labels:type_name -> PodInfo.LabelsEntry
-	0,  // 1: HealthCheckResponse.status:type_name -> HealthCheckResponse.ServingStatus
-	21, // 2: CD.Data:type_name -> CD.DataEntry
-	4,  // 3: CoordinatorManager.GetPodInfo:input_type -> Pod
-	6,  // 4: CoordinatorManager.RemoveRecoveryConf:input_type -> RRC
-	7,  // 5: CoordinatorManager.TerminatePostgres:input_type -> TP
-	5,  // 6: CoordinatorManager.GetPostMasterPIDFileData:input_type -> Empty
-	5,  // 7: CoordinatorManager.IsPostgresProcessRunning:input_type -> Empty
-	9,  // 8: CoordinatorManager.ConfigRecoveryConf:input_type -> CRC
-	14, // 9: CoordinatorManager.UpdatePeerLsn:input_type -> LSNP
-	5,  // 10: CoordinatorManager.PromotePostgres:input_type -> Empty
-	5,  // 11: CoordinatorManager.HealthCheck:input_type -> Empty
-	5,  // 12: CoordinatorManager.GetControlData:input_type -> Empty
-	12, // 13: CoordinatorManager.GetCheckPointEnd:input_type -> CPE
-	5,  // 14: CoordinatorManager.ListDatabaseHistory:input_type -> Empty
-	5,  // 15: CoordinatorManager.GetSmallestWalFile:input_type -> Empty
-	5,  // 16: CoordinatorManager.CheckPrimaryAlive:input_type -> Empty
-	16, // 17: CoordinatorManager.CreateFailOverFile:input_type -> FFOF
-	1,  // 18: CoordinatorManager.GetPodInfo:output_type -> PodInfo
-	5,  // 19: CoordinatorManager.RemoveRecoveryConf:output_type -> Empty
-	5,  // 20: CoordinatorManager.TerminatePostgres:output_type -> Empty
-	3,  // 21: CoordinatorManager.GetPostMasterPIDFileData:output_type -> ExecResult
-	8,  // 22: CoordinatorManager.IsPostgresProcessRunning:output_type -> IPPR
-	5,  // 23: CoordinatorManager.ConfigRecoveryConf:output_type -> Empty
-	15, // 24: CoordinatorManager.UpdatePeerLsn:output_type -> ACK
-	3,  // 25: CoordinatorManager.PromotePostgres:output_type -> ExecResult
-	10, // 26: CoordinatorManager.HealthCheck:output_type -> HealthCheckResponse
-	11, // 27: CoordinatorManager.GetControlData:output_type -> CD
-	13, // 28: CoordinatorManager.GetCheckPointEnd:output_type -> CPER
-	17, // 29: CoordinatorManager.ListDatabaseHistory:output_type -> DBHistoryResponse
-	18, // 30: CoordinatorManager.GetSmallestWalFile:output_type -> WalFileResponse
-	19, // 31: CoordinatorManager.CheckPrimaryAlive:output_type -> PrimaryAliveResponse
-	15, // 32: CoordinatorManager.CreateFailOverFile:output_type -> ACK
-	18, // [18:33] is the sub-list for method output_type
-	3,  // [3:18] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	26, // 0: PodInfo.Labels:type_name -> PodInfo.LabelsEntry
+	2,  // 1: HealthCheckResponse.status:type_name -> HealthCheckResponse.ServingStatus
+	27, // 2: CD.Data:type_name -> CD.DataEntry
+	0,  // 3: UpgradeCapabilities.Steps:type_name -> UpgradeStep
+	0,  // 4: UpgradeStepRequest.Step:type_name -> UpgradeStep
+	0,  // 5: UpgradeStepStatus.Step:type_name -> UpgradeStep
+	1,  // 6: UpgradeStepStatus.Phase:type_name -> UpgradeStepPhase
+	6,  // 7: CoordinatorManager.GetPodInfo:input_type -> Pod
+	8,  // 8: CoordinatorManager.RemoveRecoveryConf:input_type -> RRC
+	9,  // 9: CoordinatorManager.TerminatePostgres:input_type -> TP
+	7,  // 10: CoordinatorManager.GetPostMasterPIDFileData:input_type -> Empty
+	7,  // 11: CoordinatorManager.IsPostgresProcessRunning:input_type -> Empty
+	11, // 12: CoordinatorManager.ConfigRecoveryConf:input_type -> CRC
+	16, // 13: CoordinatorManager.UpdatePeerLsn:input_type -> LSNP
+	7,  // 14: CoordinatorManager.PromotePostgres:input_type -> Empty
+	7,  // 15: CoordinatorManager.HealthCheck:input_type -> Empty
+	7,  // 16: CoordinatorManager.GetControlData:input_type -> Empty
+	14, // 17: CoordinatorManager.GetCheckPointEnd:input_type -> CPE
+	7,  // 18: CoordinatorManager.ListDatabaseHistory:input_type -> Empty
+	7,  // 19: CoordinatorManager.GetSmallestWalFile:input_type -> Empty
+	7,  // 20: CoordinatorManager.CheckPrimaryAlive:input_type -> Empty
+	18, // 21: CoordinatorManager.CreateFailOverFile:input_type -> FFOF
+	7,  // 22: CoordinatorManager.GetUpgradeCapabilities:input_type -> Empty
+	7,  // 23: CoordinatorManager.GetUpgradeEnv:input_type -> Empty
+	24, // 24: CoordinatorManager.StartUpgradeStep:input_type -> UpgradeStepRequest
+	24, // 25: CoordinatorManager.GetUpgradeStepStatus:input_type -> UpgradeStepRequest
+	3,  // 26: CoordinatorManager.GetPodInfo:output_type -> PodInfo
+	7,  // 27: CoordinatorManager.RemoveRecoveryConf:output_type -> Empty
+	7,  // 28: CoordinatorManager.TerminatePostgres:output_type -> Empty
+	5,  // 29: CoordinatorManager.GetPostMasterPIDFileData:output_type -> ExecResult
+	10, // 30: CoordinatorManager.IsPostgresProcessRunning:output_type -> IPPR
+	7,  // 31: CoordinatorManager.ConfigRecoveryConf:output_type -> Empty
+	17, // 32: CoordinatorManager.UpdatePeerLsn:output_type -> ACK
+	5,  // 33: CoordinatorManager.PromotePostgres:output_type -> ExecResult
+	12, // 34: CoordinatorManager.HealthCheck:output_type -> HealthCheckResponse
+	13, // 35: CoordinatorManager.GetControlData:output_type -> CD
+	15, // 36: CoordinatorManager.GetCheckPointEnd:output_type -> CPER
+	19, // 37: CoordinatorManager.ListDatabaseHistory:output_type -> DBHistoryResponse
+	20, // 38: CoordinatorManager.GetSmallestWalFile:output_type -> WalFileResponse
+	21, // 39: CoordinatorManager.CheckPrimaryAlive:output_type -> PrimaryAliveResponse
+	17, // 40: CoordinatorManager.CreateFailOverFile:output_type -> ACK
+	22, // 41: CoordinatorManager.GetUpgradeCapabilities:output_type -> UpgradeCapabilities
+	23, // 42: CoordinatorManager.GetUpgradeEnv:output_type -> UpgradeEnv
+	25, // 43: CoordinatorManager.StartUpgradeStep:output_type -> UpgradeStepStatus
+	25, // 44: CoordinatorManager.GetUpgradeStepStatus:output_type -> UpgradeStepStatus
+	26, // [26:45] is the sub-list for method output_type
+	7,  // [7:26] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_pkg_utils_grpc_postgres_proto_postgres_proto_init() }
@@ -1134,8 +1592,8 @@ func file_pkg_utils_grpc_postgres_proto_postgres_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDesc), len(file_pkg_utils_grpc_postgres_proto_postgres_proto_rawDesc)),
-			NumEnums:      1,
-			NumMessages:   21,
+			NumEnums:      3,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

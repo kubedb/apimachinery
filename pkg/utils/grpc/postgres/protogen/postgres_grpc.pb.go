@@ -35,6 +35,10 @@ const (
 	CoordinatorManager_GetSmallestWalFile_FullMethodName       = "/CoordinatorManager/GetSmallestWalFile"
 	CoordinatorManager_CheckPrimaryAlive_FullMethodName        = "/CoordinatorManager/CheckPrimaryAlive"
 	CoordinatorManager_CreateFailOverFile_FullMethodName       = "/CoordinatorManager/CreateFailOverFile"
+	CoordinatorManager_GetUpgradeCapabilities_FullMethodName   = "/CoordinatorManager/GetUpgradeCapabilities"
+	CoordinatorManager_GetUpgradeEnv_FullMethodName            = "/CoordinatorManager/GetUpgradeEnv"
+	CoordinatorManager_StartUpgradeStep_FullMethodName         = "/CoordinatorManager/StartUpgradeStep"
+	CoordinatorManager_GetUpgradeStepStatus_FullMethodName     = "/CoordinatorManager/GetUpgradeStepStatus"
 )
 
 // CoordinatorManagerClient is the client API for CoordinatorManager service.
@@ -60,6 +64,14 @@ type CoordinatorManagerClient interface {
 	// cluster (a fixed touch, no caller supplied command). Used by the distributed ops
 	// path where the hub cannot exec into the spoke pod.
 	CreateFailOverFile(ctx context.Context, in *FFOF, opts ...grpc.CallOption) (*ACK, error)
+	// Major version upgrade (see UpgradeStep): what this coordinator supports, the
+	// pod's upgrade environment, and the background steps.
+	GetUpgradeCapabilities(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UpgradeCapabilities, error)
+	GetUpgradeEnv(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UpgradeEnv, error)
+	// StartUpgradeStep starts the step in the background, or reports it when it is
+	// already running or done for this ops request; it never runs a step twice.
+	StartUpgradeStep(ctx context.Context, in *UpgradeStepRequest, opts ...grpc.CallOption) (*UpgradeStepStatus, error)
+	GetUpgradeStepStatus(ctx context.Context, in *UpgradeStepRequest, opts ...grpc.CallOption) (*UpgradeStepStatus, error)
 }
 
 type coordinatorManagerClient struct {
@@ -220,6 +232,46 @@ func (c *coordinatorManagerClient) CreateFailOverFile(ctx context.Context, in *F
 	return out, nil
 }
 
+func (c *coordinatorManagerClient) GetUpgradeCapabilities(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UpgradeCapabilities, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpgradeCapabilities)
+	err := c.cc.Invoke(ctx, CoordinatorManager_GetUpgradeCapabilities_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coordinatorManagerClient) GetUpgradeEnv(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UpgradeEnv, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpgradeEnv)
+	err := c.cc.Invoke(ctx, CoordinatorManager_GetUpgradeEnv_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coordinatorManagerClient) StartUpgradeStep(ctx context.Context, in *UpgradeStepRequest, opts ...grpc.CallOption) (*UpgradeStepStatus, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpgradeStepStatus)
+	err := c.cc.Invoke(ctx, CoordinatorManager_StartUpgradeStep_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coordinatorManagerClient) GetUpgradeStepStatus(ctx context.Context, in *UpgradeStepRequest, opts ...grpc.CallOption) (*UpgradeStepStatus, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpgradeStepStatus)
+	err := c.cc.Invoke(ctx, CoordinatorManager_GetUpgradeStepStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CoordinatorManagerServer is the server API for CoordinatorManager service.
 // All implementations must embed UnimplementedCoordinatorManagerServer
 // for forward compatibility.
@@ -243,6 +295,14 @@ type CoordinatorManagerServer interface {
 	// cluster (a fixed touch, no caller supplied command). Used by the distributed ops
 	// path where the hub cannot exec into the spoke pod.
 	CreateFailOverFile(context.Context, *FFOF) (*ACK, error)
+	// Major version upgrade (see UpgradeStep): what this coordinator supports, the
+	// pod's upgrade environment, and the background steps.
+	GetUpgradeCapabilities(context.Context, *Empty) (*UpgradeCapabilities, error)
+	GetUpgradeEnv(context.Context, *Empty) (*UpgradeEnv, error)
+	// StartUpgradeStep starts the step in the background, or reports it when it is
+	// already running or done for this ops request; it never runs a step twice.
+	StartUpgradeStep(context.Context, *UpgradeStepRequest) (*UpgradeStepStatus, error)
+	GetUpgradeStepStatus(context.Context, *UpgradeStepRequest) (*UpgradeStepStatus, error)
 	mustEmbedUnimplementedCoordinatorManagerServer()
 }
 
@@ -297,6 +357,18 @@ func (UnimplementedCoordinatorManagerServer) CheckPrimaryAlive(context.Context, 
 }
 func (UnimplementedCoordinatorManagerServer) CreateFailOverFile(context.Context, *FFOF) (*ACK, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFailOverFile not implemented")
+}
+func (UnimplementedCoordinatorManagerServer) GetUpgradeCapabilities(context.Context, *Empty) (*UpgradeCapabilities, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUpgradeCapabilities not implemented")
+}
+func (UnimplementedCoordinatorManagerServer) GetUpgradeEnv(context.Context, *Empty) (*UpgradeEnv, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUpgradeEnv not implemented")
+}
+func (UnimplementedCoordinatorManagerServer) StartUpgradeStep(context.Context, *UpgradeStepRequest) (*UpgradeStepStatus, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartUpgradeStep not implemented")
+}
+func (UnimplementedCoordinatorManagerServer) GetUpgradeStepStatus(context.Context, *UpgradeStepRequest) (*UpgradeStepStatus, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUpgradeStepStatus not implemented")
 }
 func (UnimplementedCoordinatorManagerServer) mustEmbedUnimplementedCoordinatorManagerServer() {}
 func (UnimplementedCoordinatorManagerServer) testEmbeddedByValue()                            {}
@@ -589,6 +661,78 @@ func _CoordinatorManager_CreateFailOverFile_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CoordinatorManager_GetUpgradeCapabilities_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoordinatorManagerServer).GetUpgradeCapabilities(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CoordinatorManager_GetUpgradeCapabilities_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoordinatorManagerServer).GetUpgradeCapabilities(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CoordinatorManager_GetUpgradeEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoordinatorManagerServer).GetUpgradeEnv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CoordinatorManager_GetUpgradeEnv_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoordinatorManagerServer).GetUpgradeEnv(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CoordinatorManager_StartUpgradeStep_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpgradeStepRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoordinatorManagerServer).StartUpgradeStep(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CoordinatorManager_StartUpgradeStep_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoordinatorManagerServer).StartUpgradeStep(ctx, req.(*UpgradeStepRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CoordinatorManager_GetUpgradeStepStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpgradeStepRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoordinatorManagerServer).GetUpgradeStepStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CoordinatorManager_GetUpgradeStepStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoordinatorManagerServer).GetUpgradeStepStatus(ctx, req.(*UpgradeStepRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CoordinatorManager_ServiceDesc is the grpc.ServiceDesc for CoordinatorManager service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -655,6 +799,22 @@ var CoordinatorManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateFailOverFile",
 			Handler:    _CoordinatorManager_CreateFailOverFile_Handler,
+		},
+		{
+			MethodName: "GetUpgradeCapabilities",
+			Handler:    _CoordinatorManager_GetUpgradeCapabilities_Handler,
+		},
+		{
+			MethodName: "GetUpgradeEnv",
+			Handler:    _CoordinatorManager_GetUpgradeEnv_Handler,
+		},
+		{
+			MethodName: "StartUpgradeStep",
+			Handler:    _CoordinatorManager_StartUpgradeStep_Handler,
+		},
+		{
+			MethodName: "GetUpgradeStepStatus",
+			Handler:    _CoordinatorManager_GetUpgradeStepStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
