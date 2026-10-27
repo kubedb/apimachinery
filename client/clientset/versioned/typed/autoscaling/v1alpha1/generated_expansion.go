@@ -30,6 +30,8 @@ type DocumentDBAutoscalerExpansion interface{}
 
 type DruidAutoscalerExpansion interface{}
 
+type DurableWorkflowAutoscalerExpansion interface{}
+
 type ElasticsearchAutoscalerExpansion interface{}
 
 type EtcdAutoscalerExpansion interface{}

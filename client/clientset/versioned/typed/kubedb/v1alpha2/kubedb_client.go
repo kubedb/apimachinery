@@ -35,6 +35,7 @@ type KubedbV1alpha2Interface interface {
 	DB2sGetter
 	DocumentDBsGetter
 	DruidsGetter
+	DurableWorkflowsGetter
 	ElasticsearchesGetter
 	EtcdsGetter
 	HanaDBsGetter
@@ -61,6 +62,7 @@ type KubedbV1alpha2Interface interface {
 	SinglestoresGetter
 	SolrsGetter
 	WeaviatesGetter
+	WorkflowNamespacesGetter
 	ZooKeepersGetter
 }
 
@@ -91,6 +93,10 @@ func (c *KubedbV1alpha2Client) DocumentDBs(namespace string) DocumentDBInterface
 
 func (c *KubedbV1alpha2Client) Druids(namespace string) DruidInterface {
 	return newDruids(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) DurableWorkflows(namespace string) DurableWorkflowInterface {
+	return newDurableWorkflows(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) Elasticsearches(namespace string) ElasticsearchInterface {
@@ -195,6 +201,10 @@ func (c *KubedbV1alpha2Client) Solrs(namespace string) SolrInterface {
 
 func (c *KubedbV1alpha2Client) Weaviates(namespace string) WeaviateInterface {
 	return newWeaviates(c, namespace)
+}
+
+func (c *KubedbV1alpha2Client) WorkflowNamespaces(namespace string) WorkflowNamespaceInterface {
+	return newWorkflowNamespaces(c, namespace)
 }
 
 func (c *KubedbV1alpha2Client) ZooKeepers(namespace string) ZooKeeperInterface {

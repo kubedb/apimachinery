@@ -35,6 +35,7 @@ type CatalogV1alpha1Interface interface {
 	DB2VersionsGetter
 	DocumentDBVersionsGetter
 	DruidVersionsGetter
+	DurableWorkflowVersionsGetter
 	ElasticsearchVersionsGetter
 	EtcdVersionsGetter
 	HanaDBVersionsGetter
@@ -92,6 +93,10 @@ func (c *CatalogV1alpha1Client) DocumentDBVersions() DocumentDBVersionInterface 
 
 func (c *CatalogV1alpha1Client) DruidVersions() DruidVersionInterface {
 	return newDruidVersions(c)
+}
+
+func (c *CatalogV1alpha1Client) DurableWorkflowVersions() DurableWorkflowVersionInterface {
+	return newDurableWorkflowVersions(c)
 }
 
 func (c *CatalogV1alpha1Client) ElasticsearchVersions() ElasticsearchVersionInterface {

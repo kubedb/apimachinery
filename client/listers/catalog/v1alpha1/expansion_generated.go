@@ -42,6 +42,10 @@ type DocumentDBVersionListerExpansion interface{}
 // DruidVersionLister.
 type DruidVersionListerExpansion interface{}
 
+// DurableWorkflowVersionListerExpansion allows custom methods to be added to
+// DurableWorkflowVersionLister.
+type DurableWorkflowVersionListerExpansion interface{}
+
 // ElasticsearchVersionListerExpansion allows custom methods to be added to
 // ElasticsearchVersionLister.
 type ElasticsearchVersionListerExpansion interface{}
