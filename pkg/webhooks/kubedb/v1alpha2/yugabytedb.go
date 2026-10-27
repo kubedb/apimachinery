@@ -195,6 +195,7 @@ func validateYugabyteDBImmutable(old, db *olddbapi.YugabyteDB) field.ErrorList {
 	if old.Spec.DisableSecurity != db.Spec.DisableSecurity {
 		allErr = append(allErr, field.Forbidden(spec.Child("disableSecurity"), "disableSecurity is immutable"))
 	}
+	allErr = append(allErr, validateYugabyteDBInitImmutable(old, db)...)
 	if old.IsReadReplicaEnabled() && db.IsReadReplicaEnabled() && old.ReadReplicaPlacementUUID() != db.ReadReplicaPlacementUUID() {
 		allErr = append(allErr, field.Forbidden(spec.Child("topology", "readReplica", "placementUUID"), "placementUUID is immutable"))
 	}
@@ -399,6 +400,7 @@ func (w *YugabyteDBCustomWebhook) validate(ctx context.Context, db, old *olddbap
 	}
 
 	allErr = append(allErr, validateYugabyteDBPITR(db)...)
+	allErr = append(allErr, validateYugabyteDBInit(db)...)
 
 	if pl := db.Spec.Placement; pl != nil {
 		seen := map[string]bool{}
@@ -423,6 +425,49 @@ func (w *YugabyteDBCustomWebhook) validate(ctx context.Context, db, old *olddbap
 		return warnings, yugabyteDBInvalid(db.Name, allErr)
 	}
 	return warnings, nil
+}
+
+// validateYugabyteDBInit checks spec.init. The operator runs spec.init.script in a Job with the
+// database image, which has no git-sync, and reads the password from the auth Secret.
+func validateYugabyteDBInit(db *olddbapi.YugabyteDB) field.ErrorList {
+	var allErr field.ErrorList
+	in := db.Spec.Init
+	if in == nil {
+		return nil
+	}
+	p := field.NewPath("spec", "init")
+	if in.Archiver != nil {
+		allErr = append(allErr, field.Forbidden(p.Child("archiver"), "archiver recovery is not supported for YugabyteDB"))
+	}
+	if s := in.Script; s != nil {
+		if s.Git != nil {
+			allErr = append(allErr, field.Forbidden(p.Child("script", "git"), "a git script source is not supported for YugabyteDB; use a ConfigMap, a Secret or another volume source"))
+		} else if apiequality.Semantic.DeepEqual(s.VolumeSource, core.VolumeSource{}) {
+			allErr = append(allErr, field.Required(p.Child("script"), "a volume source (for example configMap or secret) is required"))
+		}
+		if !db.Spec.DisableSecurity && olddbapi.IsVirtualAuthSecretReferred(db.Spec.AuthSecret) {
+			allErr = append(allErr, field.Forbidden(p.Child("script"), "an init script can not be used with an auth Secret from a secret store"))
+		}
+	}
+	return allErr
+}
+
+// validateYugabyteDBInitImmutable keeps spec.init as it was at creation; only the operator sets
+// spec.init.initialized.
+func validateYugabyteDBInitImmutable(old, db *olddbapi.YugabyteDB) field.ErrorList {
+	o, n := old.Spec.Init, db.Spec.Init
+	if o != nil {
+		o = o.DeepCopy()
+		o.Initialized = false
+	}
+	if n != nil {
+		n = n.DeepCopy()
+		n.Initialized = false
+	}
+	if apiequality.Semantic.DeepEqual(o, n) {
+		return nil
+	}
+	return field.ErrorList{field.Forbidden(field.NewPath("spec", "init"), "spec.init is immutable")}
 }
 
 // validateYugabyteDBPITR checks spec.pitr. YugabyteDB allows one snapshot schedule for each database.

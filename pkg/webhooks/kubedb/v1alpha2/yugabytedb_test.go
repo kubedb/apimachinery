@@ -255,6 +255,19 @@ func TestYugabyteDBValidateCreate(t *testing.T) {
 			db.Spec.Topology.Master.Replicas = ptr.To(int32(7))
 			db.Spec.Topology.TServer.Replicas = ptr.To(int32(7))
 		}},
+		{name: "init script from a ConfigMap", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.Init = &olddbapi.InitSpec{Script: &olddbapi.ScriptSourceSpec{VolumeSource: core.VolumeSource{ConfigMap: &core.ConfigMapVolumeSource{LocalObjectReference: core.LocalObjectReference{Name: "s"}}}}}
+		}},
+		{name: "waitForInitialRestore", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.Init = &olddbapi.InitSpec{WaitForInitialRestore: true} }},
+		{name: "init script from git", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.Init = &olddbapi.InitSpec{Script: &olddbapi.ScriptSourceSpec{Git: &olddbapi.GitRepo{Args: []string{"--repo=x"}}}}
+		}, want: "git script source is not supported"},
+		{name: "init script without a source", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.Init = &olddbapi.InitSpec{Script: &olddbapi.ScriptSourceSpec{ScriptPath: "a.sql"}}
+		}, want: "a volume source"},
+		{name: "init archiver", mutate: func(db *olddbapi.YugabyteDB) {
+			db.Spec.Init = &olddbapi.InitSpec{Archiver: &olddbapi.ArchiverRecovery{}}
+		}, want: "archiver recovery is not supported"},
 		{name: "RF 2", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.ReplicationFactor = ptr.To(int32(2)) }, want: "replicationFactor"},
 		{name: "RF 0", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.ReplicationFactor = ptr.To(int32(0)) }, want: "replicationFactor"},
 		{name: "RF 9", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.ReplicationFactor = ptr.To(int32(9)) }, want: "replicationFactor"},
@@ -426,6 +439,7 @@ func TestYugabyteDBValidateUpdateImmutable(t *testing.T) {
 			db.Spec.Topology.TServer.PodTemplate.Spec.PodPlacementPolicy = &core.LocalObjectReference{Name: "zones"}
 		}},
 		{name: "deletionPolicy may change", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.DeletionPolicy = olddbapi.DeletionPolicyWipeOut }},
+		{name: "init added later", mutate: func(db *olddbapi.YugabyteDB) { db.Spec.Init = &olddbapi.InitSpec{WaitForInitialRestore: true} }, want: "spec.init is immutable"},
 	}
 	// immutability applies before and after provisioning, for users and for the operator
 	for _, provisioned := range []bool{false, true} {
@@ -631,4 +645,14 @@ func TestYugabyteDBExamples(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestYugabyteDBInitInitializedMayBeSet(t *testing.T) {
+	w := ybTestWebhook(t)
+	old := ybTestDB(t, w)
+	old.Spec.Init = &olddbapi.InitSpec{WaitForInitialRestore: true}
+	db := old.DeepCopy()
+	db.Spec.Init.Initialized = true
+	_, err := w.ValidateUpdate(ybCtx("system:serviceaccount:kubedb:kubedb-provisioner"), old, db)
+	checkErr(t, err, "")
 }
