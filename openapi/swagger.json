@@ -24490,6 +24490,11 @@
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.IncBackupRestore"
         },
+        "incrementalBackup": {
+          "description": "IncrementalBackup is the task that takes a block-level incremental physical backup on top of the latest physical backup (Postgres: pg_basebackup --incremental).",
+          "default": {},
+          "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.IncrementalBackup"
+        },
         "manifestBackup": {
           "default": {},
           "$ref": "#/definitions/dev.kubedb.apimachinery.apis.catalog.v1alpha1.ManifestBackup"
@@ -24832,6 +24837,18 @@
       }
     },
     "dev.kubedb.apimachinery.apis.catalog.v1alpha1.IncBackupRestore": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "dev.kubedb.apimachinery.apis.catalog.v1alpha1.IncrementalBackup": {
       "type": "object",
       "required": [
         "name"

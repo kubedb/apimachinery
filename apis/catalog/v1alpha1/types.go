@@ -59,6 +59,13 @@ type AddonTasks struct {
 	FullBackup        FullBackup        `json:"fullBackup,omitempty"`
 	FullBackupRestore FullBackupRestore `json:"fullBackupRestore,omitempty"`
 	IncBackupRestore  IncBackupRestore  `json:"incBackupRestore,omitempty"`
+	// IncrementalBackup is the task that takes a block-level incremental physical backup
+	// on top of the latest physical backup (Postgres: pg_basebackup --incremental).
+	IncrementalBackup IncrementalBackup `json:"incrementalBackup,omitempty"`
+}
+
+type IncrementalBackup struct {
+	Name string `json:"name"`
 }
 
 type FullBackup struct {
