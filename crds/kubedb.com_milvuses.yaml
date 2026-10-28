@@ -82,6 +82,11 @@ spec:
                 - name
                 type: object
                 x-kubernetes-map-type: atomic
+              autoOps:
+                properties:
+                  disabled:
+                    type: boolean
+                type: object
               configuration:
                 properties:
                   inline:
