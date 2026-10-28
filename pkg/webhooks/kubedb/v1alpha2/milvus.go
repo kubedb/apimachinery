@@ -303,10 +303,6 @@ func milvusValidateArchiver(db *olddbapi.Milvus) field.ErrorList {
 		errs = append(errs, field.Invalid(spec.Child("metaStorage", "externallyManaged"), true,
 			"the archiver and archive recovery need a KubeDB-managed meta etcd dedicated to this Milvus"))
 	}
-	if strings.HasPrefix(db.Spec.Version, "3.") {
-		errs = append(errs, field.Invalid(spec.Child("version"), db.Spec.Version,
-			"the Milvus archiver is not validated for Milvus 3.x yet"))
-	}
 	if ini := db.Spec.Init; ini != nil && ini.Archiver != nil {
 		a := ini.Archiver
 		if a.RecoveryTimestamp.IsZero() {
