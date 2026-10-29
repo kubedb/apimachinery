@@ -567,6 +567,12 @@ func (m *Milvus) setComponentDefaults(mvVersion *catalog.MilvusVersion, node any
 		if (*n).StorageType == "" {
 			(*n).StorageType = StorageTypeDurable
 		}
+		// The data volume is mounted for every Durable StreamingNode, so a spec that sets
+		// the role (replicas, podTemplate) but no storage needs the default too, or the
+		// PetSet references a volume it never claims and no pod can be created.
+		if (*n).StorageType == StorageTypeDurable && (*n).Storage == nil {
+			(*n).Storage = m.SetDefaultStorage()
+		}
 	}
 
 	if replicas != nil && *replicas == nil {
