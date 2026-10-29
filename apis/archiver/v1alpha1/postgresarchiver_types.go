@@ -59,6 +59,11 @@ type PostgresArchiverSpec struct {
 	// This options will eventually go to the full-backup job's yaml
 	// +optional
 	FullBackup *FullBackupOptions `json:"fullBackup"`
+	// IncrementalBackup defines the sessionConfig of the block-level incremental physical backup
+	// (pg_basebackup --incremental). It is taken on top of the latest physical backup and is
+	// only supported on PostgreSQL 17.11+ and 18.6+; other versions keep taking full backups.
+	// +optional
+	IncrementalBackup *PostgresIncrementalBackupOptions `json:"incrementalBackup,omitempty"`
 	// LogBackup defines the sidekick configuration for the log backup
 	// +optional
 	LogBackup *LogBackupOptions `json:"logBackup"`
