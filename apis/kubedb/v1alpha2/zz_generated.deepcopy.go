@@ -4751,6 +4751,7 @@ func (in *MilvusSpec) DeepCopyInto(out *MilvusSpec) {
 		}
 	}
 	in.HealthChecker.DeepCopyInto(&out.HealthChecker)
+	out.AutoOps = in.AutoOps
 	if in.Monitor != nil {
 		in, out := &in.Monitor, &out.Monitor
 		*out = new(v1.AgentSpec)
