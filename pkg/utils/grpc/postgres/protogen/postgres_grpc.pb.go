@@ -35,6 +35,7 @@ const (
 	CoordinatorManager_GetSmallestWalFile_FullMethodName       = "/CoordinatorManager/GetSmallestWalFile"
 	CoordinatorManager_CheckPrimaryAlive_FullMethodName        = "/CoordinatorManager/CheckPrimaryAlive"
 	CoordinatorManager_CreateFailOverFile_FullMethodName       = "/CoordinatorManager/CreateFailOverFile"
+	CoordinatorManager_GetArchivedWal_FullMethodName           = "/CoordinatorManager/GetArchivedWal"
 )
 
 // CoordinatorManagerClient is the client API for CoordinatorManager service.
@@ -60,6 +61,11 @@ type CoordinatorManagerClient interface {
 	// cluster (a fixed touch, no caller supplied command). Used by the distributed ops
 	// path where the hub cannot exec into the spoke pod.
 	CreateFailOverFile(ctx context.Context, in *FFOF, opts ...grpc.CallOption) (*ACK, error)
+	// GetArchivedWal returns the last WAL file the archiver has pushed to the backup
+	// storage (its contiguous watermark), answered only by the primary. Coordinators
+	// in a DC-DR standby data center use it to prune their local wal_archive, which
+	// the primary's same-DC LSN broadcast never reaches.
+	GetArchivedWal(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*WalFileResponse, error)
 }
 
 type coordinatorManagerClient struct {
@@ -220,6 +226,16 @@ func (c *coordinatorManagerClient) CreateFailOverFile(ctx context.Context, in *F
 	return out, nil
 }
 
+func (c *coordinatorManagerClient) GetArchivedWal(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*WalFileResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(WalFileResponse)
+	err := c.cc.Invoke(ctx, CoordinatorManager_GetArchivedWal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CoordinatorManagerServer is the server API for CoordinatorManager service.
 // All implementations must embed UnimplementedCoordinatorManagerServer
 // for forward compatibility.
@@ -243,6 +259,11 @@ type CoordinatorManagerServer interface {
 	// cluster (a fixed touch, no caller supplied command). Used by the distributed ops
 	// path where the hub cannot exec into the spoke pod.
 	CreateFailOverFile(context.Context, *FFOF) (*ACK, error)
+	// GetArchivedWal returns the last WAL file the archiver has pushed to the backup
+	// storage (its contiguous watermark), answered only by the primary. Coordinators
+	// in a DC-DR standby data center use it to prune their local wal_archive, which
+	// the primary's same-DC LSN broadcast never reaches.
+	GetArchivedWal(context.Context, *Empty) (*WalFileResponse, error)
 	mustEmbedUnimplementedCoordinatorManagerServer()
 }
 
@@ -297,6 +318,9 @@ func (UnimplementedCoordinatorManagerServer) CheckPrimaryAlive(context.Context, 
 }
 func (UnimplementedCoordinatorManagerServer) CreateFailOverFile(context.Context, *FFOF) (*ACK, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFailOverFile not implemented")
+}
+func (UnimplementedCoordinatorManagerServer) GetArchivedWal(context.Context, *Empty) (*WalFileResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArchivedWal not implemented")
 }
 func (UnimplementedCoordinatorManagerServer) mustEmbedUnimplementedCoordinatorManagerServer() {}
 func (UnimplementedCoordinatorManagerServer) testEmbeddedByValue()                            {}
@@ -589,6 +613,24 @@ func _CoordinatorManager_CreateFailOverFile_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CoordinatorManager_GetArchivedWal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoordinatorManagerServer).GetArchivedWal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CoordinatorManager_GetArchivedWal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoordinatorManagerServer).GetArchivedWal(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CoordinatorManager_ServiceDesc is the grpc.ServiceDesc for CoordinatorManager service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -655,6 +697,10 @@ var CoordinatorManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateFailOverFile",
 			Handler:    _CoordinatorManager_CreateFailOverFile_Handler,
+		},
+		{
+			MethodName: "GetArchivedWal",
+			Handler:    _CoordinatorManager_GetArchivedWal_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

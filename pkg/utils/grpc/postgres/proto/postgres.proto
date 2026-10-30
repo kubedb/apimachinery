@@ -113,6 +113,11 @@ service CoordinatorManager {
   // cluster (a fixed touch, no caller supplied command). Used by the distributed ops
   // path where the hub cannot exec into the spoke pod.
   rpc CreateFailOverFile(FFOF) returns (ACK) {}
+  // GetArchivedWal returns the last WAL file the archiver has pushed to the backup
+  // storage (its contiguous watermark), answered only by the primary. Coordinators
+  // in a DC-DR standby data center use it to prune their local wal_archive, which
+  // the primary's same-DC LSN broadcast never reaches.
+  rpc GetArchivedWal(Empty) returns (WalFileResponse) {}
 }
 
 // Generated from the repo root so the descriptor registers under its full path
