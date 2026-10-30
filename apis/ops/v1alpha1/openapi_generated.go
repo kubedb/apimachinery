@@ -631,6 +631,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidVerticalScalingSpec":                         schema_apimachinery_apis_ops_v1alpha1_DruidVerticalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.DruidVolumeExpansionSpec":                         schema_apimachinery_apis_ops_v1alpha1_DruidVolumeExpansionSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchCustomConfiguration":                 schema_apimachinery_apis_ops_v1alpha1_ElasticsearchCustomConfiguration(ref),
+		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingDC":                 schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingDC(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingSpec":               schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingSpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingTopologySpec":       schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingTopologySpec(ref),
 		"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchLicenseOpsSpec":                      schema_apimachinery_apis_ops_v1alpha1_ElasticsearchLicenseOpsSpec(ref),
@@ -36136,6 +36137,36 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchCustomConfiguration(ref 
 	}
 }
 
+func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingDC(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ElasticsearchHorizontalScalingDC is a per data center node-count target for scaling a distributed DC-DR Elasticsearch.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"clusterName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "ClusterName is the data center, named by its OCM managed cluster, matching a Member distributionRule in the Elasticsearch PlacementPolicy.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"replicas": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Replicas is the desired local node count for this data center.",
+							Default:     0,
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+				Required: []string{"clusterName", "replicas"},
+			},
+		},
+	}
+}
+
 func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -36156,11 +36187,25 @@ func schema_apimachinery_apis_ops_v1alpha1_ElasticsearchHorizontalScalingSpec(re
 							Ref:         ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingTopologySpec"),
 						},
 					},
+					"dataCenters": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DataCenters scales individual data centers of a distributed DC-DR Elasticsearch. Each entry sets that data center's local node count; data centers not listed are left unchanged. Use this instead of Node for a DC-DR cluster, where each data center runs its own self-contained Elasticsearch cluster and is scaled independently.",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingDC"),
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingTopologySpec"},
+			"kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingDC", "kubedb.dev/apimachinery/apis/ops/v1alpha1.ElasticsearchHorizontalScalingTopologySpec"},
 	}
 }
 

@@ -1000,6 +1000,12 @@ func Convert_v1alpha2_MemcachedSpec_To_v1_MemcachedSpec(in *MemcachedSpec, out *
 	return nil
 }
 
+// Convert_v1_ElasticsearchStatus_To_v1alpha2_ElasticsearchStatus is lossy:
+// DisasterRecovery is reported only in v1.
+func Convert_v1_ElasticsearchStatus_To_v1alpha2_ElasticsearchStatus(in *v1.ElasticsearchStatus, out *ElasticsearchStatus, s conversion.Scope) error {
+	return autoConvert_v1_ElasticsearchStatus_To_v1alpha2_ElasticsearchStatus(in, out, s)
+}
+
 func Convert_v1_ElasticsearchSpec_To_v1alpha2_ElasticsearchSpec(in *v1.ElasticsearchSpec, out *ElasticsearchSpec, s conversion.Scope) error {
 	if err := Convert_v1_AutoOpsSpec_To_v1alpha2_AutoOpsSpec(&in.AutoOps, &out.AutoOps, s); err != nil {
 		return err
